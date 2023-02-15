@@ -5,16 +5,14 @@
     'version': '1.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
-    'summary': "An online payments provider covering several countries, currencies and payment "
-               "methods from Latin America.",
+    'summary': "A payment provider covering several countries in Latin America.",
     'depends': ['payment'],
     'data': [
         'views/payment_mercado_pago_templates.xml',
-        'views/payment_views.xml',
+        'views/payment_provider_views.xml',
 
         'data/payment_provider_data.xml',  # Depends on views/payment_mercado_pago_templates.xml
     ],
-    'application': True,
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',

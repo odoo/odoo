@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="mail.MessageActionList" owl="1">
-        <t t-if="messageActionList">
-            <div class="o_MessageActionList d-flex rounded-1 bg-white shadow-sm" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'flex-row-reverse': messageActionList.messageView.isInChatWindowAndIsAlignedRight }" t-attf-class="{{ className }}" t-ref="root">
-                <t t-foreach="messageActionList.messageActionViews" t-as="messageActionView" t-key="messageActionView.localId">
-                    <MessageActionView record="messageActionView"/>
-                </t>
-            </div>
-        </t>
+        <div class="o_MessageActionList d-flex rounded-1 shadow-sm overflow-hidden" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'flex-row-reverse': messageView.isInChatWindowAndIsAlignedRight }" t-attf-class="{{ className }}" t-ref="root">
+            <MessageActionView t-foreach="messageActionViews" t-as="messageActionView" t-key="messageActionView.localId" record="messageActionView"/>
+        </div>
     </t>
 </templates>

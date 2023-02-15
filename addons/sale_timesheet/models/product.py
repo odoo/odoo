@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
 
     def _selection_service_policy(self):
         service_policies = super()._selection_service_policy()
-        service_policies.insert(1, ('delivered_timesheet', 'Based on Timesheets'))
+        service_policies.insert(1, ('delivered_timesheet', _('Based on Timesheets')))
         return service_policies
 
     service_type = fields.Selection(selection_add=[

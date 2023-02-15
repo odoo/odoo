@@ -3,10 +3,6 @@
  * all renderers. For field default rules, see the fields.scss file.
  */
 
-.o_debug .o_legacy_form_view, .o_debug .o_legacy_kanban_view, .o_debug .o_legacy_list_view {
-    border-top: 3px solid red;
-}
-
 // Invisible modifier (can be inside the view, the button area, ...)
 .o_invisible_modifier {
     display: none!important;
@@ -48,9 +44,13 @@
 
 // No content helper
 .o_view_nocontent {
-    @include o-position-absolute(30%, 0, 0, 0);
+    @include o-position-absolute(0, 0, 0, 0);
     pointer-events: none;
-    z-index: 1;
+    z-index: var(--o-view-nocontent-zindex, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image:  radial-gradient(at 50% 50%, #{$o-view-background-color} 0px, #{rgba($o-view-background-color, 0.5)} 100%);
 
     .o_nocontent_help {
         @include o-nocontent-empty;
@@ -83,7 +83,7 @@
     }
 }
 
-.o_view_sample_data {
+.o_legacy_view_sample_data {
     .o_list_table {
         cursor: default !important;
 
@@ -98,8 +98,8 @@
 
     .o_nocontent_help {
         border-radius: 20%;
-        background-color: #f9f9f9;
-        box-shadow: 0 0 120px 100px #f9f9f9;
+        background-color: $o-view-background-color;
+        box-shadow: 0 0 120px 100px $o-view-background-color;
     }
 
     .o_sample_data_disabled {

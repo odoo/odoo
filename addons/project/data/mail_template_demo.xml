@@ -6,6 +6,7 @@
             <field name="subject">Project status - {{ object.name }}</field>
             <field name="email_from">{{ (object.partner_id.email_formatted if object.partner_id else user.email_formatted) }}</field>
             <field name="partner_to" >{{ object.partner_id.id }}</field>
+            <field name="description">Set on project's stages to inform customers when a project reaches that stage</field>
             <field name="body_html" type="html">
 <div>
     Dear <t t-out="object.partner_id.name or 'customer'">Brandon Freeman</t>,<br/>

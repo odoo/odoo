@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 class ProjectMilestone(models.Model):
     _name = 'project.milestone'
@@ -19,3 +19,13 @@ class ProjectMilestone(models.Model):
     @api.model
     def _get_fields_to_export(self):
         return super()._get_fields_to_export() + ['allow_billable', 'quantity_percentage', 'sale_line_name']
+
+    def action_view_sale_order(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sales Order'),
+            'res_model': 'sale.order',
+            'res_id': self.sale_line_id.order_id.id,
+            'view_mode': 'form',
+        }

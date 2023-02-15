@@ -6,13 +6,13 @@ from unittest.mock import patch
 from lxml import objectify
 
 from odoo.fields import Command
-from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import BaseCommon
 from odoo.tools.misc import hmac as hmac_tool
 
 _logger = logging.getLogger(__name__)
 
 
-class PaymentCommon(TransactionCase):
+class PaymentCommon(BaseCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -79,6 +79,9 @@ class PaymentCommon(TransactionCase):
             'is_published': True,
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
+            'available_currency_ids': [Command.set(
+                (cls.currency_euro + cls.currency_usd + cls.env.company.currency_id).ids
+            )],
         })
 
         cls.provider = cls.dummy_provider
@@ -91,22 +94,17 @@ class PaymentCommon(TransactionCase):
 
         account_payment_module = cls.env['ir.module.module']._get('account_payment')
         cls.account_payment_installed = account_payment_module.state in ('installed', 'to upgrade')
+        cls.enable_reconcile_after_done_patcher = True
 
     def setUp(self):
-        def stop_patcher_without_fail():
-            if self.is_patcher_started:
-                self.reconcile_after_done_patcher.stop()
-
         super().setUp()
-        if self.account_payment_installed:
+        if self.account_payment_installed and self.enable_reconcile_after_done_patcher:
             # disable account payment generation if account_payment is installed
             # because the accounting setup of providers is not managed in this common
             self.reconcile_after_done_patcher = patch(
                 'odoo.addons.account_payment.models.payment_transaction.PaymentTransaction._reconcile_after_done',
             )
-            self.reconcile_after_done_patcher.start()
-            self.is_patcher_started = True
-            self.addCleanup(stop_patcher_without_fail)
+            self.startPatcher(self.reconcile_after_done_patcher)
 
     #=== Utils ===#
 
@@ -233,3 +231,8 @@ class PaymentCommon(TransactionCase):
             self.fail(f"{func.__name__} should not raise error of class {exception_class.__name__}")
         except Exception:
             pass  # Any exception whose class is not monitored is caught and ignored
+
+    def _skip_if_account_payment_is_not_installed(self):
+        """ Skip current test if `account_payment` module is not installed. """
+        if not self.account_payment_installed:
+            self.skipTest("account_payment module is not installed")

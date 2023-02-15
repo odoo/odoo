@@ -2,12 +2,13 @@
 
 import {CheckBox} from '@web/core/checkbox/checkbox';
 import {useService, useAutofocus} from "@web/core/utils/hooks";
+import {sprintf} from "@web/core/utils/strings";
 import {useWowlService} from '@web/legacy/utils';
 import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import {qweb, _t} from 'web.core';
 
-const {Component, onWillStart, useState, xml, useRef, markup} = owl;
+const {Component, onWillStart, useState, xml, useRef} = owl;
 
 export class PageDependencies extends Component {
     setup() {
@@ -23,6 +24,7 @@ export class PageDependencies extends Component {
         this.dependencies = {};
         this.depText = '...';
         this.action = useRef('action');
+        this.sprintf = sprintf;
 
         onWillStart(() => this.onWillStart());
     }
@@ -30,25 +32,13 @@ export class PageDependencies extends Component {
     async onWillStart() {
         this.dependencies = await this.orm.call(
             'website',
-            this.props.type === 'key' ?
-                'page_search_key_dependencies' :
-                'page_search_dependencies',
-            [this.props.pageId],
+            'search_url_dependencies',
+            [this.props.resModel, this.props.resIds],
         );
         if (this.props.mode === 'popover') {
             this.depText = Object.entries(this.dependencies)
                 .map(dependency => `${dependency[1].length} ${dependency[0].toLowerCase()}`)
                 .join(', ');
-        } else {
-            for (const key of Object.keys(this.dependencies)) {
-                this.dependencies[key] = this.dependencies[key].map(item => {
-                    // TODO probably need to refactor this feature so that the
-                    // client side is in charge of what the sentences look like
-                    // (not server-side HTML).
-                    item.contentToDisplay = markup(item.content);
-                    return item;
-                });
-            }
         }
     }
 
@@ -71,17 +61,13 @@ PageDependencies.popoverTemplate = xml`
 `;
 PageDependencies.template = 'website.PageDependencies';
 PageDependencies.props = {
-    pageId: Number,
+    resIds: Array,
+    resModel: String,
     mode: String,
-    type: {
-        type: String,
-        optional: true,
-    },
 };
 
 export class DeletePageDialog extends Component {
     setup() {
-        this.orm = useService('orm');
         this.website = useService('website');
         this.title = this.env._t("Delete Page");
         this.deleteButton = this.env._t("Ok");
@@ -96,11 +82,7 @@ export class DeletePageDialog extends Component {
         this.state.confirm = checked;
     }
 
-    async onClickDelete() {
-        await this.orm.unlink("website.page", [
-            this.props.pageId,
-        ]);
-        this.website.goToWebsite({path: '/'});
+    onClickDelete() {
         this.props.close();
         this.props.onDelete();
     }
@@ -112,7 +94,8 @@ DeletePageDialog.components = {
 };
 DeletePageDialog.template = 'website.DeletePageDialog';
 DeletePageDialog.props = {
-    pageId: Number,
+    resIds: Array,
+    resModel: String,
     onDelete: {type: Function, optional: true},
     close: Function,
 };
@@ -163,6 +146,7 @@ export class PagePropertiesDialog extends FormViewDialog {
     setup() {
         super.setup();
         this.dialog = useService('dialog');
+        this.orm = useService('orm');
         this.website = useService('website');
 
         this.viewProps.resId = this.resId;
@@ -183,9 +167,13 @@ export class PagePropertiesDialog extends FormViewDialog {
     }
 
     deletePage() {
+        const pageIds = [this.resId];
         this.dialog.add(DeletePageDialog, {
-            pageId: this.resId,
-            onDelete: () => {
+            resIds: pageIds,
+            resModel: 'website.page',
+            onDelete: async () => {
+                await this.orm.unlink("website.page", pageIds);
+                this.website.goToWebsite({path: '/'});
                 this.props.close();
                 this.props.onClose();
             },

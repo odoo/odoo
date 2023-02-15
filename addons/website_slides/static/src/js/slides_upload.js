@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { qweb as QWeb, _t } from 'web.core';
+import {_t, qweb as QWeb} from 'web.core';
 import Dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
 import utils from 'web.utils';
@@ -285,11 +285,11 @@ var SlideUploadDialog = Dialog.extend({
             formatNoMatches: false,
             selection_data: false,
             fetch_rpc_fnc: fetchFNC,
-            formatSelection: function (data) {
+            formatSelection: function (data, container, fmt) {
                 if (data.tag) {
                     data.text = data.tag;
                 }
-                return data.text;
+                return fmt(data.text);
             },
             createSearchChoice: function (term, data) {
                 var addedTags = $(this.opts.element).select2('data');
@@ -540,7 +540,6 @@ var SlideUploadDialog = Dialog.extend({
 
         var $input = $(ev.currentTarget);
         var preventOnchange = $input.data('preventOnchange');
-        var $preview = self.$('#slide-image');
 
         var file = ev.target.files[0];
         if (!file) {
@@ -565,27 +564,22 @@ var SlideUploadDialog = Dialog.extend({
             return;
         }
 
-        utils.getDataURLFromFile(file).then(function (buffer) {
-            if (isImage) {
-                $preview.attr('src', buffer);
-            }
-            buffer = buffer.split(',')[1];
-            self.file.data = buffer;
-            self._showPreviewColumn();
-        });
-
-        if (file.type === 'application/pdf') {
+        const preview = document.getElementById("slide-image");
+        if (file.type !== 'application/pdf') {
+            utils.getDataURLFromFile(file).then(dataURL => {
+                if (isImage) {
+                    preview.src = dataURL;
+                }
+                this.file.data = dataURL.split(',', 1)[1];
+                this._showPreviewColumn();
+            });
+        } else {
             var ArrayReader = new FileReader();
             this.set('can_submit_form', false);
             // file read as ArrayBuffer for pdfjsLib get_Document API
             ArrayReader.readAsArrayBuffer(file);
-            ArrayReader.onload = function (evt) {
+            ArrayReader.onload = async function (evt) {
                 var buffer = evt.target.result;
-                var passwordNeeded = function () {
-                    self._alertDisplay(_t("You can not upload password protected file."));
-                    self._fileReset();
-                    self.set('can_submit_form', true);
-                };
                 /**
                  * The following line fixes pdfjsLib 'Util' global variable.
                  * This is (most likely) related to #32181 which lazy loads most assets.
@@ -604,30 +598,33 @@ var SlideUploadDialog = Dialog.extend({
                  * cause much harm.
                  */
                 window.Util = window.pdfjsLib.Util;
-                window.pdfjsLib.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
-                    self._formSetFieldValue('duration', (pdf._pdfInfo.numPages || 0) * 5);
-                    pdf.getPage(1).then(function getFirstPage(page) {
-                        var scale = 1;
-                        var viewport = page.getViewport(scale);
-                        var canvas = document.getElementById('data_canvas');
-                        var context = canvas.getContext('2d');
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        // Render PDF page into canvas context
-                        page.render({
-                            canvasContext: context,
-                            viewport: viewport
-                        }).then(function () {
-                            var imageData = self.$('#data_canvas')[0].toDataURL();
-                            $preview.attr('src', imageData);
-                            if (loaded) {
-                                self.set('can_submit_form', true);
-                            }
-                            loaded = true;
-                            self._showPreviewColumn();
-                        });
-                    });
-                });
+                const pdfTask = window.pdfjsLib.getDocument(new Uint8Array(buffer));
+                pdfTask.onPassword = () => {
+                    this._alertDisplay(_t("You can not upload password protected file."));
+                    this._fileReset();
+                    this.set('can_submit_form', true);
+                    // fixme: throw?
+                };
+                const pdf = await pdfTask.promise;
+
+                self._formSetFieldValue('duration', (pdf.numPages || 0) * 5);
+                const page = await pdf.getPage(1)
+                var viewport = page.getViewport({scale: 1});
+                var canvas = document.getElementById('data_canvas');
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                // Render PDF page into canvas context
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+                preview.src = canvas.toDataURL();
+                if (loaded) {
+                    self.set('can_submit_form', true);
+                }
+                loaded = true;
+                self._showPreviewColumn();
             };
         }
 

@@ -33,16 +33,16 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     await afterNextRender(() => document.querySelector('.o_MessagingMenu_toggler').click());
     assert.containsOnce(
         document.body,
-        '.o_MessagingMenuTab[data-tab-id="all"]',
+        '.o_MessagingMenuTabView[data-tab-id="all"]',
         "should have a tab/filter 'all' in messaging menu"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessagingMenuTab[data-tab-id="chat"]',
+        '.o_MessagingMenuTabView[data-tab-id="chat"]',
         "should have a tab/filter 'chat' in messaging menu"
     );
     assert.hasClass(
-        document.querySelector('.o_MessagingMenuTab[data-tab-id="all"]'),
+        document.querySelector('.o_MessagingMenuTabView[data-tab-id="all"]'),
         'o-active',
         "tab/filter 'all' of messaging menu should be active initially"
     );
@@ -53,10 +53,10 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_MessagingMenuTab[data-tab-id="chat"]').click()
+        document.querySelector('.o_MessagingMenuTabView[data-tab-id="chat"]').click()
     );
     assert.hasClass(
-        document.querySelector('.o_MessagingMenuTab[data-tab-id="chat"]'),
+        document.querySelector('.o_MessagingMenuTabView[data-tab-id="chat"]'),
         'o-active',
         "tab/filter 'chat' of messaging menu should become active after click"
     );

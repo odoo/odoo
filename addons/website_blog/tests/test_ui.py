@@ -20,3 +20,6 @@ class TestUi(odoo.tests.HttpCase):
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog', login='admin')
+
+    def test_blog_post_tags(self):
+        self.start_tour(self.env['website'].get_client_action_url('/blog'), 'blog_tags', login='admin')

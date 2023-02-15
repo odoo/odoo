@@ -19,8 +19,7 @@ class TestModuleManifest(BaseCase):
         cls.addons_path = cls._tmp_dir.name
 
         patcher = patch.object(odoo.addons, '__path__', [cls.addons_path])
-        patcher.start()
-        cls.addClassCleanup(patcher.stop)
+        cls.startClassPatcher(patcher)
 
     def setUp(self):
         self.module_root = tempfile.mkdtemp(prefix='odoo-test-module-', dir=self.addons_path)
@@ -47,7 +46,7 @@ class TestModuleManifest(BaseCase):
             'demo_xml': [],
             'depends': [],
             'description': '',
-            'external_dependencies': [],
+            'external_dependencies': {},
             'icon': '/base/static/description/icon.png',
             'init_xml': [],
             'installable': True,

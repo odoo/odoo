@@ -150,7 +150,7 @@ class TestTracking(TestMailCommon):
 
         def patched_message_track_post_template(*args, **kwargs):
             if args[0]._name == "mail.test.track":
-                args[0].message_post_with_template(template.id)
+                args[0].message_post_with_source(template)
             return True
 
         with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
@@ -222,14 +222,14 @@ class TestTracking(TestMailCommon):
             if 'name' in init_values and init_values['name'] == magic_code:
                 return 'mail.mt_name_changed'
             return False
-        self.registry('mail.test.container')._patch_method('_track_subtype', _track_subtype)
+        self.patch(self.registry('mail.test.container'), '_track_subtype', _track_subtype)
 
         def _track_template(self, changes):
             res = {}
             if 'name' in changes:
                 res['name'] = (mail_template, {'composition_mode': 'mass_mail'})
             return res
-        self.registry('mail.test.container')._patch_method('_track_template', _track_template)
+        self.patch(self.registry('mail.test.container'), '_track_template', _track_template)
 
         cls = type(self.env['mail.test.container'])
         self.assertFalse(hasattr(getattr(cls, 'name'), 'track_visibility'))

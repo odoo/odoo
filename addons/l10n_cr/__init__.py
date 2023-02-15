@@ -33,3 +33,6 @@
 #    or implied, of ClearCorp S.A..
 #    
 ##############################################################################
+
+def load_translations(env):
+    env.ref('l10n_cr.account_chart_template_0').process_coa_translations()

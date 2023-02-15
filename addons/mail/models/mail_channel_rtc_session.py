@@ -10,6 +10,7 @@ from odoo import api, fields, models
 class MailRtcSession(models.Model):
     _name = 'mail.channel.rtc.session'
     _description = 'Mail RTC session'
+    _rec_name = 'channel_member_id'
 
     channel_member_id = fields.Many2one('mail.channel.member', required=True, ondelete='cascade')
     channel_id = fields.Many2one('mail.channel', related='channel_member_id.channel_id', store=True, readonly=True)
@@ -62,7 +63,7 @@ class MailRtcSession(models.Model):
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in valid_values})
         session_data = self._mail_rtc_session_format()
-        self.env['bus.bus']._sendone(self.channel_id, 'mail.channel.rtc.session/insert', session_data)
+        self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'RtcSession': session_data})
 
     @api.autovacuum
     def _gc_inactive_sessions(self):

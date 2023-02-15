@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _, Command
 from odoo.osv import expression
-from odoo.tools.float_utils import float_round as round
+from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.tools import frozendict
@@ -28,17 +28,17 @@ class AccountTaxGroup(models.Model):
     property_tax_payable_account_id = fields.Many2one(
         comodel_name='account.account',
         company_dependent=True,
-        string='Tax current account (payable)',
+        string='Tax Payable Account',
         help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the authorities.")
     property_tax_receivable_account_id = fields.Many2one(
         comodel_name='account.account',
         company_dependent=True,
-        string='Tax current account (receivable)',
+        string='Tax Receivable Account',
         help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the company.")
     property_advance_tax_payment_account_id = fields.Many2one(
         comodel_name='account.account',
         company_dependent=True,
-        string='Advance Tax payment account',
+        string='Tax Advance Account',
         help="Downpayments posted on this account will be considered by the Tax Closing Entry.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country for which this tax group is applicable.")
     country_code = fields.Char(related="country_id.code")
@@ -193,12 +193,14 @@ class AccountTax(models.Model):
         return '%'.join(list(name))
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        return super().name_search(name=AccountTax._parse_name_search(name), args=args, operator=operator, limit=limit)
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        if operator in ("ilike", "like"):
+            name = AccountTax._parse_name_search(name)
+        return super()._name_search(name, args, operator, limit, name_get_uid)
 
     def _search_name(self, operator, value):
         if operator not in ("ilike", "like") or not isinstance(value, str):
-            return super()._search_name(operator, value)
+            return [('name', operator, value)]
         return [('name', operator, AccountTax._parse_name_search(value))]
 
     def _check_repartition_lines(self, lines):
@@ -628,8 +630,8 @@ class AccountTax(models.Model):
                     tax_base_amount, sign * price_unit, quantity, product, partner, fixed_multiplicator)
 
             # Round the tax_amount multiplied by the computed repartition lines factor.
-            tax_amount = round(tax_amount, precision_rounding=prec)
-            factorized_tax_amount = round(tax_amount * sum_repartition_factor, precision_rounding=prec)
+            tax_amount = float_round(tax_amount, precision_rounding=prec)
+            factorized_tax_amount = float_round(tax_amount * sum_repartition_factor, precision_rounding=prec)
 
             if price_include and total_included_checkpoints.get(i) is None:
                 cumulated_tax_included_amount += factorized_tax_amount
@@ -657,10 +659,10 @@ class AccountTax(models.Model):
             # The factorized_tax_amount will be 0.06 (200% x 0.03). However, each line taken independently will compute
             # 50% * 0.03 = 0.01 with rounding. It means there is 0.06 - 0.04 = 0.02 as total_rounding_error to dispatch
             # in lines as 2 x 0.01.
-            repartition_line_amounts = [round(tax_amount * line.factor, precision_rounding=prec) for line in tax_repartition_lines]
-            total_rounding_error = round(factorized_tax_amount - sum(repartition_line_amounts), precision_rounding=prec)
+            repartition_line_amounts = [float_round(tax_amount * line.factor, precision_rounding=prec) for line in tax_repartition_lines]
+            total_rounding_error = float_round(factorized_tax_amount - sum(repartition_line_amounts), precision_rounding=prec)
             nber_rounding_steps = int(abs(total_rounding_error / currency.rounding))
-            rounding_error = round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, precision_rounding=prec)
+            rounding_error = float_round(nber_rounding_steps and total_rounding_error / nber_rounding_steps or 0.0, precision_rounding=prec)
 
             for repartition_line, line_amount in zip(tax_repartition_lines, repartition_line_amounts):
 
@@ -677,10 +679,11 @@ class AccountTax(models.Model):
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
                     'amount': sign * line_amount,
-                    'base': round(sign * tax_base_amount, precision_rounding=prec),
+                    'base': float_round(sign * tax_base_amount, precision_rounding=prec),
                     'sequence': tax.sequence,
                     'account_id': repartition_line._get_aml_target_tax_account().id,
                     'analytic': tax.analytic,
+                    'use_in_tax_closing': repartition_line.use_in_tax_closing,
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
@@ -719,7 +722,7 @@ class AccountTax(models.Model):
     def _convert_to_tax_base_line_dict(
             self, base_line,
             partner=None, currency=None, product=None, taxes=None, price_unit=None, quantity=None,
-            discount=None, account=None, analytic_account=None, analytic_tags=None, price_subtotal=None,
+            discount=None, account=None, analytic_distribution=None, price_subtotal=None,
             is_refund=False, rate=None,
             handle_price_include=None,
             extra_context=None,
@@ -734,8 +737,7 @@ class AccountTax(models.Model):
             'quantity': quantity or 0.0,
             'discount': discount or 0.0,
             'account': account or self.env['account.account'],
-            'analytic_account': analytic_account or self.env['account.analytic.account'],
-            'analytic_tags': analytic_tags or self.env['account.analytic.tag'],
+            'analytic_distribution': analytic_distribution,
             'price_subtotal': price_subtotal or 0.0,
             'is_refund': is_refund,
             'rate': rate or 1.0,
@@ -747,7 +749,7 @@ class AccountTax(models.Model):
     def _convert_to_tax_line_dict(
             self, tax_line,
             partner=None, currency=None, taxes=None, tax_tags=None, tax_repartition_line=None,
-            group_tax=None, account=None, analytic_account=None, analytic_tags=None, tax_amount=None,
+            group_tax=None, account=None, analytic_distribution=None, tax_amount=None,
     ):
         return {
             'record': tax_line,
@@ -758,8 +760,7 @@ class AccountTax(models.Model):
             'tax_repartition_line': tax_repartition_line or self.env['account.tax.repartition.line'],
             'group_tax': group_tax or self.env['account.tax'],
             'account': account or self.env['account.account'],
-            'analytic_account': analytic_account or self.env['account.analytic.account'],
-            'analytic_tags': analytic_tags or self.env['account.analytic.tag'],
+            'analytic_distribution': analytic_distribution,
             'tax_amount': tax_amount or 0.0,
         }
 
@@ -783,8 +784,7 @@ class AccountTax(models.Model):
             'tax_ids': [Command.set(tax_vals['tax_ids'])],
             'tax_tag_ids': [Command.set(tax_vals['tag_ids'])],
             'tax_id': tax_vals['group'].id if tax_vals['group'] else tax_vals['id'],
-            'analytic_tag_ids': [Command.set(line_vals['analytic_tags'].ids if tax_vals['analytic'] else [])],
-            'analytic_account_id': line_vals['analytic_account'].id if tax_vals['analytic'] else False,
+            'analytic_distribution': line_vals['analytic_distribution'] if tax_vals['analytic'] else {},
         }
 
     @api.model
@@ -805,8 +805,7 @@ class AccountTax(models.Model):
             'tax_ids': [Command.set(line_vals['taxes'].ids)],
             'tax_tag_ids': [Command.set(line_vals['tax_tags'].ids)],
             'tax_id': (line_vals['group_tax'] or tax).id,
-            'analytic_tag_ids': [Command.set(line_vals['analytic_tags'].ids if tax.analytic else [])],
-            'analytic_account_id': line_vals['analytic_account'].id if tax.analytic else False,
+            'analytic_distribution': line_vals['analytic_distribution'] if tax.analytic else {},
         }
 
     @api.model
@@ -863,6 +862,9 @@ class AccountTax(models.Model):
 
             tax_values_list = []
             for tax_res in taxes_res['taxes']:
+                tax_amount = tax_res['amount'] / rate
+                if self.company_id.tax_calculation_rounding_method == 'round_per_line':
+                    tax_amount = currency.round(tax_amount)
                 tax_rep = self.env['account.tax.repartition.line'].browse(tax_res['tax_repartition_line_id'])
                 tax_values_list.append({
                     **tax_res,
@@ -870,7 +872,7 @@ class AccountTax(models.Model):
                     'base_amount_currency': tax_res['base'],
                     'base_amount': currency.round(tax_res['base'] / rate),
                     'tax_amount_currency': tax_res['amount'],
-                    'tax_amount': currency.round(tax_res['amount'] / rate),
+                    'tax_amount': tax_amount,
                 })
 
         else:
@@ -1127,8 +1129,7 @@ class AccountTax(models.Model):
             to_process.append((base_line, to_update_vals, tax_values_list))
 
         def grouping_key_generator(base_line, tax_values):
-            tax = tax_values['tax_repartition_line'].tax_id
-            source_tax = tax_values['group'] or tax
+            source_tax = tax_values['tax_repartition_line'].tax_id
             return {'tax_group': source_tax.tax_group_id}
 
         global_tax_details = self._aggregate_taxes(to_process, grouping_key_generator=grouping_key_generator)
@@ -1161,21 +1162,14 @@ class AccountTax(models.Model):
         amount_tax = 0.0
 
         subtotal_order = {}
-        groups_by_subtotal = {}
+        groups_by_subtotal = defaultdict(list)
         for tax_group_vals in tax_group_vals_list:
             tax_group = tax_group_vals['tax_group']
 
-            if tax_group.preceding_subtotal:
-                subtotal_title = tax_group.preceding_subtotal
-                sequence = tax_group.sequence + 1 # Avoid sequence = 0 here.
-            else:
-                subtotal_title = _("Untaxed Amount")
-                sequence = 0
+            subtotal_title = tax_group.preceding_subtotal or _("Untaxed Amount")
+            sequence = tax_group.sequence
 
-            if subtotal_title not in subtotal_order:
-                subtotal_order[subtotal_title] = sequence
-                groups_by_subtotal[subtotal_title] = []
-
+            subtotal_order[subtotal_title] = min(subtotal_order.get(subtotal_title, float('inf')), sequence)
             groups_by_subtotal[subtotal_title].append({
                 'group_key': tax_group.id,
                 'tax_group_id': tax_group.id,
@@ -1200,11 +1194,12 @@ class AccountTax(models.Model):
 
         amount_total = amount_untaxed + amount_tax
 
-        display_tax_base = len(global_tax_details['tax_details']) == 1 and tax_group_vals['base_amount'] != amount_untaxed
+        display_tax_base = (len(global_tax_details['tax_details']) == 1 and currency.compare_amounts(tax_group_vals_list[0]['base_amount'], amount_untaxed) != 0)\
+                           or len(global_tax_details['tax_details']) > 1
 
         return {
-            'amount_untaxed': amount_untaxed,
-            'amount_total': amount_total,
+            'amount_untaxed': currency.round(amount_untaxed) if currency else amount_untaxed,
+            'amount_total': currency.round(amount_total) if currency else amount_total,
             'formatted_amount_total': formatLang(self.env, amount_total, currency_obj=currency),
             'formatted_amount_untaxed': formatLang(self.env, amount_untaxed, currency_obj=currency),
             'groups_by_subtotal': groups_by_subtotal,

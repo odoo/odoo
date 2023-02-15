@@ -291,9 +291,6 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 2.0)
         mo.action_assign()
         res_dict = mo.button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        immediate_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        res_dict = immediate_wizard.process()
         self.assertEqual(res_dict.get('res_model'), 'mrp.production.backorder')
         backorder_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
 
@@ -302,10 +299,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(action.get('res_model'), 'mrp.production')
         backorder_mo_form = Form(self.env[action['res_model']].with_context(action['context']).browse(action['res_id']))
         backorder_mo = backorder_mo_form.save()
-        res_dict = backorder_mo.button_mark_done()
-        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
-        immediate_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        immediate_wizard.process()
+        backorder_mo.button_mark_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 2, "Incorrect number of final product produced.")
         self.assertEqual(len(self.env['stock.lot'].search([('product_id', '=', p_final.id)])), 2, "Serial Numbers were not correctly produced.")

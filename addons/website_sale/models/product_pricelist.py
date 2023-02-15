@@ -39,14 +39,11 @@ class ProductPricelist(models.Model):
 
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
-        if data.keys() & {'code', 'active', 'website_id', 'selectable', 'company_id'}:
-            self._check_website_pricelist()
         self and self.clear_caches()
         return res
 
     def unlink(self):
         res = super(ProductPricelist, self).unlink()
-        self._check_website_pricelist()
         self and self.clear_caches()
         return res
 
@@ -64,12 +61,6 @@ class ProductPricelist(models.Model):
             res = res.filtered(lambda pl: pl._is_available_on_website(website))
         return res
 
-    def _check_website_pricelist(self):
-        for website in self.env['website'].search([]):
-            # sudo() to be able to read pricelists/website from another company
-            if not website.sudo().pricelist_ids:
-                raise UserError(_("With this action, '%s' website would not have any pricelist available.") % (website.name))
-
     def _is_available_on_website(self, website):
         """ To be able to be used on a website, a pricelist should either:
         - Have its `website_id` set to current website (specific pricelist).
@@ -85,7 +76,7 @@ class ProductPricelist(models.Model):
         self.ensure_one()
         if self.company_id and self.company_id != website.company_id:
             return False
-        return self.website_id.id == website.id or (not self.website_id and (self.selectable or self.sudo().code))
+        return self.active and self.website_id.id == website.id or (not self.website_id and (self.selectable or self.sudo().code))
 
     def _is_available_in_country(self, country_code):
         self.ensure_one()

@@ -6,9 +6,9 @@
         <field name="model">stock.route</field>
         <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
         <field name="arch" type="xml">
-            <field name="warehouse_ids" position="after">
-                <br/><field name="sale_selectable" string="Sales Order Lines"/>
-            </field>
+            <xpath expr="//group[@name='route_selector']/group[last()]" position="inside">
+                <field name="sale_selectable" string="Sales Order Lines"/>
+            </xpath>
         </field>
     </record>
 

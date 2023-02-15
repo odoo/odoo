@@ -4,6 +4,7 @@
 from datetime import datetime
 import logging
 
+import json
 import requests
 from werkzeug import urls
 
@@ -104,7 +105,10 @@ class GoogleService(models.AbstractModel):
             headers = {}
 
         # Remove client_secret key from logs
-        _log_params = (params or {}).copy()
+        if isinstance(params, str):
+            _log_params = json.loads(params) or {}
+        else:
+            _log_params = (params or {}).copy()
         if _log_params.get('client_secret'):
             _log_params['client_secret'] = _log_params['client_secret'][0:4] + 'x' * 12
 

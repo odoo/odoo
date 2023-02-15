@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { useEffect } = owl;
+import { useEffect } from "@odoo/owl";
 
 /**
  * @typedef {import("./command_service").CommandOptions} CommandOptions
@@ -13,7 +13,7 @@ const { useEffect } = owl;
  * when the caller component will mount/unmount.
  *
  * @param {string} name
- * @param {()=>(void | CommandPaletteConfig)} action
+ * @param {()=>(void | import("@web/core/commands/command_palette").CommandPaletteConfig)} action
  * @param {CommandOptions} [options]
  */
 export function useCommand(name, action, options = {}) {

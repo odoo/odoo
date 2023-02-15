@@ -202,7 +202,7 @@ return {
                         }
                         return returnedResult;
                     };
-                    Promise.resolve(result).then(always).guardedCatch(always);
+                    Promise.resolve(result).then(always).catch(always);
                 });
             });
             return this.lock.then(function () {

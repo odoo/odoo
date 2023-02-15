@@ -7,19 +7,23 @@
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
             <form string="Survey Question" create="false" class="o_survey_question_view_form">
+                <field name="is_placed_before_trigger" invisible="1"/>
+                <div class="alert alert-warning mb-0 text-center" role="alert" attrs="{'invisible': [('is_placed_before_trigger', '=', False)]}">
+                    ⚠️ This question is positioned before its trigger and will be skipped.
+                </div>
                 <field name="is_page" invisible="1"/>
                 <field name="page_id" invisible="1" required="False"/>
-                <field name="survey_id" invisible="1"/>
                 <field name="sequence" invisible="1"/>
                 <field name="scoring_type" invisible="1"/>
                 <sheet>
+                    <field name="survey_id" invisible="not context.get('show_survey_field')" readonly="1"/>
                     <div class="float-end d-flex flex-column text-center" attrs="{'invisible': [('is_page', '=', False)]}">
                         <label for="background_image"/>
                         <field name="background_image" widget="image" class="oe_avatar"/>
                     </div>
                     <div class="oe_title" style="width: 100%;">
                         <label for="title" string="Section" attrs="{'invisible': [('is_page', '=', False)]}"/>
-                        <label for="title" string="Question" attrs="{'invisible': [('is_page', '=', True)]}"/>
+                        <label for="title" string="Question" attrs="{'invisible': [('is_page', '=', True)]}"/><br/>
                         <field name="title" placeholder="e.g. &quot;What is the...&quot;" colspan="4"/>
                         <field name="questions_selection" invisible="1"/>
                     </div>
@@ -31,7 +35,7 @@
                             <field name="question_type" widget="radio" attrs="{'required': [('is_page', '=', False)]}" />
                         </group>
                         <group>
-                            <div class="col-lg-6 offset-lg-3 d-none d-sm-block o_preview_questions">
+                            <div class="mx-lg-auto w-lg-50 d-none d-sm-block o_preview_questions" colspan="2">
                                 <!-- Multiple choice: only one answer -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer"
                                     title="Multiple choice with one answer">
@@ -81,28 +85,28 @@
                                 <!-- Matrix -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                     <div class="row o_matrix_head">
-                                        <div class="col-lg-3"></div>
-                                        <div class="col-lg-3">ans</div>
-                                        <div class="col-lg-3">ans</div>
-                                        <div class="col-lg-3">ans</div>
+                                        <div class="col-3"></div>
+                                        <div class="col-3">ans</div>
+                                        <div class="col-3">ans</div>
+                                        <div class="col-3">ans</div>
                                     </div>
                                     <div class="row o_matrix_row">
-                                        <div class="col-lg-3">Row1</div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3">Row1</div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                     </div>
                                     <div class="row o_matrix_row">
-                                        <div class="col-lg-3">Row2</div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                        <div class="col-3">Row2</div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
                                     </div>
                                     <div class="row o_matrix_row">
-                                        <div class="col-lg-3">Row3</div>
-                                        <div class="col-lg-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-lg-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3">Row3</div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                     </div>
                                 </div>
                             </div>
@@ -115,12 +119,15 @@
                         ]}">
                             <group>
                                 <group attrs="{'invisible': [('question_type', 'not in', ['char_box', 'numerical_box', 'date', 'datetime'])]}">
-                                    <field name="answer_numerical_box" string="Correct Answer"
-                                        attrs="{'invisible': [('question_type', '!=', 'numerical_box')], 'required': [('is_scored_question', '=', True), ('question_type', '=', 'numerical_box')]}" class="oe_inline"/>
-                                    <field name="answer_date" string="Correct Answer"
-                                        attrs="{'invisible': [('question_type', '!=', 'date')], 'required': [('is_scored_question', '=', True), ('question_type', '=', 'date')]}" class="oe_inline"/>
-                                    <field name="answer_datetime" string="Correct Answer"
-                                        attrs="{'invisible': [('question_type', '!=', 'datetime')], 'required': [('is_scored_question', '=', True), ('question_type', '=', 'datetime')]}" class="oe_inline"/>
+                                    <field name="answer_numerical_box" string="Correct Answer" class="oe_inline"
+                                        attrs="{'invisible': [('question_type', '!=', 'numerical_box')],
+                                                'required': [('is_scored_question', '=', True), ('question_type', '=', 'numerical_box')]}" />
+                                    <field name="answer_date" string="Correct Answer"  class="oe_inline"
+                                        attrs="{'invisible': [('question_type', '!=', 'date')],
+                                                'required': [('is_scored_question', '=', True), ('question_type', '=', 'date')]}"/>
+                                    <field name="answer_datetime" string="Correct Answer" class="oe_inline"
+                                        attrs="{'invisible': [('question_type', '!=', 'datetime')],
+                                                'required': [('is_scored_question', '=', True), ('question_type', '=', 'datetime')]}"/>
 
                                     <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
                                     <field name="save_as_email" attrs="{'invisible': ['|', ('validation_email', '=', False), ('question_type', '!=', 'char_box')]}"/>
@@ -137,7 +144,7 @@
                                 </group>
                             </group>
                             <group attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
-                                <field name="suggested_answer_ids" context="{'default_question_id': active_id}" nolabel="1">
+                                <field name="suggested_answer_ids" context="{'default_question_id': active_id}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Choices"/>
@@ -154,7 +161,7 @@
 
                             <group attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                 <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}"
-                                    attrs="{'invisible': [('question_type', '!=', 'matrix')]}" nolabel="1">
+                                    attrs="{'invisible': [('question_type', '!=', 'matrix')]}" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Rows"/>
@@ -171,42 +178,64 @@
                                 <group string="Answers">
                                     <!-- Global validation setting -->
                                     <field name="validation_required"
-                                        attrs="{'invisible': [('question_type', 'not in', ['char_box', 'numerical_box', 'date', 'datetime'])]}"/>
-                                    <!-- Char -->
-                                    <field name="validation_length_min" attrs="{'invisible': ['|', ('question_type', '!=', 'char_box'), ('validation_required', '=', False)]}"/>
-                                    <field name="validation_length_max" attrs="{'invisible': ['|', ('question_type', '!=', 'char_box'), ('validation_required', '=', False)]}"/>
-                                    <!-- Numerical -->
-                                    <field name="validation_min_float_value"
-                                        attrs="{'invisible': ['|', ('question_type', '!=', 'numerical_box'), ('validation_required', '=', False)]}"/>
-                                    <field name="validation_max_float_value"
-                                        attrs="{'invisible': ['|', ('question_type', '!=', 'numerical_box'), ('validation_required', '=', False)]}"/>
-                                    <!-- Date and datetime -->
-                                    <field name="validation_min_date" attrs="{'invisible': ['|', ('question_type', '!=', 'date'), ('validation_required', '=', False)]}"/>
-                                    <field name="validation_max_date" attrs="{'invisible': ['|', ('question_type', '!=', 'date'), ('validation_required', '=', False)]}"/>
-                                    <field name="validation_min_datetime" widget="datetime"
-                                        attrs="{'invisible': ['|', ('question_type', '!=', 'datetime'), ('validation_required', '=', False)]}"/>
-                                    <field name="validation_max_datetime" widget="datetime"
-                                        attrs="{'invisible': ['|', ('question_type', '!=', 'datetime'), ('validation_required', '=', False)]}"/>
+                                           attrs="{'invisible': [('question_type', 'not in', ['char_box', 'numerical_box', 'date', 'datetime'])]}"/>
+                                    <div class="o_wrap_label o_form_label" attrs="{'invisible': [('validation_required', '=', False)]}">Min/Max Limits</div>
+                                    <div class="o_survey_question_validation_parameters" attrs="{'invisible': [('validation_required', '=', False)]}">
+                                        <!-- Minima -->
+                                        <field name="validation_length_min" class="o_survey_question_validation_inline" nolabel="1" placeholder="Minimum"
+                                               attrs="{'invisible': [('question_type', '!=', 'char_box')],
+                                                       'required': [('validation_required', '=', True), ('question_type', '=', 'char_box')]}"/>
+                                        <field name="validation_min_float_value" class="o_survey_question_validation_inline" nolabel="1" placeholder="Minimum"
+                                               attrs="{'invisible': [('question_type', '!=', 'numerical_box')],
+                                                       'required': [('validation_required', '=', True), ('question_type', '=', 'numerical_box')]}"/>
+                                        <field name="validation_min_date" nolabel="1" placeholder="Minimum"
+                                               attrs="{'invisible': [('question_type', '!=', 'date')],
+                                                       'required': [('validation_required', '=', True), ('question_type', '=', 'date'), ('validation_max_date', '=', False)]}"/>
+                                        <field name="validation_min_datetime" nolabel="1" placeholder="Minimum"
+                                               attrs="{'invisible': [('question_type', '!=', 'datetime')],
+                                                       'required': [('validation_required', '=', True), ('question_type', '=', 'datetime'), ('validation_max_datetime', '=', False)]}"/>
 
+                                        <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                        <!-- Maxima -->
+                                        <field name="validation_length_max" class="o_survey_question_validation_inline" nolabel="1" placeholder="Maximum"
+                                               attrs="{'invisible': [('question_type', '!=', 'char_box')],
+                                                       'required': [('validation_required', '=', True), ('question_type', '=', 'char_box')]}"/>
+                                        <field name="validation_max_float_value" class="o_survey_question_validation_inline" nolabel="1" placeholder="Maximum"
+                                               attrs="{'invisible': [('question_type', '!=', 'numerical_box')],
+                                                       'required': [('validation_required', '=', True), ('question_type', '=', 'numerical_box')]}"/>
+                                        <field name="validation_max_date" nolabel="1" placeholder="Maximum"
+                                               attrs="{'invisible': [('question_type', '!=', 'date')],
+                                                       'required': [('validation_required', '=', True), ('question_type', '=', 'date'), ('validation_min_date', '=', False)]}"/>
+                                        <field name="validation_max_datetime" nolabel="1" placeholder="Maximum"
+                                               attrs="{'invisible': [('question_type', '!=', 'datetime')],
+                                                      'required': [('validation_required', '=', True), ('question_type', '=', 'datetime'), ('validation_min_datetime', '=', False)]}"/>
+                                    </div>
                                     <field name="validation_error_msg" attrs="{
                                         'invisible': [('validation_required', '=', False)]}"
-                                        placeholder="The answer you entered is not valid."/>
+                                        placeholder="Displayed when the answer entered is not valid."/>
 
                                     <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
                                     <field name="question_placeholder"
-                                        attrs="{'invisible': [('question_type', 'not in', ['text_box', 'char_box', 'date', 'datetime', 'numerical_box'])]}"
-                                        placeholder="Help Participants know what to write"/>
-                                    <field name='comments_allowed' attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}"/>
-                                    <field name='comments_message'
-                                        attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"
-                                        placeholder="If other, please specify:"/>
+                                           attrs="{'invisible': [('question_type', 'not in', ['text_box', 'char_box', 'date', 'datetime', 'numerical_box'])]}"
+                                           placeholder="Help Participants know what to write"/>
+                                    <field name="comments_allowed" attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}"/>
+                                    <field name="comments_message"
+                                           attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"
+                                           placeholder="If other, please specify:"/>
+                                    <field name='comment_count_as_answer'
+                                        attrs="{'invisible': ['|', ('question_type', 'not in', ['simple_choice','multiple_choice', 'matrix']), ('comments_allowed', '=', False)]}"/>
                                 </group>
                                 <group string="Layout">
+                                    <p class="text-muted" colspan="2" attrs="{'invisible': [('questions_selection', '=', 'all')]}">
+                                        Conditional display is not available when questions are randomly picked.
+                                    </p>
                                     <field name="is_conditional" attrs="{'invisible': [('questions_selection', '=', 'random')]}"/>
-                                    <field name="triggering_question_id" options="{'no_open': True, 'no_create': True}"
-                                        attrs="{'invisible': [('is_conditional','=', False)], 'required': [('is_conditional','=', True)]}"/>
+                                    <field name="allowed_triggering_question_ids" invisible="1"/>
+                                    <field name="triggering_question_id"  options="{'no_create_edit': True, 'no_open': True, 'no_create': True}"
+                                           domain="[('id', 'in', allowed_triggering_question_ids)]" placeholder="Pick a previous multiple-choice question"
+                                           attrs="{'invisible': ['|', ('questions_selection', '=', 'random'), ('is_conditional','=', False)], 'required': [('is_conditional','=', True)]}"/>
                                     <field name="triggering_answer_id" options="{'no_open': True, 'no_create': True}"
-                                        attrs="{'invisible': ['|', ('is_conditional','=', False), ('triggering_question_id','=', False)],
+                                        attrs="{'invisible': ['|', ('questions_selection', '=', 'random'), ('triggering_question_id','=', False)],
                                                 'required': [('is_conditional','=', True)]}"/>
                                 </group>
                             </group>
@@ -238,13 +267,10 @@
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
             <tree string="Survey Question" create="false">
-                <field name="sequence" widget="handle"/>
                 <field name="title"/>
                 <field name="survey_id"/>
                 <field name="question_type"/>
-                <field name="triggering_question_id" invisible="1"/>
-                <button disabled="disabled" icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
-                    title="This question depends on another question's answer." class="icon_rotates"/>
+                <field name="constr_mandatory" optional="1"/>
             </tree>
         </field>
     </record>
@@ -269,7 +295,7 @@
         <field name="res_model">survey.question</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="survey_question_search"/>
-        <field name="context">{'search_default_group_by_page': True}</field>
+        <field name="context">{'search_default_group_by_page': True, 'show_survey_field': True}</field>
         <field name="domain">[('is_page', '=', False)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">

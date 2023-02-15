@@ -15,12 +15,6 @@ export class FormLabelHighlightText extends FormLabel {
             this.upgradeEnterprise = true;
         }
     }
-    get className() {
-        if (this.props.className) {
-            return this.props.className;
-        }
-        return super.className;
-    }
 }
 
 FormLabelHighlightText.template = "web.FormLabelHighlightText";

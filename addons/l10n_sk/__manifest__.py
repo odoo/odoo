@@ -22,7 +22,7 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
     
     """,
     'depends': [
-        'account',
+        'l10n_multilang',
         'base_iban',
         'base_vat',
     ],
@@ -36,6 +36,6 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
           'data/account_fiscal_position_data.xml',
           'data/account_chart_template_data.xml'
     ],
-    'demo': ['data/demo_company.xml'],
+    'demo': ['demo/demo_company.xml'],
     'license': 'LGPL-3',
 }

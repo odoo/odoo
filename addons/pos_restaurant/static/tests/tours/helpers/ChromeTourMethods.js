@@ -1,33 +1,33 @@
-odoo.define('pos_restaurant.tour.ChromeTourMethods', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const { createTourMethods } = require('point_of_sale.tour.utils');
-    const { Do } = require('point_of_sale.tour.ChromeTourMethods');
+import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
+import { Do } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 
-    class DoExt extends Do {
-        backToFloor() {
-            return [
-                {
-                    content: 'back to floor',
-                    trigger: '.floor-button',
-                },
-            ];
-        }
+class DoExt extends Do {
+    backToFloor() {
+        return [
+            {
+                content: "back to floor",
+                trigger: ".floor-button",
+            },
+        ];
     }
+}
 
-    class Check {
-        backToFloorTextIs(floor, table) {
-            return [
-                {
-                    content: `back to floor text is '${floor} ( ${table} )'`,
-                    trigger: `.floor-button span:contains("${floor}") ~ .table-name:contains("(${table})")`,
-                    run: () => {},
-                },
-            ];
-        }
+class Check {
+    backToFloorTextIs(floor, table) {
+        return [
+            {
+                content: `back to floor text is '${floor} ( ${table} )'`,
+                trigger: `.floor-button span:contains("${floor}") ~ .table-name:contains("(${table})")`,
+                run: () => {},
+            },
+        ];
     }
+}
 
-    class Execute {}
+class Execute {}
 
-    return createTourMethods('Chrome', DoExt, Check, Execute);
-});
+// FIXME: this is a horrible hack to export an object as named exports.
+// eslint-disable-next-line no-undef
+Object.assign(__exports, createTourMethods("Chrome", DoExt, Check, Execute));

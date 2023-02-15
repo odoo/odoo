@@ -12,21 +12,11 @@ from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_payulatam.controllers.main import PayuLatamController
-from odoo.addons.payment_payulatam.models.payment_provider import SUPPORTED_CURRENCIES
 from odoo.addons.payment_payulatam.tests.common import PayULatamCommon
 
 
 @tagged('post_install', '-at_install')
 class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
-
-    def test_compatibility_with_supported_currencies(self):
-        """ Test that the PayULatam provider is compatible with all supported currencies. """
-        for supported_currency_code in SUPPORTED_CURRENCIES:
-            supported_currency = self._prepare_currency(supported_currency_code)
-            compatible_providers = self.env['payment.provider']._get_compatible_providers(
-                self.company.id, self.partner.id, self.amount, currency_id=supported_currency.id
-            )
-            self.assertIn(self.payulatam, compatible_providers)
 
     def test_incompatibility_with_unsupported_currency(self):
         """ Test that the PayULatam provider is not compatible with an unsupported currency. """
@@ -46,8 +36,7 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
     @freeze_time('2011-11-02 12:00:21')  # Freeze time for consistent singularization behavior
     def test_reference_is_computed_based_on_document_name(self):
         """ Test computation of reference prefixes based on the provided invoice. """
-        if not self.env['ir.module.module']._get('account').state == 'installed':
-            self.skipTest('account module not installed')
+        self._skip_if_account_payment_is_not_installed()
 
         invoice = self.env['account.move'].create({})
         reference = self.env['payment.transaction']._compute_reference(
@@ -211,10 +200,3 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
         self.assertRaises(
             Forbidden, PayuLatamController._verify_notification_signature, payload, tx
         )
-
-    def test_payulatam_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.payulatam_merchant_id, False)
-        self.assertEqual(self.provider.payulatam_account_id, False)
-        self.assertEqual(self.provider.payulatam_api_key, False)

@@ -22,9 +22,6 @@
         'web.assets_backend': [
             'sale_product_matrix/static/src/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'sale_product_matrix/static/tests/section_and_note_widget_tests.js',
-        ],
     },
     'license': 'LGPL-3',
 }

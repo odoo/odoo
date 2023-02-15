@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.BurgerUserMenu" owl="1">
+    <div class="o_user_menu_mobile mt-2">
+      <t t-foreach="getElements()" t-as="element" t-key="element_index">
+          <t t-if="!element.hide">
+              <a t-if="element.type == 'item'" class="dropdown-item py-3 fs-4" t-att-href="element.href or ''" t-esc="element.description" t-on-click.stop.prevent="() => this._onItemClicked(element.callback)"/>
+              <CheckBox
+                  t-if="element.type == 'switch'"
+                  value="element.isChecked"
+                  className="'dropdown-item form-switch d-flex flex-row-reverse justify-content-between py-3 fs-4'"
+                  onChange="element.callback"
+              >
+                  <t t-out="element.description"/>
+              </CheckBox>
+              <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
+          </t>
+      </t>
+    </div>
+  </t>
+
+</templates>

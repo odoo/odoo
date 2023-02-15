@@ -46,8 +46,8 @@
                         </span>
                     </t>
                 </div>
-                <a href="#" t-attf-class="btn btn-light align-self-baseline {{profiling.state.isEnabled ? 'py-2' : ''}}">
-                    <i class="o_open_profiling oi oi-launch" t-on-click="openProfiles"/>
+                <a href="#" t-on-click.prevent="openProfiles" t-attf-class="btn btn-light align-self-baseline {{profiling.state.isEnabled ? 'py-2' : ''}}">
+                    <i class="o_open_profiling oi oi-launch" />
                 </a>
             </div>
         </DropdownItem>

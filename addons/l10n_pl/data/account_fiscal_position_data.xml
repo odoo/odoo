@@ -6,7 +6,7 @@
         
         <record id="fiscal_position_template_1" model="account.fiscal.position.template">
             <field name="sequence">1</field>
-            <field name="name">Kraj</field>
+            <field name="name">Domestic</field>
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="True"/>
@@ -15,7 +15,7 @@
 
         <record id="fiscal_position_template_4" model="account.fiscal.position.template">
             <field name="sequence">2</field>
-            <field name="name">Wspólnota Prywatny</field>
+            <field name="name">Community Private</field>
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="auto_apply" eval="True"/>
             <field name="country_group_id" ref="base.europe"/>
@@ -23,7 +23,7 @@
 
         <record id="fiscal_position_template_2" model="account.fiscal.position.template">
             <field name="sequence">3</field>
-            <field name="name">Wspólnota</field>
+            <field name="name">Community</field>
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="True"/>
@@ -32,7 +32,7 @@
 
         <record id="fiscal_position_template_3" model="account.fiscal.position.template">
             <field name="sequence">4</field>
-            <field name="name">Import/Eksport</field>
+            <field name="name">Import/Export</field>
             <field name="chart_template_id" ref="pl_chart_template"/>
             <field name="auto_apply" eval="True"/>
         </record>

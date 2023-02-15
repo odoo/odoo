@@ -29,7 +29,6 @@
         'data/website_blog_demo.xml'
     ],
     'installable': True,
-    'application': True,
     'assets': {
         'website.assets_wysiwyg': [
             'website_blog/static/src/js/options.js',
@@ -39,6 +38,9 @@
         'website.assets_editor': [
             'website_blog/static/src/js/tours/website_blog.js',
             'website_blog/static/src/js/systray_items/*.js',
+        ],
+        'web.assets_tests': [
+            'website_blog/static/tests/**/*',
         ],
         'web.assets_frontend': [
             'website_blog/static/src/scss/website_blog.scss',

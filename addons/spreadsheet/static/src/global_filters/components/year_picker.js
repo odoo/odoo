@@ -3,18 +3,6 @@
 import { DatePicker } from "@web/core/datepicker/datepicker";
 const { DateTime } = luxon;
 
-/**
- * @param {string} format
- * @returns {boolean}
- */
-const isValidStaticFormat = (format) => {
-    try {
-        return /^[\d\s/:-]+$/.test(DateTime.local().toFormat(format));
-    } catch (_err) {
-        return false;
-    }
-};
-
 const DEFAULT_DATE = DateTime.local();
 export class YearPicker extends DatePicker {
     /**
@@ -33,7 +21,7 @@ export class YearPicker extends DatePicker {
     getOptions(useStatic = false) {
         return {
             format:
-                !useStatic || isValidStaticFormat(this.format) ? this.format : this.staticFormat,
+                !useStatic || this.isValidStaticFormat(this.format) ? this.format : this.staticFormat,
             locale: DEFAULT_DATE.locale,
         };
     }
@@ -79,7 +67,7 @@ export class YearPicker extends DatePicker {
      */
     updateInput({ useStatic } = {}) {
         const [formattedValue] = this.formatValue(this.date, this.getOptions(useStatic));
-        this.inputRef.el.value = formattedValue || "";
+        this.inputRef.el.value = formattedValue || this.props.placeholder;
     }
 
     /**

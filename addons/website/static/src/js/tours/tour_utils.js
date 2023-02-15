@@ -3,7 +3,7 @@ odoo.define("website.tour_utils", function (require) {
 
 const {_t} = require("web.core");
 const {Markup} = require('web.utils');
-var tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 
 function addMedia(position = "right") {
     return {
@@ -11,6 +11,19 @@ function addMedia(position = "right") {
         content: Markup(_t("<b>Add</b> the selected image.")),
         position: position,
         run: "click",
+    };
+}
+function assertCssVariable(variableName, variableValue, trigger = 'iframe body') {
+    return {
+        content: `Check CSS variable ${variableName}=${variableValue}`,
+        trigger: trigger,
+        auto: true,
+        run: function () {
+            const styleValue = getComputedStyle(this.$anchor[0]).getPropertyValue(variableName);
+            if ((styleValue && styleValue.trim()) !== variableValue.trim()) {
+                throw new Error(`Failed precondition: ${variableName}=${styleValue} (should be ${variableValue})`);
+            }
+        },
     };
 }
 function assertPathName(pathName, trigger) {
@@ -56,7 +69,7 @@ function selectColorPalette(position = "left") {
 
 function changeColumnSize(position = "right") {
     return {
-        trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
+        trigger: `iframe .oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
         content: Markup(_t("<b>Slide</b> this button to change the column size.")),
         position: position,
     };
@@ -119,7 +132,7 @@ function changePaddingSize(direction) {
         position = "bottom";
     }
     return {
-        trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
+        trigger: `iframe .oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
         content: Markup(_.str.sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction)),
         consumeEvent: 'mousedown',
         position: position,
@@ -159,9 +172,9 @@ function clickOnElement(elementName, selector) {
  * @param {*} position
  */
 function clickOnSnippet(snippet, position = "bottom") {
-    const snippetClass = snippet.id || snippet;
+    const trigger = snippet.id ? `#wrapwrap .${snippet.id}` : snippet;
     return {
-        trigger: `iframe #wrapwrap .${snippetClass}`,
+        trigger: `iframe ${trigger}`,
         extra_trigger: "body.editor_has_snippets",
         content: Markup(_t("<b>Click on a snippet</b> to access its options menu.")),
         position: position,
@@ -172,7 +185,14 @@ function clickOnSnippet(snippet, position = "bottom") {
 function clickOnSave(position = "bottom") {
     return [{
         trigger: "div:not(.o_loading_dummy) > #oe_snippets button[data-action=\"save\"]:not([disabled])",
-        extra_trigger: "body:not(:has(.o_dialog))",
+        // TODO this should not be needed but for now it better simulates what
+        // an human does. By the time this was added, it's technically possible
+        // to drag and drop a snippet then immediately click on save and have
+        // some problem. Worst case probably is a traceback during the redirect
+        // after save though so it's not that big of an issue. The problem will
+        // of course be solved (or at least prevented in stable). More details
+        // in related commit message.
+        extra_trigger: "body:not(:has(.o_dialog)) #oe_snippets:not(:has(.o_we_already_dragging))",
         in_modal: false,
         content: Markup(_t("Good job! It's time to <b>Save</b> your work.")),
         position: position,
@@ -308,13 +328,14 @@ function registerWebsitePreviewTour(name, options, steps) {
             content: "Wait for the edit mode to be started",
             trigger: '.o_website_preview.editor_enable.editor_has_snippets',
             timeout: 30000,
+            auto: true,
             run: () => {}, // It's a check
         });
     } else {
         tourSteps[0].timeout = 20000;
     }
 
-    return tour.register(name, Object.assign({}, options, { url }), tourSteps);
+    return registry.category("web_tour.tours").add(name, Object.assign({}, options, { url, steps: tourSteps}));
 }
 
 function registerThemeHomepageTour(name, steps) {
@@ -343,9 +364,10 @@ function registerBackendAndFrontendTour(name, options, steps) {
         return registerWebsitePreviewTour(name, options, newSteps);
     }
 
-    return tour.register(name, {
+    return registry.category("web_tour.tours").add(name, {
         url: options.url,
-    }, steps);
+        steps,
+    });
 }
 
 /**
@@ -372,6 +394,7 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
 
 return {
     addMedia,
+    assertCssVariable,
     assertPathName,
     changeBackground,
     changeBackgroundColor,

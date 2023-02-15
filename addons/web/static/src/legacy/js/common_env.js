@@ -23,7 +23,7 @@ odoo.define("web.commonEnv", function (require) {
     const rpc = require("web.rpc");
     const session = require("web.session");
     const { _t } = require("web.translation");
-    const utils = require("web.utils");
+    const {getCookie, setCookie} = require('web.utils.cookies');
 
     const browser = {
         clearInterval: window.clearInterval.bind(window),
@@ -54,7 +54,7 @@ odoo.define("web.commonEnv", function (require) {
                 return jsonRpc(...arguments);
             },
             getCookie() {
-                return utils.get_cookie(...arguments);
+                return getCookie(...arguments);
             },
             httpRequest(route, params = {}, readMethod = 'json') {
                 const info = {
@@ -90,7 +90,7 @@ odoo.define("web.commonEnv", function (require) {
                 return session.rpc(query.route, query.params, options);
             },
             setCookie() {
-                utils.set_cookie(...arguments);
+                setCookie(...arguments);
             },
         },
         session,

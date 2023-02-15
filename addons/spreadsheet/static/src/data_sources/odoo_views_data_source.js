@@ -3,29 +3,16 @@
 import { LoadableDataSource } from "./data_source";
 import { Domain } from "@web/core/domain";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
+import { omit } from "@web/core/utils/objects";
 
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
  */
 
 /**
- * Remove user specific info from the context
- * @param {Object} context
- * @returns {Object}
- */
-function removeContextUserInfo(context) {
-    context = { ...context };
-    delete context.allowed_company_ids;
-    delete context.tz;
-    delete context.lang;
-    delete context.uid;
-    return context;
-}
-
-/**
  * @typedef {Object} OdooModelMetaData
  * @property {string} resModel
- * @property {Array<Object>|undefined} fields
+ * @property {Array<Field>|undefined} fields
  */
 
 export class OdooViewsDataSource extends LoadableDataSource {
@@ -41,8 +28,9 @@ export class OdooViewsDataSource extends LoadableDataSource {
         this._metaData = JSON.parse(JSON.stringify(params.metaData));
         /** @protected */
         this._initialSearchParams = JSON.parse(JSON.stringify(params.searchParams));
-        this._initialSearchParams.context = removeContextUserInfo(
-            this._initialSearchParams.context
+        this._initialSearchParams.context = omit(
+            this._initialSearchParams.context || {},
+            ...Object.keys(this._orm.user.context)
         );
         /** @private */
         this._customDomain = this._initialSearchParams.domain;
@@ -90,13 +78,6 @@ export class OdooViewsDataSource extends LoadableDataSource {
      */
     async _load() {
         await this.loadMetadata();
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    isReady() {
-        return this._isFullyLoaded;
     }
 
     isMetaDataLoaded() {

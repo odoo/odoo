@@ -9,5 +9,5 @@ class SriPayment(models.Model):
     _name = "l10n_ec.sri.payment"
     _description = "SRI Payment Method"
 
-    name = fields.Char("Name")
+    name = fields.Char("Name", translate=True)
     code = fields.Char("Code")

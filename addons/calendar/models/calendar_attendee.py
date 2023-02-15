@@ -113,18 +113,19 @@ class Attendee(models.Model):
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
-                attachment_values = []
+                attachment_ids = None
                 if ics_file:
-                    attachment_values = [
-                        (0, 0, {'name': 'invitation.ics',
-                                'mimetype': 'text/calendar',
-                                'datas': base64.b64encode(ics_file)})
-                    ]
+                    attachment_ids = self.env['ir.attachment'].create({
+                        'datas': base64.b64encode(ics_file),
+                        'description': 'invitation.ics',
+                        'mimetype': 'text/calendar',
+                        'name': 'invitation.ics',
+                    }).ids
+
                 body = mail_template._render_field(
                     'body_html',
                     attendee.ids,
-                    compute_lang=True,
-                    post_process=True)[attendee.id]
+                    compute_lang=True)[attendee.id]
                 subject = mail_template._render_field(
                     'subject',
                     attendee.ids,
@@ -136,8 +137,9 @@ class Attendee(models.Model):
                     subject=subject,
                     partner_ids=attendee.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_light',
-                    attachment_ids=attachment_values,
-                    force_send=force_send)
+                    attachment_ids=attachment_ids,
+                    force_send=force_send,
+                )
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """

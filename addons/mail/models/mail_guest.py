@@ -85,8 +85,8 @@ class MailGuest(models.Model):
             'id': self.id,
             'name': self.name
         }
-        bus_notifs = [(channel, 'mail.guest/insert', guest_data) for channel in self.channel_ids]
-        bus_notifs.append((self, 'mail.guest/insert', guest_data))
+        bus_notifs = [(channel, 'mail.record/insert', {'Guest': guest_data}) for channel in self.channel_ids]
+        bus_notifs.append((self, 'mail.record/insert', {'Guest': guest_data}))
         self.env['bus.bus']._sendmany(bus_notifs)
 
     def _update_timezone(self, timezone):

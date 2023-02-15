@@ -3,7 +3,7 @@
 import json
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_round, format_date
+from odoo.tools import float_compare, float_round, format_date, float_is_zero
 from datetime import timedelta
 
 class ReportBomStructure(models.AbstractModel):
@@ -23,7 +23,10 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _compute_current_production_capacity(self, bom_data):
         # Get the maximum amount producible product of the selected bom given each component's stock levels.
-        stockable_components = filter(lambda c: c['product'].detailed_type == 'product', bom_data.get('components', []))
+        stockable_components = filter(
+            lambda c: c['product'].detailed_type == 'product'
+            and not float_is_zero(c['base_bom_line_qty'], precision_digits=c['uom'].rounding),
+            bom_data.get('components', []))
         producibles = [float_round(comp['quantity_available'] / comp['base_bom_line_qty'], precision_digits=0, rounding_method='DOWN') for comp in stockable_components]
         return min(producibles) * bom_data['bom']['product_qty'] if producibles else 0
 
@@ -119,7 +122,7 @@ class ReportBomStructure(models.AbstractModel):
         }
 
     @api.model
-    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, index=0, product_info=False, ignore_stock=False):
+    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False):
         """ Gets recursively the BoM and all its subassemblies and computes availibility estimations for each component and their disponibility in stock.
             Accepts specific keys in context that will affect the data computed :
             - 'minimized': Will cut all data not required to compute availability estimations.
@@ -157,12 +160,12 @@ class ReportBomStructure(models.AbstractModel):
 
         bom_key = bom.id
         if not product_info[key].get(bom_key):
-            product_info[key][bom_key] = self._get_resupply_route_info(warehouse, product, current_quantity, bom)
+            product_info[key][bom_key] = self._get_resupply_route_info(warehouse, product, current_quantity, product_info, bom, parent_bom, parent_product)
         route_info = product_info[key].get(bom_key, {})
         quantities_info = {}
         if not ignore_stock:
             # Useless to compute quantities_info if it's not going to be used later on
-            quantities_info = self._get_quantities_info(product, bom.product_uom_id, parent_bom, product_info)
+            quantities_info = self._get_quantities_info(product, bom.product_uom_id, product_info, parent_bom, parent_product)
 
         bom_report_line = {
             'index': index,
@@ -174,7 +177,7 @@ class ReportBomStructure(models.AbstractModel):
             'quantity_available': quantities_info.get('free_qty', 0),
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
             'base_bom_line_qty': bom_line.product_qty if bom_line else False,  # bom_line isn't defined only for the top-level product
-            'name': product.display_name,
+            'name': product.display_name or bom.product_tmpl_id.display_name,
             'uom': bom.product_uom_id if bom else product.uom_id,
             'uom_name': bom.product_uom_id.name if bom else product.uom_id.name,
             'route_type': route_info.get('route_type', ''),
@@ -185,7 +188,7 @@ class ReportBomStructure(models.AbstractModel):
             'currency_id': company.currency_id.id,
             'product': product,
             'product_id': product.id,
-            'link_id': product.id if product.product_variant_count > 1 else product.product_tmpl_id.id,
+            'link_id': (product.id if product.product_variant_count > 1 else product.product_tmpl_id.id) or bom.product_tmpl_id.id,
             'link_model': 'product.product' if product.product_variant_count > 1 else 'product.template',
             'code': bom and bom.display_name or '',
             'prod_cost': prod_cost,
@@ -206,14 +209,14 @@ class ReportBomStructure(models.AbstractModel):
         components = []
         for component_index, line in enumerate(bom.bom_line_ids):
             new_index = f"{index}{component_index}"
-            if line._skip_bom_line(product):
+            if product and line._skip_bom_line(product):
                 continue
             line_quantity = (current_quantity / (bom.product_qty or 1.0)) * line.product_qty
             if line.child_bom_id:
                 component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
-                                               index=new_index, product_info=product_info, ignore_stock=ignore_stock)
+                                               parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock)
             else:
-                component = self._get_component_data(bom, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
+                component = self._get_component_data(bom, product, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
             components.append(component)
             bom_report_line['bom_cost'] += component['bom_cost']
         bom_report_line['components'] = components
@@ -236,7 +239,7 @@ class ReportBomStructure(models.AbstractModel):
         return bom_report_line
 
     @api.model
-    def _get_component_data(self, parent_bom, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock=False):
+    def _get_component_data(self, parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock=False):
         company = parent_bom.company_id or self.env.company
         key = bom_line.product_id.id
         if key not in product_info:
@@ -245,15 +248,15 @@ class ReportBomStructure(models.AbstractModel):
         price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity
         rounded_price = company.currency_id.round(price)
 
-        bom_key = 'no_bom'
+        bom_key = parent_bom.id
         if not product_info[key].get(bom_key):
-            product_info[key][bom_key] = self._get_resupply_route_info(warehouse, bom_line.product_id, line_quantity)
+            product_info[key][bom_key] = self._get_resupply_route_info(warehouse, bom_line.product_id, line_quantity, product_info, parent_bom=parent_bom, parent_product=parent_product)
         route_info = product_info[key].get(bom_key, {})
 
         quantities_info = {}
         if not ignore_stock:
             # Useless to compute quantities_info if it's not going to be used later on
-            quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.product_uom_id, parent_bom, product_info)
+            quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.product_uom_id, product_info, parent_bom, parent_product)
         availabilities = self._get_availabilities(bom_line.product_id, line_quantity, product_info, bom_key, quantities_info, level, ignore_stock)
 
         attachment_ids = []
@@ -296,7 +299,7 @@ class ReportBomStructure(models.AbstractModel):
         }
 
     @api.model
-    def _get_quantities_info(self, product, bom_uom, parent_bom, product_info):
+    def _get_quantities_info(self, product, bom_uom, product_info, parent_bom=False, parent_product=False):
         return {
             'free_qty': product.uom_id._compute_quantity(product.free_qty, bom_uom) if product.detailed_type == 'product' else False,
             'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if product.detailed_type == 'product' else False,
@@ -465,12 +468,24 @@ class ReportBomStructure(models.AbstractModel):
         return lines
 
     @api.model
-    def _get_resupply_route_info(self, warehouse, product, quantity, bom=False):
-        found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
+    def _get_resupply_route_info(self, warehouse, product, quantity, product_info, bom=False, parent_bom=False, parent_product=False):
+        found_rules = []
+        if self._need_special_rules(product_info, parent_bom, parent_product):
+            found_rules = self._find_special_rules(product, product_info, parent_bom, parent_product)
+        if not found_rules:
+            found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
         if not found_rules:
             return {}
         rules_delay = sum(rule.delay for rule in found_rules)
         return self._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
+
+    @api.model
+    def _need_special_rules(self, product_info, parent_bom=False, parent_product=False):
+        return False
+
+    @api.model
+    def _find_special_rules(self, product, product_info, parent_bom=False, parent_product=False):
+        return False
 
     @api.model
     def _format_route_info(self, rules, rules_delay, warehouse, product, bom, quantity):

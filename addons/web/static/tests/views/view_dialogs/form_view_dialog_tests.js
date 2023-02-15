@@ -1,6 +1,12 @@
 /** @odoo-module */
 
-import { click, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "@web/../tests/helpers/utils";
 import { makeView } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -209,7 +215,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             serverData,
             arch: `<form>
                     <field name="name"/>
-                    <field name="instrument" context="{'tree_view_ref': 'some_tree_view'}"/>
+                    <field name="instrument" context="{'tree_view_ref': 'some_tree_view'}" open_target="new"/>
                    </form>`,
             mockRPC: function (route, args) {
                 if (args.method === "get_formview_id") {
@@ -242,8 +248,44 @@ QUnit.module("ViewDialogs", (hooks) => {
                 }
             },
         });
-        await click(target, ".o_form_button_edit");
         await click(target, '.o_field_widget[name="instrument"] button.o_external_button');
+    });
+
+    QUnit.test("click on view buttons in a FormViewDialog", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="foo"/>
+                    <button name="method1" type="object" string="Button 1" class="btn1"/>
+                    <button name="method2" type="object" string="Button 2" class="btn2" close="1"/>
+                </form>`,
+        };
+
+        function mockRPC(route, args) {
+            assert.step(args.method || route);
+        }
+        const webClient = await createWebClient({ serverData, mockRPC });
+        patchWithCleanup(webClient.env.services.action, {
+            doActionButton: (params) => {
+                assert.step(params.name);
+                params.onClose();
+            },
+        });
+        webClient.env.services.dialog.add(FormViewDialog, {
+            resModel: "partner",
+            resId: 1,
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.containsN(target, ".o_dialog .o_form_view button", 2);
+        assert.verifySteps(["/web/webclient/load_menus", "get_views", "read"]);
+        await click(target.querySelector(".o_dialog .o_form_view .btn1"));
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.verifySteps(["method1", "read"]); // should re-read the record
+        await click(target.querySelector(".o_dialog .o_form_view .btn2"));
+        assert.containsNone(target, ".o_dialog .o_form_view");
+        assert.verifySteps(["method2"]); // should not read as we closed
     });
 
     QUnit.test(
@@ -283,4 +325,24 @@ QUnit.module("ViewDialogs", (hooks) => {
             assert.containsNone(target, ".modal", "modal should be closed");
         }
     );
+
+    QUnit.test("FormViewDialog with remove button", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo"/></form>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+        webClient.env.services.dialog.add(FormViewDialog, {
+            resModel: "partner",
+            resId: 1,
+            removeRecord: () => assert.step("remove"),
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.containsOnce(target, ".o_dialog .modal-footer .o_form_button_remove");
+        await click(target.querySelector(".o_dialog .modal-footer .o_form_button_remove"));
+        assert.verifySteps(["remove"]);
+        assert.containsNone(target, ".o_dialog .o_form_view");
+    });
 });

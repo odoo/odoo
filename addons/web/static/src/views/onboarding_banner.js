@@ -4,7 +4,7 @@ import { loadCSS, loadJS } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/view_hook";
 
-const { Component, markup, onWillStart, useRef, xml } = owl;
+import { Component, markup, onWillStart, useRef, xml } from "@odoo/owl";
 
 export class OnboardingBanner extends Component {
     setup() {
@@ -39,7 +39,11 @@ export class OnboardingBanner extends Component {
     }
 
     async loadBanner(bannerRoute) {
-        const response = await this.rpc(bannerRoute, { context: this.user.context });
+        let response = await this.rpc(bannerRoute, { context: this.user.context });
+        if (response.code === 503) {
+            // Sent by Onboarding Controller when rare concurrent `create` transactions occur
+            response = await this.rpc(bannerRoute, { context: this.user.context });
+        }
         if (!response.html) {
             return;
         }

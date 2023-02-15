@@ -1,29 +1,26 @@
-odoo.define('l10n_fr_pos_cert.PaymentScreen', function(require) {
+/** @odoo-module */
 
-    const PaymentScreen = require('point_of_sale.PaymentScreen');
-    const Registries = require('point_of_sale.Registries');
-    const session = require('web.session');
+import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
+import { patch } from "@web/core/utils/patch";
+import session from "web.session";
 
-    const PosFrPaymentScreen = PaymentScreen => class extends PaymentScreen {
-        async _postPushOrderResolve(order, order_server_ids) {
-            try {
-                if(this.env.pos.is_french_country()) {
-                    let result = await this.rpc({
-                        model: 'pos.order',
-                        method: 'search_read',
-                        domain: [['id', 'in', order_server_ids]],
-                        fields: ['l10n_fr_hash'],
-                        context: session.user_context,
-                    });
-                    order.set_l10n_fr_hash(result[0].l10n_fr_hash || false);
-                }
-            } finally {
-                return super._postPushOrderResolve(...arguments);
+patch(PaymentScreen.prototype, "l10n_fr_pos_cert.PaymentScreen", {
+    async _postPushOrderResolve(order, order_server_ids) {
+        const _super = this._super;
+        try {
+            if (this.env.pos.is_french_country()) {
+                const result = await this.rpc({
+                    model: "pos.order",
+                    method: "search_read",
+                    domain: [["id", "in", order_server_ids]],
+                    fields: ["l10n_fr_hash"],
+                    context: session.user_context,
+                });
+                order.set_l10n_fr_hash(result[0].l10n_fr_hash || false);
             }
+        } catch {
+            // FIXME this doesn't seem correct but is equivalent to return in finally which we had before.
         }
-    };
-
-    Registries.Component.extend(PaymentScreen, PosFrPaymentScreen);
-
-    return PaymentScreen;
+        return _super(...arguments);
+    },
 });

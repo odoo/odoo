@@ -12,6 +12,7 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import email_normalize, hmac, generate_tracking_message_id
@@ -247,17 +248,18 @@ class MailGroup(models.Model):
     # MAILING
     # ------------------------------------------------------------
 
-    def _alias_get_error_message(self, message, message_dict, alias):
+    def _alias_get_error(self, message, message_dict, alias):
         self.ensure_one()
 
         if alias.alias_contact == 'followers':
             # Members only
             if not self._find_member(message_dict.get('email_from')):
-                return _('Only members can send email to the mailing list.')
+                return AliasError('error_mail_group_members_restricted',
+                                  _('Only members can send email to the mailing list.'))
             # Skip the verification because the partner is in the member list
             return
 
-        return super(MailGroup, self)._alias_get_error_message(message, message_dict, alias)
+        return super(MailGroup, self)._alias_get_error(message, message_dict, alias)
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
@@ -306,12 +308,13 @@ class MailGroup(models.Model):
         if not values.get('message_id'):
             values['message_id'] = generate_tracking_message_id('%s-mail.group' % self.id)
 
-        attachments = kwargs.get('attachments') or []
-        attachment_ids = kwargs.get('attachment_ids') or []
-        attachement_values = Mailthread._message_post_process_attachments(attachments, attachment_ids, values)
-        values.update(attachement_values)
+        values.update(Mailthread._process_attachments_for_post(
+            kwargs.get('attachments') or [],
+            kwargs.get('attachment_ids') or [],
+            values
+        ))
 
-        mail_message = Mailthread._message_create(values)
+        mail_message = Mailthread._message_create([values])
 
         # Find the <mail.group.message> parent
         group_message_parent_id = False
@@ -492,7 +495,7 @@ class MailGroup(models.Model):
 
         for group in groups:
             moderators_to_notify = group.moderator_ids
-            MailThread = self.env['mail.thread'].with_context(mail_notify_author=True)
+            MailThread = self.env['mail.thread']
             for moderator in moderators_to_notify:
                 body = self.env['ir.qweb']._render('mail_group.mail_group_notify_moderation', {
                     'moderator': moderator,
@@ -505,6 +508,7 @@ class MailGroup(models.Model):
                     body=body,
                     email_from=email_from,
                     model='mail.group',
+                    notify_author=True,
                     res_id=group.id,
                 )
 
@@ -552,7 +556,7 @@ class MailGroup(models.Model):
         existing_member = self._find_member(email, partner_id)
         if existing_member:
             # Update the information of the partner to force the synchronization
-            # If one the the value is not up to date (e.g. if our email is subscribed
+            # If one the value is not up to date (e.g. if our email is subscribed
             # but our partner was not set)
             existing_member.write({
                 'email': email,

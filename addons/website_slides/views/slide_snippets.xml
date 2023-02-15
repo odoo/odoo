@@ -20,13 +20,13 @@
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="Slides Snippet Options">
     <xpath expr="." position="inside">
-        <div data-selector="main:has(.o_wslides_home_main)" data-page-options="true" data-no-check="true" string="Courses Page">
+        <div data-selector="main:has(.o_wslides_home_main)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Courses Page">
             <we-checkbox string="New Content Ribbon"
                          data-customize-website-views="website_slides.course_card_information_arrow"
                          data-no-preview="true"
                          data-reload="/"/>
         </div>
-        <div data-selector="main:has(.o_wslides_home_aside_loggedin)" data-page-options="true" data-no-check="true" string="Courses Page">
+        <div data-selector="main:has(.o_wslides_home_aside_loggedin)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Courses Page">
             <we-checkbox string="Achievements"
                          data-customize-website-views="website_slides.toggle_latest_achievements"
                          data-no-preview="true"

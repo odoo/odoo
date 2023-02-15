@@ -31,15 +31,13 @@ class AutomaticEntryWizard(models.TransientModel):
     account_type = fields.Selection([('income', 'Revenue'), ('expense', 'Expense')], compute='_compute_account_type', store=True)
     expense_accrual_account = fields.Many2one('account.account', readonly=False,
         domain="[('company_id', '=', company_id),"
-               "('account_type', 'not in', ('asset_receivable', 'liability_payable')),"
-               "('is_off_balance', '=', False)]",
+               "('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         compute="_compute_expense_accrual_account",
         inverse="_inverse_expense_accrual_account",
     )
     revenue_accrual_account = fields.Many2one('account.account', readonly=False,
         domain="[('company_id', '=', company_id),"
-               "('account_type', 'not in', ('asset_receivable', 'liability_payable')),"
-               "('is_off_balance', '=', False)]",
+               "('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         compute="_compute_revenue_accrual_account",
         inverse="_inverse_revenue_accrual_account",
     )
@@ -163,6 +161,7 @@ class AutomaticEntryWizard(models.TransientModel):
 
             counterpart_balances[(line.partner_id, counterpart_currency)]['amount_currency'] += counterpart_amount_currency
             counterpart_balances[(line.partner_id, counterpart_currency)]['balance'] += line.balance
+            counterpart_balances[(line.partner_id, counterpart_currency)]['analytic_distribution'] = line.analytic_distribution
             grouped_source_lines[(line.partner_id, line.currency_id, line.account_id)] += line
 
         # Generate counterpart lines' vals
@@ -179,6 +178,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'partner_id': counterpart_partner.id or None,
                     'amount_currency': counterpart_currency.round((counterpart_vals['balance'] < 0 and -1 or 1) * abs(counterpart_vals['amount_currency'])) or 0,
                     'currency_id': counterpart_currency.id,
+                    'analytic_distribution': counterpart_vals['analytic_distribution'],
                 })
 
         # Generate change_account lines' vals
@@ -246,6 +246,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'currency_id': aml.currency_id.id,
                     'account_id': aml.account_id.id,
                     'partner_id': aml.partner_id.id,
+                    'analytic_distribution': aml.analytic_distribution,
                 }),
                 (0, 0, {
                     'name': self._format_strings(_('{percent:0.2f}% recognized on {new_date}'), aml.move_id),
@@ -255,6 +256,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'currency_id': aml.currency_id.id,
                     'account_id': accrual_account.id,
                     'partner_id': aml.partner_id.id,
+                    'analytic_distribution': aml.analytic_distribution,
                 }),
             ]
             move_data[aml.move_id.date]['line_ids'] += [
@@ -266,6 +268,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'currency_id': aml.currency_id.id,
                     'account_id': aml.account_id.id,
                     'partner_id': aml.partner_id.id,
+                    'analytic_distribution': aml.analytic_distribution,
                 }),
                 (0, 0, {
                     'name': self._format_strings(_('{percent:0.2f}% to recognize on {new_date}'), aml.move_id),
@@ -275,6 +278,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'currency_id': aml.currency_id.id,
                     'account_id': accrual_account.id,
                     'partner_id': aml.partner_id.id,
+                    'analytic_distribution': aml.analytic_distribution,
                 }),
             ]
 
@@ -298,8 +302,8 @@ class AutomaticEntryWizard(models.TransientModel):
             preview_columns = [
                 {'field': 'account_id', 'label': _('Account')},
                 {'field': 'name', 'label': _('Label')},
-                {'field': 'debit', 'label': _('Debit'), 'class': 'text-right text-nowrap'},
-                {'field': 'credit', 'label': _('Credit'), 'class': 'text-right text-nowrap'},
+                {'field': 'debit', 'label': _('Debit'), 'class': 'text-end text-nowrap'},
+                {'field': 'credit', 'label': _('Credit'), 'class': 'text-end text-nowrap'},
             ]
             if record.action == 'change_account':
                 preview_columns[2:2] = [{'field': 'partner_id', 'label': _('Partner')}]
@@ -340,7 +344,7 @@ class AutomaticEntryWizard(models.TransientModel):
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
             accrual_move = created_moves[1:].filtered(lambda m: m.date == move.date)
 
-            if accrual_account.reconcile:
+            if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
                 destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
                 destination_move_offset += 2
                 accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]
@@ -407,7 +411,6 @@ class AutomaticEntryWizard(models.TransientModel):
         return {
             'name': _("Transfer"),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.move',
             'res_id': new_move.id,

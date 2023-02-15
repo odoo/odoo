@@ -79,6 +79,14 @@ class AccountPaymentMethod(models.Model):
             'manual': {'mode': 'multi', 'domain': [('type', 'in', ('bank', 'cash'))]},
         }
 
+    @api.model
+    def _get_sdd_payment_method_code(self):
+        """
+        TO OVERRIDE
+        This hook will be used to return the list of sdd payment method codes
+        """
+        return []
+
 
 class AccountPaymentMethodLine(models.Model):
     _name = "account.payment.method.line"
@@ -101,8 +109,7 @@ class AccountPaymentMethodLine(models.Model):
         ondelete='restrict',
         domain="[('deprecated', '=', False), "
                 "('company_id', '=', company_id), "
-                "('account_type', 'not in', ('asset_receivable', 'liability_payable')), "
-                "'|', ('account_type', '=', 'asset_current'), ('id', '=', parent.default_account_id)]"
+                "'|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', parent.default_account_id)]"
     )
     journal_id = fields.Many2one(comodel_name='account.journal', ondelete="cascade")
 

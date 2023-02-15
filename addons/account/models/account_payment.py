@@ -132,11 +132,10 @@ class AccountPayment(models.Model):
         compute='_compute_stat_buttons_from_reconciliation',
         help="Statements lines matched to this payment",
     )
-    reconciled_statement_ids = fields.Many2many('account.bank.statement', string="Reconciled Statements",
-        compute='_compute_stat_buttons_from_reconciliation',
-        help="Statements matched to this payment")
-    reconciled_statements_count = fields.Integer(string="# Reconciled Statements",
-        compute="_compute_stat_buttons_from_reconciliation")
+    reconciled_statement_lines_count = fields.Integer(
+        string="# Reconciled Statement Lines",
+        compute="_compute_stat_buttons_from_reconciliation",
+    )
 
     # == Display purpose fields ==
     payment_method_code = fields.Char(
@@ -387,10 +386,8 @@ class AccountPayment(models.Model):
     @api.depends('amount_total_signed', 'payment_type')
     def _compute_amount_company_currency_signed(self):
         for payment in self:
-            if payment.payment_type == 'outbound':
-                payment.amount_company_currency_signed = -payment.amount_total_signed
-            else:
-                payment.amount_company_currency_signed = payment.amount_total_signed
+            liquidity_lines = payment._seek_for_lines()[0]
+            payment.amount_company_currency_signed = sum(liquidity_lines.mapped('balance'))
 
     @api.depends('amount', 'payment_type')
     def _compute_amount_signed(self):
@@ -563,8 +560,7 @@ class AccountPayment(models.Model):
             self.reconciled_bill_ids = False
             self.reconciled_bills_count = 0
             self.reconciled_statement_line_ids = False
-            self.reconciled_statement_ids = False
-            self.reconciled_statements_count = 0
+            self.reconciled_statement_lines_count = 0
             return
 
         self.env['account.move'].flush_model()
@@ -629,7 +625,7 @@ class AccountPayment(models.Model):
             WHERE account.id = payment.outstanding_account_id
                 AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
-                AND counterpart_line.statement_id IS NOT NULL
+                AND counterpart_line.statement_line_id IS NOT NULL
             GROUP BY payment.id
         ''', {
             'payment_ids': tuple(stored_payments.ids)
@@ -639,8 +635,7 @@ class AccountPayment(models.Model):
         for pay in self:
             statement_line_ids = query_res.get(pay.id, [])
             pay.reconciled_statement_line_ids = [Command.set(statement_line_ids)]
-            pay.reconciled_statement_ids = [Command.set(pay.reconciled_statement_line_ids.statement_id.ids)]
-            pay.reconciled_statements_count = len(statement_line_ids)
+            pay.reconciled_statement_lines_count = len(statement_line_ids)
             if len(pay.reconciled_invoice_ids.mapped('move_type')) == 1 and pay.reconciled_invoice_ids[0].move_type == 'out_refund':
                 pay.reconciled_invoices_type = 'credit_note'
             else:
@@ -820,6 +815,13 @@ class AccountPayment(models.Model):
             move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
             pay.write(move._cleanup_write_orm_values(pay, payment_vals_to_write))
 
+    @api.model
+    def _get_trigger_fields_to_synchronize(self):
+        return (
+            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
+            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
+        )
+
     def _synchronize_to_moves(self, changed_fields):
         ''' Update the account.move regarding the modified account.payment.
         :param changed_fields: A list containing all modified fields on account.payment.
@@ -827,10 +829,7 @@ class AccountPayment(models.Model):
         if self._context.get('skip_account_move_synchronization'):
             return
 
-        if not any(field_name in changed_fields for field_name in (
-            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
-            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id',
-        )):
+        if not any(field_name in changed_fields for field_name in self._get_trigger_fields_to_synchronize()):
             return
 
         for pay in self.with_context(skip_account_move_synchronization=True):
@@ -840,7 +839,7 @@ class AccountPayment(models.Model):
             # This allows to create a new payment with custom 'line_ids'.
 
             write_off_line_vals = []
-            if writeoff_lines:
+            if liquidity_lines and counterpart_lines and writeoff_lines:
                 write_off_line_vals.append({
                     'name': writeoff_lines[0].name,
                     'account_id': writeoff_lines[0].account_id.id,
@@ -853,8 +852,8 @@ class AccountPayment(models.Model):
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
             line_ids_commands = [
-                (1, liquidity_lines.id, line_vals_list[0]),
-                (1, counterpart_lines.id, line_vals_list[1]),
+                Command.update(liquidity_lines.id, line_vals_list[0]) if liquidity_lines else Command.create(line_vals_list[0]),
+                Command.update(counterpart_lines.id, line_vals_list[1]) if counterpart_lines else Command.create(line_vals_list[1])
             ]
 
             for line in writeoff_lines:
@@ -981,27 +980,27 @@ class AccountPayment(models.Model):
             })
         return action
 
-    def button_open_statements(self):
+    def button_open_statement_lines(self):
         ''' Redirect the user to the statement line(s) reconciled to this payment.
         :return:    An action on account.move.
         '''
         self.ensure_one()
 
         action = {
-            'name': _("Matched Statements"),
+            'name': _("Matched Transactions"),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.bank.statement',
+            'res_model': 'account.bank.statement.line',
             'context': {'create': False},
         }
-        if len(self.reconciled_statement_ids) == 1:
+        if len(self.reconciled_statement_lines_ids) == 1:
             action.update({
                 'view_mode': 'form',
-                'res_id': self.reconciled_statement_ids.id,
+                'res_id': self.reconciled_statement_lines_ids.id,
             })
         else:
             action.update({
                 'view_mode': 'list,form',
-                'domain': [('id', 'in', self.reconciled_statement_ids.ids)],
+                'domain': [('id', 'in', self.reconciled_statement_lines_ids.ids)],
             })
         return action
 

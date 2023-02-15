@@ -24,7 +24,7 @@ odoo.define('website.s_website_form', function (require) {
                 // We do not initialize the datetime picker in edit mode but want the dates to be formated
                 const dateTimeFormat = time.getLangDatetimeFormat();
                 const dateFormat = time.getLangDateFormat();
-                this.$target[0].querySelectorAll('.s_website_form_input.datetimepicker-input').forEach(el => {
+                this.el.querySelectorAll('.s_website_form_input.datetimepicker-input').forEach(el => {
                     const value = el.getAttribute('value');
                     if (value) {
                         const format = el.closest('.s_website_form_field').dataset.type === 'date' ? dateFormat : dateTimeFormat;
@@ -55,7 +55,7 @@ odoo.define('website.s_website_form', function (require) {
         },
         willStart: async function () {
             const res = this._super(...arguments);
-            if (!this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
+            if (!this.el.classList.contains('s_website_form_no_recaptcha')) {
                 this._recaptchaLoaded = true;
                 this._recaptcha.loadLibs();
             }
@@ -73,7 +73,7 @@ odoo.define('website.s_website_form', function (require) {
         start: function () {
             // Prepare visibility data and update field visibilities
             const visibilityFunctionsByFieldName = new Map();
-            for (const fieldEl of this.$target[0].querySelectorAll('[data-visibility-dependency]')) {
+            for (const fieldEl of this.el.querySelectorAll('[data-visibility-dependency]')) {
                 const inputName = fieldEl.querySelector('.s_website_form_input').name;
                 if (!visibilityFunctionsByFieldName.has(inputName)) {
                     visibilityFunctionsByFieldName.set(inputName, []);
@@ -107,12 +107,12 @@ odoo.define('website.s_website_form', function (require) {
                 format: time.getLangDatetimeFormat(),
                 extraFormats: ['X'],
             };
-            const $datetimes = this.$target.find('.s_website_form_datetime, .o_website_form_datetime'); // !compatibility
+            const $datetimes = this.$el.find('.s_website_form_datetime, .o_website_form_datetime'); // !compatibility
             $datetimes.datetimepicker(datepickers_options);
 
             // Adapt options to date-only pickers
             datepickers_options.format = time.getLangDateFormat();
-            const $dates = this.$target.find('.s_website_form_date, .o_website_form_date'); // !compatibility
+            const $dates = this.$el.find('.s_website_form_date, .o_website_form_date'); // !compatibility
             $dates.datetimepicker(datepickers_options);
 
             this.$allDates = $datetimes.add($dates);
@@ -123,7 +123,7 @@ odoo.define('website.s_website_form', function (require) {
             // Because, using t-att- inside form make it non-editable
             // Data-fill-with attribute is given during registry and is used by
             // to know which user data should be used to prfill fields.
-            const dataForEl = document.querySelector(`[data-for='${this.$target[0].id}']`);
+            const dataForEl = document.querySelector(`[data-for='${this.el.id}']`);
             if (dataForEl || Object.keys(this.preFillValues).length) {
                 const dataForValues = dataForEl ?
                     JSON.parse(dataForEl.dataset.values
@@ -131,7 +131,7 @@ odoo.define('website.s_website_form', function (require) {
                         .replace('None', '""')
                         .replace(/'/g, '"')
                     ) : {};
-                const fieldNames = this.$target.serializeArray().map(el => el.name);
+                const fieldNames = this.$el.serializeArray().map(el => el.name);
                 // All types of inputs do not have a value property (eg:hidden),
                 // for these inputs any function that is supposed to put a value
                 // property actually puts a HTML value attribute. Because of
@@ -140,7 +140,7 @@ odoo.define('website.s_website_form', function (require) {
                 // the values to submit() for these fields but this could break
                 // customizations that use the current behavior as a feature.
                 for (const name of fieldNames) {
-                    const fieldEl = this.$target[0].querySelector(`[name="${name}"]`);
+                    const fieldEl = this.el.querySelector(`[name="${name}"]`);
 
                     // In general, we want the data-for and prefill values to
                     // take priority over set default values. The 'email_to'
@@ -179,7 +179,7 @@ odoo.define('website.s_website_form', function (require) {
                 });
             }
             // Check disabled states
-            this.inputEls = this.$target[0].querySelectorAll('.s_website_form_field.s_website_form_field_hidden_if .s_website_form_input');
+            this.inputEls = this.el.querySelectorAll('.s_website_form_field.s_website_form_field_hidden_if .s_website_form_input');
             this._disabledStates = new Map();
             for (const inputEl of this.inputEls) {
                 this._disabledStates[inputEl] = inputEl.disabled;
@@ -190,15 +190,15 @@ odoo.define('website.s_website_form', function (require) {
 
         destroy: function () {
             this._super.apply(this, arguments);
-            this.$target.find('button').off('click');
+            this.$el.find('button').off('click');
 
             // Empty imputs
-            this.$target[0].reset();
+            this.el.reset();
 
             // Apply default values
             const dateTimeFormat = time.getLangDatetimeFormat();
             const dateFormat = time.getLangDateFormat();
-            this.$target[0].querySelectorAll('input[type="text"], input[type="email"], input[type="number"]').forEach(el => {
+            this.el.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]').forEach(el => {
                 let value = el.getAttribute('value');
                 if (value) {
                     if (el.classList.contains('datetimepicker-input')) {
@@ -208,17 +208,17 @@ odoo.define('website.s_website_form', function (require) {
                     el.value = value;
                 }
             });
-            this.$target[0].querySelectorAll('textarea').forEach(el => el.value = el.textContent);
+            this.el.querySelectorAll('textarea').forEach(el => el.value = el.textContent);
 
             // Remove saving of the error colors
-            this.$target.find('.o_has_error').removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
+            this.$el.find('.o_has_error').removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
 
             // Remove the status message
-            this.$target.find('#s_website_form_result, #o_website_form_result').empty(); // !compatibility
+            this.$el.find('#s_website_form_result, #o_website_form_result').empty(); // !compatibility
 
             // Remove the success message and display the form
-            this.$target.removeClass('d-none');
-            this.$target.parent().find('.s_website_form_end_message').addClass('d-none');
+            this.$el.removeClass('d-none');
+            this.$el.parent().find('.s_website_form_end_message').addClass('d-none');
 
             // Reinitialize dates
             this.$allDates.removeClass('s_website_form_datepicker_initialized');
@@ -229,7 +229,7 @@ odoo.define('website.s_website_form', function (require) {
             }
 
             // All 'hidden if' fields start with d-none
-            this.$target[0].querySelectorAll('.s_website_form_field_hidden_if:not(.d-none)').forEach(el => el.classList.add('d-none'));
+            this.el.querySelectorAll('.s_website_form_field_hidden_if:not(.d-none)').forEach(el => el.classList.add('d-none'));
 
             // Reset the initial default values.
             for (const [fieldEl, initialValue] of this.initialValues.entries()) {
@@ -246,22 +246,22 @@ odoo.define('website.s_website_form', function (require) {
         send: async function (e) {
             e.preventDefault(); // Prevent the default submit behavior
              // Prevent users from crazy clicking
-            const $button = this.$target.find('.s_website_form_send, .o_website_form_send');
+            const $button = this.$el.find('.s_website_form_send, .o_website_form_send');
             $button.addClass('disabled') // !compatibility
                    .attr('disabled', 'disabled');
             this.restoreBtnLoading = dom.addButtonLoadingEffect($button[0]);
 
             var self = this;
 
-            self.$target.find('#s_website_form_result, #o_website_form_result').empty(); // !compatibility
+            self.$el.find('#s_website_form_result, #o_website_form_result').empty(); // !compatibility
             if (!self.check_error_fields({})) {
                 self.update_status('error', _t("Please fill in the form correctly."));
                 return false;
             }
 
             // Prepare form inputs
-            this.form_fields = this.$target.serializeArray();
-            $.each(this.$target.find('input[type=file]:not([disabled])'), (outer_index, input) => {
+            this.form_fields = this.$el.serializeArray();
+            $.each(this.$el.find('input[type=file]:not([disabled])'), (outer_index, input) => {
                 $.each($(input).prop('files'), function (index, file) {
                     // Index field name as ajax won't accept arrays of files
                     // when aggregating multiple files into a single field value
@@ -293,7 +293,7 @@ odoo.define('website.s_website_form', function (require) {
             });
 
             // force server date format usage for existing fields
-            this.$target.find('.s_website_form_field:not(.s_website_form_custom)')
+            this.$el.find('.s_website_form_field:not(.s_website_form_custom)')
             .find('.s_website_form_date, .s_website_form_datetime').each(function () {
                 var date = $(this).datetimepicker('viewDate').clone().locale('en');
                 var format = 'YYYY-MM-DD';
@@ -315,10 +315,10 @@ odoo.define('website.s_website_form', function (require) {
             }
 
             // Post form and handle result
-            ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
+            ajax.post(this.$el.attr('action') + (this.$el.data('force_action') || this.$el.data('model_name')), form_values)
             .then(async function (result_data) {
                 // Restore send button behavior
-                self.$target.find('.s_website_form_send, .o_website_form_send')
+                self.$el.find('.s_website_form_send, .o_website_form_send')
                     .removeAttr('disabled')
                     .removeClass('disabled'); // !compatibility
                 result_data = JSON.parse(result_data);
@@ -331,10 +331,10 @@ odoo.define('website.s_website_form', function (require) {
                     }
                 } else {
                     // Success, redirect or update status
-                    let successMode = self.$target[0].dataset.successMode;
-                    let successPage = self.$target[0].dataset.successPage;
+                    let successMode = self.el.dataset.successMode;
+                    let successPage = self.el.dataset.successPage;
                     if (!successMode) {
-                        successPage = self.$target.attr('data-success_page'); // Compatibility
+                        successPage = self.$el.attr('data-success_page'); // Compatibility
                         successMode = successPage ? 'redirect' : 'nothing';
                     }
                     switch (successMode) {
@@ -356,8 +356,8 @@ odoo.define('website.s_website_form', function (require) {
                             // message)
                             await concurrency.delay(dom.DEBOUNCE);
 
-                            self.$target[0].classList.add('d-none');
-                            self.$target[0].parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
+                            self.el.classList.add('d-none');
+                            self.el.parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
                             return;
                         }
                         default: {
@@ -371,7 +371,7 @@ odoo.define('website.s_website_form', function (require) {
                         }
                     }
 
-                    self.$target[0].reset();
+                    self.el.reset();
                     self.restoreBtnLoading();
                 }
             })
@@ -387,8 +387,11 @@ odoo.define('website.s_website_form', function (require) {
             var self = this;
             var form_valid = true;
             // Loop on all fields
-            this.$target.find('.form-field, .s_website_form_field').each(function (k, field) { // !compatibility
+            this.$el.find('.form-field, .s_website_form_field').each(function (k, field) { // !compatibility
                 var $field = $(field);
+                // FIXME that seems broken, "for" does not contain the field
+                // but this is used to retrieve errors sent from the server...
+                // need more investigation.
                 var field_name = $field.find('.col-form-label').attr('for');
 
                 // Validate inputs for this field
@@ -398,17 +401,27 @@ odoo.define('website.s_website_form', function (require) {
                     // field as it seems checkValidity forces every required
                     // checkbox to be checked, instead of looking at other
                     // checkboxes with the same name and only requiring one
-                    // of them to be checked.
+                    // of them to be valid.
                     if (input.required && input.type === 'checkbox') {
                         // Considering we are currently processing a single
                         // field, we can assume that all checkboxes in the
                         // inputs variable have the same name
+                        // TODO should be improved: probably do not need to
+                        // filter neither on required, nor on checkbox and
+                        // checking the validity of the group of checkbox is
+                        // currently done for each checkbox of that group...
                         var checkboxes = _.filter(inputs, function (input) {
                             return input.required && input.type === 'checkbox';
                         });
-                        return !_.any(checkboxes, checkbox => checkbox.checked);
+                        return !_.any(checkboxes, checkbox => checkbox.checkValidity());
 
                     // Special cases for dates and datetimes
+                    // FIXME this seems like dead code, the inputs do not use
+                    // those classes, their parent does (but it seemed to work
+                    // at some point given that https://github.com/odoo/odoo/commit/75e03c0f7692a112e1b0fa33267f4939363f3871
+                    // was made)... need more investigation (if restored,
+                    // consider checking the date inputs are not disabled before
+                    // saying they are invalid (see checkValidity used here))
                     } else if ($(input).hasClass('s_website_form_date') || $(input).hasClass('o_website_form_date')) { // !compatibility
                         if (!self.is_datetime_valid(input.value, 'date')) {
                             return true;
@@ -418,13 +431,26 @@ odoo.define('website.s_website_form', function (require) {
                             return true;
                         }
                     }
+
+                    // Note that checkValidity also takes care of the case where
+                    // the input is disabled, in which case, it is considered
+                    // valid (as the data will not be sent anyway).
+                    // This takes care of conditionally-hidden fields (whose
+                    // inputs are disabled while they are hidden) which should
+                    // not require validation while they are hidden. Indeed,
+                    // their purpose is to be able to enter additional data when
+                    // some condition is fulfilled. If such a field is required,
+                    // it is only required when visible for example.
                     return !input.checkValidity();
                 });
 
                 // Update field color if invalid or erroneous
-                $field.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
+                const $controls = $field.find('.form-control, .form-select, .form-check-input, .form-control-file');
+                $field.removeClass('o_has_error');
+                $controls.removeClass('is-invalid');
                 if (invalid_inputs.length || error_fields[field_name]) {
-                    $field.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
+                    $field.addClass('o_has_error');
+                    $controls.addClass('is-invalid');
                     if (_.isString(error_fields[field_name])) {
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.
@@ -444,7 +470,7 @@ odoo.define('website.s_website_form', function (require) {
                 try {
                     this.parse_date(value, type_of_date);
                     return true;
-                } catch (_e) {
+                } catch {
                     return false;
                 }
             }
@@ -475,7 +501,7 @@ odoo.define('website.s_website_form', function (require) {
 
         update_status: function (status, message) {
             if (status !== 'success') { // Restore send button behavior if result is an error
-                this.$target.find('.s_website_form_send, .o_website_form_send')
+                this.$el.find('.s_website_form_send, .o_website_form_send')
                     .removeAttr('disabled')
                     .removeClass('disabled'); // !compatibility
                 this.restoreBtnLoading();
@@ -598,7 +624,7 @@ odoo.define('website.s_website_form', function (require) {
                     return false;
                 }
 
-                const formData = new FormData(this.$target[0]);
+                const formData = new FormData(this.el);
                 const currentValueOfDependency = formData.get(dependencyName);
                 return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
             };

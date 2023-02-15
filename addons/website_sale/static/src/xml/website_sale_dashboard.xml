@@ -23,8 +23,8 @@
         </t>
     </t>
 
-    <t t-name="website_sale.dashboard_content" t-extend="website.dashboard_content">
-        <t t-jquery="div.o_website_dashboard_content" t-operation="prepend">
+    <t t-name="website_sale.dashboard_content" t-inherit="website.dashboard_content" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_website_dashboard_content')]/*[1]" position="before">
             <div t-if="widget.groups.sale_salesman" class="row o_dashboard_sales">
                 <div class="col-12 row o_box">
                     <t t-if="widget.dashboards_data.sales.summary.order_count">
@@ -69,7 +69,7 @@
                     </t>
                 </div>
             </div>
-        </t>
+        </xpath>
     </t>
 
     <t t-name="website_sale.products_table">
@@ -158,5 +158,12 @@
                 <a name="source_id" class="dropdown-item js_utm_selector" role="menuitem">Sources</a>
             </div>
         </div>
+    </t>
+
+    <!-- Show the date range buttons related to the 'community' Sales Dashboard -->
+    <t t-extend="website.DateRangeButtons">
+        <t t-jquery="t[t-set='show_range_buttons']" t-operation="attributes">
+            <attribute name="t-value" value="1" />
+        </t>
     </t>
 </templates>

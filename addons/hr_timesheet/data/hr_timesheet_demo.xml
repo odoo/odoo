@@ -22,7 +22,6 @@
         <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
         <field name="unit_amount">2.00</field>
         <field name="project_id" ref='project.project_project_2'/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-60.00</field>
     </record>
 
@@ -50,7 +49,6 @@
         <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
         <field name="unit_amount">1.00</field>
         <field name="project_id" ref='project.project_project_2'/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.00</field>
     </record>
 
@@ -70,7 +68,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_1"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -91,7 +88,6 @@
         <field name="unit_amount">3</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_1"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-90.0</field>
     </record>
 
@@ -122,7 +118,6 @@
         <field name="unit_amount">2</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_1"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-60.0</field>
     </record>
 
@@ -183,7 +178,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_1"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -244,7 +238,6 @@
         <field name="unit_amount">2</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_1"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-60.0</field>
     </record>
 
@@ -305,7 +298,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_1"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -396,7 +388,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_2"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -417,7 +408,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_2"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -448,7 +438,6 @@
         <field name="unit_amount">3</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_2"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-90.0</field>
     </record>
 
@@ -479,7 +468,6 @@
         <field name="unit_amount">3</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_2"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-90.0</field>
     </record>
 
@@ -500,7 +488,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_2"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -511,7 +498,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_2"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -552,7 +538,6 @@
         <field name="unit_amount">2</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_2"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-60.0</field>
     </record>
 
@@ -623,7 +608,6 @@
         <field name="unit_amount">3</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-90.0</field>
     </record>
 
@@ -644,7 +628,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -655,7 +638,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -686,7 +668,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -697,7 +678,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -708,7 +688,6 @@
         <field name="unit_amount">2</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-60.0</field>
     </record>
 
@@ -729,7 +708,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -750,7 +728,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -771,7 +748,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -892,7 +868,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -903,7 +878,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -954,7 +928,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -995,7 +968,6 @@
         <field name="unit_amount">2</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-60.0</field>
     </record>
 
@@ -1026,7 +998,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -1037,7 +1008,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -1058,7 +1028,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -1090,7 +1059,6 @@
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
         <field name="amount">-60.0</field>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
     </record>
 
     <record id="project_1_task_6_account_analytic_line_21" model="account.analytic.line">
@@ -1170,7 +1138,6 @@
         <field name="unit_amount">3</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_7"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-90.0</field>
     </record>
 
@@ -1191,7 +1158,6 @@
         <field name="unit_amount">2</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_7"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-60.0</field>
     </record>
 
@@ -1202,7 +1168,6 @@
         <field name="unit_amount">3</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_7"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-90.0</field>
     </record>
 
@@ -1213,7 +1178,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_7"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -1264,7 +1228,6 @@
         <field name="unit_amount">2</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_7"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_analysis'))]"/>
         <field name="amount">-60.0</field>
     </record>
 
@@ -1435,7 +1398,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_8"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -1566,7 +1528,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_8"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -1647,7 +1608,6 @@
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_8"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-30.0</field>
     </record>
 
@@ -1688,7 +1648,6 @@
         <field name="unit_amount">2</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_8"/>
-        <field name="tag_ids" eval="[Command.link(ref('project.tag_training'))]"/>
         <field name="amount">-60.0</field>
     </record>
 

@@ -6,7 +6,7 @@
                 <t t-else="">Invoices &amp; Bills</t>
             </li>
             <li t-if="invoice" class="breadcrumb-item active">
-                <t t-esc="invoice.name" t-if="invoice.name != '/'"/>
+                <t t-out="invoice.name" t-if="invoice.name != '/'"/>
                 <t t-else=""><em>Draft Invoice</em></t>
             </li>
         </xpath>
@@ -47,7 +47,7 @@
                     <tr>
                         <td>
                             <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.name">
-                                <t t-esc="invoice.name" t-if="invoice.name != '/'"/>
+                                <t t-out="invoice.name" t-if="invoice.name != '/'"/>
                                 <em t-else="">Draft Invoice</em>
                             </a>
                         </td>
@@ -67,7 +67,7 @@
                                 <span class="badge rounded-pill text-bg-warning"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
                             </t>
                         </td>
-                        <td class="text-end"><span t-esc="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
+                        <td class="text-end"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                     </tr>
                 </t>
             </tbody>

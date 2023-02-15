@@ -83,7 +83,7 @@ export class AccountPaymentField extends Component {
     }
 
     async openMove(moveId) {
-        const action = await this.orm.call(this.props.record.resModel, 'open_move', [moveId], {});
+        const action = await this.orm.call(this.props.record.resModel, 'action_open_business_doc', [moveId], {});
         this.action.doAction(action);
     }
 }

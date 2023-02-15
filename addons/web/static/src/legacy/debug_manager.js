@@ -7,7 +7,7 @@ import { formatMany2one } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, useState } = owl;
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 const debugRegistry = registry.category("debug");
 
@@ -133,9 +133,7 @@ class SetDefaultDialog extends Component {
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
-                    fieldsInfo[fieldName].options.isPassword ||
-                    fieldInfo.depends === undefined ||
-                    fieldInfo.depends.length !== 0
+                    fieldsInfo[fieldName].options.isPassword
                 ) {
                     return false;
                 }

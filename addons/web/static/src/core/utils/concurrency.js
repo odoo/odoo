@@ -3,6 +3,8 @@
 /**
  * KeepLast is a concurrency primitive that manages a list of tasks, and only
  * keeps the last task active.
+ *
+ * @template T
  */
 export class KeepLast {
     constructor() {
@@ -11,7 +13,6 @@ export class KeepLast {
     /**
      * Register a new task
      *
-     * @template T
      * @param {Promise<T>} promise
      * @returns {Promise<T>}
      */
@@ -79,8 +80,8 @@ export class Mutex {
      * Add a computation to the queue, it will be executed as soon as the
      * previous computations are completed.
      *
-     * @param {function} action a function which may return a Promise
-     * @returns {Promise}
+     * @param {() => (void | Promise<void>)} action a function which may return a Promise
+     * @returns {Promise<void>}
      */
     async exec(action) {
         this._queueSize++;
@@ -103,7 +104,7 @@ export class Mutex {
         return this._lock;
     }
     /**
-     * @returns {Promise} resolved as soon as the Mutex is unlocked
+     * @returns {Promise<void>} resolved as soon as the Mutex is unlocked
      *   (directly if it is currently idle)
      */
     getUnlockedDef() {
@@ -118,11 +119,14 @@ export class Mutex {
  * promise which resolves as soon as a promise, among all added promises, is
  * resolved. The race is thus over. From that point, a new race will begin the
  * next time a promise will be added.
+ *
+ * @template T
  */
 export class Race {
     constructor() {
         this.currentProm = null;
         this.currentPromResolver = null;
+        this.currentPromRejecter = null;
     }
     /**
      * Register a new promise. If there is an ongoing race, the promise is added
@@ -130,24 +134,31 @@ export class Race {
      * resolves as soon as the race is over, with the value of the first resolved
      * promise added to the race.
      *
-     * @param {Promise} promise
-     * @returns {Promise
+     * @param {Promise<T>} promise
+     * @returns {Promise<T>}
      */
     add(promise) {
         if (!this.currentProm) {
-            this.currentProm = new Promise((resolve) => {
+            this.currentProm = new Promise((resolve, reject) => {
                 this.currentPromResolver = (value) => {
                     this.currentProm = null;
                     this.currentPromResolver = null;
+                    this.currentPromRejecter = null;
                     resolve(value);
+                };
+                this.currentPromRejecter = (error) => {
+                    this.currentProm = null;
+                    this.currentPromResolver = null;
+                    this.currentPromRejecter = null;
+                    reject(error);
                 };
             });
         }
-        promise.then(this.currentPromResolver);
+        promise.then(this.currentPromResolver).catch(this.currentPromRejecter);
         return this.currentProm;
     }
     /**
-     * @returns {Promise|null} promise resolved as soon as the race is over, or
+     * @returns {Promise<T>|null} promise resolved as soon as the race is over, or
      *   null if there is no race ongoing)
      */
     getCurrentProm() {

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="web.SelectMenu" owl="1">
+        <Dropdown
+            class="`o_select_menu border w-100 rounded-2 overflow-hidden ${props.class || ''}`"
+            togglerClass="`o_select_menu_toggler d-flex flex-row align-items-center flex-nowrap btn btn-secondary w-100 bg-light ${props.togglerClass || ''}`"
+            menuClass="'o_select_menu_menu pt-0'"
+            position="'bottom-fit'"
+            beforeOpen.bind="filterOptions"
+            onOpened.bind="onOpened"
+            onScroll.bind="onScroll"
+        >
+            <t t-set-slot="toggler">
+                <span class="o_select_menu_toggler_slot text-start">
+                    <t t-if="!props.slots or !props.slots.default" t-esc="displayValue" />
+                    <t t-else="" t-slot="default" />
+                </span>
+                <span t-if="canClear()" t-on-click.stop="() => this.props.onSelect(null)" class="o_select_menu_toggler_clear p-0 m-0">
+                    <i class="fa fa-times"></i>
+                </span>
+                <span class="o_select_menu_toggler_caret p-0 m-0">
+                    <i class="fa fa-caret-down"></i>
+                </span>
+            </t>
+            <div class="o_select_menu_input p-2 position-sticky top-0 start-0" t-ref="inputContainerRef">
+                <input
+                    type="text"
+                    class="form-control"
+                    t-ref="inputRef"
+                    t-on-input="debouncedOnInput"
+                    t-att-placeholder="props.searchPlaceholder"
+                    autocomplete="off"
+                    autocorrect="off"
+                    spellcheck="false"
+                />
+            </div>
+            <t t-if="state.choices.length === 0">
+                <span class="text-muted fst-italic ms-3">No result found</span>
+            </t>
+            <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
+                <div t-if="choice.isGroup" class="o_select_menu_group sticky-top bg-white px-3 mt-2 fst-italic fw-bolder">
+                    <span t-esc="choice.label" />
+                    <hr class="bg-primary mt-2 mb-1" />
+                </div>
+                <DropdownItem
+                    t-if="!choice.isGroup"
+                    onSelected="() => this.props.onSelect(choice.value)"
+                    class="getItemClass(choice)"
+                >
+                    <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
+                    <t t-else="">
+                        <div class="o_select_menu_item_label text-wrap" t-esc="choice.label || choice.value" />
+                    </t>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

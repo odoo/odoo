@@ -35,16 +35,16 @@ QUnit.test('mark as read', async function (assert) {
     await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,
-        '.o_NotificationGroup_markAsRead',
+        '.o_NotificationGroupView_markAsRead',
         "should have 1 mark as read button"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_NotificationGroup_markAsRead').click();
+        document.querySelector('.o_NotificationGroupView_markAsRead').click();
     });
     assert.containsNone(
         document.body,
-        '.o_NotificationGroup',
+        '.o_NotificationGroupView',
         "should have no notification group"
     );
 });
@@ -95,58 +95,58 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
 
     assert.containsN(
         document.body,
-        '.o_NotificationGroup',
+        '.o_NotificationGroupView',
         2,
         "should have 2 notifications group"
     );
-    const groups = document.querySelectorAll('.o_NotificationGroup');
+    const groups = document.querySelectorAll('.o_NotificationGroupView');
     assert.containsOnce(
         groups[0],
-        '.o_NotificationGroup_name',
+        '.o_NotificationGroupView_name',
         "should have 1 group name in first group"
     );
     assert.strictEqual(
-        groups[0].querySelector('.o_NotificationGroup_name').textContent,
+        groups[0].querySelector('.o_NotificationGroupView_name').textContent,
         "Partner",
         "should have model name as group name"
     );
     assert.containsOnce(
         groups[0],
-        '.o_NotificationGroup_counter',
+        '.o_NotificationGroupView_counter',
         "should have 1 group counter in first group"
     );
     assert.strictEqual(
-        groups[0].querySelector('.o_NotificationGroup_counter').textContent.trim(),
+        groups[0].querySelector('.o_NotificationGroupView_counter').textContent.trim(),
         "(2)",
         "should have 2 notifications in first group"
     );
     assert.strictEqual(
-        groups[0].querySelector('.o_NotificationGroup_inlineText').textContent.trim(),
+        groups[0].querySelector('.o_NotificationGroupView_inlineText').textContent.trim(),
         "An error occurred when sending an email.",
         "should have the group text corresponding to email"
     );
     assert.containsOnce(
         groups[1],
-        '.o_NotificationGroup_name',
+        '.o_NotificationGroupView_name',
         "should have 1 group name in second group"
     );
     assert.strictEqual(
-        groups[1].querySelector('.o_NotificationGroup_name').textContent,
+        groups[1].querySelector('.o_NotificationGroupView_name').textContent,
         "Partner",
         "should have second model name as group name"
     );
     assert.containsOnce(
         groups[1],
-        '.o_NotificationGroup_counter',
+        '.o_NotificationGroupView_counter',
         "should have 1 group counter in second group"
     );
     assert.strictEqual(
-        groups[1].querySelector('.o_NotificationGroup_counter').textContent.trim(),
+        groups[1].querySelector('.o_NotificationGroupView_counter').textContent.trim(),
         "(2)",
         "should have 2 notifications in second group"
     );
     assert.strictEqual(
-        groups[1].querySelector('.o_NotificationGroup_inlineText').textContent.trim(),
+        groups[1].querySelector('.o_NotificationGroupView_inlineText').textContent.trim(),
         "An error occurred when sending an SMS.",
         "should have the group text corresponding to sms"
     );
@@ -235,21 +235,21 @@ QUnit.test('grouped notifications by document model', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_NotificationGroup',
+        '.o_NotificationGroupView',
         "should have 1 notification group"
     );
     assert.containsOnce(
         document.body,
-        '.o_NotificationGroup_counter',
+        '.o_NotificationGroupView_counter',
         "should have 1 group counter"
     );
     assert.strictEqual(
-        document.querySelector('.o_NotificationGroup_counter').textContent.trim(),
+        document.querySelector('.o_NotificationGroupView_counter').textContent.trim(),
         "(2)",
         "should have 2 notifications in the group"
     );
 
-    document.querySelector('.o_NotificationGroup').click();
+    document.querySelector('.o_NotificationGroupView').click();
     assert.verifySteps(
         ['do_action'],
         "should do an action to display the related records"

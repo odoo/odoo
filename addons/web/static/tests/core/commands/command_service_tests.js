@@ -21,7 +21,7 @@ import {
     triggerHotkey,
 } from "../../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let env;
 let target;
@@ -169,6 +169,33 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
     );
 });
 
+QUnit.test("useCommand hook with isAvailable", async (assert) => {
+    let available = false;
+    class MyComponent extends TestComponent {
+        setup() {
+            useCommand("Take the throne", () => {}, {
+                isAvailable: () => {
+                    return available;
+                },
+            });
+        }
+    }
+    await mount(MyComponent, target, { env });
+
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsNone(target, ".o_command");
+
+    triggerHotkey("escape");
+    await nextTick();
+    available = true;
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsOnce(target, ".o_command");
+});
+
 QUnit.test("command with hotkey", async (assert) => {
     assert.expect(2);
 
@@ -216,6 +243,27 @@ QUnit.test("global command with hotkey", async (assert) => {
     triggerHotkey("b");
     await nextTick();
     assert.verifySteps([globalHotkey]);
+});
+
+QUnit.test("command with hotkey and isAvailable", async (assert) => {
+    assert.expect(3);
+
+    const hotkey = "a";
+    let isAvailable = false;
+    env.services.command.add("test", () => assert.step(hotkey), {
+        hotkey,
+        isAvailable: () => isAvailable,
+    });
+    await nextTick();
+
+    triggerHotkey("a");
+    await nextTick();
+    assert.verifySteps([]);
+
+    isAvailable = true;
+    triggerHotkey("a");
+    await nextTick();
+    assert.verifySteps([hotkey]);
 });
 
 QUnit.test("open command palette with command config", async (assert) => {

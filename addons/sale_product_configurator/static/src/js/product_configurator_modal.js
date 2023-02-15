@@ -79,6 +79,7 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
             mode: self.mode,
             product_id: self.rootProduct.product_id,
             variant_values: self.rootProduct.variant_values,
+            product_custom_attribute_values: self.rootProduct.product_custom_attribute_values,
             pricelist_id: self.pricelistId || false,
             add_qty: self.rootProduct.quantity,
             force_dialog: self.forceDialog,
@@ -114,7 +115,6 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
             if (!self.preventOpening) {
                 self.$modal.find(".modal-body").replaceWith(self.$el);
                 self.$modal.attr('open', true);
-                self.$modal.removeAttr("aria-hidden");
                 self.$modal.appendTo(self.container);
                 const modal = new Modal(self.$modal[0], {
                     focus: true,

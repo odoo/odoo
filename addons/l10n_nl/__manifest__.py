@@ -10,7 +10,7 @@
     'author': 'Onestein',
     'website': 'http://www.onestein.eu',
     'depends': [
-        'account',
+        'l10n_multilang',
         'base_iban',
         'base_vat',
     ],

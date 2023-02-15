@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from babel.dates import format_datetime, format_date
 from odoo import models, api, _, fields
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
@@ -79,8 +80,10 @@ class account_journal(models.Model):
             SELECT move.journal_id,
                    move.sequence_prefix
               FROM account_move move
+              JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
                AND move.state = 'posted'
+               AND (company.fiscalyear_lock_date IS NULL OR move.date >= company.fiscalyear_lock_date) 
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
         """, {
@@ -125,7 +128,6 @@ class account_journal(models.Model):
             return {'x':short_name,'y': amount, 'name':name}
 
         self.ensure_one()
-        BankStatement = self.env['account.bank.statement']
         data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
@@ -274,17 +276,21 @@ class account_journal(models.Model):
             outstanding_pay_account_balance, nb_lines_outstanding_pay_account_balance = self._get_journal_outstanding_payments_account_balance(
                 domain=[('parent_state', '=', 'posted')])
 
-            self._cr.execute('''
-                SELECT COUNT(st_line.id)
-                FROM account_bank_statement_line st_line
-                JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
-                JOIN account_bank_statement st ON st_line.statement_id = st.id
-                WHERE st_line_move.journal_id IN %s
-                AND st.state = 'posted'
-                AND NOT st_line.is_reconciled
-                AND st_line_move.to_check IS NOT TRUE
-            ''', [tuple(self.ids)])
-            number_to_reconcile = self.env.cr.fetchone()[0]
+            if self.default_account_id:
+                self._cr.execute('''
+                    SELECT COUNT(st_line.id)
+                    FROM account_bank_statement_line st_line
+                    JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
+                    JOIN account_move_line aml ON aml.move_id = st_line_move.id
+                    WHERE st_line_move.journal_id IN %s
+                    AND NOT st_line.is_reconciled
+                    AND st_line_move.to_check IS NOT TRUE
+                    AND st_line_move.state = 'posted'
+                    AND aml.account_id = %s
+                ''', [tuple(self.ids), self.default_account_id.id])
+                number_to_reconcile = self.env.cr.fetchone()[0]
+            else:
+                number_to_reconcile = 0
 
             to_check_ids = self.to_check_ids()
             number_to_check = len(to_check_ids)
@@ -429,7 +435,7 @@ class account_journal(models.Model):
             rslt_sum += target_currency.round(amount)
         return (rslt_count, rslt_sum)
 
-    def action_create_new(self):
+    def _get_move_action_context(self):
         ctx = self._context.copy()
         ctx['default_journal_id'] = self.id
         if self.type == 'sale':
@@ -439,37 +445,20 @@ class account_journal(models.Model):
         else:
             ctx['default_move_type'] = 'entry'
             ctx['view_no_maturity'] = True
+        return ctx
+
+    def action_create_new(self):
         return {
             'name': _('Create invoice/bill'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'account.move',
             'view_id': self.env.ref('account.view_move_form').id,
-            'context': ctx,
+            'context': self._get_move_action_context(),
         }
 
     def create_cash_statement(self):
-        ctx = self._context.copy()
-        ctx.update({'journal_id': self.id, 'default_journal_id': self.id, 'default_journal_type': 'cash'})
-        open_statements = self.env['account.bank.statement'].search([('journal_id', '=', self.id), ('state', '=', 'open')])
-        action = {
-            'name': _('Create cash statement'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'account.bank.statement',
-            'context': ctx,
-        }
-        if len(open_statements) == 1:
-            action.update({
-                'view_mode': 'form',
-                'res_id': open_statements.id,
-            })
-        elif len(open_statements) > 1:
-            action.update({
-                'view_mode': 'tree,form',
-                'domain': [('id', 'in', open_statements.ids)],
-            })
-        return action
+        raise UserError(_('Please install Accounting for this feature'))
 
     def action_create_vendor_bill(self):
         """ This function is called by the "Import" button of Vendor Bills,
@@ -606,6 +595,7 @@ class account_journal(models.Model):
                 for journal_id, prefix in has_sequence_holes
             ),
             'context': {
+                **self._get_move_action_context(),
                 'search_default_group_by_sequence_prefix': 1,
                 'expand': 1,
             }

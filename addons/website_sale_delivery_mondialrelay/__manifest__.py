@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "website_sale_delivery_mondialrelay",
+    'name': "eCommerce Mondialrelay Delivery",
     'summary': """ Let's choose Point Relais® on your ecommerce """,
 
     'description': """

@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'CallActionListView',
+Model({
+    name: "CallActionListView",
+    template: "mail.CallActionListView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -79,114 +78,77 @@ registerModel({
                 startWithVideo: true,
             });
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeCallButtonTitle() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (this.thread.rtc) {
-                return this.env._t("Disconnect");
-            } else {
-                return this.env._t("Join Call");
-            }
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeCameraButtonTitle() {
-            if (this.messaging.rtc.sendUserVideo) {
-                return this.env._t("Stop camera");
-            } else {
-                return this.env._t("Turn camera on");
-            }
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeHeadphoneButtonTitle() {
-            if (!this.messaging.rtc.currentRtcSession) {
-                return clear();
-            }
-            if (this.messaging.rtc.currentRtcSession.isDeaf) {
-                return this.env._t("Undeafen");
-            } else {
-                return this.env._t("Deafen");
-            }
-        },
-        /**
-         * @private
-         */
-        _computeIsSmall() {
-            return Boolean(this.callView && this.callView.threadView.compact && !this.callView.isFullScreen);
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeMicrophoneButtonTitle() {
-            if (!this.messaging.rtc.currentRtcSession) {
-                return clear();
-            }
-            if (this.messaging.rtc.currentRtcSession.isMute) {
-                return this.env._t("Unmute");
-            } else {
-                return this.env._t("Mute");
-            }
-        },
-        /**
-         * @returns {string}
-         */
-        _computeScreenSharingButtonTitle() {
-            if (this.messaging.rtc.sendDisplay) {
-                return this.env._t("Stop screen sharing");
-            } else {
-                return this.env._t("Share screen");
-            }
-        },
     },
     fields: {
         callButtonTitle: attr({
-            compute: '_computeCallButtonTitle',
-            default: '',
+            default: "",
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (this.thread.rtc) {
+                    return this.env._t("Disconnect");
+                } else {
+                    return this.env._t("Join Call");
+                }
+            },
         }),
-        callMainView: one('CallMainView', {
-            identifying: true,
-            inverse: 'callActionListView',
-        }),
-        callView: one('CallView', {
-            related: 'callMainView.callView',
-            required: true,
-        }),
+        callMainView: one("CallMainView", { identifying: true, inverse: "callActionListView" }),
+        callView: one("CallView", { related: "callMainView.callView", required: true }),
         cameraButtonTitle: attr({
-            compute: '_computeCameraButtonTitle',
-            default: '',
+            default: "",
+            compute() {
+                if (this.messaging.rtc.sendUserVideo) {
+                    return this.env._t("Stop camera");
+                } else {
+                    return this.env._t("Turn camera on");
+                }
+            },
         }),
         headphoneButtonTitle: attr({
-            compute: '_computeHeadphoneButtonTitle',
-            default: '',
+            default: "",
+            compute() {
+                if (!this.messaging.rtc.currentRtcSession) {
+                    return clear();
+                }
+                if (this.messaging.rtc.currentRtcSession.isDeaf) {
+                    return this.env._t("Undeafen");
+                } else {
+                    return this.env._t("Deafen");
+                }
+            },
         }),
         isSmall: attr({
-            compute: '_computeIsSmall',
+            compute() {
+                return Boolean(
+                    this.callView && this.callView.threadView.compact && !this.callView.isFullScreen
+                );
+            },
         }),
         microphoneButtonTitle: attr({
-            compute: '_computeMicrophoneButtonTitle',
+            compute() {
+                if (!this.messaging.rtc.currentRtcSession) {
+                    return clear();
+                }
+                if (this.messaging.rtc.currentRtcSession.isMute) {
+                    return this.env._t("Unmute");
+                } else {
+                    return this.env._t("Mute");
+                }
+            },
         }),
-        moreButtonRef: attr(),
-        moreMenuPopoverView: one('PopoverView', {
-            inverse: 'callActionListViewOwnerAsMoreMenu',
-        }),
+        moreButtonRef: attr({ ref: "moreButton" }),
+        moreMenuPopoverView: one("PopoverView", { inverse: "callActionListViewOwnerAsMoreMenu" }),
         screenSharingButtonTitle: attr({
-            compute: '_computeScreenSharingButtonTitle',
-            default: '',
+            default: "",
+            compute() {
+                if (this.messaging.rtc.sendDisplay) {
+                    return this.env._t("Stop screen sharing");
+                } else {
+                    return this.env._t("Share screen");
+                }
+            },
         }),
-        thread: one('Thread', {
-            related: 'callMainView.thread',
-            required: true,
-        }),
+        thread: one("Thread", { related: "callMainView.thread", required: true }),
     },
 });

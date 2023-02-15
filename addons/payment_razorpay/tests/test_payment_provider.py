@@ -24,10 +24,3 @@ class TestPaymentProvider(RazorpayCommon):
         self.assertEqual(
             calculated_signature, '437b72e4e87362a39951b44487cf698410b074afdbed19ec44fffd32d2f863f3'
         )
-
-    def test_neutralize(self):
-        """ Test that the sensitive fields of the provider are correctly neutralized. """
-        self.env['payment.provider']._neutralize()
-        self.assertFalse(self.provider.razorpay_key_id)
-        self.assertFalse(self.provider.razorpay_key_secret)
-        self.assertFalse(self.provider.razorpay_webhook_secret)

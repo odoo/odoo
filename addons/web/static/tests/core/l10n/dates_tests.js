@@ -10,6 +10,8 @@ import {
     serializeDateTime,
     deserializeDate,
     deserializeDateTime,
+    momentToLuxon,
+    luxonToMoment,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { patch, unpatch } from "@web/core/utils/patch";
@@ -42,13 +44,13 @@ function runTestSet(assert, testSet, options) {
         let res2;
         try {
             res1 = options.newFn(input);
-        } catch (_e) {
+        } catch {
             // continue
         }
 
         try {
             res2 = options.legacyFn(input);
-        } catch (_e) {
+        } catch {
             // continue
         }
 
@@ -150,6 +152,18 @@ QUnit.module(
                 parseDateTime("01/13/2019 10:05:45").toISO(),
                 "2019-01-13T10:05:45.000-11:00"
             );
+        });
+
+        QUnit.test("parseDate with different numbering system", async (assert) => {
+            patchWithCleanup(localization, {
+                dateFormat: "dd MMM, yyyy",
+                dateTimeFormat: "dd MMM, yyyy hh:mm:ss",
+                timeFormat: "hh:mm:ss",
+            });
+
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab", defaultLocale: "ar" });
+
+            assert.equal(parseDate("٠١ فبراير, ٢٠٢٣").toISO(), "2023-02-01T00:00:00.000+01:00");
         });
 
         QUnit.test("parseDateTime", async (assert) => {
@@ -518,6 +532,73 @@ QUnit.module(
             );
         });
 
+        QUnit.test("luxonToMoment", async (assert) => {
+            // Timezone is only patched for luxon, as we do not use the lib moment-timezone anyway.
+            patchTimeZone(330);
+            patchDate(2022, 1, 21, 15, 30, 0);
+
+            const luxonDate = DateTime.local().set({
+                millisecond: 0, // force 0ms due to test execution time
+            });
+            assert.strictEqual(luxonDate.toISO(), "2022-02-21T15:30:00.000+05:30");
+
+            const momentDate = luxonToMoment(luxonDate);
+            // Here we only assert the values of the moment object, as it may be
+            // in another timezone than the user's timezone (the patched one) anyway.
+            assert.deepEqual(momentDate.toObject(), {
+                years: 2022,
+                months: 1, // 0-based
+                date: 21,
+                hours: 15,
+                minutes: 30,
+                seconds: 0,
+                milliseconds: 0,
+            });
+        });
+
+        QUnit.test("momentToLuxon", async (assert) => {
+            // Timezone is only patched for luxon, as we do not use the lib moment-timezone anyway.
+            patchTimeZone(330);
+
+            // Patching the date after the having patched the timezone is important,
+            // as it will allow the native Date object to apply the correct timezone offset.
+            // BUT the native dates will still be in the browser's timezone...
+            patchDate(2022, 1, 21, 15, 30, 0);
+
+            // ...thus the created moment object will be in the browser's timezone.
+            const momentDate = moment().millisecond(0); // force 0ms due to test execution time
+            const momentHourOffset = momentDate.utcOffset() / 60;
+            // NB: asserting the moment offset is not relevant as it comes from the browser's TZ.
+            assert.deepEqual(momentDate.toObject(), {
+                years: 2022,
+                months: 1, // 0-based
+                date: 21,
+                hours: 10 + momentHourOffset,
+                minutes: 0,
+                seconds: 0,
+                milliseconds: 0,
+            });
+
+            // momentToluxon uses the moment object as is and outputs the same values in a luxon's
+            // DateTime object in the user's timezone...
+            const luxonDate = momentToLuxon(momentDate);
+            // ...so the below assert is correct even if we would have naturally
+            // expected something like "2022-02-21T15:30:00.000+05:30"
+            assert.deepEqual(luxonDate.toObject(), {
+                year: 2022,
+                month: 2, // 1-based
+                day: 21,
+                hour: 10 + momentHourOffset,
+                minute: 0,
+                second: 0,
+                millisecond: 0,
+            });
+            assert.strictEqual(luxonDate.offset, 330, "should be in user's timezone");
+        });
+
+        // -----------------------------------------------------------------------------------------
+        // -- Date utils legacy comparison -> TESTS in the below module will get removed someday! --
+        // -----------------------------------------------------------------------------------------
         QUnit.module("dates utils compatibility with legacy", {
             beforeEach() {
                 patchWithCleanup(localization, {
@@ -566,7 +647,7 @@ QUnit.module(
              * Type of testSet value: [newExpected: string, legacyExpected: string]
              */
             const testSet = new Map([
-                ["10101010101010", ["1010-10-10T00:00:00.000Z"]],
+                ["10101010101010", [undefined, "1010-10-10T00:00:00.000Z"]],
                 ["1191111", ["1191-04-21T00:00:00.000Z"]], // day 111 of year 1191
                 ["11911111", ["1191-11-11T00:00:00.000Z"]],
                 ["3101", ["2020-01-31T00:00:00.000Z"]],
@@ -583,8 +664,8 @@ QUnit.module(
                 ["310197", ["1997-01-31T00:00:00.000Z"]],
                 ["310117", ["2017-01-31T00:00:00.000Z"]],
                 ["31011985", ["1985-01-31T00:00:00.000Z"]],
-                ["3101198508", ["1985-01-31T00:00:00.000Z"]],
-                ["310119850833", ["1985-01-31T00:00:00.000Z"]],
+                ["3101198508", [undefined, "1985-01-31T00:00:00.000Z"]],
+                ["310119850833", [undefined, "1985-01-31T00:00:00.000Z"]],
 
                 ["1137", [undefined]],
                 ["1197", [undefined]],
@@ -598,7 +679,7 @@ QUnit.module(
 
                 ["970131", [undefined]],
                 ["31.01", ["2020-01-31T00:00:00.000Z"]],
-                ["31/01/1985 08", ["1985-01-31T00:00:00.000Z"]],
+                ["31/01/1985 08", [undefined, "1985-01-31T00:00:00.000Z"]],
 
                 ["01121934", ["1934-12-01T00:00:00.000Z"]],
                 ["011234", ["2034-12-01T00:00:00.000Z"]],

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="label_package_template_view_delivery" inherit_id="stock.label_package_template_view">
         <xpath expr="//t[@name='datamatrix_pack_date']" position="after">
@@ -35,7 +36,7 @@
             </t>
         </xpath>
         <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
-            <t t-if="o.valid_sscc and env['ir.actions.report'].datamatrix_available()">
+            <t t-if="o.valid_sscc">
                 <!-- SSCC uses weight if necessary/available, standard barcode will not -->
                 <div t-if="o.shipping_weight" class="col-auto"><strong>Shipping Weight: </strong><span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
                 <div t-elif="o.weight" class="col-auto"><strong>Weight: </strong><span t-field="o.weight"/> <t t-out="o.weight_uom_name"/></div>

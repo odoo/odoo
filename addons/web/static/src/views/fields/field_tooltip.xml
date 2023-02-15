@@ -8,6 +8,10 @@
         </p>
 
         <ul class="o-tooltip--technical" t-if="debug" role="tooltip">
+            <li data-item="field" t-if="field and field.label">
+                <span class="o-tooltip--technical--title">Label:</span>
+                <t t-esc="field.label"/>
+            </li>
             <li data-item="field" t-if="field and field.name">
                 <span class="o-tooltip--technical--title">Field:</span>
                 <t t-esc="field.name"/>
@@ -24,9 +28,9 @@
                 <li t-if="field.widget" data-item="widget">
                     <span class="o-tooltip--technical--title">Widget:</span>
                     <t t-if="field.widgetDescription" t-esc="field.widgetDescription"/>
-                    <t t-if="field.widgetDescription"> (</t>
-                    <t t-esc="field.widget"/>
-                    <t t-if="field.widgetDescription">)</t>
+                    <t t-if="field.widget">
+                        (<t t-esc="field.widget"/>)
+                    </t>
                 </li>
                 <li t-if="field.context" data-item="context">
                     <span class="o-tooltip--technical--title">Context:</span>

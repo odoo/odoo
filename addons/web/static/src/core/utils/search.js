@@ -12,6 +12,10 @@ import { unaccent } from "./strings";
  *
  * Better matches will get a higher score: consecutive letters are better,
  * and a match closer to the beginning of the string is also scored higher.
+ *
+ * @param {string} pattern
+ * @param {string} str
+ * @returns {number}
  */
 function match(pattern, str) {
     let totalScore = 0;
@@ -39,6 +43,12 @@ function match(pattern, str) {
  * Return a list of things that matches a pattern, ordered by their 'score' (
  * higher score first). An higher score means that the match is better. For
  * example, consecutive letters are considered a better match.
+ *
+ * @template T
+ * @param {string} pattern
+ * @param {T[]} list
+ * @param {(element: T) => string} fn
+ * @returns {T[]}
  */
 export function fuzzyLookup(pattern, list, fn) {
     const results = [];
@@ -56,6 +66,11 @@ export function fuzzyLookup(pattern, list, fn) {
 }
 
 // Does `pattern` fuzzy match `string`?
+/**
+ * @param {string} pattern
+ * @param {string} string
+ * @returns {boolean}
+ */
 export function fuzzyTest(pattern, string) {
     return match(pattern, string) !== 0;
 }

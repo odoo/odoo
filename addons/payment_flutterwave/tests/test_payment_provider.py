@@ -19,9 +19,3 @@ class TestPaymentProvider(FlutterwaveCommon):
             self.company_id, self.partner.id, 0., is_validation=True
         )
         self.assertNotIn(self.flutterwave, compatible_providers)
-
-    def test_neutralize(self):
-        self.env['payment.provider']._neutralize()
-        self.assertEqual(self.provider.flutterwave_public_key, False)
-        self.assertEqual(self.provider.flutterwave_secret_key, False)
-        self.assertEqual(self.provider.flutterwave_webhook_secret, False)

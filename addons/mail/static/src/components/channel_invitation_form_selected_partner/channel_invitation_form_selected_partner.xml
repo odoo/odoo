@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ChannelInvitationFormSelectedPartner" owl="1">
-        <button class="btn btn-secondary" t-on-click="() => channelInvitationFormSelectedPartnerView.channelInvitationFormOwner.onClickSelectedPartner(channelInvitationFormSelectedPartnerView.partner)">
-            <t t-esc="channelInvitationFormSelectedPartnerView.partner.nameOrDisplayName"/> <i class="fa fa-times"/>
+    <t t-name="mail.ChannelInvitationFormSelectedPartnerView" owl="1">
+        <button class="btn btn-secondary" t-on-click="() => channelInvitationFormOwner.onClickSelectedPartner(partner)">
+            <t t-esc="partner.nameOrDisplayName"/> <i class="fa fa-times"/>
         </button>
     </t>
 

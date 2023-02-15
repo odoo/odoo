@@ -8,10 +8,25 @@ $-seen-urls: ();
     @if $-url and index($-seen-urls, $-url) == null {
         $-seen-urls: append($-seen-urls, $-url);
         @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
+    } @else {
+        $-name: o-get-font-info($alias, 'name');
+        $-attachment: o-get-font-info($alias, 'attachment');
+        @if $-attachment {
+            @import url("/web/content/#{$-attachment}/google-font-#{unquote($-name)}");
+        }
     }
 }
 
 :root {
+    // The color behind the boxed layout is forced by Odoo. The box background
+    // color uses the `$body-bg` variable.
+    // grep: BOXED_BODY_BG_ODOO
+    @if o-website-value('layout') != 'full' {
+        $-boxed-layout-body-bg: o-color('body');
+        --#{$variable-prefix}body-bg-rgb: #{to-rgb($-boxed-layout-body-bg)};
+        --#{$variable-prefix}body-bg: #{$-boxed-layout-body-bg};
+    }
+
     // The theme customize modal JS will need to know the value of some scss
     // variables used to render the user website, and those may have been
     // customized by themes, the user or anything else (so there is no file to
@@ -22,6 +37,11 @@ $-seen-urls: ();
 
     // 1) Handle default values
     @include print-variable('header-font-size', $font-size-base);
+
+    $-font-website-value: o-website-value('font');
+    @include print-variable('headings-font', $-font-website-value);
+    @include print-variable('navbar-font', $-font-website-value);
+    @include print-variable('buttons-font', $-font-website-value);
 
     // 2) The values in the $theme-colors map are already printed by Bootstrap.
 
@@ -41,8 +61,6 @@ $-seen-urls: ();
     }
 
     // 5) Use final value used by the theme
-    @include print-variable('body', $body-bg);
-
     @include print-variable('logo-height', $o-theme-navbar-logo-height);
     @include print-variable('fixed-logo-height', $o-theme-navbar-fixed-logo-height);
 
@@ -110,7 +128,10 @@ $-seen-urls: ();
 
     @if o-website-value('layout') != 'full' {
         > main {
-            background-color: o-color('o-cc1-bg');
+            // The color behind the boxed layout is forced by Odoo. The box
+            // background color uses the `$body-bg` variable.
+            // grep: BOXED_BODY_BG_ODOO
+            background-color: $body-bg;
         }
 
         @include media-breakpoint-up(sm) {
@@ -746,7 +767,7 @@ $-transition-duration: 200ms;
 .o_header_affixed {
     display: block;
     @include o-position-absolute(0, 0, auto, 0);
-    position: sticky;
+    position: fixed;
 
     &:not(.o_header_no_transition) {
         transition: transform $-transition-duration;
@@ -962,6 +983,12 @@ header {
                 } @else {
                     max-width: 560px;
                     text-align: left !important;
+                    // Prevent #top_menu from overflowing the page below the
+                    // maximum width. (e.g. if contains an inline language
+                    // switcher with many elements.)
+                    @media (max-width: 560px) {
+                        max-width: 100%;
+                    }
                 }
                 min-width: 250px;
                 margin: 0 !important;
@@ -1012,6 +1039,11 @@ header {
                     padding-left: .5em;
                     padding-right: .5em;
                 }
+                .js_language_selector .dropdown-toggle {
+                    // Hide the language switcher button because it does not
+                    // make sense to show it if the dropdown is always open.
+                    display: none;
+                }
             }
         }
         &.collapsing #top_menu {
@@ -1056,12 +1088,19 @@ header {
 } @else if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
-            // Hack: padding is used by layout option (boxed, etc) so use
-            // border here to be able to combine the effect.
+            // Two different website options might add padding:
+            // - The sidebar header template
+            // - The website layout template when different than 'full'
+            // We need to combine both using `calc`. The `border` solution does
+            // not work on Safari.
+            $padding-size: o-website-value('sidebar-width');
+            @if o-website-value('layout') != 'full' {
+                $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
+            }
             @if $-hamburger-right {
-                border-right: o-website-value('sidebar-width') solid transparent;
+                padding-right: $padding-size;
             } @else {
-                border-left: o-website-value('sidebar-width') solid transparent;
+                padding-left: $padding-size;
             }
 
             > header {
@@ -1165,7 +1204,7 @@ header {
     }
 }
 
-.o_mega_menu_container_size {
+.dropdown-menu.o_mega_menu_container_size {
     $-header-template: o-website-value('header-template');
     @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
         $bp: if($-header-template == 'minimalist', md, lg);
@@ -1474,17 +1513,6 @@ $ribbon-padding: 100px;
 // Search results
 .o_search_result_item_detail {
     flex: 1;
-}
-
-// Cookies Bar
-#website_cookies_bar {
-    .o_cookies_discrete {
-        .js_close_popup.o_cookies_bar_text_button, .o_cookies_bar_text_policy {
-            @include media-breakpoint-down(lg) {
-                margin-bottom: 1rem;
-            }
-        }
-    }
 }
 
 .o_website_btn_loading {

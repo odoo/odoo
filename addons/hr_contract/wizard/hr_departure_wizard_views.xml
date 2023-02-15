@@ -11,8 +11,8 @@
             <xpath expr="//div[@id='activities']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//field[@name='departure_date']" position="replace">
-                <field name="departure_date" string="Contract End Date"/>
+            <xpath expr="//field[@name='departure_date']" position="attributes">
+                <attribute name="string">Contract End Date</attribute>
             </xpath>
             <xpath expr="//div[@id='activities']" position="inside">
                 <div><field name="set_date_end"/><label for="set_date_end" string="Contract"/></div>

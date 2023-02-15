@@ -12,10 +12,12 @@ from . import test_crawl
 from . import test_disable_unused_snippets_assets
 from . import test_fuzzy
 from . import test_get_current_website
+from . import test_grid_layout
 from . import test_http_endpoint
 from . import test_lang_url
 from . import test_menu
 from . import test_page
+from . import test_page_manager
 from . import test_performance
 from . import test_qweb
 from . import test_res_users

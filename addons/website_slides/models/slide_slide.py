@@ -119,11 +119,11 @@ class Slide(models.Model):
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Html('Description', translate=True)
-    channel_id = fields.Many2one('slide.channel', string="Course", required=True)
+    channel_id = fields.Many2one('slide.channel', string="Course", required=True, ondelete='cascade')
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     is_new_slide = fields.Boolean('Is New Slide', compute='_compute_is_new_slide')
-    completion_time = fields.Float('Duration', digits=(10, 4), help="The estimated completion time for this slide")
+    completion_time = fields.Float('Duration', digits=(10, 4))
     # Categories
     is_category = fields.Boolean('Is a category', default=False)
     category_id = fields.Many2one('slide.slide', string="Section", compute="_compute_category_id", store=True)
@@ -171,10 +171,12 @@ class Slide(models.Model):
     # google
     google_drive_id = fields.Char('Google Drive ID of the external URL', compute='_compute_google_drive_id')
     # content - webpage
-    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of category 'Article'.", translate=True, sanitize_attributes=False, sanitize_form=False)
+    html_content = fields.Html(
+        "HTML Content", translate=True,
+        sanitize_attributes=False, sanitize_form=False, sanitize_overridable=True,
+        help="Custom HTML content for slides of category 'Article'.")
     # content - images
-    image_binary_content = fields.Binary('Image Content', related='binary_content', readonly=False,
-        help="Used to filter file input to images only")
+    image_binary_content = fields.Binary('Image Content', related='binary_content', readonly=False) # Used to filter file input to images only
     image_google_url = fields.Char('Image Link', related='url', readonly=False,
         help="Link of the image (we currently only support Google Drive as source)")
     # content - documents
@@ -193,8 +195,7 @@ class Slide(models.Model):
         help="Subtype of the slide category, allows more precision on the actual file type / source type.")
     document_google_url = fields.Char('Document Link', related='url', readonly=False,
         help="Link of the document (we currently only support Google Drive as source)")
-    document_binary_content = fields.Binary('PDF Content', related='binary_content', readonly=False,
-        help="Used to filter file input to PDF only")
+    document_binary_content = fields.Binary('PDF Content', related='binary_content', readonly=False) # Used to filter file input to PDF only
     # content - videos
     video_url = fields.Char('Video Link', related='url', readonly=False,
         help="Link of the video (we support YouTube, Google Drive and Vimeo as sources)")
@@ -251,6 +252,9 @@ class Slide(models.Model):
     def _compute_is_new_slide(self):
         for slide in self:
             slide.is_new_slide = slide.date_published > fields.Datetime.now() - relativedelta(days=7) if slide.is_published else False
+
+    def _get_placeholder_filename(self, field):
+        return self.channel_id._get_placeholder_filename(field)
 
     @api.depends('channel_id.slide_ids.is_category', 'channel_id.slide_ids.sequence')
     def _compute_category_id(self):
@@ -684,11 +688,6 @@ class Slide(models.Model):
         rec = super(Slide, self).copy(default)
         rec.sequence = 0
         return rec
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_already_taken(self):
-        if self.question_ids and self.channel_id.channel_partner_ids:
-            raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
 
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):

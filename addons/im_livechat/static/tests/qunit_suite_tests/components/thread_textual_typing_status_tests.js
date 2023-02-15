@@ -31,7 +31,7 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
     await openDiscuss();
 
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "",
         "Should display no one is currently typing"
     );
@@ -49,7 +49,7 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
+        document.querySelector('.o_ThreadTextualTypingStatusView').textContent,
         "Visitor 20 is typing...",
         "Should display that visitor is typing"
     );

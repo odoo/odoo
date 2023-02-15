@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
-import base64
 import logging
 import requests
 import zipfile
@@ -20,18 +19,20 @@ class odoo_resolver(etree.Resolver):
     It will search filenames in the ir.attachments
     """
 
-    def __init__(self, env):
+    def __init__(self, env, prefix):
         super().__init__()
         self.env = env
+        self.prefix = prefix
 
     def resolve(self, url, id, context):
         """Search url in ``ir.attachment`` and return the resolved content."""
-        attachment = self.env['ir.attachment'].search([('name', '=', url)])
+        attachment_name = f'{self.prefix}.{url}' if self.prefix else url
+        attachment = self.env['ir.attachment'].search([('name', '=', attachment_name)])
         if attachment:
-            return self.resolve_string(base64.b64decode(attachment.datas), context)
+            return self.resolve_string(attachment.raw, context)
 
 
-def _check_with_xsd(tree_or_str, stream, env=None):
+def _check_with_xsd(tree_or_str, stream, env=None, prefix=None):
     """Check an XML against an XSD schema.
 
     This will raise a UserError if the XML file is not valid according to the
@@ -42,12 +43,15 @@ def _check_with_xsd(tree_or_str, stream, env=None):
         If env is given, it can also be the name of an attachment in the filestore
     :param odoo.api.Environment env: If it is given, it enables resolving the
         imports of the schema in the filestore with ir.attachments.
+    :param str prefix: if given, provides a prefix to try when
+        resolving the imports of the schema. e.g. prefix='l10n_cl_edi' will
+        enable 'SiiTypes_v10.xsd' to be resolved to 'l10n_cl_edi.SiiTypes_v10.xsd'.
     """
     if not isinstance(tree_or_str, etree._Element):
         tree_or_str = etree.fromstring(tree_or_str)
     parser = etree.XMLParser()
     if env:
-        parser.resolvers.add(odoo_resolver(env))
+        parser.resolvers.add(odoo_resolver(env, prefix))
         if isinstance(stream, str) and stream.endswith('.xsd'):
             attachment = env['ir.attachment'].search([('name', '=', stream)])
             if not attachment:
@@ -259,7 +263,7 @@ def load_xsd_files_from_url(env, url, file_name, force_reload=False,
     return fetched_attachment
 
 
-def validate_xml_from_attachment(env, xml_content, xsd_name, reload_files_function=None):
+def validate_xml_from_attachment(env, xml_content, xsd_name, reload_files_function=None, prefix=None):
     """Try and validate the XML content with an XSD attachment.
     If the XSD attachment cannot be found in database, (re)load it.
 
@@ -275,7 +279,7 @@ def validate_xml_from_attachment(env, xml_content, xsd_name, reload_files_functi
     if env.context.get('skip_xsd', False):
         return
     try:
-        _check_with_xsd(xml_content, xsd_name, env)
+        _check_with_xsd(xml_content, xsd_name, env, prefix)
     except FileNotFoundError:
         if not reload_files_function:
             _logger.warning("You need to provide a function used to (re)load XSD files")

@@ -1,45 +1,31 @@
 // container ghost card in modal
-.o_kanban_examples_dialog .modal-body {
-    display: flex;
-    padding: 0px;
-    background: map-get($theme-colors, 'light');
-
-    // sidebar
-    .o_notebook_headers {
-        flex: 0 0 auto;
-        border-right: 1px solid map-get($grays, '300');
-        background: white;
-
-        > ul > li {
-            margin: 0;
-            border-bottom: 1px solid map-get($grays, '300');
-
-            > a {
-                padding: 12px 15px;
-                border-left: 3px solid transparent;
-                &:not(.active) {
-                    color: $o-main-text-color;
-                }
-                &:focus {
-                    outline: none;
-                }
-            }
-            &.active > a {
-                color: $headings-color;
-                border-left-color: $o-brand-primary;
-                font-weight: bold;
-            }
-        }
+.o_kanban_examples_dialog {
+    .modal-body {
+        padding: 0;
+        background: map-get($theme-colors, 'light');
     }
 
-    // content
-    .o_notebook_content {
-        flex: 1 1 100%;
-        min-height: 300px;
+    .o_notebook {
+        --notebook-link-border-color: #{$border-color};
+        --notebook-link-border-color-hover: #{$border-color};
+        --notebook-link-border-color-active-accent: #{$o-brand-primary};
 
-        .o_kanban_examples_description {
-            padding: 16px 16px 0;
-            text-align: justify;
+        // sidebar
+        .nav-link.active {
+            &, &:hover, &:focus, &:active {
+                border-right-color: var(--notebook-link-border-color-active);
+            }
+        }
+
+        // content
+        .o_notebook_content {
+            flex: 1 1 100%;
+            min-height: 300px;
+
+            .o_kanban_examples_description {
+                padding: 16px 16px 0;
+                text-align: justify;
+            }
         }
     }
 }

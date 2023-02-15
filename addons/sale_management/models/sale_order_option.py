@@ -82,7 +82,7 @@ class SaleOrderOption(models.Model):
     @api.depends('product_id', 'uom_id', 'quantity')
     def _compute_price_unit(self):
         for option in self:
-            if not option.product_id or not option.order_id.pricelist_id:
+            if not option.product_id:
                 continue
             # To compute the price_unit a so line is created in cache
             values = option._get_values_to_add_to_order()

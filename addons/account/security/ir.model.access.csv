@@ -35,8 +35,6 @@ access_account_fiscal_position_account,account.fiscal.position all,model_account
 access_product_product_account_user,product.product.account.user,product.model_product_product,group_account_readonly,1,0,0,0
 access_product_product_account_manager,product.product.account.manager,product.model_product_product,account.group_account_manager,1,1,1,1
 
-access_account_cashbox,account.bank.statement.cashbox,model_account_bank_statement_cashbox,account.group_account_user,1,1,1,1
-access_account_cashbox_line,account.bank.statement.cashbox.line,model_account_cashbox_line,account.group_account_user,1,1,1,1
 access_account_bank_statement_group_readonly,account.bank.statement.group.invoice,model_account_bank_statement,account.group_account_readonly,1,0,0,0
 access_account_bank_statement_group_invoice,account.bank.statement.group.invoice,model_account_bank_statement,account.group_account_invoice,1,0,0,0
 access_account_bank_statement_line_group_readonly,account.bank.statement.line.group.invoice,model_account_bank_statement_line,account.group_account_readonly,1,0,0,0
@@ -58,6 +56,9 @@ access_account_analytic_account,account.analytic.account,analytic.model_account_
 access_account_analytic_line_readonly,account.analytic.line invoice,model_account_analytic_line,account.group_account_readonly,1,0,0,0
 access_account_analytic_line_invoice,account.analytic.line invoice,model_account_analytic_line,account.group_account_invoice,1,1,1,1
 access_account_analytic_accountant,account.analytic.account accountant,analytic.model_account_analytic_account,account.group_account_user,1,1,1,1
+access_account_analytic_plan_accountant,account.analytic.plan accountant,analytic.model_account_analytic_plan,account.group_account_user,1,1,1,1
+access_account_analytic_distribution_readonly,account.analytic.distribution invoice,analytic.model_account_analytic_distribution_model,account.group_account_readonly,1,0,0,0
+access_account_analytic_distribution_invoice,account.analytic.distribution invoice,analytic.model_account_analytic_distribution_model,account.group_account_invoice,1,1,1,1
 
 access_account_journal_readonly,account.journal,model_account_journal,account.group_account_readonly,1,0,0,0
 access_account_journal_manager,account.journal,model_account_journal,account.group_account_manager,1,1,1,1
@@ -119,20 +120,15 @@ access_account_payment_readonly,account.payment,model_account_payment,account.gr
 access_account_payment,account.payment,model_account_payment,account.group_account_invoice,1,1,1,1
 
 access_account_payment_register,access.account.payment.register,model_account_payment_register,account.group_account_invoice,1,1,1,0
-access_account_bank_statement_closebalance,access.account.bank.statement.closebalance,model_account_bank_statement_closebalance,account.group_account_user,1,1,1,0
 access_account_automatic_entry_wizard,access.account.automatic.entry.wizard,model_account_automatic_entry_wizard,account.group_account_user,1,1,1,0
 access_account_unreconcile,access.account.unreconcile,model_account_unreconcile,account.group_account_user,1,1,1,0
 access_account_resequence,access.account.resequence.wizard,model_account_resequence_wizard,account.group_account_manager,1,1,1,0
 access_validate_account_move,access.validate.account.move,model_validate_account_move,account.group_account_invoice,1,1,1,0
-access_cash_box_out,access.cash.box.out,model_cash_box_out,account.group_account_user,1,1,1,0
 access_account_move_reversal,access.account.move.reversal,model_account_move_reversal,account.group_account_invoice,1,1,1,0
 access_account_financial_year_op,access.account.financial.year.op,model_account_financial_year_op,account.group_account_manager,1,1,1,0
 access_account_setup_bank_manual_config,access.account.setup.bank.manual.config,model_account_setup_bank_manual_config,account.group_account_manager,1,1,1,0
 access_account_invoice_send,access.account.invoice.send,model_account_invoice_send,account.group_account_invoice,1,1,1,0
 
-access_account_analytic_default,account.analytic.default,model_account_analytic_default,account.group_account_readonly,1,0,0,0
-access_account_analytic_default_analytic,account.analytic.default analytic,model_account_analytic_default,analytic.group_analytic_accounting,1,0,0,0
-access_account_analytic_default_invoice,account.analytic.default invoice,model_account_analytic_default,account.group_account_invoice,1,1,1,1
 access_account_tour_upload_bill,account.tour.upload.bill,model_account_tour_upload_bill,account.group_account_manager,1,1,1,0
 access_account_tour_upload_bill_email_confirm,account.tour.upload.bill.email.confirm,model_account_tour_upload_bill_email_confirm,account.group_account_manager,1,1,1,0
 

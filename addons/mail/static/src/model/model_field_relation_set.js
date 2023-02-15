@@ -1,16 +1,15 @@
 /** @odoo-module */
 
-import { decrement, increment } from '@mail/model/model_field_command';
-import { Listener } from '@mail/model/model_listener';
-import { followRelations } from '@mail/model/model_utils';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { decrement, increment } from "@mail/model/model_field_command";
+import { Listener } from "@mail/model/model_listener";
+import { followRelations } from "@mail/model/model_utils";
+import { cleanSearchTerm } from "@mail/utils/utils";
 
 /**
  * Defines a set containing the relation records of the given field on the given
  * record. The behavior of this set depends on the field properties.
  */
 export class RelationSet {
-
     /**
      * @param {Record} record
      * @param {ModelField} field
@@ -49,114 +48,135 @@ export class RelationSet {
         }
         this.set.add(value);
         if (this.field.sort) {
-            this.sortArray.push(value);
+            const compareDefinition = this.field.sort;
+            const compareFunction = (a, b) => {
+                for (const [compareMethod, relatedPath] of compareDefinition) {
+                    const valA = followRelations(a, relatedPath);
+                    const valB = followRelations(b, relatedPath);
+                    switch (compareMethod) {
+                        case "truthy-first": {
+                            if (valA === valB) {
+                                break;
+                            }
+                            if (!valA) {
+                                return 1;
+                            }
+                            if (!valB) {
+                                return -1;
+                            }
+                            break;
+                        }
+                        case "falsy-first": {
+                            if (valA === valB) {
+                                break;
+                            }
+                            if (!valA) {
+                                return -1;
+                            }
+                            if (!valB) {
+                                return 1;
+                            }
+                            break;
+                        }
+                        case "case-insensitive-asc": {
+                            if (typeof valA !== "string" || typeof valB !== "string") {
+                                break;
+                            }
+                            const cleanedValA = cleanSearchTerm(valA);
+                            const cleanedValB = cleanSearchTerm(valB);
+                            if (cleanedValA === cleanedValB) {
+                                break;
+                            }
+                            return cleanedValA < cleanedValB ? -1 : 1;
+                        }
+                        case "smaller-first":
+                            if (typeof valA !== "number" || typeof valB !== "number") {
+                                break;
+                            }
+                            if (valA === valB) {
+                                break;
+                            }
+                            return valA - valB;
+                        case "greater-first":
+                            if (typeof valA !== "number" || typeof valB !== "number") {
+                                break;
+                            }
+                            if (valA === valB) {
+                                break;
+                            }
+                            return valB - valA;
+                        case "most-recent-first":
+                            if (!(valA instanceof Date) || !(valB instanceof Date)) {
+                                break;
+                            }
+                            if (valA === valB) {
+                                break;
+                            }
+                            return valB - valA;
+                        default:
+                            throw Error(
+                                `sort compare method "${compareMethod}" is not supported.`
+                            );
+                    }
+                }
+                return 0;
+            };
+            const search = (from, to) => {
+                if (from === to) {
+                    return to;
+                }
+                const m = Math.floor((from + to) / 2);
+                const compare = compareFunction(this.sortArray[m], value);
+                if (compare > 0) {
+                    return search(from, m);
+                }
+                if (compare < 0) {
+                    return search(m + 1, to);
+                }
+                return m;
+            };
+            // insert correct position
+            this.sortArray.splice(search(0, this.sortArray.length), 0, value);
             const listener = new Listener({
                 isPartOfUpdateCycle: true,
                 name: `sort of ${value} in ${this.field} of ${this.record}`,
-                onChange: info => {
+                onChange: (info) => {
                     // access all useful values of current record (and relations) to mark them as dependencies
                     this.record.modelManager.startListening(listener);
-                    const compareDefinition = this.field.sort.call(this.record);
-                    const relatedPathSet = new Set(compareDefinition.map(operation => operation[1])); // only keep unique paths to avoid unnecessary listeners
-                    for (const relatedPath of relatedPathSet) {
+                    for (const relatedPath of this.field.sortedFieldSplittedPaths) {
                         followRelations(value, relatedPath);
                     }
                     this.record.modelManager.stopListening(listener);
                     // sort outside of listening to avoid registering listeners for all other items (they already added their own listeners)
-                    const compareFunction = (a, b) => {
-                        for (const [compareMethod, relatedPath] of compareDefinition) {
-                            const valA = followRelations(a, relatedPath);
-                            const valB = followRelations(b, relatedPath);
-                            switch (compareMethod) {
-                                case 'truthy-first': {
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    if (!valA) {
-                                        return 1;
-                                    }
-                                    if (!valB) {
-                                        return -1;
-                                    }
-                                    break;
-                                }
-                                case 'falsy-first': {
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    if (!valA) {
-                                        return -1;
-                                    }
-                                    if (!valB) {
-                                        return 1;
-                                    }
-                                    break;
-                                }
-                                case 'case-insensitive-asc': {
-                                    if (typeof valA !== 'string' || typeof valB !== 'string') {
-                                        break;
-                                    }
-                                    const cleanedValA = cleanSearchTerm(valA);
-                                    const cleanedValB = cleanSearchTerm(valB);
-                                    if (cleanedValA === cleanedValB) {
-                                        break;
-                                    }
-                                    return cleanedValA < cleanedValB ? -1 : 1;
-                                }
-                                case 'smaller-first':
-                                    if (typeof valA !== 'number' || typeof valB !== 'number') {
-                                        break;
-                                    }
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    return valA - valB;
-                                case 'greater-first':
-                                    if (typeof valA !== 'number' || typeof valB !== 'number') {
-                                        break;
-                                    }
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    return valB - valA;
-                                case 'most-recent-first':
-                                    if (!(valA instanceof Date) || !(valB instanceof Date)) {
-                                        break;
-                                    }
-                                    if (valA === valB) {
-                                        break;
-                                    }
-                                    return valB - valA;
-                                default:
-                                    throw Error(`sort compare method "${compareMethod}" is not supported.`);
-                            }
-                        }
-                        return 0;
-                    };
-                    // Naive method: re-sort the complete array every time. Ideally each item should
-                    // be inserted/moved at its correct place immediately, but this can be optimized
-                    // eventually if necessary.
-                    this.sortArray.sort(compareFunction);
+                    if (info.reason !== "initial call") {
+                        // Naive method: re-sort the complete array every time. Ideally each item should
+                        // be moved at its correct place immediately, but this can be optimized
+                        // eventually if necessary.
+                        this.sortArray.sort(compareFunction);
+                    }
                     // Similarly naive approach: the field is marked as changed even if sort didn't
                     // actually move any record.
                     this.record.modelManager._markRecordFieldAsChanged(this.record, this.field);
                 },
             });
             this.sortListenerByValue.set(value, listener);
-            listener.onChange({ reason: 'initial call' });
+            listener.onChange({ reason: "initial call" });
         }
-        for (const { from: contributionFieldName, to: sumFieldName } of this.field.sumContributions) {
+        for (const { from: contributionFieldName, to: sumFieldName } of this.field
+            .sumContributions) {
             this.sumByValueByField.get(sumFieldName).set(value, 0);
             const listener = new Listener({
                 isPartOfUpdateCycle: true,
                 name: `sum of field(${sumFieldName}) of ${this.record} from field(${contributionFieldName}) of ${value} through relation ${this.field}`,
-                onChange: info => {
+                onChange: (info) => {
                     // listen to the contribution to mark it as dependency
                     this.record.modelManager.startListening(listener);
                     const contribution = value[contributionFieldName];
                     this.record.modelManager.stopListening(listener);
                     // retrieve the previous contribution and update it
-                    const previousContribution = this.sumByValueByField.get(sumFieldName).get(value);
+                    const previousContribution = this.sumByValueByField
+                        .get(sumFieldName)
+                        .get(value);
                     this.sumByValueByField.get(sumFieldName).set(value, contribution);
                     this.record.modelManager._update(
                         this.record,
@@ -166,12 +186,12 @@ export class RelationSet {
                                 increment(contribution),
                             ],
                         },
-                        { allowWriteReadonly: true },
+                        { allowWriteReadonly: true }
                     );
                 },
             });
             this.sumListenerByValueByField.get(sumFieldName).set(value, listener);
-            listener.onChange({ reason: 'initial call' });
+            listener.onChange({ reason: "initial call" });
         }
     }
 
@@ -206,7 +226,11 @@ export class RelationSet {
             // remove contribution of current value
             const contribution = this.sumByValueByField.get(sumFieldName).get(value);
             this.sumByValueByField.get(sumFieldName).delete(value);
-            this.record.modelManager._update(this.record, { [sumFieldName]: decrement(contribution) }, { allowWriteReadonly: true });
+            this.record.modelManager._update(
+                this.record,
+                { [sumFieldName]: decrement(contribution) },
+                { allowWriteReadonly: true }
+            );
             // remove listener on current value
             const listener = this.sumListenerByValueByField.get(sumFieldName).get(value);
             this.sumListenerByValueByField.get(sumFieldName).delete(value);
@@ -232,5 +256,4 @@ export class RelationSet {
         }
         return this.set[Symbol.iterator]();
     }
-
 }

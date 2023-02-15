@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('mass_mailing_snippets_menu_tabs', {
+registry.category("web_tour.tours").add('mass_mailing_snippets_menu_tabs', {
     test: true,
     url: '/web',
-}, [
-    tour.stepUtils.showAppsMenuItem(), {
+    steps: [
+    stepUtils.showAppsMenuItem(), {
         content: "Select the 'Email Marketing' app.",
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
     },
@@ -48,5 +49,5 @@ tour.register('mass_mailing_snippets_menu_tabs', {
         trigger: 'iframe .o_we_customize_panel .snippet-option-DesignTab',
         run: () => null, // it's a check
     },
-    ...tour.stepUtils.discardForm(),
-]);
+    ...stepUtils.discardForm(),
+]});

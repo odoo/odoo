@@ -106,7 +106,7 @@
 // ------------------------------------------------------------------
 // Caret
 // ------------------------------------------------------------------
-@mixin o-caret-down($caret-width: $caret-width, $caret-color: var(--o-input-border-color, currentColor)) {
+@mixin o-caret-down($caret-width: $caret-width, $caret-color: var(--o-caret-color, currentColor)) {
     @include utils-caret-boilerplate;
     border-bottom: 0;
     border-left: $caret-width solid transparent;
@@ -200,16 +200,13 @@
 // @param {integer} [$index] - the position where to add the support font, if
 //        not given, it will be placed before the generic one.
 @function o-add-unicode-support-font($font, $index: false) {
-    @if $index == false {
-        $index: length($font);
-    }
-
     $-with-support-font: ();
     @for $i from 1 through length($font) {
-        @if $i == $index {
+        $-part: nth($font, $i);
+        @if $i == $index or $-part == serif or $-part == sans-serif {
             $-with-support-font: append($-with-support-font, 'Odoo Unicode Support Noto', $separator: comma);
         }
-        $-with-support-font: append($-with-support-font, nth($font, $i), $separator: comma);
+        $-with-support-font: append($-with-support-font, $-part, $separator: comma);
     }
 
     @return $-with-support-font;
@@ -315,7 +312,7 @@
 }
 @mixin o-kanban-dropdown-open {
     position: relative;
-    background: white;
+    background: $dropdown-bg;
     border-color: $border-color;
     z-index: $zindex-dropdown + 1;
 }
@@ -417,6 +414,13 @@
     margin-top: 30px;
     margin-bottom: 30px;
     background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+}
+
+// Sample data
+@mixin o-sample-data-disabled {
+    opacity: 0.33;
+    pointer-events: none;
+    user-select: none;
 }
 
 // ----------------------------------------------------------------------------

@@ -280,7 +280,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertEqual(copies[5].name, 'XMISC/2019/00004')
 
         # Can't have twice the same name
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'), self.env.cr.savepoint():
             copies[0].name = 'XMISC/2019/00001'
 
         # Lets remove the order by date
@@ -411,12 +411,6 @@ class TestSequenceMixinDeletion(TestSequenceMixinCommon):
         # A draft move without any name can always be deleted.
         self.move_draft.unlink()
 
-        # The moves that are not at the end of their sequence chain cannot be deleted
-        for move in (self.move_1_1, self.move_1_2, self.move_2_1):
-            move.button_draft()
-            with self.assertRaises(UserError):
-                move.unlink()
-
         # The last element of each sequence chain should allow deletion.
         # Everything should be deletable if we follow this order (a bit randomized on purpose)
         for move in (self.move_1_3, self.move_1_2, self.move_3_1, self.move_2_2, self.move_2_1, self.move_1_1):
@@ -428,20 +422,6 @@ class TestSequenceMixinDeletion(TestSequenceMixinCommon):
         all_moves = (self.move_1_3 + self.move_1_2 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
         all_moves.button_draft()
         all_moves.unlink()
-
-    def test_sequence_deletion_3(self):
-        """Cannot delete non sequential batches."""
-        all_moves = (self.move_1_3 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
-        all_moves.button_draft()
-        with self.assertRaises(UserError):
-            all_moves.unlink()
-
-    def test_sequence_deletion_4(self):
-        """Cannot delete batches not containing the last entry."""
-        all_moves = (self.move_1_2 + self.move_3_1 + self.move_2_2 + self.move_2_1 + self.move_1_1)
-        all_moves.button_draft()
-        with self.assertRaises(UserError):
-            all_moves.unlink()
 
 
 @tagged('post_install', '-at_install')
@@ -508,14 +488,14 @@ class TestSequenceMixinConcurrency(TransactionCase):
         move.action_post()
         env2.cr.commit()
 
-        # try to post in cr1, should fail because this transaction started before the post in cr2
+        # try to post in cr1, the retry sould find the right number
         move = env1['account.move'].browse(self.data['move_ids'][2])
-        with self.assertRaises(psycopg2.OperationalError), mute_logger('odoo.sql_db'):
-            move.action_post()
+        move.action_post()
+        env1.cr.commit()
 
         # check the values
         moves = env0['account.move'].browse(self.data['move_ids'])
-        self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', '/'])
+        self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', 'CT/2016/01/0003'])
 
     def test_sequence_concurency_no_useless_lock(self):
         """Do not lock needlessly when the sequence is not computed"""

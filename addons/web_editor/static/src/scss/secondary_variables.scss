@@ -34,12 +34,6 @@ $o-theme-color-palette: map-merge((
     // colors by default, so that theme colors affect the default Odoo layouts
     'primary': $-main-color,
     'secondary': map-get($o-color-palette, 'o-color-2'),
-
-    // BS light and dark colors are not used for any BS component, just
-    // for color utilities. By default, we set them to a very light and
-    // very dark version of a desaturate version of the main color
-    'light': lighten(desaturate($-main-color, 80%), min(70%, max(0%, 97% - $-main-color-lightness))), // Does not increase over 97% lightness
-    'dark': darken(desaturate($-main-color, 80%), min(70%, max(0%, $-main-color-lightness - 10%))), // Does not lower under 10% lightness
 ), $o-theme-color-palette);
 $o-theme-color-palette: map-merge($o-base-theme-color-palette, $o-theme-color-palette);
 

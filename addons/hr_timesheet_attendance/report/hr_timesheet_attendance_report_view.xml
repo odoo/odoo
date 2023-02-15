@@ -7,6 +7,9 @@
             <field name="arch" type="xml">
                 <search string="Timesheet Attendance">
                     <field name="user_id" string="Employee"/>
+                    <filter string="My Team" name="my_team" domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Department" name="my_department" domain="[('user_id.employee_id.member_of_department', '=', True)]"/>
+                    <separator/>
                     <filter name="month" string="Date" date="date"/>
                     <filter name="group_by_user" string="Employee" context="{'group_by': 'user_id'}"/>
                     <filter name="group_by_month" string="Date" date="date" context="{'group_by': 'date'}"/>

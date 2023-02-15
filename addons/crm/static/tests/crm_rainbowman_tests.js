@@ -4,12 +4,12 @@ import "@crm/../tests/mock_server";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
-    clickEdit,
     clickSave,
     dragAndDrop,
     getFixture,
 } from '@web/../tests/helpers/utils';
 import testUtils from 'web.test_utils';
+import { serializeDateTime } from "@web/core/l10n/dates";
 const find = testUtils.dom.find;
 
 let target;
@@ -26,7 +26,7 @@ function getMockRpc(assert) {
 
 QUnit.module('Crm Rainbowman Triggers', {
     beforeEach: function () {
-        const format = "YYYY-MM-DD HH:mm:ss";
+        const now = luxon.DateTime.now();
         const serverData = {
             models: {
                 'res.users': {
@@ -73,15 +73,15 @@ QUnit.module('Crm Rainbowman Triggers', {
                     records : [
                         { id: 1, name: 'Lead 1', planned_revenue: 5.0, stage_id: 1, team_id: 1, user_id: 1 },
                         { id: 2, name: 'Lead 2', planned_revenue: 5.0, stage_id: 2, team_id: 2, user_id: 4 },
-                        { id: 3, name: 'Lead 3', planned_revenue: 3.0, stage_id: 3, team_id: 1, user_id: 1, date_closed: moment().subtract(5, 'days').format(format) },
-                        { id: 4, name: 'Lead 4', planned_revenue: 4.0, stage_id: 3, team_id: 2, user_id: 4, date_closed: moment().subtract(23, 'days').format(format) },
-                        { id: 5, name: 'Lead 5', planned_revenue: 7.0, stage_id: 3, team_id: 1, user_id: 1, date_closed: moment().subtract(20, 'days').format(format) },
+                        { id: 3, name: 'Lead 3', planned_revenue: 3.0, stage_id: 3, team_id: 1, user_id: 1, date_closed: serializeDateTime(now.minus({days: 5})) },
+                        { id: 4, name: 'Lead 4', planned_revenue: 4.0, stage_id: 3, team_id: 2, user_id: 4, date_closed: serializeDateTime(now.minus({days: 23})) },
+                        { id: 5, name: 'Lead 5', planned_revenue: 7.0, stage_id: 3, team_id: 1, user_id: 1, date_closed: serializeDateTime(now.minus({days: 20})) },
                         { id: 6, name: 'Lead 6', planned_revenue: 4.0, stage_id: 2, team_id: 1, user_id: 2 },
-                        { id: 7, name: 'Lead 7', planned_revenue: 1.8, stage_id: 3, team_id: 2, user_id: 3, date_closed: moment().subtract(23, 'days').format(format) },
+                        { id: 7, name: 'Lead 7', planned_revenue: 1.8, stage_id: 3, team_id: 2, user_id: 3, date_closed: serializeDateTime(now.minus({days: 23})) },
                         { id: 8, name: 'Lead 8', planned_revenue: 1.9, stage_id: 1, team_id: 2, user_id: 3 },
-                        { id: 9, name: 'Lead 9', planned_revenue: 1.5, stage_id: 3, team_id: 2, user_id: 3, date_closed: moment().subtract(5, 'days').format(format) },
+                        { id: 9, name: 'Lead 9', planned_revenue: 1.5, stage_id: 3, team_id: 2, user_id: 3, date_closed: serializeDateTime(now.minus({days: 5})) },
                         { id: 10, name: 'Lead 10', planned_revenue: 1.7, stage_id: 2, team_id: 2, user_id: 3 },
-                        { id: 11, name: 'Lead 11', planned_revenue: 2.0, stage_id: 3, team_id: 2, user_id: 4, date_closed: moment().subtract(5, 'days').format(format) },
+                        { id: 11, name: 'Lead 11', planned_revenue: 2.0, stage_id: 3, team_id: 2, user_id: 4, date_closed: serializeDateTime(now.minus({days: 5})) },
                     ],
                 },
             },
@@ -90,7 +90,7 @@ QUnit.module('Crm Rainbowman Triggers', {
         this.testFormView = {
             arch: `
                 <form js_class="crm_form">
-                    <header><field name="stage_id" widget="crm_statusbar" options="{'clickable': '1'}"/></header>
+                    <header><field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/></header>
                     <field name="name"/>
                     <field name="planned_revenue"/>
                     <field name="team_id"/>
@@ -125,6 +125,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             ...this.testFormView,
             resId: 6,
             mockRPC: getMockRpc(assert),
+            mode: "readonly",
         });
 
         await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
@@ -139,7 +140,6 @@ QUnit.module('Crm Rainbowman Triggers', {
             resId: 6,
             mockRPC: getMockRpc(assert),
         });
-        await clickEdit(target);
 
         await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
         assert.verifySteps([]); // no message displayed yet
@@ -155,6 +155,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             ...this.testFormView,
             resId: 2,
             mockRPC: getMockRpc(assert),
+            mode: "readonly",
         });
 
         await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
@@ -168,6 +169,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             ...this.testFormView,
             resId: 1,
             mockRPC: getMockRpc(assert),
+            mode: "readonly",
         });
 
         await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
@@ -181,6 +183,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             ...this.testFormView,
             resId: 8,
             mockRPC: getMockRpc(assert),
+            mode: "readonly",
         });
 
         await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
@@ -194,6 +197,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             ...this.testFormView,
             resId: 10,
             mockRPC: getMockRpc(assert),
+            mode: "readonly",
         });
 
         await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
@@ -207,6 +211,7 @@ QUnit.module('Crm Rainbowman Triggers', {
             ...this.testFormView,
             resId: 1,
             mockRPC: getMockRpc(assert),
+            mode: "readonly",
         });
 
         await click(target.querySelector(".o_statusbar_status button[data-value='2']"));

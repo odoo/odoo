@@ -29,19 +29,38 @@ export class FormArchParser extends XMLParser {
                 if (archParseBoolean(node.getAttribute("default_focus") || "")) {
                     autofocusFieldId = fieldId;
                 }
-                addFieldDependencies(activeFields, fieldInfo.FieldComponent.fieldDependencies);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    fieldInfo.FieldComponent.fieldDependencies
+                );
                 return false;
             } else if (node.tagName === "div" && node.classList.contains("oe_chatter")) {
                 // remove this when chatter fields are declared as attributes on the root node
                 return false;
             } else if (node.tagName === "widget") {
                 const { WidgetComponent } = Widget.parseWidgetNode(node);
-                addFieldDependencies(activeFields, WidgetComponent.fieldDependencies);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    WidgetComponent.fieldDependencies
+                );
             }
         });
         // TODO: generate activeFields for the model based on fieldNodes (merge duplicated fields)
         for (const fieldNode of Object.values(fieldNodes)) {
-            activeFields[fieldNode.name] = fieldNode;
+            const fieldName = fieldNode.name;
+            if (activeFields[fieldName]) {
+                const { alwaysInvisible } = fieldNode;
+                activeFields[fieldName] = {
+                    ...fieldNode,
+                    // a field can only be considered to be always invisible
+                    // if all its nodes are always invisible
+                    alwaysInvisible: activeFields[fieldName].alwaysInvisible && alwaysInvisible,
+                };
+            } else {
+                activeFields[fieldName] = fieldNode;
+            }
             // const { onChange, modifiers } = fieldNode;
             // let readonly = modifiers.readonly || [];
             // let required = modifiers.required || [];

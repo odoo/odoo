@@ -1,12 +1,12 @@
 odoo.define('website_forum.tour_forum_question', function (require) {
     'use strict';
 
-    var tour = require("web_tour.tour");
+    const { registry } = require("@web/core/registry");
 
-    tour.register('forum_question', {
+    registry.category("web_tour.tours").add('forum_question', {
         test: true,
         url: '/forum/help-1',
-    }, [{
+        steps: [{
         content: "Ask the question in this forum by clicking on the button.",
         trigger: '.o_forum_ask_btn',
     }, {
@@ -60,5 +60,5 @@ odoo.define('website_forum.tour_forum_question', function (require) {
     }, {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '#wrap:has(".o_wforum_answer_correct")',
-    }]);
+    }]});
 });

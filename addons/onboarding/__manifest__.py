@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Onboarding toolbox',
+    'name': 'Onboarding Toolbox',
     'version': '1.0',
     'category': 'Hidden',
     'sequence': 9001,

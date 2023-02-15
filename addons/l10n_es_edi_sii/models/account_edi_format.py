@@ -228,6 +228,9 @@ class AccountEdiFormat(models.Model):
         if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
             # ES partner with VAT.
             partner_info['NIF'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+            if self.env.context.get('error_1117'):
+                partner_info['IDOtro'] = {'IDType': '07', 'ID': IDOtro_ID}
+
         elif partner.country_id.code in eu_country_codes and partner.vat:
             # European partner.
             partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
@@ -440,7 +443,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_edi_call_web_service_sign(self, invoices, info_list):
         company = invoices.company_id
 
-        # All are sharing the same value, see '_get_batch_key'.
+        # All are sharing the same value.
         csv_number = invoices.mapped('l10n_es_edi_csv')[0]
 
         # Set registration date
@@ -561,6 +564,11 @@ class AccountEdiFormat(models.Model):
                 results[inv] = {'success': True}
                 inv.message_post(body=_("We saw that this invoice was sent correctly before, but we did not treat "
                                         "the response.  Make sure it is not because of a wrong configuration."))
+
+            elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
+                return self.with_context(error_1117=True)._post_invoice_edi(invoices)
+
+
             else:
                 results[inv] = {
                     'error': _("[%s] %s", respl.CodigoErrorRegistro, respl.DescripcionErrorRegistro),
@@ -573,35 +581,25 @@ class AccountEdiFormat(models.Model):
     # EDI OVERRIDDEN METHODS
     # -------------------------------------------------------------------------
 
-    def _get_invoice_edi_content(self, move):
-        if self.code != 'es_sii':
-            return super()._get_invoice_edi_content(move)
-        return json.dumps(self._l10n_es_edi_get_invoices_info(move)).encode()
+    def _l10n_es_edi_sii_xml_invoice_content(self, invoice):
+        return json.dumps(self._l10n_es_edi_get_invoices_info(invoice)).encode()
 
-    def _is_required_for_invoice(self, invoice):
-        # OVERRIDE
+    def _get_move_applicability(self, move):
+        # EXTENDS account_edi
+        self.ensure_one()
         if self.code != 'es_sii':
-            return super()._is_required_for_invoice(invoice)
+            return super()._get_move_applicability(move)
 
-        return invoice.l10n_es_edi_is_required
+        if move.l10n_es_edi_is_required:
+            return {
+                'post': self._l10n_es_edi_sii_post_invoices,
+                'post_batching': lambda invoice: (invoice.move_type, invoice.l10n_es_edi_csv),
+                'edi_content': self._l10n_es_edi_sii_xml_invoice_content,
+            }
 
     def _needs_web_services(self):
         # OVERRIDE
         return self.code == 'es_sii' or super()._needs_web_services()
-
-    def _support_batching(self, move=None, state=None, company=None):
-        # OVERRIDE
-        if self.code != 'es_sii':
-            return super()._support_batching(move=move, state=state, company=company)
-
-        return state == 'to_send' and move.is_invoice()
-
-    def _get_batch_key(self, move, state):
-        # OVERRIDE
-        if self.code != 'es_sii':
-            return super()._get_batch_key(move, state)
-
-        return move.move_type, move.l10n_es_edi_csv
 
     def _check_move_configuration(self, move):
         # OVERRIDE
@@ -642,11 +640,7 @@ class AccountEdiFormat(models.Model):
 
         return journal.country_code == 'ES'
 
-    def _post_invoice_edi(self, invoices):
-        # OVERRIDE
-        if self.code != 'es_sii':
-            return super()._post_invoice_edi(invoices)
-
+    def _l10n_es_edi_sii_post_invoices(self, invoices):
         # Ensure a certificate is available.
         certificate = invoices.company_id.l10n_es_edi_certificate_id
         if not certificate:

@@ -47,22 +47,22 @@
             "cells": {
                 "A7": {
                     "style": 1,
-                    "content": "[Best Sellers by Revenue](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"dashboard\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Best Sellers by Revenue\"})",
+                    "content": "[Best Sellers by Revenue](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Best Sellers by Revenue\"})",
                     "border": 1
                 },
                 "A24": {
                     "style": 1,
-                    "content": "[Best Sellers by Units Sold](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"dashboard\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Best Sellers by Units Sold](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "A41": {
                     "style": 1,
-                    "content": "[Best Selling Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"dashboard\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Best Selling Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "A42": {
                     "style": 2,
-                    "content": "Product",
+                    "content": "=_t(\"Product\")",
                     "border": 2
                 },
                 "A43": {
@@ -107,47 +107,57 @@
                 },
                 "B42": {
                     "style": 5,
-                    "content": "Units",
+                    "content": "=_t(\"Units\")",
                     "border": 2
                 },
                 "B43": {
                     "style": 6,
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",1)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",1)"
                 },
                 "B44": {
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",2)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",2)"
                 },
                 "B45": {
                     "style": 6,
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",3)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",3)"
                 },
                 "B46": {
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",4)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",4)"
                 },
                 "B47": {
                     "style": 6,
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",5)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",5)"
                 },
                 "B48": {
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",6)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",6)"
                 },
                 "B49": {
                     "style": 6,
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",7)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",7)"
                 },
                 "B50": {
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",8)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",8)"
                 },
                 "B51": {
                     "style": 6,
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",9)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",9)"
                 },
                 "B52": {
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",10)"
+                    "format": 2,
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",10)"
                 },
                 "C42": {
                     "style": 5,
-                    "content": "Revenue",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "C43": {
@@ -201,12 +211,12 @@
                 },
                 "E41": {
                     "style": 1,
-                    "content": "[Best Selling Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"dashboard\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+                    "content": "[Best Selling Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
                     "border": 1
                 },
                 "E42": {
                     "style": 2,
-                    "content": "Category",
+                    "content": "=_t(\"Category\")",
                     "border": 2
                 },
                 "E43": {
@@ -251,57 +261,57 @@
                 },
                 "F42": {
                     "style": 5,
-                    "content": "Units",
+                    "content": "=_t(\"Units\")",
                     "border": 2
                 },
                 "F43": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",1)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",1)"
                 },
                 "F44": {
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",2)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",2)"
                 },
                 "F45": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",3)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",3)"
                 },
                 "F46": {
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",4)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",4)"
                 },
                 "F47": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",5)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",5)"
                 },
                 "F48": {
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",6)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",6)"
                 },
                 "F49": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",7)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",7)"
                 },
                 "F50": {
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",8)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",8)"
                 },
                 "F51": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",9)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",9)"
                 },
                 "F52": {
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",10)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",10)"
                 },
                 "G42": {
                     "style": 5,
-                    "content": "Revenue",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "G43": {
@@ -448,7 +458,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "e35856cf-9090-489b-b055-2d441380d954",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -465,7 +474,15 @@
                                 "group_by_no_leaf": 1,
                                 "group_by": []
                             },
-                            "domain": [],
+                            "domain": [[
+                                "state",
+                                "not in",
+                                [
+                                    "draft",
+                                    "sent",
+                                    "cancel"
+                                ]
+                            ]],
                             "groupBy": [
                                 "product_id"
                             ],
@@ -485,14 +502,13 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "d0171069-d2cd-4c2c-a686-cd7515e93bb5",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
                             "groupBy": [
                                 "product_id"
                             ],
-                            "measure": "__count",
+                            "measure": "product_uom_qty",
                             "order": "DESC",
                             "resModel": "sale.report"
                         },
@@ -502,7 +518,15 @@
                                 "group_by_no_leaf": 1,
                                 "group_by": []
                             },
-                            "domain": [],
+                            "domain": [[
+                                "state",
+                                "not in",
+                                [
+                                    "draft",
+                                    "sent",
+                                    "cancel"
+                                ]
+                            ]],
                             "groupBy": [
                                 "product_id"
                             ],
@@ -528,7 +552,7 @@
                         "type": "scorecard",
                         "background": "",
                         "baseline": "Data!C2",
-                        "baselineDescr": "units sold",
+                        "baselineDescr": "sold",
                         "keyValue": "Data!B2"
                     }
                 },
@@ -546,7 +570,7 @@
                         "title": "Best Category",
                         "type": "scorecard",
                         "background": "",
-                        "baseline": "Data!D3",
+                        "baseline": "Data!C3",
                         "baselineDescr": "sold",
                         "keyValue": "Data!B3"
                     }
@@ -566,19 +590,19 @@
             "cells": {
                 "A1": {
                     "style": 6,
-                    "content": "KPI"
+                    "content": "=_t(\"KPI\")"
                 },
                 "A2": {
                     "style": 6,
-                    "content": "Best selling product"
+                    "content": "=_t(\"Best selling product\")"
                 },
                 "A3": {
                     "style": 6,
-                    "content": "Best selling category"
+                    "content": "=_t(\"Best selling category\")"
                 },
                 "B1": {
                     "style": 6,
-                    "content": "Name"
+                    "content": "=_t(\"Name\")"
                 },
                 "B2": {
                     "style": 8,
@@ -590,21 +614,21 @@
                 },
                 "C1": {
                     "style": 6,
-                    "content": "Units"
+                    "content": "=_t(\"Units\")"
                 },
                 "C2": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(1,\"__count\",\"#product_id\",1)"
+                    "content": "=ODOO.PIVOT(1,\"product_uom_qty\",\"#product_id\",1)"
                 },
                 "C3": {
                     "style": 6,
                     "format": 2,
-                    "content": "=ODOO.PIVOT(2,\"__count\",\"#categ_id\",1)"
+                    "content": "=ODOO.PIVOT(2,\"product_uom_qty\",\"#categ_id\",1)"
                 },
                 "D1": {
                     "style": 6,
-                    "content": "Revenue"
+                    "content": "=_t(\"Revenue\")"
                 },
                 "D2": {
                     "style": 6,
@@ -678,9 +702,13 @@
         "c30175e7-604c-4fc7-8adb-03be67f0dc8f": "sale.sale_menu_root",
         "30212d4a-1f77-4cb8-8590-4eb34876e260": "sale.sale_menu_root",
         "e35856cf-9090-489b-b055-2d441380d954": "sale.sale_menu_root",
-        "d0171069-d2cd-4c2c-a686-cd7515e93bb5": "sale.sale_menu_root"
+        "d0171069-d2cd-4c2c-a686-cd7515e93bb5": "sale.sale_menu_root",
+        "5f383918-4073-4f19-9cc9-603216c953ad": "sale.menu_sale_report",
+        "ec57f69b-f2b1-4dfc-990c-91ab61b526bf": "sale.menu_sale_report"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
     "pivots": {
         "1": {
             "colGroupBys": [],
@@ -688,9 +716,20 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [[
+                "state",
+                "not in",
+                [
+                    "draft",
+                    "sent",
+                    "cancel"
+                ]
+            ]],
             "id": "1",
             "measures": [
+                {
+                    "field": "product_uom_qty"
+                },
                 {
                     "field": "__count"
                 },
@@ -718,9 +757,20 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [[
+                "state",
+                "not in",
+                [
+                    "draft",
+                    "sent",
+                    "cancel"
+                ]
+            ]],
             "id": "2",
             "measures": [
+                {
+                    "field": "product_uom_qty"
+                },
                 {
                     "field": "__count"
                 },
@@ -744,8 +794,6 @@
         }
     },
     "pivotNextId": 3,
-    "lists": {},
-    "listNextId": 1,
     "globalFilters": [
         {
             "id": "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52",

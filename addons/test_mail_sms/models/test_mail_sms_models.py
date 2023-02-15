@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class MailTestSMS(models.Model):
@@ -19,6 +19,9 @@ class MailTestSMS(models.Model):
     phone_nbr = fields.Char()
     mobile_nbr = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _sms_get_partner_fields(self):
         return ['customer_id']
@@ -39,9 +42,22 @@ class MailTestSMSBL(models.Model):
     name = fields.Char()
     subject = fields.Char()
     email_from = fields.Char()
-    phone_nbr = fields.Char()
-    mobile_nbr = fields.Char()
+    phone_nbr = fields.Char(compute='_compute_phone_nbr', readonly=False, store=True)
+    mobile_nbr = fields.Char(compute='_compute_mobile_nbr', readonly=False, store=True)
     customer_id = fields.Many2one('res.partner', 'Customer')
+
+    @api.depends('customer_id')
+    def _compute_mobile_nbr(self):
+        for phone_record in self.filtered(lambda rec: not rec.mobile_nbr and rec.customer_id):
+            phone_record.mobile_nbr = phone_record.customer_id.mobile
+
+    @api.depends('customer_id')
+    def _compute_phone_nbr(self):
+        for phone_record in self.filtered(lambda rec: not rec.phone_nbr and rec.customer_id):
+            phone_record.phone_nbr = phone_record.customer_id.phone
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _sms_get_partner_fields(self):
         return ['customer_id']
@@ -80,6 +96,9 @@ class MailTestSMSOptout(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer')
     opt_out = fields.Boolean()
 
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
     def _mailing_get_opt_out_list_sms(self, mailing):
         res_ids = mailing._get_recipients()
         return self.search([
@@ -107,6 +126,9 @@ class MailTestSMSPartner(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer')
     opt_out = fields.Boolean()
 
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
     def _mailing_get_opt_out_list_sms(self, mailing):
         res_ids = mailing._get_recipients()
         return self.search([
@@ -132,6 +154,9 @@ class MailTestSMSPartner2Many(models.Model):
     name = fields.Char()
     customer_ids = fields.Many2many('res.partner', string='Customers')
     opt_out = fields.Boolean()
+
+    def _mail_get_partner_fields(self):
+        return ['customer_ids']
 
     def _mailing_get_opt_out_list_sms(self, mailing):
         res_ids = mailing._get_recipients()

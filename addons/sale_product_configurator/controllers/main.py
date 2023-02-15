@@ -16,17 +16,26 @@ class ProductConfiguratorController(http.Controller):
         attribute_value_ids = set(kw.get('product_template_attribute_value_ids', []))
         attribute_value_ids |= set(kw.get('product_no_variant_attribute_value_ids', []))
         if attribute_value_ids:
-            product_combination = request.env['product.template.attribute.value'].browse(attribute_value_ids)
+            product_combination = request.env['product.template.attribute.value'].browse(
+                attribute_value_ids
+            ).filtered(
+                lambda ptav: ptav.product_tmpl_id == product_template
+            )  # Filter out ptavs not belonging to the given template
+            # It happens when you change the template on an already configured line
+            # receiving the configured attributes data from the previous template configuration.
 
         if pricelist:
             product_template = product_template.with_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
 
-        return request.env['ir.ui.view']._render_template("sale_product_configurator.configure", {
-            'product': product_template,
-            'pricelist': pricelist,
-            'add_qty': add_qty,
-            'product_combination': product_combination
-        })
+        return request.env['ir.ui.view']._render_template(
+            "sale_product_configurator.configure",
+            {
+                'product': product_template,
+                'pricelist': pricelist,
+                'add_qty': add_qty,
+                'product_combination': product_combination
+            },
+        )
 
     @http.route(['/sale_product_configurator/show_advanced_configurator'], type='json', auth="user", methods=['POST'])
     def show_advanced_configurator(self, product_id, variant_values, pricelist_id, **kw):
@@ -76,7 +85,8 @@ class ProductConfiguratorController(http.Controller):
             'pricelist': pricelist,
             'handle_stock': handle_stock,
             'already_configured': kw.get("already_configured", False),
-            'mode': kw.get('mode', 'add')
+            'mode': kw.get('mode', 'add'),
+            'product_custom_attribute_values': kw.get('product_custom_attribute_values', None)
         })
 
     def _get_pricelist(self, pricelist_id, pricelist_fallback=False):

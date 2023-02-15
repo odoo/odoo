@@ -3,13 +3,23 @@
 .ui-widget.ui-autocomplete {
     top: 0;       // Compute initial position
     min-width: 0; // Compute initial width
+    color: $dropdown-color;
 
     // Needed because .ui-widget are rendered at a
     // lower stacking contex compared to modals.
     z-index: $zindex-modal + 1;
 
+    &.ui-widget-content {
+        background-color: $dropdown-bg;
+        border: $dropdown-border-width solid $dropdown-border-color;
+        @include border-radius($dropdown-border-radius);
+        @include box-shadow($dropdown-box-shadow);
+    }
+
     .ui-menu-item {
         > a {
+            @include o-hover-text-color($dropdown-link-color, $dropdown-link-hover-color);
+
             &.dropdown-item {
                 padding: $o-dropdown-vpadding $o-dropdown-hpadding;
             }

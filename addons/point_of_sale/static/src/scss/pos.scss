@@ -673,6 +673,7 @@ td {
     opacity: 0.5;
     cursor: default;
     color: inherit;
+    pointer-events: none;
 }
 
 /*  ********* The actionpad (payment, set customer) ********* */
@@ -755,6 +756,7 @@ td {
     padding-right: 40px;
     border-top: none;
     border-right: none;
+    overflow-wrap: break-word;
 }
 .pos .actionpad .button.set-partner.decentered {
     padding-left: 40px;
@@ -882,6 +884,11 @@ td {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
+    flex-direction: row-reverse;
+}
+
+.pos .rightpane-header .categories-header {
+    display: flex;
 }
 
 .pos .rightpane-header .breadcrumbs {
@@ -1150,13 +1157,12 @@ td {
 .pos .product .product-img img {
     width: 100%;
     height: 100px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 @media screen and (max-width: 768px) {
     .pos .product:active {
-        border: solid 3px $primary;
-        box-sizing: border-box;
+        box-shadow: 0 0 0 3px $primary;
     }
 }
 
@@ -1341,7 +1347,7 @@ td {
 }
 
 .screen .center-content{
-    flex-grow: 1;
+    flex-grow: 2;
     display: flex;
     flex-direction: column;
 }
@@ -1413,20 +1419,21 @@ td {
 /* b) The payment screen */
 
 .payment-screen .main-content {
-    display: grid;
-    grid-template-columns: 300px 1fr auto;
+    display: flex;
 }
 .payment-screen .left-content {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: inherit;
+    width: 100%;
     border: none;
+    max-height: 100%;
 }
 .payment-screen .center-content {
     display: grid;
     grid-template-rows: auto 1fr;
     border: 10px solid $gray-300;
+    width: 30rem;
 }
 .payment-screen p.title-category {
     margin: 0;
@@ -1494,9 +1501,10 @@ td {
     border-top-width: 0px;
     cursor: pointer;
     display: flex;
-    padding: map-get($spacers, 3) map-get($spacers, 2);
     flex-grow: 1;
     flex-basis: 100%;
+    min-height: 60px;
+    overflow: auto;
 }
 .paymentline:active {
     background: black;
@@ -1505,20 +1513,19 @@ td {
 }
 .paymentline .payment-name {
     flex-grow: 1;
-    margin-left: 10px;
-    margin-right: 10px;
     /* make the name of the payment line to be truncated with ellipsis */
     white-space: nowrap;
-    overflow:hidden;
     text-overflow:ellipsis;
+    padding: map-get($spacers, 3);
 }
 .paymentline .payment-amount {
-    margin-left: 10px;
-    margin-right: 10px;
+    padding: map-get($spacers, 3);
 }
 .paymentline .delete-button {
   margin-left: 10px;
   margin-right: 10px;
+  padding: map-get($spacers, 3);
+  font-size: x-large;
 }
 .paymentline.selected{
   background: $gray-200;
@@ -1540,10 +1547,10 @@ td {
     text-overflow: ellipsis;
     white-space: nowrap;
     position: relative;
-    max-width: 300px;
     width: 100%;
     transition: background-color, border-color, color 150ms linear;
     box-sizing: border-box;
+    height: 60px;
 }
 .payment-screen .payment-buttons .button:hover {
     background-color: $gray-200;
@@ -1580,10 +1587,21 @@ td {
     border: 1px solid #cacaca;
 }
 .paymentlines .electronic_payment {
-    background: #e2e2e2;
+    background: $gray-200;
     border-collapse: unset;
     font-size: 16px;
     padding-right: 0;
+}
+
+.paymentline .electronic_status {
+    flex-grow: 1;
+    margin-left: 10px;
+    margin-right: 10px;
+    /* make the name of the payment line to be truncated with ellipsis */
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    padding: map-get($spacers, 3);
 }
 
 .paymentlines .electronic_payment div:first-child {
@@ -1595,6 +1613,7 @@ td {
 .paymentlines .electronic_payment div:last-child {
     flex-grow: 1;
     text-align: center;
+    padding: map-get($spacers, 3);
 }
 
 .payment-status-container {
@@ -1624,7 +1643,7 @@ td {
     .payment-screen .main-content {
         grid-template-columns: 300px 1fr;
         grid-template-rows: 1fr auto;
-    } 
+    }
     .screen .center-content {
         border-bottom: none;
     }
@@ -1662,7 +1681,7 @@ td {
     .payment-screen .main-content {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
-    } 
+    }
     .payment-screen .center-content {
         grid-template-rows: 1fr;
     }
@@ -1695,7 +1714,7 @@ td {
       .payment-status-container {
           font-size: 22px;
       }
-      
+
 }
 
 @media screen and (max-width: 576px) {
@@ -1886,12 +1905,12 @@ td {
 }
 .pos .partnerlist-screen .partner-list th,
 .pos .partnerlist-screen .partner-list td {
-    padding: 12px;
+    padding: 15px 8px;
 }
 
 .pos .partnerlist-screen .fa.fa.fa-phone,
-.pos .partnerlist-screen .fa.fa-mobile,
-.pos .partnerlist-screen .fa.fa-paper-plane-o {
+.pos .partnerlist-screen .fa.fa-paper-plane-o,
+.pos .partnerlist-screen .fa.fa-mobile{
     margin-right: 4px;
 }
 
@@ -1957,9 +1976,11 @@ td {
     width: 30px;
     opacity: .75;
 }
+.pos .edit-partner-button-cell {
+    vertical-align: middle;
+}
 .pos .edit-partner-button {
-    margin-top: 6px;
-    color: black;
+    height: 30px;
     font-weight: bold;
 }
 .pos .partner-list tr.partner-line.highlight{
@@ -2161,6 +2182,7 @@ td {
     padding: map-get($spacers, 2) map-get($spacers, 3);
     border-top: 1px solid $gray-200;
     box-sizing: border-box;
+    background:  inherit;
 }
 .pos .order .summary .total {
     font-size: 22px;
@@ -2321,12 +2343,16 @@ td {
     font-size: 24px;
     vertical-align: top;
 }
+.paymentmethods-container {
+    overflow: scroll;
+}
 .paymentmethods .button {
     background: #fff;
     font-size: 16px;
     border-bottom: solid 1px $gray-300;
     border-top-width: 0px;
     cursor: pointer;
+    min-height: 60px;
 }
 .paymentmethods .button:first-child {
     border-top-width: 1px;
@@ -2346,9 +2372,21 @@ td {
     flex-grow: 1;
     flex-basis: 100%;
 }
-.paymentmethod .payment-name {
+.paymentmethod .payment-method-display {
     flex-grow: 1;
     padding: map-get($spacers, 3);
+    display: flex;
+    align-items: center;
+}
+.paymentmethods .payment-method-display .payment-method-icon {
+  max-width: 50px;
+  max-height: 50px;
+  vertical-align: middle;
+}
+
+.paymentmethods .payment-method-display .payment-name {
+    vertical-align: middle;
+    margin-left: 10px;
 }
 .paymentmethod .payment-amount {
     margin-left: 10px;
@@ -2440,87 +2478,6 @@ td {
 
 .pos .pos-actionbar .button.rightalign{
     float:right;
-}
-/*  ********* The Debug Widget  ********* */
-
-.pos .debug-widget{
-    z-index:100000;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 200px;
-    font-size: 10px;
-
-    background: rgba(0,0,0,0.82);
-    color: white;
-    padding-bottom: 10px;
-    cursor: move;
-    -webkit-transform: translate3d(0,0,0);
-}
-.pos .debug-widget .toggle{
-    position: absolute;
-    font-size: 16px;
-    cursor:pointer;
-    top:0px;
-    right:0px;
-    padding:10px;
-    padding-right:15px;
-}
-.pos .debug-widget .content{
-    overflow: hidden;
-}
-.pos .debug-widget header {
-    position: relative;
-}
-.pos .debug-widget h1{
-    background:black;
-    padding-top: 10px;
-    padding-left: 10px;
-    margin-top:0;
-    margin-bottom:0;
-}
-.pos .debug-widget .category{
-    background: black;
-    padding-left: 10px;
-    margin: 0px;
-    font-weight: bold;
-    padding-top:3px;
-    padding-bottom:3px;
-}
-.pos .debug-widget .button{
-    padding: 5px;
-    padding-left: 15px;
-    display: block;
-    cursor:pointer;
-}
-.pos .debug-widget .button:active{
-    background: rgba(96,21,177,0.45);
-}
-.pos .debug-widget input{
-    margin-left:10px;
-    margin-top:7px;
-    padding: 4px;
-    width: 180px;
-    border: none;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    border-radius: 3px;
-}
-.pos .debug-widget .status{
-    padding: 5px;
-    padding-left: 15px;
-    display: block;
-    cursor:default;
-}
-.pos .debug-widget .status.on{
-    background-color: #6cd11d;
-}
-.pos .debug-widget .event{
-    padding: 5px;
-    padding-left: 15px;
-    display: block;
-    cursor:default;
-    background-color: #1E1E1E;
 }
 
 /*  ********* The PopupWidgets  ********* */
@@ -2614,13 +2571,6 @@ td {
     color: $primary;
 }
 
-.pos .popup-textarea textarea {
-    width: 100%;
-    box-sizing: border-box;
-}
-.pos .popup-textarea .popup-textarea-wrap {
-    padding: map-get($spacers, 2);
-}
 .pos .popup .button.dont-show-again {
     width: 130px;
 }
@@ -2674,13 +2624,35 @@ td {
     box-sizing: border-box;
     width: 80%;
 }
-.pos .popup .list-lines{
-    overflow: auto;
-    height: 250px;
-    margin: 10px;
+.pos .edit-list-popup header {
+    display: flex;
+    flex-direction: column;
 }
-.pos .popup .list-line-input {
-    margin: 3px;
+.pos .edit-list-popup header .sub-title {
+    font-weight: normal;
+    margin-top: 5px
+}
+.pos .edit-list-popup main {
+    margin: 10px;
+    padding-left: 40px;
+    text-align: left;
+}
+.pos .edit-list-popup .list-lines {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+}
+
+.pos .edit-list-popup .list-lines span {
+    font-size: 16px;
+    padding-right: 40px;
+    margin-left: 3px;
+}
+
+.pos .edit-list-popup .list-line-input {
+    margin: 3px 10px 3px 3px;
+    width: 90%
 }
 
 .pos .popup-number .popup-input {
@@ -2748,6 +2720,9 @@ td {
 .pos .popup-number .title,
 .pos .popup-textinput .title
 {
+    margin-bottom: 20px;
+}
+.pos .popup-textinput main {
     margin-bottom: 20px;
 }
 .pos .popup-numpad .input-button,
@@ -2986,6 +2961,20 @@ td {
     grid-column: 1;
     word-break: break-word;
     max-width: 300px;
+    position: relative
+}
+
+.pos .product_configurator_attributes .configurator_radio .attribute-name-cell label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80vw;
+    max-width: 600px;
+    height: 100%;
+}
+
+.pos .product_configurator_attributes .configurator_radio .attribute-name-cell label:hover {
+    cursor: pointer;
 }
 
 .pos .product_configurator_attributes .configurator_radio .price-extra-cell {
@@ -2995,6 +2984,7 @@ td {
 .pos .product_configurator_attributes .configurator_radio input[type='radio'] {
     box-shadow: none;
     margin-right: 0.5em;
+    cursor: pointer;
 }
 
 .pos .product_configurator_attributes .configurator_radio .price_extra {
@@ -3008,7 +2998,8 @@ td {
 .pos .product_configurator_attributes .configurator_radio .custom_value {
     margin-left: 0.5em;
     height: 1.3em;
-
+    position: relative;
+    z-index: 1;
 }
 
 /** Selector attribute **/
@@ -3509,6 +3500,8 @@ td {
     width: 75%;
     max-width: 250px;
     justify-content: flex-start;
+    height: 100%;
+    min-height: 48px;
 }
 
 .pos .search-bar-container.sb-product .icon {
@@ -3683,25 +3676,7 @@ td {
     }
 }
 
-/**
- * Notification
- */
-
- .pos .notification {
-    width: 350px;
-    background-color: #333333AA;
-    color: #fff;
-    text-align: center;
-    border-radius: 2px;
-    padding: 16px;
-    position: fixed;
-    z-index: 1;
-    left: calc((100% - 350px - 32px)/2);
-    bottom: 5%;
-    font-size: 17px;
-}
-
-.pos .pos-topheader .status-buttons > div:hover {
+.pos .pos-topheader .status-buttons > div:not(.not-clickable):hover {
     background: rgba(0, 0, 0, .08);
 }
 
@@ -3709,93 +3684,6 @@ td {
     .ticket-screen .pos-search-bar .search input {
         padding-left: 10px;
     }
-}
-
-/** CashMovePopup **/
-
-.cash-move-popup {
-    top: 20% !important;
-}
-
-.cash-move {
-    display: flex;
-    flex-flow: column;
-}
-
-.cash-move .input-amount {
-    display: flex;
-    flex-flow: row;
-}
-
-.cash-move .input-amount .input-type {
-    height: 40px;
-    line-height:40px;
-    text-align:center;
-    border-radius: 2px;
-    padding: 0 12px;
-    margin-right: 10px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    border: solid 1px rgba(60,60,60,0.1);
-    background: rgba(0,0,0,0.05);
-    white-space: nowrap;
-}
-
-.cash-move .input-amount .input-type.highlight {
-    background: $primary !important;
-    border: solid 1px #64AF8A !important;
-    color: white !important;
-}
-
-.cash-move .input-amount .red-highlight {
-    background: #bd2222 !important;
-    border: solid 1px #bd2222 !important;
-    color: white !important;
-}
-
-.cash-move .input-amount input {
-    width: 100%;
-    min-height: auto;
-    text-align: right;
-    padding-right: 30px;
-}
-
-.cash-move .input-amount .input-field {
-    position: relative;
-    flex-grow: 1;
-}
-
-.cash-move .input-amount .input-field span.currency {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-
-.cash-move textarea {
-    resize: none;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.cash-move .error-message {
-    color: rgb(197, 52, 0);
-    text-align: left;
-    padding-left: 5px;
-}
-
-.pos .popup footer.cash-move {
-    display: block;
-    width: calc(100% - 36px);
-    padding: 10px 18px 10px 18px;
-}
-
-.pos .popup .footer.cash-move .button.confirm {
-    float: left;
-}
-
-.pos .popup .footer.cash-move .button.cancel {
-    margin-right: 0;
 }
 
 /* For LoadingScreen */

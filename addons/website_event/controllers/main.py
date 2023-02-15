@@ -20,7 +20,7 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
 from odoo.tools import lazy
-
+from odoo.exceptions import UserError
 
 class WebsiteEventController(http.Controller):
 
@@ -31,6 +31,20 @@ class WebsiteEventController(http.Controller):
     # ------------------------------------------------------------
     # EVENT LIST
     # ------------------------------------------------------------
+
+    def _get_events_search_options(self, **post):
+        return {
+            'displayDescription': False,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'date': post.get('date'),
+            'tags': post.get('tags'),
+            'type': post.get('type'),
+            'country': post.get('country'),
+        }
 
     @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event)
     def events(self, page=1, **searches):
@@ -47,18 +61,7 @@ class WebsiteEventController(http.Controller):
 
         step = 12  # Number of events per page
 
-        options = {
-            'displayDescription': False,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
-            'allowFuzzy': not searches.get('noFuzzy'),
-            'date': searches.get('date'),
-            'tags': searches.get('tags'),
-            'type': searches.get('type'),
-            'country': searches.get('country'),
-        }
+        options = self._get_events_search_options(**searches)
         order = 'date_begin'
         if searches.get('date', 'upcoming') == 'old':
             order = 'date_begin desc'
@@ -259,6 +262,9 @@ class WebsiteEventController(http.Controller):
         """
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
+        for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
+            if int(ticket_id) not in event.event_ticket_ids.ids and len(event.event_ticket_ids.ids) > 0:
+                raise UserError(_("This ticket is not available for sale for this event"))
         registrations = {}
         global_values = {}
         for key, value in form_details.items():
@@ -331,40 +337,6 @@ class WebsiteEventController(http.Controller):
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')
-        }
-
-    # ------------------------------------------------------------
-    # EDITOR (NEW EVENT)
-    # ------------------------------------------------------------
-
-    @http.route('/event/add_event', type='json', auth="user", methods=['POST'], website=True)
-    def add_event(self, name, event_start, event_end, address_values, **kwargs):
-        values = self._prepare_event_values(name, event_start, event_end, address_values)
-        event = request.env['event.event'].create(values)
-        return "/event/%s/register?enable_editor=1" % slug(event)
-
-    def _prepare_event_values(self, name, event_start, event_end, address_values=None):
-        """
-        Return the values to create a new event.
-        event_start,event_date are datetimes in the user tz.
-        address_values is used to either choose an existing location or create one as we allow it in the frontend.
-        """
-        date_begin = parse(event_start).astimezone(pytz.utc).replace(tzinfo=None)
-        date_end = parse(event_end).astimezone(pytz.utc).replace(tzinfo=None)
-        address_id = request.env['res.partner']
-        if address_values:
-            (address_pid, address_vals) = int(address_values[0]), address_values[1]
-            address_id = address_pid
-            if address_pid == 0:
-                address_id = request.env['res.partner'].create(address_vals).id
-        return {
-            'name': name,
-            'date_begin': date_begin,
-            'date_end': date_end,
-            'address_id': address_id,
-            'seats_available': 1000,
-            'website_id': request.website.id,
-            'event_ticket_ids': request.env['event.event.ticket'],
         }
 
     # ------------------------------------------------------------

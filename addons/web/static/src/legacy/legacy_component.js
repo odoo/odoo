@@ -90,3 +90,6 @@ export class LegacyComponent extends owl.Component {
         }
     }
 }
+LegacyComponent.props = {
+    "*": true,
+};

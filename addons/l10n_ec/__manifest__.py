@@ -40,7 +40,7 @@ Master Data:
     "depends": [
         "base",
         "base_iban",
-        "account",
+        "l10n_multilang",
         "account_debit_note",
         "l10n_latam_invoice_document",
         "l10n_latam_base",

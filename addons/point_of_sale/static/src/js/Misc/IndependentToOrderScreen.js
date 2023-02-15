@@ -1,15 +1,15 @@
-odoo.define('point_of_sale.IndependentToOrderScreen', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class IndependentToOrderScreen extends PosComponent {
-        close() {
-            const order = this.env.pos.get_order();
-            const { name: screenName } = order.get_screen_data();
-            this.showScreen(screenName);
-        }
+export class IndependentToOrderScreen extends LegacyComponent {
+    static storeOnOrder = false;
+    setup() {
+        super.setup(...arguments);
+        this.pos = usePos();
     }
-
-    return IndependentToOrderScreen;
-});
+    close() {
+        this.pos.closeScreen();
+    }
+}

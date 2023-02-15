@@ -9,7 +9,7 @@ from logging import getLogger
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 from zlib import compress, decompress
-from PIL import Image
+from PIL import Image, PdfImagePlugin
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
@@ -27,6 +27,9 @@ DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
 REGEX_SUBTYPE_UNFORMATED = re.compile(r'^\w+/[\w-]+$')
 REGEX_SUBTYPE_FORMATED = re.compile(r'^/\w+#2F[\w-]+$')
 
+
+# Disable linter warning: this import is needed to make sure a PDF stream can be saved in Image.
+PdfImagePlugin.__name__
 
 # make sure values are unwrapped by calling the specialized __getitem__
 def _unwrapping_get(self, key, default=None):
@@ -82,6 +85,18 @@ def rotate_pdf(pdf):
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
         return _buffer.getvalue()
+
+
+def to_pdf_stream(attachment) -> io.BytesIO:
+    """Get the byte stream of the attachment as a PDF."""
+    stream = io.BytesIO(attachment.raw)
+    if attachment.mimetype == 'application/pdf':
+        return stream
+    elif attachment.mimetype.startswith('image'):
+        output_stream = io.BytesIO()
+        Image.open(stream).convert("RGB").save(output_stream, format="pdf")
+        return output_stream
+    _logger.warning("mimetype (%s) not recognized for %s", attachment.mimetype, attachment)
 
 
 def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):

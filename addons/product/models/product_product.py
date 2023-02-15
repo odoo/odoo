@@ -51,8 +51,7 @@ class ProductProduct(models.Model):
         'Cost', company_dependent=True,
         digits='Product Price',
         groups="base.group_user",
-        help="""In Standard Price & AVCO: value of the product (automatically computed in AVCO).
-        In FIFO: value of the next unit that will leave the stock (automatically computed).
+        help="""Value of the product (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
     volume = fields.Float('Volume', digits='Volume')
@@ -87,6 +86,7 @@ class ProductProduct(models.Model):
     image_256 = fields.Image("Image 256", compute='_compute_image_256')
     image_128 = fields.Image("Image 128", compute='_compute_image_128')
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed')
+    write_date = fields.Datetime(compute='_compute_write_date', store=True)
 
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
@@ -113,14 +113,28 @@ class ProductProduct(models.Model):
             else:
                 record[variant_field] = record[template_field]
 
-    @api.depends("create_date", "write_date", "product_tmpl_id.create_date", "product_tmpl_id.write_date")
-    def _compute_concurrency_field(self):
-        # Intentionally not calling super() to involve all fields explicitly
+    @api.depends("product_tmpl_id.write_date")
+    def _compute_write_date(self):
+        """
+        First, the purpose of this computation is to update a product's
+        write_date whenever its template's write_date is updated.  Indeed,
+        when a template's image is modified, updating its products'
+        write_date will invalidate the browser's cache for the products'
+        image, which may be the same as the template's.  This guarantees UI
+        consistency.
+
+        Second, the field 'write_date' is automatically updated by the
+        framework when the product is modified.  The recomputation of the
+        field supplements that behavior to keep the product's write_date
+        up-to-date with its template's write_date.
+
+        Third, the framework normally prevents us from updating write_date
+        because it is a "magic" field.  However, the assignment inside the
+        compute method is not subject to this restriction.  It therefore
+        works as intended :-)
+        """
         for record in self:
-            record[self.CONCURRENCY_CHECK_FIELD] = max(filter(None, (
-                record.product_tmpl_id.write_date or record.product_tmpl_id.create_date,
-                record.write_date or record.create_date or fields.Datetime.now(),
-            )))
+            record.write_date = max(record.write_date, record.product_tmpl_id.write_date)
 
     def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""
@@ -561,6 +575,7 @@ class ProductProduct(models.Model):
             'context': {
                 'default_product_id': self.id,
                 'default_applied_on': '0_product_variant',
+                'search_default_visible': True,
             }
         }
 
@@ -644,11 +659,11 @@ class ProductProduct(models.Model):
         return prices
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         self = self.with_context(
             empty_list_help_document_name=_("product"),
         )
-        return super(ProductProduct, self).get_empty_list_help(help)
+        return super(ProductProduct, self).get_empty_list_help(help_message)
 
     def get_product_multiline_description_sale(self):
         """ Compute a multiline description of this product, in the context of sales

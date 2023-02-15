@@ -8,13 +8,17 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { sprintf } from "@web/core/utils/strings";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 class PropertyTagsColorListPopover extends Component {}
 PropertyTagsColorListPopover.template = "web.PropertyTagsColorListPopover";
 PropertyTagsColorListPopover.components = {
     ColorList,
 };
+
+// property tags does not really need timeout because it does not make RPC calls
+export class PropertyTagAutoComplete extends AutoComplete { };
+Object.assign(PropertyTagAutoComplete, { timeout: 0 });
 
 export class PropertyTags extends Component {
     setup() {
@@ -25,6 +29,15 @@ export class PropertyTags extends Component {
     /* --------------------------------------------------------
      * Public methods / Getters
      * -------------------------------------------------------- */
+
+    /**
+     * Return true if we should display the badges or just the tag label.
+     *
+     * @returns {array}
+     */
+    get displayBadge() {
+        return !this.env.config || this.env.config.viewType !== "kanban";
+    }
 
     /**
      * Return the list containing tags values and actions for the TagsList component.
@@ -38,7 +51,12 @@ export class PropertyTags extends Component {
 
         // Retrieve the tags label and color
         // ['a', 'b'] =>  [['a', 'A', 5], ['b', 'B', 6]]
-        const value = this.props.tags.filter((tag) => this.props.selectedTags.indexOf(tag[0]) >= 0);
+        let value = this.props.tags.filter((tag) => this.props.selectedTags.indexOf(tag[0]) >= 0);
+
+        if (!this.displayBadge) {
+            // in kanban view e.g. to not show tag without color
+            value = value.filter(tag => tag[2]);
+        }
 
         const canDeleteTag = !this.props.readonly && this.props.canChangeTags;
 
@@ -200,7 +218,7 @@ export class PropertyTags extends Component {
      *
      * If we use the component for the tag configuration, clicking on "delete"
      * will remove the tags from the available tags. If we use the component
-     * the the tag selection, it will unselect the tag.
+     * the tag selection, it will unselect the tag.
      *
      * @param {string} deleteTag, ID of the tag to delete
      */
@@ -262,13 +280,14 @@ export class PropertyTags extends Component {
 
 PropertyTags.template = "web.PropertyTags";
 PropertyTags.components = {
-    AutoComplete,
+    AutoComplete: PropertyTagAutoComplete,
     TagsList,
     ColorList,
     Popover: PropertyTagsColorListPopover,
 };
 
 PropertyTags.props = {
+    id: { type: String, optional: true },
     selectedTags: {}, // Tags value visible in the tags list
     tags: {}, // Tags definition visible in the dropdown
     // Define the behavior of the delete button on the tags, either

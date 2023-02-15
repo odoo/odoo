@@ -1,12 +1,26 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
+
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "stock_move", "weight"):
+            # In case of a big database with a lot of stock moves, the RAM gets exhausted
+            # To prevent a process from being killed We create the column 'weight' manually
+            # Then we do the computation in a query by multiplying product weight with qty
+            create_column(self.env.cr, "stock_move", "weight", "numeric")
+            self.env.cr.execute("""
+                UPDATE stock_move move
+                SET weight = move.product_qty * product.weight
+                FROM product_product product
+                WHERE move.product_id = product.id
+                AND move.state != 'cancel'
+                """)
+        return super()._auto_init()
 
     weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
 
@@ -20,7 +34,7 @@ class StockMove(models.Model):
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
         carrier_id = self.group_id.sale_id.carrier_id.id
-        vals['carrier_id'] = any(propagate_carrier for propagate_carrier in self.rule_id) and carrier_id
+        vals['carrier_id'] = any(rule.propagate_carrier for rule in self.rule_id) and carrier_id
         return vals
 
     def _key_assign_picking(self):
@@ -32,8 +46,7 @@ class StockMoveLine(models.Model):
 
     sale_price = fields.Float(compute='_compute_sale_price')
     destination_country_code = fields.Char(related='picking_id.destination_country_code')
-    carrier_id = fields.Many2one(related='picking_id.carrier_id')
-    carrier_name = fields.Char(related='picking_id.carrier_id.name', readonly=True, store=True, string="Carrier Name")
+    carrier_id = fields.Many2one(related='picking_id.carrier_id', store=True)  # need to be stored for the groupby in `stock_move_line_view_search_delivery`
 
     @api.depends('qty_done', 'product_uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom')
     def _compute_sale_price(self):

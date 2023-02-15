@@ -2,16 +2,15 @@ odoo.define('website_sale.tour_shop_mail', function (require) {
 'use strict';
 
 var rpc = require('web.rpc');
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 const tourUtils = require('website_sale.tour_utils');
 
 require('web.dom_ready');
 
-tour.register('shop_mail', {
+registry.category("web_tour.tours").add('shop_mail', {
     test: true,
     url: '/',
-},
-[
+    steps: [
     {
         content: "Change the domain of the websites and go to shop",
         trigger: 'body',
@@ -64,7 +63,7 @@ tour.register('shop_mail', {
     {
         content: "click send by email",
         trigger: '.btn[name="action_quotation_send"]',
-        extra_trigger: '.o_statusbar_status .btn-primary:contains("Sales Order")',
+        extra_trigger: '.o_statusbar_status .o_arrow_button_current:contains("Sales Order")',
     },
     {
         content: "Open recipients dropdown",
@@ -83,7 +82,7 @@ tour.register('shop_mail', {
     },
     {
         content: "wait mail to be sent, and go see it",
-        trigger: '.o_Message_content:contains("Your"):contains("order")',
+        trigger: '.o_MessageView_content:contains("Your"):contains("order")',
         run: function () {
             window.location.href = "/web#action=mail.action_view_mail_mail&view_type=list";
         },
@@ -97,5 +96,5 @@ tour.register('shop_mail', {
         trigger: 'div.o_field_html[name="body_html"] p:contains("Your"):contains("order")',
         extra_trigger: 'div.o_field_html[name="body_html"] a[href^="https://my-test-domain.com"]',
     },
-]);
+]});
 });

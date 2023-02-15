@@ -25,6 +25,8 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
             'partner_id': cls.company_data['company'].partner_id.id,
         })
 
+        cls.env.ref('base.EUR').active = True
+
         cls.sepa_qr_invoice = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,

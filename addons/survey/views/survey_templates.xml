@@ -38,7 +38,12 @@
                             <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
                         </t>
                         <t t-else="">
-                            <t t-set="page_ids" t-value="survey.question_ids.ids"/>
+                            <t t-if="not answer.is_session_answer">
+                                <t t-set="page_ids" t-value="answer.predefined_question_ids.ids"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="page_ids" t-value="survey.question_ids.ids"/>
+                            </t>
                             <t t-set="page_number" t-value="page_ids.index(question.id)"/>
                         </t>
                     </t>
@@ -61,7 +66,6 @@
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap o_survey_wrap d-flex">
                 <div class="container o_survey_form d-flex flex-column mb-5">
-
                     <t t-call="survey.survey_fill_header" />
                     <t t-call="survey.survey_fill_form" />
                 </div>
@@ -156,7 +160,7 @@
                             <span class="fw-bold text-danger" t-field="survey.time_limit" t-options="{'widget': 'duration', 'unit': 'minute'}"></span>
                         </p>
                     </div>
-                    <button type="submit" value="start" class="btn btn-primary btn-lg">
+                    <button type="submit" value="start" class="btn btn-primary btn-lg disabled">
                         <t t-if="survey.certification">
                             Start Certification
                         </t>
@@ -186,7 +190,7 @@
             </t>
 
             <div class="text-center mt16 mb256">
-                <button type="submit" value="finish" class="btn btn-primary">Submit</button>
+                <button type="submit" value="finish" class="btn btn-primary disabled">Submit</button>
                     <span class="fw-bold text-muted ms-2 d-none d-md-inline">
                         <span id="enter-tooltip">or press Enter</span>
                     </span>
@@ -204,7 +208,7 @@
 
             <div class="row">
                 <div class="col-12 text-center mt16">
-                    <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
+                    <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary disabled">
                         <t t-if="not survey_last">Continue</t>
                         <t t-else="">Submit</t>
                     </button>
@@ -242,7 +246,7 @@
 
                 <div class="row">
                     <div class="col-12 text-center mt16">
-                        <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary">
+                        <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary disabled">
                             <t t-if="answer.is_session_answer or survey_last">Submit</t>
                             <t t-else="">Continue</t>
                         </button>

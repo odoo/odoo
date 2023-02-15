@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class SelectionField extends Component {
     get options() {
@@ -71,6 +71,7 @@ SelectionField.props = {
 
 SelectionField.displayName = _lt("Selection");
 SelectionField.supportedTypes = ["many2one", "selection"];
+SelectionField.legacySpecialData = "_fetchSpecialRelation";
 
 SelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 SelectionField.extractProps = ({ attrs }) => {

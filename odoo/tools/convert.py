@@ -272,159 +272,11 @@ form: module.record_id""" % (xml_id,)
         if records:
             records.unlink()
 
-    def _tag_report(self, rec):
-        res = {}
-        for dest,f in (('name','string'),('model','model'),('report_name','name')):
-            res[dest] = rec.get(f)
-            assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field, dest in (('attachment', 'attachment'),
-                            ('attachment_use', 'attachment_use'),
-                            ('usage', 'usage'),
-                            ('file', 'report_file'),
-                            ('report_type', 'report_type'),
-                            ('parser', 'parser'),
-                            ('print_report_name', 'print_report_name'),
-                            ):
-            if rec.get(field):
-                res[dest] = rec.get(field)
-        if rec.get('auto'):
-            res['auto'] = safe_eval(rec.get('auto','False'))
-        if rec.get('header'):
-            res['header'] = safe_eval(rec.get('header','False'))
-
-        res['multi'] = rec.get('multi') and safe_eval(rec.get('multi','False'))
-
-        xml_id = rec.get('id','')
-        self._test_xml_id(xml_id)
-        warnings.warn(f"The <report> tag is deprecated, use a <record> tag for {xml_id!r}.", DeprecationWarning)
-
-        if rec.get('groups'):
-            g_names = rec.get('groups','').split(',')
-            groups_value = []
-            for group in g_names:
-                if group.startswith('-'):
-                    group_id = self.id_get(group[1:])
-                    groups_value.append(odoo.Command.unlink(group_id))
-                else:
-                    group_id = self.id_get(group)
-                    groups_value.append(odoo.Command.link(group_id))
-            res['groups_id'] = groups_value
-        if rec.get('paperformat'):
-            pf_name = rec.get('paperformat')
-            pf_id = self.id_get(pf_name)
-            res['paperformat_id'] = pf_id
-
-        xid = self.make_xml_id(xml_id)
-        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
-        report = self.env['ir.actions.report']._load_records([data], self.mode == 'update')
-        self.idref[xml_id] = report.id
-
-        if not rec.get('menu') or safe_eval(rec.get('menu','False')):
-            report.create_action()
-        elif self.mode=='update' and safe_eval(rec.get('menu','False'))==False:
-            # Special check for report having attribute menu=False on update
-            report.unlink_action()
-        return report.id
-
     def _tag_function(self, rec):
         if self.noupdate and self.mode != 'init':
             return
         env = self.get_env(rec)
         _eval_xml(self, rec, env)
-
-    def _tag_act_window(self, rec):
-        name = rec.get('name')
-        xml_id = rec.get('id','')
-        self._test_xml_id(xml_id)
-        warnings.warn(f"The <act_window> tag is deprecated, use a <record> for {xml_id!r}.", DeprecationWarning)
-        view_id = False
-        if rec.get('view_id'):
-            view_id = self.id_get(rec.get('view_id'))
-        domain = rec.get('domain') or '[]'
-        res_model = rec.get('res_model')
-        binding_model = rec.get('binding_model')
-        view_mode = rec.get('view_mode') or 'tree,form'
-        usage = rec.get('usage')
-        limit = rec.get('limit')
-        uid = self.env.user.id
-
-        # Act_window's 'domain' and 'context' contain mostly literals
-        # but they can also refer to the variables provided below
-        # in eval_context, so we need to eval() them before storing.
-        # Among the context variables, 'active_id' refers to
-        # the currently selected items in a list view, and only
-        # takes meaning at runtime on the client side. For this
-        # reason it must remain a bare variable in domain and context,
-        # even after eval() at server-side. We use the special 'unquote'
-        # class to achieve this effect: a string which has itself, unquoted,
-        # as representation.
-        active_id = unquote("active_id")
-        active_ids = unquote("active_ids")
-        active_model = unquote("active_model")
-
-        # Include all locals() in eval_context, for backwards compatibility
-        eval_context = {
-            'name': name,
-            'xml_id': xml_id,
-            'type': 'ir.actions.act_window',
-            'view_id': view_id,
-            'domain': domain,
-            'res_model': res_model,
-            'src_model': binding_model,
-            'view_mode': view_mode,
-            'usage': usage,
-            'limit': limit,
-            'uid': uid,
-            'active_id': active_id,
-            'active_ids': active_ids,
-            'active_model': active_model,
-        }
-        context = self.get_env(rec, eval_context).context
-
-        try:
-            domain = safe_eval(domain, eval_context)
-        except (ValueError, NameError):
-            # Some domains contain references that are only valid at runtime at
-            # client-side, so in that case we keep the original domain string
-            # as it is. We also log it, just in case.
-            _logger.debug('Domain value (%s) for element with id "%s" does not parse '\
-                'at server-side, keeping original string, in case it\'s meant for client side only',
-                domain, xml_id or 'n/a', exc_info=True)
-        res = {
-            'name': name,
-            'type': 'ir.actions.act_window',
-            'view_id': view_id,
-            'domain': domain,
-            'context': context,
-            'res_model': res_model,
-            'view_mode': view_mode,
-            'usage': usage,
-            'limit': limit,
-        }
-
-        if rec.get('groups'):
-            g_names = rec.get('groups','').split(',')
-            groups_value = []
-            for group in g_names:
-                if group.startswith('-'):
-                    group_id = self.id_get(group[1:])
-                    groups_value.append(odoo.Command.unlink(group_id))
-                else:
-                    group_id = self.id_get(group)
-                    groups_value.append(odoo.Command.link(group_id))
-            res['groups_id'] = groups_value
-
-        if rec.get('target'):
-            res['target'] = rec.get('target','')
-        if binding_model:
-            res['binding_model_id'] = self.env['ir.model']._get(binding_model).id
-            res['binding_type'] = rec.get('binding_type') or 'action'
-            views = rec.get('binding_views')
-            if views is not None:
-                res['binding_view_types'] = views
-        xid = self.make_xml_id(xml_id)
-        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
-        self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
     def _tag_menuitem(self, rec, parent=None):
         rec_id = rec.attrib["id"]
@@ -565,7 +417,10 @@ form: module.record_id""" % (xml_id,)
                     val = self.model_id_get(f_ref)
                     f_val = val[0] + ',' + str(val[1])
                 else:
-                    f_val = self.id_get(f_ref)
+                    f_val = self.id_get(f_ref, raise_if_not_found=nodeattr2bool(rec, 'forcecreate', True))
+                    if not f_val:
+                        _logger.warning("Skipping creation of %r because %s=%r could not be resolved", xid, f_name, f_ref)
+                        return None
             else:
                 f_val = _eval_xml(self, field, env)
                 if f_name in model._fields:
@@ -722,10 +577,10 @@ form: module.record_id""" % (xml_id,)
     def noupdate(self):
         return self._noupdate[-1]
 
-    def __init__(self, cr, module, idref, mode, noupdate=False, xml_filename=None):
+    def __init__(self, env, module, idref, mode, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
-        self.envs = [odoo.api.Environment(cr, SUPERUSER_ID, {})]
+        self.envs = [env]
         self.idref = {} if idref is None else idref
         self._noupdate = [noupdate]
         self.xml_filename = xml_filename
@@ -735,8 +590,6 @@ form: module.record_id""" % (xml_id,)
             'function': self._tag_function,
             'menuitem': self._tag_menuitem,
             'template': self._tag_template,
-            'report': self._tag_report,
-            'act_window': self._tag_act_window,
 
             **dict.fromkeys(self.DATA_ROOTS, self._tag_root)
         }
@@ -746,27 +599,27 @@ form: module.record_id""" % (xml_id,)
         self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
-def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
+def convert_file(env, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
     if pathname is None:
         pathname = os.path.join(module, filename)
     ext = os.path.splitext(filename)[1].lower()
 
     with file_open(pathname, 'rb') as fp:
         if ext == '.csv':
-            convert_csv_import(cr, module, pathname, fp.read(), idref, mode, noupdate)
+            convert_csv_import(env, module, pathname, fp.read(), idref, mode, noupdate)
         elif ext == '.sql':
-            convert_sql_import(cr, fp)
+            convert_sql_import(env, fp)
         elif ext == '.xml':
-            convert_xml_import(cr, module, fp, idref, mode, noupdate)
+            convert_xml_import(env, module, fp, idref, mode, noupdate)
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
             raise ValueError("Can't load unknown file type %s.", filename)
 
-def convert_sql_import(cr, fp):
-    cr.execute(fp.read()) # pylint: disable=sql-injection
+def convert_sql_import(env, fp):
+    env.cr.execute(fp.read()) # pylint: disable=sql-injection
 
-def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
+def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
         noupdate=False):
     '''Import csv file :
         quote: "
@@ -794,14 +647,13 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         'install_filename': fname,
         'noupdate': noupdate,
     }
-    env = odoo.api.Environment(cr, SUPERUSER_ID, context)
-    result = env[model].load(fields, datas)
+    result = env[model].with_context(**context).load(fields, datas)
     if any(msg['type'] == 'error' for msg in result['messages']):
         # Report failed import and abort module install
         warning_msg = "\n".join(msg['message'] for msg in result['messages'])
         raise Exception(_('Module loading %s failed: file %s could not be processed:\n %s') % (module, fname, warning_msg))
 
-def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
+def convert_xml_import(env, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     doc = etree.parse(xmlfile)
     schema = os.path.join(config['root_path'], 'import_xml.rng')
     relaxng = etree.RelaxNG(etree.parse(schema))
@@ -822,5 +674,5 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         xml_filename = xmlfile
     else:
         xml_filename = xmlfile.name
-    obj = xml_import(cr, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename)
+    obj = xml_import(env, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot())

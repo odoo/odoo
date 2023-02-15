@@ -1,18 +1,15 @@
-odoo.define('point_of_sale.PaymentScreenNumpad', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class PaymentScreenNumpad extends PosComponent {
-        setup() {
-            super.setup();
-            this.decimalPoint = this.env._t.database.parameters.decimal_point;
-        }
+import { PSNumpadInputButton } from "./PSNumpadInputButton";
+
+export class PaymentScreenNumpad extends LegacyComponent {
+    static components = { PSNumpadInputButton };
+    static template = "PaymentScreenNumpad";
+
+    setup() {
+        super.setup();
+        this.decimalPoint = this.env._t.database.parameters.decimal_point;
     }
-    PaymentScreenNumpad.template = 'PaymentScreenNumpad';
-
-    Registries.Component.add(PaymentScreenNumpad);
-
-    return PaymentScreenNumpad;
-});
+}

@@ -6,14 +6,14 @@ from bisect import bisect_left
 from collections import defaultdict
 import re
 
-ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*)\s)?(.*)')
+ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 
 class AccountAccount(models.Model):
     _name = "account.account"
     _inherit = ['mail.thread']
     _description = "Account"
-    _order = "is_off_balance, code, company_id"
+    _order = "code, company_id"
     _check_company_auto = True
 
     @api.constrains('account_type', 'reconcile')
@@ -101,8 +101,6 @@ class AccountAccount(models.Model):
     opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit')
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit')
     opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance')
-
-    is_off_balance = fields.Boolean(compute='_compute_is_off_balance', default=False, store=True, readonly=True)
 
     current_balance = fields.Float(compute='_compute_current_balance')
     related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount')
@@ -296,6 +294,22 @@ class AccountAccount(models.Model):
                     "The account code can only contain alphanumeric characters and dots."
                 ))
 
+    @api.constrains('account_type')
+    def _check_account_is_bank_journal_bank_account(self):
+        self.env['account.account'].flush_model(['account_type'])
+        self.env['account.journal'].flush_model(['type', 'default_account_id'])
+        self._cr.execute('''
+            SELECT journal.id
+              FROM account_journal journal
+              JOIN account_account account ON journal.default_account_id = account.id
+             WHERE account.account_type IN ('asset_receivable', 'liability_payable')
+               AND account.id IN %s
+             LIMIT 1;
+        ''', [tuple(self.ids)])
+
+        if self._cr.fetchone():
+            raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
+
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
@@ -402,11 +416,6 @@ class AccountAccount(models.Model):
             closest_index = bisect_left(codes_list, account.code) - 1
             account.account_type = accounts_with_codes[account.company_id.id][codes_list[closest_index]] if closest_index != -1 else 'asset_current'
 
-    @api.depends('internal_group')
-    def _compute_is_off_balance(self):
-        for account in self:
-            account.is_off_balance = account.internal_group == "off_balance"
-
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
         for account in self:
@@ -506,12 +515,19 @@ class AccountAccount(models.Model):
         return super(AccountAccount, contextual_self).default_get(default_fields)
 
     @api.model
-    def _order_by_frequency_per_partner(self, company_id, partner_id, move_type=None, limit=None):
+    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None):
         """
-        Returns the accounts ordered from most used to least used for a given partner
-        and filtered according to the move type.
+        Returns the accounts ordered from most frequent to least frequent for a given partner
+        and filtered according to the move type
+        :param company_id: the company id
+        :param partner_id: the partner id for which we want to retrieve the most frequent accounts
+        :param move_type: the type of the move to know which type of accounts to retrieve
+        :param filter_never_user_accounts: True if we should filter out accounts never used for the partner
+        :param limit: the maximum number of accounts to retrieve
+        :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
-        limit = "LIMIT 1" if limit is not None else ""
+        join = "INNER JOIN" if filter_never_user_accounts else "LEFT JOIN"
+        limit = f"LIMIT {limit:d}" if limit else ""
         where_internal_group = ""
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
             where_internal_group = "AND account.internal_group = 'income'"
@@ -520,7 +536,7 @@ class AccountAccount(models.Model):
         self._cr.execute(f"""
             SELECT account.id
               FROM account_account account
-              LEFT JOIN account_move_line aml
+            {join} account_move_line aml
                 ON aml.account_id  = account.id
                 AND aml.partner_id = %s
                 AND account.deprecated = FALSE
@@ -535,9 +551,18 @@ class AccountAccount(models.Model):
         return [r[0] for r in self._cr.fetchall()]
 
     @api.model
+    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None):
+        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1)
+        return most_frequent_account[0] if most_frequent_account else False
+
+    @api.model
+    def _order_accounts_by_frequency_for_partner(self, company_id, partner_id, move_type=None):
+        return self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type)
+
+    @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if not name and self._context.get('partner_id') and self._context.get('move_type'):
-            return self._order_by_frequency_per_partner(
+            return self._order_accounts_by_frequency_for_partner(
                             self.env.company.id, self._context.get('partner_id'), self._context.get('move_type'))
         args = args or []
         domain = []
@@ -564,7 +589,7 @@ class AccountAccount(models.Model):
     @api.onchange('name')
     def _onchange_name(self):
         code, name = self._split_code_name(self.name)
-        if code:
+        if code and not self.code:
             self.name = name
             self.code = code
 
@@ -600,9 +625,14 @@ class AccountAccount(models.Model):
         """
         rslt = super(AccountAccount, self).load(fields, data)
 
-        if 'import_file' in self.env.context:
+        if 'import_file' in self.env.context and 'opening_balance' in fields:
             companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
             for company in companies:
+                if company.account_opening_move_id.filtered(lambda m: m.state == "posted"):
+                    raise UserError(
+                        _('You cannot import the "openning_balance" if the opening move (%s) is already posted. \
+                        If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
+                          company.account_opening_move_id.name))
                 company._auto_balance_opening_move()
                 # the current_balance of the account only includes posted moves and
                 # would always amount to 0 after the import if we didn't post the opening move
@@ -659,7 +689,7 @@ class AccountAccount(models.Model):
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
             return self.create({'code': code, 'name': name}).name_get()[0]
-        raise ValueError(_("The values for the created account need to be verified."))
+        raise UserError(_("Please create new accounts from the Chart of Accounts menu."))
 
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist
@@ -712,7 +742,6 @@ class AccountAccount(models.Model):
         return {
             'name': self.display_name,
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.account',
             'res_id': self.id,
@@ -732,8 +761,6 @@ class AccountAccount(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Taxes'),
             'res_model': 'account.tax',
-            'view_type': 'list',
-            'view_mode': 'list',
             'views': [[False, 'list'], [False, 'form']],
             'domain': [('id', 'in', related_taxes_ids)],
         }

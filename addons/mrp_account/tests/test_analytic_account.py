@@ -5,14 +5,20 @@ from odoo.tests.common import TransactionCase
 from odoo.tests import Form
 
 
-class TestAnalyticAccount(TransactionCase):
-
+class TestMrpAnalyticAccount(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.env.user.write({'groups_id': [(4, cls.env.ref('analytic.group_analytic_accounting').id),]})
 
-        cls.analytic_account = cls.env['account.analytic.account'].create({'name': 'test_analytic_account'})
+        cls.analytic_plan = cls.env['account.analytic.plan'].create({
+            'name': 'Plan',
+            'company_id': False,
+        })
+        cls.analytic_account = cls.env['account.analytic.account'].create({
+            'name': 'test_analytic_account',
+            'plan_id': cls.analytic_plan.id,
+        })
         cls.workcenter = cls.env['mrp.workcenter'].create({
             'name': 'Workcenter',
             'default_capacity': 1,
@@ -41,6 +47,8 @@ class TestAnalyticAccount(TransactionCase):
                 (0, 0, {'name': 'work work', 'workcenter_id': cls.workcenter.id, 'time_cycle': 15, 'sequence': 1}),
             ]})
 
+
+class TestAnalyticAccount(TestMrpAnalyticAccount):
     def test_mo_analytic(self):
         """Test the amount on analytic line will change when consumed qty of the
         component changed.
@@ -152,7 +160,8 @@ class TestAnalyticAccount(TransactionCase):
         # Required for `workorder_ids` to be visible in the view
         self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
         # set wc analytic account to be different from the one on the bom
-        wc_analytic_account = self.env['account.analytic.account'].create({'name': 'wc_analytic_account'})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        wc_analytic_account = self.env['account.analytic.account'].create({'name': 'wc_analytic_account', 'plan_id': analytic_plan.id})
         self.workcenter.costs_hour_account_id = wc_analytic_account
 
         # create a mo
@@ -210,13 +219,13 @@ class TestAnalyticAccount(TransactionCase):
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
 
         # Mark as done
-        wizard_dict = mo.button_mark_done()
-        Form(self.env[(wizard_dict.get('res_model'))].with_context(wizard_dict['context'])).save().process()
+        mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
 
         # Create a new analytic account
-        new_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account_2'})
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
+        new_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account_2', 'plan_id': analytic_plan.id})
         # Change the MO analytic account
         mo.analytic_account_id = new_analytic_account
         self.assertEqual(mo.move_raw_ids.analytic_account_line_id.account_id.id, new_analytic_account.id)

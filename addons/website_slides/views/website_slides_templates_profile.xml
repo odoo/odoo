@@ -39,7 +39,7 @@
                 <div class="card mb-2">
                     <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex"
                         t-attf-onclick="location.href='/slides/#{slug(course.channel_id)}';">
-                        <div class="o_wslides_background_image ps-5 pe-4 rounded-start" t-attf-style="background-image: url(#{course.channel_id.website_background_image_url});"/>
+                        <div t-field="course.channel_id.image_1920" t-options="{'widget': 'image', 'class':'o_wslides_course_card_image', 'preview_image': 'image_512'}" class="rounded-start"/>
                         <div class="p-2 w-100">
                             <h5 class="mt-0 mb-1" t-field="course.channel_id.name"/>
 

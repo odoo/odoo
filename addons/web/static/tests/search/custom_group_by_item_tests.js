@@ -109,6 +109,42 @@ QUnit.module("Search", (hooks) => {
     );
 
     QUnit.test(
+        'stored many2many should be proposed in "Add Custom Group" menu',
+        async function (assert) {
+            assert.expect(1);
+
+            await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: ControlPanel,
+                searchMenuTypes: ["groupBy"],
+                searchViewId: false,
+                searchViewFields: {
+                    char_a: { string: "Char A", type: "char", store: true, sortable: true },
+                    m2m_no_stored: { string: "M2M Not Stored", type: "many2many" },
+                    m2m_stored: {
+                        string: "M2M Stored",
+                        type: "many2many",
+                        store: true,
+                    },
+                },
+            });
+
+            await toggleGroupByMenu(target);
+            await toggleAddCustomGroup(target);
+
+            assert.deepEqual(
+                [
+                    ...target.querySelectorAll(
+                        ".o_add_custom_group_menu .dropdown-menu select option"
+                    ),
+                ].map((el) => el.innerText),
+                ["Char A", "M2M Stored"]
+            );
+        }
+    );
+
+    QUnit.test(
         'add a date field in "Add Custom Group" activate a groupby with global default option "month"',
         async function (assert) {
             assert.expect(6);

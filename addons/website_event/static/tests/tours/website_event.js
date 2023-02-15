@@ -3,7 +3,6 @@ odoo.define("website_event.tour", function (require) {
 
     const {_t} = require("web.core");
     const {Markup} = require('web.utils');
-    const time = require('web.time');
     const wTourUtils = require('website.tour_utils');
 
 
@@ -12,7 +11,6 @@ odoo.define("website_event.tour", function (require) {
         url: "/",
     }, [{
         content: _t("Click here to add new content to your website."),
-        extra_trigger: 'iframe #wrapwrap',
         trigger: ".o_menu_systray .o_new_content_container > a",
         consumeVisibleOnly: true,
         position: 'bottom',
@@ -26,16 +24,12 @@ odoo.define("website_event.tour", function (require) {
         run: 'text Technical Training',
         position: "left",
     }, {
-        content: _t("Open date range picker."),
-        trigger: '.modal-dialog [name=date_begin] input',
-    }, {
-        trigger: '.modal-dialog [name=date_begin] input',
-        extra_trigger: '.daterangepicker',
-        content: _t("Pick a Start date for your event"),
+        trigger: '.modal-dialog div[name=date_begin]',
+        content: _t("Open date range picker. Pick a Start date for your event"),
         run: function () {
-            const daterangepicker = this.$anchor.data('daterangepicker');
-            daterangepicker.setStartDate(moment().format(time.getLangDatetimeFormat()));
-            daterangepicker.setEndDate(moment().add(1, "d").format(time.getLangDatetimeFormat()));
+            $('input[id="date_begin"]').val('09/30/2020 08:00:00').change();
+            $('input[id="date_end"]').val('10/02/2020 23:00:00').change();
+            $('input[id="date_begin"]').click();
         }
     }, {
         content: _t("Apply change."),

@@ -15,8 +15,7 @@ class TestPopulate(common.TransactionCase):
     def setUp(self):
         super(TestPopulate, self).setUp()
         patcher = patch.object(self.cr, 'commit')
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
 
     def test_dependency(self):
         ordered_models = Populate._get_ordered_models(self.env, ['test.populate'])

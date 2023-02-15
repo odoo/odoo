@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _, Command
+from odoo import fields, models, _, Command, tools
 import base64
 from datetime import timedelta
 
@@ -77,16 +77,7 @@ class AccountTourUploadBill(models.TransientModel):
         if self.selection == 'upload':
             return purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice').create_document_from_attachment(attachment_ids=self.attachment_ids.ids)
         elif self.selection == 'sample':
-            bodies = self.env['ir.actions.report']._prepare_html(self.preview_invoice)[0]
-            sample_pdf = self.env['ir.actions.report']._run_wkhtmltopdf(bodies)
-
             invoice_date = fields.Date.today() - timedelta(days=12)
-            attachment = self.env['ir.attachment'].create({
-                'type': 'binary',
-                'name': 'INV-%s-0001.pdf' % invoice_date.strftime('%Y-%m'),
-                'res_model': 'mail.compose.message',
-                'datas': base64.encodebytes(sample_pdf),
-            })
             partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)
             if not partner:
                 partner = self.env['res.partner'].create({
@@ -113,7 +104,19 @@ class AccountTourUploadBill(models.TransientModel):
                     })
                 ],
             })
-            bill.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
+            # In case of test environment, don't create the pdf
+            if tools.config['test_enable'] or tools.config['test_file']:
+                bill.with_context(no_new_invoice=True).message_post()
+            else:
+                bodies = self.env['ir.actions.report']._prepare_html(self.preview_invoice)[0]
+                content = self.env['ir.actions.report']._run_wkhtmltopdf(bodies)
+                attachment = self.env['ir.attachment'].create({
+                    'type': 'binary',
+                    'name': 'INV-%s-0001.pdf' % invoice_date.strftime('%Y-%m'),
+                    'res_model': 'mail.compose.message',
+                    'datas': base64.encodebytes(content),
+                })
+                bill.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
 
             return self._action_list_view_bill(bill.ids)
         else:

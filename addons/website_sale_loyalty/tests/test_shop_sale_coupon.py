@@ -10,16 +10,6 @@ from odoo.addons.sale.tests.test_sale_product_attribute_value_config import Test
 @tagged('post_install', '-at_install')
 class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestUi, cls).setUpClass()
-        # set currency to not rely on demo data and avoid possible race condition
-        cls.currency_ratio = 1.0
-        pricelist = cls.env.ref('product.list0')
-        new_currency = cls._setup_currency(cls.currency_ratio)
-        pricelist.currency_id = new_currency
-        cls.env.flush_all()
-
     def test_01_admin_shop_sale_loyalty_tour(self):
         # pre enable "Show # found" option to avoid race condition...
         public_category = self.env['product.public.category'].create({'name': 'Public Category'})

@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.http import request
 
 
 class Http(models.AbstractModel):
@@ -13,8 +12,8 @@ class Http(models.AbstractModel):
             widget to apply, depending on the current company.
         """
         result = super(Http, self).session_info()
-        if request.env.user._is_internal():
-            company_ids = request.env.user.company_ids
+        if self.env.user._is_internal():
+            company_ids = self.env.user.company_ids
 
             for company in company_ids:
                 result["user_companies"]["allowed_companies"][company.id].update({
@@ -30,7 +29,7 @@ class Http(models.AbstractModel):
 
     @api.model
     def get_timesheet_uoms(self):
-        company_ids = request.env.user.company_ids
+        company_ids = self.env.user.company_ids
         uom_ids = company_ids.mapped('timesheet_encode_uom_id') | \
                   company_ids.mapped('project_time_mode_id')
         return {

@@ -19,35 +19,7 @@ class SaleOrderLine(models.Model):
         'project.task', 'Generated Task',
         index=True, copy=False)
     # used to know if generate a task and/or a project, depending on the product settings
-    is_service = fields.Boolean("Is a Service", compute='_compute_is_service', store=True, compute_sudo=True)
     reached_milestones_ids = fields.One2many('project.milestone', 'sale_line_id', string='Reached Milestones', domain=[('is_reached', '=', True)])
-
-    def name_get(self):
-        res = super().name_get()
-        with_price_unit = self.env.context.get('with_price_unit')
-        if with_price_unit:
-            names = dict(res)
-            result = []
-            sols_by_so_dict = defaultdict(lambda: self.env[self._name])  # key: (sale_order_id, product_id), value: sale order line
-            for line in self:
-                sols_by_so_dict[line.order_id.id, line.product_id.id] += line
-
-            for sols in sols_by_so_dict.values():
-                if len(sols) > 1 and all(sols.mapped('is_service')):
-                    result += [(
-                        line.id,
-                        '%s - %s' % (
-                            names.get(line.id), format_amount(self.env, line.price_unit, line.currency_id))
-                    ) for line in sols]
-                else:
-                    result += [(line.id, names.get(line.id)) for line in sols]
-            return result
-        return res
-
-    @api.depends('product_id.type')
-    def _compute_is_service(self):
-        for so_line in self:
-            so_line.is_service = so_line.product_id.type == 'service'
 
     @api.depends('product_id.type')
     def _compute_product_updatable(self):
@@ -55,21 +27,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.product_id.type == 'service' and line.state == 'sale':
                 line.product_updatable = False
-
-    def _auto_init(self):
-        """
-        Create column to stop ORM from computing it himself (too slow)
-        """
-        if not column_exists(self.env.cr, 'sale_order_line', 'is_service'):
-            create_column(self.env.cr, 'sale_order_line', 'is_service', 'bool')
-            self.env.cr.execute("""
-                UPDATE sale_order_line line
-                SET is_service = (pt.type = 'service')
-                FROM product_product pp
-                LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                WHERE pp.id = line.product_id
-            """)
-        return super()._auto_init()
 
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
@@ -106,9 +63,10 @@ class SaleOrderLine(models.Model):
         # generate task with hours=0.
         for line in lines:
             if line.state == 'sale' and not line.is_expense:
+                has_task = bool(line.task_id)
                 line.sudo()._timesheet_service_generation()
                 # if the SO line created a task, post a message on the order
-                if line.task_id:
+                if line.task_id and not has_task:
                     msg_body = _("Task Created (%s): %s", line.product_id.name, line.task_id._get_html_link())
                     line.order_id.message_post(body=msg_body)
         return lines
@@ -145,11 +103,11 @@ class SaleOrderLine(models.Model):
         return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
             'analytic_account_id': account.id,
-            'analytic_tag_ids': [Command.set(self.analytic_tag_ids.ids)],
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'active': True,
             'company_id': self.company_id.id,
+            'allow_billable': True,
         }
 
     def _timesheet_create_project(self):
@@ -193,14 +151,15 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
-        planned_hours = self._convert_qty_company_hours(self.company_id)
+        planned_hours = 0.0
+        if self.product_id.service_type not in ['milestones', 'manual']:
+            planned_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
         description = '<br/>'.join(sale_line_name_parts[1:])
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
-            'analytic_tag_ids': [Command.set(project.analytic_tag_ids.ids)],
             'planned_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'email_from': self.order_id.partner_id.email,
@@ -323,12 +282,12 @@ class SaleOrderLine(models.Model):
             to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
-        if not values.get('analytic_account_id'):
+        if not values.get('analytic_distribution'):
             task_analytic_account = self.task_id._get_task_analytic_account_id() if self.task_id else False
             if task_analytic_account:
-                values['analytic_account_id'] = task_analytic_account.id
+                values['analytic_distribution'] = {task_analytic_account.id: 100}
             elif self.project_id.analytic_account_id:
-                values['analytic_account_id'] = self.project_id.analytic_account_id.id
+                values['analytic_distribution'] = {self.project_id.analytic_account_id.id: 100}
             elif self.is_service and not self.is_expense:
                 task_analytic_account_id = self.env['project.task'].read_group([
                     ('sale_line_id', '=', self.id),
@@ -344,16 +303,7 @@ class SaleOrderLine(models.Model):
                 ], ['analytic_account_id'], ['analytic_account_id'])
                 analytic_account_ids = {rec['analytic_account_id'][0] for rec in (task_analytic_account_id + project_analytic_account_id)}
                 if len(analytic_account_ids) == 1:
-                    values['analytic_account_id'] = analytic_account_ids.pop()
-        if self.task_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids]
-        if self.task_id.analytic_tag_ids or self.task_id.project_id.analytic_tag_ids:
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in self.task_id.analytic_tag_ids | self.task_id.project_id.analytic_tag_ids]
-        elif self.is_service and not self.is_expense:
-            tag_ids = self.env['account.analytic.tag'].search([
-                '|', ('task_ids.sale_line_id', '=', self.id), ('project_ids.sale_line_id', '=', self.id)
-            ])
-            values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in tag_ids]
+                    values['analytic_distribution'] = {analytic_account_ids.pop(): 100}
         return values
 
     def _get_action_per_item(self):

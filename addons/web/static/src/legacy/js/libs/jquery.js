@@ -123,13 +123,21 @@ $.fn.extend({
         });
     },
     /**
+     * @todo Should really be converted to no jQuery and probably even removed
+     * from jQuery utilities in master
      * @return {jQuery}
      */
     closestScrollable() {
+        const document = this.length ? this[0].ownerDocument : window.document;
+
         let $el = this;
         while ($el[0] !== document.scrollingElement) {
-            // Avoid infinite loop.
-            if (!$el.length) {
+            if (!$el.length || $el[0] instanceof Document) {
+                // Ensure that $().closestScrollable() -> $() and handle the
+                // case of elements not attached to the DOM.
+                // Also, .parent() used to loop through ancestors can
+                // theoretically reach the document if nothing up to the HTML
+                // included is not scrollable.
                 return $();
             }
             if ($el.isScrollable()) {
@@ -173,9 +181,13 @@ $.fn.extend({
      * @returns {boolean}
      */
     isScrollable() {
+        if (!this.length) {
+            return false;
+        }
         const overflow = this.css('overflow-y');
+        const el = this[0];
         return overflow === 'auto' || overflow === 'scroll'
-            || (overflow === 'visible' && this === document.scrollingElement);
+            || (overflow === 'visible' && el === el.ownerDocument.scrollingElement);
     },
 });
 
@@ -189,13 +201,14 @@ $.fn.scrollTop = function (value) {
         // The caller wants to scroll a set of elements including html and/or
         // body to a specific point -> do that but make sure to add the real
         // top level element to that set of elements if any different is found.
-        originalScrollTop.apply(this.not('html, body').add($().getScrollingElement()), arguments);
+        const $withRealScrollable = this.not('html, body').add($().getScrollingElement(this[0].ownerDocument));
+        originalScrollTop.apply($withRealScrollable, arguments);
         return this;
     } else if (value === undefined && this.eq(0).is('html, body')) {
         // The caller wants to get the scroll point of a set of elements, jQuery
         // will return the scroll point of the first one, if it is html or body
         // return the scroll point of the real top level element.
-        return originalScrollTop.apply($().getScrollingElement(), arguments);
+        return originalScrollTop.apply($().getScrollingElement(this[0].ownerDocument), arguments);
     }
     return originalScrollTop.apply(this, arguments);
 };
@@ -206,7 +219,8 @@ $.fn.animate = function (properties, ...rest) {
         // The caller wants to scroll a set of elements including html and/or
         // body to a specific point -> do that but make sure to add the real
         // top level element to that set of elements if any different is found.
-        originalAnimate.call(this.not('html, body').add($().getScrollingElement()), {'scrollTop': props['scrollTop']}, ...rest);
+        const $withRealScrollable = this.not('html, body').add($().getScrollingElement(this[0].ownerDocument));
+        originalAnimate.call($withRealScrollable, {'scrollTop': props['scrollTop']}, ...rest);
         delete props['scrollTop'];
     }
     if (!Object.keys(props).length) {

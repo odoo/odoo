@@ -18,8 +18,7 @@ class MockLinkTracker(common.BaseCase):
             return "Test_TITLE"
 
         link_tracker_title_patch = patch('odoo.addons.link_tracker.models.link_tracker.LinkTracker._get_title_from_url', wraps=_get_title_from_url)
-        link_tracker_title_patch.start()
-        self.addCleanup(link_tracker_title_patch.stop)
+        self.startPatcher(link_tracker_title_patch)
 
     def _get_href_from_anchor_id(self, body, anchor_id):
         """ Parse en html body to find the href of an element given its ID. """

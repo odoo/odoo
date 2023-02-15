@@ -2,18 +2,17 @@
 
 import { browser } from "@web/core/browser/browser";
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'CallView',
+Model({
+    name: "CallView",
+    template: "mail.CallView",
     lifecycleHooks: {
         _created() {
-            browser.addEventListener('fullscreenchange', this._onFullScreenChange);
+            browser.addEventListener("fullscreenchange", this._onFullScreenChange);
         },
         _willDelete() {
-            browser.removeEventListener('fullscreenchange', this._onFullScreenChange);
+            browser.removeEventListener("fullscreenchange", this._onFullScreenChange);
         },
     },
     recordMethods: {
@@ -36,18 +35,19 @@ registerModel({
                 if (this.exists()) {
                     this.update({ isFullScreen: true });
                 }
-            } catch (_e) {
+            } catch {
                 if (this.exists()) {
                     this.update({ isFullScreen: false });
                 }
                 this.messaging.notify({
                     message: this.env._t("The FullScreen mode was denied by the browser"),
-                    type: 'warning',
+                    type: "warning",
                 });
             }
         },
         async deactivateFullScreen() {
-            const fullScreenElement = document.webkitFullscreenElement || document.fullscreenElement;
+            const fullScreenElement =
+                document.webkitFullscreenElement || document.fullscreenElement;
             if (fullScreenElement) {
                 if (document.exitFullscreen) {
                     await document.exitFullscreen();
@@ -65,66 +65,6 @@ registerModel({
         // Private
         //----------------------------------------------------------------------
 
-        /**
-         * @private
-         */
-        _computeAspectRatio() {
-            const rtcAspectRatio = this.messaging.rtc.videoConfig && this.messaging.rtc.videoConfig.aspectRatio;
-            const aspectRatio = rtcAspectRatio || 16 / 9;
-            // if we are in minimized mode (round avatar frames), we treat the cards like squares.
-            return this.isMinimized ? 1 : aspectRatio;
-        },
-        /**
-         * @private
-         */
-        _computeCallSideBarView() {
-            if (this.activeRtcSession && this.isSidebarOpen && !this.threadView.compact) {
-                return {};
-            }
-            return clear();
-        },
-        _computeFilteredChannelMembers() {
-            if (!this.channel) {
-                return clear();
-            }
-            const channelMembers = [];
-            for (const channelMember of this.channel.callParticipants) {
-                if (this.channel.showOnlyVideo && this.thread.videoCount > 0 && !channelMember.isStreaming) {
-                    continue;
-                }
-                channelMembers.push(channelMember);
-            }
-            return channelMembers;
-        },
-        /**
-         * @private
-         */
-        _computeIsMinimized() {
-            if (!this.threadView || !this.thread) {
-                return true;
-            }
-            if (this.isFullScreen || this.threadView.compact) {
-                return false;
-            }
-            if (this.activeRtcSession) {
-                return false;
-            }
-            return !this.thread.rtc || this.thread.videoCount === 0;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-         _computeLayoutSettingsTitle() {
-            return this.env._t("Change Layout");
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeSettingsTitle() {
-            return this.env._t("Settings");
-        },
         /**
          * @private
          */
@@ -146,7 +86,8 @@ registerModel({
          * @private
          */
         _onFullScreenChange() {
-            const fullScreenElement = document.webkitFullscreenElement || document.fullscreenElement;
+            const fullScreenElement =
+                document.webkitFullscreenElement || document.fullscreenElement;
             if (fullScreenElement) {
                 this.update({ isFullScreen: true });
                 return;
@@ -158,88 +99,109 @@ registerModel({
         /**
          * The rtc session that is the main card of the view.
          */
-        activeRtcSession: one('RtcSession', {
-            related: 'channel.activeRtcSession',
-        }),
+        activeRtcSession: one("RtcSession", { related: "channel.activeRtcSession" }),
         /**
          * The aspect ratio of the tiles.
          */
         aspectRatio: attr({
             default: 16 / 9,
-            compute: '_computeAspectRatio',
+            compute() {
+                const rtcAspectRatio =
+                    this.messaging.rtc.videoConfig && this.messaging.rtc.videoConfig.aspectRatio;
+                const aspectRatio = rtcAspectRatio || 16 / 9;
+                // if we are in minimized mode (round avatar frames), we treat the cards like squares.
+                return this.isMinimized ? 1 : aspectRatio;
+            },
         }),
-        callMainView: one('CallMainView', {
-            default: {},
-            inverse: 'callView',
-            readonly: true,
+        callMainView: one("CallMainView", { default: {}, inverse: "callView", readonly: true }),
+        callSidebarView: one("CallSidebarView", {
+            inverse: "callView",
+            compute() {
+                if (this.activeRtcSession && this.isSidebarOpen && !this.threadView.compact) {
+                    return {};
+                }
+                return clear();
+            },
         }),
-        callSidebarView: one('CallSidebarView', {
-            compute: '_computeCallSideBarView',
-            inverse: 'callView',
-        }),
-        channel: one('Channel', {
-            related: 'thread.channel',
-        }),
-        filteredChannelMembers: many('ChannelMember', {
-            compute: '_computeFilteredChannelMembers',
+        channel: one("Channel", { related: "thread.channel" }),
+        filteredChannelMembers: many("ChannelMember", {
+            compute() {
+                if (!this.channel) {
+                    return clear();
+                }
+                const channelMembers = [];
+                for (const channelMember of this.channel.callParticipants) {
+                    if (
+                        this.channel.showOnlyVideo &&
+                        this.thread.videoCount > 0 &&
+                        !channelMember.isStreaming
+                    ) {
+                        continue;
+                    }
+                    channelMembers.push(channelMember);
+                }
+                return channelMembers;
+            },
         }),
         /**
          * Determines if the viewer should be displayed fullScreen.
          */
-        isFullScreen: attr({
-            default: false,
-        }),
+        isFullScreen: attr({ default: false }),
         /**
          * Determines if the tiles are in a minimized format:
          * small circles instead of cards, smaller display area.
          */
         isMinimized: attr({
             default: false,
-            compute: '_computeIsMinimized',
+            compute() {
+                if (!this.threadView || !this.thread) {
+                    return true;
+                }
+                if (this.isFullScreen || this.threadView.compact) {
+                    return false;
+                }
+                if (this.activeRtcSession) {
+                    return false;
+                }
+                return !this.thread.rtc || this.thread.videoCount === 0;
+            },
         }),
-        isSidebarOpen: attr({
-            default: true,
-        }),
+        isSidebarOpen: attr({ default: true }),
         /**
          * Text content that is displayed on title of the layout settings dialog.
          */
         layoutSettingsTitle: attr({
-            compute: '_computeLayoutSettingsTitle',
+            compute() {
+                return this.env._t("Change Layout");
+            },
         }),
         /**
          * All the participant cards of the call viewer (main card and tile cards).
          * this is a technical inverse to distinguish from the other relation 'tileParticipantCards'.
          */
-        participantCards: many('CallParticipantCard', {
-            inverse: 'callView',
-            isCausal: true,
-        }),
+        participantCards: many("CallParticipantCard", { inverse: "callView", isCausal: true }),
         /**
          * Text content that is displayed on title of the settings dialog.
          */
         settingsTitle: attr({
-            compute: '_computeSettingsTitle',
+            compute() {
+                return this.env._t("Settings");
+            },
         }),
-        thread: one('Thread', {
-            related: 'threadView.thread',
-            required: true,
-        }),
+        thread: one("Thread", { related: "threadView.thread", required: true }),
         /**
          * ThreadView on which the call view is attached.
          */
-        threadView: one('ThreadView', {
-            identifying: true,
-            inverse: 'callView',
-        }),
+        threadView: one("ThreadView", { identifying: true, inverse: "callView" }),
     },
     onChanges: [
         {
-            dependencies: ['thread.rtc'],
-            methodName: '_onChangeRtcChannel',
+            dependencies: ["thread.rtc"],
+            methodName: "_onChangeRtcChannel",
         },
         {
-            dependencies: ['thread.videoCount'],
-            methodName: '_onChangeVideoCount',
+            dependencies: ["thread.videoCount"],
+            methodName: "_onChangeVideoCount",
         },
     ],
 });

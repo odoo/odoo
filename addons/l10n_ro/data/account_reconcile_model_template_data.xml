@@ -2,36 +2,36 @@
 <odoo>
     <record id="suppadvance_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Avans Furnizor - Stocuri</field>
+        <field name="name">Vendor Advance - Stocks</field>
     </record>
     <record id="suppadvance_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="suppadvance_template"/>
         <field name="account_id" ref="pcg_4091"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Avans Furnizor - Stocuri</field>
+        <field name="label">Vendor Advance - Stocks</field>
     </record>
     <record id="suppadvance_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Avans Furnizor - Servicii</field>
+        <field name="name">Supplier Advance - Services</field>
     </record>
     <record id="suppadvance_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="suppadvance_template"/>
         <field name="account_id" ref="pcg_4092"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Avans Furnizor - Servicii</field>
+        <field name="label">Supplier Advance - Services</field>
     </record>
     <record id="suppadvance_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Avans Furnizor - Imobilizări Corporale</field>
+        <field name="name">Vendor Advance - Property, Plant and Equipment</field>
     </record>
     <record id="suppadvance_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="suppadvance_template"/>
         <field name="account_id" ref="pcg_4093"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Avans Furnizor - Imobilizări Corporale</field>
+        <field name="label">Vendor Advance - Property, Plant and Equipment</field>
     </record>
     <record id="suppadvance_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
@@ -42,72 +42,72 @@
         <field name="account_id" ref="pcg_4094"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Avans Furnizor - Imobilizări Necorporale</field>
+        <field name="label">Supplier Advance - Intangible Assets</field>
     </record>
     <record id="custadvance_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Avans Client</field>
+        <field name="name">Customer Advances</field>
     </record>
     <record id="custadvance_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="custadvance_template"/>
         <field name="account_id" ref="pcg_419"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Avans Client</field>
+        <field name="label">Customer Advances</field>
     </record>
     <record id="bankcomm_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Comision Bancar</field>
+        <field name="name">Bank Commission</field>
     </record>
     <record id="bankcomm_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="bankcomm_template"/>
         <field name="account_id" ref="pcg_627" />
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Comision Bancar</field>
+        <field name="label">Bank Commission</field>
     </record>
     <record id="interest_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Dobândă</field>
+        <field name="name">Interests</field>
     </record>
     <record id="interest_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="interest_template"/>
         <field name="account_id" ref="pcg_766"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Dobândă</field>
+        <field name="label">Interests</field>
     </record>
     <record id="inttransfer_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Virament Intern</field>
+        <field name="name">Internal transfer</field>
     </record>
     <record id="inttransfer_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="inttransfer_template"/>
         <field name="account_id" ref="pcg_581"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Virament Intern</field>
+        <field name="label">Internal transfer</field>
     </record>
     <record id="payroll_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Salarii</field>
+        <field name="name">Wages</field>
     </record>
     <record id="payroll_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="payroll_template"/>
         <field name="account_id" ref="pcg_421"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Salarii</field>
+        <field name="label">Wages</field>
     </record>
     <record id="pendsettl_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Operațiuni în curs de clarificare</field>
+        <field name="name">Operations being clarified</field>
     </record>
     <record id="pendsettl_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="pendsettl_template"/>
         <field name="account_id" ref="pcg_473"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
-        <field name="label">Operațiuni în curs de clarificare</field>
+        <field name="label">Operations being clarified</field>
     </record>
 </odoo>

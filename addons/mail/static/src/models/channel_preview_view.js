@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
-import { htmlToTextContentInline } from '@mail/js/utils';
+import { attr, clear, one, Model } from "@mail/model";
+import { htmlToTextContentInline } from "@mail/js/utils";
 
-registerModel({
-    name: 'ChannelPreviewView',
+Model({
+    name: "ChannelPreviewView",
+    template: "mail.ChannelPreviewView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -33,107 +32,73 @@ registerModel({
                 this.thread.markAsSeen(this.thread.lastNonTransientMessage);
             }
         },
-        /**
-         * @returns {string}
-         */
-        _computeImageUrl() {
-            if (this.channel.correspondent) {
-                return this.channel.correspondent.avatarUrl;
-            }
-            return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeInlineLastMessageBody() {
-            if (!this.thread || !this.thread.lastMessage) {
-                return clear();
-            }
-            return htmlToTextContentInline(this.thread.lastMessage.prettyBody);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsEmpty() {
-            return !this.inlineLastMessageBody && !this.lastTrackingValue;
-        },
-        /**
-         * @private
-         * @returns {TrackingValue|FieldCommand}
-         */
-        _computeLastTrackingValue() {
-            if (this.thread && this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
-                return this.thread.lastMessage.lastTrackingValue;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computeMessageAuthorPrefixView() {
-            if (
-                this.thread &&
-                this.thread.lastMessage &&
-                this.thread.lastMessage.author
-            ) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            if (!this.channel.correspondent) {
-                return clear();
-            }
-            if (this.channel.correspondent.isImStatusSet) {
-                return {};
-            }
-            return clear();
-        },
     },
     fields: {
-        channel: one('Channel', {
-            identifying: true,
-            inverse: 'channelPreviewViews',
-        }),
+        channel: one("Channel", { identifying: true, inverse: "channelPreviewViews" }),
         imageUrl: attr({
-            compute: '_computeImageUrl',
+            compute() {
+                if (this.channel.correspondent) {
+                    return this.channel.correspondent.avatarUrl;
+                }
+                return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
+            },
         }),
         inlineLastMessageBody: attr({
-            compute: '_computeInlineLastMessageBody',
             default: "",
+            compute() {
+                if (!this.thread || !this.thread.lastMessage) {
+                    return clear();
+                }
+                return htmlToTextContentInline(this.thread.lastMessage.prettyBody);
+            },
         }),
         isEmpty: attr({
-            compute: '_computeIsEmpty',
+            compute() {
+                return !this.inlineLastMessageBody && !this.lastTrackingValue;
+            },
         }),
-        lastTrackingValue: one('TrackingValue', {
-            compute: '_computeLastTrackingValue',
+        lastTrackingValue: one("TrackingValue", {
+            compute() {
+                if (
+                    this.thread &&
+                    this.thread.lastMessage &&
+                    this.thread.lastMessage.lastTrackingValue
+                ) {
+                    return this.thread.lastMessage.lastTrackingValue;
+                }
+                return clear();
+            },
         }),
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
          */
-        markAsReadRef: attr(),
-        messageAuthorPrefixView: one('MessageAuthorPrefixView', {
-            compute: '_computeMessageAuthorPrefixView',
-            inverse: 'channelPreviewViewOwner',
+        markAsReadRef: attr({ ref: "markAsRead" }),
+        messageAuthorPrefixView: one("MessageAuthorPrefixView", {
+            inverse: "channelPreviewViewOwner",
+            compute() {
+                if (this.thread && this.thread.lastMessage && this.thread.lastMessage.author) {
+                    return {};
+                }
+                return clear();
+            },
         }),
-        notificationListViewOwner: one('NotificationListView', {
+        notificationListViewOwner: one("NotificationListView", {
             identifying: true,
-            inverse: 'channelPreviewViews',
+            inverse: "channelPreviewViews",
         }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
-            inverse: 'channelPreviewViewOwner',
+        personaImStatusIconView: one("PersonaImStatusIconView", {
+            inverse: "channelPreviewViewOwner",
+            compute() {
+                if (!this.channel.correspondent) {
+                    return clear();
+                }
+                if (this.channel.correspondent.isImStatusSet) {
+                    return {};
+                }
+                return clear();
+            },
         }),
-        thread: one('Thread', {
-            related: 'channel.thread',
-        }),
+        thread: one("Thread", { related: "channel.thread" }),
     },
 });

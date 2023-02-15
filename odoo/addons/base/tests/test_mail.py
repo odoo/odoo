@@ -1,25 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
+from markupsafe import Markup
 from unittest.mock import patch
+
 import email.policy
 import email.message
 import re
 import threading
 
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
+from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
+from odoo.tests import tagged
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import (
     is_html_empty, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
     email_split, email_domain_normalize,
     misc, formataddr,
     prepend_html_content,
+    config,
 )
 
 from . import test_mail_examples
 
 
+@tagged('mail_sanitize')
 class TestSanitizer(BaseCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
@@ -292,6 +297,7 @@ class TestSanitizer(BaseCase):
     #         self.assertNotIn(ext, new_html)
 
 
+@tagged('mail_sanitize')
 class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """
 
@@ -311,7 +317,7 @@ class TestHtmlTools(BaseCase):
             ('<div><p>First <br/>Second <br/>Third Paragraph</p><p>--<br/>Signature paragraph with a <a href="./link">link</a></p></div>',
              'First Second Third Paragraph -- Signature paragraph with a link'),
             ('<p>Now =&gt; processing&nbsp;entities&#8203;and extra whitespace too.  </p>',
-             'Now =&gt; processing\xa0entities\u200band extra whitespace too.'),
+             'Now =&gt; processing&nbsp;entities\u200band extra whitespace too.'),
             ('<div>Look what happens with <p>unmatched tags</div>', 'Look what happens with unmatched tags'),
             ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with Are we good?')
         ]
@@ -355,6 +361,30 @@ class TestHtmlTools(BaseCase):
         ]
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
+
+    def test_nl2br_enclose(self):
+        """ Test formatting of nl2br when using Markup: consider new <br> tags
+        as trusted without validating the whole input content. """
+        source_all = [
+            'coucou',
+            '<p>coucou</p>',
+            'coucou\ncoucou',
+            'coucou\n\ncoucou',
+            '<p>coucou\ncoucou\n\nzbouip</p>\n',
+        ]
+        expected_all = [
+            Markup('<div>coucou</div>'),
+            Markup('<div>&lt;p&gt;coucou&lt;/p&gt;</div>'),
+            Markup('<div>coucou<br>\ncoucou</div>'),
+            Markup('<div>coucou<br>\n<br>\ncoucou</div>'),
+            Markup('<div>&lt;p&gt;coucou<br>\ncoucou<br>\n<br>\nzbouip&lt;/p&gt;<br>\n</div>'),
+        ]
+        for source, expected in zip(source_all, expected_all):
+            with self.subTest(source=source, expected=expected):
+                self.assertEqual(
+                    nl2br_enclose(source, "div"),
+                    expected,
+                )
 
     def test_prepend_html_content(self):
         body = """
@@ -452,6 +482,7 @@ class TestEmailTools(BaseCase):
             ('admin@example.com', ['admin@example.com']),
             ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
             ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
+            ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com']),
         ]
 
         for (rfc2822_email, expected) in tests:
@@ -464,7 +495,7 @@ class TestEmailTools(BaseCase):
 
 
 class EmailConfigCase(TransactionCase):
-    @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
+    @patch.dict(config.options, {"email_from": "settings@example.com"})
     def test_default_email_from(self, *args):
         """Email from setting is respected."""
         # ICP setting is more important
@@ -485,37 +516,42 @@ class EmailConfigCase(TransactionCase):
         self.assertEqual(message["From"], "settings@example.com")
 
 
+class _FakeSMTP:
+    """SMTP stub"""
+    def __init__(self):
+        self.messages = []
+        self.from_filter = 'example.com'
+
+    # Python 3 before 3.7.4
+    def sendmail(self, smtp_from, smtp_to_list, message_str,
+                 mail_options=(), rcpt_options=()):
+        self.messages.append(message_str)
+
+    # Python 3.7.4+
+    def send_message(self, message, smtp_from, smtp_to_list,
+                     mail_options=(), rcpt_options=()):
+        self.messages.append(message.as_string())
+
+
 class TestEmailMessage(TransactionCase):
-    def test_as_string(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._fake_smtp = _FakeSMTP()
+
+    def build_email(self, **kwargs):
+        kwargs.setdefault('email_from', 'from@example.com')
+        kwargs.setdefault('email_to', 'to@example.com')
+        kwargs.setdefault('subject', 'subject')
+        return self.env['ir.mail_server'].build_email(**kwargs)
+
+    def send_email(self, msg):
+        with patch.object(threading.current_thread(), 'testing', False):
+            self.env['ir.mail_server'].send_email(msg, smtp_session=self._fake_smtp)
+        return self._fake_smtp.messages.pop()
+
+    def test_bpo_34424_35805(self):
         """Ensure all email sent are bpo-34424 and bpo-35805 free"""
-
-        message_truth = (
-            r'From: .+? <joe@example\.com>\r\n'
-            r'To: .+? <joe@example\.com>\r\n'
-            r'Message-Id: <[0-9a-z.-]+@[0-9a-z.-]+>\r\n'
-            r'References: (<[0-9a-z.-]+@[0-9a-z.-]+>\s*)+\r\n'
-            r'\r\n'
-        )
-
-        class FakeSMTP:
-            """SMTP stub"""
-            def __init__(this):
-                this.email_sent = False
-                this.from_filter = 'example.com'
-
-            # Python 3 before 3.7.4
-            def sendmail(this, smtp_from, smtp_to_list, message_str,
-                         mail_options=(), rcpt_options=()):
-                this.email_sent = True
-                self.assertRegex(message_str, message_truth)
-
-            # Python 3.7.4+
-            def send_message(this, message, smtp_from, smtp_to_list,
-                             mail_options=(), rcpt_options=()):
-                message_str = message.as_string()
-                this.email_sent = True
-                self.assertRegex(message_str, message_truth)
-
         msg = email.message.EmailMessage(policy=email.policy.SMTP)
         msg['From'] = '"Joé Doe" <joe@example.com>'
         msg['To'] = '"Joé Doe" <joe@example.com>'
@@ -524,7 +560,33 @@ class TestEmailMessage(TransactionCase):
         msg['Message-Id'] = '<929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>'
         msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
 
-        smtp = FakeSMTP()
-        self.patch(threading.current_thread(), 'testing', False)
-        self.env['ir.mail_server'].send_email(msg, smtp_session=smtp)
-        self.assertTrue(smtp.email_sent)
+        msg_on_the_wire = self.send_email(msg)
+        self.assertEqual(msg_on_the_wire,
+            'From: =?utf-8?q?Jo=C3=A9?= Doe <joe@example.com>\r\n'
+            'To: =?utf-8?q?Jo=C3=A9?= Doe <joe@example.com>\r\n'
+            'Message-Id: <929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>\r\n'
+            'References: <345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>\r\n'
+            '\r\n'
+        )
+
+    def test_alternative_correct_order(self):
+        """
+        RFC-1521 7.2.3. The Multipart/alternative subtype
+        > the alternatives appear in an order of increasing faithfulness
+        > to the original content. In general, the best choice is the
+        > LAST part of a type supported by the recipient system's local
+        > environment.
+
+        Also, the MIME-Version header should be present in BOTH the
+        enveloppe AND the parts
+        """
+        msg = self.build_email(body='<p>Hello world</p>', subtype='html')
+        msg_on_the_wire = self.send_email(msg)
+
+        self.assertGreater(msg_on_the_wire.index('text/html'), msg_on_the_wire.index('text/plain'),
+            "The html part should be preferred (=appear after) to the text part")
+        self.assertEqual(msg_on_the_wire.count('==============='), 2 + 2, # +2 for the header and the footer
+            "There should be 2 parts: one text and one html")
+        self.assertEqual(msg_on_the_wire.count('MIME-Version: 1.0'), 3,
+            "There should be 3 headers MIME-Version: one on the enveloppe, "
+            "one on the html part, one on the text part")

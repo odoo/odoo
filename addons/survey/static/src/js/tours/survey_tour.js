@@ -2,18 +2,19 @@
 
 import { _t } from 'web.core';
 import { Markup } from 'web.utils';
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('survey_tour', {
+registry.category("web_tour.tours").add('survey_tour', {
     url: "/web",
     rainbowManMessage: _t("Congratulations! You are now ready to collect feedback like a pro :-)"),
     sequence: 225,
-}, [
-    ...tour.stepUtils.goToAppSteps('survey.menu_surveys', Markup(_t("Ready to change the way you <b>gather data</b>?"))),
+    steps: [
+    ...stepUtils.goToAppSteps('survey.menu_surveys', Markup(_t("Ready to change the way you <b>gather data</b>?"))),
 {
-    trigger: 'body:has(.o_survey_load_sample) .o_survey_sample_container',
+    trigger: '.btn-outline-primary.o_survey_load_sample',
     content: Markup(_t("Load a <b>sample Survey</b> to get started quickly.")),
-    position: 'bottom',
+    position: 'left',
 }, {
     trigger: 'button[name=action_test_survey]',
     content: _t("Let's give it a spin!"),
@@ -58,4 +59,4 @@ tour.register('survey_tour', {
     content: _t("Use the breadcrumbs to quickly go back to the dashboard."),
     position: 'bottom',
 }
-]);
+]});

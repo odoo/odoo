@@ -124,6 +124,22 @@ QUnit.module('core', {}, function () {
         assert.verifySteps(['ok prom2', 'mutex unlocked (2)']);
     });
 
+    QUnit.test('mutex: error and getUnlockedDef', async function (assert) {
+        const mutex = new concurrency.Mutex();
+        mutex.exec(async () => {
+            await Promise.resolve();
+            throw new Error("boom");
+        }).catch(() => assert.step("prom rejected"));
+        await testUtils.nextTick();
+        assert.verifySteps(['prom rejected']);
+
+        mutex.getUnlockedDef().then(function () {
+            assert.step('mutex unlocked');
+        });
+        await testUtils.nextMicrotaskTick();
+        assert.verifySteps(['mutex unlocked']);
+    });
+
     QUnit.test('DropPrevious: basic usecase', async function (assert) {
         assert.expect(4);
 

@@ -139,7 +139,7 @@ class TestRatingPerformance(TestRatingCommon):
         partners = self.env['res.partner'].sudo().create([
             {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
 
-        with self.assertQueryCount(employee=1516):  # tmf 1516 / com 5510
+        with self.assertQueryCount(employee=1514):  # tmf 1514 / com 1514
             record_ratings = self.env['mail.test.rating'].create([{
                 'customer_id': partners[idx].id,
                 'name': 'Test Rating',

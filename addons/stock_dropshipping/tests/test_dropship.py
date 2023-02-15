@@ -34,7 +34,6 @@ class TestDropship(common.TransactionCase):
                 'product_uom': prod.uom_id.id,
                 'price_unit': 12,
             })],
-            'pricelist_id': self.env.ref('product.list0').id,
             'picking_policy': 'direct',
         })
         so.action_confirm()
@@ -130,3 +129,55 @@ class TestDropship(common.TransactionCase):
             ('location_dest_id', '=', self.env.ref('stock.stock_location_customers').id),
             ('product_id', '=', drop_shop_product.id)])
         self.assertEqual(len(move_line.ids), 1, 'There should be exactly one move line')
+
+    def test_sale_order_picking_partner(self):
+        """ Test that the partner is correctly set on the picking and the move when the product is dropshipped or not."""
+
+        # Create a vendor and a customer
+        supplier_dropship = self.env['res.partner'].create({'name': 'Vendor'})
+        customer = self.env['res.partner'].create({'name': 'Customer'})
+
+        # Create new product without any routes
+        super_product = self.env['product.product'].create({
+            'name': "Super product",
+            'seller_ids': [(0, 0, {
+                'partner_id': supplier_dropship.id,
+            })],
+        })
+
+        # Create a sale order
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = customer
+        with so_form.order_line.new() as line:
+            line.product_id = super_product
+        sale_order = so_form.save()
+
+        # Confirm sale order
+        sale_order.action_confirm()
+
+        # Check the partner of the related picking and move
+        self.assertEqual(sale_order.picking_ids.partner_id, customer)
+        self.assertEqual(sale_order.picking_ids.move_ids.partner_id, customer)
+
+        # Add a dropship route to the product
+        super_product.route_ids = [self.env.ref('stock_dropshipping.route_drop_shipping').id]
+
+        # Create a sale order
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = customer
+        with so_form.order_line.new() as line:
+            line.product_id = super_product
+        sale_order = so_form.save()
+
+        # Confirm sale order
+        sale_order.action_confirm()
+
+        # Check a quotation was created to a certain vendor and confirm it, so it becomes a confirmed purchase order
+        purchase = self.env['purchase.order'].search([('partner_id', '=', supplier_dropship.id)])
+        self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
+        purchase.button_confirm()
+        self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
+
+        # Check the partner of the related picking and move
+        self.assertEqual(sale_order.picking_ids.partner_id, supplier_dropship)
+        self.assertEqual(sale_order.picking_ids.move_ids.partner_id, customer)

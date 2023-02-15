@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
-import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { registerMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ActivityMenuView extends Component {
     /**
      * @override
      */
-     setup() {
+    setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component' });
+        useComponentToModel({ fieldName: "component" });
     }
     /**
      * @returns {ActivityMenuView}
@@ -23,7 +23,7 @@ export class ActivityMenuView extends Component {
 
 Object.assign(ActivityMenuView, {
     props: { record: Object },
-    template: 'mail.ActivityMenuView',
+    template: "mail.ActivityMenuView",
 });
 
 registerMessagingComponent(ActivityMenuView);

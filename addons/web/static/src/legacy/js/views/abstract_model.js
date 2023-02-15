@@ -23,7 +23,7 @@
  * but only if the (re)load params haven't changed: as soon as a param changes,
  * the "sample" mode is left, and it never enters it again in the future (in the
  * lifetime of the model instance).  To access those sample data from the outside,
- * 'get' must be called with the the option "withSampleData" set to true.  In
+ * 'get' must be called with the option "withSampleData" set to true.  In
  * this case, if the main model is in "sample" mode, it redirects the call to the
  * sample model.
  */

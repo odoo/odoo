@@ -48,6 +48,16 @@ class AccountMove(models.Model):
         l10n_in_edi = self.edi_document_ids.filtered(lambda i: i.edi_format_id.code == "in_einvoice_1_03"
             and i.state in ("sent", "to_cancel"))
         if l10n_in_edi:
-            return json.loads(l10n_in_edi.attachment_id.raw.decode("utf-8"))
+            return json.loads(l10n_in_edi.sudo().attachment_id.raw.decode("utf-8"))
         else:
             return {}
+
+    @api.model
+    def _l10n_in_edi_is_managing_invoice_negative_lines_allowed(self):
+        """ Negative lines are not allowed by the Indian government making some features unavailable like sale_coupon
+        or global discounts. This method allows odoo to distribute the negative discount lines to each others lines
+        with same HSN code making such features available even for Indian people.
+        :return: True if odoo needs to distribute the negative discount lines, False otherwise.
+        """
+        param_name = 'l10n_in_edi.manage_invoice_negative_lines'
+        return bool(self.env['ir.config_parameter'].sudo().get_param(param_name))

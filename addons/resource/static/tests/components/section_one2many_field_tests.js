@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { clickEdit, getFixture } from "@web/../tests/helpers/utils";
+import { getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 QUnit.module("SectionOneToManyField", (hooks) => {
@@ -73,13 +73,8 @@ QUnit.module("SectionOneToManyField", (hooks) => {
         assert.doesNotHaveClass(rows[1], "o_is_line_section fw-bold");
         assert.strictEqual(rows[0].textContent, "firstSectionTitle");
         assert.strictEqual(rows[1].textContent, "recordTitle5");
-        assert.strictEqual(rows[0].querySelector("td[name=title]").getAttribute("colspan"), "2");
+        assert.strictEqual(rows[0].querySelector("td[name=title]").getAttribute("colspan"), "3");
         assert.strictEqual(rows[1].querySelector("td[name=title]").getAttribute("colspan"), null);
-
-        assert.containsNone(target, ".o_list_record_remove");
-
-        await clickEdit(target);
-
         assert.containsOnce(target, ".o_list_record_remove");
         assert.containsNone(target, ".o_is_line_section .o_list_record_remove");
     });

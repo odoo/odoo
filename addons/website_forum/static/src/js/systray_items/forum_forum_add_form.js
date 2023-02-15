@@ -7,7 +7,7 @@ export class AddForumFormController extends NewContentFormController {
     /**
      * @override
      */
-    get path() {
+    computePath() {
         return `/forum/${this.model.root.data.id}`;
     }
 }

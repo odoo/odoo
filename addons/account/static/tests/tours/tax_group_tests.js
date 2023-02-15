@@ -1,12 +1,13 @@
 /** @odoo-module alias=account.tax.group.tour.tests */
 "use strict";
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('account_tax_group', {
+registry.category("web_tour.tours").add('account_tax_group', {
     test: true,
     url: "/web",
-}, [tour.stepUtils.showAppsMenuItem(),
+    steps: [stepUtils.showAppsMenuItem(),
     {
         content: "Go to Invoicing",
         trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
@@ -63,11 +64,6 @@ tour.register('account_tax_group', {
         content: "Save the account move",
         trigger: '.o_form_button_save',
     },
-    // Edit account.move
-    {
-        content: "Edit the account move",
-        trigger: '.o_form_button_edit',
-    },
     // Edit tax group amount
     {
         content: "Edit tax group amount",
@@ -116,4 +112,4 @@ tour.register('account_tax_group', {
         content: "Check new value of tax group",
         trigger: '.o_tax_group_amount_value:contains("389.70")',
     },
-]);
+]});

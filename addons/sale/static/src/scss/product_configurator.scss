@@ -31,6 +31,10 @@
     &.custom_value {
         background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
     }
+
+    &.transparent {
+        background-image: url(/web/static/img/transparent.png);
+    }
 }
 
 .css_not_available_msg {
@@ -288,14 +292,4 @@ label.css_attribute_color.css_not_available {
 .oe_striked_price {
     text-decoration: line-through;
     white-space: nowrap;
-}
-
-.o_list_view {
-    .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
-        .o_field_widget .o_edit_product_configuration {
-            padding: 0;
-            background-color: inherit;
-            margin-left: 3px;
-        }
-    }
 }

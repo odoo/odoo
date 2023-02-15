@@ -132,6 +132,7 @@ export class GraphModel extends Model {
         if ("measure" in params) {
             const metaData = this._buildMetaData(params);
             await this._fetchDataPoints(metaData);
+            this.useSampleModel = false;
         } else {
             await this.race.getCurrentProm();
             this.metaData = Object.assign({}, this.metaData, params);
@@ -165,12 +166,9 @@ export class GraphModel extends Model {
 
         this._normalize(metaData);
 
-        metaData.measures = computeReportMeasures(
-            metaData.fields,
-            metaData.fieldAttrs,
-            [metaData.measure],
-            metaData.additionalMeasures
-        );
+        metaData.measures = computeReportMeasures(metaData.fields, metaData.fieldAttrs, [
+            metaData.measure,
+        ]);
 
         return Object.assign(metaData, params);
     }

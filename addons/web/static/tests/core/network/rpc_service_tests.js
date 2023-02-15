@@ -18,7 +18,7 @@ import {
 } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let isXHRMocked = false;
 const serviceRegistry = registry.category("services");
@@ -108,7 +108,7 @@ QUnit.test("trigger an error when response has 'error' key", async (assert) => {
     });
     try {
         await env.services.rpc("/test/");
-    } catch (_error) {
+    } catch {
         assert.ok(true);
     }
     unpatch(browser, "mock.xhr");
@@ -234,7 +234,7 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     });
     try {
         await env.services.rpc("/test/");
-    } catch (_e) {
+    } catch {
         assert.ok(true);
     }
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
@@ -247,10 +247,17 @@ QUnit.test("check connection aborted", async (assert) => {
     const MockXHR = makeMockXHR({}, () => {}, def);
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR }, { pure: true });
     const env = await makeTestEnv({ serviceRegistry });
+    env.bus.addEventListener("RPC:REQUEST", () => {
+        assert.step("RPC:REQUEST");
+    });
+    env.bus.addEventListener("RPC:RESPONSE", () => {
+        assert.step("RPC:RESPONSE");
+    });
 
     const connection = env.services.rpc();
     connection.abort();
     assert.rejects(connection, ConnectionAbortedError);
+    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
 });
 
 QUnit.test(

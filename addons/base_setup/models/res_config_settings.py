@@ -27,8 +27,6 @@ class ResConfigSettings(models.TransientModel):
     )
     module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")
     module_auth_ldap = fields.Boolean("LDAP Authentication")
-    # TODO: remove in master
-    module_base_gengo = fields.Boolean("Translate Your Website with Gengo")
     module_account_inter_company_rules = fields.Boolean("Manage Inter Company")
     module_voip = fields.Boolean("Asterisk (VoIP)")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
@@ -116,7 +114,9 @@ class ResConfigSettings(models.TransientModel):
         informations += '%s\n' % self.company_id.city if self.company_id.city else ''
         informations += '%s\n' % self.company_id.state_id.display_name if self.company_id.state_id else ''
         informations += '%s' % self.company_id.country_id.display_name if self.company_id.country_id else ''
-        informations += '\nVAT: %s' % self.company_id.vat if self.company_id.vat else ''
+        vat_display = self.company_id.country_id.vat_label or _('VAT')
+        vat_display = '\n' + vat_display + ': '
+        informations += '%s %s' % (vat_display, self.company_id.vat) if self.company_id.vat else ''
 
         for record in self:
             record.company_informations = informations

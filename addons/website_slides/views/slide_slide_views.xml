@@ -58,19 +58,19 @@
                                     <field name="slide_views" widget="statinfo" nolabel="1"/> Attendees
                                 </span>
                             </button>
-                            <button disabled="1" icon="fa-thumbs-up" class="oe_stat_button oe_read_only"
+                            <button disabled="1" icon="fa-thumbs-up" class="oe_stat_button"
                                 attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('likes', '=', 0)]}">
                                 <span class="o_stat_value" >
                                     <field class="ms-1" name="likes" widget="statinfo" nolabel="1"/> Likes
                                 </span>
                              </button>
-                             <button disabled="1" icon="fa-thumbs-down" class="oe_stat_button oe_read_only"
+                             <button disabled="1" icon="fa-thumbs-down" class="oe_stat_button"
                                 attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('dislikes', '=', 0)]}">
                                  <span class="o_stat_value">
                                     <field class="ms-1" name="dislikes" widget="statinfo" nolabel="1"/> Dislikes
                                  </span>
                              </button>
-                             <button disabled="1" icon="fa-comments" class="oe_stat_button oe_read_only"
+                             <button disabled="1" icon="fa-comments" class="oe_stat_button"
                                  attrs="{'invisible': ['|', ('channel_allow_comment', '!=', True), ('comments_count','=', 0)]}">
                                 <span class="o_stat_value">
                                     <field class="ms-1" name="comments_count" widget="statinfo" nolabel="1"/> Comments
@@ -160,7 +160,7 @@
                             </page>
                             <page string="Additional Resources" name="external_links" >
                                 <group>
-                                    <field name="slide_resource_ids" widget="one2many" nolabel="1">
+                                    <field name="slide_resource_ids" widget="one2many" nolabel="1" colspan="2">
                                         <tree editable="top">
                                             <field name="resource_type"/>
                                             <field name="name" required="1"/>
@@ -182,8 +182,8 @@
                                             <field string="Fourth Try &amp; More" name="quiz_fourth_attempt_reward"/>
                                         </group>
                                     </group>
-                                    <group name="questions">
-                                        <field name="question_ids" nolabel="1">
+                                    <group name="questions" string="Questions">
+                                        <field name="question_ids" nolabel="1" colspan="2">
                                             <tree>
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="question" string="Question"/>
@@ -209,7 +209,6 @@
             <field name="inherit_id" ref="view_slide_slide_form"/>
             <field name="priority" eval="50"/>
             <field name="mode">primary</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="channel_id" position="attributes">
                     <attribute name="invisible">1</attribute>

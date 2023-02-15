@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2022-06-09 14:05+0000\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-20 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
 msgstr ""
 
 #. module: bus
@@ -96,6 +101,11 @@ msgid "Message"
 msgstr ""
 
 #. module: bus
+#: model:ir.model,name:bus.model_ir_model
+msgid "Models"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
 msgstr ""
@@ -107,17 +117,22 @@ msgstr ""
 
 #. module: bus
 #. openerp-web
-#: code:addons/bus/static/src/js/services/assets_watchdog_service.js:0
-#: code:addons/bus/static/src/js/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #, python-format
 msgid "Refresh"
 msgstr ""
 
 #. module: bus
 #. openerp-web
-#: code:addons/bus/static/src/js/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #, python-format
 msgid "The page appears to be out of date."
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users
+msgid "User"
 msgstr ""
 
 #. module: bus
@@ -126,13 +141,18 @@ msgid "User Presence"
 msgstr ""
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_users
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr ""
 
 #. module: bus
-#: code:addons/bus/controllers/main.py:0
+#. openerp-web
+#: code:addons/bus/static/src/services/bus_service.js:0
 #, python-format
-msgid "bus.Bus not available in test mode"
+msgid "Websocket connection lost. Trying to reconnect..."
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_websocket
+msgid "websocket message handling"
 msgstr ""

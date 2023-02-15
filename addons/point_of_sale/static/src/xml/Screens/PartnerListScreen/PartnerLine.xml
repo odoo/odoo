@@ -17,17 +17,17 @@
                 </div>
             </td>
             <td t-if="!env.isMobile">
-                <t t-esc="shortAddress" />
+                <t t-esc="props.partner.address" />
             </td>
             <td class="partner-line-email" t-if="!env.isMobile">
                 <div t-if="props.partner.phone">
-                    <i class="fa fa-phone fa-fw"/><t t-esc="props.partner.phone"/>
+                    <i class="fa fa-fw fa-phone"/><t t-esc="props.partner.phone"/>
                 </div>
                 <div t-if="props.partner.mobile">
-                    <i class="fa fa-mobile fa-lg fa-fw"/><t t-esc="props.partner.mobile"/>
+                    <i class="fa fa-fw fa-mobile fa-lg"/><t t-esc="props.partner.mobile"/>
                 </div>
                 <div t-if="props.partner.email" class="email-field">
-                    <i class="fa fa-paper-plane-o fa-fw"/><t t-esc="props.partner.email" />
+                    <i class="fa fa-fw fa-paper-plane-o"/><t t-esc="props.partner.email" />
                 </div>
             </td>
             <td t-if="env.isMobile">
@@ -35,7 +35,7 @@
                 <span t-if="highlight"><br/></span>
             </td>
             <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
-            <td>
+            <td class="edit-partner-button-cell">
                 <button class="edit-partner-button" t-on-click.stop="() => props.onClickEdit(props.partner)">DETAILS</button>
             </td>
             <td class="partner-line-last-column-placeholder oe_invisible"></td>

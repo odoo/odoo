@@ -40,50 +40,17 @@
         <!-- Needed so that we can have the same analytic accounts on hr_timesheet and project_account_budget -->
         <record id="analytic_office_design" model="account.analytic.account">
             <field name="name">Office Design</field>
+            <field name="plan_id" ref="analytic.analytic_plan_projects"/>
         </record>
 
         <record id="analytic_research_development" model="account.analytic.account">
             <field name="name">Research &amp; Development</field>
+            <field name="plan_id" ref="analytic.analytic_plan_projects"/>
         </record>
 
         <record id="analytic_renovations" model="account.analytic.account">
             <field name="name">Renovations</field>
-        </record>
-
-        <!-- Analytic Tags -->
-        <record id="tag_analysis" model="account.analytic.tag">
-            <field name="name">Analysis</field>
-            <field name="color">1</field>
-        </record>
-
-        <record id="tag_design" model="account.analytic.tag">
-            <field name="name">Design</field>
-            <field name="color">2</field>
-        </record>
-
-        <record id="tag_training" model="account.analytic.tag">
-            <field name="name">Training</field>
-            <field name="color">3</field>
-        </record>
-
-        <record id="tag_research" model="account.analytic.tag">
-            <field name="name">Research</field>
-            <field name="color">4</field>
-        </record>
-
-        <record id="tag_development" model="account.analytic.tag">
-            <field name="name">Development</field>
-            <field name="color">5</field>
-        </record>
-
-        <record id="tag_modification" model="account.analytic.tag">
-            <field name="name">Modification</field>
-            <field name="color">6</field>
-        </record>
-
-        <record id="tag_decoration" model="account.analytic.tag">
-            <field name="name">Decoration</field>
-            <field name="color">7</field>
+            <field name="plan_id" ref="analytic.analytic_plan_projects"/>
         </record>
 
         <!-- Stage templates -->
@@ -129,7 +96,6 @@
             <field name="tag_ids" eval="[Command.link(ref('project.project_tags_05'))]"/>
             <field name="stage_id" ref="project.project_project_stage_1"/>
             <field name="analytic_account_id" ref="project.analytic_office_design"/>
-            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_design'))]"/>
         </record>
         <record id="project_1_follower_admin" model="mail.followers">
             <field name="res_model">project.project</field>
@@ -146,7 +112,6 @@
             <field name="tag_ids" eval="[Command.link(ref('project.project_tags_04'))]"/>
             <field name="stage_id" ref="project.project_project_stage_1"/>
             <field name="analytic_account_id" ref="project.analytic_research_development"/>
-            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_research')), Command.link(ref('tag_development'))]"/>
         </record>
         <record id="project_2_activity_1" model="mail.activity">
             <field name="res_id" ref="project_project_2"/>
@@ -171,6 +136,25 @@
             <field name="stage_id" ref="project.project_project_stage_2"/>
             <field name="analytic_account_id" ref="project.analytic_renovations"/>
             <field name="privacy_visibility">employees</field>
+        </record>
+
+        <record id="project_project_4" model="project.project">
+            <field name="date_start" eval="(DateTime.today() + relativedelta(months=-1)).strftime('%Y-%m-%d 10:00:00')"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-5)).strftime('%Y-%m-%d 17:00:00')"/>
+            <field name="name">Home Make Over</field>
+            <field name="color">4</field>
+            <field name="active">False</field>
+            <field name="description">Interior designing and refurnishing.</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="type_ids" eval="[
+                Command.link(ref('project_stage_0')),
+                Command.link(ref('project_stage_1')),
+                Command.link(ref('project_stage_2')),
+                Command.link(ref('project_stage_3')),
+            ]"/>
+            <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="tag_ids" eval="[Command.link(ref('project_tags_04')), Command.link(ref('project_tags_02'))]"/>
+            <field name="stage_id" ref="project.project_project_stage_2"/>
         </record>
 
         <!-- Personal Stages: Mitchell Admin-->
@@ -394,7 +378,6 @@
             <field name="tag_ids" eval="[Command.set([ref('project_tags_00')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="milestone_id" ref="project.project_1_milestone_2" />
-            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_modification'))]"/>
         </record>
         <record id="project_1_task_4_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -488,7 +471,6 @@
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="color">11</field>
             <field name="milestone_id" ref="project.project_1_milestone_3" />
-            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_modification'))]"/>
         </record>
         <record id="project_1_task_6_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -529,7 +511,6 @@
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=6)"/>
             <field name="color">9</field>
             <field name="milestone_id" ref="project.project_1_milestone_3" />
-            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_modification'))]"/>
         </record>
         <record id="project_1_task_7_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -624,6 +605,29 @@
             <field name="user_id" ref="base.user_demo"/>
         </record>
 
+        <!-- Archive Tasks -->
+        <record id="project_1_task_9_archive_1" model="project.task">
+            <field name="name">Kitchen Assembly</field>
+            <field name="active">False</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project_project_4"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+        </record>
+        <record id="project_task_furniture" model="project.task">
+            <field name="name">Furniture Delivery</field>
+            <field name="active">False</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project_project_4"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+        </record>
+         <record id="project_task_ceiling" model="project.task">
+            <field name="name">Ceiling fan</field>
+            <field name="active">False</field>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project_project_4"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+        </record>
+
         <!-- Project 1 Recurring tasks and subtasks -->
         <record id="project_task_recurrence_1" model="project.task.recurrence">
             <field name="recurrence_left">3</field>
@@ -635,8 +639,22 @@
             <field name="repeat_weekday">mon</field>
             <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
         </record>
+        <record id="project_1_recurrence_1_task_template" model="project.task">
+            <field name="active" eval="False"/>
+            <field name="sequence">20</field>
+            <field name="planned_hours">20.0</field>
+            <field name="user_ids" eval="False"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="name">Customer review</field>
+            <field name="stage_id" ref="project_stage_1"/>
+            <field name="recurring_task" eval="True"/>
+            <field name="recurrence_id" ref="project_task_recurrence_1"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+            <field name="milestone_id" ref="project.project_1_milestone_3" />
+        </record>
         <record id="project_task_recurrence_1" model="project.task.recurrence">
             <field name="next_recurrence_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+            <field name="task_template_id" ref="project_1_recurrence_1_task_template"/>
         </record>
         <record id="project_task_recurrence_2" model="project.task.recurrence">
             <field name="recurrence_left">20</field>
@@ -648,8 +666,21 @@
             <field name="repeat_type">after</field>
             <field name="repeat_number">20</field>
         </record>
+        <record id="project_1_recurrence_2_task_template" model="project.task">
+            <field name="active" eval="False"/>
+            <field name="sequence">20</field>
+            <field name="planned_hours">0.25</field>
+            <field name="user_ids" eval="False"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="name">Daily stand-up meeting - Send minutes</field>
+            <field name="stage_id" ref="project_stage_1"/>
+            <field name="recurring_task" eval="True"/>
+            <field name="recurrence_id" ref="project_task_recurrence_2"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(weeks=-1)"/>
+        </record>
         <record id="project_task_recurrence_2" model="project.task.recurrence">
             <field name="next_recurrence_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+            <field name="task_template_id" ref="project_1_recurrence_2_task_template"/>
         </record>
         <record id="project_1_task_10" model="project.task">
             <field name="sequence">20</field>
@@ -668,7 +699,6 @@
             <field name="planned_hours">0.25</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
-            <field name="parent_id" ref="project.project_1_task_10"/>
             <field name="name">Daily stand-up meeting - Send minutes</field>
             <field name="stage_id" ref="project_stage_1"/>
             <field name="recurring_task" eval="True"/>
@@ -701,7 +731,6 @@
             <field name="parent_id" ref="project.project_1_task_12"/>
             <field name="name">Preparation</field>
             <field name="stage_id" ref="project_stage_1"/>
-            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_analysis'))]"/>
         </record>
         <record id="project_1_task_15" model="project.task">
             <field name="sequence">30</field>
@@ -711,6 +740,25 @@
             <field name="parent_id" ref="project.project_1_task_12"/>
             <field name="name">Minutes</field>
             <field name="stage_id" ref="project_stage_1"/>
+        </record>
+        <record id="project_1_task_16" model="project.task">
+            <field name="planned_hours" eval="24.0"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="name">Chair Cabinet</field>
+            <field name="stage_id" ref="project_stage_2"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="depend_on_ids" eval="[Command.link(ref('project.project_1_task_2'))]"/>
+            <field name="date_deadline" eval="DateTime.now() + relativedelta(days=6)"/>
+            <field name="color">9</field>
+        </record>
+        <record id="project_1_task_17" model="project.task">
+            <field name="name">Plywood requirement</field>
+            <field name="sequence">40</field>
+            <field name="planned_hours">2.0</field>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="parent_id" ref="project.project_1_task_16"/>
+            <field name="stage_id" ref="project_stage_2"/>
         </record>
 
         <function model="project.task.recurrence" name="_cron_create_recurring_tasks"/>
@@ -725,7 +773,6 @@
             <field name="name">Customer analysis + Architecture</field>
             <field name="color">7</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
-            <field name="analytic_tag_ids" eval="[Command.link(ref('tag_analysis')), Command.link(ref('tag_design'))]"/>
         </record>
         <record id="project_2_task_1_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -1371,6 +1418,12 @@ Send it ASAP, its urgent.</field>
             <field name="user_id" eval="ref('base.user_admin')"/>
             <field name="progress" eval="35"/>
             <field name="status">at_risk</field>
+        </record>
+        <record id="project_update_3" model="project.update" context="{'default_project_id': ref('project.project_project_3')}">
+            <field name="name">Status</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
+            <field name="progress" eval="100"/>
+            <field name="status">done</field>
         </record>
     </data>
 </odoo>

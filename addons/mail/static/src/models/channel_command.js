@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { attr, one, Model } from "@mail/model";
+import { cleanSearchTerm } from "@mail/utils/utils";
 
-registerModel({
-    name: 'ChannelCommand',
+Model({
+    name: "ChannelCommand",
     modelMethods: {
         /**
          * Fetches channel commands matching the given search term to extend the
@@ -41,12 +40,18 @@ registerModel({
                 if (!isATypeSpecific && isBTypeSpecific) {
                     return 1;
                 }
-                const cleanedAName = cleanSearchTerm(a.name || '');
-                const cleanedBName = cleanSearchTerm(b.name || '');
-                if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
+                const cleanedAName = cleanSearchTerm(a.name || "");
+                const cleanedBName = cleanSearchTerm(b.name || "");
+                if (
+                    cleanedAName.startsWith(cleanedSearchTerm) &&
+                    !cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return -1;
                 }
-                if (!cleanedAName.startsWith(cleanedSearchTerm) && cleanedBName.startsWith(cleanedSearchTerm)) {
+                if (
+                    !cleanedAName.startsWith(cleanedSearchTerm) &&
+                    cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return 1;
                 }
                 if (cleanedAName < cleanedBName) {
@@ -73,15 +78,17 @@ registerModel({
                 return [[]];
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [this.messaging.commands.filter(command => {
-                if (!cleanSearchTerm(command.name).includes(cleanedSearchTerm)) {
-                    return false;
-                }
-                if (command.channel_types) {
-                    return command.channel_types.includes(thread.channel.channel_type);
-                }
-                return true;
-            })];
+            return [
+                this.messaging.commands.filter((command) => {
+                    if (!cleanSearchTerm(command.name).includes(cleanedSearchTerm)) {
+                        return false;
+                    }
+                    if (command.channel_types) {
+                        return command.channel_types.includes(thread.channel.channel_type);
+                    }
+                    return true;
+                }),
+            ];
         },
     },
     recordMethods: {
@@ -92,9 +99,9 @@ registerModel({
          * @param {Thread} param0.channel
          * @param {Object} [param0.body='']
          */
-        async execute({ channel, body = '' }) {
+        async execute({ channel, body = "" }) {
             return this.messaging.rpc({
-                model: 'mail.channel',
+                model: "mail.channel",
                 method: this.methodName,
                 args: [[channel.id]],
                 kwargs: { body },
@@ -112,25 +119,19 @@ registerModel({
         /**
          *  The command that will be executed.
          */
-        help: attr({
-            required: true,
-        }),
+        help: attr({ required: true }),
         /**
          * Name of the method of `mail.channel` to call on the server when
          * executing this command.
          */
-        methodName: attr({
-            required: true,
-        }),
+        methodName: attr({ required: true }),
         /**
          *  The keyword to use a specific command.
          */
-        name: attr({
-            identifying: true,
-        }),
-        suggestable: one('ComposerSuggestable', {
+        name: attr({ identifying: true }),
+        suggestable: one("ComposerSuggestable", {
             default: {},
-            inverse: 'channelCommand',
+            inverse: "channelCommand",
             readonly: true,
             required: true,
         }),

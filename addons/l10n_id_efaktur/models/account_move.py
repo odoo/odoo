@@ -36,13 +36,9 @@ class AccountMove(models.Model):
             ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
             ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
         ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
-        readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+        readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False,
+        compute="_compute_kode_transaksi", store=True)
     l10n_id_need_kode_transaksi = fields.Boolean(compute='_compute_need_kode_transaksi')
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        self.l10n_id_kode_transaksi = self.partner_id.l10n_id_kode_transaksi
-        return super(AccountMove, self)._onchange_partner_id()
 
     @api.onchange('l10n_id_tax_number')
     def _onchange_l10n_id_tax_number(self):
@@ -56,18 +52,23 @@ class AccountMove(models.Model):
             record.l10n_id_csv_created = bool(record.l10n_id_attachment_id)
 
     @api.depends('partner_id')
+    def _compute_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_kode_transaksi = move.partner_id.l10n_id_kode_transaksi
+
+    @api.depends('partner_id')
     def _compute_need_kode_transaksi(self):
         for move in self:
             move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.move_type == 'out_invoice' and move.country_code == 'ID'
 
-    @api.constrains('l10n_id_kode_transaksi', 'line_ids')
+    @api.constrains('l10n_id_kode_transaksi', 'line_ids', 'partner_id')
     def _constraint_kode_ppn(self):
         ppn_tag = self.env.ref('l10n_id.ppn_tag')
-        for move in self.filtered(lambda m: m.l10n_id_kode_transaksi != '08'):
+        for move in self.filtered(lambda m: m.l10n_id_need_kode_transaksi and m.l10n_id_kode_transaksi != '08'):
             if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product') \
                     and any(ppn_tag.id not in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
                 raise UserError(_('Cannot mix VAT subject and Non-VAT subject items in the same invoice with this kode transaksi.'))
-        for move in self.filtered(lambda m: m.l10n_id_kode_transaksi == '08'):
+        for move in self.filtered(lambda m: m.l10n_id_need_kode_transaksi and m.l10n_id_kode_transaksi == '08'):
             if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
                 raise UserError('Kode transaksi 08 is only for non VAT subject items.')
 
@@ -177,7 +178,7 @@ class AccountMove(models.Model):
             eTax['REFERENSI'] = number_ref
             eTax['KODE_DOKUMEN_PENDUKUNG'] = '0'
 
-            lines = move.line_ids.filtered(lambda x: x.is_downpayment and x.price_unit < 0 and not x.display_type)
+            lines = move.line_ids.filtered(lambda x: x.move_id._is_downpayment() and x.price_unit < 0 and x.display_type == 'product')
             eTax['FG_UANG_MUKA'] = 0
             eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_subtotal, 0)))))
             eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: float_round(l.price_total - l.price_subtotal, 0)))))

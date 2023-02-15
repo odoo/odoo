@@ -14,7 +14,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 let serverData;
 let target;
@@ -165,7 +165,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_statusbar_status button:disabled", 2);
         assert.hasClass(
             target.querySelector('.o_statusbar_status button[data-value="4"]'),
-            "btn-primary"
+            "o_arrow_button_current"
         );
     });
 
@@ -245,7 +245,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='4']"),
-            "btn-primary"
+            "o_arrow_button_current"
         );
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='4']"),
@@ -253,7 +253,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         const clickableButtons = target.querySelectorAll(
-            ".o_statusbar_status button.btn-secondary:not(.dropdown-toggle):not(:disabled)"
+            ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current)"
         );
         assert.strictEqual(clickableButtons.length, 2);
 
@@ -261,7 +261,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='1']"),
-            "btn-primary"
+            "o_arrow_button_current"
         );
         assert.hasClass(
             target.querySelector(".o_statusbar_status button[data-value='1']"),
@@ -402,7 +402,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await click(target, ".o_form_button_edit");
             assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 3);
             const buttons = target.querySelectorAll(
                 ".o_statusbar_status button:not(.dropdown-toggle)"
@@ -435,7 +434,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await click(target, ".o_form_button_edit");
             await click(target, ".o_statusbar_status .dropdown-toggle");
 
             const status = target.querySelectorAll(".o_statusbar_status");
@@ -464,7 +462,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await click(target, ".o_form_button_edit");
         assert.strictEqual(
             target.querySelector("[aria-label='Current state']").textContent,
             "aaa",
@@ -512,8 +509,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_edit");
-
         assert.containsN(target, ".o_statusbar_status button.disabled", 3);
         assert.strictEqual(rpcCount, 1, "should have done 1 search_read rpc");
         await editInput(target, ".o_field_widget[name='qux'] input", 9.5);
@@ -554,5 +549,52 @@ QUnit.module("Fields", (hooks) => {
             ["first record", "second record", "aaa"]
         );
         await click(target, "#o_command_2");
+    });
+
+    QUnit.test("smart actions are unavailable if readonly", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                    <form>
+                        <header>
+                            <field name="trululu" widget="statusbar" readonly="1"/>
+                        </header>
+                    </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_widget");
+
+        triggerHotkey("control+k");
+        await nextTick();
+        const moveStages = [...target.querySelectorAll(".o_command")].map((el) => el.textContent);
+        assert.notOk(moveStages.includes("Move to Trululu...ALT + SHIFT + X"));
+        assert.notOk(moveStages.includes("Move to next...ALT + X"));
+    });
+
+    QUnit.test("hotkeys are unavailable if readonly", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                    <form>
+                        <header>
+                            <field name="trululu" widget="statusbar" readonly="1"/>
+                        </header>
+                    </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_widget");
+        triggerHotkey("alt+shift+x"); // Move to stage...
+        await nextTick();
+        assert.containsNone(target, ".modal", "command palette should not open");
+
+        triggerHotkey("alt+x"); // Move to next
+        await nextTick();
+        assert.containsNone(target, ".modal", "command palette should not open");
     });
 });

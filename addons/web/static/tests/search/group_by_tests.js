@@ -34,12 +34,12 @@ QUnit.module("GroupBy Class", {}, () => {
         assert.expect(3);
         try {
             getGroupBy(":day");
-        } catch (_e) {
+        } catch {
             assert.step("Error 1");
         }
         try {
             getGroupBy("diay_name:yar");
-        } catch (_e) {
+        } catch {
             assert.step("Error 2");
         }
         assert.verifySteps(["Error 1", "Error 2"]);
@@ -56,22 +56,22 @@ QUnit.module("GroupBy Class", {}, () => {
         assert.expect(5);
         try {
             getGroupBy("", fields);
-        } catch (_e) {
+        } catch {
             assert.step("Error 1");
         }
         try {
             getGroupBy("display_name:day", fields);
-        } catch (_e) {
+        } catch {
             assert.step("Error 2");
         }
         try {
             getGroupBy("diay_name:year", fields);
-        } catch (_e) {
+        } catch {
             assert.step("Error 3");
         }
         try {
             getGroupBy("diay_name:yar", fields);
-        } catch (_e) {
+        } catch {
             assert.step("Error 4");
         }
         assert.verifySteps(["Error 1", "Error 2", "Error 3", "Error 4"]);
@@ -91,7 +91,7 @@ QUnit.module("GroupBy Class", {}, () => {
         assert.expect(2);
         try {
             getGroupBy("date_field:yar", fields);
-        } catch (_e) {
+        } catch {
             assert.step("Error");
         }
         assert.verifySteps(["Error"]);

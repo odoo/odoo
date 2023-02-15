@@ -39,7 +39,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     ...selectImageSteps,
     {
         content: "check popover content has site URL",
-        trigger: ".o_edit_menu_popover a.o_we_url_link[href='http://odoo.com/']:contains(http://odoo.com/)",
+        trigger: "iframe .o_edit_menu_popover a.o_we_url_link[href='http://odoo.com/']:contains(http://odoo.com/)",
         run: () => {}, // check
     }, {
         content: "remove URL",
@@ -49,7 +49,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     ...selectImageSteps,
     {
         content: "check popover content has no URL",
-        trigger: ".o_edit_menu_popover a.o_we_url_link:not([href]):contains(No URL specified)",
+        trigger: "iframe .o_edit_menu_popover a.o_we_url_link:not([href]):contains(No URL specified)",
         run: () => {}, // check
     }, {
         content: "enter email URL",
@@ -59,7 +59,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     ...selectImageSteps,
     {
         content: "check popover content has mail URL",
-        trigger: ".o_edit_menu_popover:has(.fa-envelope-o) a.o_we_url_link[href='mailto:test@test.com']:contains(mailto:test@test.com)",
+        trigger: "iframe .o_edit_menu_popover:has(.fa-envelope-o) a.o_we_url_link[href='mailto:test@test.com']:contains(mailto:test@test.com)",
         run: () => {}, // check
     }, {
         content: "enter phone URL",
@@ -69,7 +69,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     ...selectImageSteps,
     {
         content: "check popover content has phone URL",
-        trigger: ".o_edit_menu_popover:has(.fa-phone) a.o_we_url_link[href='tel:555-2368']:contains(tel:555-2368)",
+        trigger: "iframe .o_edit_menu_popover:has(.fa-phone) a.o_we_url_link[href='tel:555-2368']:contains(tel:555-2368)",
         run: () => {}, // check
     }, {
         content: "remove URL",
@@ -79,7 +79,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     ...selectImageSteps,
     {
         content: "check popover content has no URL",
-        trigger: ".o_edit_menu_popover a.o_we_url_link:not([href]):contains(No URL specified)",
+        trigger: "iframe .o_edit_menu_popover a.o_we_url_link:not([href]):contains(No URL specified)",
         run: () => {}, // check
     },
 ]);

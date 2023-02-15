@@ -71,8 +71,26 @@
     }
 }
 
-.o_form_view .o_group .o_field_tags {
-    width: 100%;
+.o_form_view {
+    .o_group, .o_inner_group {
+        .o_field_tags {
+            width: 100%;
+        }
+    }
+
+    &:not(.o_field_highlight) {
+        .o_field_many2many_selection {
+            .o_dropdown_button {
+                visibility: hidden;
+            }
+
+            &:hover, &:focus-within {
+                .o_dropdown_button {
+                    visibility: visible;
+                }
+            }
+        }
+    }
 }
 
 .o_form_statusbar .o_field_tags {

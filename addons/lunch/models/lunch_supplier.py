@@ -230,7 +230,7 @@ class LunchSupplier(models.Model):
             ('supplier_id', 'in', available_today.ids),
             ('state', '=', state),
             ('date', '=', fields.Date.context_today(self.with_context(tz=self.tz))),
-        ], order="user_id, name")
+        ], order="user_id, product_id")
         return orders
 
     def _send_auto_email(self):

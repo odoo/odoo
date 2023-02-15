@@ -23,7 +23,5 @@ Allows customers to pay for their orders at a shop, instead of paying online.
             'website_sale_picking/static/tests/tours/**/*.js'
         ]
     },
-    'application': False,
-    'auto_install': False,
     'license': 'LGPL-3',
 }

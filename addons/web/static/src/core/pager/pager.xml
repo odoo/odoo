@@ -5,14 +5,14 @@
         <nav class="o_pager align-items-center d-flex gap-2" aria-label="Pager">
             <span class="o_pager_counter" t-on-click.stop="">
                 <t t-if="state.isEditing">
-                    <input type="text" class="o_pager_value o_input d-inline-block w-auto text-end" size="7" t-ref="autofocus" t-att-value="value" t-on-blur="onInputBlur" t-on-change="onInputChange" t-on-keydown.stop="onInputKeydown" />
+                    <input type="text" class="o_pager_value o_input d-inline-block w-auto text-end mb-n1" size="7" t-ref="autofocus" t-att-value="value" t-on-blur="onInputBlur" t-on-change="onInputChange" t-on-keydown.stop="onInputKeydown" />
                 </t>
                 <t t-else="">
-                    <span class="o_pager_value d-inline-block border-bottom border-white" t-esc="value" t-on-click="onValueClick" />
+                    <span class="o_pager_value d-inline-block border-bottom border-transparent mb-n1" t-esc="value" t-on-click="onValueClick" />
                 </t>
                 <span> / </span>
                 <t t-if="props.updateTotal">
-                    <span class="o_pager_limit o_pager_limit_fetch" t-on-click.stop="props.updateTotal"><t t-esc="props.total"/>+</span>
+                    <span class="o_pager_limit o_pager_limit_fetch" t-att-class="{ 'disabled': state.isDisabled }" t-on-click.stop="updateTotal"><t t-esc="props.total"/>+</span>
                 </t>
                 <t t-else="">
                     <span class="o_pager_limit" t-esc="props.total"/>

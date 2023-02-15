@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { attr, one, Model } from "@mail/model";
+import { cleanSearchTerm } from "@mail/utils/utils";
 
-registerModel({
-    name: 'CannedResponse',
+Model({
+    name: "CannedResponse",
     modelMethods: {
         /**
          * Fetches canned responses matching the given search term to extend the
@@ -33,12 +32,18 @@ registerModel({
         getSuggestionSortFunction(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return (a, b) => {
-                const cleanedAName = cleanSearchTerm(a.source || '');
-                const cleanedBName = cleanSearchTerm(b.source || '');
-                if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
+                const cleanedAName = cleanSearchTerm(a.source || "");
+                const cleanedBName = cleanSearchTerm(b.source || "");
+                if (
+                    cleanedAName.startsWith(cleanedSearchTerm) &&
+                    !cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return -1;
                 }
-                if (!cleanedAName.startsWith(cleanedSearchTerm) && cleanedBName.startsWith(cleanedSearchTerm)) {
+                if (
+                    !cleanedAName.startsWith(cleanedSearchTerm) &&
+                    cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return 1;
                 }
                 if (cleanedAName < cleanedBName) {
@@ -62,15 +67,15 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [this.messaging.cannedResponses.filter(cannedResponse =>
-                cleanSearchTerm(cannedResponse.source).includes(cleanedSearchTerm)
-            )];
+            return [
+                this.messaging.cannedResponses.filter((cannedResponse) =>
+                    cleanSearchTerm(cannedResponse.source).includes(cleanedSearchTerm)
+                ),
+            ];
         },
     },
     fields: {
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         /**
          *  The keyword to use a specific canned response.
          */
@@ -80,9 +85,9 @@ registerModel({
          * entered.
          */
         substitution: attr(),
-        suggestable: one('ComposerSuggestable', {
+        suggestable: one("ComposerSuggestable", {
             default: {},
-            inverse: 'cannedResponse',
+            inverse: "cannedResponse",
             readonly: true,
             required: true,
         }),

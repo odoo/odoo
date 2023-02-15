@@ -6,25 +6,23 @@
         <field name="groups_id" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
-    <!--Leave Type-->
+    <!--Time Off Type-->
     <record id="hr_holiday_status_dv" model="hr.leave.type">
         <field name="name">Parental Leaves</field>
         <field name="requires_allocation">yes</field>
         <field name="employee_requests">no</field>
-        <field name="color_name">brown</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">officer</field>
-        <field name="responsible_id" ref="base.user_admin"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 
     <record id="holiday_status_training" model="hr.leave.type">
         <field name="name">Training Time Off</field>
         <field name="requires_allocation">yes</field>
         <field name="employee_requests">no</field>
-        <field name="color_name">lightyellow</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">officer</field>
-        <field name="responsible_id" ref="base.user_admin"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 
     <!-- Accrual Plan -->

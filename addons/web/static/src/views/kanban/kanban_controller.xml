@@ -10,11 +10,14 @@
                 <t t-component="props.Renderer"
                     list="model.root"
                     archInfo="props.archInfo"
+                    Compiler="props.Compiler"
                     readonly="true"
                     forceGlobalClick="props.forceGlobalClick"
                     openRecord.bind="openRecord"
                     noContentHelp="props.info.noContentHelp"
+                    scrollTop.bind="scrollTop"
                 />
+
             </Layout>
         </div>
     </t>
@@ -23,8 +26,21 @@
         <div t-if="props.showButtons" class="o_cp_buttons d-flex align-items-baseline" role="toolbar" aria-label="Main actions">
             <t t-if="canCreate">
                 <button type="button" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord(null)" data-bounce-button="">
-                    Create
+                    New
                 </button>
+            </t>
+            <t t-foreach="headerButtons" t-as="button" t-key="button.id">
+                <MultiRecordViewButton
+                    t-if="button.display === 'always'"
+                    list="model.root"
+                    className="button.className"
+                    clickParams="button.clickParams"
+                    defaultRank="'btn-secondary'"
+                    domain="props.domain"
+                    icon="button.icon"
+                    string="button.string"
+                    title="button.title"
+                />
             </t>
         </div>
     </t>

@@ -1,0 +1,16 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ChatterMessageCounter" owl="1">
+        <div class="o_message_counter">
+            <t t-if="props.count">
+                <span class="fa fa-comments" />
+                <span class="o_message_count"> <t t-esc="props.count"/> </span>
+                comments
+            </t>
+            <t t-else="">
+                There are no comments for now.
+            </t>
+        </div>
+    </t>
+
+</templates>

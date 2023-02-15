@@ -100,12 +100,20 @@ SELECT
     sale_order.user_id AS sale_order_user_id,
     
     sale_order_line.product_id AS product_id,
-    sale_order_line.price_total
-        / CASE COALESCE(sale_order.currency_rate, 0) WHEN 0 THEN 1.0 ELSE sale_order.currency_rate END
-        / sale_order_line.product_uom_qty AS sale_price,
-    sale_order_line.price_subtotal
-        / CASE COALESCE(sale_order.currency_rate, 0) WHEN 0 THEN 1.0 ELSE sale_order.currency_rate END
-        / sale_order_line.product_uom_qty AS sale_price_untaxed,
+    CASE
+        WHEN sale_order_line.product_uom_qty = 0 THEN 0
+        ELSE
+        sale_order_line.price_total
+            / CASE COALESCE(sale_order.currency_rate, 0) WHEN 0 THEN 1.0 ELSE sale_order.currency_rate END
+            / sale_order_line.product_uom_qty
+    END AS sale_price,
+    CASE
+        WHEN sale_order_line.product_uom_qty = 0 THEN 0
+        ELSE
+        sale_order_line.price_subtotal
+            / CASE COALESCE(sale_order.currency_rate, 0) WHEN 0 THEN 1.0 ELSE sale_order.currency_rate END
+            / sale_order_line.product_uom_qty
+        END AS sale_price_untaxed,
     CASE
         WHEN sale_order_line.price_total = 0 THEN 'free'
         WHEN event_registration.is_paid THEN 'paid'

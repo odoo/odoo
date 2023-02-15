@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
+from collections import defaultdict
 
 class EmployeeSkill(models.Model):
     _name = 'hr.employee.skill'
@@ -50,24 +51,37 @@ class EmployeeSkill(models.Model):
 
     def _create_logs(self):
         today = fields.Date.context_today(self)
+        employee_skills = self.env['hr.employee.skill'].search([
+            ('employee_id', 'in', self.employee_id.ids)
+        ])
+        employee_skill_logs = self.env['hr.employee.skill.log'].search([
+            ('employee_id', 'in', self.employee_id.ids),
+        ])
+
+        skills_by_employees = defaultdict(lambda: self.env['hr.employee.skill'])
+        for skill in employee_skills:
+            skills_by_employees[skill.employee_id.id] |= skill
+
+        logs_by_employees = defaultdict(lambda: self.env['hr.employee.skill.log'])
+        for log in employee_skill_logs:
+            logs_by_employees[log.employee_id.id] |= log
+
         skill_to_create_vals = []
-        for employee_skill in self:
-            existing_log = self.env['hr.employee.skill.log'].search([
-                ('employee_id', '=', employee_skill.employee_id.id),
-                ('department_id', '=', employee_skill.employee_id.department_id.id),
-                ('skill_id', '=', employee_skill.skill_id.id),
-                ('date', '=', today),
-            ])
-            if existing_log:
-                existing_log.write({'skill_level_id': employee_skill.skill_level_id.id})
-            else:
-                skill_to_create_vals.append({
-                    'employee_id': employee_skill.employee_id.id,
-                    'skill_id': employee_skill.skill_id.id,
-                    'skill_level_id': employee_skill.skill_level_id.id,
-                    'department_id': employee_skill.employee_id.department_id.id,
-                    'skill_type_id': employee_skill.skill_type_id.id,
-                })
+        for employee in skills_by_employees:
+            employee_logs = logs_by_employees[employee]
+            for employee_skill in skills_by_employees[employee]:
+                existing_log = employee_logs.filtered(lambda l: l.department_id == employee_skill.employee_id.department_id and l.skill_id == employee_skill.skill_id and l.date == today)
+                if existing_log:
+                    existing_log.write({'skill_level_id': employee_skill.skill_level_id.id})
+                else:
+                    skill_to_create_vals.append({
+                        'employee_id': employee_skill.employee_id.id,
+                        'skill_id': employee_skill.skill_id.id,
+                        'skill_level_id': employee_skill.skill_level_id.id,
+                        'department_id': employee_skill.employee_id.department_id.id,
+                        'skill_type_id': employee_skill.skill_type_id.id,
+                    })
+
         if skill_to_create_vals:
             self.env['hr.employee.skill.log'].create(skill_to_create_vals)
 

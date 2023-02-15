@@ -1,34 +1,39 @@
 /** @odoo-module **/
 
-import PosComponent from 'point_of_sale.PosComponent';
-import ProductScreen from 'point_of_sale.ProductScreen';
-import Registries from 'point_of_sale.Registries';
-import { useListener } from "@web/core/utils/hooks";
+import { LegacyComponent } from "@web/legacy/legacy_component";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { useListener, useService } from "@web/core/utils/hooks";
+import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
 
-export class PromoCodeButton extends PosComponent {
+export class PromoCodeButton extends LegacyComponent {
+    static template = "PromoCodeButton";
+
     setup() {
         super.setup();
-        useListener('click', this.onClick);
+        this.popup = useService("popup");
+        useListener("click", this.onClick);
     }
 
     async onClick() {
-        const { confirmed, payload: code } = await this.showPopup('TextInputPopup', {
-            title: this.env._t('Enter Promotion or Coupon Code'),
-            startingValue: '',
+        let { confirmed, payload: code } = await this.popup.add(TextInputPopup, {
+            title: this.env._t("Enter Code"),
+            startingValue: "",
+            placeholder: this.env._t("Gift card or Discount code"),
         });
-        if (confirmed && code !== '') {
-            this.env.pos.get_order().activateCode(code);
+        if (confirmed) {
+            code = code.trim();
+            if (code !== "") {
+                this.env.pos.get_order().activateCode(code);
+            }
         }
     }
 }
 
-PromoCodeButton.template = 'PromoCodeButton';
-
 ProductScreen.addControlButton({
     component: PromoCodeButton,
     condition: function () {
-        return this.env.pos.config.use_coupon_programs;
-    }
+        return this.env.pos.programs.some((p) =>
+            ["coupons", "promotion", "gift_card"].includes(p.program_type)
+        );
+    },
 });
-
-Registries.Component.add(PromoCodeButton);

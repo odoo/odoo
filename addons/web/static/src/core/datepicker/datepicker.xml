@@ -7,11 +7,13 @@
             <input type="text"
                 class="o_datepicker_input o_input datetimepicker-input"
                 t-att-name="props.name"
+                t-att-id="props.inputId"
                 t-att-placeholder="props.placeholder"
                 t-attf-data-target="#{ '#' + datePickerId }"
                 t-att-readonly="props.readonly"
                 t-ref="input"
                 t-on-change="() => this.onDateChange()"
+                t-on-input="(ev) => this.props.onInput(ev)"
                 t-on-click="onInputClick"
                 t-on-keydown="onInputKeydown"
             />

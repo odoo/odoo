@@ -1,18 +1,17 @@
 odoo.define('website_sale.tour_shop_zoom', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
 var imageSelector = '#o-carousel-product .carousel-item.active img';
 var imageName = "A Colorful Image";
 var nameGreen = "Forest Green";
 
 // This tour relies on a data created from the python test.
-tour.register('shop_zoom', {
+registry.category("web_tour.tours").add('shop_zoom', {
     test: true,
-    url: '/shop?search=' + imageName,
-},
-[
+    url: '/shop?debug=1&search=' + imageName,
+    steps: [
     {
         content: "select " + imageName,
         trigger: '.oe_product_cart a:containsExact("' + imageName + '")',
@@ -50,5 +49,5 @@ tour.register('shop_zoom', {
         trigger: '.o_wsale_image_viewer',
         run: () => {},
     },
-]);
+]});
 });

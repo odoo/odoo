@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,12 +22,12 @@ msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
-msgid "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
+msgid "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
 msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
-msgid "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
+msgid "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
 msgstr ""
 
 #. module: rating
@@ -79,6 +79,12 @@ msgid "Customer"
 msgstr ""
 
 #. module: rating
+#: code:addons/rating/controllers/main.py:0
+#, python-format
+msgid "Customer rated %r."
+msgstr ""
+
+#. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Date"
 msgstr ""
@@ -111,11 +117,6 @@ msgstr ""
 #. module: rating
 #: model:ir.model,name:rating.model_mail_thread
 msgid "Email Thread"
-msgstr ""
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__consumed
-msgid "Enabled if the rating has been filled."
 msgstr ""
 
 #. module: rating
@@ -152,11 +153,6 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
-msgstr ""
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__res_id
-msgid "Identifier of the rated object"
 msgstr ""
 
 #. module: rating
@@ -374,8 +370,8 @@ msgstr ""
 
 #. module: rating
 #. openerp-web
+#: code:addons/rating/static/src/components/channel_preview_view/channel_preview_view.xml:0
 #: code:addons/rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
-#: code:addons/rating/static/src/components/thread_preview/thread_preview.xml:0
 #, python-format
 msgid "Rating:"
 msgstr ""
@@ -457,11 +453,6 @@ msgstr ""
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Thank you, we appreciate your feedback!"
-msgstr ""
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__res_name
-msgid "The name of the rated resource."
 msgstr ""
 
 #. module: rating

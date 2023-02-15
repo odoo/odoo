@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from odoo import _, models
+import base64
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
@@ -64,7 +65,7 @@ class PosOrder(models.Model):
         coupon_new_id_map = {k: k for k in coupon_data.keys() if k > 0}
 
         # Create the coupons that were awarded by the order.
-        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0}
+        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0 and not v.get('giftCardId')}
         coupon_create_vals = [{
             'program_id': p['program_id'],
             'partner_id': p.get('partner_id', False),
@@ -72,8 +73,22 @@ class PosOrder(models.Model):
             'points': 0,
             'source_pos_order_id': self.id,
         } for p in coupons_to_create.values()]
+
         # Pos users don't have the create permission
-        new_coupons = self.env['loyalty.card'].sudo().create(coupon_create_vals)
+        new_coupons = self.env['loyalty.card'].with_context(action_no_send_mail=True).sudo().create(coupon_create_vals)
+
+        # We update the gift card that we sold when the gift_card_settings = 'scan_use'.
+        gift_cards_to_update = [v for v in coupon_data.values() if v.get('giftCardId')]
+        updated_gift_cards = self.env['loyalty.card']
+        for coupon_vals in gift_cards_to_update:
+            gift_card = self.env['loyalty.card'].browse(coupon_vals.get('giftCardId'))
+            gift_card.write({
+                'points': coupon_vals['points'],
+                'source_pos_order_id': self.id,
+                'partner_id': coupon_vals.get('partner_id', False),
+            })
+            updated_gift_cards |= gift_card
+
         # Map the newly created coupons
         for old_id, new_id in zip(coupons_to_create.keys(), new_coupons):
             coupon_new_id_map[new_id.id] = old_id
@@ -90,10 +105,13 @@ class PosOrder(models.Model):
                 coupon.points += coupon_data[coupon_new_id_map[coupon.id]]['points']
             for reward_code in coupon_data[coupon_new_id_map[coupon.id]].get('line_codes', []):
                 lines_per_reward_code[reward_code].coupon_id = coupon
+        # Send creation email
+        new_coupons.with_context(action_no_send_mail=False)._send_creation_communication()
         # Reports per program
         report_per_program = {}
         coupon_per_report = defaultdict(list)
-        for coupon in new_coupons:
+        # Important to include the updated gift cards so that it can be printed. Check coupon_report.
+        for coupon in new_coupons | updated_gift_cards:
             if coupon.program_id not in report_per_program:
                 report_per_program[coupon.program_id] = coupon.program_id.communication_plan_ids.\
                     filtered(lambda c: c.trigger == 'create').pos_report_print_id
@@ -116,11 +134,53 @@ class PosOrder(models.Model):
                 'program_name': coupon.program_id.name,
                 'expiration_date': coupon.expiration_date,
                 'code': coupon.code,
-            } for coupon in new_coupons if coupon.program_id.applies_on == 'future'],
+            } for coupon in new_coupons if (
+                coupon.program_id.applies_on == 'future'
+                # Don't send the coupon code for the gift card and ewallet programs.
+                # It should not be printed in the ticket.
+                and coupon.program_id.program_type not in ['gift_card', 'ewallet']
+            )],
             'coupon_report': coupon_per_report,
         }
+
+    def _prepare_order_line(self, order_line):
+        order_line = super(PosOrder, self)._prepare_order_line(order_line)
+
+        if order_line.get("reward_id"):
+            order_line["reward_id"] = order_line["reward_id"][0]
+        if order_line.get("coupon_id"):
+            order_line["coupon_id"] = order_line["coupon_id"][0]
+
+        return order_line
 
     def _get_fields_for_order_line(self):
         fields = super(PosOrder, self)._get_fields_for_order_line()
         fields.extend(['is_reward_line', 'reward_id', 'coupon_id', 'reward_identifier_code', 'points_cost'])
         return fields
+
+    def _add_mail_attachment(self, name, ticket):
+        attachment = super()._add_mail_attachment(name, ticket)
+        gift_card_programs = self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'gift_card' and
+                                                                                  p.pos_report_print_id)
+        if gift_card_programs:
+            gift_cards = self.env['loyalty.card'].search([('source_pos_order_id', '=', self.id),
+                                                          ('program_id', 'in', gift_card_programs.mapped('id'))])
+            if gift_cards:
+                for program in gift_card_programs:
+                    filtered_gift_cards = gift_cards.filtered(lambda gc: gc.program_id == program)
+                    if filtered_gift_cards:
+                        action_report = program.pos_report_print_id
+                        report = action_report._render_qweb_pdf(action_report.report_name, filtered_gift_cards.mapped('id'))
+                        filename = name + '.pdf'
+                        gift_card_pdf = self.env['ir.attachment'].create({
+                            'name': filename,
+                            'type': 'binary',
+                            'datas': base64.b64encode(report[0]),
+                            'store_fname': filename,
+                            'res_model': 'pos.order',
+                            'res_id': self.ids[0],
+                            'mimetype': 'application/x-pdf'
+                        })
+                        attachment += [(4, gift_card_pdf.id)]
+
+        return attachment

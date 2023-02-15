@@ -59,3 +59,4 @@ export class DebugMenu extends DebugMenuBasic {
     }
 }
 DebugMenu.components = { Dropdown, DropdownItem };
+DebugMenu.props = {};

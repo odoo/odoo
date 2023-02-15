@@ -1,27 +1,10 @@
 /** @odoo-module **/
 
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useModelField } from "./model_field_hook";
+import { useUniquePopover } from "./unique_popover_hook";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
-const { Component, onWillStart, onWillUpdateProps } = owl;
-
-function useUniquePopover() {
-    const popover = usePopover();
-    let remove = null;
-    return Object.assign(Object.create(popover), {
-        add(target, component, props, options) {
-            if (remove) {
-                remove();
-            }
-            remove = popover.add(target, component, props, options);
-            return () => {
-                remove();
-                remove = null;
-            };
-        },
-    });
-}
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 export class ModelFieldSelector extends Component {
     setup() {
@@ -88,10 +71,11 @@ export class ModelFieldSelector extends Component {
                 isDebugMode: this.props.isDebugMode,
                 loadChain: this.loadChain.bind(this),
                 filter: this.props.filter,
+                followRelations: this.props.followRelations,
             },
             {
                 closeOnClickAway: true,
-                popoverClass: "o-popover-no-arrow",
+                popoverClass: "o_popover_field_selector",
             }
         );
     }
@@ -110,6 +94,7 @@ Object.assign(ModelFieldSelector, {
         isDebugMode: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
         filter: { type: Function, optional: true },
+        followRelations: { type: Boolean, optional: true },
     },
     defaultProps: {
         readonly: true,
@@ -117,5 +102,6 @@ Object.assign(ModelFieldSelector, {
         showSearchInput: true,
         update: () => {},
         filter: () => true,
+        followRelations: true,
     },
 });

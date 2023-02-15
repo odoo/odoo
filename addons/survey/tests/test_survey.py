@@ -296,3 +296,46 @@ class TestSurveyInternals(common.TestSurveyCommon):
         self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
         self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
                             q_is_vegetarian.suggested_answer_ids[1].id)
+
+    @users('survey_manager')
+    def test_unlink_triggers(self):
+        # Create the survey questions
+        q_is_vegetarian_text = 'Are you vegetarian ?'
+        q_is_vegetarian = self._add_question(
+            self.page_0, q_is_vegetarian_text, 'multiple_choice', survey_id=self.survey.id,
+            sequence=100, labels=[{'value': 'Yes'}, {'value': 'No'}])
+        q_food_vegetarian_text = 'Choose your green meal'
+        veggie_question = self._add_question(
+            self.page_0, q_food_vegetarian_text, 'multiple_choice',
+            is_conditional=True, sequence=101,
+            triggering_question_id=q_is_vegetarian.id,
+            triggering_answer_id=q_is_vegetarian.suggested_answer_ids[0].id,
+            survey_id=self.survey.id,
+            labels=[{'value': 'Vegetarian pizza'}, {'value': 'Vegetarian burger'}])
+        q_food_not_vegetarian_text = 'Choose your meal'
+        not_veggie_question = self._add_question(
+            self.page_0, q_food_not_vegetarian_text, 'multiple_choice',
+            is_conditional=True, sequence=102,
+            triggering_question_id=q_is_vegetarian.id,
+            triggering_answer_id=q_is_vegetarian.suggested_answer_ids[1].id,
+            survey_id=self.survey.id,
+            labels=[{'value': 'Steak with french fries'}, {'value': 'Fish'}])
+
+        q_is_vegetarian.suggested_answer_ids[0].unlink()
+
+        # Deleting answer Yes makes the following question always visible
+        self.assertEqual(veggie_question.is_conditional, False)
+        self.assertEqual(veggie_question.triggering_question_id.id, False)
+        self.assertEqual(veggie_question.triggering_answer_id.id, False)
+
+        # But the other is still conditional
+        self.assertEqual(not_veggie_question.is_conditional, True)
+        self.assertEqual(not_veggie_question.triggering_question_id.id, q_is_vegetarian.id)
+        self.assertEqual(not_veggie_question.triggering_answer_id.id, q_is_vegetarian.suggested_answer_ids[0].id)
+
+        q_is_vegetarian.unlink()
+
+        # Now it will also be always visible
+        self.assertEqual(not_veggie_question.is_conditional, False)
+        self.assertEqual(not_veggie_question.triggering_question_id.id, False)
+        self.assertEqual(not_veggie_question.triggering_answer_id.id, False)

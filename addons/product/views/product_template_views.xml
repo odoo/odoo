@@ -81,7 +81,7 @@
         <field name="name">Product.template.product.kanban</field>
         <field name="model">product.template</field>
         <field name="arch" type="xml">
-            <kanban sample="1">
+            <kanban sample="1" class="o_kanban_product_template">
                 <field name="id"/>
                 <field name="product_variant_count"/>
                 <field name="currency_id"/>
@@ -170,7 +170,7 @@ ctx.update({'default_pricelist': env['product.pricelist'].search([], limit=1).id
 action = {
     'name': 'Pricelist Report',
     'type': 'ir.actions.client',
-    'tag': 'generate_pricelist',
+    'tag': 'generate_pricelist_report',
     'context': ctx,
 }
         </field>

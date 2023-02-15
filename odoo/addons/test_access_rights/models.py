@@ -43,10 +43,10 @@ class ObjCateg(models.Model):
 
     name = fields.Char(required=True)
 
-    def search(self, args, **kwargs):
+    def search(self, domain, *args, **kwargs):
         if self.env.context.get('only_media'):
-            args += [('name', '=', 'Media')]
-        return super(ObjCateg, self).search(args, **kwargs)
+            domain += [('name', '=', 'Media')]
+        return super(ObjCateg, self).search(domain, **kwargs)
 
 
 class FakeTicket(models.Model):

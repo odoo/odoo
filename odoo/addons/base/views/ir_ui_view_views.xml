@@ -10,16 +10,16 @@
                         <group>
                             <field name="name"/>
                             <field name="type"/>
-                            <field name="model"/>
+                            <field name="model" invisible="True"/>
+                            <field name="model_id"/>
                             <field name="priority"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group groups="base.group_no_one">
-                            <field name="field_parent"/>
                             <field name="inherit_id"/>
                             <field name="mode"/>
                             <field name="model_data_id"/>
-                            <field name="xml_id"/>
+                            <field name="xml_id" class="text-break"/>
                         </group>
                     </group>
                     <div class="oe_edit_only alert alert-info" role="alert">

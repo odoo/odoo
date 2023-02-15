@@ -140,11 +140,14 @@ checkoutForm.include({
             }).then(feesPerProvider => {
                 for (const card of this.$('.o_payment_option_card:has(.o_payment_fee)')) {
                     const radio = $(card).find('input[name="o_payment_radio"]');
+                    let providerId;
                     if (radio.data("paymentOptionType") === 'provider') {
-                        const providerId = radio.data("paymentOptionId");
-                        const chunk = $(card).find('.o_payment_fee .oe_currency_value')[0];
-                        chunk.innerText = (feesPerProvider[providerId] || 0).toFixed(2);
+                        providerId = radio.data("paymentOptionId");
+                    } else { // token
+                        providerId = radio.data("paymentProviderId");
                     }
+                    const chunk = $(card).find('.o_payment_fee .oe_currency_value')[0];
+                    chunk.innerText = (feesPerProvider[providerId] || 0).toFixed(2);
                 }
             }).guardedCatch(error => {
                 error.event.preventDefault();

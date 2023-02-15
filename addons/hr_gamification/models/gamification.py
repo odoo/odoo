@@ -24,7 +24,7 @@ class GamificationBadgeUser(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'gamification.badge',
             'view_mode': 'form',
-            'res_id': self.id,
+            'res_id': self.badge_id.id,
         }
 
 class GamificationBadge(models.Model):

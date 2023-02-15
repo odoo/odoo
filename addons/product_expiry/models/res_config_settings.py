@@ -15,6 +15,12 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_lot_on_delivery_slip:
             self.group_expiry_date_on_delivery_slip = False
 
+    @api.onchange('group_stock_production_lot')
+    def _onchange_group_stock_production_lot(self):
+        super()._onchange_group_stock_production_lot()
+        if self.group_stock_production_lot:
+            self.module_product_expiry = True
+
     @api.onchange('module_product_expiry')
     def _onchange_module_product_expiry(self):
         if not self.module_product_expiry:

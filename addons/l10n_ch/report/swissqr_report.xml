@@ -14,9 +14,8 @@
 
         <template id="l10n_ch_swissqr_template">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
-            <t t-call="web.external_layout">
-                <!-- TODO master: remove this -->
-                <script t-if="0">document.body.className += " l10n_ch_qr";</script>
+            <t t-set="company" t-value="o.company_id"/>
+            <t t-call="web.external_layout_standard">
                 <!-- add default margin for header (matching A4 European margin) -->
                 <t t-set="report_header_style">padding-top:6.2mm; padding-left:8.2mm; padding-right:8.2mm;</t>
 
@@ -26,7 +25,7 @@
                 <t t-set="is_scor" t-value="o.partner_bank_id._is_iso11649_reference(o.payment_reference)"/>
 
                 <div class="swissqr_page_title">
-                    <h1>QR-bill for invoice <t t-esc="o.name"/></h1>
+                    <h1>QR-bill for invoice <t t-out="o.name"/></h1>
                 </div>
 
                 <div class="swissqr_content_v2">
@@ -48,7 +47,7 @@
                                 <span t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <span t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <br/>
-                                <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
+                                <span t-out="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
                                 <span t-field="o.company_id.country_id.code"/>
                                 <span t-field="o.company_id.zip"/>
@@ -63,13 +62,13 @@
                             </t>
                             <t t-if="is_qrr">
                                 <div class="swissqr_text content">
-                                    <span t-esc="o.space_qrr_reference(o.payment_reference)"/><br/>
+                                    <span t-out="o.space_qrr_reference(o.payment_reference)"/><br/>
                                     <br/>
                                 </div>
                             </t>
                             <t t-if="is_scor">
                                 <div class="swissqr_text content">
-                                    <span t-esc="o.space_scor_reference(o.payment_reference)"/><br/>
+                                    <span t-out="o.space_scor_reference(o.payment_reference)"/><br/>
                                     <br/>
                                 </div>
                             </t>
@@ -103,7 +102,7 @@
                                         <span>Amount</span>
                                     </div>
                                     <div class="content">
-                                        <span t-esc="formated_amount"/>
+                                        <span t-out="formated_amount"/>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +143,7 @@
                                             <span>Amount</span><br/>
                                         </div>
                                         <div class="content">
-                                            <span t-esc="formated_amount"/>
+                                            <span t-out="formated_amount"/>
                                         </div>
                                     </div>
                                 </div>
@@ -160,7 +159,7 @@
                                 <span t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <span t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
                                 <br/>
-                                <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
+                                <span t-out="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
                                 <span t-field="o.company_id.country_id.code"/>
                                 <span t-field="o.company_id.zip"/>
@@ -175,13 +174,13 @@
                             </t>
                             <t t-if="is_qrr">
                                 <div class="swissqr_text content">
-                                    <span t-esc="o.space_qrr_reference(o.payment_reference)"/><br/>
+                                    <span t-out="o.space_qrr_reference(o.payment_reference)"/><br/>
                                     <br/>
                                 </div>
                             </t>
                             <t t-if="is_scor">
                                 <div class="swissqr_text content">
-                                    <span t-esc="o.space_scor_reference(o.payment_reference)"/><br/>
+                                    <span t-out="o.space_scor_reference(o.payment_reference)"/><br/>
                                     <br/>
                                 </div>
                             </t>
@@ -192,7 +191,7 @@
                                     <span>Additional information</span>
                                 </div>
                                 <div class="swissqr_text content">
-                                    <span t-esc="additional_info"/><br/>
+                                    <span t-out="additional_info"/><br/>
                                     <br/>
                                 </div>
                             </t>

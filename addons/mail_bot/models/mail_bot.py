@@ -22,14 +22,14 @@ class MailBot(models.AbstractModel):
          :param command: the name of the called command if the logic is not triggered by a message_post
         """
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
-        if len(record) != 1 or values.get("author_id") == odoobot_id:
+        if len(record) != 1 or values.get("author_id") == odoobot_id or values.get("message_type") != "comment" and not command:
             return
         if self._is_bot_pinged(values) or self._is_bot_in_private_channel(record):
             body = values.get("body", "").replace(u'\xa0', u' ').strip().lower().strip(".!")
             answer = self._get_answer(record, body, values, command)
             if answer:
-                message_type = values.get('message_type', 'comment')
-                subtype_id = values.get('subtype_id', self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
+                message_type = 'comment'
+                subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
                 record.with_context(mail_create_nosubscribe=True).sudo().message_post(body=answer, author_id=odoobot_id, message_type=message_type, subtype_id=subtype_id)
 
     def _get_answer(self, record, body, values, command=False):

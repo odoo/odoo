@@ -124,7 +124,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.containsN(target, '.o_field_badge[name="display_name"]', 4);
-        assert.containsOnce(target, '.o_field_badge[name="display_name"] .bg-danger');
-        assert.containsOnce(target, '.o_field_badge[name="display_name"] .bg-warning');
+        assert.containsOnce(target, '.o_field_badge[name="display_name"] .text-bg-danger');
+        assert.containsOnce(target, '.o_field_badge[name="display_name"] .text-bg-warning');
     });
 });

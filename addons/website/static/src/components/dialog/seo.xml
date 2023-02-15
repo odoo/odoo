@@ -103,8 +103,8 @@
             <t t-if="props.isIndexed">
                 <div class="r"><t t-esc="props.title"/></div>
                 <div class="s">
-                    <div class="kv"><t t-esc="props.url"/></div>
-                    <div class="st"><t t-esc="description"/></div>
+                    <div class="kv mb-1 text-muted"><t t-esc="props.url"/></div>
+                    <div class="st text-black"><t t-esc="description"/></div>
                 </div>
             </t>
             <t t-else="">
@@ -143,7 +143,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text seo_name_pre" t-esc="seoNamePre"/>
                         </div>
-                        <input type="text" t-model="seoContext.seoName" class="form-control" t-att-placeholder="props.seoNameDefault" />
+                        <input type="text" class="form-control" t-att-placeholder="props.seoNameDefault"
+                               t-on-input="_updateInputValue" t-att-value="seoContext.seoName"/>
                         <div class="input-group-append" title="Unalterable unique identifier">
                             <span class="input-group-text seo_name_post" t-esc="seoNamePost"/>
                         </div>

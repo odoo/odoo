@@ -60,37 +60,30 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <group>
-                        <group name="leave_validation" id="time_off_requests">
-                            <h2>Time Off Requests</h2>
+                        <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
                             <field name="active" invisible="1"/>
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
-                            <field name="responsible_id" domain="[('share', '=', False)]"
+                            <field name="responsible_ids"
+                                widget="many2many_tags"
                                 attrs="{
-                                'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')],
-                                'required': ['|',('leave_validation_type', 'in', ['both', 'hr']), ('requires_allocation', '=', 'yes'), ('allocation_validation_type', '=', 'officer')]}"/>
-                            <field name="request_unit" widget="radio-inline"/>
+                                'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')]}"/>
+                            <field name="request_unit"/>
                             <field name="support_document" string="Allow To Attach Supporting Document" />
                             <field name="time_type" required="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group name="allocation_validation" id="allocation_requests">
-                        <h2>Allocation Requests</h2>
+                        <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
                             <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
                             <field name="employee_requests" widget="radio" attrs="{'invisible': [('requires_allocation', '=', 'no')]}"/>
                             <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('employee_requests', '=', 'no')]}"/>
                         </group>
                     </group>
-                    <group>
-                        <group id="payroll">
-                        </group>
-                    </group>
                     <group name="visual" id="visual" >
-                        <group colspan="4">
-                            <h2>Display Option</h2>
+                        <group colspan="2" string="Display Option">
                         </group>
-                        <group colspan="4">
+                        <group colspan="2">
                             <field name="color" widget="color_picker" />
-                            <field class="d-flex flex-wrap" name="icon_id" widget="hr_holidays_radio_image" options="{'horizontal': true}"/>
+                            <field class="o_time_off_icon_types d-flex flex-wrap" name="icon_id" widget="hr_holidays_radio_image" options="{'horizontal': true}"/>
                         </group>
                     </group>
                 </sheet>

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, clickEdit, clickSave, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -42,11 +42,6 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: '<form><field name="product_id" widget="hr_holidays_radio_image"/></form>',
         });
-        assert.containsOnce(target, ".o_field_widget.o_field_hr_holidays_radio_image");
-        assert.containsNone(target, ".o_radio_input");
-        assert.containsNone(target, "img");
-
-        await clickEdit(target);
 
         assert.containsOnce(target, ".o_field_widget.o_field_hr_holidays_radio_image");
         assert.containsN(target, ".o_radio_input", 3);
@@ -58,7 +53,7 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target);
         assert.containsOnce(target, ".o_field_widget.o_field_hr_holidays_radio_image");
-        assert.containsNone(target, ".o_radio_input");
-        assert.containsOnce(target, "img", 1);
+        assert.containsN(target, ".o_radio_input", 3);
+        assert.containsN(target, "img", 3);
     });
 });

@@ -134,4 +134,8 @@ class LoyaltyRule(models.Model):
     def _compute_amount(self, currency_to):
         self.ensure_one()
         return self.currency_id._convert(
-            self.minimum_amount, currency_to, self.company_id, fields.Date.today())
+            self.minimum_amount,
+            currency_to,
+            self.company_id or self.env.company,
+            fields.Date.today()
+        )

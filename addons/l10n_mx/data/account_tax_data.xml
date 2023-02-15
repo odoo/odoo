@@ -4,8 +4,8 @@
         <record id="tax9" model="account.tax.template">
             <field name="sequence" eval="10"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">IVA(0%) VENTAS</field>
-            <field name="description">IVA(0%)</field>
+            <field name="name">VAT(0%) sales</field>
+            <field name="description">VAT(0%)</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -37,8 +37,8 @@
         <record id="tax12" model="account.tax.template">
             <field name="sequence" eval="1"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">IVA(16%) VENTAS</field>
-            <field name="description">IVA(16%)</field>
+            <field name="name">VAT(16%) sales</field>
+            <field name="description">VAT(16%)</field>
             <field name="amount">16</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -70,8 +70,8 @@
         <record id="tax1" model="account.tax.template">
             <field name="sequence" eval="10"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">RET IVA FLETES 4%</field>
-            <field name="description">Retención IVA(-4%)</field>
+            <field name="name">VAT withholding 4%</field>
+            <field name="description">VAT withholding(-4%)</field>
             <field name="amount">-4</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -82,29 +82,63 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
+            }),
+        ]"/>
+        </record>
+        <record id="tax18" model="account.tax.template">
+            <field name="sequence" eval="20"/>
+            <field name="active" eval="0"/>
+            <field name="chart_template_id" ref="mx_coa"/>
+            <field name="name">RET IVA RESICO 1.25%</field>
+            <field name="description">Retención IVA(-1.25%)</field>
+            <field name="amount">-1.25</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="tax_group_iva_ret_1_25"/>
+            <field name="tax_exigibility">on_payment</field>
+            <field name="cash_basis_transition_account_id" ref="cuenta216_10"/>
+            <field name="l10n_mx_tax_type">Tasa</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
+            }),
+        ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
         </record>
         <record id="tax2" model="account.tax.template">
             <field name="sequence" eval="10"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">RET IVA ARRENDAMIENTO 10%</field>
-            <field name="description">Retención IVA(-10%)</field>
+            <field name="name">VAT withholding lease 10%</field>
+            <field name="description">VAT withholding(-10%)</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -115,29 +149,29 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
         </record>
         <record id="tax3" model="account.tax.template">
             <field name="sequence" eval="10"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">RET ISR ARRENDAMIENTO 10%</field>
-            <field name="description">Retención ISR(-10%)</field>
+            <field name="name">Withholding of lease income tax 10%</field>
+            <field name="description">Withholding income(-10%)</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -165,8 +199,8 @@
         <record id="tax5" model="account.tax.template">
             <field name="sequence" eval="10"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">RET ISR HONORARIOS 10%</field>
-            <field name="description">Retención ISR(-10%)</field>
+            <field name="name">Withholding of income tax on salaries 10%</field>
+            <field name="description">Withholding income salaries (-10%)</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -194,8 +228,8 @@
         <record id="tax7" model="account.tax.template">
             <field name="sequence" eval="10"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">RETENCION IVA ARRENDAMIENTO 10.67%</field>
-            <field name="description">Retención IVA(-10.67%)</field>
+            <field name="name">Vat withholding tax on leasing 10.67%</field>
+            <field name="description">Vat withholding(-10.67%)</field>
             <field name="amount">-10.67</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -206,29 +240,29 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
         </record>
         <record id="tax8" model="account.tax.template">
             <field name="sequence" eval="10"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">RETENCION IVA HONORARIOS 10.67%</field>
-            <field name="description">Retención IVA(-10.67%)</field>
+            <field name="name">Vat withholding fees 10.67%</field>
+            <field name="description">Vat withholding(-10.67%)</field>
             <field name="amount">-10.67</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -239,29 +273,29 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_ret')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('cuenta216_10_20'),
+                'minus_report_expression_ids': [ref('tax_report_mx_diot_withheld_tag')],
             }),
         ]"/>
         </record>
         <record id="tax13" model="account.tax.template">
             <field name="sequence" eval="10"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">IVA(0%) COMPRAS</field>
-            <field name="description">IVA(0%)</field>
+            <field name="name">VAT(0%) purchases</field>
+            <field name="description">VAT(0%)</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -272,7 +306,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_0')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_paid_0_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -282,7 +316,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_0')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_refunds_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -293,8 +327,8 @@
         <record id="tax14" model="account.tax.template">
             <field name="sequence" eval="1"/>
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">IVA(16%) COMPRAS</field>
-            <field name="description">IVA(16%)</field>
+            <field name="name">VAT(16%) purchases</field>
+            <field name="description">VAT(16%)</field>
             <field name="amount">16</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -305,7 +339,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_16')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_paid_16_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -315,7 +349,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_16')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_refunds_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -325,8 +359,8 @@
         </record>
         <record id="tax16" model="account.tax.template">
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">IVA(8%) COMPRAS</field>
-            <field name="description">IVA(8%)</field>
+            <field name="name">VAT(8%) purchases</field>
+            <field name="description">VAT(8%)</field>
             <field name="amount">8</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -338,7 +372,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_8')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_paid_8_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -348,7 +382,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'tag_ids': [ref('tag_diot_8')],
+                'plus_report_expression_ids': [ref('tax_report_mx_diot_refunds_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
@@ -358,8 +392,8 @@
         </record>
         <record id="tax17" model="account.tax.template">
             <field name="chart_template_id" ref="mx_coa"/>
-            <field name="name">IVA(8%) VENTAS</field>
-            <field name="description">IVA(8%)</field>
+            <field name="name">VAT(8%) sales</field>
+            <field name="description">VAT(8%)</field>
             <field name="amount">8</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>

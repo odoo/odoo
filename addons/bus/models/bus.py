@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import contextlib
 import datetime
 import json
 import logging
@@ -130,8 +131,9 @@ class ImDispatch(threading.Thread):
         outdated_channels = websocket._channels - channels
         self._clear_outdated_channels(websocket, outdated_channels)
         websocket.subscribe(channels, last)
-        if not self.is_alive():
-            self.start()
+        with contextlib.suppress(RuntimeError):
+            if not self.is_alive():
+                self.start()
 
     def unsubscribe(self, websocket):
         self._clear_outdated_channels(websocket, websocket._channels)
@@ -176,9 +178,9 @@ class ImDispatch(threading.Thread):
                 _logger.exception("Bus.loop error, sleep and retry")
                 time.sleep(TIMEOUT)
 
-dispatch = None
+# Partially undo a2ed3d3d5bdb6025a1ba14ad557a115a86413e65
+# IMDispatch has a lazy start, so we could initialize it anyway
+# And this avoids the Bus unavailable error messages
+dispatch = ImDispatch()
 stop_event = threading.Event()
-if not odoo.multi_process or odoo.evented:
-    # We only use the event dispatcher in threaded and gevent mode
-    dispatch = ImDispatch()
-    CommonServer.on_stop(stop_event.set)
+CommonServer.on_stop(stop_event.set)

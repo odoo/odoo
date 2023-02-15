@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="ResetProgramsButton" owl="1">
-        <span class="control-button">
+        <span class="control-button" t-att-class="{'disabled': _isDisabled()}">
             <i class="fa fa-star"></i>
             <span> </span>
             <span>Reset Programs</span>

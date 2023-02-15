@@ -22,15 +22,15 @@ class PosOrder(models.Model):
         values.setdefault('crm_team_id', session.config_id.crm_team_id.id)
         return values
 
-    @api.depends('pricelist_id.currency_id', 'date_order', 'company_id')
+    @api.depends('date_order', 'company_id')
     def _compute_currency_rate(self):
         for order in self:
             date_order = order.date_order or fields.Datetime.now()
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.pricelist_id.currency_id, order.company_id, date_order)
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, date_order)
 
     def _prepare_invoice_vals(self):
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
-        invoice_vals['team_id'] = self.crm_team_id
+        invoice_vals['team_id'] = self.crm_team_id.id
         addr = self.partner_id.address_get(['delivery'])
         invoice_vals['partner_shipping_id'] = addr['delivery']
         sale_orders = self.lines.mapped('sale_order_origin_id')
@@ -70,14 +70,14 @@ class PosOrder(models.Model):
             # track the waiting pickings
             waiting_picking_ids = set()
             for so_line in so_lines:
-                for stock_move in so_line.move_ids:
+                for stock_move in so_line.move_ids.group_id.stock_move_ids:
                     picking = stock_move.picking_id
                     if not picking.state in ['waiting', 'confirmed', 'assigned']:
                         continue
                     new_qty = so_line.product_uom_qty - so_line.qty_delivered
                     if float_compare(new_qty, 0, precision_rounding=stock_move.product_uom.rounding) <= 0:
                         new_qty = 0
-                    stock_move.product_uom_qty = so_line.product_uom._compute_quantity(new_qty, stock_move.product_uom, False)
+                    stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)
                     waiting_picking_ids.add(picking.id)
 
             def is_product_uom_qty_zero(move):

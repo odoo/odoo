@@ -62,6 +62,11 @@
         <t t-set="comment_lines" t-value="question_data['comment_line_ids']"/>
         <t t-set="graph_data" t-value="question_data['graph_data']"/>
         <t t-set="table_data" t-value="question_data['table_data']"/>
+        <t t-set="question_has_image_answers" t-value="any(answer.value_image_filename for answer in question.suggested_answer_ids)"/>
+        <!-- Line height for results tables with pagination (font size 1rem)
+             If table height greater than expected, adding a scrollbar -->
+        <t t-set="default_line_height" t-value="35"/> <!-- 1 line/answer -->
+        <t t-set="text_box_line_height" t-value="83"/> <!-- 3 lines/answer -->
 
         <div class="o_survey_results_question pb-5 border-bottom">
         <div class="row mb-3">
@@ -98,18 +103,17 @@
 
         <!-- Answers -->
         <t t-set="question_answered" t-value="question_data['answer_input_done_ids']"/>
-        <div t-if="not question_answered" class="alert alert-secondary m-3" role="alert">
-            No one answered this question.
+        <div t-if="not question_answered" class="o_survey_no_answers text-center fw-bold">
+            <p> No answers yet! </p>
         </div>
-
-        <t t-if="question_answered and question.question_type in ['text_box', 'char_box']"
-           t-call="survey.question_result_text"/>
-        <t t-elif="question_answered and question.question_type in ['numerical_box', 'date', 'datetime']"
-           t-call="survey.question_result_number_or_date_or_datetime"/>
+        <t t-elif="question.question_type in ['text_box', 'char_box']"
+            t-call="survey.question_result_text"/>
+        <t t-elif="question.question_type in ['numerical_box', 'date', 'datetime']"
+            t-call="survey.question_result_number_or_date_or_datetime"/>
         <t t-elif="question.question_type in ['simple_choice', 'multiple_choice']"
-           t-call="survey.question_result_choice"/>
+            t-call="survey.question_result_choice"/>
         <t t-elif="question.question_type in ['matrix']"
-           t-call="survey.question_result_matrix"/>
+            t-call="survey.question_result_matrix"/>
         </div>
     </template>
 
@@ -190,38 +194,43 @@
     </template>
 
     <template id="question_result_text" name="Question: text result (text_box, char_box)">
-        <table class="table table-hover table-sm" t-att-id="'survey_table_question_%d' % question.id">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>User Responses</th>
-                </tr>
-            </thead>
-            <tbody>
-                <t t-foreach="table_data" t-as="input_line">
-                    <tr t-if="not input_line.skipped" t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
-                        <td>
-                            <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
-                            <t t-else="">
-                                <a t-att-href="input_line.user_input_id.get_print_url()">
-                                    <t t-esc="input_line_index + 1"></t>
-                                </a>
-                            </t>
-                        </td>
-                        <td>
-                            <t t-if="question.question_type == 'text_box'">
-                                <span t-if="no_print_url" t-field="input_line.value_text_box" />
-                                <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_text_box"></a>
-                            </t>
-                            <t t-if="question.question_type == 'char_box'">
-                                <span t-if="no_print_url" t-field="input_line.value_char_box" />
-                                <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_char_box"></a>
-                            </t>
-                        </td>
+        <t t-set="non_skipped_records" t-value="list(filter(lambda record: not record.skipped, table_data))"/>
+        <t t-set="first_page_records_count" t-value="len(non_skipped_records) if len(non_skipped_records) &lt; page_record_limit else page_record_limit"/>
+        <t t-set="cell_height" t-value="text_box_line_height if question.question_type == 'text_box' else default_line_height"/>
+        <div t-attf-style="height: calc((#{cell_height}px * #{first_page_records_count}) + #{default_line_height}px + 16px);" class="overflow-auto">
+            <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % question.id">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User Responses</th>
                     </tr>
-                </t>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <t t-foreach="non_skipped_records" t-as="input_line">
+                        <tr t-att-class="'d-none' if not input_line in non_skipped_records[:page_record_limit] else ''">
+                            <td>
+                                <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                                <t t-else="">
+                                    <a t-att-href="input_line.user_input_id.get_print_url()">
+                                        <t t-esc="input_line_index + 1"></t>
+                                    </a>
+                                </t>
+                            </td>
+                            <td>
+                                <t t-if="question.question_type == 'text_box'">
+                                    <span t-if="no_print_url" t-field="input_line.value_text_box" />
+                                    <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_text_box"></a>
+                                </t>
+                                <t t-if="question.question_type == 'char_box'">
+                                    <span t-if="no_print_url" t-field="input_line.value_char_box" />
+                                    <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_char_box"></a>
+                                </t>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
         <t t-call="survey.question_table_pagination"/>
     </template>
 
@@ -300,36 +309,40 @@
                 </table>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'survey_data_question_%d' % question.id">
-                <table class="table table-hover table-sm" t-att-id="'survey_table_question_%d' % question.id">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>User Responses</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="table_data" t-as="input_line">
-                            <tr t-if="not input_line.skipped" t-att-class="'d-none' if input_line_index >= page_record_limit else ''">
-                                <td>
-                                    <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
-                                    <t t-else="">
-                                        <a t-att-href="input_line.user_input_id.get_print_url()">
-                                            <t t-esc="input_line_index + 1"></t>
-                                        </a>
-                                    </t>
-                                </td>
-                                <td>
-                                    <a t-if="question.question_type == 'numerical_box'" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_numerical_box"/>
-                                    <a t-if="question.question_type == 'date'" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_date"/>
-                                    <t t-if="question.question_type == 'datetime'">
-                                        <span t-if="no_print_url" t-field="input_line.value_datetime"/>
-                                        <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_datetime"></a>
-                                    </t>
-                                </td>
+                <t t-set="non_skipped_records" t-value="list(filter(lambda record: not record.skipped, table_data))"/>
+                <t t-set="first_page_records_count" t-value="len(non_skipped_records) if len(non_skipped_records) &lt; page_record_limit else page_record_limit"/>
+                <div t-attf-style="height: calc((#{default_line_height}px * #{first_page_records_count + 1}) + 16px);" class="overflow-auto">
+                    <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % question.id">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User Responses</th>
                             </tr>
-                        </t>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="non_skipped_records" t-as="input_line">
+                                <tr t-att-class="'d-none' if not input_line in non_skipped_records[:page_record_limit] else ''">
+                                    <td>
+                                        <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                                        <t t-else="">
+                                            <a t-att-href="input_line.user_input_id.get_print_url()">
+                                                <t t-esc="input_line_index + 1"></t>
+                                            </a>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <a t-if="question.question_type == 'numerical_box'" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_numerical_box"/>
+                                        <a t-if="question.question_type == 'date'" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_date"/>
+                                        <t t-if="question.question_type == 'datetime'">
+                                            <span t-if="no_print_url" t-field="input_line.value_datetime"/>
+                                            <a t-else="" t-att-href="input_line.user_input_id.get_print_url()" t-field="input_line.value_datetime"></a>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
                <t t-call="survey.question_table_pagination"/>
             </div>
         </div>
@@ -348,9 +361,9 @@
             </li>
             <li class="nav-item">
                 <a t-att-href="'#survey_data_question_%d' % question.id"
-                   t-att-aria-controls="'survey_data_question_%d' % question.id"
-                   t-attf-class="nav-link #{'active' if not question_answered else ''}"
-                   data-bs-toggle="tab" role="tab">
+                    t-att-aria-controls="'survey_data_question_%d' % question.id"
+                    t-attf-class="nav-link #{'active' if not question_answered else ''}"
+                    data-bs-toggle="tab" role="tab">
                     <i class="fa fa-list-alt me-1"/>Data
                 </a>
             </li>
@@ -366,11 +379,12 @@
                 <canvas/>
             </div>
             <div role="tabpanel" t-att-id="'survey_data_question_%d' % question.id"
-                 t-attf-class="tab-pane #{'active' if not question_answered else ''}">
+                t-attf-class="tab-pane #{'active' if not question_answered else ''}">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Answer</th>
+                            <th t-if="question_has_image_answers">Image</th>
                             <th>User Choice</th>
                             <th t-if="question.is_scored_question">Score</th>
                         </tr>
@@ -385,6 +399,11 @@
                                     <span t-else="" t-esc="choice_data['value']"/>
                                     <i t-if="question.is_scored_question and choice_data['suggested_answer'].is_correct" class="fa fa-check"/>
                                 </p>
+                            </td>
+                            <td t-if="question_has_image_answers">
+                               <div t-if="choice_data['suggested_answer'].value_image"
+                                    t-field="choice_data['suggested_answer'].value_image"
+                                    t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_max o_survey_answer_image", "alt-field": "name", "itemprop": "image"}'/>
                             </td>
                             <td class="o_survey_answer">
                                 <span t-esc="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
@@ -468,7 +487,7 @@
     </template>
 
     <template id="question_result_comments" name="Question: comments">
-        <table class="table table-hover table-sm" t-att-id="'survey_table_question_%d' % question.id">
+        <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % question.id">
             <thead>
                 <tr>
                     <th>#</th>
@@ -494,9 +513,11 @@
     </template>
 
     <template id="question_table_pagination" name="Survey: statistics table pagination">
-        <ul t-att-id="'pagination_%d' % question.id" class="pagination" t-att-data-question_id="question.id" t-att-data-record_limit="page_record_limit">
-            <t t-if="len(table_data) > page_record_limit">
-                <t t-set="total" t-value="ceil(len(table_data) / page_record_limit) + 1"/>
+        <ul t-att-id="'pagination_%d' % question.id" class="pagination mt-2" t-att-data-question_id="question.id"
+            t-att-data-record_limit="page_record_limit">
+            <t t-set="non_skipped_answers_count" t-value="len(question_data['answer_input_done_ids'])"/>
+            <t t-if="non_skipped_answers_count > page_record_limit">
+                <t t-set="total" t-value="ceil(non_skipped_answers_count / page_record_limit) + 1"/>
                 <li t-foreach="range(1, total)" t-as="num"
                     t-att-class="'page-item o_survey_js_results_pagination %s' % ('active' if num == 1 else '')">
                     <a href="#" class="page-link" t-esc="num"></a>

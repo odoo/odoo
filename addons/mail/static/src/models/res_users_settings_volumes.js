@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, one, Model } from "@mail/model";
 
 /**
  * Mirrors the fields of the python model res.users.settings.volumes.
  */
-registerModel({
-    name: 'res.users.settings.volumes',
+Model({
+    name: "res.users.settings.volumes",
     recordMethods: {
         /**
          * @private
@@ -25,28 +24,20 @@ registerModel({
         },
     },
     fields: {
-        guest_id: one('Guest', {
-            inverse: 'volumeSetting',
-        }),
-        id: attr({
-            identifying: true,
-        }),
-        partner_id: one('Partner', {
-            inverse: 'volumeSetting',
-        }),
-        user_setting_id: one('res.users.settings', {
-            inverse: 'volume_settings_ids',
+        guest_id: one("Guest", { inverse: "volumeSetting" }),
+        id: attr({ identifying: true }),
+        partner_id: one("Partner", { inverse: "volumeSetting" }),
+        user_setting_id: one("res.users.settings", {
+            inverse: "volume_settings_ids",
             readonly: true,
             required: true,
         }),
-        volume: attr({
-            default: 0.5,
-        }),
+        volume: attr({ default: 0.5 }),
     },
     onChanges: [
         {
-            dependencies: ['volume'],
-            methodName: '_onChangeVolume',
+            dependencies: ["volume"],
+            methodName: "_onChangeVolume",
         },
     ],
 });

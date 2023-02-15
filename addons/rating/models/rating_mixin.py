@@ -100,14 +100,13 @@ class RatingMixin(models.AbstractModel):
     def write(self, values):
         """ If the rated ressource name is modified, we should update the rating res_name too.
             If the rated ressource parent is changed we should update the parent_res_id too"""
-        with self.env.norecompute():
-            result = super(RatingMixin, self).write(values)
-            for record in self:
-                if record._rec_name in values:  # set the res_name of ratings to be recomputed
-                    res_name_field = self.env['rating.rating']._fields['res_name']
-                    self.env.add_to_compute(res_name_field, record.rating_ids)
-                if record._rating_get_parent_field_name() in values:
-                    record.rating_ids.sudo().write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
+        result = super(RatingMixin, self).write(values)
+        for record in self:
+            if record._rec_name in values:  # set the res_name of ratings to be recomputed
+                res_name_field = self.env['rating.rating']._fields['res_name']
+                self.env.add_to_compute(res_name_field, record.rating_ids)
+            if record._rating_get_parent_field_name() in values:
+                record.rating_ids.sudo().write({'parent_res_id': record[record._rating_get_parent_field_name()].id})
 
         return result
 
@@ -170,34 +169,24 @@ class RatingMixin(models.AbstractModel):
             rating = ratings[0]
         return rating.access_token
 
-    def rating_send_request(self, template, lang=False, subtype_id=False, force_send=True, composition_mode='comment',
-                            email_layout_xmlid=None):
+    def rating_send_request(self, template, lang=False, force_send=True):
         """ This method send rating request by email, using a template given
         in parameter.
 
          :param record template: a mail.template record used to compute the message body;
          :param str lang: optional lang; it can also be specified directly on the template
            itself in the lang field;
-         :param int subtype_id: optional subtype to use when creating the message; is
-           a note by default to avoid spamming followers;
          :param bool force_send: whether to send the request directly or use the mail
            queue cron (preferred option);
-         :param str composition_mode: comment (message_post) or mass_mail (template.send_mail);
-         :param str email_layout_xmlid: layout used to encapsulate the content when sending email;
         """
         if lang:
             template = template.with_context(lang=lang)
-        if subtype_id is False:
-            subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        if force_send:
-            self = self.with_context(mail_notify_force_send=True)  # default value is True, should be set to false if not?
-        for record in self:
-            record.message_post_with_template(
-                template.id,
-                composition_mode=composition_mode,
-                email_layout_xmlid=email_layout_xmlid if email_layout_xmlid is not None else 'mail.mail_notification_light',
-                subtype_id=subtype_id
-            )
+        self.with_context(mail_notify_force_send=force_send).message_post_with_source(
+            template,
+            email_layout_xmlid='mail.mail_notification_light',
+            force_send=force_send,
+            subtype_xmlid='mail.mt_note',
+        )
 
     def rating_apply(self, rate, token=None, rating=None, feedback=None,
                      subtype_xmlid=None, notify_delay_send=False):
@@ -234,7 +223,7 @@ class RatingMixin(models.AbstractModel):
             if subtype_xmlid is None:
                 subtype_id = self._rating_apply_get_default_subtype_id()
             else:
-                subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
+                subtype_id = False
             feedback = tools.plaintext2html(feedback or '')
 
             scheduled_datetime = (
@@ -260,6 +249,7 @@ class RatingMixin(models.AbstractModel):
                     rating_id=rating.id,
                     scheduled_date=scheduled_datetime,
                     subtype_id=subtype_id,
+                    subtype_xmlid=subtype_xmlid,
                 )
         return rating
 

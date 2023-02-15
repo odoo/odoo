@@ -3,8 +3,8 @@
 
     <t t-name="mail.CallSystrayMenuContainer" owl="1">
         <div class="CallSystrayMenuContainer">
-            <t t-if="messaging">
-                <CallSystrayMenu record="messaging.rtc.callSystrayMenu"/>
+            <t t-if="isLoaded">
+                <CallSystrayMenu t-if="messaging" record="messaging.rtc.callSystrayMenu"/>
             </t>
         </div>
     </t>

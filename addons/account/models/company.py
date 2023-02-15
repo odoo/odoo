@@ -71,7 +71,7 @@ class ResCompany(models.Model):
         ('included', 'On early payment'),
         ('excluded', 'Never'),
         ('mixed', 'Always (upon invoice)')
-    ], string='Cash Discount Tax Reduction', default='included', readonly=False)
+    ], string='Cash Discount Tax Reduction', readonly=False, store=True, compute='_compute_early_pay_discount_computation')
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
@@ -83,12 +83,12 @@ class ResCompany(models.Model):
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Gain Exchange Rate Account",
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+        domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+        domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
@@ -102,6 +102,7 @@ class ResCompany(models.Model):
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)
+    display_invoice_amount_total_words = fields.Boolean(string='Total amount of invoice in letters')
     account_use_credit_limit = fields.Boolean(
         string='Sales Credit Limit', help='Enable the use of credit limit on partners.')
 
@@ -286,22 +287,22 @@ class ResCompany(models.Model):
         :param unreconciled_statement_lines: The statement lines.
         :return: A dictionary representing a window action.
         """
-        statements = unreconciled_statement_lines.statement_id
+
         action = {
-            'name': _("Unreconciled Statements"),
+            'name': _("Unreconciled Transactions"),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.bank.statement',
+            'res_model': 'account.bank.statement.line',
             'context': {'create': False},
         }
-        if len(statements) == 1:
+        if len(unreconciled_statement_lines) == 1:
             action.update({
                 'view_mode': 'form',
-                'res_id': statements.id,
+                'res_id': unreconciled_statement_lines.id,
             })
         else:
             action.update({
                 'view_mode': 'list,form',
-                'domain': [('id', 'in', statements.ids)],
+                'domain': [('id', 'in', unreconciled_statement_lines.ids)],
             })
         return action
 
@@ -316,7 +317,7 @@ class ResCompany(models.Model):
                 error_msg = _('There are still unposted entries in the period you want to lock. You should either post or delete them.')
                 action_error = {
                     'view_mode': 'tree',
-                    'name': 'Unposted Entries',
+                    'name': _('Unposted Entries'),
                     'res_model': 'account.move',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', draft_entries.ids)],
@@ -671,3 +672,13 @@ class ResCompany(models.Model):
 
         return {'date_from': datetime(year=current_date.year, month=1, day=1).date(),
                 'date_to': datetime(year=current_date.year, month=12, day=31).date()}
+
+    @api.depends('country_code')
+    def _compute_early_pay_discount_computation(self):
+        for company in self:
+            if company.country_code == 'BE':
+                company.early_pay_discount_computation = 'mixed'
+            elif company.country_code == 'NL':
+                company.early_pay_discount_computation = 'excluded'
+            else:
+                company.early_pay_discount_computation = 'included'

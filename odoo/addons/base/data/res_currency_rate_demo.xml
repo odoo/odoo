@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- The Following currency rates are considered as on 1st Jan,2010 against EUR. -->
         <record forcecreate="0" id="rateUSD" model="res.currency.rate">
-            <field name="rate">1.2834</field>
+            <field name="rate">1.0</field>
             <field name="currency_id" ref="USD"/>
             <field name="name">2010-01-01</field>
-        </record>
-
-        <record id="rateUSDbis" model="res.currency.rate">
-            <field name="rate">1.5289</field>
-            <field name="currency_id" ref="USD"/>
-            <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
         <record forcecreate="0" id="rateVEF" model="res.currency.rate">
@@ -748,7 +741,7 @@
         <record forcecreate="0" id="rateEUR" model="res.currency.rate">
             <field name="currency_id" ref="EUR" />
             <field name="name">2010-01-01</field>
-            <field name="rate">1.0</field>
+            <field name="rate">1.2834</field>
         </record>
 
         <record forcecreate="0" id="rateVUV" model="res.currency.rate">

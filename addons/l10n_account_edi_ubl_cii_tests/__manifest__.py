@@ -24,9 +24,8 @@
         'l10n_be',
         'l10n_de',
         'l10n_nl',
+        'l10n_au',
     ],
     'installable': True,
-    'application': False,
-    'auto_install': False,
     'license': 'LGPL-3',
 }

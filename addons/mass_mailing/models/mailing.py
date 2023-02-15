@@ -53,7 +53,7 @@ class MassMailing(models.Model):
             })
 
         if 'contact_list_ids' in fields_list and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
-            if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
+            if vals.get('mailing_model_id') == self.env['ir.model']._get_id('mailing.list'):
                 mailing_list = self.env['mailing.list'].search([], limit=2)
                 if len(mailing_list) == 1:
                     vals['contact_list_ids'] = [(6, 0, [mailing_list.id])]
@@ -73,6 +73,7 @@ class MassMailing(models.Model):
         'Subject', required=True, translate=False)
     preview = fields.Char(
         'Preview', translate=False,
+        render_engine='inline_template', render_options={'post_process': True},
         help='Catchy preview sentence that encourages recipients to open this email.\n'
              'In most inboxes, this is displayed next to the subject.\n'
              'Keep it empty if you prefer the first characters of your email content to appear instead.')
@@ -104,9 +105,9 @@ class MassMailing(models.Model):
         help="Date at which the mailing was or will be sent.")
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False, sanitize=False)
-    body_html = fields.Html(string='Body converted to be sent by mail', render_engine='qweb', sanitize=False)
-
-   # used to determine if the mail body is empty
+    body_html = fields.Html(
+        string='Body converted to be sent by mail', sanitize=False,
+        render_engine='qweb', render_options={'post_process': True})
     is_body_empty = fields.Boolean(compute="_compute_is_body_empty")
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -153,6 +154,9 @@ class MassMailing(models.Model):
     mailing_model_name = fields.Char(
         string='Recipients Model Name',
         related='mailing_model_id.model', readonly=True, related_sudo=True)
+    mailing_on_mailing_list = fields.Boolean(
+        string='Based on Mailing Lists',
+        compute='_compute_mailing_on_mailing_list')
     mailing_domain = fields.Char(
         string='Domain',
         compute='_compute_mailing_domain', readonly=False, store=True)
@@ -257,8 +261,8 @@ class MassMailing(models.Model):
     def _compute_total(self):
         for mass_mailing in self:
             total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
-            if mass_mailing.ab_testing_pc < 100:
-                total = int(total / 100.0 * mass_mailing.ab_testing_pc)
+            if total and mass_mailing.ab_testing_enabled and mass_mailing.ab_testing_pc < 100:
+                total = max(int(total / 100.0 * mass_mailing.ab_testing_pc), 1)
             mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
@@ -381,6 +385,12 @@ class MassMailing(models.Model):
     def _compute_mailing_model_real(self):
         for mailing in self:
             mailing.mailing_model_real = 'mailing.contact' if mailing.mailing_model_id.model == 'mailing.list' else mailing.mailing_model_id.model
+
+    @api.depends('mailing_model_id')
+    def _compute_mailing_on_mailing_list(self):
+        mailing_list_model_id = self.env['ir.model']._get('mailing.list')
+        self.mailing_on_mailing_list = False
+        self.filtered(lambda m: m.mailing_model_id == mailing_list_model_id).mailing_on_mailing_list = True
 
     @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type', 'mailing_filter_id')
     def _compute_mailing_domain(self):
@@ -783,7 +793,7 @@ class MassMailing(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,kanban,form,calendar,graph',
             'res_model': 'mailing.mailing',
-            'domain': [('campaign_id', '=', self.campaign_id.id), ('ab_testing_enabled', '=', True)],
+            'domain': [('campaign_id', '=', self.campaign_id.id), ('ab_testing_enabled', '=', True), ('mailing_type', '=', self.mailing_type)],
         }
         if self.mailing_type == 'mail':
             action['views'] = [
@@ -980,7 +990,9 @@ class MassMailing(models.Model):
         # randomly choose a fragment
         if self.ab_testing_enabled and self.ab_testing_pc < 100:
             contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
-            topick = int(contact_nbr / 100.0 * self.ab_testing_pc)
+            topick = 0
+            if contact_nbr:
+                topick = max(int(contact_nbr / 100.0 * self.ab_testing_pc), 1)
             if self.campaign_id and self.ab_testing_enabled:
                 already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
             else:
@@ -988,7 +1000,7 @@ class MassMailing(models.Model):
             remaining = set(res_ids).difference(already_mailed)
             if topick > len(remaining) or (len(remaining) > 0 and topick == 0):
                 topick = len(remaining)
-            res_ids = random.sample(remaining, topick)
+            res_ids = random.sample(sorted(remaining), topick)
         return res_ids
 
     def _get_remaining_recipients(self):
@@ -1007,12 +1019,12 @@ class MassMailing(models.Model):
 
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
                     'email': email_to,
-                    'token': self._unsubscribe_token(res_id, email_to),
+                    'token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
             }
         )
@@ -1025,7 +1037,7 @@ class MassMailing(models.Model):
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
                     'email': email_to,
-                    'token': self._unsubscribe_token(res_id, email_to),
+                    'token': self._generate_mailing_recipient_token(res_id, email_to),
                 }),
             }
         )
@@ -1034,39 +1046,46 @@ class MassMailing(models.Model):
     def action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
-        # If no recipient is passed, we don't want to use the recipients of the first
-        # mailing for all the others
-        initial_res_ids = res_ids
         for mailing in self:
-            if not initial_res_ids:
-                res_ids = mailing._get_remaining_recipients()
-            if not res_ids:
+            context_user = mailing.user_id or mailing.write_uid or self.env.user
+            mailing = mailing.with_context(
+                **self.env['res.users'].with_user(context_user).context_get()
+            )
+            mailing_res_ids = res_ids or mailing._get_remaining_recipients()
+            if not mailing_res_ids:
                 raise UserError(_('There are no recipients selected.'))
 
             composer_values = {
+                'auto_delete': not mailing.keep_archives,
+                # email-mode: keep original message for routing
+                'auto_delete_keep_log': mailing.reply_to_mode == 'update',
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
-                'subject': mailing.subject,
-                'model': mailing.mailing_model_real,
-                'email_from': mailing.email_from,
-                'record_name': False,
                 'composition_mode': 'mass_mail',
-                'mass_mailing_id': mailing.id,
-                'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
-                'reply_to_force_new': mailing.reply_to_mode == 'new',
-                'template_id': None,
+                'email_from': mailing.email_from,
                 'mail_server_id': mailing.mail_server_id.id,
+                'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
+                'mass_mailing_id': mailing.id,
+                'model': mailing.mailing_model_real,
+                'record_name': False,
+                'reply_to_force_new': mailing.reply_to_mode == 'new',
+                'subject': mailing.subject,
+                'template_id': False,
             }
             if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to
 
-            composer = self.env['mail.compose.message'].with_context(active_ids=res_ids).create(composer_values)
-            extra_context = mailing._get_mass_mailing_context()
-            composer = composer.with_context(active_ids=res_ids, **extra_context)
+            composer = self.env['mail.compose.message'].with_context(
+                active_ids=mailing_res_ids,
+                default_composition_mode='mass_mail',
+                **mailing._get_mass_mailing_context()
+            ).create(composer_values)
+
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.current_thread(), 'testing', False)
-            composer._action_send_mail(auto_commit=auto_commit)
+            composer._action_send_mail(
+                auto_commit=not getattr(threading.current_thread(), 'testing', False)
+            )
             mailing.write({
                 'state': 'done',
                 'sent_date': fields.Datetime.now(),
@@ -1097,8 +1116,10 @@ class MassMailing(models.Model):
     def _process_mass_mailing_queue(self):
         mass_mailings = self.search([('state', 'in', ('in_queue', 'sending')), '|', ('schedule_date', '<', fields.Datetime.now()), ('schedule_date', '=', False)])
         for mass_mailing in mass_mailings:
-            user = mass_mailing.write_uid or self.env.user
-            mass_mailing = mass_mailing.with_context(**user.with_user(user).context_get())
+            context_user = mass_mailing.user_id or mass_mailing.write_uid or self.env.user
+            mass_mailing = mass_mailing.with_context(
+                **self.env['res.users'].with_user(context_user).context_get()
+            )
             if len(mass_mailing._get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
                 mass_mailing.action_send_mail()
@@ -1157,7 +1178,7 @@ class MassMailing(models.Model):
                 ** mailing._prepare_statistics_email_values(),
             }
             if mail_user.has_group('mass_mailing.group_mass_mailing_user'):
-                rendering_data['mailing_report_token'] = self._get_unsubscribe_token(mail_user.id)
+                rendering_data['mailing_report_token'] = self._generate_mailing_report_token(mail_user.id)
                 rendering_data['user_id'] = mail_user.id
 
             rendered_body = self.env['ir.qweb']._render(
@@ -1257,8 +1278,8 @@ class MassMailing(models.Model):
     def _get_pretty_mailing_type(self):
         return _('Emails')
 
-    def _get_unsubscribe_token(self, user_id):
-        """Generate a secure hash for this user. It allows to opt out from
+    def _generate_mailing_report_token(self, user_id):
+        """Generate a secure token for this user. It allows to opt out from
         mailing reports while keeping some security in that process. """
         return tools.hmac(self.env(su=True), 'mailing-report-deactivated', user_id)
 
@@ -1284,21 +1305,18 @@ class MassMailing(models.Model):
             mailing_domain = [('id', 'in', [])]
         return mailing_domain
 
-    def _unsubscribe_token(self, res_id, email):
-        """Generate a secure hash for this mailing list and parameters.
+    def _generate_mailing_recipient_token(self, document_id, email):
+        """Generate a secure token for a given mailing and recipient (based on
+        their email). This allows notably to unsubscribe from the mailing or
+        to blacklist their email entirely without need of a user account.
 
-        This is appended to the unsubscription URL and then checked at
-        unsubscription time to ensure no malicious unsubscriptions are
-        performed.
-
-        :param int res_id:
-            ID of the resource that will be unsubscribed.
-
-        :param str email:
-            Email of the resource that will be unsubscribed.
+        :param int document_id: ID of the business document on which mailing
+          is performed;
+        :param str email: recipient email, used to unsubscribe / blacklist;
         """
+        self.ensure_one()
         secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
-        token = (self.env.cr.dbname, self.id, int(res_id), tools.ustr(email))
+        token = (self.env.cr.dbname, self.id, int(document_id), tools.ustr(email))
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
 
     def _convert_inline_images_to_urls(self, body_html):

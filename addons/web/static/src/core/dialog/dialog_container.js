@@ -2,7 +2,7 @@
 
 import { ErrorHandler, WithEnv } from "../utils/components";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 export class DialogContainer extends Component {
     handleError(error, dialog) {
@@ -13,6 +13,9 @@ export class DialogContainer extends Component {
     }
 }
 DialogContainer.components = { ErrorHandler, WithEnv };
+DialogContainer.props = {
+    dialogs: Object,
+};
 //Legacy : The div wrapping the t-foreach, is placed to avoid owl to delete non-owl dialogs.
 //This div can be removed after removing all legacy dialogs.
 DialogContainer.template = xml`

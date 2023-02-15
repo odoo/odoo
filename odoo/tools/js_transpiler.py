@@ -15,6 +15,8 @@ import re
 import logging
 from functools import partial
 
+from odoo.tools.misc import OrderedSet
+
 _logger = logging.getLogger(__name__)
 
 def transpile_javascript(url, content):
@@ -27,7 +29,7 @@ def transpile_javascript(url, content):
     """
     module_path = url_to_module_path(url)
     legacy_odoo_define = get_aliased_odoo_define_content(module_path, content)
-
+    dependencies = OrderedSet()
     # The order of the operations does sometimes matter.
     steps = [
         convert_legacy_default_import,
@@ -39,14 +41,15 @@ def transpile_javascript(url, content):
         convert_unnamed_relative_import,
         convert_from_export,
         convert_star_from_export,
-        partial(convert_relative_require, url),
         remove_index,
+        partial(convert_relative_require, url, dependencies),
         convert_export_function,
         convert_export_class,
         convert_variable_export,
         convert_object_export,
         convert_default_export,
-        partial(wrap_with_odoo_define, module_path),
+        partial(wrap_with_qunit_module, url),
+        partial(wrap_with_odoo_define, module_path, dependencies),
     ]
     for s in steps:
         content = s(content)
@@ -94,13 +97,23 @@ def url_to_module_path(url):
     else:
         raise ValueError("The js file %r must be in the folder '/static/src' or '/static/lib' or '/static/test'" % url)
 
+def wrap_with_qunit_module(url, content):
+    """
+    Wraps the test file content (source code) with the QUnit.module('module_name', function() {...}).
+    """
+    if "tests" in url and re.search(r'QUnit\.(test|debug|only)', content):
+        match = URL_RE.match(url)
+        return f"""QUnit.module("{match["module"]}", function() {{{content}}});"""
+    else:
+        return content
 
-def wrap_with_odoo_define(module_path, content):
+def wrap_with_odoo_define(module_path, dependencies, content):
     """
     Wraps the current content (source code) with the odoo.define call.
+    It adds as a second argument the list of dependencies.
     Should logically be called once all other operations have been performed.
     """
-    return f"""odoo.define({module_path!r}, async function (require) {{
+    return f"""odoo.define({module_path!r}, {list(dependencies)}, async function (require) {{
 'use strict';
 let __exports = {{}};
 {content}
@@ -389,7 +402,7 @@ IMPORT_BASIC_RE = re.compile(r"""
     ^
     (?P<space>\s*)                      # space and empty line
     import\s+                           # import
-    (?P<object>{(\s*\w+\s*,?\s*)+})\s*  # { a, b, c as x, ... }
+    (?P<object>{[\s\w,]+})\s*           # { a, b, c as x, ... }
     from\s*                             # from
     (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
     """, re.MULTILINE | re.VERBOSE)
@@ -471,7 +484,7 @@ IMPORT_DEFAULT_AND_NAMED_RE = re.compile(r"""
     (?P<space>\s*)                                  # space and empty line
     import\s+                                       # import
     (?P<default_export>\w+)\s*,\s*                  # default variable name,
-    (?P<named_exports>{(\s*\w+\s*,?\s*)+})\s*       # { a, b, c as x, ... }
+    (?P<named_exports>{[\s\w,]+})\s*                # { a, b, c as x, ... }
     from\s*                                         # from
     (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
     """, re.MULTILINE | re.VERBOSE)
@@ -503,14 +516,15 @@ def convert_default_and_named_import(content):
 
 
 RELATIVE_REQUIRE_RE = re.compile(r"""
-    require\((?P<quote>["'`])([^@"'`]+)(?P=quote)\)  # require("some/path")
-    """, re.VERBOSE)
+    ^[^/*\n]*require\((?P<quote>[\"'`])([^\"'`]+)(?P=quote)\) # require("some/path")
+    """, re.MULTILINE | re.VERBOSE)
 
 
-def convert_relative_require(url, content):
+def convert_relative_require(url, dependencies, content):
     """
     Convert the relative path contained in a 'require()'
-    to the new path system (@module/path)
+    to the new path system (@module/path).
+    Adds all modules path to dependencies.
     .. code-block:: javascript
 
         // Relative path:
@@ -527,10 +541,13 @@ def convert_relative_require(url, content):
     """
     new_content = content
     for quote, path in RELATIVE_REQUIRE_RE.findall(new_content):
+        module_path = path
         if path.startswith(".") and "/" in path:
             pattern = rf"require\({quote}{path}{quote}\)"
-            repl = f'require("{relative_path_to_module_path(url, path)}")'
+            module_path = relative_path_to_module_path(url, path)
+            repl = f'require("{module_path}")'
             new_content = re.sub(pattern, repl, new_content)
+        dependencies.add(module_path)
     return new_content
 
 

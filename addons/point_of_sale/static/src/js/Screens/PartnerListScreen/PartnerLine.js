@@ -1,24 +1,14 @@
-odoo.define('point_of_sale.PartnerLine', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class PartnerLine extends PosComponent {
-        get highlight() {
-            return this._isPartnerSelected ? 'highlight' : '';
-        }
-        get shortAddress() {
-            const { partner } = this.props;
-            return [partner.zip, partner.city, partner.state_id[1]].filter(field => field).join(', ');
-        }
-        get _isPartnerSelected() {
-            return this.props.partner === this.props.selectedPartner;
-        }
+export class PartnerLine extends LegacyComponent {
+    static template = "PartnerLine";
+
+    get highlight() {
+        return this._isPartnerSelected ? "highlight" : "";
     }
-    PartnerLine.template = 'PartnerLine';
-
-    Registries.Component.add(PartnerLine);
-
-    return PartnerLine;
-});
+    get _isPartnerSelected() {
+        return this.props.partner === this.props.selectedPartner;
+    }
+}

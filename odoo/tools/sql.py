@@ -3,13 +3,14 @@
 
 # pylint: disable=sql-injection
 
+from binascii import crc32
 import logging
+import json
+import re
 import psycopg2
 from psycopg2.sql import SQL, Identifier
 
-import odoo.sql_db
 from collections import defaultdict
-from contextlib import closing
 
 _schema = logging.getLogger('odoo.schema')
 
@@ -127,7 +128,7 @@ def convert_column(cr, tablename, columnname, columntype):
 
 def convert_column_translatable(cr, tablename, columnname, columntype):
     """ Convert the column from/to a 'jsonb' translated field column. """
-    drop_index(cr, f"{tablename}_{columnname}_index", tablename)
+    drop_index(cr, make_index_name(tablename, columnname), tablename)
     if columntype == "jsonb":
         using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
     else:
@@ -275,6 +276,9 @@ def index_exists(cr, indexname):
     cr.execute("SELECT 1 FROM pg_indexes WHERE indexname=%s", (indexname,))
     return cr.rowcount
 
+def check_index_exist(cr, indexname):
+    assert index_exists(cr, indexname), f"{indexname} does not exist"
+
 def create_index(cr, indexname, tablename, expressions, method='btree', where=''):
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):
@@ -363,3 +367,79 @@ def increment_fields_skiplock(records, *fields):
     cr = records._cr
     cr.execute(query, {'ids': records.ids})
     return bool(cr.rowcount)
+
+
+def value_to_translated_trigram_pattern(value):
+    """ Escape value to match a translated field's trigram index content
+
+    The trigram index function jsonb_path_query_array("column_name", '$.*')::text
+    uses all translations' representations to build the indexed text. So the
+    original text needs to be JSON-escaped correctly to match it.
+
+    :param str value: value provided in domain
+    :return: a pattern to match the indexed text
+    """
+    if len(value) < 3:
+        # matching less than 3 characters will not take advantage of the index
+        return '%'
+
+    # apply JSON escaping to value; the argument ensure_ascii=False prevents
+    # json.dumps from escaping unicode to ascii, which is consistent with the
+    # index function jsonb_path_query_array("column_name", '$.*')::text
+    json_escaped = json.dumps(value, ensure_ascii=False)[1:-1]
+
+    # apply PG wildcard escaping to JSON-escaped text
+    wildcard_escaped = re.sub(r'(_|%|\\)', r'\\\1', json_escaped)
+
+    # add wildcards around it to get the pattern
+    return f"%{wildcard_escaped}%"
+
+
+def pattern_to_translated_trigram_pattern(pattern):
+    """ Escape pattern to match a translated field's trigram index content
+
+    The trigram index function jsonb_path_query_array("column_name", '$.*')::text
+    uses all translations' representations to build the indexed text. So the
+    original pattern needs to be JSON-escaped correctly to match it.
+
+    :param str pattern: value provided in domain
+    :return: a pattern to match the indexed text
+    """
+    # find the parts around (non-escaped) wildcard characters (_, %)
+    sub_patterns = re.findall(r'''
+        (
+            (?:.)*?           # 0 or more charaters including the newline character
+            (?<!\\)(?:\\\\)*  # 0 or even number of backslashes to promise the next wildcard character is not escaped
+        )
+        (?:_|%|$)             # a non-escaped wildcard charater or end of the string
+        ''', pattern, flags=re.VERBOSE | re.DOTALL)
+
+    # unescape PG wildcards from each sub pattern (\% becomes %)
+    sub_texts = [re.sub(r'\\(.|$)', r'\1', t, flags=re.DOTALL) for t in sub_patterns]
+
+    # apply JSON escaping to sub texts having at least 3 characters (" becomes \");
+    # the argument ensure_ascii=False prevents from escaping unicode to ascii
+    json_escaped = [json.dumps(t, ensure_ascii=False)[1:-1] for t in sub_texts if len(t) >= 3]
+
+    # apply PG wildcard escaping to JSON-escaped texts (% becomes \%)
+    wildcard_escaped = [re.sub(r'(_|%|\\)', r'\\\1', t) for t in json_escaped]
+
+    # replace the original wildcard characters by %
+    return f"%{'%'.join(wildcard_escaped)}%" if wildcard_escaped else "%"
+
+
+def make_identifier(identifier: str) -> str:
+    """ Return ``identifier``, possibly modified to fit PostgreSQL's identifier size limitation.
+    If too long, ``identifier`` is truncated and padded with a hash to make it mostly unique.
+    """
+    # if length exceeds the PostgreSQL limit of 63 characters.
+    if len(identifier) > 63:
+        # We have to fit a crc32 hash and one underscore into a 63 character
+        # alias. The remaining space we can use to add a human readable prefix.
+        return f"{identifier[:54]}_{crc32(identifier.encode()):08x}"
+    return identifier
+
+
+def make_index_name(table_name: str, column_name: str) -> str:
+    """ Return an index name according to conventions for the given table and column. """
+    return make_identifier(f"{table_name}__{column_name}_index")

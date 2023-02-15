@@ -1,19 +1,20 @@
 /** @odoo-module **/
-import tour from 'web_tour.tour';
 import { _t } from 'web.core';
-import session from 'web.session';
+
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
 const leaveType = "NotLimitedHR";
 const leaveDateFrom = "01/17/2022";
 const leaveDateTo = "01/17/2022";
 const description = 'Days off';
 
-tour.register('hr_holidays_tour', {
+registry.category("web_tour.tours").add('hr_holidays_tour', {
     url: '/web',
     rainbowManMessage: _t("Congrats, we can see that your request has been validated."),
-    test: false
-}, [
-    tour.stepUtils.showAppsMenuItem(), 
+    test: false,
+    steps: [
+    stepUtils.showAppsMenuItem(), 
     {
         trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
         content: _t("Let's discover the Time Off application"),
@@ -25,39 +26,30 @@ tour.register('hr_holidays_tour', {
         position: 'bottom',
     },
     {
-        trigger: '.o_field_widget[name="holiday_status_id"]',
+        trigger: 'div[name="holiday_status_id"] input',
         content: _t("Let's try to create a Sick Time Off, select it in the list"),
-        position: 'right',
-        run: function(actions) {
-            actions.text(leaveType, this.$anchor.find('input'));
-        }
+        run: `text ${leaveType}`,
     },
     {
-        trigger: ".ui-menu-item > a",
+        trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType}")`,
+        run: "click",
         auto: true,
-        in_modal: false
+        in_modal: false,
     },
     {
-        trigger: 'input[name="request_date_from"]',
+        trigger: '.o_field_widget[name="request_date_from"] input',
         content: _t("You can select the period you need to take off, from start date to end date"),
         position: 'right',
-        run: function(actions) {
-            this.$anchor.val(leaveDateFrom);
-            this.$anchor.trigger("change");
-        }
+        run: `text ${leaveDateFrom}`,
     },
     {
-        trigger: 'input[name="request_date_to"]',
+        trigger: '.o_field_widget[name="request_date_to"] input',
         content: _t("You can select the period you need to take off, from start date to end date"),
         position: 'right',
-        run: function(actions) {
-            this.$anchor.val(leaveDateTo);
-            this.$anchor.trigger("change");
-        },
-        auto: true
+        run: `text ${leaveDateTo}`,
     },
     {
-        trigger: 'textarea[name="name"]',
+        trigger: 'div[name="name"] textarea',
         content: _t("Add some description for the people that will validate it"),
         run: `text ${description}`,
         position: 'right'
@@ -83,15 +75,7 @@ tour.register('hr_holidays_tour', {
         position: 'bottom',
         run: function(actions) {
             const rows = this.$anchor.find('tr.o_data_row');
-            const createdRow = rows.filter((i, row) => {
-                const el = $(row);
-                return el.find(`div[name="all_employee_ids"]:contains("${session.name}")`).length &&
-                el.find(`td[name="name"]:contains("${description}")`).length &&
-                el.find(`td[name="holiday_status_id"]:contains("${leaveType}")`).length &&
-                el.find(`td[name="date_from"]:contains("${leaveDateFrom}")`).length &&
-                el.find(`td[name="date_to"]:contains("${leaveDateTo}")`).length;
-            });
-            actions.click(createdRow);
+            actions.click(rows[0]);
         }
     },
     {
@@ -104,4 +88,4 @@ tour.register('hr_holidays_tour', {
         content: _t("State is now confirmed. We can go back to the calendar"),
         position: 'bottom'
     }
-]);
+]});

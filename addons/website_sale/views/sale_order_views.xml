@@ -60,6 +60,10 @@
                     class="btn-primary"
                     attrs="{'invisible': ['|', ('is_abandoned_cart', '=', False), ('cart_recovery_email_sent', '=', True)]}"/>
             </xpath>
+            <xpath expr="//button[@name='action_quotation_send' and @states='sent,sale']" position="after">
+                <button name="action_quotation_send" string="Send by Email" type="object"
+                    attrs="{'invisible': ['|', '|', ('is_abandoned_cart', '=', False), ('cart_recovery_email_sent', '=', True), ('state', '!=', 'draft')]}"/>
+            </xpath>
         </field>
     </record>
 
@@ -215,9 +219,6 @@
     <menuitem id="menu_catalog_products" name="Products"
         action="product_template_action_website"
         parent="menu_catalog" sequence="1"/>
-    <menuitem id="product_catalog_variants" name="Product Variants"
-        action="product.product_normal_action"
-        parent="menu_catalog" groups="product.group_product_variant" sequence="2"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists"
         action="product.product_pricelist_action2"
         parent="menu_catalog" groups="product.group_product_pricelist" sequence="3"/>
@@ -227,6 +228,12 @@
     <menuitem id="menu_product_attribute_action"
         action="product.attribute_action"
         parent="menu_catalog"  groups="product.group_product_variant" sequence="5"/>
+    <menuitem id="product_catalog_product_tags"
+              name="Product Tags"
+              action="product_public_tags_action"
+              parent="menu_catalog"
+              groups="base.group_no_one"
+    />
 
     <!-- Reporting sub-menus -->
     <menuitem id="menu_report_sales" name="Online Sales"
@@ -242,8 +249,8 @@
         action="payment.action_payment_token"
         groups="base.group_no_one"
         parent="menu_ecommerce_settings"/>
-    <menuitem id="menu_ecommerce_payment_icons"
-        action="payment.action_payment_icon"
+    <menuitem id="menu_ecommerce_payment_methods"
+        action="payment.action_payment_method"
         groups="base.group_no_one"
         parent="menu_ecommerce_settings"/>
     <menuitem id="menu_ecommerce_payment_transactions"

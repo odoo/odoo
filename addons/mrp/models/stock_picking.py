@@ -21,6 +21,10 @@ class StockPickingType(models.Model):
         help="Allow to create new lot/serial numbers for the components",
         default=False,
     )
+    use_auto_consume_components_lots = fields.Boolean(
+        string="Consume Reserved Lots/Serial Numbers automatically",
+        help="Allow automatic consumption of tracked components that are reserved",
+    )
 
     def _get_mo_count(self):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')

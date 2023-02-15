@@ -4,7 +4,7 @@ import spreadsheet from "./o_spreadsheet_extended";
 const { load, CorePlugin, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 4;
+export const ODOO_VERSION = 5;
 
 const MAP = {
     PIVOT: "ODOO.PIVOT",
@@ -18,7 +18,7 @@ const MAP = {
 const dmyRegex = /^([0|1|2|3][1-9])\/(0[1-9]|1[0-2])\/(\d{4})$/i;
 
 export function migrate(data) {
-    let _data = load(data);
+    let _data = load(data, !!odoo.debug);
     const version = _data.odooVersion || 0;
     if (version < 1) {
         _data = migrate0to1(_data);
@@ -31,6 +31,9 @@ export function migrate(data) {
     }
     if (version < 4) {
         _data = migrate3to4(_data);
+    }
+    if (version < 5) {
+        _data = migrate4to5(_data);
     }
     return _data;
 }
@@ -64,7 +67,7 @@ function migrate1to2(data) {
             if (cell.content && cell.content.startsWith("=")) {
                 try {
                     cell.content = migratePivotDaysParameters(cell.content);
-                } catch (_) {
+                } catch {
                     continue;
                 }
             }
@@ -126,6 +129,66 @@ function migrate3to4(data) {
         for (const pivot of Object.values(data.pivots)) {
             pivot.name = pivot.name || pivot.model;
         }
+    }
+    return data;
+}
+
+function migrate4to5(data) {
+    for (const filter of data.globalFilters || []) {
+        for (const [id, fm] of Object.entries(filter.pivotFields || {})) {
+            if (!(data.pivots && id in data.pivots)) {
+                delete filter.pivotFields[id];
+                continue;
+            }
+            if (!data.pivots[id].fieldMatching) {
+                data.pivots[id].fieldMatching = {};
+            }
+            data.pivots[id].fieldMatching[filter.id] = { chain: fm.field, type: fm.type };
+            if ("offset" in fm) {
+                data.pivots[id].fieldMatching[filter.id].offset = fm.offset;
+            }
+        }
+        delete filter.pivotFields;
+
+        for (const [id, fm] of Object.entries(filter.listFields || {})) {
+            if (!(data.lists && id in data.lists)) {
+                delete filter.listFields[id];
+                continue;
+            }
+            if (!data.lists[id].fieldMatching) {
+                data.lists[id].fieldMatching = {};
+            }
+            data.lists[id].fieldMatching[filter.id] = { chain: fm.field, type: fm.type };
+            if ("offset" in fm) {
+                data.lists[id].fieldMatching[filter.id].offset = fm.offset;
+            }
+        }
+        delete filter.listFields;
+
+        const findFigureFromId = (id) => {
+            for (const sheet of data.sheets) {
+                const fig = sheet.figures.find((f) => f.id === id);
+                if (fig) {
+                    return fig;
+                }
+            }
+            return undefined;
+        };
+        for (const [id, fm] of Object.entries(filter.graphFields || {})) {
+            const figure = findFigureFromId(id);
+            if (!figure) {
+                delete filter.graphFields[id];
+                continue;
+            }
+            if (!figure.data.fieldMatching) {
+                figure.data.fieldMatching = {};
+            }
+            figure.data.fieldMatching[filter.id] = { chain: fm.field, type: fm.type };
+            if ("offset" in fm) {
+                figure.data.fieldMatching[filter.id].offset = fm.offset;
+            }
+        }
+        delete filter.graphFields;
     }
     return data;
 }

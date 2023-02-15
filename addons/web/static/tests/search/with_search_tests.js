@@ -18,7 +18,7 @@ import {
     toggleMenuItem,
 } from "./helpers";
 
-const { Component, onWillUpdateProps, onWillStart, useState, xml } = owl;
+import { Component, onWillUpdateProps, onWillStart, useState, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 

@@ -3,11 +3,11 @@
 
     <t t-name="mail.EmojiGridRowView" owl="1">
         <div class="o_EmojiGridRowView">
-            <EmojiGridSectionView t-if="emojiGridRowView.sectionView" record="emojiGridRowView.sectionView"/>
+            <div t-if="hasSection" class="o_EmojiGridSectionView d-flex justify-content-center align-items-end mx-2 text-truncate">
+                <span t-out="category.displayName"/>
+            </div>
             <t t-else="">
-                <t t-foreach="emojiGridRowView.items" t-as="item" t-key="item">
-                    <EmojiGridItemView className="'o_EmojiGridRowView_item'" record="item"/>
-                </t>
+                <EmojiView t-foreach="items" t-as="item" t-key="item" className="'o_EmojiGridRowView_item'" record="item"/>
             </t>
         </div>
     </t>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_analytic_plan_form_view" model="ir.ui.view">
+        <field name="name">account.analytic.plan.form</field>
+        <field name="model">account.analytic.plan</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Plans">
+                <field name="company_id" invisible="1"/>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_children_plans" type="object" class="oe_stat_button" icon="fa-bars">
+                            <field string="Subplans" name="children_count" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_analytical_accounts" type="object" class="oe_stat_button" icon="fa-bars">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="all_account_count"/></span>
+                                <span class="o_stat_text">Analytic Accounts</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="parent_id"/>
+                            <field name="default_applicability"
+                                   attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                        <field name="color" widget="color_picker"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Applicability" name="applicability"
+                              attrs="{'invisible': [('parent_id', '!=', False)]}">
+                            <field name="applicability_ids">
+                                <tree editable="bottom">
+                                    <field name="business_domain"/>
+                                    <field name="applicability"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_analytic_plan_tree_view" model="ir.ui.view">
+        <field name="name">account.analytic.plan.tree</field>
+        <field name="model">account.analytic.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Plans" multi_edit="True">
+                <field name="name"/>
+                <field name="default_applicability"/>
+                <field name="color" widget="color_picker"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_analytic_plan_action" model="ir.actions.act_window">
+        <field name="name">Analytic Plans</field>
+        <field name="res_model">account.analytic.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('account_analytic_plan_form_view')})]"/>
+        <field name="domain">[('parent_id', '=', False)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+              Click to add a new analytic account plan.
+          </p>
+        </field>
+    </record>
+</odoo>

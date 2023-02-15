@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { makeDeferred } from "@mail/utils/deferred";
+
 /**
  * Module that contains registry for adding new models or patching models.
  * Useful for model manager in order to generate models.
@@ -11,6 +13,8 @@
 
 export const registry = new Map();
 export const IS_RECORD = Symbol("Record");
+
+const patches = [];
 
 /**
  * Concats `contextMessage` at the beginning of any error raising when calling
@@ -31,23 +35,38 @@ function addContextToErrors(func, contextMessage) {
 }
 
 /**
+ * Adds the provided `componentSetup` to the model specified by the `modelName`.
+ *
+ * @param {string} modelName The name of the model to which to add the
+ * componentSetup function.
+ * @param {Function} componentSetup The componentSetup function to be added.
+ */
+function addComponentSetup(modelName, componentSetup) {
+    if (typeof componentSetup !== "function") {
+        throw new Error(
+            `Cannot add componentSetup to model ${modelName}: componentSetup must be a function (current type: "${typeof componentSetup}").`
+        );
+    }
+    registry.get(modelName).set("componentSetup", componentSetup);
+}
+
+/**
  * Adds the provided fields to the model specified by the `modelName`.
  *
  * @param {string} modelName The name of the model to which to add the fields.
  * @param {Object} fields Fields to be added. key = field name, value = field attributes
  */
-export function addFields(modelName, fields) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add fields to model "${modelName}": model must be registered before fields can be added.`);
-    }
+function addFields(modelName, fields) {
     const definition = registry.get(modelName);
     for (const [fieldName, field] of Object.entries(fields)) {
         addContextToErrors(() => {
             assertNameIsAvailableOnRecords(fieldName, definition);
         }, `Cannot add field "${fieldName}" to model "${modelName}": `);
-        definition.get('fields').set(fieldName, field);
+        definition.get("fields").set(fieldName, field);
     }
 }
+
+const validHookNames = ["_created", "_willDelete"];
 
 /**
  * Adds the provided hooks to the model specified by the `modelName`.
@@ -55,18 +74,18 @@ export function addFields(modelName, fields) {
  * @param {string} modelName The name of the model to which to add the hooks.
  * @param {Object} hooks Hooks to be added. key = name, value = handler
  */
-export function addLifecycleHooks(modelName, hooks) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add lifecycle hooks to model "${modelName}": model must be registered before lifecycle hooks can be added.`);
-    }
+function addLifecycleHooks(modelName, hooks) {
     const definition = registry.get(modelName);
     for (const [name, handler] of Object.entries(hooks)) {
         addContextToErrors(() => {
             assertIsFunction(handler);
-            assertIsValidHookName(name);
-            assertSectionDoesNotHaveKey('lifecycleHooks', name, definition);
+            if (!validHookNames.includes(name)) {
+                throw new Error(
+                    `unsupported hook name. Possible values: ${validHookNames.join(", ")}.`
+                );
+            }
         }, `Cannot add lifecycle hook "${name}" to model "${modelName}": `);
-        definition.get('lifecycleHooks').set(name, handler);
+        definition.get("lifecycleHooks").set(name, handler);
     }
 }
 
@@ -80,17 +99,14 @@ export function addLifecycleHooks(modelName, hooks) {
  * @param {string} modelName The name of the model to which to add the model getters.
  * @param {Object} modelGetters Model getters to be added. key = name, value = getter
  */
-export function addModelGetters(modelName, modelGetters) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add record getters to model "${modelName}": model must be registered before record getters can be added.`);
-    }
+function addModelGetters(modelName, modelGetters) {
     const definition = registry.get(modelName);
     for (const [getterName, getter] of Object.entries(modelGetters)) {
         addContextToErrors(() => {
             assertIsFunction(getter);
             assertNameIsAvailableOnModel(getterName, definition);
         }, `Cannot add model getter "${getterName}" to model "${modelName}": `);
-        definition.get('modelGetters').set(getterName, getter);
+        definition.get("modelGetters").set(getterName, getter);
     }
 }
 
@@ -100,17 +116,14 @@ export function addModelGetters(modelName, modelGetters) {
  * @param {string} modelName The name of the model to which to add the model methods.
  * @param {Object} modelMethods Model methods to be added. key = name, value = method
  */
-export function addModelMethods(modelName, modelMethods) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add model methods to model "${modelName}": model must be registered before model methods can be added.`);
-    }
+function addModelMethods(modelName, modelMethods) {
     const definition = registry.get(modelName);
     for (const [name, method] of Object.entries(modelMethods)) {
         addContextToErrors(() => {
             assertIsFunction(method);
             assertNameIsAvailableOnModel(name, definition);
         }, `Cannot add model method "${name}" to model "${modelName}": `);
-        definition.get('modelMethods').set(name, method);
+        definition.get("modelMethods").set(name, method);
     }
 }
 
@@ -120,33 +133,51 @@ export function addModelMethods(modelName, modelMethods) {
  * @param {string} modelName The name of the model to which to add onChanges.
  * @param {Object[]} onChanges Array of onChange definitions.
  */
-export function addOnChanges(modelName, onChanges) {
+function addOnChanges(modelName, onChanges) {
     addContextToErrors(() => {
-        if (!registry.has(modelName)) {
-            throw new Error(`model must be registered before onChanges can be added.`);
-        }
         for (const onChange of onChanges) {
-            if (!Object.prototype.hasOwnProperty.call(onChange, 'dependencies')) {
-                throw new Error("at least one onChange definition lacks dependencies (the list of fields to be watched for changes).");
+            if (!Object.prototype.hasOwnProperty.call(onChange, "dependencies")) {
+                throw new Error(
+                    "at least one onChange definition lacks dependencies (the list of fields to be watched for changes)."
+                );
             }
-            if (!Object.prototype.hasOwnProperty.call(onChange, 'methodName')) {
-                throw new Error("at least one onChange definition lacks a methodName (the name of the method to be called on change).");
+            if (!Object.prototype.hasOwnProperty.call(onChange, "methodName")) {
+                throw new Error(
+                    "at least one onChange definition lacks a methodName (the name of the method to be called on change)."
+                );
             }
-            if (!Array.isArray(onChange.dependencies) || onChange.dependencies.some(d => typeof d !== 'string')) {
+            if (!Array.isArray(onChange.dependencies)) {
                 throw new Error("onChange dependencies must be an array of strings.");
             }
-            if (typeof onChange.methodName !== 'string') {
+            if (typeof onChange.methodName !== "string") {
                 throw new Error("onChange methodName must be a string.");
             }
-            const allowedKeys = ['dependencies', 'methodName'];
+            const allowedKeys = ["dependencies", "methodName"];
             for (const key of Object.keys(onChange)) {
                 if (!allowedKeys.includes(key)) {
-                    throw new Error(`unknown key "${key}" in onChange definition. Allowed keys: ${allowedKeys.join(", ")}.`);
+                    throw new Error(
+                        `unknown key "${key}" in onChange definition. Allowed keys: ${allowedKeys.join(
+                            ", "
+                        )}.`
+                    );
                 }
             }
+            // paths of dependencies are splitted now to avoid having to do it
+            // each time the path is followed.
+            const splittedDependencies = [];
+            for (const dependency of onChange.dependencies) {
+                if (typeof dependency !== "string") {
+                    throw new Error("onChange dependencies must be an array of strings.");
+                }
+                splittedDependencies.push(dependency.split("."));
+            }
+            onChange.dependencies = splittedDependencies;
         }
     }, `Cannot add onChanges to model "${modelName}": `);
-    registry.get(modelName).get('onChanges').push(...onChanges);
+    registry
+        .get(modelName)
+        .get("onChanges")
+        .push(...onChanges);
 }
 
 /**
@@ -155,17 +186,14 @@ export function addOnChanges(modelName, onChanges) {
  * @param {string} modelName The name of the model to which to add the methods.
  * @param {Object} recordMethods Record methods to be added. key = name, value = method
  */
-export function addRecordMethods(modelName, recordMethods) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add record methods to model "${modelName}": model must be registered before record methods can be added.`);
-    }
+function addRecordMethods(modelName, recordMethods) {
     const definition = registry.get(modelName);
     for (const [name, method] of Object.entries(recordMethods)) {
         addContextToErrors(() => {
             assertIsFunction(method);
             assertNameIsAvailableOnRecords(name, definition);
         }, `Cannot add record method "${name}" to model "${modelName}": `);
-        definition.get('recordMethods').set(name, method);
+        definition.get("recordMethods").set(name, method);
     }
 }
 
@@ -179,17 +207,14 @@ export function addRecordMethods(modelName, recordMethods) {
  * @param {string} modelName The name of the model to which to add the record getters.
  * @param {Object} recordGetters Record getters to be added. key = name, value = getter
  */
-export function addRecordGetters(modelName, recordGetters) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add record getters to model "${modelName}": model must be registered before record getters can be added.`);
-    }
+function addRecordGetters(modelName, recordGetters) {
     const definition = registry.get(modelName);
     for (const [getterName, getter] of Object.entries(recordGetters)) {
         addContextToErrors(() => {
             assertIsFunction(getter);
             assertNameIsAvailableOnRecords(getterName, definition);
         }, `Cannot add record getter "${getterName}" to model "${modelName}": `);
-        definition.get('recordGetters').set(getterName, getter);
+        definition.get("recordGetters").set(getterName, getter);
     }
 }
 
@@ -200,49 +225,8 @@ export function addRecordGetters(modelName, recordGetters) {
  * @throws {Error} when `toAssert` is not typeof function.
  */
 function assertIsFunction(toAssert) {
-    if (typeof toAssert !== 'function') {
+    if (typeof toAssert !== "function") {
         throw new Error(`"${toAssert}" must be a function`);
-    }
-}
-
-/**
- * Asserts that `name` is a valid hook name.
- *
- * @param {string} name The hook name to check.
- * @throws {Error} if name is not an existing hook name.
- */
-function assertIsValidHookName(name) {
-    const validHookNames = new Set(['_created', '_willDelete']);
-    if (!validHookNames.has(name)) {
-        throw new Error("invalid hook name.");
-    }
-}
-
-/**
- * Asserts that the provided `key` is not already defined within the section
- * `sectionName` on the model `modelDefinition`.
- *
- * @param {string} sectionName The section of the `modelDefinition` to check into.
- * @param {string} key The key to check for.
- * @param {Object} modelDefinition The definition of the model to check.
- */
-function assertSectionDoesNotHaveKey(sectionName, key, modelDefinition) {
-    if (modelDefinition.get(sectionName).has(key)) {
-        throw new Error(`"${key}" is already defined on "${sectionName}".`);
-    }
-}
-
-/**
- * Asserts that the provided `key` has already been defined within the section
- * `sectionName` on the model `modelDefinition`.
- *
- * @param {string} sectionName The section of the `modelDefinition` to check into.
- * @param {string} key The key to check for.
- * @param {Object} modelDefinition The definition of the model to check.
- */
-function assertSectionHasKey(sectionName, key, modelDefinition) {
-    if (!modelDefinition.get(sectionName).has(key)) {
-        throw new Error(`"${key}" is not defined yet on "${sectionName}".`);
     }
 }
 
@@ -254,7 +238,7 @@ function assertSectionHasKey(sectionName, key, modelDefinition) {
  * @throws {Error} when `name` is already used as a key on the model.
  */
 function assertNameIsAvailableOnModel(name, modelDefinition) {
-    if (['modelGetters', 'modelMethods'].some(x => modelDefinition.get(x).has(name))) {
+    if (["modelGetters", "modelMethods"].some((x) => modelDefinition.get(x).has(name))) {
         throw new Error(`there is already a key with this name on the model.`);
     }
 }
@@ -267,149 +251,173 @@ function assertNameIsAvailableOnModel(name, modelDefinition) {
  * @throws {Error} when `name` is already used as a key on the records.
  */
 function assertNameIsAvailableOnRecords(name, modelDefinition) {
-    if (['fields', 'recordGetters', 'recordMethods'].some(x => modelDefinition.get(x).has(name))) {
+    if (
+        ["fields", "recordGetters", "recordMethods"].some((x) => modelDefinition.get(x).has(name))
+    ) {
         throw new Error(`there is already a key with this name on the records.`);
     }
 }
 
-/**
- * Overrides the fields of the model specified by the `modelName`.
- *
- * @param {string} modelName The name of the model to which to apply the patch.
- * @param {Object} fields Fields to be overriden. key = name, value = field attributes.
- */
-export function patchFields(modelName, fields) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot patch fields on model "${modelName}": model must be registered before being patched.`);
+function patchComponentSetup({ name, componentSetup }) {
+    const originalComponentSetup = registry.get(name).get("componentSetup");
+    if (!originalComponentSetup) {
+        addComponentSetup(name, componentSetup);
+        return;
     }
-    const definition = registry.get(modelName);
-    for (const [fieldName, attributes] of Object.entries(fields)) {
-        const fieldDefinition = definition.get('fields').get(fieldName);
-        if (!fieldDefinition) {
-            throw new Error(`Cannot patch field "${fieldName}" on "${modelName}": the field does not exist.`);
-        }
-        for (const [attributeName, attributeData] of Object.entries(attributes)) {
-            switch (attributeName) {
-                case 'compute':
-                    addContextToErrors(() => {
-                        if (!fieldDefinition.compute) {
-                            throw new Error(`not a computed field.`);
+    if (typeof componentSetup !== "function") {
+        throw new Error(
+            `Cannot patch componentSetup of model ${name}: componentSetup must be a function (current type: "${typeof componentSetup}").`
+        );
+    }
+    registry.get(name).set("componentSetup", function () {
+        this._super = originalComponentSetup;
+        return componentSetup.call(this);
+    });
+}
+
+function patchFields(patch) {
+    const newFieldsToAdd = Object.create(null);
+    for (const [fieldName, fieldData] of Object.entries(patch.fields)) {
+        const originalFieldDefinition = registry.get(patch.name).get("fields").get(fieldName);
+        if (!originalFieldDefinition) {
+            newFieldsToAdd[fieldName] = fieldData;
+        } else {
+            for (const [attributeName, attributeData] of Object.entries(fieldData)) {
+                switch (attributeName) {
+                    case "compute": {
+                        if (!originalFieldDefinition.compute) {
+                            throw new Error(
+                                `Cannot patch compute of field ${patch.name}/${fieldName}: the field is not a compute in the original definition.`
+                            );
                         }
-                        if (typeof fieldDefinition.compute !== 'function') {
-                            throw new Error(`the compute function must be inlined in the original definition.`);
+                        if (typeof attributeData !== "function") {
+                            throw new Error(
+                                `Cannot patch compute of field ${
+                                    patch.name
+                                }/${fieldName}: the compute must be a function (found: "${typeof attributeData}").`
+                            );
                         }
-                        if (typeof attributeData !== 'function') {
-                            throw new Error(`the compute must be a function.`);
+                        const computeBeforePatch = originalFieldDefinition.compute;
+                        originalFieldDefinition.compute = function () {
+                            this._super = computeBeforePatch;
+                            return attributeData.call(this);
+                        };
+                        break;
+                    }
+                    case "sort":
+                        if (originalFieldDefinition.sort) {
+                            if (typeof attributeData !== "function") {
+                                throw new Error(
+                                    `Cannot patch sorting rules of field ${
+                                        patch.name
+                                    }/${fieldName}: the value of 'sort' must be a function to apply to the sorting rules array (found: "${typeof attributeData}").`
+                                );
+                            }
+                            originalFieldDefinition.sort = attributeData.call({
+                                _super: originalFieldDefinition.sort,
+                            });
+                        } else {
+                            if (!Array.isArray(attributeData)) {
+                                throw new Error(
+                                    `Cannot add sorting rules to field ${patch.name}/${fieldName}: sorting rules must be an array.`
+                                );
+                            }
+                            originalFieldDefinition.sort = attributeData;
                         }
-                    }, `Cannot patch compute of field "${fieldName}" on "${modelName}": `);
-                    const computeBeforePatch = fieldDefinition.compute;
-                    fieldDefinition.compute = function () {
-                        this._super = computeBeforePatch;
-                        return attributeData.call(this);
-                    };
-                    break;
-                case 'sort':
-                    addContextToErrors(() => {
-                        if (!fieldDefinition.sort) {
-                            throw new Error(`not a sorted field.`);
-                        }
-                        if (typeof fieldDefinition.sort !== 'function') {
-                            throw new Error(`the sort function must be inlined in the original definition.`);
-                        }
-                        if (typeof attributeData !== 'function') {
-                            throw new Error(`the sort must be a function.`);
-                        }
-                    }, `Cannot patch sort function of field "${fieldName}" on "${modelName}": `);
-                    const sortBeforePatch = fieldDefinition.sort;
-                    fieldDefinition.sort = function () {
-                        this._super = sortBeforePatch;
-                        return attributeData.call(this);
-                    };
-                    break;
-                default:
-                    throw new Error(`Cannot patch field "${fieldName}" on "${modelName}": unsupported field attribute "${attributeName}".`);
+                        break;
+                    case "fieldType":
+                        throw new Error(
+                            `Cannot patch field ${patch.name}/${fieldName}: patches do not need field type (attr, one, many).`
+                        );
+                    default:
+                        throw new Error(
+                            `Cannot patch field ${patch.name}/${fieldName}: unsupported field attribute "${attributeName}".`
+                        );
+                }
             }
         }
     }
-};
-
-/**
- * Overrides the lifecycle hooks of the model specified by the `modelName`.
- *
- * @param {string} modelName The name of the model to which to apply the patch.
- * @param {Object} hooks Lifecycle hooks to be overriden. key = name, value = handler
- */
-export function patchLifecycleHooks(modelName, hooks) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot patch lifecycle hooks on model "${modelName}": model must be registered before being patched.`);
-    }
-    const definition = registry.get(modelName);
-    for (const [name, handler] of Object.entries(hooks)) {
-        addContextToErrors(() => {
-            assertIsFunction(handler);
-            assertIsValidHookName(name);
-            assertSectionHasKey('lifecycleHooks', name, definition);
-        }, `Cannot patch lifecycle hook "${name}" on model "${modelName}": `);
-        const hookBeforePatch = definition.get('lifecycleHooks').get(name);
-        definition.get('lifecycleHooks').set(name, function (...args) {
-            this._super = hookBeforePatch;
-            return handler.call(this, ...args);
-        });
-    }
+    addFields(patch.name, newFieldsToAdd);
 }
 
-/**
- * Overrides the model methods of the model specified by the `modelName`.
- *
- * @param {string} modelName The name of the model to which to apply the patch.
- * @param {Object} methods Model methods to be overriden. key = name, value = method
- */
-export function patchModelMethods(modelName, modelMethods) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot patch model methods on model "${modelName}": model must be registered before being patched.`);
+function patchLifecycleHooks(patch) {
+    const originalLifecycleHooksDefinition = registry.get(patch.name).get("lifecycleHooks");
+    const newLifecycleHooksToAdd = Object.create(null);
+    for (const [hookName, hookHandler] of Object.entries(patch.lifecycleHooks)) {
+        if (!originalLifecycleHooksDefinition.has(hookName)) {
+            newLifecycleHooksToAdd[hookName] = hookHandler;
+        } else {
+            if (typeof hookHandler !== "function") {
+                throw new Error(
+                    `Cannot patch hook "${hookName}" on model ${
+                        patch.name
+                    }: the hook handler must be a function (current type: "${typeof hookHandler}").`
+                );
+            }
+            const hookHandlerBeforePatch = originalLifecycleHooksDefinition.get(hookName);
+            originalLifecycleHooksDefinition.set(hookName, function () {
+                this._super = hookHandlerBeforePatch;
+                return hookHandler.call(this);
+            });
+        }
     }
-    const definition = registry.get(modelName);
-    for (const [name, method] of Object.entries(modelMethods)) {
-        addContextToErrors(() => {
-            assertIsFunction(method);
-            assertSectionHasKey('modelMethods', name, definition);
-        }, `Cannot patch model method "${name}" on model "${modelName}": `);
-        const methodBeforePatch = definition.get('modelMethods').get(name);
-        definition.get('modelMethods').set(name, function (...args) {
-            this._super = methodBeforePatch;
-            return method.call(this, ...args);
-        });
-    }
+    addLifecycleHooks(patch.name, newLifecycleHooksToAdd);
 }
 
-/**
- * Overrides the record methods of the model specified by the `modelName`.
- *
- * @param {string} modelName The name of the model to which to apply the patch.
- * @param {Object} methods Record methods to be overriden. key = name, value = method
- */
-export function patchRecordMethods(modelName, recordMethods) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot patch record methods on model "${modelName}": model must be registered before being patched.`);
+function patchModelMethods(patch) {
+    const originalModelMethodsDefinition = registry.get(patch.name).get("modelMethods");
+    const newModelMethodsToAdd = Object.create(null);
+    for (const [methodName, method] of Object.entries(patch.modelMethods)) {
+        if (!originalModelMethodsDefinition.has(methodName)) {
+            newModelMethodsToAdd[methodName] = method;
+        } else {
+            if (typeof method !== "function") {
+                throw new Error(
+                    `Cannot patch model method "${methodName}" on model ${
+                        patch.name
+                    }: the method must be a function (current type: "${typeof method}").`
+                );
+            }
+            const methodBeforePatch = originalModelMethodsDefinition.get(methodName);
+            originalModelMethodsDefinition.set(methodName, function (...args) {
+                this._super = methodBeforePatch;
+                return method.call(this, ...args);
+            });
+        }
     }
-    const definition = registry.get(modelName);
-    for (const [name, method] of Object.entries(recordMethods)) {
-        addContextToErrors(() => {
-            assertIsFunction(method);
-            assertSectionHasKey('recordMethods', name, definition);
-        }, `Cannot patch record method "${name}" on model "${modelName}": `);
-        const methodBeforePatch = definition.get('recordMethods').get(name);
-        definition.get('recordMethods').set(name, function (...args) {
-            this._super = methodBeforePatch;
-            return method.call(this, ...args);
-        });
+    addModelMethods(patch.name, newModelMethodsToAdd);
+}
+
+function patchRecordMethods(patch) {
+    const originalRecordMethods = registry.get(patch.name).get("recordMethods");
+    const newRecordMethodsToAdd = Object.create(null);
+    for (const [methodName, method] of Object.entries(patch.recordMethods)) {
+        if (!originalRecordMethods.has(methodName)) {
+            newRecordMethodsToAdd[methodName] = method;
+        } else {
+            if (typeof method !== "function") {
+                throw new Error(
+                    `Cannot patch record method "${methodName}" on model ${
+                        patch.name
+                    }: the method must be a function (current type: "${typeof method}").`
+                );
+            }
+            const methodBeforePatch = originalRecordMethods.get(methodName);
+            originalRecordMethods.set(methodName, function (...args) {
+                this._super = methodBeforePatch;
+                return method.call(this, ...args);
+            });
+        }
     }
+    addRecordMethods(patch.name, newRecordMethodsToAdd);
 }
 
 /**
  * @param {Object} definition The JSON definition of the model to register.
+ * @param {function} [definition.componentSetup]
  * @param {Object} [definition.fields]
  * @param {string} [definition.identifyingMode='and']
+ * @param {string} [definition.isLegacyComponent=false]
  * @param {Object} [definition.lifecycleHooks]
  * @param {Object} [definition.modelGetters] Deprecated; use fields instead.
  * @param {Object} [definition.modelMethods]
@@ -417,30 +425,71 @@ export function patchRecordMethods(modelName, recordMethods) {
  * @param {Object[]} [definition.onChanges]
  * @param {Object} [definition.recordGetters] Deprecated; use fields instead.
  * @param {Object} [definition.recordMethods]
+ * @param {string} [definition.template]
  */
-export function registerModel({ fields, identifyingMode = 'and', lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods }) {
+export function Model({
+    componentSetup,
+    fields,
+    identifyingMode = "and",
+    isLegacyComponent = false,
+    lifecycleHooks,
+    modelGetters,
+    modelMethods,
+    name,
+    onChanges,
+    recordGetters,
+    recordMethods,
+    template,
+}) {
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
     if (registry.has(name)) {
         throw new Error(`Cannot register model "${name}": model has already been registered.`);
     }
-    const sectionNames = ['name', 'identifyingMode', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
-    const invalidSectionNames = Object.keys(arguments[0]).filter(x => !sectionNames.includes(x));
+    const sectionNames = [
+        "name",
+        "template",
+        "componentSetup",
+        "identifyingMode",
+        "isLegacyComponent",
+        "lifecycleHooks",
+        "modelMethods",
+        "modelGetters",
+        "recordMethods",
+        "recordGetters",
+        "fields",
+        "onChanges",
+    ];
+    const invalidSectionNames = Object.keys(arguments[0]).filter((x) => !sectionNames.includes(x));
     if (invalidSectionNames.length > 0) {
-        throw new Error(`Cannot register model "${name}": model definition contains unknown key(s): ${invalidSectionNames.join(", ")}`);
+        throw new Error(
+            `Cannot register model "${name}": model definition contains unknown key(s): ${invalidSectionNames.join(
+                ", "
+            )}`
+        );
     }
-    registry.set(name, new Map([
-        ['name', name],
-        ['identifyingMode', identifyingMode],
-        ['lifecycleHooks', new Map()],
-        ['modelMethods', new Map()],
-        ['modelGetters', new Map()],
-        ['recordMethods', new Map()],
-        ['recordGetters', new Map()],
-        ['fields', new Map()],
-        ['onChanges', []],
-    ]));
+    registry.set(
+        name,
+        new Map([
+            ["name", name],
+            ["identifyingMode", identifyingMode],
+            ["isLegacyComponent", isLegacyComponent],
+            ["lifecycleHooks", new Map()],
+            ["modelMethods", new Map()],
+            ["modelGetters", new Map()],
+            ["recordMethods", new Map()],
+            ["recordGetters", new Map()],
+            ["fields", new Map()],
+            ["onChanges", []],
+        ])
+    );
+    if (template) {
+        registry.get(name).set("template", template);
+        if (componentSetup) {
+            addComponentSetup(name, componentSetup);
+        }
+    }
     if (lifecycleHooks) {
         addLifecycleHooks(name, lifecycleHooks);
     }
@@ -463,3 +512,83 @@ export function registerModel({ fields, identifyingMode = 'and', lifecycleHooks,
         addOnChanges(name, onChanges);
     }
 }
+
+export function Patch({
+    componentSetup,
+    fields,
+    lifecycleHooks,
+    modelMethods,
+    name,
+    onChanges,
+    recordMethods,
+}) {
+    if (!name) {
+        throw new Error("Patch is lacking the name of the model to be patched.");
+    }
+    const allowedSectionNames = [
+        "name",
+        "componentSetup",
+        "lifecycleHooks",
+        "modelMethods",
+        "recordMethods",
+        "fields",
+        "onChanges",
+    ];
+    const invalidSectionNames = Object.keys(arguments["0"]).filter(
+        (x) => !allowedSectionNames.includes(x)
+    );
+    if (invalidSectionNames.length > 0) {
+        throw new Error(
+            `Error while registering patch for model "${name}": patch definition contains unsupported key(s): ${invalidSectionNames.join(
+                ", "
+            )}`
+        );
+    }
+    patches.push({
+        name,
+        componentSetup: componentSetup || undefined,
+        lifecycleHooks: lifecycleHooks || {},
+        modelMethods: modelMethods || {},
+        recordMethods: recordMethods || {},
+        fields: fields || {},
+        onChanges: onChanges || [],
+    });
+}
+
+export const patchesAppliedPromise = makeDeferred();
+
+(async function applyPatches() {
+    if (document.readyState !== "complete") {
+        await new Promise((resolve) => {
+            /**
+             * Called when all JS resources are loaded. This is useful to
+             * ensure all definitions have been parsed before applying patches.
+             */
+            window.addEventListener("load", resolve);
+        });
+    }
+    /**
+     * All JS resources are loaded, but not necessarily processed.
+     * We assume no messaging-related modules return any Promise,
+     * therefore they should be processed *at most* asynchronously at
+     * "Promise time".
+     */
+    await new Promise((resolve) => setTimeout(resolve));
+    for (const patch of patches) {
+        const definition = registry.get(patch.name);
+        if (!definition) {
+            throw new Error(
+                `Cannot patch model "${patch.name}": there is no model registered under this name.`
+            );
+        }
+        if (patch.componentSetup) {
+            patchComponentSetup(patch);
+        }
+        patchLifecycleHooks(patch);
+        patchModelMethods(patch);
+        patchRecordMethods(patch);
+        patchFields(patch);
+        addOnChanges(patch.name, patch.onChanges);
+    }
+    patchesAppliedPromise.resolve();
+})();

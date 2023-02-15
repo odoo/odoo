@@ -24,7 +24,6 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
                 'product_uom': self.company_data['product_delivery_no'].uom_id.id,
                 'price_unit': self.company_data['product_delivery_no'].list_price,
             })],
-            'pricelist_id': self.env.ref('product.list0').id,
         })
         so.action_confirm()
         so._create_analytic_account()  # normally created at so confirmation when you use the right products
@@ -40,7 +39,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         exp = self.env['hr.expense'].create({
             'name': 'Air Travel',
             'product_id': self.company_data['product_delivery_cost'].id,
-            'analytic_account_id': so.analytic_account_id.id,
+            'analytic_distribution': {so.analytic_account_id.id: 100},
             'unit_amount': 621.54,
             'employee_id': self.expense_employee.id,
             'sheet_id': sheet.id,
@@ -78,7 +77,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         exp = self.env['hr.expense'].create({
             'name': 'Car Travel',
             'product_id': prod_exp_2.id,
-            'analytic_account_id': so.analytic_account_id.id,
+            'analytic_distribution': {so.analytic_account_id.id: 100},
             'product_uom_id': self.env.ref('uom.product_uom_km').id,
             'unit_amount': 0.15,
             'quantity': 100,

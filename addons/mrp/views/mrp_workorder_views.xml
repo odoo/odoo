@@ -84,7 +84,7 @@
                 <field name="date_start" optional="hide" readonly="1"/>
                 <field name="date_finished" optional="hide" readonly="1"/>
                 <field name="duration_expected" widget="float_time" sum="expected duration"/>
-                <field name="duration" widget="mrp_time_counter"
+                <field name="duration" widget="mrp_timer"
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
                   attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
@@ -102,7 +102,7 @@
                         title="Open Work Order"
                     context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" " width="0.1" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
         </field>
     </record>
@@ -198,7 +198,7 @@
                                 <field name="date_end"/>
                                 <field name="workcenter_id" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
-                                <field name="loss_id" string="Productivity" optional="hide"/>
+                                <field name="loss_id" string="Productivity" optional="show"/>
                             </tree>
                             <form>
                                 <group>
@@ -326,6 +326,10 @@
                 decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
                 color="workcenter_id"
                 display_unavailability="1"
+                progress_bar="workcenter_id"
+                total_row="True"
+                js_class="mrp_workorder_gantt"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
                 sample="1"
                 form_view_id="%(mrp_production_workorder_form_view_inherit)d">
 
@@ -364,6 +368,9 @@
                 color="production_id"
                 display_unavailability="1"
                 progress_bar="workcenter_id"
+                total_row="True"
+                js_class="mrp_workorder_gantt"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
                 form_view_id="mrp_production_workorder_form_view_inherit">
 
                 <field name="date_planned_start"/>
@@ -407,6 +414,7 @@
                 <field name="date_planned_start"/>
                 <field name="production_date"/>
                 <field name="product_uom_id" force_save="1"/>
+                <field name="operation_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
@@ -419,7 +427,7 @@
                                 <div class="o_kanban_workorder_date">
                                     <h5><span class="d-flex" t-esc="record.date_planned_start.value or record.production_date.value"/></h5>
                                 </div>
-                                <div class="o_kanban_manage_button_section">
+                                <div>
                                     <h2 class="ml8">
                                         <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
                                             <t t-out="record.state.value"/>

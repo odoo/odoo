@@ -3,21 +3,31 @@
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
+import { LINE_FILL_TRANSPARENCY } from "@web/views/graph/graph_renderer";
 
 const { chartRegistry } = spreadsheet.registries;
 
-const { getDefaultChartJsRuntime, chartFontColor, ChartColors } = spreadsheet.helpers;
+const {
+    getDefaultChartJsRuntime,
+    chartFontColor,
+    ChartColors,
+    getFillingMode,
+    colorToRGBA,
+    rgbaToHex,
+} = spreadsheet.helpers;
 
 export class OdooLineChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
         this.verticalAxisPosition = definition.verticalAxisPosition;
+        this.stacked = definition.stacked;
     }
 
     getDefinition() {
         return {
             ...super.getDefinition(),
             verticalAxisPosition: this.verticalAxisPosition,
+            stacked: this.stacked,
         };
     }
 }
@@ -34,19 +44,26 @@ chartRegistry.add("odoo_line", {
 });
 
 function createOdooChartRuntime(chart, getters) {
-    const dataSource = getters.getGraphDataSource(chart.id);
     const background = chart.background || "#FFFFFF";
-    const { datasets, labels } = dataSource.getData();
+    const { datasets, labels } = chart.dataSource.getData();
     const chartJsConfig = getLineConfiguration(chart, labels);
     const colors = new ChartColors();
-    for (const { label, data } of datasets) {
+    for (const [index, { label, data }] of datasets.entries()) {
         const color = colors.next();
+        const backgroundRGBA = colorToRGBA(color);
+        if (chart.stacked) {
+            // use the transparency of Odoo to keep consistency
+            backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
+        }
+        const backgroundColor = rgbaToHex(backgroundRGBA);
         const dataset = {
             label,
             data,
             lineTension: 0,
             borderColor: color,
-            backgroundColor: color,
+            backgroundColor,
+            pointBackgroundColor: color,
+            fill: chart.stacked ? getFillingMode(index) : false,
         };
         chartJsConfig.data.datasets.push(dataset);
     }
@@ -60,7 +77,17 @@ function getLineConfiguration(chart, labels) {
     const legend = {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
-        labels: { fontColor },
+        labels: {
+            fontColor,
+            generateLabels(chart) {
+                const { data } = chart;
+                const labels = window.Chart.defaults.global.legend.labels.generateLabels(chart);
+                for (const [index, label] of labels.entries()) {
+                    label.fillStyle = data.datasets[index].borderColor;
+                }
+                return labels;
+            },
+        },
     };
     legend.position = chart.legendPosition;
     config.options.legend = legend;
@@ -91,5 +118,8 @@ function getLineConfiguration(chart, labels) {
             },
         ],
     };
+    if (chart.stacked) {
+        config.options.scales.yAxes[0].stacked = true;
+    }
     return config;
 }

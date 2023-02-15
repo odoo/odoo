@@ -36,15 +36,13 @@ Dashboard / Reports for Warehouse Management includes:
         'wizard/stock_request_count.xml',
         'wizard/stock_valuation_layer_revaluation_views.xml',
         'wizard/stock_quantity_history.xml',
-        'report/report_stock_forecasted.xml',
     ],
     'installable': True,
     'auto_install': True,
     'post_init_hook': '_configure_journals',
     'assets': {
         'web.assets_backend': [
-            'stock_account/static/src/js/report_stock_forecasted.js',
-            'stock_account/static/src/xml/inventory_report.xml',
+            'stock_account/static/src/stock_account_forecasted/*',
         ],
     },
     'license': 'LGPL-3',

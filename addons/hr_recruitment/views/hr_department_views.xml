@@ -15,7 +15,7 @@
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
-                    <t t-groups="hr_recruitment.group_hr_recruitment_user">
+                    <t groups="hr_recruitment.group_hr_recruitment_user">
                         <div t-if="record.new_applicant_count.raw_value > 0" class="row ml16">
                             <div class="col">
                                 <a name="%(hr_applicant_action_from_department)d" type="action">

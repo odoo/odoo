@@ -1,28 +1,22 @@
-odoo.define('point_of_sale.Orderline', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class Orderline extends PosComponent {
-        selectLine() {
-            this.trigger('select-line', { orderline: this.props.line });
-        }
-        lotIconClicked() {
-            this.trigger('edit-pack-lot-lines', { orderline: this.props.line });
-        }
-        get addedClasses() {
-            return {
-                selected: this.props.line.selected,
-            };
-        }
-        get customerNote() {
-            return this.props.line.get_customer_note();
-        }
+export class Orderline extends LegacyComponent {
+    static template = "Orderline";
+
+    selectLine() {
+        this.trigger("select-line", { orderline: this.props.line });
     }
-    Orderline.template = 'Orderline';
-
-    Registries.Component.add(Orderline);
-
-    return Orderline;
-});
+    lotIconClicked() {
+        this.trigger("edit-pack-lot-lines", { orderline: this.props.line });
+    }
+    get addedClasses() {
+        return {
+            selected: this.props.line.selected,
+        };
+    }
+    get customerNote() {
+        return this.props.line.get_customer_note();
+    }
+}

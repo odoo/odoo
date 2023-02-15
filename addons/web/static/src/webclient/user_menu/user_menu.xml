@@ -10,12 +10,21 @@
             <t t-foreach="getElements()" t-as="element" t-key="element_index">
                 <t t-if="!element.hide">
                     <DropdownItem
-                        t-if="element.type == 'item'"
+                        t-if="element.type == 'item' || element.type == 'switch'"
                         href="element.href"
                         dataset="{ menu: element.id }"
-                        t-esc="element.description"
                         onSelected="element.callback"
-                    />
+                    >
+                        <CheckBox
+                            t-if="element.type == 'switch'"
+                            value="element.isChecked"
+                            className="'form-switch d-flex flex-row-reverse justify-content-between p-0'"
+                            onChange="element.callback"
+                        >
+                            <t t-out="element.description"/>
+                        </CheckBox>
+                        <t t-else="" t-out="element.description"/>
+                    </DropdownItem>
                     <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
                 </t>
             </t>

@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 
 
 class StockScrap(models.Model):
@@ -11,17 +11,6 @@ class StockScrap(models.Model):
     _inherit = ['mail.thread']
     _order = 'id desc'
     _description = 'Scrap'
-
-    def _get_default_scrap_location_id(self):
-        company_id = self.env.context.get('default_company_id') or self.env.company.id
-        return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [company_id, False])], limit=1).id
-
-    def _get_default_location_id(self):
-        company_id = self.env.context.get('default_company_id') or self.env.company.id
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
-        if warehouse:
-            return warehouse.lot_stock_id.id
-        return None
 
     name = fields.Char(
         'Reference',  default=lambda self: _('New'),
@@ -34,6 +23,7 @@ class StockScrap(models.Model):
         required=True, states={'done': [('readonly', True)]}, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
+        compute="_compute_product_uom_id", store=True, readonly=False, precompute=True,
         required=True, states={'done': [('readonly', True)]}, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     tracking = fields.Selection(string='Product Tracking', readonly=True, related="product_id.tracking")
@@ -47,54 +37,58 @@ class StockScrap(models.Model):
     move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True, check_company=True, copy=False)
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, check_company=True)
     location_id = fields.Many2one(
-        'stock.location', 'Source Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
-        required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id, check_company=True)
+        'stock.location', 'Source Location',
+        compute='_compute_location_id', store=True, required=True, precompute=True, states={'done': [('readonly', True)]},
+        domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]", check_company=True)
     scrap_location_id = fields.Many2one(
-        'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
-        domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
-    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure')
+        'stock.location', 'Scrap Location',
+        compute='_compute_scrap_location_id', store=True, required=True, precompute=True, states={'done': [('readonly', True)]},
+        domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", check_company=True)
+    scrap_qty = fields.Float(
+        'Quantity', required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure',
+        compute='_compute_scrap_qty', precompute=True, readonly=False, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
         string='Status', default="draft", readonly=True, tracking=True)
     date_done = fields.Datetime('Date', readonly=True)
 
-    @api.onchange('picking_id')
-    def _onchange_picking_id(self):
-        if self.picking_id:
-            self.location_id = (self.picking_id.state == 'done') and self.picking_id.location_dest_id.id or self.picking_id.location_id.id
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        for scrap in self:
+            scrap.product_uom_id = scrap.product_id.uom_id
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        if self.product_id:
-            if self.tracking == 'serial':
-                self.scrap_qty = 1
-            self.product_uom_id = self.product_id.uom_id.id
-            # Check if we can get a more precise location instead of
-            # the default location (a location corresponding to where the
-            # reserved product is stored)
-            if self.picking_id:
-                for move_line in self.picking_id.move_line_ids:
-                    if move_line.product_id == self.product_id:
-                        self.location_id = move_line.location_id if move_line.state != 'done' else move_line.location_dest_id
-                        break
+    @api.depends('company_id', 'picking_id')
+    def _compute_location_id(self):
+        groups = self.env['stock.warehouse']._read_group(
+            [('company_id', 'in', self.company_id.ids)], ['min_id:min(id)'], ['company_id'])
+        locations_per_company = {
+            group['company_id'][0]: self.env['stock.warehouse'].browse(group['min_id']).lot_stock_id
+            for group in groups
+        }
+        for scrap in self:
+            if scrap.picking_id:
+                scrap.location_id = scrap.picking_id.location_dest_id if scrap.picking_id.state == 'done' else scrap.picking_id.location_id
+            else:
+                scrap.location_id = locations_per_company[scrap.company_id.id]
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-            # Change the locations only if their company doesn't match the company set, otherwise
-            # user defaults are overridden.
-            if self.location_id.company_id != self.company_id:
-                self.location_id = warehouse.lot_stock_id
-            if self.scrap_location_id.company_id != self.company_id:
-                self.scrap_location_id = self.env['stock.location'].search([
-                    ('scrap_location', '=', True),
-                    ('company_id', 'in', [self.company_id.id, False]),
-                ], limit=1)
-        else:
-            self.location_id = False
-            self.scrap_location_id = False
+    @api.depends('company_id')
+    def _compute_scrap_location_id(self):
+        groups = self.env['stock.location']._read_group(
+            [('company_id', 'in', self.company_id.ids), ('scrap_location', '=', True)], ['min_id:min(id)'], ['company_id'])
+        locations_per_company = {
+            group['company_id'][0]: self.env['stock.location'].browse(group['min_id'])
+            for group in groups
+        }
+        for scrap in self:
+            scrap.scrap_location_id = locations_per_company[scrap.company_id.id]
+
+    @api.depends('move_id', 'move_id.move_line_ids.qty_done', 'product_id')
+    def _compute_scrap_qty(self):
+        self.scrap_qty = 1
+        for scrap in self:
+            if scrap.move_id:
+                scrap.scrap_qty = scrap.move_id.quantity_done
 
     @api.onchange('lot_id')
     def _onchange_serial_number(self):
@@ -162,6 +156,9 @@ class StockScrap(models.Model):
 
     def action_validate(self):
         self.ensure_one()
+        if float_is_zero(self.scrap_qty,
+                         precision_rounding=self.product_uom_id.rounding):
+            raise UserError(_('You can only enter positive quantities.'))
         if self.product_id.type != 'product':
             return self.do_scrap()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

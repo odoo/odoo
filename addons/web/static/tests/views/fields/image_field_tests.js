@@ -5,7 +5,6 @@ import {
     getFixture,
     nextTick,
     triggerEvent,
-    clickEdit,
     clickSave,
     editInput,
 } from "@web/../tests/helpers/utils";
@@ -19,6 +18,11 @@ const PRODUCT_IMAGE =
 
 let serverData;
 let target;
+
+function getUnique(target) {
+    const src = target.dataset.src;
+    return new URL(src).searchParams.get("unique");
+}
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -76,7 +80,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("ImageField is correctly rendered", async function (assert) {
         assert.expect(10);
 
-        serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
+        serverData.models.partner.records[0].write_date = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
 
         await makeView({
@@ -92,8 +96,8 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/read") {
                     assert.deepEqual(
                         args[1],
-                        ["__last_update", "document", "display_name"],
-                        "The fields document, display_name and __last_update should be present when reading an image"
+                        ["write_date", "document", "display_name"],
+                        "The fields document, display_name and write_date should be present when reading an image"
                     );
                 }
             },
@@ -130,8 +134,6 @@ QUnit.module("Fields", (hooks) => {
             "90px",
             "the image should correctly set its attributes"
         );
-
-        await click(target, ".o_form_button_edit");
 
         assert.containsOnce(
             target,
@@ -209,8 +211,6 @@ QUnit.module("Fields", (hooks) => {
                 "the image should correctly set its attributes"
             );
 
-            await click(target, ".o_form_button_edit");
-
             assert.containsOnce(
                 target,
                 ".o_field_image .o_select_file_button",
@@ -241,7 +241,6 @@ QUnit.module("Fields", (hooks) => {
             "data:image/png;base64,coucou==",
             "the image should have the initial src"
         );
-        await click(target, ".o_form_button_edit");
         // Whitebox: replace the event target before the event is handled by the field so that we can modify
         // the files that it will take into account. This relies on the fact that it reads the files from
         // event.target and not from a direct reference to the input element.
@@ -269,6 +268,65 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "clicking save manually after uploading new image should change the unique of the image src",
+        async function (assert) {
+            serverData.models.partner.onchanges = { foo: () => {} };
+
+            const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
+            rec.document = "3 kb";
+            rec.write_date = "2022-08-05 08:37:00"; // 1659688620000
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: /* xml */ `
+                    <form>
+                        <field name="foo"/>
+                        <field name="document" widget="image" />
+                    </form>`,
+                mockRPC(_route, { method, args }) {
+                    if (method === "write") {
+                        args[1].write_date = "2022-08-05 09:37:00"; // 1659692220000
+                        args[1].document = "4 kb";
+                    }
+                },
+            });
+            assert.strictEqual(
+                getUnique(target.querySelector(".o_field_image img")),
+                "1659688620000"
+            );
+
+            await editInput(
+                target,
+                "input[type=file]",
+                new File(
+                    [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+                    "fake_file.png",
+                    { type: "png" }
+                )
+            );
+            assert.strictEqual(
+                target.querySelector("div[name=document] img").dataset.src,
+                `data:image/png;base64,${MY_IMAGE}`
+            );
+
+            await editInput(target, ".o_field_widget[name='foo'] input", "grrr");
+            assert.strictEqual(
+                target.querySelector("div[name=document] img").dataset.src,
+                `data:image/png;base64,${MY_IMAGE}`
+            );
+
+            await clickSave(target);
+            assert.strictEqual(
+                getUnique(target.querySelector(".o_field_image img")),
+                "1659692220000"
+            );
+        }
+    );
+
     QUnit.test("ImageField: option accepted_file_extensions", async function (assert) {
         await makeView({
             type: "form",
@@ -281,7 +339,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
         // The view must be in edit mode
-        await click(target.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             target.querySelector("input.o_input_file").getAttribute("accept"),
             ".png,.jpeg",
@@ -320,7 +377,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("ImageField: zoom and zoom_delay options", async function (assert) {
+    QUnit.test("ImageField: zoom and zoom_delay options (readonly)", async (assert) => {
         serverData.models.partner.records[0].document = MY_IMAGE;
 
         await makeView({
@@ -330,7 +387,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="document" widget="image" options="{'zoom': true, 'zoom_delay': 600}" />
+                    <field name="document" widget="image" options="{'zoom': true, 'zoom_delay': 600}" readonly="1" />
                 </form>`,
         });
         // data-tooltip attribute is used by the tooltip service
@@ -344,8 +401,22 @@ QUnit.module("Fields", (hooks) => {
             "600",
             "tooltip has the right delay"
         );
+    });
 
-        await click(target.querySelector(".o_form_button_edit"));
+    QUnit.test("ImageField: zoom and zoom_delay options (edit)", async function (assert) {
+        serverData.models.partner.records[0].document = MY_IMAGE;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="document" widget="image" options="{'zoom': true, 'zoom_delay': 600}" />
+                </form>`,
+        });
+
         assert.ok(
             !target.querySelector(".o_field_image img").dataset["tooltipInfo"],
             "the tooltip is not present in edition"
@@ -353,10 +424,10 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "ImageField displays the right images with zoom and preview_image options",
+        "ImageField displays the right images with zoom and preview_image options (readonly)",
         async function (assert) {
             serverData.models.partner.records[0].document = "3 kb";
-            serverData.models.partner.records[0].__last_update = "2022-08-05 08:37:00";
+            serverData.models.partner.records[0].write_date = "2022-08-05 08:37:00";
 
             await makeView({
                 type: "form",
@@ -365,7 +436,7 @@ QUnit.module("Fields", (hooks) => {
                 serverData,
                 arch: `
                 <form>
-                    <field name="document" widget="image" options="{'zoom': true, 'preview_image': 'document_preview', 'zoom_delay': 600}" />
+                    <field name="document" widget="image" options="{'zoom': true, 'preview_image': 'document_preview', 'zoom_delay': 600}" readonly="1" />
                 </form>`,
             });
 
@@ -392,7 +463,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("ImageField in subviews is loaded correctly", async function (assert) {
-        serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
+        serverData.models.partner.records[0].write_date = "2017-02-08 10:00:00";
         serverData.models.partner.records[0].document = MY_IMAGE;
         serverData.models.partner_type.fields.image = { name: "image", type: "binary" };
         serverData.models.partner_type.records[0].image = PRODUCT_IMAGE;
@@ -479,7 +550,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.containsOnce(
             target.querySelector(".o_form_view"),
@@ -500,7 +571,7 @@ QUnit.module("Fields", (hooks) => {
 
         const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
         rec.document = "3 kb";
-        rec.__last_update = "2022-08-05 08:37:00";
+        rec.write_date = "2022-08-05 08:37:00";
 
         await makeView({
             resId: 1,
@@ -517,25 +588,19 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "onchange") {
                     return {
                         value: {
-                            __last_update: "", // actual return of the server
+                            write_date: "", // actual return of the server
                         },
                     };
                 }
                 if (method === "write") {
-                    args[1].__last_update = "2022-08-05 09:37:00";
+                    args[1].write_date = "2022-08-05 09:37:00";
                 }
             },
         });
 
-        function getUnique(target) {
-            const src = target.dataset.src;
-            return new URL(src).searchParams.get("unique");
-        }
-
         assert.verifySteps(["get_views", "read"]);
         assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
 
-        await clickEdit(target);
         assert.verifySteps([]);
         // same unique as before
         assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
@@ -547,18 +612,18 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target);
         assert.verifySteps(["write", "read"]);
-        // different unique: the record has been written
-        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659692220000");
+
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
     });
 
     QUnit.test("unique in url change on record change", async (assert) => {
         const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
         rec.document = "3 kb";
-        rec.__last_update = "2022-08-05 08:37:00";
+        rec.write_date = "2022-08-05 08:37:00";
 
         const rec2 = serverData.models.partner.records.find((rec) => rec.id === 2);
         rec2.document = "3 kb";
-        rec2.__last_update = "2022-08-05 09:37:00";
+        rec2.write_date = "2022-08-05 09:37:00";
 
         await makeView({
             resIds: [1, 2],

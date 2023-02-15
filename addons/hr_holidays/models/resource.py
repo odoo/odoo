@@ -8,7 +8,7 @@ from odoo.osv import expression
 class CalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
 
-    holiday_id = fields.Many2one("hr.leave", string='Leave Request')
+    holiday_id = fields.Many2one("hr.leave", string='Time Off Request')
 
     @api.constrains('date_from', 'date_to', 'calendar_id')
     def _check_compare_dates(self):
@@ -105,7 +105,7 @@ class CalendarLeaves(models.Model):
 class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
 
-    associated_leaves_count = fields.Integer("Leave Count", compute='_compute_associated_leaves_count')
+    associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
 
     def _compute_associated_leaves_count(self):
         leaves_read_group = self.env['resource.calendar.leaves'].read_group(

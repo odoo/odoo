@@ -7,7 +7,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text"];
@@ -35,7 +35,9 @@ export class SearchBar extends Component {
 
         this.keepLast = new KeepLast();
 
-        this.inputRef = useAutofocus();
+        this.inputRef = this.env.config.disableSearchBarAutofocus
+            ? useRef("autofocus")
+            : useAutofocus();
 
         useBus(this.env.searchModel, "focus-search", () => {
             this.inputRef.el.focus();
@@ -144,7 +146,7 @@ export class SearchBar extends Component {
                         value = parser(trimmedQuery);
                     }
                 }
-            } catch (_e) {
+            } catch {
                 continue;
             }
 
@@ -183,12 +185,13 @@ export class SearchBar extends Component {
         if (searchItem.domain) {
             try {
                 domain = new Domain(searchItem.domain).toList();
-            } catch (_e) {
+            } catch {
                 // Pass
             }
         }
-        const options = await this.orm.call(field.relation, "name_search", domain, {
-            context: field.context,
+        const options = await this.orm.call(field.relation, "name_search", [], {
+            args: domain,
+            context: { ...this.env.searchModel.globalContext, ...field.context },
             limit: 8,
             name: query.trim(),
         });
@@ -457,3 +460,4 @@ export class SearchBar extends Component {
 }
 
 SearchBar.template = "web.SearchBar";
+SearchBar.props = {};

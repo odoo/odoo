@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
             'merchant_id': self.provider_id.asiapay_merchant_id,
             'amount': self.amount,
             'reference': self.reference,
-            'currency_code': const.CURRENCY_MAPPING[self.provider_id.asiapay_currency_id.name],
+            'currency_code': const.CURRENCY_MAPPING[self.provider_id.available_currency_ids[0].name],
             'mps_mode': 'SCP',
             'return_url': urls.url_join(base_url, AsiaPayController._return_url),
             'payment_type': 'N',

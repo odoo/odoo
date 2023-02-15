@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class Many2ManyCheckboxesField extends Component {
     get items() {
@@ -35,6 +35,7 @@ Many2ManyCheckboxesField.components = { CheckBox };
 Many2ManyCheckboxesField.props = {
     ...standardFieldProps,
 };
+Many2ManyCheckboxesField.legacySpecialData = "_fetchSpecialRelation";
 
 Many2ManyCheckboxesField.displayName = _lt("Checkboxes");
 Many2ManyCheckboxesField.supportedTypes = ["many2many"];

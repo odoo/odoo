@@ -6,6 +6,10 @@ import { waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
 const { toCartesian, toZone } = spreadsheet.helpers;
 
 /**
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
+ */
+
+/**
  * Select a cell
  */
 export function selectCell(model, xc) {
@@ -15,9 +19,11 @@ export function selectCell(model, xc) {
 
 /**
  * Add a global filter and ensure the data sources are completely reloaded
+ * @param {Model} model
+ * @param {{filter: GlobalFilter}} filter
  */
-export async function addGlobalFilter(model, filter) {
-    const result = model.dispatch("ADD_GLOBAL_FILTER", filter);
+export async function addGlobalFilter(model, filter, fieldMatchings = {}) {
+    const result = model.dispatch("ADD_GLOBAL_FILTER", { ...filter, ...fieldMatchings });
     await waitForDataSourcesLoaded(model);
     return result;
 }

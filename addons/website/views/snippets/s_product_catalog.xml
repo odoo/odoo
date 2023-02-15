@@ -66,7 +66,7 @@
 </template>
 
 <template id="s_product_catalog_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='web_editor.snippet_options_background_options']" position="before">
+    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
         <div data-js="MultipleItems"
              data-selector=".s_product_catalog">
             <t t-call="website.s_product_catalog_add_product_widget">

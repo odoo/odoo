@@ -1,61 +1,54 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'EmojiCategoryView',
+Model({
+    name: "EmojiCategoryView",
+    template: "mail.EmojiCategoryView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
          */
         onClick() {
-            this.emojiPickerView.emojiSearchBarView.reset();
-            let categoryRowScrollPosition = Math.max(
-                0,
-                // Index of the beginning of the category
-                (this.emojiPickerView.emojiGridView.rowHeight * this.viewCategory.emojiGridRowView.index)
-                -
-                // Cancels the amount of buffer rows
-                (this.emojiPickerView.emojiGridView.rowHeight * this.emojiPickerView.emojiGridView.topBufferAmount)
-            );
-            this.emojiPickerView.emojiGridView.containerRef.el.scrollTo({ top: categoryRowScrollPosition });
+            this.emojiPickerViewOwner.reset();
+            this.emojiPickerViewOwner.emojiGridView.update({
+                categorySelectedByUser: this.viewCategory,
+            });
         },
         /**
          * @param {MouseEvent} ev
          */
         onMouseenter(ev) {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: true });
         },
         /**
          * @param {MouseEvent} ev
          */
         onMouseleave(ev) {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: false });
         },
     },
     fields: {
-        category: one('EmojiCategory', {
-            related: 'viewCategory.category',
-        }),
-        emojiCategoryBarViewOwner: one('EmojiCategoryBarView', {
+        category: one("EmojiCategory", { related: "viewCategory.category" }),
+        emojiPickerViewOwner: one("EmojiPickerView", {
             identifying: true,
-            inverse: 'emojiCategoryViews',
-        }),
-        emojiPickerView: one('EmojiPickerView', {
-            related: 'emojiCategoryBarViewOwner.emojiPickerView',
+            inverse: "emojiCategoryViews",
         }),
         isActive: attr({
             compute() {
                 return Boolean(this.viewCategory.emojiPickerViewAsActive);
             },
         }),
-        isHovered: attr({
-            default: false,
-        }),
-        viewCategory: one('EmojiPickerView.Category', {
+        isHovered: attr({ default: false }),
+        viewCategory: one("EmojiPickerView.Category", {
             identifying: true,
-            inverse: 'emojiCategoryView',
+            inverse: "emojiCategoryView",
         }),
-    }
+    },
 });

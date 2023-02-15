@@ -31,13 +31,3 @@ class WebsiteSaleSlides(WebsiteSlides):
             else:
                 values['product_info'] = False
         return values
-
-    def _slide_channel_prepare_values(self, **kwargs):
-        """Parse the values posted when we create a new course
-        from website to add the selected product.
-        """
-        channel = super(WebsiteSaleSlides, self)._slide_channel_prepare_values(**kwargs)
-        channel['enroll'] = kwargs.get('enroll')
-        if channel['enroll'] == 'payment' and 'product_id' in kwargs:
-            channel['product_id'] = int(kwargs['product_id'])
-        return channel

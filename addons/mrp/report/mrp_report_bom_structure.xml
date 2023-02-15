@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_mrp_bom">
-        <div class="o_mrp_bom_report_page container py-3 py-lg-5 px-0 bg-white">
+        <div class="o_mrp_bom_report_page container py-3 py-lg-5 px-0 bg-view">
             <div t-if="data.get('lines')">
                 <div class="px-3 mb-5">
                     <h1>BoM Overview</h1>
@@ -65,7 +65,7 @@
                             <td t-if="data['show_availabilities']"/>
                             <td t-if="data['show_lead_times']"/>
                             <td/>
-                            <td class="text-end" t-esc="data['cost_share'] * data['bom_cost'] / data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <td class="text-end" t-esc="data['bom_cost'] / data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                             <td class="text-end" t-esc="data['prod_cost']/data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                         </tr>
                         <t t-if="data['show_costs'] and data['byproducts']" t-foreach="data['byproducts']" t-as="byproduct">
@@ -78,7 +78,7 @@
                                 <td t-if="data['show_availabilities']"/>
                                 <td t-if="data['show_lead_times']"/>
                                 <td/>
-                                <td class="text-end" t-esc="byproduct['cost_share'] * data['bom_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                <td class="text-end" t-esc="byproduct['bom_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                 <td class="text-end" t-esc="byproduct['prod_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                             </tr>
                         </t>

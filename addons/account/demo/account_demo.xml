@@ -48,5 +48,14 @@
         <record id="base.res_partner_1" model="res.partner">
             <field name="property_supplier_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         </record>
+
+        <!-- Analytic -->
+        <record id="analytic.analytic_plan_internal" model="account.analytic.plan">
+            <field name="applicability_ids" eval="[
+                Command.create({
+                    'business_domain': 'invoice',
+                    'account_prefix': '450000',
+                    'applicability': 'mandatory'})]"/>
+        </record>
     </data>
 </odoo>

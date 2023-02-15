@@ -40,7 +40,7 @@ patch(BurgerMenu.prototype, 'website_burger_menu', {
     async _onMenuClicked(menu) {
         const websiteMenu = this.websiteCustomMenus.get(menu.xmlid);
         if (websiteMenu) {
-            this.websiteCustomMenus.open(menu.xmlid);
+            this.websiteCustomMenus.open(menu);
             this._closeBurger();
         } else {
             this._super(menu);

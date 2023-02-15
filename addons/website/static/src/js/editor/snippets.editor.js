@@ -42,6 +42,16 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             this._toggleAnimatedTextButton();
         };
         this.$body[0].addEventListener('selectionchange', this.__onSelectionChange);
+
+        // editor_has_snippets is, amongst other things, in charge of hiding the
+        // backend navbar with a CSS animation. But we also need to make it
+        // display: none when the animation finishes for efficiency but also so
+        // that the tour tooltips pointing at the navbar disappear. This could
+        // rely on listening to the transitionend event but it seems more future
+        // proof to just add a delay after which the navbar is hidden.
+        this._hideBackendNavbarTimeout = setTimeout(() => {
+            this.el.ownerDocument.body.classList.add('editor_has_snippets_hide_backend_navbar');
+        }, 500);
     },
     /**
      * @override
@@ -50,6 +60,8 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         this._super(...arguments);
         this.$body[0].removeEventListener('selectionchange', this.__onSelectionChange);
         this.$body[0].classList.remove('o_animated_text_highlighted');
+        clearTimeout(this._hideBackendNavbarTimeout);
+        this.el.ownerDocument.body.classList.remove('editor_has_snippets_hide_backend_navbar');
     },
 
     //--------------------------------------------------------------------------
@@ -73,22 +85,47 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * if not already defined.
      *
      * @private
-     * @param {boolean} [reconfigure=false]
-     * @param {boolean} [onlyIfUndefined=false]
+     * @param {boolean} [alwaysReconfigure=false]
+     * @param {boolean} [configureIfNecessary=false]
      */
-    async _configureGMapAPI({reconfigure, onlyIfUndefined}) {
+    async _configureGMapAPI({alwaysReconfigure, configureIfNecessary}) {
+        if (!alwaysReconfigure && !configureIfNecessary) {
+            // TODO should review, parameters are weird... only one necessary?
+            return false;
+        }
+
         const apiKey = await new Promise(resolve => {
             this.getParent().trigger_up('gmap_api_key_request', {
                 onSuccess: key => resolve(key),
             });
         });
-        if (!reconfigure && (apiKey || !onlyIfUndefined)) {
+        const apiKeyValidation = apiKey ? await this._validateGMapAPIKey(apiKey) : {
+            isValid: false,
+            message: undefined,
+        };
+        if (!alwaysReconfigure && configureIfNecessary && apiKey && apiKeyValidation.isValid) {
             return false;
         }
+
         let websiteId;
         this.trigger_up('context_get', {
             callback: ctx => websiteId = ctx['website_id'],
         });
+
+        function applyError(message) {
+            const $apiKeyInput = this.find('#api_key_input');
+            const $apiKeyHelp = this.find('#api_key_help');
+            $apiKeyInput.addClass('is-invalid');
+            $apiKeyHelp.empty().text(message);
+        }
+
+        const $content = $(qweb.render('website.s_google_map_modal', {
+            apiKey: apiKey,
+        }));
+        if (!apiKeyValidation.isValid && apiKeyValidation.message) {
+            applyError.call($content, apiKeyValidation.message);
+        }
+
         return new Promise(resolve => {
             let invalidated = false;
             const dialog = new Dialog(this, {
@@ -96,54 +133,56 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 title: _t("Google Map API Key"),
                 buttons: [
                     {text: _t("Save"), classes: 'btn-primary', click: async (ev) => {
-                        const $apiKeyInput = dialog.$('#api_key_input');
-                        const valueAPIKey = $apiKeyInput.val();
-                        const $apiKeyHelp = dialog.$('#api_key_help');
+                        const valueAPIKey = dialog.$('#api_key_input').val();
                         if (!valueAPIKey) {
-                            $apiKeyInput.addClass('is-invalid');
-                            $apiKeyHelp.text(_t("Enter an API Key"));
+                            applyError.call(dialog.$el, _t("Enter an API Key"));
                             return;
                         }
                         const $button = $(ev.currentTarget);
                         $button.prop('disabled', true);
-                        try {
-                            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${valueAPIKey}`);
-                            if (response.status === 200) {
-                                await this._rpc({
-                                    model: 'website',
-                                    method: 'write',
-                                    args: [
-                                        [websiteId],
-                                        {google_maps_api_key: valueAPIKey},
-                                    ],
-                                });
-                                invalidated = true;
-                                dialog.close();
-                            } else {
-                                const text = await response.text();
-                                $apiKeyInput.addClass('is-invalid');
-                                $apiKeyHelp.empty().text(
-                                    _t("Invalid API Key. The following error was returned by Google:")
-                                ).append($('<i/>', {
-                                    text: text,
-                                    class: 'ms-1',
-                                }));
-                            }
-                        } catch (_e) {
-                            $apiKeyHelp.text(_t("Check your connection and try again"));
-                        } finally {
-                            $button.prop("disabled", false);
+                        const res = await this._validateGMapAPIKey(valueAPIKey);
+                        if (res.isValid) {
+                            await this._rpc({
+                                model: 'website',
+                                method: 'write',
+                                args: [
+                                    [websiteId],
+                                    {google_maps_api_key: valueAPIKey},
+                                ],
+                            });
+                            invalidated = true;
+                            dialog.close();
+                        } else {
+                            applyError.call(dialog.$el, res.message);
                         }
+                        $button.prop("disabled", false);
                     }},
                     {text: _t("Cancel"), close: true}
                 ],
-                $content: $(qweb.render('website.s_google_map_modal', {
-                    apiKey: apiKey,
-                })),
+                $content: $content,
             });
             dialog.on('closed', this, () => resolve(invalidated));
             dialog.open();
         });
+    },
+    /**
+     * @private
+     */
+    async _validateGMapAPIKey(key) {
+        try {
+            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${key}`);
+            const isValid = (response.status === 200);
+            return {
+                isValid: isValid,
+                message: !isValid &&
+                    _t("Invalid API Key. The following error was returned by Google:") + " " + (await response.text()),
+            };
+        } catch {
+            return {
+                isValid: false,
+                message: _t("Check your connection and try again"),
+            };
+        }
     },
     /**
      * @override
@@ -168,8 +207,8 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
     async _handleGMapRequest(ev, gmapRequestEventName) {
         ev.stopPropagation();
         const reconfigured = await this._configureGMapAPI({
-            reconfigure: ev.data.reconfigure,
-            onlyIfUndefined: ev.data.configureIfNecessary,
+            alwaysReconfigure: ev.data.reconfigure,
+            configureIfNecessary: ev.data.configureIfNecessary,
         });
         this.getParent().trigger_up(gmapRequestEventName, {
             refetch: reconfigured,
@@ -377,7 +416,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             try {
                 range.surroundContents(animatedTextEl);
                 $snippet = $(animatedTextEl);
-            } catch (_e) {
+            } catch {
                 // This try catch is needed because 'surroundContents' may
                 // fail when the range has partially selected a non-Text node.
                 if (range.commonAncestorContainer.textContent === range.toString()) {
@@ -430,7 +469,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 }
             }
         }
-    }
+    },
 });
 
 weSnippetEditor.SnippetEditor.include({
@@ -448,6 +487,29 @@ weSnippetEditor.SnippetEditor.include({
             return _t("Logo");
         }
         return this._super(...arguments);
+    },
+    /**
+     * Changes some behaviors before the drag and drop.
+     *
+     * @private
+     * @override
+     * @returns {Function} a function that restores what was changed when the
+     *  drag and drop is over.
+     */
+    _prepareDrag() {
+        const restore = this._super(...arguments);
+        // Remove the footer scroll effect if it has one (because the footer
+        // dropzone flickers otherwise when it is in grid mode).
+        const wrapwrapEl = this.$body[0].ownerDocument.defaultView.document.body.querySelector('#wrapwrap');
+        const hasFooterScrollEffect = wrapwrapEl && wrapwrapEl.classList.contains('o_footer_effect_enable');
+        if (hasFooterScrollEffect) {
+            wrapwrapEl.classList.remove('o_footer_effect_enable');
+            return () => {
+                wrapwrapEl.classList.add('o_footer_effect_enable');
+                restore();
+            };
+        }
+        return restore;
     },
 });
 return {

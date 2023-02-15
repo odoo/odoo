@@ -11,7 +11,7 @@ This is the module to manage the accounting chart for Algeria in Odoo.
 This module applies to companies based in Algeria.
 """,
     'author': 'Osis',
-    'depends': ['account'],
+    'depends': ['account', 'l10n_multilang'],
     'data': [
         'data/account_chart_template_data.xml',
         'data/account.account.template.csv',
@@ -19,6 +19,9 @@ This module applies to companies based in Algeria.
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configuration_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
 }

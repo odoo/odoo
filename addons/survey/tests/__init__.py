@@ -9,6 +9,7 @@ from . import test_certification_flow
 from . import test_survey_invite
 from . import test_survey_security
 from . import test_survey_randomize
+from . import test_survey_ui_backend
 from . import test_survey_ui_certification
 from . import test_survey_ui_feedback
 from . import test_survey_ui_session

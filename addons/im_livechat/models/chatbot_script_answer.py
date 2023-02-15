@@ -12,7 +12,7 @@ class ChatbotScriptAnswer(models.Model):
     _description = 'Chatbot Script Answer'
     _order = 'script_step_id, sequence, id'
 
-    name = fields.Char(string='Name', required=True, translate=True)
+    name = fields.Char(string='Answer', required=True, translate=True)
     sequence = fields.Integer(string='Sequence', default=1)
     redirect_link = fields.Char('Redirect Link',
         help="The visitor will be redirected to this link upon clicking the option "

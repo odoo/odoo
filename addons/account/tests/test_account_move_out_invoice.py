@@ -570,7 +570,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu',
+                'name': 'turlututu installment #1',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 423.0,
@@ -578,7 +578,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu',
+                'name': 'turlututu installment #2',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 987.0,
@@ -627,7 +627,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu',
+                'name': 'turlututu installment #1',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 414.0,
@@ -635,7 +635,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu',
+                'name': 'turlututu installment #2',
                 'account_id': self.partner_b.property_account_receivable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 966.0,
@@ -1164,57 +1164,49 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
 
-        analytic_tag = self.env['account.analytic.tag'].create({
-            'name': 'test_analytic_tag',
-        })
-
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account',
             'partner_id': self.invoice.partner_id.id,
+            'plan_id': analytic_plan.id,
             'code': 'TEST'
         })
 
+        analytic_distribution = {str(analytic_account.id): 100.00}
+
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = analytic_account
-            line_form.analytic_tag_ids.add(analytic_tag)
+            line_form.analytic_distribution = analytic_distribution
         move_form.save()
 
         # The tax is not flagged as an analytic one. It should change nothing on the taxes.
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
+            line_form.analytic_distribution = {}
         move_form.save()
 
         # Enable the analytic
@@ -1222,8 +1214,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = analytic_account
-            line_form.analytic_tag_ids.add(analytic_tag)
+            line_form.analytic_distribution = analytic_distribution
         move_form.save()
 
         # The tax is flagged as an analytic one.
@@ -1231,103 +1222,94 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
                 'amount_currency': -150.0,
                 'credit': 150.0,
-                'analytic_account_id': analytic_account.id,
-                'analytic_tag_ids': analytic_tag.ids,
+                'analytic_distribution': analytic_distribution,
             },
             {
                 **self.tax_line_vals_1,
                 'amount_currency': -30.0,
                 'credit': 30.0,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
         move_form = Form(self.invoice)
         with move_form.invoice_line_ids.edit(0) as line_form:
-            line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
+            line_form.analytic_distribution = {}
         with move_form.invoice_line_ids.edit(1) as line_form:
-            line_form.analytic_account_id = self.env['account.analytic.account']
-            line_form.analytic_tag_ids.clear()
+            line_form.analytic_distribution = {}
         move_form.save()
 
         # The tax line has been removed.
         self.assertInvoiceValues(self.invoice, [
             {
                 **self.product_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.product_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.tax_line_vals_2,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
             {
                 **self.term_line_vals_1,
-                'analytic_account_id': False,
-                'analytic_tag_ids': [],
+                'analytic_distribution': False,
             },
         ], self.move_vals)
 
     def test_out_invoice_line_onchange_analytic_2(self):
         self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
 
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test', 'company_id': False})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test_analytic_account1',
+            'plan_id': analytic_plan.id,
             'code': 'TEST1'
         })
 
+        analytic_distribution = {str(analytic_account.id): 100.00}
+
         self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
-            'analytic_account_id': analytic_account.id,
+            'analytic_distribution': analytic_distribution,
         })]})
 
         self.assertRecordValues(self.invoice.invoice_line_ids, [
-            {'analytic_account_id': analytic_account.id},
-            {'analytic_account_id': False},
+            {'analytic_distribution': analytic_distribution},
+            {'analytic_distribution': False},
         ])
 
         # We can remove the analytic account, it is not recomputed by an invalidation
         self.invoice.write({'invoice_line_ids': [(1, self.invoice.invoice_line_ids.ids[0], {
-            'analytic_account_id': False,
+            'analytic_distribution': False,
         })]})
 
         self.assertRecordValues(self.invoice.invoice_line_ids, [
-            {'analytic_account_id': False},
-            {'analytic_account_id': False},
+            {'analytic_distribution': False},
+            {'analytic_distribution': False},
         ])
 
     def test_out_invoice_line_onchange_cash_rounding_1(self):
@@ -2345,9 +2327,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.tax_line_vals_1,
                 'currency_id': self.currency_data['currency'].id,
-                'amount_currency': -180.0,
+                'amount_currency': -200.0,
                 'debit': 0.0,
-                'credit': 90.0,
+                'credit': 100.0,
             },
             {
                 **self.tax_line_vals_2,
@@ -2360,8 +2342,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.term_line_vals_1,
                 'name': move.name,
                 'currency_id': self.currency_data['currency'].id,
-                'amount_currency': 1410.0,
-                'debit': 705.0,
+                'amount_currency': 1430.0,
+                'debit': 715.0,
                 'credit': 0.0,
                 'date_maturity': fields.Date.from_string('2017-01-15'),
             },
@@ -2371,8 +2353,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
             'date': fields.Date.from_string('2017-01-15'),
             'amount_untaxed': 1200.0,
-            'amount_tax': 210.0,
-            'amount_total': 1410.0,
+            'amount_tax': 230.0,
+            'amount_total': 1430.0,
         })
 
     def test_out_invoice_switch_out_refund_1(self):
@@ -2398,7 +2380,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        move.action_switch_invoice_into_refund_credit_note()
+        move.action_switch_move_type()
 
         self.assertRecordValues(move, [{'move_type': 'out_refund'}])
         self.assertInvoiceValues(move, [
@@ -2518,7 +2500,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_untaxed' : -self.move_vals['amount_untaxed'],
         })
 
-        move.action_switch_invoice_into_refund_credit_note()
+        move.action_switch_move_type()
 
         self.assertRecordValues(move, [{'move_type': 'out_refund'}])
         self.assertInvoiceValues(move, [
@@ -3167,6 +3149,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
             tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
@@ -3350,3 +3333,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice.amount_untaxed, 82.64)
         self.assertEqual(invoice.amount_tax, 17.36)
         self.assertEqual(len(invoice.invoice_line_ids), 2)
+
+    def test_out_invoice_depreciated_account(self):
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'currency_id': self.currency_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': self.product_a.property_account_income_id.id,
+                })
+            ],
+        })
+        self.product_a.property_account_income_id.deprecated = True
+        with self.assertRaises(UserError), self.cr.savepoint():
+            move.action_post()

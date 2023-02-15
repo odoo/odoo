@@ -79,17 +79,18 @@
             'website_sale/static/src/scss/website_sale_backend.scss',
             'website_sale/static/src/xml/website_sale_dashboard.xml',
             'website_sale/static/src/js/tours/website_sale_shop.js',
+            'website_sale/static/src/xml/website_sale.xml',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
             'website_sale/static/src/js/website_sale.editor.js',
+            'website_sale/static/src/js/website_sale_form_editor.js',
         ],
         'website.assets_editor': [
             'website_sale/static/src/js/systray_items/*.js',
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
-            'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
         ],
         'web.assets_common': [

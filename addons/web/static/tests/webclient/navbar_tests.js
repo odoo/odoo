@@ -21,7 +21,7 @@ import {
     mockTimeout,
 } from "../helpers/utils";
 
-const { Component, xml, onRendered } = owl;
+import { Component, xml, onRendered } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");

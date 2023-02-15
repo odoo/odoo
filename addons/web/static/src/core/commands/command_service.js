@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { CommandPalette } from "./command_palette";
 
-const { Component, xml, EventBus } = owl;
+import { Component, xml, EventBus } from "@odoo/owl";
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
@@ -21,6 +21,7 @@ const { Component, xml, EventBus } = owl;
 /**
  * @typedef {import("../hotkeys/hotkey_service").HotkeyOptions & {
  *  category?: string;
+ *  isAvailable: ()=>(boolean);
  * }} CommandOptions
  */
 
@@ -175,6 +176,7 @@ export const commandService = {
                 registration.removeHotkey = hotkeyService.add(registration.hotkey, action, {
                     activeElement: registration.activeElement,
                     global: registration.global,
+                    validate: registration.isAvailable,
                 });
             }
 

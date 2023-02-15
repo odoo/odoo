@@ -126,6 +126,8 @@ QUnit.module("ViewDialogs", (hooks) => {
                             groupby: ["bar"],
                             orderby: "",
                             expand: false,
+                            expand_orderby: null,
+                            expand_limit: null,
                             lazy: true,
                             limit: 80,
                             offset: 0,
@@ -226,7 +228,6 @@ QUnit.module("ViewDialogs", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         webClient.env.services.dialog.add(SelectCreateDialog, {
             noCreate: true,
-            readonly: true, //Not used
             resModel: "partner",
             domain: [["id", "=", session.user_context.uid]],
         });
@@ -319,7 +320,6 @@ QUnit.module("ViewDialogs", (hooks) => {
             },
         });
 
-        await click(target, ".o_form_button_edit");
         await click(target, ".o_field_x2many_list_row_add a");
 
         await editInput(target, ".o_field_widget[name=instrument] input", "ABC");
@@ -342,7 +342,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("SelectCreateDialog: save current search", async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         serverData.views = {
             "partner,false,list": `
@@ -384,6 +384,9 @@ QUnit.module("ViewDialogs", (hooks) => {
                     "should save the correct context"
                 );
                 return 7; // fake serverSideId
+            }
+            if (args.method === "get_views") {
+                assert.equal(args.kwargs.options.load_filters, true, "Missing load_filters option");
             }
         };
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
@@ -476,4 +479,41 @@ QUnit.module("ViewDialogs", (hooks) => {
             await click(target, ".modal .o_select_button");
         }
     );
+
+    QUnit.test("SelectCreateDialog: default props, create a record", async function (assert) {
+        serverData.views = {
+            "partner,false,list": `<tree><field name="display_name"/></tree>`,
+            "partner,false,search": `
+                <search>
+                    <filter name="bar" help="Bar" domain="[('bar', '=', True)]"/>
+                </search>`,
+            "partner,false,form": `<form><field name="display_name"/></form>`,
+        };
+
+        const webClient = await createWebClient({ serverData });
+
+        webClient.env.services.dialog.add(SelectCreateDialog, {
+            onSelected: (resIds) => assert.step(`onSelected ${resIds}`),
+            resModel: "partner",
+        });
+        await nextTick();
+
+        assert.containsOnce(target, ".o_dialog");
+        assert.containsN(target, ".o_dialog .o_list_view .o_data_row", 3);
+        assert.containsN(target, ".o_dialog footer button", 3);
+        assert.containsOnce(target, ".o_dialog footer button.o_select_button");
+        assert.containsOnce(target, ".o_dialog footer button.o_create_button");
+        assert.containsOnce(target, ".o_dialog footer button.o_form_button_cancel");
+
+        await click(target.querySelector(".o_dialog footer button.o_create_button"));
+
+        assert.containsN(target, ".o_dialog", 2);
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+
+        await editInput(target, ".o_dialog .o_form_view .o_field_widget input", "hello");
+        await click(target.querySelector(".o_dialog .o_form_button_save"));
+
+        assert.containsNone(target, ".o_dialog");
+        assert.verifySteps(["onSelected 4"]);
+    });
 });

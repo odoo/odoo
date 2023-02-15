@@ -9,8 +9,8 @@ from odoo.addons.bus.websocket import wsrequest
 class IrWebsocket(models.AbstractModel):
     _inherit = 'ir.websocket'
 
-    def _update_bus_presence(self, inactivity_period):
-        super()._update_bus_presence(inactivity_period)
+    def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
+        super()._update_bus_presence(inactivity_period, im_status_ids_by_model)
         #  This method can either be called due to an http or a
         #  websocket request. The request itself is necessary to
         #  retrieve the current guest. Let's retrieve the proper

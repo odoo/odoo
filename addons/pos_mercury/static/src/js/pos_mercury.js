@@ -1,34 +1,37 @@
-odoo.define('pos_mercury.pos_mercury', function (require) {
-"use strict";
+/** @odoo-module */
 
-var { PosGlobalState, Order, Payment } = require('point_of_sale.models');
-const Registries = require('point_of_sale.Registries');
+import { PosGlobalState, Order, Payment } from "@point_of_sale/js/models";
+import { patch } from "@web/core/utils/patch";
 
-
-const PosMercuryPosGlobalState = (PosGlobalState) => class PosMercuryPosGlobalState extends PosGlobalState {
+patch(PosGlobalState.prototype, "pos_mercury.PosGlobalState", {
     getOnlinePaymentMethods() {
         var online_payment_methods = [];
 
         $.each(this.payment_methods, function (i, payment_method) {
             if (payment_method.pos_mercury_config_id) {
-                online_payment_methods.push({label: payment_method.name, item: payment_method.id});
+                online_payment_methods.push({
+                    label: payment_method.name,
+                    item: payment_method.id,
+                });
             }
         });
 
         return online_payment_methods;
-    }
+    },
     decodeMagtek(magtekInput) {
         // Regular expression to identify and extract data from the track 1 & 2 of the magnetic code
-        var _track1_regex = /%B?([0-9]*)\^([A-Z\/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/;
+        // FIXME: ` -_` is a character range from 32 to 95 which contains a lot of things and also covers `A-Z`
+        //        this is almost certainly a mistake.
+        var _track1_regex = /%B?([0-9]*)\^([A-Z/ -_]*)\^([0-9]{4})(.{3})([^?]+)\?/;
 
         var track1 = magtekInput.match(_track1_regex);
-        var magtek_generated = magtekInput.split('|');
+        var magtek_generated = magtekInput.split("|");
 
         var to_return = {};
         try {
             track1.shift(); // get rid of complete match
-            to_return['number'] = track1.shift().substr(-4);
-            to_return['name'] = track1.shift();
+            to_return["number"] = track1.shift().substr(-4);
+            to_return["name"] = track1.shift();
             track1.shift(); // expiration date
             track1.shift(); // service code
             track1.shift(); // discretionary data
@@ -37,21 +40,21 @@ const PosMercuryPosGlobalState = (PosGlobalState) => class PosMercuryPosGlobalSt
             magtek_generated.shift(); // track1 and track2
             magtek_generated.shift(); // clear text crc
             magtek_generated.shift(); // encryption counter
-            to_return['encrypted_block'] = magtek_generated.shift();
+            to_return["encrypted_block"] = magtek_generated.shift();
             magtek_generated.shift(); // enc session id
             magtek_generated.shift(); // device serial
             magtek_generated.shift(); // magneprint data
             magtek_generated.shift(); // magneprint status
             magtek_generated.shift(); // enc track3
-            to_return['encrypted_key'] = magtek_generated.shift();
+            to_return["encrypted_key"] = magtek_generated.shift();
             magtek_generated.shift(); // enc track1
             magtek_generated.shift(); // reader enc status
 
             return to_return;
-        } catch (_e) {
+        } catch {
             return 0;
         }
-    }
+    },
     decodeMercuryResponse(data) {
         // get rid of xml version declaration and just keep the RStream
         // from the response because the xml contains two version
@@ -78,14 +81,12 @@ const PosMercuryPosGlobalState = (PosGlobalState) => class PosMercuryPosGlobalSt
             purchase: parseFloat(tran_response.find("Purchase").text()),
             authorize: parseFloat(tran_response.find("Authorize").text()),
         };
-    }
-}
-Registries.Model.extend(PosGlobalState, PosMercuryPosGlobalState);
+    },
+});
 
-
-const PosMercuryPayment = (Payment) => class PosMercuryPayment extends Payment {
+patch(Payment.prototype, "pos_mercury.Payment", {
     init_from_JSON(json) {
-        super.init_from_JSON(...arguments);
+        this._super(...arguments);
 
         this.paid = json.paid;
         this.mercury_card_number = json.mercury_card_number;
@@ -99,43 +100,41 @@ const PosMercuryPayment = (Payment) => class PosMercuryPayment extends Payment {
         this.mercury_swipe_pending = json.mercury_swipe_pending;
 
         this.set_credit_card_name();
-    }
+    },
     export_as_JSON() {
-        return _.extend(super.export_as_JSON(...arguments), {paid: this.paid,
-                                                                              mercury_card_number: this.mercury_card_number,
-                                                                              mercury_card_brand: this.mercury_card_brand,
-                                                                              mercury_card_owner_name: this.mercury_card_owner_name,
-                                                                              mercury_ref_no: this.mercury_ref_no,
-                                                                              mercury_record_no: this.mercury_record_no,
-                                                                              mercury_invoice_no: this.mercury_invoice_no,
-                                                                              mercury_auth_code: this.mercury_auth_code,
-                                                                              mercury_data: this.mercury_data,
-                                                                              mercury_swipe_pending: this.mercury_swipe_pending});
-    }
+        return _.extend(this._super(...arguments), {
+            paid: this.paid,
+            mercury_card_number: this.mercury_card_number,
+            mercury_card_brand: this.mercury_card_brand,
+            mercury_card_owner_name: this.mercury_card_owner_name,
+            mercury_ref_no: this.mercury_ref_no,
+            mercury_record_no: this.mercury_record_no,
+            mercury_invoice_no: this.mercury_invoice_no,
+            mercury_auth_code: this.mercury_auth_code,
+            mercury_data: this.mercury_data,
+            mercury_swipe_pending: this.mercury_swipe_pending,
+        });
+    },
     set_credit_card_name() {
         if (this.mercury_card_number) {
             this.name = this.mercury_card_brand + " (****" + this.mercury_card_number + ")";
         }
-    }
+    },
     is_done() {
-        var res = super.is_done(...arguments);
+        var res = this._super(...arguments);
         return res && !this.mercury_swipe_pending;
-    }
+    },
     export_for_printing() {
-        const result = super.export_for_printing(...arguments);
+        const result = this._super(...arguments);
         result.mercury_data = this.mercury_data;
         result.mercury_auth_code = this.mercury_auth_code;
         return result;
-    }
-}
-Registries.Model.extend(Payment, PosMercuryPayment);
+    },
+});
 
-
-const PosMercuryOrder = (Order) => class PosMercuryOrder extends Order {
+patch(Order.prototype, "pos_mercury.Order", {
     electronic_payment_in_progress() {
-        var res = super.electronic_payment_in_progress(...arguments);
-        return res || this.get_paymentlines().some(line => line.mercury_swipe_pending);
-    }
-}
-Registries.Model.extend(Order, PosMercuryOrder);
+        var res = this._super(...arguments);
+        return res || this.get_paymentlines().some((line) => line.mercury_swipe_pending);
+    },
 });

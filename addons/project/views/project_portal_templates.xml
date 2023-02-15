@@ -125,7 +125,7 @@
                     </tr>
                 </thead>
                 <t t-foreach="grouped_tasks" t-as="tasks">
-                    <tbody>
+                    <tbody t-if="tasks">
                         <tr t-if="not groupby == 'none'" class="table-light">
                             <th t-if="groupby == 'project'" t-attf-colspan="{{grouped_tasks_colspan}}">
                                 <!-- This div is necessary for documents_project_sale -->
@@ -149,7 +149,7 @@
                                 <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
                         </tr>
                     </tbody>
-                    <tbody>
+                    <tbody t-if="tasks">
                         <t t-foreach="tasks" t-as="task">
                             <tr>
                                 <td class="text-start">
@@ -179,10 +179,10 @@
                                     </t>
                                 </td>
                                 <td t-if="groupby != 'project'">
-                                    <span class="badge rounded-pill text-bg-info mw-100 text-truncate" title="Current project of the task" t-esc="task.project_id.name" />
+                                    <span class="badge rounded-pill text-bg-info mw-100 align-middle text-truncate" title="Current project of the task" t-esc="task.project_id.name" />
                                 </td>
                                 <td t-if="groupby != 'stage'" class="text-end">
-                                    <span t-attf-class="badge #{'text-bg-primary' if task.stage_id.fold else 'text-bg-light'}" title="Current stage of the task" t-esc="task.stage_id.name"/>
+                                    <span t-attf-class="badge #{'text-bg-primary' if task.stage_id.fold else 'text-bg-light'} o_text_overflow" t-attf-title="#{task.stage_id.name}" t-esc="task.stage_id.name"/>
                                 </td>
                             </tr>
                         </t>
@@ -212,7 +212,7 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/web#model=project.task&amp;id=%s&amp;action=%s&amp;view_type=form' % (task.id, task.env.ref('project.action_view_all_task').id)"/>
+                    <t t-set="backend_url" t-value="'/web#model=project.task&amp;id=%s&amp;action=%s&amp;view_type=form' % (task.id, task.env.ref('project.action_view_my_task').id)"/>
                 </t>
             </t>
 

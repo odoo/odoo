@@ -19,7 +19,7 @@
                         ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),
                         '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
-                    attrs="{'invisible': [('event_ok', '=', False)], 'required': [('event_ok', '!=', False)]}"
+                    attrs="{'invisible': [('product_type', '!=', 'event')], 'required': [('product_type', '=', 'event')]}"
                     options="{'no_open': True, 'no_create': True}"
                 />
                 <field
@@ -29,15 +29,13 @@
                          '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
                     attrs="{
-                        'invisible': ['|', ('event_ok', '=', False), ('event_id', '=', False)],
-                        'required': [('event_ok', '!=', False), ('event_id', '!=', False)],
+                        'invisible': ['|', ('product_type', '!=', 'event'), ('event_id', '=', False)],
+                        'required': [('product_type', '=', 'event'), ('event_id', '!=', False)],
                     }"
                     options="{'no_open': True, 'no_create': True}"
                 />
-                <field name="event_ok" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_template_id']" position="after">
-                <field name="event_ok" invisible="1" />
                 <field name="event_id" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                 <field name="event_ticket_id" optional="hide" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
             </xpath>

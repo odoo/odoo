@@ -5,7 +5,7 @@
     <record id="tax110" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">110</field>
-        <field name="name">Salgsmoms 25%, varer</field>
+        <field name="name">Sales VAT 25%, goods</field>
         <field name="description">25%</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
@@ -30,7 +30,7 @@
     <record id="tax120" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">120</field>
-        <field name="name">Salgsmoms 25%, ydelser</field>
+        <field name="name">Sales tax 25%, services</field>
         <field name="description">25%</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
@@ -56,7 +56,7 @@
     <record id="tax210" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">210</field>
-        <field name="name">EU Varesalg (Virksomheder) - momsfritaget</field>
+        <field name="name">EU Sales of Goods (Business) - VAT exempt</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -78,7 +78,7 @@
     <record id="tax220" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">220</field>
-        <field name="name">EU Ydelsessalg (Virksomheder) - momsfritaget</field>
+        <field name="name">EU Sales of Services (Business) - VAT exempt</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -101,7 +101,7 @@
     <record id="tax310" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">310</field>
-        <field name="name">3. Land Salg Vare / Ydelser</field>
+        <field name="name">3rd country Sales Goods/Services</field>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -128,7 +128,7 @@
     <record id="tax400" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">400</field>
-        <field name="name">Købsmoms 25%, varer</field>
+        <field name="name">VAT 25%, goods</field>
         <field name="description">25%</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
@@ -153,8 +153,8 @@
     <record id="tax410" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">410</field>
-        <field name="name">Købsmoms 25% indeholdt, varer</field>
-        <field name="description">25% indeholdt</field>
+        <field name="name">VAT 25% included, goods</field>
+        <field name="description">25% included</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="price_include" eval="True"/>
@@ -179,7 +179,7 @@
     <record id="tax420" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">420</field>
-        <field name="name">Købsmoms 25%, ydelser</field>
+        <field name="name">VAT 25%, services</field>
         <field name="description">25%</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
@@ -204,7 +204,7 @@
     <record id="tax425" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">420</field>
-        <field name="name">Købsmoms 25% indeholdt, ydelser</field>
+        <field name="name">VAT 25% included, services</field>
         <field name="description">25%</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
@@ -230,7 +230,7 @@
     <record id="tax430" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">430</field>
-        <field name="name">Køb omvendt betalingspligt</field>
+        <field name="name">Purchase reverse charge</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -266,7 +266,7 @@
     <record id="tax450" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">450</field>
-        <field name="name">Restaurationsmoms 6,25%, købsmoms</field>
+        <field name="name">Restaurant VAT 6.25%, purchase VAT</field>
         <field name="description">6,25%</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
@@ -301,7 +301,7 @@
     <record id="tax460" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">450</field>
-        <field name="name">Restaurationsmoms indeholdt 6,25%, købsmoms</field>
+        <field name="name">Restaurant VAT 6.25%, purchase VAT</field>
         <field name="description">6,25%</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
@@ -338,7 +338,7 @@
     <record id="tax510" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">510</field>
-        <field name="name">EU Varekøb</field>
+        <field name="name">EU Purchases</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -380,7 +380,7 @@
     <record id="tax520" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">520</field>
-        <field name="name">EU Ydelseskøb</field>
+        <field name="name">EU Performance Purchasing</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -423,7 +423,7 @@
     <record id="tax610" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">610</field>
-        <field name="name">3. Land Varekøb</field>
+        <field name="name">3. Land Purchase</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -459,7 +459,7 @@
     <record id="tax620" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">620</field>
-        <field name="name">3. Land Ydelseskøb</field>
+        <field name="name">3rd country Performance Purchasing</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -499,7 +499,7 @@
     <record id="tax710" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">710</field>
-        <field name="name">Olie- og flaskegasafgift</field>
+        <field name="name">Oil and cylinder gas tax</field>
         <field name="amount">100</field>
         <field name="amount_type">division</field>
         <field name="price_include" eval="True"/>
@@ -536,7 +536,7 @@
     <record id="tax720" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">720</field>
-        <field name="name">Elafgift</field>
+        <field name="name">Electricity Tax</field>
         <field name="amount">0.896</field>
         <field name="amount_type">fixed</field>
         <field name="price_include" eval="True"/>
@@ -564,7 +564,7 @@
     <record id="tax730" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">730</field>
-        <field name="name">Naturgas- og bygasafgift</field>
+        <field name="name">Natural gas and town gas tax</field>
         <field name="amount">100</field>
         <field name="amount_type">division</field>
         <field name="price_include" eval="True"/>
@@ -600,7 +600,7 @@
     <record id="tax740" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">740</field>
-        <field name="name">Kulafgift</field>
+        <field name="name">Coal Tax</field>
         <field name="amount">100</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -635,7 +635,7 @@
     <record id="tax750" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">750</field>
-        <field name="name">CO2-afgift</field>
+        <field name="name">CO-2 tax</field>
         <field name="active" eval="False"/>
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
@@ -672,7 +672,7 @@
     <record id="tax760" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">760</field>
-        <field name="name">Vandafgift</field>
+        <field name="name">Water tax</field>
         <field name="amount">6.1800</field>
         <field name="amount_type">fixed</field>
         <field name="price_include" eval="True"/>

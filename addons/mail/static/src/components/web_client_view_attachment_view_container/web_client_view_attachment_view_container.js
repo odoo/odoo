@@ -1,11 +1,8 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models';
-// ensure components are registered beforehand.
-import '@mail/components/web_client_view_attachment_view/web_client_view_attachment_view';
-import { getMessagingComponent } from '@mail/utils/messaging_component';
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
 
-const { Component, onWillDestroy, onWillUpdateProps } = owl;
+import { Component, onWillDestroy, onWillUpdateProps } from "@odoo/owl";
 
 const getNextId = (function () {
     let tmpId = 0;
@@ -25,17 +22,16 @@ const getNextId = (function () {
  * mounting of attachment view until it becomes initialized.
  */
 export class WebClientViewAttachmentViewContainer extends Component {
-
     /**
      * @override
      */
     setup() {
-        useModels();
+        useMessagingContainer();
         super.setup();
         this.webClientViewAttachmentView = undefined;
         this.webClientViewAttachmentViewId = getNextId();
         this._insertFromProps(this.props);
-        onWillUpdateProps(nextProps => this._insertFromProps(nextProps));
+        onWillUpdateProps((nextProps) => this._insertFromProps(nextProps));
         onWillDestroy(() => this._deleteRecord());
     }
 
@@ -64,21 +60,19 @@ export class WebClientViewAttachmentViewContainer extends Component {
             this._deleteRecord();
             return;
         }
-        const thread = messaging.models['Thread'].insert({
+        const thread = messaging.models["Thread"].insert({
             id: props.threadId,
             model: props.threadModel,
         });
-        this.webClientViewAttachmentView = messaging.models['WebClientViewAttachmentView'].insert({
+        this.webClientViewAttachmentView = messaging.models["WebClientViewAttachmentView"].insert({
             id: this.webClientViewAttachmentViewId,
             thread,
         });
         this.render();
     }
-
 }
 
 Object.assign(WebClientViewAttachmentViewContainer, {
-    components: { WebClientViewAttachmentView: getMessagingComponent('WebClientViewAttachmentView') },
     props: {
         threadId: {
             type: Number,
@@ -86,5 +80,5 @@ Object.assign(WebClientViewAttachmentViewContainer, {
         },
         threadModel: String,
     },
-    template: 'mail.WebClientViewAttachmentViewContainer',
+    template: "mail.WebClientViewAttachmentViewContainer",
 });

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-12-07 10:47+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,40 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_sale_stock_wishlist
-#. openerp-web
-#: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
-#: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
-#, python-format
-msgid "Add to wishlist"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
+msgid ""
+"<i class=\"fa fa-bell\"/>\n"
+"                        We'll notify you once the product is back in stock."
+msgstr ""
+
+#. module: website_sale_stock_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
+msgid ""
+"<i class=\"fa fa-times text-danger\"/>\n"
+"                                Invalid email"
+msgstr ""
+
+#. module: website_sale_stock_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
+msgid ""
+"<small>\n"
+"                            <i class=\"fa fa-envelope-o\"/>\n"
+"                            Get notified when back in stock\n"
+"                        </small>"
+msgstr ""
+
+#. module: website_sale_stock_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
+msgid ""
+"Add\n"
+"                <span class=\"d-none d-md-inline\">to Cart</span>"
 msgstr ""
 
 #. module: website_sale_stock_wishlist
 #. openerp-web
 #: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
 #, python-format
-msgid "Add to your wishlist to be notified when it's back in stock."
+msgid "Add to wishlist"
 msgstr ""
 
 #. module: website_sale_stock_wishlist
@@ -38,47 +60,13 @@ msgid "Added to your wishlist"
 msgstr ""
 
 #. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
-msgid "Be notified when back in stock"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#. openerp-web
-#: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
-#, python-format
-msgid "Check my wishlist"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.availability_email_body
-msgid "Dear Customer,"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#. openerp-web
-#: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
-#, python-format
-msgid "My wishlist"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.availability_email_body
-msgid "Order Now"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
 #: model:ir.model,name:website_sale_stock_wishlist.model_product_template
-msgid "Product Template"
+msgid "Product"
 msgstr ""
 
 #. module: website_sale_stock_wishlist
 #: model:ir.model,name:website_sale_stock_wishlist.model_product_wishlist
 msgid "Product Wishlist"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.availability_email_body
-msgid "Regards,"
 msgstr ""
 
 #. module: website_sale_stock_wishlist
@@ -99,32 +87,6 @@ msgid "Temporarily out of stock"
 msgstr ""
 
 #. module: website_sale_stock_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.availability_email_body
-msgid "The following product is now available."
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#: code:addons/website_sale_stock_wishlist/models/product_wishlist.py:0
-#, python-format
-msgid "The product '%(product_name)s' is now available"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#: code:addons/website_sale_stock_wishlist/models/product_wishlist.py:0
-#, python-format
-msgid "Wishlist"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#: model:ir.actions.server,name:website_sale_stock_wishlist.ir_cron_send_availability_email_ir_actions_server
-#: model:ir.cron,cron_name:website_sale_stock_wishlist.ir_cron_send_availability_email
-#: model:ir.cron,name:website_sale_stock_wishlist.ir_cron_send_availability_email
-msgid "Wishlist: send email regarding products availability"
-msgstr ""
-
-#. module: website_sale_stock_wishlist
-#. openerp-web
-#: code:addons/website_sale_stock_wishlist/static/src/xml/product_availability.xml:0
-#, python-format
-msgid "You'll be notified as soon as the product will be available again."
+#: model_terms:ir.ui.view,arch_db:website_sale_stock_wishlist.product_wishlist
+msgid "youremail@gmail.com"
 msgstr ""

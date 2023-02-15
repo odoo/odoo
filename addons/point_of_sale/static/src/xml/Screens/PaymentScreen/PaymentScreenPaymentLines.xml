@@ -31,7 +31,7 @@
                         <t t-if="line and line.payment_status">
                             <div class="paymentline electronic_payment">
                                 <t t-if="line.payment_status == 'pending'">
-                                    <div>
+                                    <div class="electronic_status">
                                         Payment request pending
                                     </div>
                                     <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="() => this.trigger('send-payment-request', line)">
@@ -39,7 +39,7 @@
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'retry'">
-                                    <div>
+                                    <div class="electronic_status">
                                         Transaction cancelled
                                     </div>
                                     <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="() => this.trigger('send-payment-request', line)">
@@ -47,7 +47,7 @@
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'force_done'">
-                                    <div>
+                                    <div class="electronic_status">
                                         Connection error
                                     </div>
                                     <div class="button send_force_done" title="Force Done" t-on-click="() => this.trigger('send-force-done', line)">
@@ -55,7 +55,7 @@
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'waitingCard'">
-                                    <div>
+                                    <div class="electronic_status">
                                         Waiting for card
                                     </div>
                                     <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.trigger('send-payment-cancel', line)">
@@ -63,7 +63,7 @@
                                     </div>
                                 </t>
                                 <t t-elif="['waiting', 'waitingCancel', 'waitingCapture'].includes(line.payment_status)">
-                                    <div>
+                                    <div class="electronic_status">
                                         Request sent
                                     </div>
                                     <div>
@@ -71,7 +71,7 @@
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversing'">
-                                    <div>
+                                    <div class="electronic_status">
                                         Reversal request sent to terminal
                                     </div>
                                     <div>
@@ -79,7 +79,7 @@
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'done'">
-                                    <div>
+                                    <div class="electronic_status">
                                         Payment Successful
                                     </div>
                                     <t t-if="line.can_be_reversed">
@@ -92,7 +92,7 @@
                                     </t>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversed'">
-                                    <div>
+                                    <div class="electronic_status">
                                         Payment reversed
                                     </div>
                                     <div></div>

@@ -88,7 +88,7 @@ Produkt setup:
 .
 
     """,
-    'depends': ['account', 'base_iban', 'base_vat'],
+    'depends': ['l10n_multilang', 'base_iban', 'base_vat'],
     'data': [
         'data/account_account_tags.xml',
         'data/l10n_dk_chart_template_data.xml',

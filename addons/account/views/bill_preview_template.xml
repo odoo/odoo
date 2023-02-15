@@ -27,13 +27,13 @@
                                     <div  style="width:50%; display:inline-block;">
                                         <address class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization" style="width:100%">
                                             <div>
-                                                <span itemprop="name"><t t-esc="company_name"/></span>
+                                                <span itemprop="name"><t t-out="company_name"/></span>
                                             </div>
                                             <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
                                                 <div class="d-flex align-items-baseline">
                                                     <span class="w-100 o_force_ltr d-block" itemprop="streetAddress">
                                                         <t t-foreach="company_street_address" t-as="line">
-                                                            <t t-esc="line"/><br/>
+                                                            <t t-out="line"/><br/>
                                                         </t>
                                                     </span>
                                                 </div>
@@ -43,17 +43,17 @@
                                 </div>
                             </div>
                             <div class="pt-3" style="margin-top: 32px;">
-                                <h2><t t-esc="invoice_name"/></h2>
+                                <h2><t t-out="invoice_name"/></h2>
                                 <div id="dates" class="page"  style="margin-top: 28px !important;">
                                     <div style="width:25%; display:inline-block;">
                                         <strong>Invoice Date:</strong>
-                                        <p class="m-0"><t t-esc="invoice_date"/></p>
+                                        <p class="m-0"><t t-out="invoice_date"/></p>
                                     </div>
 
                                     <div  style="width:25%; display:inline-block;">
                                         <div class="mb-0" itemscope="itemscope" itemtype="http://schema.org/Organization" style="width:100%">
                                                 <strong>Due Date:</strong>
-                                                <p class="m-0"><t t-esc="invoice_due_date"/></p>
+                                                <p class="m-0"><t t-out="invoice_due_date"/></p>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-4">
-                                    <p>Please use the following communication for your payment : <b><t t-esc="invoice_ref"/></b></p>
+                                    <p>Please use the following communication for your payment : <b><t t-out="invoice_ref"/></b></p>
                                     <p>Payment terms: 30 Days</p>
                                 </div>
                             </div>

@@ -7,13 +7,13 @@
         <field name="image_128" type="base64" file="payment_alipay/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_alipay"/>
         <!-- https://intl.alipay.com/ihome/home/about/buy.htm?topic=paymentMethods -->
-        <field name="payment_icon_ids"
+        <field name="payment_method_ids"
                eval="[(6, 0, [
-                   ref('payment.payment_icon_cc_jcb'),
-                   ref('payment.payment_icon_cc_mastercard'),
-                   ref('payment.payment_icon_cc_western_union'),
-                   ref('payment.payment_icon_cc_webmoney'),
-                   ref('payment.payment_icon_cc_visa'),
+                   ref('payment.payment_method_jcb'),
+                   ref('payment.payment_method_mastercard'),
+                   ref('payment.payment_method_western_union'),
+                   ref('payment.payment_method_webmoney'),
+                   ref('payment.payment_method_visa'),
                ])]"/>
         <field name="code">alipay</field>
         <field name="redirect_form_view_id" ref="redirect_form"/>

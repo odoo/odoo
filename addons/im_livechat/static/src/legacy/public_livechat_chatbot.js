@@ -27,7 +27,12 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
     _prepareGetSessionParameters() {
         const parameters = this._super(...arguments);
 
-        if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
+        const { publicLivechat } = this.messaging.publicLivechatGlobal;
+        if (publicLivechat && publicLivechat.isTemporary && !publicLivechat.data.chatbot_script_id) {
+            return parameters;
+        } else if (publicLivechat && publicLivechat.data.chatbot_script_id) {
+            parameters.chatbot_script_id = publicLivechat.data.chatbot_script_id;
+        } else if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
             parameters.chatbot_script_id = this.messaging.publicLivechatGlobal.chatbot.scriptId;
         }
 
@@ -101,6 +106,9 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
             this.messaging.publicLivechatGlobal.chatbot.update({
                 welcomeMessageTimeout: setTimeout(() => {
+                    if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                        return;
+                    }
                     this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
                     this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                 }, welcomeMessageDelay),

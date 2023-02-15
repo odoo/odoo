@@ -58,13 +58,14 @@ The Dashboard for the Sales Manager will include
     'demo': [
         'data/sale_order_template_demo.xml',
     ],
-    'application': True,
-    'uninstall_hook': 'uninstall_hook',
-    'post_init_hook': 'post_init_hook',
     'assets': {
         'web.assets_frontend': [
             'sale_management/static/src/js/**/*',
         ],
     },
+    'application': True,
+    'pre_init_hook': 'pre_init_hook',
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }

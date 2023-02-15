@@ -1,9 +1,9 @@
 <odoo>
     <div t-name="spreadsheet.ChartFigure" t-inherit="o-spreadsheet-ChartFigure" t-inherit-mode="extension" owl="1">
-        <xpath expr="//div[hasclass('o-chart-menu-item')]" position="before">
+        <xpath expr="//div[hasclass('o-figure-menu-item')]" position="before">
             <div
                 t-if="hasOdooMenu and !env.isDashboard()"
-                class="o-chart-menu-item o-chart-external-link"
+                class="o-figure-menu-item o-chart-external-link"
                 t-on-click="navigateToOdooMenu">
                 <span class="fa fa-external-link" />
             </div>

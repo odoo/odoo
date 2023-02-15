@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('sale_product_configurator_pricelist_tour', {
+registry.category("web_tour.tours").add('sale_product_configurator_pricelist_tour', {
     url: '/web',
     test: true,
-},
-[
-tour.stepUtils.showAppsMenuItem(),
+    steps: [
+stepUtils.showAppsMenuItem(),
 {
     content: "navigate to the sale app",
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
@@ -24,11 +24,17 @@ tour.stepUtils.showAppsMenuItem(),
     trigger: 'ul.ui-autocomplete > li > a:contains(Azure)',
 }, {
     content: "search the pricelist",
-    trigger: 'div[name="pricelist_id"] input',
-    run: 'text Custom pricelist (TEST)'
+    trigger: 'input[id="pricelist_id"]',
+    // Wait for onchange to come back
+    extra_trigger: "[name=partner_id]:contains(Fremont)",
+}, {
+    content: "search the pricelist",
+    trigger: 'input[id="pricelist_id"]',
+    run: 'text Custo'
 }, {
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
+    in_modal: false,
 }, {
     trigger: 'a:contains("Add a product")',
 }, {
@@ -65,12 +71,11 @@ tour.stepUtils.showAppsMenuItem(),
 }, {
     content: "add to SO",
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
 }, {
     content: "verify SO final price excluded",
     trigger: 'span[name="Untaxed Amount"]:contains("1,257.00")',
 }, {
     content: "verify SO final price included",
     trigger: 'span[name="amount_total"]:contains("1,437.00")',
-}, ...tour.stepUtils.discardForm()
-]);
+}, ...stepUtils.discardForm()
+]});

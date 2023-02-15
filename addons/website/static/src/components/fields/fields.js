@@ -6,9 +6,8 @@ import {useInputField} from '@web/views/fields/input_field_hook';
 import {useService} from '@web/core/utils/hooks';
 import {Switch} from '@website/components/switch/switch';
 import {registry} from '@web/core/registry';
-import {formatChar} from '@web/views/fields/formatters';
 
-const {Component, useState, onWillStart} = owl;
+const {Component, useState} = owl;
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
@@ -16,15 +15,17 @@ const {Component, useState, onWillStart} = owl;
  */
 class PageUrlField extends Component {
     setup() {
+        this.orm = useService('orm');
+        this.serverUrl = `${window.location.origin}/`;
+        this.pageUrl = this.fieldURL;
+
         this.state = useState({
             redirect_old_url: false,
-            url: this.props.value,
+            url: this.pageUrl,
             redirect_type: '301',
         });
-        useInputField({getValue: () => this.props.value.url || this.props.value});
 
-        this.serverUrl = window.location.origin;
-        this.pageUrl = this.props.value;
+        useInputField({getValue: () => this.fieldURL});
     }
 
     get enableRedirect() {
@@ -34,6 +35,11 @@ class PageUrlField extends Component {
     onChangeRedirectOldUrl(value) {
         this.state.redirect_old_url = value;
         this.updateValues();
+    }
+
+    get fieldURL() {
+        const value = this.props.value;
+        return (value.url !== undefined ? value.url : value).replace(/^\//g, '');
     }
 
     updateValues() {
@@ -56,61 +62,6 @@ PageUrlField.extractProps = ({attrs}) => {
 PageUrlField.supportedTypes = ['char'];
 
 registry.category("fields").add("page_url", PageUrlField);
-
-/**
- * Used to display key dependencies and warn user about changing a special file
- * (website.page & supported mimetype) name, since the key will be updated too.
- */
-class PageNameField extends Component {
-    setup() {
-        this.orm = useService('orm');
-
-        useInputField({getValue: () => this.props.value || ''});
-        this.state = useState({
-            name: this.props.value,
-        });
-
-        this.pageName = this.props.value;
-        this.supportedMimetypes = {};
-
-        onWillStart(() => this.onWillStart());
-    }
-
-    get formattedPageName() {
-        return formatChar(this.props.value);
-    }
-
-    async onWillStart() {
-        this.supportedMimetypes = await this.orm.call('website', 'guess_mimetype', []);
-    }
-
-    get warnAboutCall() {
-        return this.nameChanged && this.isSupportedMimetype;
-    }
-
-    get nameChanged() {
-        return this.state.name !== this.pageName;
-    }
-
-    get isSupportedMimetype() {
-        const ext = '.' + this.pageName.split('.').pop();
-        return ext in this.supportedMimetypes && ext !== '.html';
-    }
-}
-PageNameField.components = {PageDependencies};
-PageNameField.template = 'website.PageNameField';
-PageNameField.props = {
-    ...standardFieldProps,
-    placeholder: {type: String, optional: true},
-};
-PageNameField.extractProps = ({attrs}) => {
-    return {
-        placeholder: attrs.placeholder,
-    };
-};
-PageNameField.supportedTypes = ['char'];
-
-registry.category("fields").add("page_name", PageNameField);
 
 /**
  * Displays 'Selection' field's values as images to select.

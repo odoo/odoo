@@ -415,19 +415,19 @@ function formatSelection(value, field, options) {
     }
     return value;
 }
-
 /**
- * Returns a string representing the value of the python properties field.
+ * Returns a string representing json.
  *
- * @param {string|false} value
+ * @param {json|false} value
  * @param {Object} [field]
- *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @returns {string}
  */
-function formatProperties(value, field) {
-    if (!value || !value.length) {
+function formatJson(value, field, options) {
+    if (!value) {
         return '';
     }
-    return value.map(property => property['string']).join(', ');
+    return JSON.stringify(value);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -763,11 +763,10 @@ return {
         monetary: formatMonetary,
         one2many: formatX2Many,
         percentage: formatPercentage,
-        properties: formatProperties,
-        properties_definition: formatProperties,
         reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,
+        json: formatJson,
     },
     parse: {
         binary: _.identity,
@@ -789,6 +788,7 @@ return {
         reference: parseMany2one,
         selection: _.identity, // todo
         text: _.identity, // todo
+        json: _.identity, // todo
     },
 };
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.Navbar" owl="1">
+        <div class="pos-topheader">
+            <div t-if="pos.tempScreen" class="block-top-header" />
+            <div class="pos-branding">
+                <img t-if="!env.isMobile" class="pos-logo" t-on-click="() => debug.toggleWidget()" src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                <div t-if="props.showCashMoveButton" class="cash-move-button" t-on-click="onCashMoveButtonClick">
+                    <i class="fa fa-money" aria-hidden="true"></i>
+                    <span style="padding-left: 10px;">Cash In/Out</span>
+                </div>
+                <div class="ticket-button" t-att-class="{ highlight: isTicketScreenShown }" t-on-click="onTicketButtonClick">
+                    <div class="with-badge" t-att-badge="orderCount">
+                        <i class="fa fa-ticket" aria-hidden="true"></i>
+                    </div>
+                    <div t-if="!env.isMobile">Orders</div>
+                </div>
+            </div>
+            <div class="pos-rightheader">
+                <div class="status-buttons">
+                    <CashierName />
+                    <SaleDetailsButton t-if="env.proxy.printer" isHeaderButton="true"/>
+                    <ProxyStatus t-if="env.pos.config.use_proxy" />
+                    <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
+                    <SyncNotification />
+                    <HeaderButton />
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-    import tour from 'web_tour.tour';
+    import { registry } from "@web/core/registry";
+    import { stepUtils } from '@web_tour/js/tour_step_utils';
 
-    tour.register('crm_rainbowman', {
+    registry.category("web_tour.tours").add('crm_rainbowman', {
         test: true,
         url: "/web",
-    }, [
-        tour.stepUtils.showAppsMenuItem(),
+        steps: [
+        stepUtils.showAppsMenuItem(),
         {
             trigger: ".o_app[data-menu-xmlid='crm.crm_menu_root']",
             content: "open crm app",
@@ -60,16 +61,20 @@
         }, {
             trigger: ".o_statusbar_status button[data-value='4']",
             content: "move lead to won stage",
-        }, {
+        },
+        ...stepUtils.saveForm(),
+        {
             trigger: ".o_statusbar_status button[data-value='1']",
             extra_trigger: ".o_reward_rainbow",
             content: "move lead to previous stage & rainbowman appears",
         }, {
             trigger: "button[name=action_set_won_rainbowman]",
             content: "click button mark won",
-        }, {
+        },
+        ...stepUtils.saveForm(),
+        {
             trigger: ".o_menu_brand",
             extra_trigger: ".o_reward_rainbow",
             content: "last rainbowman appears",
         }
-    ]);
+    ]});

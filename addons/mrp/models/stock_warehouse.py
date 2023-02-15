@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools import split_every
 
 
 class StockWarehouse(models.Model):
@@ -209,8 +210,8 @@ class StockWarehouse(models.Model):
         })
         return values
 
-    def _get_sequence_values(self):
-        values = super(StockWarehouse, self)._get_sequence_values()
+    def _get_sequence_values(self, name=False, code=False):
+        values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
         values.update({
             'pbm_type_id': {'name': self.name + ' ' + _('Sequence picking before manufacturing'), 'prefix': self.code + '/PC/', 'padding': 5, 'company_id': self.company_id.id},
             'sam_type_id': {'name': self.name + ' ' + _('Sequence stock after manufacturing'), 'prefix': self.code + '/SFP/', 'padding': 5, 'company_id': self.company_id.id},
@@ -306,3 +307,11 @@ class Orderpoint(models.Model):
                                             '&', ('product_id', '=', False), ('product_tmpl_id', 'in', self.product_id.product_tmpl_id.ids),
                                        ('type', '=', 'phantom')], count=True):
             raise ValidationError(_("A product with a kit-type bill of materials can not have a reordering rule."))
+
+    def _get_orderpoint_products(self):
+        non_kit_ids = []
+        for products in split_every(2000, super()._get_orderpoint_products().ids, self.env['product.product'].browse):
+            kit_ids = set(k.id for k in self.env['mrp.bom']._bom_find(products, bom_type='phantom').keys())
+            non_kit_ids.extend(id_ for id_ in products.ids if id_ not in kit_ids)
+            products.invalidate_recordset()
+        return self.env['product.product'].browse(non_kit_ids)

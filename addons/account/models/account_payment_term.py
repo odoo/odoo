@@ -15,17 +15,31 @@ class AccountPaymentTerm(models.Model):
     def _default_line_ids(self):
         return [Command.create({'value': 'balance', 'value_amount': 0.0, 'days': 0, 'end_month': False})]
 
+    def _default_example_amount(self):
+        return self._context.get('example_amount') or 100  # Force default value if the context is set to False
+
+    def _default_example_date(self):
+        return self._context.get('example_date') or fields.Date.today()
+
     name = fields.Char(string='Payment Terms', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
     note = fields.Html(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
     company_id = fields.Many2one('res.company', string='Company')
+    fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     sequence = fields.Integer(required=True, default=10)
     display_on_invoice = fields.Boolean(string='Display terms on invoice', help="If set, the payment deadlines and respective due amounts will be detailed on invoices.")
-    example_amount = fields.Float(default=100, store=False)
-    example_date = fields.Date(string='Date example', default=fields.Date.context_today, store=False)
+    example_amount = fields.Float(default=_default_example_amount, store=False)
+    example_date = fields.Date(string='Date example', default=_default_example_date, store=False)
     example_invalid = fields.Boolean(compute='_compute_example_invalid')
     example_preview = fields.Html(compute='_compute_example_preview')
+
+    @api.depends('company_id')
+    @api.depends_context('allowed_company_ids')
+    def _compute_fiscal_country_codes(self):
+        for record in self:
+            allowed_companies = record.company_id or self.env.companies
+            record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
 
     @api.depends('line_ids')
     def _compute_example_invalid(self):
@@ -138,7 +152,12 @@ class AccountPaymentTerm(models.Model):
             if line.value == 'fixed':
                 term_vals['company_amount'] = sign * company_currency.round(line.value_amount)
                 term_vals['foreign_amount'] = sign * currency.round(line.value_amount)
-                line_tax_amount = line_tax_amount_currency = line_untaxed_amount = line_untaxed_amount_currency = 0.0
+                company_proportion = tax_amount/untaxed_amount if untaxed_amount else 1
+                foreign_proportion = tax_amount_currency/untaxed_amount_currency if untaxed_amount_currency else 1
+                line_tax_amount = company_currency.round(line.value_amount * company_proportion) * sign
+                line_tax_amount_currency = currency.round(line.value_amount * foreign_proportion) * sign
+                line_untaxed_amount = term_vals['company_amount'] - line_tax_amount
+                line_untaxed_amount_currency = term_vals['foreign_amount'] - line_tax_amount_currency
             elif line.value == 'percent':
                 term_vals['company_amount'] = company_currency.round(total_amount * (line.value_amount / 100.0))
                 term_vals['foreign_amount'] = currency.round(total_amount_currency * (line.value_amount / 100.0))
@@ -208,6 +227,7 @@ class AccountPaymentTermLine(models.Model):
     payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
 
     def _get_due_date(self, date_ref):
+        self.ensure_one()
         due_date = fields.Date.from_string(date_ref)
         due_date += relativedelta(months=self.months)
         due_date += relativedelta(days=self.days)

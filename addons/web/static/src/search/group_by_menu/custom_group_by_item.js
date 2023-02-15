@@ -2,7 +2,7 @@
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class CustomGroupByItem extends Component {
     setup() {
@@ -15,3 +15,7 @@ export class CustomGroupByItem extends Component {
 
 CustomGroupByItem.template = "web.CustomGroupByItem";
 CustomGroupByItem.components = { Dropdown };
+CustomGroupByItem.props = {
+    fields: Array,
+    onAddCustomGroup: Function,
+};

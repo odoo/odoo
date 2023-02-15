@@ -49,6 +49,7 @@
                 value="props.username"
                 resModel="'res.users'"
                 getDomain="getDomain"
+                fieldString="props.username"
                 activeActions="{}"
                 update.bind="props.onUpdateUser"
             />
@@ -61,6 +62,7 @@
                 value="props.location"
                 resModel="'lunch.location'"
                 getDomain="getDomain"
+                fieldString="props.location"
                 activeActions="{}"
                 update.bind="props.onUpdateLunchLocation"
             />
@@ -70,7 +72,7 @@
     <t t-name="lunch.LunchDashboardOrder" owl="1">
         <LunchAlerts alerts="state.infos.alerts"/>
 
-        <div class="o_lunch_banner container-fluid p-4 border-bottom bg-white">
+        <div class="o_lunch_banner container-fluid p-4 border-bottom bg-view">
             <div class="row h-100">
                 <div class="col-12 col-md-4">
                     <div class="row h-100 align-content-center">
@@ -124,7 +126,7 @@
             <t t-call="lunch.LunchDashboardOrder"/>
         </t>
         <t t-else="">
-            <details class="fixed-bottom bg-white p-2" t-att-open="state.mobileOpen">
+            <details class="fixed-bottom bg-view p-2" t-att-open="state.mobileOpen">
                 <summary class="btn btn-primary w-100" t-on-click="() => state.mobileOpen = !state.mobileOpen">
                     <i class="fa fa-fw fa-shopping-cart"/>
                     Your Cart (<LunchCurrency currency="currency" amount="state.infos.total || 0"/>)

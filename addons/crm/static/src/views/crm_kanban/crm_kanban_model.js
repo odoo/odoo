@@ -4,9 +4,8 @@ import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { checkRainbowmanMessage } from "@crm/views/check_rainbowman_message";
 
 export class CrmKanbanModel extends KanbanModel {
-    setup(params, { orm, effect }) {
+    setup(params, { effect }) {
         super.setup(...arguments);
-        this.ormService = orm;
         this.effect = effect;
     }
 }
@@ -32,7 +31,10 @@ export class CrmKanbanDynamicGroupList extends CrmKanbanModel.DynamicGroupList {
      * a rainbowman message if that's the case.
      */
     async moveRecord(dataRecordId, dataGroupId, refId, targetGroupId) {
-        const res = await super.moveRecord(...arguments);
+        const succeeded = await super.moveRecord(...arguments);
+        if (!succeeded) {
+            return;
+        }
         const sourceGroup = this.groups.find((g) => g.id === dataGroupId);
         const targetGroup = this.groups.find((g) => g.id === targetGroupId);
         if (
@@ -42,9 +44,8 @@ export class CrmKanbanDynamicGroupList extends CrmKanbanModel.DynamicGroupList {
             sourceGroup.groupByField.name === "stage_id"
         ) {
             const record = targetGroup.list.records.find((r) => r.id === dataRecordId);
-            await checkRainbowmanMessage(this.model.ormService, this.model.effect, record.resId);
+            await checkRainbowmanMessage(this.model.orm, this.model.effect, record.resId);
         }
-        return res;
     }
 }
 
@@ -69,4 +70,4 @@ export class CrmKanbanGroup extends CrmKanbanModel.Group {
 
 CrmKanbanModel.DynamicGroupList = CrmKanbanDynamicGroupList;
 CrmKanbanModel.Group = CrmKanbanGroup;
-CrmKanbanModel.services = [...KanbanModel.services, "effect", "orm"];
+CrmKanbanModel.services = [...KanbanModel.services, "effect"];

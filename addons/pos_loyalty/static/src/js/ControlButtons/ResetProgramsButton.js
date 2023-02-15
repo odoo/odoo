@@ -1,28 +1,27 @@
 /** @odoo-module **/
 
-import PosComponent from 'point_of_sale.PosComponent';
-import ProductScreen from 'point_of_sale.ProductScreen';
-import Registries from 'point_of_sale.Registries';
+import { LegacyComponent } from "@web/legacy/legacy_component";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
 
-export class ResetProgramsButton extends PosComponent {
+export class ResetProgramsButton extends LegacyComponent {
+    static template = "ResetProgramsButton";
+
     setup() {
         super.setup();
-        useListener('click', this.onClick);
+        useListener("click", this.onClick);
     }
-
-    async onClick() {
+    _isDisabled() {
+        return !this.env.pos.get_order().isProgramsResettable();
+    }
+    onClick() {
         this.env.pos.get_order()._resetPrograms();
     }
 }
 
-ResetProgramsButton.template = 'ResetProgramsButton';
-
 ProductScreen.addControlButton({
     component: ResetProgramsButton,
     condition: function () {
-        return this.env.pos.config.use_coupon_programs;
-    }
+        return this.env.pos.programs.some((p) => ["coupons", "promotion"].includes(p.program_type));
+    },
 });
-
-Registries.Component.add(ResetProgramsButton);

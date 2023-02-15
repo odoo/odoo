@@ -10,7 +10,7 @@ import { patchWithCleanup, nextTick } from '@web/../tests/helpers/utils';
 QUnit.module('bus', function () {
     QUnit.module('multi_tab_service_tests.js');
 
-    QUnit.test('multi tab service elects new master on unload', async function (assert) {
+    QUnit.test('multi tab service elects new master on pagehide', async function (assert) {
         assert.expect(5);
 
         registry.category('services').add('multi_tab', multiTabService);
@@ -18,10 +18,10 @@ QUnit.module('bus', function () {
         const firstTabEnv = await makeTestEnv();
         assert.ok(firstTabEnv.services['multi_tab'].isOnMainTab(), 'only tab should be the main one');
 
-        // prevent second tab from receiving unload event.
+        // prevent second tab from receiving pagehide event.
         patchWithCleanup(browser, {
             addEventListener(eventName, callback) {
-                if (eventName === 'unload') {
+                if (eventName === 'pagehide') {
                     return;
                 }
                 this._super(eventName, callback);
@@ -34,7 +34,7 @@ QUnit.module('bus', function () {
         secondTabEnv.services["multi_tab"].bus.addEventListener("no_longer_main_tab", () =>
             assert.step("tab2 no_longer_main_tab")
         );
-        window.dispatchEvent(new Event('unload'));
+        window.dispatchEvent(new Event('pagehide'));
 
         // Let the multi tab elect a new main.
         await nextTick();
@@ -87,10 +87,10 @@ QUnit.module('bus', function () {
         registry.category('services').add('multi_tab', multiTabService);
 
         await makeTestEnv();
-        // prevent second tab from receiving unload event.
+        // prevent second tab from receiving pagehide event.
         patchWithCleanup(browser, {
             addEventListener(eventName, callback) {
-                if (eventName === 'unload') {
+                if (eventName === 'pagehide') {
                     return;
                 }
                 this._super(eventName, callback);
@@ -98,7 +98,7 @@ QUnit.module('bus', function () {
         });
         const secondTabEnv = await makeTestEnv();
         secondTabEnv.services['multi_tab'].bus.addEventListener('become_main_tab', () => assert.step('become_main_tab'));
-        window.dispatchEvent(new Event('unload'));
+        window.dispatchEvent(new Event('pagehide'));
 
         // Let the multi tab elect a new main.
         await nextTick();

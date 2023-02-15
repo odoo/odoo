@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
@@ -23,23 +24,25 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
-msgid ""
-"<i class=\"fa fa-cog\"/>\n"
-"                        Edit Settings"
+msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
 msgstr ""
 
 #. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 msgid ""
-"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
 
 #. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Outlook Credentials</span>"
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
 msgstr ""
 
 #. module: microsoft_outlook
@@ -49,19 +52,15 @@ msgid "An error occurred when fetching the access token. %s"
 msgstr ""
 
 #. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
+msgid "Authenticate with"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
-
-#. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
-msgid "Client ID"
-msgstr ""
-
-#. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
-msgid "Client Secret"
 msgstr ""
 
 #. module: microsoft_outlook
@@ -70,8 +69,39 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Connect your Outlook account with the OAuth Authentication process.  \n"
+"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+msgstr ""
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid ""
+"Connect your personal Outlook account using OAuth. \n"
+"You will be redirected to the Outlook login page to accept the permissions."
+msgstr ""
+
+#. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "ID"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "ID of your Outlook app"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model,name:microsoft_outlook.model_fetchmail_server
+msgid "Incoming Mail Server"
 msgstr ""
 
 #. module: microsoft_outlook
@@ -83,6 +113,7 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
@@ -105,26 +136,17 @@ msgid "Only the administrator can link an Outlook mail server."
 msgstr ""
 
 #. module: microsoft_outlook
-#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
-msgid "Outlook"
-msgstr ""
-
-#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
 msgstr ""
 
 #. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
-
-#. module: microsoft_outlook
-#: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__use_microsoft_outlook_service
-#: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__use_microsoft_outlook_service
-msgid "Outlook Authentication"
 msgstr ""
 
 #. module: microsoft_outlook
@@ -138,6 +160,13 @@ msgid "Outlook Client Secret"
 msgstr ""
 
 #. module: microsoft_outlook
+#: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
+#: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
+msgid "Outlook OAuth Authentication"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
@@ -150,6 +179,12 @@ msgid "Please configure your Outlook credentials."
 msgstr ""
 
 #. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid "Please connect with your Outlook account before using it."
+msgstr ""
+
+#. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -158,17 +193,33 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_outlook
-#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
+msgid "Read More"
+msgstr ""
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
-msgid "Please login your Outlook mail server before using it."
+msgid "SSL is required for the server %r."
 msgstr ""
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
-msgid "Send and receive email with your Outlook account."
+msgid "Secret"
 msgstr ""
 
 #. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
+msgid "Secret of your Outlook app"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type
+msgid "Server Type"
+msgstr ""
+
+#. module: microsoft_outlook
+#: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
@@ -176,9 +227,18 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_outlook
+#: model:ir.model.fields,help:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
+msgstr ""
+
+#. module: microsoft_outlook
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"This server %r can only be used for your personal email address. Please fill"
+" the \"from_filter\" field with %r."
 msgstr ""
 
 #. module: microsoft_outlook

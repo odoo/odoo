@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
 function openProjectUpdateAndReturnToTasks(view, viewClass) {
     const legacyViewClass = viewClass.replace("o_", "o_legacy_");
@@ -21,16 +22,15 @@ function openProjectUpdateAndReturnToTasks(view, viewClass) {
         }, {
             trigger: '.o_back_button',
             content: 'Go back to the task view : ' + view,
-            // extra_trigger: '.o_list_view, .o_legacy_list_view', // FIXME: [XBO] uncomment it when the sample data will be displayed after discarding the creation of a project update record.
+            // extra_trigger: '.o_list_view', // FIXME: [XBO] uncomment it when the sample data will be displayed after discarding the creation of a project update record.
         },
     ];
 }
 
-tour.register('project_update_tour', {
+registry.category("web_tour.tours").add('project_update_tour', {
     test: true,
     url: '/web',
-},
-[tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
 }, {
     trigger: '.o-kanban-button-new',
@@ -159,7 +159,7 @@ tour.register('project_update_tour', {
 }, {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project',
-    extra_trigger: '.o_list_view, .o_legacy_list_view',
+    extra_trigger: '.o_list_view',
 }, {
     trigger: '.o_switch_view.o_graph',
     content: 'Open Graph View of Tasks',
@@ -177,4 +177,4 @@ tour.register('project_update_tour', {
     trigger: '.o_switch_view.o_activity',
     content: 'Open Activity View of Tasks',
 }, ...openProjectUpdateAndReturnToTasks("Activity", "o_activity_view"),
-]);
+]});

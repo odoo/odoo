@@ -21,14 +21,14 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.income_currency_exchange_account_id",
         string="Gain Account",
         readonly=False,
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', company_id),\
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
                 ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.expense_currency_exchange_account_id",
         string="Loss Account",
         readonly=False,
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', company_id),\
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
                 ('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template', default=lambda self: self.env.company.chart_template_id,
@@ -42,7 +42,7 @@ class ResConfigSettings(models.TransientModel):
         string='Bank Suspense Account',
         readonly=False,
         related='company_id.account_journal_suspense_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('account_type', 'in', ('asset_current', 'liability_current'))]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('asset_current', 'liability_current'))]",
         help='Bank Transactions are posted immediately after import or synchronization. '
              'Their counterparty is the bank suspense account.\n'
              'Reconciliation replaces the latter by the definitive account(s).')
@@ -51,7 +51,7 @@ class ResConfigSettings(models.TransientModel):
         string='Outstanding Receipts Account',
         readonly=False,
         related='company_id.account_journal_payment_debit_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('account_type', '=', 'asset_current')]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
         help='Incoming payments are posted on an Outstanding Receipts Account. '
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable '
@@ -61,7 +61,7 @@ class ResConfigSettings(models.TransientModel):
         string='Outstanding Payments Account',
         readonly=False,
         related='company_id.account_journal_payment_credit_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable')), ('account_type', '=', 'asset_current')]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
         help='Outgoing Payments are posted on an Outstanding Payments Account. '
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
@@ -70,7 +70,6 @@ class ResConfigSettings(models.TransientModel):
         domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]",
         help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
-    group_analytic_tags = fields.Boolean(string='Analytic Tags', implied_group='analytic.group_analytic_tags')
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
     # group_show_line_subtotals_tax_excluded and group_show_line_subtotals_tax_included are opposite,
@@ -106,7 +105,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format")
-    module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
+    module_account_bank_statement_import_csv = fields.Boolean("Import in .csv, .xls, and .xlsx format")
     module_account_bank_statement_import_camt = fields.Boolean("Import in CAMT.053 format")
     module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
     module_account_intrastat = fields.Boolean(string='Intrastat')
@@ -134,6 +133,11 @@ class ResConfigSettings(models.TransientModel):
                                      readonly=False)
     terms_type = fields.Selection(
         related='company_id.terms_type', readonly=False)
+    display_invoice_amount_total_words = fields.Boolean(
+        string="Total amount of invoice in letters",
+        related='company_id.display_invoice_amount_total_words',
+        readonly=False
+    )
     preview_ready = fields.Boolean(string="Display preview button", compute='_compute_terms_preview')
 
     use_invoice_terms = fields.Boolean(

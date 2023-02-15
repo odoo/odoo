@@ -53,11 +53,8 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
         })
 
     def setUp(self):
+        self.enable_reconcile_after_done_patcher = False
         super().setUp()
-        # Disable _reconcile_after_done patcher
-        self.reconcile_after_done_patcher.stop()
-        self.is_patcher_started = False
-
     #=== Utils ===#
 
     @classmethod

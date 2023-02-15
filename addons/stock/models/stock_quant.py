@@ -249,8 +249,9 @@ class StockQuant(models.Model):
             if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
                 if any(field for field in vals.keys() if field not in allowed_fields):
                     raise UserError(_("Quant's creation is restricted, you can't do this operation."))
-                inventory_quantity = vals.pop('inventory_quantity', False) or vals.pop(
-                    'inventory_quantity_auto_apply', False) or 0
+                auto_apply = 'inventory_quantity_auto_apply' in vals
+                inventory_quantity = vals.pop('inventory_quantity_auto_apply', False) or vals.pop(
+                    'inventory_quantity', False) or 0
                 # Create an empty quant or write on a similar one.
                 product = self.env['product.product'].browse(vals['product_id'])
                 location = self.env['stock.location'].browse(vals['location_id'])
@@ -260,15 +261,17 @@ class StockQuant(models.Model):
                 quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
                 if lot_id:
                     quant = quant.filtered(lambda q: q.lot_id)
-
                 if quant:
                     quant = quant[0].sudo()
                 else:
                     quant = self.sudo().create(vals)
-                # Set the `inventory_quantity` field to create the necessary move.
-                quant.inventory_quantity = inventory_quantity
-                quant.user_id = vals.get('user_id', self.env.user.id)
-                quant.inventory_date = fields.Date.today()
+                if auto_apply:
+                    quant.write({'inventory_quantity_auto_apply': inventory_quantity})
+                else:
+                    # Set the `inventory_quantity` field to create the necessary move.
+                    quant.inventory_quantity = inventory_quantity
+                    quant.user_id = vals.get('user_id', self.env.user.id)
+                    quant.inventory_date = fields.Date.today()
                 quants |= quant
             else:
                 quant = super().create(vals)
@@ -284,7 +287,11 @@ class StockQuant(models.Model):
         for value in values:
             if 'location_id' not in value:
                 value['location_id'] = warehouse.lot_stock_id.id
-        return super()._load_records_create(values)
+        return super(StockQuant, self.with_context(inventory_mode=True))._load_records_create(values)
+
+    def _load_records_write(self, values):
+        """ Only allowed fields should be modified """
+        return super(StockQuant, self.with_context(inventory_mode=True))._load_records_write(values)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -422,6 +429,24 @@ class StockQuant(models.Model):
             }
         self._apply_inventory()
         self.inventory_quantity_set = False
+
+    def action_inventory_at_date(self):
+        #  Handler called when the user clicked on the 'Inventory at Date' button.
+        #  Opens wizard to display, at choice, the products inventory or a computed
+        #  inventory at a given date.
+        context = {}
+        if ("default_product_id" in self.env.context):
+            context.product_id = self.env.context.default_product_id
+        elif ("product_tmpl_id" in self.env.context):
+            context.product_tmpl_id = self.env.context.product_tmpl_id
+
+        return {
+            "res_model": "stock.quantity.history",
+            "views": [[False, "form"]],
+            "target": "new",
+            "type": "ir.actions.act_window",
+            "context": context,
+        }
 
     def action_inventory_history(self):
         self.ensure_one()
@@ -951,7 +976,6 @@ class StockQuant(models.Model):
         ctx.pop('group_by', None)
         action = {
             'name': _('Locations'),
-            'view_type': 'tree',
             'view_mode': 'list,form',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',

@@ -12,7 +12,9 @@ patch(NewContentModal.prototype, 'website_hr_recruitment_new_content', {
         newJobElement.status = MODULE_STATUS.INSTALLED;
     },
 
-    createNewJob() {
-        window.location.replace('/jobs/add');
+    async createNewJob() {
+        const url = await this.rpc('/jobs/add');
+        this.website.goToWebsite({ path: url, edition: true });
+        this.websiteContext.showNewContentModal = false;
     }
 });

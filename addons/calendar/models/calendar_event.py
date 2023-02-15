@@ -212,7 +212,7 @@ class Meeting(models.Model):
         MONTH_BY_SELECTION, string='Option', compute='_compute_recurrence', readonly=False)
     day = fields.Integer('Date of month', compute='_compute_recurrence', readonly=False)
     weekday = fields.Selection(WEEKDAY_SELECTION, compute='_compute_recurrence', readonly=False)
-    byday = fields.Selection(BYDAY_SELECTION, compute='_compute_recurrence', readonly=False)
+    byday = fields.Selection(BYDAY_SELECTION, string="By day", compute='_compute_recurrence', readonly=False)
     until = fields.Date(compute='_compute_recurrence', readonly=False)
     # UI Fields.
     display_description = fields.Boolean(compute='_compute_display_description')
@@ -351,6 +351,7 @@ class Meeting(models.Model):
         recurrence_fields = self._get_recurrent_fields()
         false_values = {field: False for field in recurrence_fields}  # computes need to set a value
         defaults = self.env['calendar.recurrence'].default_get(recurrence_fields)
+        default_rrule_values = self.recurrence_id.default_get(recurrence_fields)
         for event in self:
             if event.recurrency:
                 event.update(defaults)  # default recurrence values are needed to correctly compute the recurrence params
@@ -360,7 +361,8 @@ class Meeting(models.Model):
                     for field in recurrence_fields
                     if event.recurrence_id[field]
                 }
-                event.update({**false_values, **event_values, **rrule_values})
+                rrule_values = rrule_values or default_rrule_values
+                event.update({**false_values, **defaults, **event_values, **rrule_values})
             else:
                 event.update(false_values)
 
@@ -405,12 +407,14 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Prevent sending update notification when _inverse_dates is called
+        self = self.with_context(is_calendar_event_new=True)
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
+
         vals_list = [  # Else bug with quick_create when we are filter on an other user
-            dict(vals, user_id=self.env.user.id) if not 'user_id' in vals else vals
+            dict(vals, user_id=defaults.get('user_id', self.env.user.id)) if not 'user_id' in vals else vals
             for vals in vals_list
         ]
-
-        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model', 'partner_ids'])
         meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
         # get list of models ids and filter out None values directly
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
@@ -470,7 +474,12 @@ class Meeting(models.Model):
         if not self.env.context.get('dont_notify'):
             events._setup_alarms()
 
-        return events
+        return events.with_context(is_calendar_event_new=False)
+
+    def _compute_field_value(self, field):
+        if field.compute_sudo:
+            return super(Meeting, self.with_context(prefetch_fields=False))._compute_field_value(field)
+        return super()._compute_field_value(field)
 
     def _read(self, fields):
         if self.env.is_system():
@@ -577,7 +586,7 @@ class Meeting(models.Model):
             (current_attendees - previous_attendees)._send_mail_to_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
             )
-        if 'start' in values:
+        if not self.env.context.get('is_calendar_event_new') and 'start' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
             # Only notify on future events
             if start_date and start_date >= fields.Datetime.now():
@@ -746,12 +755,11 @@ class Meeting(models.Model):
             raise UserError(_("There are no attendees on these events"))
         template_id = self.env['ir.model.data']._xmlid_to_res_id('calendar.calendar_template_meeting_update', raise_if_not_found=False)
         # The mail is sent with datetime corresponding to the sending user TZ
-        composition_mode = self.env.context.get('composition_mode', 'comment')
+        default_composition_mode = self.env.context.get('default_composition_mode', self.env.context.get('composition_mode', 'comment'))
         compose_ctx = dict(
-            default_composition_mode=composition_mode,
+            default_composition_mode=default_composition_mode,
             default_model='calendar.event',
             default_res_ids=self.ids,
-            default_use_template=bool(template_id),
             default_template_id=template_id,
             default_partner_ids=self.partner_ids.ids,
             mail_tz=self.env.user.tz,

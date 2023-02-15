@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <group name="accounting_entries" position="after">
-                    <group string="Payment Options Sweden" name="payment_options">
+                    <group string="Payment Options Sweden" name="payment_options" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'SE')]}">
                         <field name="l10n_se_check_vendor_ocr"/>
                         <field name="l10n_se_default_vendor_payment_ref"/>
                     </group>

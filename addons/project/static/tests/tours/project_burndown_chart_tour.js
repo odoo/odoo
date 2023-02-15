@@ -1,16 +1,16 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('burndown_chart_tour', {
+registry.category("web_tour.tours").add('burndown_chart_tour', {
     test: true,
     url: '/web',
-},
-[tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
 }, {
     content: 'Open "Burndown Chart Test" project menu',
-    trigger: '.o_kanban_record:contains("Burndown Chart Test") .o_kanban_manage_toggle_button',
+    trigger: '.o_kanban_record:contains("Burndown Chart Test") .o_dropdown_kanban .dropdown-toggle',
 }, {
     content: `Open "Burndown Chart Test" project's "Burndown Chart" view`,
     trigger: '.o_kanban_record:contains("Burndown Chart Test") .o_kanban_manage_reporting div[role="menuitem"] a:contains("Burndown Chart")',
@@ -76,4 +76,4 @@ tour.register('burndown_chart_tour', {
 }, {
     content: 'The comparison menu is not rendered',
     trigger: '.o_search_options:not(:has(.o_comparison_menu))',
-}]);
+}]});

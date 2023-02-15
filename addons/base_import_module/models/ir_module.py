@@ -25,6 +25,10 @@ class IrModule(models.Model):
 
     imported = fields.Boolean(string="Imported Module")
 
+    def _get_modules_to_load_domain(self):
+        # imported modules are not expected to be loaded as regular modules
+        return super()._get_modules_to_load_domain() + [('imported', '=', False)]
+
     @api.depends('name')
     def _get_latest_version(self):
         imported_modules = self.filtered(lambda m: m.imported and m.latest_version)
@@ -79,7 +83,7 @@ class IrModule(models.Model):
                     noupdate = True
                 pathname = opj(path, filename)
                 idref = {}
-                convert_file(self.env.cr, module, filename, idref, mode=mode, noupdate=noupdate, kind=kind, pathname=pathname)
+                convert_file(self.env, module, filename, idref, mode=mode, noupdate=noupdate, kind=kind, pathname=pathname)
 
         path_static = opj(path, 'static')
         IrAttachment = self.env['ir.attachment']

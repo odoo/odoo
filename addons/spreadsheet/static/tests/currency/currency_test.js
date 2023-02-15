@@ -1,8 +1,11 @@
 /** @odoo-module */
 
 import { setCellContent } from "@spreadsheet/../tests/utils/commands";
-import { getCell, getCellValue } from "@spreadsheet/../tests/utils/getters";
-import { createModelWithDataSource, waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
+import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
+import {
+    createModelWithDataSource,
+    waitForDataSourcesLoaded,
+} from "@spreadsheet/../tests/utils/model";
 
 QUnit.module("spreadsheet > Currency");
 
@@ -32,7 +35,7 @@ QUnit.test("Currency rate throw with unknown currency", async (assert) => {
     });
     setCellContent(model, "A1", `=ODOO.CURRENCY.RATE("INVALID","USD")`);
     await waitForDataSourcesLoaded(model);
-    assert.strictEqual(getCell(model, "A1").evaluated.error.message, "Currency rate unavailable.");
+    assert.strictEqual(getEvaluatedCell(model, "A1").error.message, "Currency rate unavailable.");
 });
 
 QUnit.test("Currency rates are only loaded once", async (assert) => {

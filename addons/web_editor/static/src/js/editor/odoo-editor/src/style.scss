@@ -48,27 +48,27 @@
     }
     .o_table_ui_menu_toggler {
         cursor: pointer;
-        background-color: white;
-        color: #6e727a;
-        border: 1px solid #C9CCD2;
+        background-color: var(--o-table-ui-bg, #{$o-white});
+        color: var(--o-table-ui-color, #{$o-main-text-color});
+        border: $border-width solid var(--o-table-ui-border, #{$border-color});
         border-radius: 5px;
         padding: 2px 3px;
     }
     .o_table_ui_menu {
         display: none;
         cursor: pointer;
-        background-color: white;
+        background-color: var(--o-table-ui-bg, #{$o-white});
         width: fit-content;
-        border: 1px solid #C9CCD2;
+        border: $border-width solid var(--o-table-ui-border, #{$border-color});
         padding: 5px 0;
         white-space: nowrap;
 
         > div:hover {
-            background-color: #ebebeb;
+            background-color: var(--o-table-ui-hover, #{$o-gray-200});
         }
         span {
             margin-right: 8px;
-            color: #6e727a;
+            color: var(--o-table-ui-color, #{$o-main-text-color});
         }
         div {
             padding: 0 8px;
@@ -223,13 +223,15 @@
     }
 }
 
-.oe-tablepicker-dropdown .oe-tablepicker {
+.oe-tablepicker {
     margin: -3px 2px -6px 2px;
 }
 .oe-tablepicker-wrapper.oe-floating {
     padding: 3px;
-    z-index: 1051;
-    background: white;
+    // Bootstrap sets .modal z-index at 1055.
+    // Ensure tablepicker is visible in modals.
+    z-index: 1056;
+    background-color: var(--oeTablepicker__wrapper-bg, $o-white);
 }
 .oe-tablepicker-row {
     line-height: 0;
@@ -240,7 +242,7 @@
 
     .oe-tablepicker-row .oe-tablepicker-cell {
         display: inline-block;
-        background:  #EFEFEE;
+        background-color: var(--oeTablepicker__cell-bg, $o-gray-200);
         width: 19px;
         height: 19px;
         padding: 0;
@@ -251,7 +253,7 @@
             margin-right: 0;
         }
         &.active {
-            background: #d3d1cb;
+            background-color: var(--oeTablepicker-color-accent, $o-brand-primary);
         }
     }
 }
@@ -259,7 +261,7 @@
     text-align: center;
     margin-top: 7px;
 }
-.oe-tablepicker-dropdown .oe-tablepicker-size {
+.oe-tablepicker-size {
     color: white;
 }
 @media only screen and (max-width: 767px) {
@@ -282,7 +284,8 @@
     position: absolute;
     z-index: $zindex-modal;
     border: black;
-    background-color: white;
+    background: var(--oePowerbox__wrapper-bg, $o-white);
+    color: $o-main-text-color;
     max-height: 40vh;
     box-sizing: border-box;
     max-width: 100%;
@@ -299,10 +302,10 @@
         height: 10px;
     }
     ::-webkit-scrollbar-thumb {
-        background: #D3D1CB;
+        background: var(--oePowerbox__ScrollbarThumb-background-color, #D3D1CB);
     }
     ::-webkit-scrollbar-track {
-        background: #EDECE9;
+        background: var(--oePowerbox__ScrollbarTrack-background-color, #EDECE9);
     }
 }
 .oe-powerbox-mainWrapper {
@@ -314,7 +317,7 @@
 
 .oe-powerbox-category, .oe-powerbox-noResult {
     margin: 10px;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--oePowerbox__category-color, $o-gray-600);
     font-size: 11px;
 }
 .oe-powerbox-category {
@@ -330,7 +333,7 @@
     cursor: pointer;
 
     &.active {
-        background: #EFEFEE;
+        background: var(--oePowerbox__commandName-bg, $o-gray-100); 
     }
 }
 i.oe-powerbox-commandImg {
@@ -339,17 +342,18 @@ i.oe-powerbox-commandImg {
     width: 30px;
     align-items: center;
     justify-content: center;
-    background: white;
-    color: rgba(0, 0, 0, 0.6);
+    background: var(--oePowerbox__commandImg-bg, $o-gray-100);
+    color: var(--oePowerbox__commandImg-color, $o-gray-800);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 7px;
     font-size: 15px;
 }
 .oe-powerbox-commandName {
     font-size: 13px;
+    color: var(--oePowerbox__commandName-color, $o-main-text-color);
 }
 .oe-powerbox-commandDescription {
-    color: rgba(0, 0, 0, 0.5);
+    color: var(--oePowerbox__commandDescription-color, $o-main-color-muted);
     font-size: 12px;
 }
 .oe-powerbox-commandRightCol {
@@ -360,7 +364,6 @@ i.oe-powerbox-commandImg {
 
 .oe-hint {
     position: relative;
-    caret-color: rgb(55, 53, 47);
 
     &:before {
         content: attr(placeholder);

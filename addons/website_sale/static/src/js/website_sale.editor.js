@@ -653,9 +653,10 @@ class AttachmentMediaDialog extends MediaDialog {
      * @override
      */
     async save() {
+        await super.save();
         const selectedMedia = this.selectedMedia[this.state.activeTab];
         if (selectedMedia.length) {
-            this.props.save(selectedMedia);
+            await this.props.extraImageSave(selectedMedia);
         }
         this.props.close();
     }
@@ -780,7 +781,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         const dialog = new ComponentWrapper(this, AttachmentMediaDialogWrapper, {
             multiImages: true,
             onlyImages: true,
-            save: attachments => {
+            // Kinda hack-ish but the regular save does not get the information we need
+            save: async () => {},
+            extraImageSave: async (attachments) => {
                 this._rpc({
                     route: `/shop/product/extra-images`,
                     params: {
@@ -922,22 +925,6 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
                 return this.$target.closest('[data-attribute_display_type]').data('attribute_display_type');
         }
         return this._super(methodName, params);
-    },
-});
-
-// Disable "Shown on Mobile" option if for dynamic product snippets
-options.registry.MobileVisibility.include({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _computeVisibility() {
-        return await this._super(...arguments)
-            && !this.$target.hasClass('s_dynamic_snippet_products');
     },
 });
 

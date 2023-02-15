@@ -3,14 +3,10 @@
 
     <template id="portal_my_task" inherit_id="project.portal_my_task" name="Portal: My Task with Timesheets">
         <xpath expr="//li[@id='task-nav']" position="before">
-            <li t-if="timesheets and allow_timesheets" class="list-group-item flex-grow-1 d-flex flex-wrap justify-content-center align-items-center" id='nav-report'>
-                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                    <div class="btn-group flex-grow-1 me-1">
-                        <a class="btn btn-secondary btn-block o_download_btn" t-att-href="task.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
-                    </div>
-                    <div class="btn-group flex-grow-1">
-                        <a class="btn btn-secondary btn-block o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" href="#" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
-                    </div>
+            <li t-if="timesheets and allow_timesheets" class="list-group-item d-grid flex-grow-1" id='nav-report'>
+                <div class="o_download_pdf d-flex gap-1 align-items-center">
+                    <a class="btn btn-secondary flex-fill o_download_btn" t-att-href="task.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
+                    <a class="btn btn-secondary flex-fill o_print_btn o_project_timesheet_print" t-att-href="task.get_portal_url(report_type='pdf')" href="#" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
                 </div>
             </li>
         </xpath>
@@ -44,7 +40,7 @@
     </template>
 
     <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list" name="Portal: My Tasks with Timesheets">
-        <xpath expr="//t[@t-call='portal.portal_table']" position="inside">
+        <xpath expr="//t[@t-foreach='tasks']/tr" position="before">
             <t t-set="timesheet_ids" t-value="task.sudo().timesheet_ids"/>
             <t t-set="is_uom_day" t-value="timesheet_ids._is_timesheet_encode_uom_day()"/>
         </xpath>

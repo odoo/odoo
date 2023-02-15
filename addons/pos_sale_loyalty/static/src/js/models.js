@@ -1,26 +1,24 @@
 /** @odoo-module alias=pos_sale_loyalty.models **/
 
 
-import { Orderline } from 'point_of_sale.models';
-import Registries from 'point_of_sale.Registries';
+import { Orderline } from '@point_of_sale/js/models';
+import { patch } from "@web/core/utils/patch";
 
-export const PosSaleLoyaltyOrderline = (Orderline) => class PosSaleLoyaltyOrderline extends Orderline {
+patch(Orderline.prototype, "pos_sale_loyalty.Orderline", {
     //@override
-    ignoreLoyaltyPoints() {
+    ignoreLoyaltyPoints(args) {
         if (this.sale_order_origin_id) {
             return true;
         }
-        return super.ignoreLoyaltyPoints(...arguments);
-    }
+        return this._super(args);
+    },
     //@override
     setQuantityFromSOL(saleOrderLine) {
         // we need to consider reward product such as discount in a quotation
         if (saleOrderLine.reward_id) {
             this.set_quantity(saleOrderLine.product_uom_qty);
         } else {
-            super.setQuantityFromSOL(...arguments);
+            this._super(...arguments);
         }
-    }
-};
-
-Registries.Model.extend(Orderline, PosSaleLoyaltyOrderline);
+    },
+});

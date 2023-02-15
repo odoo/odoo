@@ -16,10 +16,10 @@ const clickFooter = [{
 
 const clickEditLink = [{
     content: "Click on Edit Link in Popover",
-    trigger: '.o_edit_menu_popover .o_we_edit_link',
+    trigger: 'iframe .o_edit_menu_popover .o_we_edit_link',
 }, {
     content: "Ensure popover is closed",
-    trigger: 'html:not(:has(.o_edit_menu_popover))', // popover should be closed
+    trigger: 'iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
     run: function () {}, // it's a check
     in_modal: false,
 }];
@@ -55,7 +55,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Popover should be shown",
-        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")', // At this point preview is loaded
+        trigger: 'iframe .o_edit_menu_popover .o_we_url_link:contains("Contact Us")', // At this point preview is loaded
         run: function () {}, // it's a check
     },
     ...clickEditLink,
@@ -71,12 +71,12 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Popover should be shown with updated preview data",
-        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Home")',
+        trigger: 'iframe .o_edit_menu_popover .o_we_url_link:contains("Home")',
         run: function () {}, // it's a check
     },
     {
         content: "Click on Remove Link in Popover",
-        trigger: '.o_edit_menu_popover .o_we_remove_link',
+        trigger: 'iframe .o_edit_menu_popover .o_we_remove_link',
     },
     {
         content: "Link should be removed",
@@ -85,7 +85,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Ensure popover is closed",
-        trigger: 'html:not(:has(.o_edit_menu_popover))', // popover should be closed
+        trigger: 'iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
         run: function () {}, // it's a check
     },
     // 2. Test links in navbar (website)
@@ -95,7 +95,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Popover should be shown (2)",
-        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Home")',
+        trigger: 'iframe .o_edit_menu_popover .o_we_url_link:contains("Home")',
         run: function () {}, // it's a check
     },
     ...clickEditLink,
@@ -115,12 +115,12 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Popover should be shown with updated preview data (2)",
-        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
+        trigger: 'iframe .o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
         run: function () {}, // it's a check
     },
     {
         content: "Click on Edit Menu in Popover",
-        trigger: '.o_edit_menu_popover .js_edit_menu',
+        trigger: 'iframe .o_edit_menu_popover .js_edit_menu',
     },
     {
         content: "Edit Menu (tree) should open",
@@ -138,7 +138,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Popover should be shown (3)",
-        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
+        trigger: 'iframe .o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
         run: function () {}, // it's a check
     },
     {
@@ -152,7 +152,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Popover should be shown (4)",
-        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Home")',
+        trigger: 'iframe .o_edit_menu_popover .o_we_url_link:contains("Home")',
         run: function () {}, // it's a check
     },
     {
@@ -165,7 +165,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     // 5. Double click should not open popover but should open toolbar link
     {
         content: "Double click on link",
-        extra_trigger: 'html:not(:has(.o_edit_menu_popover))', // popover should be closed
+        extra_trigger: 'iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
         trigger: 'iframe footer a[href="/"]',
         run: function (actions) {
             // Create range to simulate real double click, see pull request
@@ -180,7 +180,8 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Ensure popover is opened on double click, and so is right panel edit link",
-        trigger: 'html:has(#o_link_dialog_url_input):has(.o_edit_menu_popover)',
+        trigger: 'html:has(#o_link_dialog_url_input)',
+        extra_trigger: 'iframe html:has(.o_edit_menu_popover)',
         run: function () {}, // it's a check
     },
 ]);

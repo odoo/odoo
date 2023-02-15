@@ -153,12 +153,15 @@ class PortalChatter(http.Controller):
         result.update({'default_message_id': message.id})
 
         if attachment_ids:
-            # sudo write the attachment to bypass the read access
-            # verification in mail message
-            record = request.env[res_model].browse(res_id)
-            message_values = {'res_id': res_id, 'model': res_model}
-            attachments = record._message_post_process_attachments([], attachment_ids, message_values)
-
+            # _message_post_helper already checks for pid/hash/token -> use message
+            # environment to keep the sudo mode when activated
+            record = message.env[res_model].browse(res_id)
+            attachments = record._process_attachments_for_post(
+                [], attachment_ids,
+                {'res_id': res_id, 'model': res_model}
+            )
+            # sudo write the attachment to bypass the read access verification in
+            # mail message
             if attachments.get('attachment_ids'):
                 message.sudo().write(attachments)
 
@@ -238,6 +241,10 @@ class MailController(mail.MailController):
             If so, those two parameters are used to authentify the recipient in the chatter, if any.
         :return:
         """
+        # no model / res_id, meaning no possible record -> direct skip to super
+        if not model or not res_id or model not in request.env:
+            return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
+
         if issubclass(type(request.env[model]), request.env.registry['portal.mixin']):
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
@@ -257,4 +264,4 @@ class MailController(mail.MailController):
                             url_params.update([("pid", pid), ("hash", hash)])
                             url = url.replace(query=urls.url_encode(url_params)).to_url()
                         return request.redirect(url)
-        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token)
+        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)

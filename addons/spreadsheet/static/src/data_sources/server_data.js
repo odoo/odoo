@@ -10,7 +10,7 @@ function removeDuplicates(array) {
     return [...new Set(array.map((el) => JSON.stringify(el)))].map((el) => JSON.parse(el));
 }
 
-class Request {
+export class Request {
     /**
      * @param {string} resModel
      * @param {string} method
@@ -149,7 +149,7 @@ export class ServerData {
      * Returns the request result if cached or the associated promise
      * @param {string} resModel
      * @param {string} method
-     * @param  {unknown[]} args
+     * @param  {unknown[]} [args]
      * @returns {Promise<any>}
      */
     async fetch(resModel, method, args) {
@@ -251,7 +251,11 @@ export default class BatchEndpoint {
      */
     _notifyResults(batchResult) {
         for (const [request, result] of batchResult) {
-            this.successCallback(request, result);
+            if (result instanceof Error) {
+                this.failureCallback(request, result);
+            } else {
+                this.successCallback(request, result);
+            }
         }
     }
 

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
         <field name="priority">30</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='analytic_account_id']" position="before">
+            <xpath expr="//field[@name='analytic_distribution']" position="before">
                 <field name="sale_order_id" groups="!sales_team.group_sale_salesman,!account.group_account_manager"
                     attrs="{'invisible': [('can_be_reinvoiced', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}"
                     options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"

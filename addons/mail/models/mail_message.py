@@ -135,7 +135,7 @@ class Message(models.Model):
     # mainly usefull for testing
     notified_partner_ids = fields.Many2many(
         'res.partner', 'mail_notification', string='Partners with Need Action',
-        context={'active_test': False}, depends=['notification_ids'])
+        context={'active_test': False}, depends=['notification_ids'], copy=False)
     needaction = fields.Boolean(
         'Need Action', compute='_compute_needaction', search='_search_needaction')
     has_error = fields.Boolean(
@@ -295,7 +295,7 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self.flush_recordset(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
+        self.flush_model(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
         for sub_ids in self._cr.split_for_in_conditions(ids):
             self._cr.execute("""
@@ -346,6 +346,7 @@ class Message(models.Model):
         """ Access rules of mail.message:
             - read: if
                 - author_id == pid, uid is the author OR
+                - create_uid == uid, uid is the creator OR
                 - uid is in the recipients (partner_ids) OR
                 - uid has been notified (needaction) OR
                 - uid have read access to the related document if model, res_id
@@ -399,12 +400,13 @@ class Message(models.Model):
         # Read mail_message.ids to have their values
         message_values = dict((message_id, {}) for message_id in self.ids)
 
-        self.flush_recordset(['model', 'res_id', 'author_id', 'parent_id', 'message_type', 'partner_ids'])
+        self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
 
         if operation == 'read':
             self._cr.execute("""
-                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id,
+                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.create_uid,
+                                m.parent_id,
                                 COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
                                 m.message_type as message_type
                 FROM "%s" m
@@ -413,11 +415,12 @@ class Message(models.Model):
                 LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
                 WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=self.env.user.partner_id.id, ids=self.ids))
-            for mid, rmod, rid, author_id, parent_id, partner_id, message_type in self._cr.fetchall():
+            for mid, rmod, rid, author_id, create_uid, parent_id, partner_id, message_type in self._cr.fetchall():
                 message_values[mid] = {
                     'model': rmod,
                     'res_id': rid,
                     'author_id': author_id,
+                    'create_uid': create_uid,
                     'parent_id': parent_id,
                     'notified': any((message_values[mid].get('notified'), partner_id)),
                     'message_type': message_type,
@@ -459,7 +462,14 @@ class Message(models.Model):
         author_ids = []
         if operation == 'read':
             author_ids = [mid for mid, message in message_values.items()
-                          if message.get('author_id') and message.get('author_id') == self.env.user.partner_id.id]
+                          if (
+                                message.get('author_id') and
+                                message.get('author_id') == self.env.user.partner_id.id
+                            ) or (
+                                message.get('create_uid') and
+                                message.get('create_uid') == self.env.uid
+                            )
+                         ]
         elif operation == 'write':
             author_ids = [mid for mid, message in message_values.items() if message.get('author_id') == self.env.user.partner_id.id]
         elif operation == 'create':
@@ -571,7 +581,7 @@ class Message(models.Model):
             if 'record_name' not in values and 'default_record_name' not in self.env.context:
                 values['record_name'] = self._get_record_name(values)
 
-            if 'attachment_ids' not in values:
+            if not values.get('attachment_ids'):
                 values['attachment_ids'] = []
             # extract base64 images
             if 'body' in values:
@@ -604,9 +614,9 @@ class Message(models.Model):
         messages = super(Message, self).create(values_list)
 
         check_attachment_access = []
-        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids')):
+        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values['attachment_ids']):
             for values in values_list:
-                for command in values.get('attachment_ids'):
+                for command in values['attachment_ids']:
                     if isinstance(command, int):
                         check_attachment_access += [command]
                     elif command[0] == 6:
@@ -653,15 +663,27 @@ class Message(models.Model):
     def unlink(self):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
+        # the cache of the related document doesn't need to be invalidate (see @_invalidate_documents)
+        # because the unlink method invalidates the whole cache anyway
         if not self:
             return True
         self.check_access_rule('unlink')
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
+        messages_by_partner = defaultdict(lambda: self.env['mail.message'])
+        partners_with_user = self.partner_ids.filtered('user_ids')
         for elem in self:
-            if elem.is_thread_message():
-                elem._invalidate_documents()
+            for partner in elem.partner_ids & partners_with_user:
+                messages_by_partner[partner] |= elem
+
+        # Notify front-end of messages deletion for partners having a user
+        if messages_by_partner:
+            self.env['bus.bus']._sendmany([
+                (partner, 'mail.message/delete', {'message_ids': messages.ids})
+                for partner, messages in messages_by_partner.items()
+            ])
+
         return super(Message, self).unlink()
 
     @api.model
@@ -834,13 +856,12 @@ class Message(models.Model):
                 'name': message_sudo.author_guest_id.name,
             } if message_sudo.author_guest_id else [('clear',)]
             if message_sudo.model and message_sudo.res_id:
-                record_name = self.env[message_sudo.model] \
-                    .browse(message_sudo.res_id) \
-                    .sudo() \
-                    .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
-                    .display_name
+                record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
+                record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
+                default_subject = record_sudo._message_compute_subject()
             else:
                 record_name = False
+                default_subject = False
             reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
@@ -856,6 +877,7 @@ class Message(models.Model):
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update({
                 'author': author,
+                'default_subject': default_subject,
                 'guestAuthor': guestAuthor,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
@@ -882,10 +904,17 @@ class Message(models.Model):
             domain = expression.AND([domain, [('id', '>', min_id)]])
         return self.search(domain, limit=limit)
 
-    def message_format(self, format_reply=True):
-        """ Get the message values in the format for web client. Since message values can be broadcasted,
-            computed fields MUST NOT BE READ and broadcasted.
-            :returns list(dict).
+    def message_format(self, format_reply=True, msg_vals=None):
+        """ Get the message values in the format for web client. Since message
+        values can be broadcasted, computed fields MUST NOT BE READ and
+        broadcasted.
+
+        :param msg_vals: dictionary of values used to create the message. If
+          given it may be used to access values related to ``message`` without
+          accessing it directly. It lessens query count in some optimized use
+          cases by avoiding access message content in db;
+
+        :returns list(dict).
              Example :
                 {
                     'body': HTML content of the message
@@ -936,6 +965,19 @@ class Message(models.Model):
         com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
+
+        # fetch scheduled notifications once, only if msg_vals is not given to
+        # avoid useless queries when notifying Inbox right after a message_post
+        scheduled_dt_by_msg_id = {}
+        if msg_vals:
+            scheduled_dt_by_msg_id = {msg.id: msg_vals.get('scheduled_date') for msg in self}
+        elif self:
+            schedulers = self.env['mail.message.schedule'].sudo().search([
+                ('mail_message_id', 'in', self.ids)
+            ])
+            for scheduler in schedulers:
+                scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
+
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
@@ -947,6 +989,7 @@ class Message(models.Model):
                 'subtype_description': message_sudo.subtype_id.description,
                 'is_notification': vals['message_type'] == 'user_notification',
                 'recipients': [{'id': p.id, 'name': p.name} for p in message_sudo.partner_ids],
+                'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
             })
             if vals['model'] and self.env[vals['model']]._original_module:
                 vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)

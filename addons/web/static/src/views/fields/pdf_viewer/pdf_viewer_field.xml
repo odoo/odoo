@@ -7,7 +7,6 @@
                 <t t-if="props.value">
                     <FileUploader
                         acceptedFileExtensions="'.pdf'"
-                        file="{ data: props.value, name: fileName }"
                         onUploaded.bind="onFileUploaded"
                     >
                         <t t-set-slot="toggler">

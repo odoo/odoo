@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class EmailField extends Component {
     setup() {
@@ -27,4 +27,8 @@ EmailField.extractProps = ({ attrs }) => {
 EmailField.displayName = _lt("Email");
 EmailField.supportedTypes = ["char"];
 
+class FormEmailField extends EmailField {}
+FormEmailField.template = "web.FormEmailField";
+
 registry.category("fields").add("email", EmailField);
+registry.category("fields").add("form.email", FormEmailField);

@@ -50,13 +50,30 @@
             <field name="binding_type">report</field>
         </record>
 
+        <!-- The top margin on the default A4 format is way too big -->
+        <record id="paperformat_euro_bank_statement" model="report.paperformat">
+            <field name="name">A4 - statement</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">32</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">15</field>
+            <field name="dpi">90</field>
+        </record>
+
         <record id="action_report_account_statement" model="ir.actions.report">
             <field name="name">Statement</field>
             <field name="model">account.bank.statement</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">account.report_statement</field>
             <field name="report_file">account.report_statement</field>
-            <field name="binding_model_id" ref="model_account_bank_statement"/>
+            <field name="paperformat_id" ref="account.paperformat_euro_bank_statement"/>
             <field name="binding_type">report</field>
         </record>
 

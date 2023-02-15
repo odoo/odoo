@@ -2,14 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
-
-import ast
+from ast import literal_eval
 
 
 class ProjectTaskTypeDelete(models.TransientModel):
     _name = 'project.task.type.delete.wizard'
-    _description = 'Project Stage Delete Wizard'
+    _description = 'Project Task Stage Delete Wizard'
 
     project_ids = fields.Many2many('project.project', domain="['|', ('active', '=', False), ('active', '=', True)]", string='Projects', ondelete='cascade')
     stage_ids = fields.Many2many('project.task.type', string='Stages To Delete', ondelete='cascade')
@@ -69,9 +67,11 @@ class ProjectTaskTypeDelete(models.TransientModel):
         elif self.env.context.get('stage_view'):
             action = self.env["ir.actions.actions"]._for_xml_id("project.open_task_type_form")
         else:
-            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_all_task")
+            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_my_task")
 
-        context = dict(ast.literal_eval(action.get('context')), active_test=True)
+        context = action.get('context', '{}')
+        context = context.replace('uid', str(self.env.uid))
+        context = dict(literal_eval(context), active_test=True)
         action['context'] = context
         action['target'] = 'main'
         return action

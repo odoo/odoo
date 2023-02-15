@@ -4,13 +4,13 @@
         <field name="name">l10n.in.res.partner.vat.inherit</field>
         <field name="model">res.partner</field>
         <field name="priority" eval="90"/>
-        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="attrs">{'required':[('l10n_in_gst_treatment', 'in', ['regular', 'composition', 'special_economic_zone', 'deemed_export'])], 'readonly': [('parent_id', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='vat']" position="before">
-                <field name="l10n_in_gst_treatment" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                <field name="l10n_in_gst_treatment" attrs="{'readonly': [('parent_id', '!=', False)], 'invisible': [('fiscal_country_codes', 'not ilike', 'IN')]}"/>
             </xpath>
         </field>
     </record>

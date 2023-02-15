@@ -2,10 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Bulgaria - Accounting',
-    'icon': '/l10n_bg/static/description/icon.png',
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
-    'author': 'Odoo S.A.',
     'description': """
         Chart accounting and taxes for Bulgaria
     """,

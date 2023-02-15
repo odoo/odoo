@@ -6,7 +6,6 @@
     'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Integrate your POS with a Stripe payment terminal',
-    'description': '',
     'data': [
         'views/pos_payment_method_views.xml',
         'views/assets_stripe.xml',

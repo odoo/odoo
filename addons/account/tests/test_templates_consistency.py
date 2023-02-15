@@ -42,7 +42,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         self.check_fields_consistency(
             'account.account.template', 'account.account', exceptions=['chart_template_id', 'nocreate'])
         self.check_fields_consistency(
-            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit', 'allowed_journal_ids', 'group_id', 'root_id', 'is_off_balance', 'non_trade', 'include_initial_balance', 'internal_group'])
+            'account.account', 'account.account.template', exceptions=['company_id', 'deprecated', 'opening_debit', 'opening_credit', 'allowed_journal_ids', 'group_id', 'root_id', 'non_trade', 'include_initial_balance', 'internal_group'])
 
     def test_account_tax_fields(self):
         '''Test fields consistency for ('account.tax', 'account.tax.template')
@@ -78,7 +78,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         )
         # lines
         self.check_fields_consistency('account.reconcile.model.line.template', 'account.reconcile.model.line', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.reconcile.model.line', 'account.reconcile.model.line.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'analytic_tag_ids', 'amount'])
+        self.check_fields_consistency('account.reconcile.model.line', 'account.reconcile.model.line.template', exceptions=['company_id', 'journal_id', 'analytic_distribution', 'amount'])
 
     def test_account_group_fields(self):
         '''Test fields consistency for ('account.group', 'account.group.template')

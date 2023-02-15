@@ -125,19 +125,11 @@ class ResConfigSettings(models.TransientModel):
 
     def action_update_terms(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': self.env["website"].get_client_action_url('/terms', True),
-            'target': 'self',
-        }
+        return self.env["website"].get_client_action('/terms', True)
 
     def action_open_extra_info(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': self.env["website"].get_client_action_url('/shop/extra_info', True),
-            'target': 'self',
-        }
+        return self.env["website"].get_client_action('/shop/extra_info', True)
 
     def action_open_sale_mail_templates(self):
         return {

@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { formatX2many } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class ListX2ManyField extends Component {
     get formattedValue() {

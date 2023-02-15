@@ -2,7 +2,7 @@ odoo.define('website_livechat.chat_request_tour', function(require) {
 'use strict';
 
 var commonSteps = require("website_livechat.tour_common");
-var tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 
 
 var stepWithChatRequestStep = [{
@@ -32,15 +32,15 @@ var stepWithChatRequestStep = [{
 }];
 
 
-tour.register('website_livechat_chat_request_part_1_no_close_tour', {
+registry.category("web_tour.tours").add('website_livechat_chat_request_part_1_no_close_tour', {
     test: true,
     url: '/',
-}, [].concat(stepWithChatRequestStep));
+    steps: [].concat(stepWithChatRequestStep)});
 
-tour.register('website_livechat_chat_request_part_2_end_session_tour', {
+registry.category("web_tour.tours").add('website_livechat_chat_request_part_2_end_session_tour', {
     test: true,
     url: '/',
-}, [].concat(commonSteps.endDiscussionStep, commonSteps.okRatingStep, commonSteps.feedbackStep, commonSteps.transcriptStep, commonSteps.closeStep));
+    steps: [].concat(commonSteps.endDiscussionStep, commonSteps.okRatingStep, commonSteps.feedbackStep, commonSteps.transcriptStep, commonSteps.closeStep)});
 
 return {};
 });

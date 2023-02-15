@@ -125,7 +125,7 @@ class Speedscope:
         """
             :param stack: A list of hashable frame
             :param context: an iterable of (level, value) ordered by level
-            :param stack_offset: offeset level for stack
+            :param stack_offset: offset level for stack
 
             Assemble stack and context and return a list of ids representing
             this stack, adding each corresponding context at the corresponding
@@ -146,7 +146,7 @@ class Speedscope:
         return stack_ids
 
     def process(self, entries, continuous=True, hide_gaps=False, use_context=True, constant_time=False):
-        # constant_time parameters is mainly usefull to hide temporality when focussing on sql determinism
+        # constant_time parameters is mainly useful to hide temporality when focussing on sql determinism
         entry_end = previous_end = None
         if not entries:
             return []

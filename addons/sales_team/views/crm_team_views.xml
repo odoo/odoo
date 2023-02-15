@@ -102,7 +102,6 @@
     <record id="crm_team_view_tree" model="ir.ui.view">
         <field name="name">crm.team.tree</field>
         <field name="model">crm.team</field>
-        <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Sales Team" sample="1" multi_edit="1">
                 <field name="sequence" widget="handle"/>
@@ -151,14 +150,42 @@
                 <field name="currency_id"/>
                 <field name="is_favorite"/>
                 <templates>
+                    <t t-name="kanban-menu">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>View</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>New</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Reporting</span>
+                                    </div>
+                                    <div name="o_team_kanban_report_separator"></div>
+                                </div>
+                            </div>
+
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="sales_team.group_sale_manager">
+                                <div role="menuitem" aria-haspopup="true" class="col-8">
+                                    <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                </div>
+                                <div role="menuitem" class="col-4">
+                                    <a class="dropdown-item" type="edit">Configuration</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <div t-attf-class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary o_text_overflow"><field name="name"/></div>
-                                </div>
-                                <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_kanban_card_content">
@@ -175,34 +202,6 @@
                                 <div class="row">
                                     <div class="col-12 o_kanban_primary_bottom">
                                         <t t-call="SalesTeamDashboardGraph"/>
-                                    </div>
-                                </div>
-                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                <div class="row">
-                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>View</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>New</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reports">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>Reporting</span>
-                                        </div>
-                                        <div name="o_team_kanban_report_separator"></div>
-                                    </div>
-                                </div>
-
-                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="sales_team.group_sale_manager">
-                                    <div role="menuitem" aria-haspopup="true" class="col-8">
-                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
-                                    </div>
-                                    <div role="menuitem" class="col-4">
-                                        <a class="dropdown-item" type="edit">Configuration</a>
                                     </div>
                                 </div>
                             </div>

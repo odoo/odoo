@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ActionMenus" owl="1">
-        <div class="o_cp_action_menus">
-            <Dropdown t-if="printItems.length" class="'d-inline-block'" togglerClass="'btn btn-secondary'" tooltip="'Printing options'" hotkey="'shift+u'">
+        <div class="o_cp_action_menus pe-2">
+            <Dropdown t-if="printItems.length" class="'d-inline-block'" togglerClass="'btn btn-light'" hotkey="'shift+u'">
                 <t t-set-slot="toggler">
-                    <i class="small me-1 fa fa-print"/>
+                    <i class="me-md-1 fa fa-print"/>
                     <span class="o_dropdown_title">Print</span>
                 </t>
                 <t t-foreach="printItems" t-as="item" t-key="item.key">
@@ -15,9 +15,9 @@
                 </t>
             </Dropdown>
 
-            <Dropdown t-if="actionItems.length" class="'d-inline-block'" togglerClass="'btn btn-secondary'" tooltip="'Additional actions'" hotkey="'u'">
+            <Dropdown t-if="actionItems.length" class="'d-inline-block'" togglerClass="'btn btn-light'" hotkey="'u'">
                 <t t-set-slot="toggler">
-                    <i class="small me-1 fa fa-cog"/>
+                    <i class="me-md-1 fa fa-cog"/>
                     <span class="o_dropdown_title">Action</span>
                 </t>
                 <t t-foreach="actionItems" t-as="item" t-key="item.key">

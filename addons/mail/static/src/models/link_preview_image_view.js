@@ -1,66 +1,62 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'LinkPreviewImageView',
+Model({
+    name: "LinkPreviewImageView",
+    template: "mail.LinkPreviewImageView",
     recordMethods: {
         /**
          * Handles mouse enter event for the container of this element.
          */
         onMouseEnter() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: true });
         },
         /**
          * Handles mouse leave event for the container of this element.
          */
         onMouseLeave() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: false });
-        },
-        /**
-         * @private
-         * @returns {LinkPreviewAsideView|FieldCommand}
-         */
-        _computeLinkPreviewAsideView() {
-            if (!this.linkPreview.isDeletable) {
-                return clear();
-            }
-            if (this.messaging.device.isMobileDevice) {
-                return {};
-            }
-            if (this.isHovered || (this.linkPreviewAsideView && this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeImageUrl() {
-            return this.linkPreview.og_image ? this.linkPreview.og_image : this.linkPreview.source_url;
         },
     },
     fields: {
         imageUrl: attr({
-            compute: '_computeImageUrl',
+            compute() {
+                return this.linkPreview.og_image
+                    ? this.linkPreview.og_image
+                    : this.linkPreview.source_url;
+            },
         }),
-        isHovered: attr({
-            default: false,
+        isHovered: attr({ default: false }),
+        linkPreview: one("LinkPreview", { identifying: true, inverse: "linkPreviewImageView" }),
+        linkPreviewAsideView: one("LinkPreviewAsideView", {
+            inverse: "linkPreviewImageView",
+            compute() {
+                if (!this.linkPreview.isDeletable) {
+                    return clear();
+                }
+                if (this.messaging.device.isMobileDevice) {
+                    return {};
+                }
+                if (
+                    this.isHovered ||
+                    (this.linkPreviewAsideView &&
+                        this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)
+                ) {
+                    return {};
+                }
+                return clear();
+            },
         }),
-        linkPreview: one('LinkPreview', {
+        linkPreviewListViewOwner: one("LinkPreviewListView", {
             identifying: true,
-            inverse: 'linkPreviewImageView',
-        }),
-        linkPreviewAsideView: one('LinkPreviewAsideView', {
-            compute: '_computeLinkPreviewAsideView',
-            inverse: 'linkPreviewImageView',
-        }),
-        linkPreviewListViewOwner: one('LinkPreviewListView', {
-            identifying: true,
-            inverse: 'linkPreviewAsImageViews',
+            inverse: "linkPreviewAsImageViews",
         }),
     },
 });

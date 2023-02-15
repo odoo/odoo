@@ -1,9 +1,11 @@
 /** @odoo-module */
 
-import { _t } from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { getFirstPivotFunction } from "../pivot_helpers";
 import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
+import { Domain } from "@web/core/domain";
+import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 
 const { astToFormula } = spreadsheet;
 const { DateTime } = luxon;
@@ -11,7 +13,7 @@ const { DateTime } = luxon;
 /**
  * Convert pivot period to the related filter value
  *
- * @param {import("@spreadsheet/global_filters/plugins/filters_plugin").RangeType} timeRange
+ * @param {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").RangeType} timeRange
  * @param {string} value
  * @returns {object}
  */
@@ -41,8 +43,8 @@ function pivotPeriodToFilterValue(timeRange, value) {
 }
 
 export default class PivotUIPlugin extends spreadsheet.UIPlugin {
-    constructor() {
-        super(...arguments);
+    constructor(config) {
+        super(config);
         /** @type {string} */
         this.selectedPivotId = undefined;
         this.selection.observe(this, {
@@ -58,13 +60,23 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             case "ZonesSelected": {
                 const sheetId = this.getters.getActiveSheetId();
                 const { col, row } = event.anchor.cell;
-                const cell = this.getters.getCell(sheetId, col, row);
+                const cell = this.getters.getCell({ sheetId, col, row });
                 if (cell !== undefined && cell.content.startsWith("=ODOO.PIVOT.HEADER(")) {
                     const filters = this.getFiltersMatchingPivot(cell.content);
                     this.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
                 }
                 break;
             }
+        }
+    }
+
+    beforeHandle(cmd) {
+        switch (cmd.type) {
+            case "START":
+                // make sure the domains are correctly set before
+                // any evaluation
+                this._addDomains();
+                break;
         }
     }
 
@@ -77,14 +89,32 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             case "SELECT_PIVOT":
                 this.selectedPivotId = cmd.pivotId;
                 break;
-            case "ADD_PIVOT_DOMAIN":
-                this._addDomain(cmd.id, cmd.domain);
-                break;
             case "REFRESH_PIVOT":
                 this._refreshOdooPivot(cmd.id);
                 break;
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooPivots();
+                break;
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+            case "REMOVE_GLOBAL_FILTER":
+            case "SET_GLOBAL_FILTER_VALUE":
+            case "CLEAR_GLOBAL_FILTER_VALUE":
+                this._addDomains();
+                break;
+            case "UNDO":
+            case "REDO":
+                if (
+                    cmd.commands.find((command) =>
+                        [
+                            "ADD_GLOBAL_FILTER",
+                            "EDIT_GLOBAL_FILTER",
+                            "REMOVE_GLOBAL_FILTER",
+                        ].includes(command.type)
+                    )
+                ) {
+                    this._addDomains();
+                }
                 break;
         }
     }
@@ -106,15 +136,13 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
      * Get the id of the pivot at the given position. Returns undefined if there
      * is no pivot at this position
      *
-     * @param {string} sheetId Id of the sheet
-     * @param {number} col Index of the col
-     * @param {number} row Index of the row
+     * @param {{ sheetId: string; col: number; row: number}} position
      *
      * @returns {string|undefined}
      */
-    getPivotIdFromPosition(sheetId, col, row) {
-        const cell = this.getters.getCell(sheetId, col, row);
-        if (cell && cell.isFormula()) {
+    getPivotIdFromPosition(position) {
+        const cell = this.getters.getCell(position);
+        if (cell && cell.isFormula) {
             const pivotFunction = getFirstPivotFunction(cell.content);
             if (pivotFunction) {
                 const content = astToFormula(pivotFunction.args[0]);
@@ -192,16 +220,26 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         const evaluatedArgs = args
             .map(astToFormula)
             .map((arg) => this.getters.evaluateFormula(arg));
+        if (evaluatedArgs.length <= 2) {
+            return [];
+        }
         const pivotId = evaluatedArgs[0];
         const argField = evaluatedArgs[evaluatedArgs.length - 2];
+        if (argField === "measure") {
+            return [];
+        }
         const filters = this.getters.getGlobalFilters();
         const matchingFilters = [];
 
         for (const filter of filters) {
             const dataSource = this.getters.getPivotDataSource(pivotId);
             const { field, aggregateOperator: time } = dataSource.parseGroupField(argField);
-            if (filter.pivotFields[pivotId].field === field.name) {
-                let value = dataSource.getPivotHeaderValue(evaluatedArgs.slice(1));
+            const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
+            if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
+                let value = dataSource.getPivotHeaderValue(evaluatedArgs.slice(-2));
+                if (value === NO_RECORD_AT_THIS_POSITION) {
+                    continue;
+                }
                 let transformedValue;
                 const currentValue = this.getters.getGlobalFilterValue(filter.id);
                 switch (filter.type) {
@@ -254,7 +292,7 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
     }
 
     /**
-     * Refresh the cache of all the lists
+     * Refresh the cache of all the pivots
      */
     _refreshOdooPivots() {
         for (const pivotId of this.getters.getPivotIds()) {
@@ -268,10 +306,28 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
      * @private
      *
      * @param {string} pivotId pivot id
-     * @param {Array<Array<any>>} domain
      */
-    _addDomain(pivotId, domain) {
+    _addDomain(pivotId) {
+        const domainList = [];
+        for (const [filterId, fieldMatch] of Object.entries(
+            this.getters.getPivotFieldMatch(pivotId)
+        )) {
+            domainList.push(this.getters.getGlobalFilterDomain(filterId, fieldMatch));
+        }
+        const domain = Domain.combine(domainList, "AND").toString();
         this.getters.getPivotDataSource(pivotId).addDomain(domain);
+    }
+
+    /**
+     * Add an additional domain to all pivots
+     *
+     * @private
+     *
+     */
+    _addDomains() {
+        for (const pivotId of this.getters.getPivotIds()) {
+            this._addDomain(pivotId);
+        }
     }
 }
 

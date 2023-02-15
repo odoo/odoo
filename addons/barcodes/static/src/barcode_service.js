@@ -23,10 +23,14 @@ function makeBarcodeInput() {
 export const barcodeService = {
     // Keys from a barcode scanner are usually processed as quick as possible,
     // but some scanners can use an intercharacter delay (we support <= 50 ms)
-    maxTimeBetweenKeysInMs: session.max_time_between_keys_in_ms || 55,
+    maxTimeBetweenKeysInMs: session.max_time_between_keys_in_ms || 100,
 
     // this is done here to make it easily mockable in mobile tests
     isMobileChrome: isMobileOS() && isBrowserChrome(),
+
+    cleanBarcode: function(barcode) {
+        return barcode.replace(/Alt|Shift|Control/g, '');
+    },
 
     start() {
         const bus = new EventBus();
@@ -39,7 +43,8 @@ export const barcodeService = {
         function handleBarcode(barcode, target) {
             bus.trigger('barcode_scanned', {barcode,target});
             if (target.getAttribute('barcode_events') === "true") {
-                $(target).trigger('barcode_scanned', barcode);
+                const barcodeScannedEvent = new CustomEvent("barcode_scanned", { detail: { barcode, target } });
+                target.dispatchEvent(barcodeScannedEvent);
             }
         }
 
@@ -47,7 +52,8 @@ export const barcodeService = {
          * check if we have a barcode, and trigger appropriate events
          */
         function checkBarcode() {
-            const str = barcodeInput ? barcodeInput.value : bufferedBarcode;
+            let str = barcodeInput ? barcodeInput.value : bufferedBarcode;
+            str = barcodeService.cleanBarcode(str);
             if (str.length >= 3) {
                 handleBarcode(str, currentTarget);
             }
@@ -66,9 +72,11 @@ export const barcodeService = {
                 return;
             }
             // Ignore 'Shift', 'Escape', 'Backspace', 'Insert', 'Delete', 'Home', 'End', Arrow*, F*, Page*, ...
-            // ctrl, meta and alt are often used for UX purpose (like shortcuts)
-            // Note: shiftKey is not ignored because it can be used by some barcode scanner for digits.
-            const isSpecialKey = ev.key.length > 1 || ev.ctrlKey || ev.metaKey || ev.altKey;
+            // meta is often used for UX purpose (like shortcuts)
+            // Notes:
+            // - shiftKey is not ignored because it can be used by some barcode scanner for digits.
+            // - altKey/ctrlKey are not ignored because it can be used in some barcodes (e.g. GS1 separator)
+            const isSpecialKey = !['Control', 'Alt'].includes(ev.key) && (ev.key.length > 1 || ev.metaKey);
             const isEndCharacter = ev.key.match(/(Enter|Tab)/);
 
             // Don't catch non-printable keys except 'enter' and 'tab'

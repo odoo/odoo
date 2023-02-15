@@ -134,6 +134,7 @@
         <field name="model">fleet.vehicle.model</field>
         <field name="arch" type="xml">
             <search string="Vehicles costs" >
+                <field name="name" string="Model" />
                 <field name="brand_id" />
                 <group expand="1" string="Group By">
                     <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Contains Vehicles"/>
@@ -203,16 +204,11 @@
                 <field name="id"/>
                 <field name="name" />
                 <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" type="open" class="dropdown-item">Configuration</a>
+                    </t>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_global_click">
-                            <div class="o_dropdown_kanban dropdown">
-                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <a role="menuitem" type="open" class="dropdown-item">Configuration</a>
-                                </div>
-                            </div>
                             <div class="o_kanban_image">
                                 <img alt="img" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_128', record.id.raw_value)" class="o_image_64_max" height="52"/>
                             </div>

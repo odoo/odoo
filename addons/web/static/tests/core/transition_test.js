@@ -3,7 +3,7 @@
 import { Transition, useTransition, config as transitionConfig } from "@web/core/transition";
 import { getFixture, mockTimeout, mount, nextTick, patchWithCleanup } from "../helpers/utils";
 
-const { Component, xml, useState } = owl;
+import { Component, xml, useState } from "@odoo/owl";
 
 QUnit.module("Transition");
 

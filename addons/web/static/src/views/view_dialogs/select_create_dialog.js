@@ -5,11 +5,14 @@ import { useService } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 import { escape } from "@web/core/utils/strings";
 
-const { Component, markup, useState } = owl;
+import { FormViewDialog } from "./form_view_dialog";
+
+import { Component, markup, useState } from "@odoo/owl";
 
 export class SelectCreateDialog extends Component {
     setup() {
         this.viewService = useService("view");
+        this.dialogService = useService("dialog");
         this.state = useState({ resIds: [] });
         this.baseViewProps = {
             display: { searchPanel: false },
@@ -27,6 +30,7 @@ export class SelectCreateDialog extends Component {
     get viewProps() {
         const type = this.env.isSmall ? "kanban" : "list";
         const props = {
+            loadIrFilters: true,
             ...this.baseViewProps,
             context: this.props.context,
             domain: this.props.domain,
@@ -48,30 +52,53 @@ export class SelectCreateDialog extends Component {
         }
     }
 
+    async unselect() {
+        if (this.props.onUnselect) {
+            await this.props.onUnselect();
+            this.props.close();
+        }
+    }
+
+    get canUnselect() {
+        return this.env.isSmall && !!this.props.onUnselect;
+    }
+
     async createEditRecord() {
         if (this.props.onCreateEdit) {
             await this.props.onCreateEdit();
             this.props.close();
+        } else {
+            this.dialogService.add(FormViewDialog, {
+                context: this.props.context,
+                resModel: this.props.resModel,
+                onRecordSaved: (record) => {
+                    this.props.onSelected([record.resId]);
+                    this.props.close();
+                },
+            });
         }
     }
 }
 SelectCreateDialog.components = { Dialog, View };
 SelectCreateDialog.template = "web.SelectCreateDialog";
-
+SelectCreateDialog.props = {
+    context: { type: Object, optional: true },
+    domain: { type: Array, optional: true },
+    dynamicFilters: { type: Array, optional: true },
+    resModel: String,
+    searchViewId: { type: [Number, { value: false }], optional: true },
+    multiSelect: { type: Boolean, optional: true },
+    onSelected: { type: Function, optional: true },
+    close: { type: Function, optional: true },
+    onCreateEdit: { type: Function, optional: true },
+    title: { type: String, optional: true },
+    noCreate: { type: Boolean, optional: true },
+    onUnselect: { type: Function, optional: true },
+};
 SelectCreateDialog.defaultProps = {
     dynamicFilters: [],
     multiSelect: true,
     searchViewId: false,
-    type: "list",
+    domain: [],
+    context: {},
 };
-
-/**
- * Props: (to complete)
- *
- * resModel
- * domain
- * context
- * title
- * onSelected
- * type
- */

@@ -76,8 +76,8 @@
                         <label for="email_from" string="From"/>
                         <div>
                             <field name="email_from" nolabel="1"/>
-                            <span class="oe_read_only ms-2 badge text-bg-success" attrs="{'invisible': [('author_moderation', '!=', 'allow')]}">Whitelisted</span>
-                            <span class="oe_read_only ms-2 badge text-bg-danger" attrs="{'invisible': [('author_moderation', '!=', 'ban')]}">Banned</span>
+                            <span class="ms-2 badge text-bg-success" attrs="{'invisible': [('author_moderation', '!=', 'allow')]}">Whitelisted</span>
+                            <span class="ms-2 badge text-bg-danger" attrs="{'invisible': [('author_moderation', '!=', 'ban')]}">Banned</span>
                             <field name="author_moderation" invisible="1"/>
                         </div>
                         <field name="mail_group_id"/>

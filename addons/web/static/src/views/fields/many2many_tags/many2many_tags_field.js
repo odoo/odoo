@@ -16,7 +16,7 @@ import { TagsList } from "./tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 class Many2ManyTagsFieldColorListPopover extends Component {}
 Many2ManyTagsFieldColorListPopover.template = "web.Many2ManyTagsFieldColorListPopover";
@@ -53,6 +53,9 @@ export class Many2ManyTagsField extends Component {
         });
 
         this.update = (recordlist) => {
+            if (!recordlist) {
+                return;
+            }
             if (Array.isArray(recordlist)) {
                 const resIds = recordlist.map((rec) => rec.id);
                 return saveRecord(resIds);
@@ -242,8 +245,12 @@ Many2ManyTagsField.defaultProps = {
 
 Many2ManyTagsField.displayName = _lt("Tags");
 Many2ManyTagsField.supportedTypes = ["many2many"];
-Many2ManyTagsField.fieldsToFetch = {
-    display_name: { name: "display_name", type: "char" },
+Many2ManyTagsField.fieldsToFetch = (fieldInfo) => {
+    const fieldsToFetch = [{ name: "display_name", type: "char" }];
+    if (fieldInfo.options.color_field) {
+        fieldsToFetch.push({ name: fieldInfo.options.color_field, type: "integer" });
+    }
+    return fieldsToFetch;
 };
 Many2ManyTagsField.isSet = (value) => value.count > 0;
 
@@ -347,10 +354,15 @@ Many2ManyTagsFieldColorEditable.defaultProps = {
 Many2ManyTagsFieldColorEditable.extractProps = (params) => {
     const props = Many2ManyTagsField.extractProps(params);
     const attrs = params.attrs;
+    const noEditColor = Boolean(attrs.options.no_edit_color);
+    const hasColorField = Boolean(attrs.options.color_field);
     return {
         ...props,
-        canEditColor: !attrs.options.no_edit_color,
+        canEditColor: !noEditColor && hasColorField,
     };
 };
 
 registry.category("fields").add("form.many2many_tags", Many2ManyTagsFieldColorEditable);
+
+registry.category("fields").add("calendar.one2many", Many2ManyTagsField);
+registry.category("fields").add("calendar.many2many", Many2ManyTagsField);

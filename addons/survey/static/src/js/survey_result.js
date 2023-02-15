@@ -3,6 +3,7 @@ odoo.define('survey.result', function (require) {
 
 var _t = require('web.core')._t;
 const { loadJS } = require('@web/core/assets');
+const { SurveyImageZoomer } = require("@survey/js/survey_image_zoomer");
 var publicWidget = require('web.public.widget');
 
 // The given colors are the same as those used by D3
@@ -416,6 +417,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         'click a.filter-failed': '_onFilterFailedClick',
         'click a.filter-passed': '_onFilterPassedClick',
         'click a.filter-passed-and-failed': '_onFilterPassedAndFailedClick',
+        'click .o_survey_answer_image': '_onAnswerImgClick',
     },
 
     //--------------------------------------------------------------------------
@@ -554,6 +556,21 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         params.delete('failed');
         params.delete('passed');
         window.location.href = window.location.pathname + '?' + params.toString();
+    },
+
+    /**
+     * Called when an image on an answer in multi-answers question is clicked.
+     * Starts a widget opening a dialog to display the now zoomable image.
+     * this.imgZoomer is the zoomer widget linked to the survey result widget, if any.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onAnswerImgClick: function (ev) {
+        ev.preventDefault();
+        new SurveyImageZoomer({
+            sourceImage: $(ev.currentTarget).attr('src')
+        }).appendTo(document.body);
     },
 
     /**

@@ -28,7 +28,6 @@
                     <field name="project_id" required="1" options="{'no_create_edit': True, 'no_open': 1}"/>
                     <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}"/>
                     <field name="name" optional="show" required="0"/>
-                    <field name="tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" optional="hide"/>
                     <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"/>
                     <field name="company_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
@@ -140,7 +139,6 @@
                             <group>
                                 <field name="project_id" required="1"/>
                                 <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}"/>
-                                <field name="tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="name"/>
                                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             </group>
@@ -171,7 +169,8 @@
             </field>
         </record>
 
-        <record id="hr_timesheet_line_search" model="ir.ui.view">
+        <!-- Base search view, contains the fields and filters common to timesheet and timesheet report -->
+        <record id="hr_timesheet_line_search_base" model="ir.ui.view">
             <field name="name">account.analytic.line.search</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
@@ -181,7 +180,6 @@
                     <field name="project_id"/>
                     <field name="ancestor_task_id" groups="project.group_subtask_project"/>
                     <field name="task_id"/>
-                    <field name="tag_ids" groups="analytic.group_analytic_tags"/>
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="manager_id"/>
@@ -204,7 +202,7 @@
         <record id="hr_timesheet_line_my_timesheet_search" model="ir.ui.view">
             <field name="name">view.search.my.timesheet.menu</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="hr_timesheet_line_search"/>
+            <field name="inherit_id" ref="hr_timesheet_line_search_base"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <field name="employee_id" position="replace"/>
@@ -214,6 +212,16 @@
                 <filter name="groupby_department" position="replace"/>
                 <filter name="groupby_manager" position="replace"/>
                 <filter name="groupby_employee" position="replace"/>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_line_search" model="ir.ui.view">
+            <field name="name">view.search.my.timesheet.menu</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet_line_search_base"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <search position="inside"/>
             </field>
         </record>
 
@@ -252,7 +260,7 @@
                                     <div class="o_kanban_record_bottom d-block mx-2">
                                         <hr class="mt4 mb4"/>
                                         <span>
-                                            <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"></i>
+                                            <i class="fa fa-calendar me-1" role="img" aria-label="Date" title="Date"></i>
                                             <t t-esc="record.date.value"/>
                                         </span>
                                         <span class="float-end" name="duration">
@@ -277,6 +285,7 @@
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
             <field name="context">{
                 "search_default_week":1,
+                "is_timesheet": 1,
             }</field>
             <field name="search_view_id" ref="hr_timesheet_line_my_timesheet_search"/>
             <field name="help" type="html">
@@ -339,6 +348,9 @@
         <record id="timesheet_action_task" model="ir.actions.act_window">
             <field name="name">Task's Timesheets</field>
             <field name="res_model">account.analytic.line</field>
+            <field name="context">{
+                'is_timesheet': 1,
+            }</field>
             <field name="domain">[('task_id', 'in', active_ids)]</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
@@ -347,6 +359,9 @@
         <record id="timesheet_action_project" model="ir.actions.act_window">
             <field name="name">Project's Timesheets</field>
             <field name="res_model">account.analytic.line</field>
+            <field name="context">{
+                'is_timesheet': 1,
+            }</field>
             <field name="domain">[('project_id', 'in', active_ids)]</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
@@ -360,6 +375,7 @@
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{
                 'search_default_week':1,
+                'is_timesheet': 1,
             }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

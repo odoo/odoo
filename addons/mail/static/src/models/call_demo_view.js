@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, one } from '@mail/model/model_field';
-import { registerModel } from '@mail/model/model_core';
+import { attr, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'CallDemoView',
+Model({
+    name: "CallDemoView",
+    template: "mail.CallDemoView",
     recordMethods: {
         /**
          * Stops recording user's microphone.
@@ -97,84 +97,62 @@ registerModel({
                 track.stop();
             }
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeDoesBrowserSupportMediaDevices() {
-            return Boolean(
-                navigator.mediaDevices &&
-                navigator.mediaDevices.getUserMedia &&
-                window.MediaStream
-            );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsMicrophoneEnabled() {
-            return this.audioStream !== null;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsVideoEnabled() {
-            return this.videoStream !== null;
-        },
     },
     fields: {
         /**
          * Ref to the audio element used for the audio feedback.
          */
-        audioRef: attr(),
+        audioRef: attr({ ref: "audio" }),
         /**
          * The MediaStream from the microphone.
          *
          * Default set to null to be consistent with the default value of
          * `HTMLMediaElement.srcObject`.
          */
-        audioStream: attr({
-            default: null,
-        }),
+        audioStream: attr({ default: null }),
         /**
          * States whether the browser has the required APIs for
          * microphone/camera recording.
          */
         doesBrowserSupportMediaDevices: attr({
-            compute: '_computeDoesBrowserSupportMediaDevices',
+            compute() {
+                return Boolean(
+                    navigator.mediaDevices &&
+                        navigator.mediaDevices.getUserMedia &&
+                        window.MediaStream
+                );
+            },
         }),
         /**
          * States if the user's microphone is currently recording.
          */
         isMicrophoneEnabled: attr({
-            compute: '_computeIsMicrophoneEnabled',
+            compute() {
+                return this.audioStream !== null;
+            },
         }),
         /**
          * States if the user's camera is currently recording.
          */
         isVideoEnabled: attr({
-            compute: '_computeIsVideoEnabled',
+            compute() {
+                return this.videoStream !== null;
+            },
         }),
         /**
          * Ref to the video element used for the video feedback.
          */
-        videoRef: attr(),
+        videoRef: attr({ ref: "video" }),
         /**
          * The MediaStream from the camera.
          *
          * Default set to null to be consistent with the default value of
          * `HTMLMediaElement.srcObject`.
          */
-        videoStream: attr({
-            default: null,
-        }),
+        videoStream: attr({ default: null }),
         /**
          * States the welcome view containing this media preview.
          */
-        welcomeView: one('WelcomeView', {
-            identifying: true,
-            inverse: 'callDemoView',
-        }),
+        welcomeView: one("WelcomeView", { identifying: true, inverse: "callDemoView" }),
     },
 });

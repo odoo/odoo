@@ -2,83 +2,14 @@
 <odoo>
     <data>
 
-        <record id="view_account_bnk_stmt_cashbox" model="ir.ui.view">
-            <field name="name">account.bnk_stmt_cashbox.form</field>
-            <field name="model">account.bank.statement.cashbox</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <field name="start_bank_stmt_ids" invisible="1"/>
-                        <field name="end_bank_stmt_ids" invisible="1"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="cashbox_lines_ids" nolabel="1" context="{'default_currency_id': currency_id}">
-                            <tree editable="bottom">
-                                <field name="currency_id" invisible="1"/>
-                                <field name="number"/>
-                                <field name="coin_value" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            </tree>
-                        </field>
-                        <div>
-                            <group>
-                                <group class="oe_subtotal_footer oe_right" cols="6">
-                                    <field name="currency_id" invisible="1" />
-                                    <div class="o_td_label"></div>
-                                    <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                </group>
-                            </group>
-                        </div>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_account_bnk_stmt_cashbox_footer" model="ir.ui.view">
-            <field name="name">account.bnk_stmt_cashbox.form</field>
-            <field name="model">account.bank.statement.cashbox</field>
-            <field name="priority">1000</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="view_account_bnk_stmt_cashbox"/>
-            <field name="arch" type="xml">
-                <xpath expr="//sheet" position="after">
-                    <footer>
-                        <button string="Confirm" class="btn-primary" special="save" data-hotkey="v"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
-                    </footer>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_account_bnk_stmt_check" model="ir.ui.view">
-            <field name="name">account.bnk_stmt_check.form</field>
-            <field name="model">account.bank.statement.closebalance</field>
-            <field name="arch" type="xml">
-                <form>
-                <div>
-                    <p>The closing balance is different than the computed one!</p>
-                    <p>Confirming this will create automatically a journal entry with the difference in the profit/loss account set on the cash journal.</p>
-                    <footer>
-                        <button string="Confirm" name="validate" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
-                    </footer>
-                </div>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_view_account_bnk_stmt_check" model="ir.actions.act_window">
-            <field name="name">Check Closing Balance</field>
-            <field name="res_model">account.bank.statement.closebalance</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_account_bnk_stmt_check"/>
-            <field name="target">new</field>
-        </record>
 
         <record id="view_bank_statement_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="not is_difference_zero" decoration-info="state=='open' and is_difference_zero" string="Statements">
+                <tree decoration-danger="not is_complete or not is_valid"
+                      create="false"
+                      string="Statements">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
@@ -87,8 +18,8 @@
                     <field name="balance_end_real"/>
                     <field name="balance_end" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="state"/>
-                    <field name="is_difference_zero" invisible="1"/>
+                    <field name="is_complete" invisible="1"/>
+                    <field name="is_valid" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -100,154 +31,26 @@
                 <search string="Search Bank Statements">
                     <field name="name" string="Bank Statement"/>
                     <field name="date"/>
-                    <filter string="New" name="draft" domain="[('state','=','open')]"/>
-                    <filter string="Processing" name="processing" domain="[('state','=','posted')]"/>
-                    <filter string="Validated" name="confirmed" domain="[('state','=','confirm')]"/>
+                    <filter string="Empty" name="empty" domain="[('line_ids','=',[])]"/>
+                    <filter name="invalid" string="Invalid"
+                            domain="['|', ('is_valid', '=', False),('is_complete', '=', False)]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
                     <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]" />
                     <group expand="0" string="Group By">
                         <filter string="Journal" name="journal" context="{'group_by': 'journal_id'}"/>
-                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
                         <filter string="Date" name="date" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-        <record id="view_bank_statement_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
-            <field name="model">account.bank.statement</field>
-            <field name="priority">1</field>
-            <field name="arch" type="xml">
-                <form string="Bank Statement">
-                <header>
-                    <button string="Post" states="open" class="oe_highlight"
-                            name="button_post" type="object"/>
-                    <button string="Validate" class="oe_highlight"
-                            name="button_validate_or_action" type="object"
-                            attrs="{'invisible':['|', '|', ('all_lines_reconciled', '=', False), ('line_ids','=',[]), ('state', '!=', 'posted')]}"/>
-                    <button string="Reset to New"
-                            name="button_reopen" type="object"
-                            attrs="{'invisible': [('state', '!=', 'posted')]}"/>
-                    <button string="Reset to Processing"
-                            name="button_reprocess" type="object"
-                            attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="open,posted,confirm"/>
-                </header>
-                <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|', ('previous_statement_id', '=', False), ('is_valid_balance_start', '=', True)]}">
-                    The starting balance <b>doesn't match</b> with the ending balance of the previous bank statement.
-                </div>
-                <sheet>
-                    <!-- Invisible fields -->
-                    <field name="all_lines_reconciled" invisible="1" />
-                    <field name="move_line_count" invisible="1"/>
-                    <field name="country_code" invisible="1"/>
-
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="button_journal_entries"
-                                string="Journal Entries" type="object"
-                                attrs="{'invisible':[('move_line_count','=', 0)]}" icon="fa-bars"/>
-                    </div>
-
-                    <div class="oe_title oe_inline">
-                        <label for="name"/>
-                        <h1><field name="name" placeholder="e.g. BNK/2021/0001"/></h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="previous_statement_id" invisible="1"/>
-                            <field name="is_valid_balance_start" invisible="1"/>
-                            <field name="journal_type" invisible="1"/>
-                            <field name="cashbox_start_id" invisible="1"/>
-                            <field name="cashbox_end_id" invisible="1"/>
-                            <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="date"
-                                   attrs="{'readonly': [('state', '!=', 'open')]}"
-                                   options="{'datepicker': {'warn_future': true}}"/>
-                            <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company" />
-                            <field name="currency_id" invisible="1"/>
-                        </group><group>
-                            <label for="balance_start"/>
-                            <div>
-                                <field name="balance_start" class="oe_inline" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                                <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'start'}"/>
-                            </div>
-                            <label for="balance_end_real"/>
-                            <div>
-                                <field name="balance_end_real" class="oe_inline" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
-                                <button name="open_cashbox_id" attrs="{'invisible': ['|',('state','!=','open'),('journal_type','!=','cash')]}" string="&#8594; Count" type="object" class="oe_edit_only oe_link oe_inline" context="{'balance':'close'}"/>
-                            </div>
-                        </group>
-                    </group>
-
-                    <notebook>
-                        <page string="Transactions" name="statement_line_ids">
-                            <field name="line_ids"
-                                   attrs="{'readonly': [('state', '!=', 'open')]}"
-                                   context="{'default_date': date, 'default_journal_id': journal_id}">
-                                <tree string="Statement lines"
-                                      editable="bottom"
-                                      decoration-muted="is_reconciled"
-                                      limit="500">
-
-                                    <!-- Invisible fields -->
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="state" invisible="1"/>
-                                    <field name="is_reconciled" invisible="1"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="partner_bank_id" invisible="1"/>
-                                    <field name="country_code" invisible="1"/>
-
-                                    <!-- Visible fields -->
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="date"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
-                                    <field name="payment_ref"/>
-                                    <field name="partner_id"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"
-                                           domain="['|', ('parent_id','=', False), ('is_company','=',True)]"/>
-                                    <field name="ref" optional="hidden"/>
-                                    <field name="narration" string="Notes" optional="hidden"/>
-                                    <field name="transaction_type" optional="hidden"/>
-                                    <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
-                                    <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
-                                    <field name="amount"
-                                           attrs="{'readonly': [('parent.state', '!=', 'open')]}"/>
-                                    <field name="account_number" optional="hidden"/>
-
-                                    <!-- Buttons -->
-                                    <button name="button_undo_reconciliation" type="object"
-                                            attrs="{'invisible': [('is_reconciled', '=', False)], 'column_invisible': [('parent.state', '!=', 'posted')]}"
-                                            string="Revert reconciliation" icon="fa-undo"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
-                        <div class="oe_subtotal_footer_separator oe_inline">
-                            <label for="balance_end" />
-                        </div>
-                        <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator"/>
-                    </group>
-                    <div class="clearfix"/>
-                </sheet>
-                <div class="o_attachment_preview"/>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids"/>
-                </div>
-                </form>
-            </field>
-        </record>
 
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
             <field name="res_model">account.bank.statement</field>
-            <field name="view_mode">tree,form,pivot,graph</field>
-            <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+            <field name="view_mode">tree,pivot,graph</field>
+            <field name="domain">['|', ('journal_id', '=', False), ('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
             <field name="help" type="html">
@@ -268,113 +71,6 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_bank_statement_tree"/>
             <field name="act_window_id" ref="action_bank_statement_tree"/>
-        </record>
-        <record model="ir.actions.act_window.view" id="action_bank_statement_form_bank">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_bank_statement_form"/>
-            <field name="act_window_id" ref="action_bank_statement_tree"/>
-        </record>
-
-        <record id="view_bank_statement_line_search" model="ir.ui.view">
-            <field name="name">account.bank.statement.line.search</field>
-            <field name="model">account.bank.statement.line</field>
-            <field name="arch" type="xml">
-                <search string="Search Bank Statements Line">
-                    <field name="payment_ref"/>
-                    <field name="statement_id"/>
-                    <field name="partner_id"/>
-                    <field name="date"/>
-                    <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]" />
-                    <field name="narration" string="Notes"/>
-                    <field name="transaction_type"/>
-                    <field name="move_id"/>
-                    <field name="amount"/>
-                    <filter name="statement" string="Statement" context="{'group_by':'statement_id'}"/>
-                </search>
-            </field>
-        </record>
-
-        <record id="view_bank_statement_line_form" model="ir.ui.view">
-            <field name="name">bank.statement.line.form</field>
-            <field name="model">account.bank.statement.line</field>
-            <field name="priority">8</field>
-            <field name="arch" type="xml">
-                <form string="Statement Line" create="false">
-                    <sheet>
-                        <group col="4">
-                            <!-- Invisible fields -->
-                            <field name="state" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
-
-                            <!-- Displayed fields -->
-                            <field name="statement_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="date" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="payment_ref" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="ref" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="partner_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="amount" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="sequence" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="narration" string="Notes" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="transaction_type" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                            <field name="move_id" attrs="{'readonly': [('state', '!=', 'open')]}"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <record id="view_bank_statement_line_tree" model="ir.ui.view">
-            <field name="name">account.bank.statement.line.tree</field>
-            <field name="model">account.bank.statement.line</field>
-            <field name="priority">8</field>
-            <field name="arch" type="xml">
-                <tree string="Statement lines" create="false" default_order="date desc, statement_id desc, sequence desc, id desc">
-                    <!-- Invisible fields -->
-                    <field name="state" invisible="1"/>
-                    <field name="sequence" readonly="1" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="journal_id" invisible="1" />
-                    <field name="is_reconciled" invisible="1"/>
-                    <field name="partner_bank_id" invisible="1"/>
-                    <field name="currency_id" invisible="1"/>
-
-                    <!-- Displayed fields -->
-                    <field name="statement_id" optional="hide"/>
-                    <field name="move_id"/>
-                    <field name="date"/>
-                    <field name="payment_ref"/>
-                    <field name="partner_id"/>
-                    <field name="ref" groups="base.group_no_one" optional="hidden"/>
-                    <field name="narration" string="Notes" optional="hidden"/>
-                    <field name="transaction_type" optional="hidden"/>
-                    <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"/>
-                    <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"/>
-                    <field name="amount"/>
-                    <field name="account_number" optional="hidden"/>
-
-                    <!-- Buttons -->
-                    <button name="button_undo_reconciliation" type="object"
-                            attrs="{'invisible': [('is_reconciled', '=', False)]}"
-                            string="Revert reconciliation" icon="fa-undo"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_bank_statement_line" model="ir.actions.act_window">
-            <field name="name">Bank Statement Lines</field>
-            <field name="res_model">account.bank.statement.line</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-            <field name="search_view_id" ref="view_bank_statement_line_search"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_empty_folder">
-                A bank statement line is a financial transaction on a bank account
-              </p><p>
-                Odoo allows you to reconcile a statement line directly with
-                the related sale or purchase invoice(s).
-              </p>
-            </field>
         </record>
 
         <record id="account_bank_statement_pivot" model="ir.ui.view">
@@ -405,10 +101,10 @@
             <field name="name">Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
-            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph</field>
             <field name="view_id" ref="view_bank_statement_tree"/>
             <field name="search_view_id" ref="view_bank_statement_search"/>
-            <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+            <field name="domain">['|', ('journal_id', '=', False), ('journal_id.type', '=', 'cash')]</field>
             <field name="context">{'journal_type':'cash'}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -416,9 +112,7 @@
               </p><p>
                 A Cash Register allows you to manage cash entries in your cash
                 journals. This feature provides an easy way to follow up cash
-                payments on a daily basis. You can enter the coins that are in
-                your cash box, and then post entries when money comes in or
-                goes out of the cash box.
+                payments on a daily basis.
               </p>
             </field>
         </record>

@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, link } from '@mail/model/model_field_command';
+import { attr, clear, link, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ThreadCache',
+Model({
+    name: "ThreadCache",
     recordMethods: {
         async loadMoreMessages() {
             if (this.isAllHistoryLoaded || this.isLoading) {
@@ -16,14 +14,17 @@ registerModel({
                 return;
             }
             this.update({ isLoadingMore: true });
-            const messageIds = this.fetchedMessages.map(message => message.id);
+            const messageIds = this.fetchedMessages.map((message) => message.id);
             const limit = 30;
             let fetchedMessages;
             let success;
             try {
-                fetchedMessages = await this._loadMessages({ limit, maxId: Math.min(...messageIds) });
+                fetchedMessages = await this._loadMessages({
+                    limit,
+                    maxId: Math.min(...messageIds),
+                });
                 success = true;
-            } catch (_e) {
+            } catch {
                 success = false;
             }
             if (!this.exists()) {
@@ -34,7 +35,7 @@ registerModel({
                     this.update({ isAllHistoryLoaded: true });
                 }
                 for (const threadView of this.threadViews) {
-                    threadView.addComponentHint('more-messages-loaded', { fetchedMessages });
+                    threadView.addComponentHint("more-messages-loaded", { fetchedMessages });
                 }
             }
             this.update({ isLoadingMore: false });
@@ -50,93 +51,15 @@ registerModel({
                 this.update({ isCacheRefreshRequested: true });
                 return;
             }
-            const messageIds = this.fetchedMessages.map(message => message.id);
+            const messageIds = this.fetchedMessages.map((message) => message.id);
             const fetchedMessages = this._loadMessages({ minId: Math.max(...messageIds, 0) });
             if (!fetchedMessages || fetchedMessages.length === 0) {
                 return;
             }
             for (const threadView of this.threadViews) {
-                threadView.addComponentHint('new-messages-loaded', { fetchedMessages });
+                threadView.addComponentHint("new-messages-loaded", { fetchedMessages });
             }
             return fetchedMessages;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand|Message[]}
-         */
-        _computeFetchedMessages() {
-            if (!this.thread) {
-                return clear();
-            }
-            return this.rawFetchedMessages.filter(m => this.thread.messages.includes(m));
-        },
-        /**
-         * @private
-         * @returns {Message|undefined}
-         */
-        _computeLastFetchedMessage() {
-            const {
-                length: l,
-                [l - 1]: lastFetchedMessage,
-            } = this.orderedFetchedMessages;
-            if (!lastFetchedMessage) {
-                return clear();
-            }
-            return lastFetchedMessage;
-        },
-        /**
-         * @private
-         * @returns {Message|undefined}
-         */
-        _computeLastMessage() {
-            const {
-                length: l,
-                [l - 1]: lastMessage,
-            } = this.orderedMessages;
-            if (!lastMessage) {
-                return clear();
-            }
-            return lastMessage;
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeMessages() {
-            if (!this.thread) {
-                return clear();
-            }
-            let newerMessages;
-            if (!this.lastFetchedMessage) {
-                newerMessages = this.thread.messages;
-            } else {
-                newerMessages = this.thread.messages.filter(message =>
-                    message.id > this.lastFetchedMessage.id
-                );
-            }
-            return [...this.fetchedMessages, ...this.temporaryMessages, ...newerMessages];
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeOrderedFetchedMessages() {
-            return this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
-        },
-        /**
-         * @private
-         * @returns {Message[]}
-         */
-        _computeOrderedMessages() {
-            return this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
-        },
-        /**
-         *
-         * @private
-         * @returns {Message[]}
-         */
-        _computeOrderedNonEmptyMessages() {
-            return this.orderedMessages.filter(message => !message.isEmpty);
         },
         /**
          * @private
@@ -194,12 +117,15 @@ registerModel({
             this.update({ isLoading: true });
             let messages;
             try {
-                messages = await this.messaging.models['Message'].performRpcMessageFetch(this.thread.fetchMessagesUrl, {
-                    ...this.thread.fetchMessagesParams,
-                    limit,
-                    'max_id': maxId,
-                    'min_id': minId,
-                });
+                messages = await this.messaging.models["Message"].performRpcMessageFetch(
+                    this.thread.fetchMessagesUrl,
+                    {
+                        ...this.thread.fetchMessagesParams,
+                        limit,
+                        max_id: maxId,
+                        min_id: minId,
+                    }
+                );
             } catch (e) {
                 if (this.exists()) {
                     this.update({
@@ -221,7 +147,7 @@ registerModel({
             if (!minId && messages.length < limit) {
                 this.update({ isAllHistoryLoaded: true });
             }
-            this.messaging.messagingBus.trigger('o-thread-cache-loaded-messages', {
+            this.messaging.messagingBus.trigger("o-thread-cache-loaded-messages", {
                 fetchedMessages: messages,
                 threadCache: this,
             });
@@ -251,9 +177,11 @@ registerModel({
                 return;
             }
             for (const threadView of this.threadViews) {
-                threadView.addComponentHint('messages-loaded', { fetchedMessages });
+                threadView.addComponentHint("messages-loaded", { fetchedMessages });
             }
-            this.messaging.messagingBus.trigger('o-thread-loaded-messages', { thread: this.thread });
+            this.messaging.messagingBus.trigger("o-thread-loaded-messages", {
+                thread: this.thread,
+            });
         },
     },
     fields: {
@@ -273,15 +201,18 @@ registerModel({
          * to manage "holes" in message list, while still allowing to display
          * new messages on main cache of thread in real-time.
          */
-        fetchedMessages: many('Message', {
-            compute: '_computeFetchedMessages',
+        fetchedMessages: many("Message", {
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                return this.rawFetchedMessages.filter((m) => this.thread.messages.includes(m));
+            },
         }),
         /**
          * Determines whether the last message fetch failed.
          */
-        hasLoadingFailed: attr({
-            default: false,
-        }),
+        hasLoadingFailed: attr({ default: false }),
         /**
          * Determines whether `this` should load initial messages.
          * @see `onChangeForHasToLoadMessages` value of this field is mainly set
@@ -289,26 +220,16 @@ registerModel({
          * @see `isCacheRefreshRequested` to request manual refresh of messages.
          */
         hasToLoadMessages: attr(),
-        isAllHistoryLoaded: attr({
-            default: false,
-        }),
-        isLoaded: attr({
-            default: false,
-        }),
-        isLoading: attr({
-            default: false,
-        }),
-        isLoadingMore: attr({
-            default: false,
-        }),
+        isAllHistoryLoaded: attr({ default: false }),
+        isLoaded: attr({ default: false }),
+        isLoading: attr({ default: false }),
+        isLoadingMore: attr({ default: false }),
         /**
          * Determines whether `this` should consider refreshing its messages.
          * This field is a hint that may or may not lead to an actual refresh.
          * @see `hasToLoadMessages`
          */
-        isCacheRefreshRequested: attr({
-            default: false,
-        }),
+        isCacheRefreshRequested: attr({ default: false }),
         /**
          * Last message that has been fetched by this thread cache.
          *
@@ -316,17 +237,42 @@ registerModel({
          * cache (@see lastMessage field for that). @see fetchedMessages field
          * for a deeper explanation about "fetched" messages.
          */
-        lastFetchedMessage: one('Message', {
-            compute: '_computeLastFetchedMessage',
+        lastFetchedMessage: one("Message", {
+            compute() {
+                const { length: l, [l - 1]: lastFetchedMessage } = this.orderedFetchedMessages;
+                if (!lastFetchedMessage) {
+                    return clear();
+                }
+                return lastFetchedMessage;
+            },
         }),
-        lastMessage: one('Message', {
-            compute: '_computeLastMessage',
+        lastMessage: one("Message", {
+            compute() {
+                const { length: l, [l - 1]: lastMessage } = this.orderedMessages;
+                if (!lastMessage) {
+                    return clear();
+                }
+                return lastMessage;
+            },
         }),
         /**
          * List of messages linked to this cache.
          */
-        messages: many('Message', {
-            compute: '_computeMessages',
+        messages: many("Message", {
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                let newerMessages;
+                if (!this.lastFetchedMessage) {
+                    newerMessages = this.thread.messages;
+                } else {
+                    newerMessages = this.thread.messages.filter(
+                        (message) => message.id > this.lastFetchedMessage.id
+                    );
+                }
+                return [...this.fetchedMessages, ...this.temporaryMessages, ...newerMessages];
+            },
         }),
         /**
          * Ordered list of messages that have been fetched by this cache.
@@ -335,42 +281,50 @@ registerModel({
          * cache (@see orderedMessages field for that). @see fetchedMessages
          * field for deeper explanation about "fetched" messages.
          */
-        orderedFetchedMessages: many('Message', {
-            compute: '_computeOrderedFetchedMessages',
+        orderedFetchedMessages: many("Message", {
+            compute() {
+                return this.fetchedMessages.sort((m1, m2) => (m1.id < m2.id ? -1 : 1));
+            },
         }),
         /**
          * Ordered list of messages linked to this cache.
          */
-        orderedMessages: many('Message', {
-            compute: '_computeOrderedMessages',
+        orderedMessages: many("Message", {
+            compute() {
+                return this.messages.sort((m1, m2) => (m1.id < m2.id ? -1 : 1));
+            },
         }),
         /**
          * List of ordered non empty messages linked to this cache.
          */
-        orderedNonEmptyMessages: many('Message', {
-            compute: '_computeOrderedNonEmptyMessages',
+        orderedNonEmptyMessages: many("Message", {
+            compute() {
+                return this.orderedMessages.filter((message) => !message.isEmpty);
+            },
         }),
-        rawFetchedMessages: many('Message'),
-        temporaryMessages: many('Message'),
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'cache',
-        }),
+        rawFetchedMessages: many("Message"),
+        temporaryMessages: many("Message"),
+        thread: one("Thread", { identifying: true, inverse: "cache" }),
         /**
          * States the 'ThreadView' that are currently displaying `this`.
          */
-        threadViews: many('ThreadView', {
-            inverse: 'threadCache',
-        }),
+        threadViews: many("ThreadView", { inverse: "threadCache" }),
     },
     onChanges: [
         {
-            dependencies: ['hasLoadingFailed', 'isCacheRefreshRequested', 'isLoaded', 'isLoading', 'thread.isTemporary', 'threadViews'],
-            methodName: '_onChangeForHasToLoadMessages',
+            dependencies: [
+                "hasLoadingFailed",
+                "isCacheRefreshRequested",
+                "isLoaded",
+                "isLoading",
+                "thread.isTemporary",
+                "threadViews",
+            ],
+            methodName: "_onChangeForHasToLoadMessages",
         },
         {
-            dependencies: ['hasToLoadMessages'],
-            methodName: '_onHasToLoadMessagesChanged',
+            dependencies: ["hasToLoadMessages"],
+            methodName: "_onHasToLoadMessagesChanged",
         },
     ],
 });

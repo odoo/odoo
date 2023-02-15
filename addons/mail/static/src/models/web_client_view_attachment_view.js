@@ -1,34 +1,45 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, one, Model } from "@mail/model";
 
-import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
+import { hidePDFJSButtons } from "@web/legacy/js/libs/pdfjs";
 
-registerModel({
-    name: 'WebClientViewAttachmentView',
+Model({
+    name: "WebClientViewAttachmentView",
+    template: "mail.WebClientViewAttachmentView",
+    componentSetup() {
+        useUpdateToModel({ methodName: "onComponentUpdate" });
+    },
     recordMethods: {
         /**
          * @param {MouseEvent} ev
          */
         onClickNext(ev) {
             ev.preventDefault();
-            const index = this.thread.attachmentsInWebClientView.findIndex(attachment => attachment === this.thread.mainAttachment);
-            this.setMainAttachmentFromIndex(index === this.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1);
+            const index = this.thread.attachmentsInWebClientView.findIndex(
+                (attachment) => attachment === this.thread.mainAttachment
+            );
+            this.setMainAttachmentFromIndex(
+                index === this.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
+            );
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickPrevious(ev) {
             ev.preventDefault();
-            const index = this.thread.attachmentsInWebClientView.findIndex(attachment => attachment === this.thread.mainAttachment);
-            this.setMainAttachmentFromIndex(index === 0 ? this.thread.attachmentsInWebClientView.length - 1 : index - 1);
+            const index = this.thread.attachmentsInWebClientView.findIndex(
+                (attachment) => attachment === this.thread.mainAttachment
+            );
+            this.setMainAttachmentFromIndex(
+                index === 0 ? this.thread.attachmentsInWebClientView.length - 1 : index - 1
+            );
         },
         onComponentUpdate() {
             if (this.iframeViewerPdfRef.el) {
                 hidePDFJSButtons(this.iframeViewerPdfRef.el);
             }
-            this.component.trigger('preview_attachment_validation');
         },
         async setMainAttachmentFromIndex(index) {
             await this.thread.setMainAttachment(this.thread.attachmentsInWebClientView[index]);
@@ -48,19 +59,18 @@ registerModel({
         },
     },
     fields: {
-        component: attr(),
-        id: attr({
-            identifying: true,
-        }),
-        iframeViewerPdfRef: attr(),
-        thread: one('Thread', {
-            required: true,
-        }),
+        id: attr({ identifying: true }),
+        iframeViewerPdfRef: attr({ ref: "iframeViewerPdf" }),
+        thread: one("Thread", { required: true }),
     },
     onChanges: [
         {
-            dependencies: ['thread.areAttachmentsLoaded', 'thread.attachmentsInWebClientView', 'thread.isLoadingAttachments'],
-            methodName: '_onChangeThreadAttachmentsInWebClientView',
+            dependencies: [
+                "thread.areAttachmentsLoaded",
+                "thread.attachmentsInWebClientView",
+                "thread.isLoadingAttachments",
+            ],
+            methodName: "_onChangeThreadAttachmentsInWebClientView",
         },
     ],
 });

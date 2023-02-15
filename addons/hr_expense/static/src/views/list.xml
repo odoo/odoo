@@ -13,13 +13,6 @@
             <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
         </xpath>
 
-        <!-- hr.expense -->
-        <xpath expr="//button[hasclass('o_button_upload_expense')]" position="after">
-            <button t-if="displayCreateReport()" class="d-none d-md-block btn btn-secondary" t-on-click="onCreateReportClick">
-                Create Report
-            </button>
-        </xpath>
-
         <!-- hr.expense.sheet -->
         <xpath expr="//button[hasclass('o_button_upload_expense')]" position="after">
             <button t-if="displaySubmit()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_submit_sheet')">
@@ -36,6 +29,12 @@
         <xpath expr="//button[hasclass('o_button_upload_expense')]" position="after">
             <button t-if="displayPost()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_sheet_move_create')">
                 Post Entries
+            </button>
+        </xpath>
+
+        <xpath expr="//button[hasclass('o_button_upload_expense')]" position="after">
+            <button t-if="displayPayment()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_register_payment')">
+                Register Payment
             </button>
         </xpath>
     </t>

@@ -10,6 +10,7 @@
             <record id="tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
+                <field name="figure_type">monetary_without_symbol</field>
             </record>
         </field>
         <field name="line_ids">
@@ -18,7 +19,7 @@
                 <field name="aggregation_formula">TRIBUTADA_INTEGRALMENTE.balance + TRIBUTADA_E_COM_COBRANCA_DO_ICMS_POR_SUBSTITUICAO_TRIBUTARIA.balance</field>
                 <field name="children_ids">
                     <record id="tax_report_icms_tributada" model="account.report.line">
-                        <field name="name">Tributada integralmente</field>
+                        <field name="name">Taxed in full</field>
                         <field name="code">TRIBUTADA_INTEGRALMENTE</field>
                         <field name="aggregation_formula">ICMS_1.balance</field>
                         <field name="children_ids">
@@ -36,7 +37,7 @@
                         </field>
                     </record>
                     <record id="tax_report_icms_tributada_com" model="account.report.line">
-                        <field name="name">Tributada e com cobrança do ICMS por substituição tributária</field>
+                        <field name="name">Taxed and with ICMS collection by tax substitution</field>
                         <field name="code">TRIBUTADA_E_COM_COBRANCA_DO_ICMS_POR_SUBSTITUICAO_TRIBUTARIA</field>
                         <field name="aggregation_formula">ICMS_2.balance</field>
                         <field name="children_ids">
@@ -200,7 +201,7 @@
                 <field name="aggregation_formula">COFINS_OPERACAO_TRIBUTAVEL_COM_ALIQUOTA_BASICA.balance</field>
                 <field name="children_ids">
                     <record id="tax_report_cofins_oper_bas" model="account.report.line">
-                        <field name="name">Operação Tributável com Alíquota Básica</field>
+                        <field name="name">Taxable Transaction with Basic Rate</field>
                         <field name="code">COFINS_OPERACAO_TRIBUTAVEL_COM_ALIQUOTA_BASICA</field>
                         <field name="aggregation_formula">COFINS_1.balance + COFINS_2.balance</field>
                         <field name="children_ids">
@@ -235,7 +236,7 @@
                 <field name="aggregation_formula">PIS_OPERACAO_TRIBUTAVEL_COM_ALIQUOTA_BASICA.balance</field>
                 <field name="children_ids">
                     <record id="tax_report_pis_oper_tri_basica" model="account.report.line">
-                        <field name="name">Operação Tributável com Alíquota Básica</field>
+                        <field name="name">Taxable Transaction with Basic Rate</field>
                         <field name="code">PIS_OPERACAO_TRIBUTAVEL_COM_ALIQUOTA_BASICA</field>
                         <field name="aggregation_formula">PIS_1.balance + PIS_2.balance</field>
                         <field name="children_ids">
@@ -271,7 +272,7 @@
                 <field name="aggregation_formula">ENTRADA_COM_RECUPERACAO_DE_CREDITO.balance + ENTRADA_TRIBUTADA_COM_ALIQUOTA_ZERO.balance</field>
                 <field name="children_ids">
                     <record id="tax_report_ipi_extrada_com" model="account.report.line">
-                        <field name="name">Entrada com recuperação de crédito</field>
+                        <field name="name">Purchase with Credit Recovery</field>
                         <field name="code">ENTRADA_COM_RECUPERACAO_DE_CREDITO</field>
                         <field name="aggregation_formula">BRTAX07_1.balance</field>
                         <field name="children_ids">
@@ -289,7 +290,7 @@
                         </field>
                     </record>
                     <record id="tax_report_ipi_extrada_tributada" model="account.report.line">
-                        <field name="name">Entrada tributada com alíquota zero</field>
+                        <field name="name">Purchase taxed at a zero rate</field>
                         <field name="code">ENTRADA_TRIBUTADA_COM_ALIQUOTA_ZERO</field>
                         <field name="aggregation_formula">IPI_2.balance</field>
                         <field name="children_ids">

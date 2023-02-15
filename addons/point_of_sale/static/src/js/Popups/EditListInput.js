@@ -1,19 +1,23 @@
-odoo.define('point_of_sale.EditListInput', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class EditListInput extends PosComponent {
-        onKeyup(event) {
-            if (event.key === "Enter" && event.target.value.trim() !== '') {
-                this.trigger('create-new-item');
-            }
+/**
+ * props {
+ *     createNewItem: callback,
+ *     removeItem: callback,
+ *     item: object,
+ * }
+ */
+export class EditListInput extends LegacyComponent {
+    static template = "EditListInput";
+
+    onKeyup(event) {
+        if (event.key === "Enter" && event.target.value.trim() !== "") {
+            this.props.createNewItem();
         }
     }
-    EditListInput.template = 'EditListInput';
-
-    Registries.Component.add(EditListInput);
-
-    return EditListInput;
-});
+    onInput(event) {
+        this.props.onInputChange(this.props.item._id, event.target.value);
+    }
+}

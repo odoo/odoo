@@ -1,29 +1,25 @@
-odoo.define('point_of_sale.ErrorPopup', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
-    const Registries = require('point_of_sale.Registries');
-    const { _lt } = require('@web/core/l10n/translation');
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { _lt } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
-    // formerly ErrorPopupWidget
-    class ErrorPopup extends AbstractAwaitablePopup {
-        setup() {
-            super.setup();
-            owl.onMounted(this.onMounted);
-        }
-        onMounted() {
-            this.playSound('error');
-        }
-    }
-    ErrorPopup.template = 'ErrorPopup';
-    ErrorPopup.defaultProps = {
-        confirmText: _lt('Ok'),
-        title: _lt('Error'),
-        body: '',
+// formerly ErrorPopupWidget
+export class ErrorPopup extends AbstractAwaitablePopup {
+    static template = "ErrorPopup";
+    static defaultProps = {
+        confirmText: _lt("Ok"),
+        title: _lt("Error"),
+        body: "",
         cancelKey: false,
     };
 
-    Registries.Component.add(ErrorPopup);
-
-    return ErrorPopup;
-});
+    setup() {
+        super.setup();
+        owl.onMounted(this.onMounted);
+        this.sound = useService("sound");
+    }
+    onMounted() {
+        this.sound.play("error");
+    }
+}

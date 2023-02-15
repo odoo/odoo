@@ -15,12 +15,16 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { evalDomain } from "../utils";
-import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_parser";
+import {
+    KANBAN_BOX_ATTRIBUTE,
+    KANBAN_MENU_ATTRIBUTE,
+    KANBAN_TOOLTIP_ATTRIBUTE,
+} from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-const { Component, onMounted, onWillUpdateProps, useRef, xml } = owl;
+import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
@@ -55,41 +59,6 @@ function getColorIndex(value) {
  */
 function getColorName(value) {
     return COLORS[getColorIndex(value)];
-}
-
-/**
- * Returns the image URL of a given field on the record.
- *
- * @param {Record} record
- * @param {string} [model] model name
- * @param {string} [field] field name
- * @param {number | [number, ...any[]]} [idOrIds] id or array
- *      starting with the id of the desired record.
- * @param {string} [placeholder] fallback when the image does not
- *  exist
- * @returns {string}
- */
-function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
-    const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
-    const isCurrentRecord =
-        record.resModel === model && (record.resId === id || (!record.resId && !id));
-    const fieldVal = record.data[field];
-    if (isCurrentRecord && fieldVal && !isBinSize(fieldVal)) {
-        // Use magic-word technique for detecting image type
-        const type = fileTypeMagicWordMap[fieldVal[0]];
-        return `data:image/${type};base64,${fieldVal}`;
-    } else if (placeholder && (!model || !field || !id || !fieldVal)) {
-        // Placeholder if either the model, field, id or value is missing or null.
-        return placeholder;
-    } else {
-        // Else: fetches the image related to the given id.
-        return url("/web/image", {
-            model,
-            field,
-            id,
-            unique: imageCacheKey(record.data.__last_update),
-        });
-    }
 }
 
 /**
@@ -134,6 +103,52 @@ function getValue(record, fieldName) {
     return formatter(value, { field, data: record.data });
 }
 
+export function getFormattedRecord(record) {
+    const formattedRecord = {};
+    for (const fieldName in record.activeFields) {
+        formattedRecord[fieldName] = {
+            value: getValue(record, fieldName),
+            raw_value: getRawValue(record, fieldName),
+        };
+    }
+    return formattedRecord;
+}
+
+/**
+ * Returns the image URL of a given field on the record.
+ *
+ * @param {Record} record
+ * @param {string} [model] model name
+ * @param {string} [field] field name
+ * @param {number | [number, ...any[]]} [idOrIds] id or array
+ *      starting with the id of the desired record.
+ * @param {string} [placeholder] fallback when the image does not
+ *  exist
+ * @returns {string}
+ */
+export function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
+    const id = (Array.isArray(idOrIds) ? idOrIds[0] : idOrIds) || null;
+    const isCurrentRecord =
+        record.resModel === model && (record.resId === id || (!record.resId && !id));
+    const fieldVal = record.data[field];
+    if (isCurrentRecord && fieldVal && !isBinSize(fieldVal)) {
+        // Use magic-word technique for detecting image type
+        const type = fileTypeMagicWordMap[fieldVal[0]];
+        return `data:image/${type};base64,${fieldVal}`;
+    } else if (placeholder && (!model || !field || !id || !fieldVal)) {
+        // Placeholder if either the model, field, id or value is missing or null.
+        return placeholder;
+    } else {
+        // Else: fetches the image related to the given id.
+        return url("/web/image", {
+            model,
+            field,
+            id,
+            unique: imageCacheKey(record.data.write_date),
+        });
+    }
+}
+
 function isBinSize(value) {
     return /^\d+(\.\d*)? [^0-9]+$/.test(value);
 }
@@ -149,7 +164,7 @@ function isBinSize(value) {
  * @param {string} innerHTML
  * @returns {boolean} true if no content found or if containing only formatting tags
  */
-function isHtmlEmpty(innerHTML = "") {
+export function isHtmlEmpty(innerHTML = "") {
     const div = Object.assign(document.createElement("div"), { innerHTML });
     return div.innerText.trim() === "";
 }
@@ -163,13 +178,17 @@ export class KanbanRecord extends Component {
 
         const { archInfo, Compiler, templates } = this.props;
         const { arch } = archInfo;
-        const ViewCompiler = Compiler || KanbanCompiler;
+        const ViewCompiler = Compiler || this.constructor.Compiler;
 
-        this.templates = useViewCompiler(ViewCompiler, arch, templates, KANBAN_BOX_ATTRIBUTE);
+        this.templates = useViewCompiler(ViewCompiler, arch, templates);
+
+        if (this.constructor.KANBAN_MENU_ATTRIBUTE in templates) {
+            this.showMenu = true;
+        }
 
         if (KANBAN_TOOLTIP_ATTRIBUTE in templates) {
             useTooltip("root", {
-                info: this,
+                info: { ...this, record: getFormattedRecord(this.props.record) },
                 template: this.templates[KANBAN_TOOLTIP_ATTRIBUTE],
             });
         }
@@ -189,25 +208,13 @@ export class KanbanRecord extends Component {
      * @param {Object} props
      */
     createRecordAndWidget(props) {
-        const { archInfo, list, record } = props;
+        const { archInfo, list } = props;
         const { activeActions } = archInfo;
 
-        // Record
-        this.record = Object.create(null);
-        for (const fieldName in record.data) {
-            this.record[fieldName] = {
-                get value() {
-                    return getValue(record, fieldName);
-                },
-                get raw_value() {
-                    return getRawValue(record, fieldName);
-                },
-            };
-        }
-
+        this.record = getFormattedRecord(this.props.record);
         // Widget
         const deletable = activeActions.delete && (!list.groupedBy || !list.groupedBy("m2m"));
-        const editable = archInfo.activeActions.edit;
+        const editable = activeActions.edit;
         this.widget = {
             deletable,
             editable,
@@ -235,9 +242,6 @@ export class KanbanRecord extends Component {
         if (archInfo.cardColorField) {
             const value = record.data[archInfo.cardColorField];
             classes.push(getColorClass(value));
-        }
-        if (record.model.useSampleModel) {
-            classes.push("o_sample_data_disabled");
         }
         if (!this.props.list.isGrouped) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
@@ -334,54 +338,32 @@ export class KanbanRecord extends Component {
         }
     }
 
-    //-------------------------------------------------------------------------
-    // KANBAN SPECIAL GETTERS AND FUNCTIONS
-    //
-    // Note: the names of these getters and functions answer to outdated standards
-    // but should not be altered for the sake of compatibility.
-    //-------------------------------------------------------------------------
-
-    get context() {
-        return this.props.record.context;
-    }
-
-    get luxon() {
-        return luxon;
-    }
-
-    get JSON() {
-        return JSON;
-    }
-
-    get read_only_mode() {
-        return this.props.readonly;
-    }
-
-    get selection_mode() {
-        return this.props.forceGlobalClick;
-    }
-
-    get user_context() {
-        return this.user.context;
-    }
-
-    kanban_color() {
-        return getColorClass(...arguments);
-    }
-
-    kanban_getcolor() {
-        return getColorIndex(...arguments);
-    }
-
-    kanban_getcolorname() {
-        return getColorName(...arguments);
-    }
-
-    kanban_image() {
-        return getImageSrcFromRecordInfo(this.props.record, ...arguments);
+    /**
+     * Returns the kanban-box template's rendering context.
+     *
+     * Note: the keys answer to outdated standards but should not be altered for
+     * the sake of compatibility.
+     *
+     * @returns {Object}
+     */
+    get renderingContext() {
+        return {
+            context: this.props.record.context,
+            JSON,
+            kanban_color: getColorClass,
+            kanban_getcolor: getColorIndex,
+            kanban_getcolorname: getColorName,
+            kanban_image: (...args) => getImageSrcFromRecordInfo(this.props.record, ...args),
+            luxon,
+            read_only_mode: this.props.readonly,
+            record: this.record,
+            selection_mode: this.props.forceGlobalClick,
+            user_context: this.user.context,
+            widget: this.widget,
+            __comp__: Object.assign(Object.create(this), { this: this }),
+        };
     }
 }
-
 KanbanRecord.components = {
     Dropdown,
     DropdownItem,
@@ -408,13 +390,8 @@ KanbanRecord.props = [
     "record",
     "templates",
 ];
-KanbanRecord.template = xml`
-    <div
-        role="article"
-        t-att-class="getRecordClasses()"
-        t-att-data-id="props.canResequence and props.record.id"
-        t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
-        t-on-click="onGlobalClick"
-        t-ref="root">
-        <t t-call="{{ templates['${KANBAN_BOX_ATTRIBUTE}'] }}"/>
-    </div>`;
+KanbanRecord.Compiler = KanbanCompiler;
+KanbanRecord.KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
+KanbanRecord.KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
+KanbanRecord.menuTemplate = "web.KanbanRecordMenu";
+KanbanRecord.template = "web.KanbanRecord";

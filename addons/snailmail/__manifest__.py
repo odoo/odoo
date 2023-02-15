@@ -15,7 +15,6 @@ Allows users to send documents by post
         'data/snailmail_data.xml',
         'views/report_assets.xml',
         'views/snailmail_views.xml',
-        'wizard/snailmail_confirm_views.xml',
         'wizard/snailmail_letter_format_error_views.xml',
         'wizard/snailmail_letter_missing_required_fields_views.xml',
         'security/ir.model.access.csv',
@@ -30,18 +29,17 @@ Allows users to send documents by post
         ],
         'snailmail.report_assets_snailmail': [
             ('include', 'web._assets_helpers'),
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'snailmail/static/src/scss/snailmail_external_layout_asset.scss',
             'snailmail/static/src/js/snailmail_external_layout.js',
         ],
         'web.assets_backend': [
-            'snailmail/static/src/components/*/*.js',
             'snailmail/static/src/components/*/*.scss',
             'snailmail/static/src/components/*/*.xml',
         ],
         'web.tests_assets': [
-            'snailmail/static/tests/helpers/*.js',
+            'snailmail/static/tests/helpers/**/*.js',
         ],
         'web.qunit_suite_tests': [
             'snailmail/static/tests/qunit_suite_tests/**/*.js',

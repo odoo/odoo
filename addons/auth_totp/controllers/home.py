@@ -54,9 +54,9 @@ class Home(web_home.Home):
                         browser=request.httprequest.user_agent.browser.capitalize(),
                         platform=request.httprequest.user_agent.platform.capitalize(),
                     )
-                    geoip = request.geoip
-                    if geoip:
-                        name += " (%s, %s)" % (geoip['city'], geoip['country_name'])
+
+                    if request.geoip.city.name:
+                        name += f" ({request.geoip.city.name}, {request.geoip.country_name})"
 
                     key = request.env['auth_totp.device']._generate("browser", name)
                     response.set_cookie(

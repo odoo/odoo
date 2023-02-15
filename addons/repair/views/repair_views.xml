@@ -7,13 +7,14 @@
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <tree string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                <field name="company_id" invisible="1"/>
                 <field name="priority" optional="show" widget="priority" nolabel="1"/>
                 <field name="name"/>
                 <field name="schedule_date" optional="show" widget="remaining_days"/>
                 <field name="description" optional="hide"/>
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="product_qty" optional="hide" string="Quantity"/>
-                <field name="product_uom" string="Unit of Measure" readonly="1" optional="hide"/>
+                <field name="product_uom" string="Unit of Measure" readonly="1" groups="uom.group_uom" optional="hide"/>
                 <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="address_id" optional="show"/>
@@ -44,7 +45,7 @@
                    <button name="print_repair_order" states="draft" string="Print Quotation" type="object" data-hotkey="y"/>
                    <button name="action_repair_cancel_draft" states="cancel" string="Set to Draft" type="object" data-hotkey="z"/>
                    <button name="action_repair_cancel" string="Cancel Repair" type="object" confirm="Draft invoices for this order will be cancelled. Do you confirm the action?" attrs="{'invisible':['|', ('state', '=', 'cancel'), ('invoice_state', '!=', 'draft')]}" data-hotkey="l"/>
-                   <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible': ['|', ('state','=', 'cancel',), ('invoice_state', '=', 'draft')]}" data-hotkey="l"/>
+                   <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible': ['|', ('state','in', ('cancel','done')), ('invoice_state', '=', 'draft')]}" data-hotkey="l"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
                <sheet string="Repairs order">
@@ -65,7 +66,7 @@
                     </div>
                     <div class="oe_title">
                         <label class="o_form_label" for="name"/>
-                        <h1>
+                        <h1 class="d-flex">
                             <field name="priority" widget="priority" class="me-3"/>
                             <field name="name"/>
                         </h1>
@@ -88,7 +89,7 @@
                             <field name="address_id" groups="account.group_delivery_invoice_address"/>
                             <field name="sale_order_id"/>
                             <field name="allowed_picking_type_ids" invisible="1"/>
-                            <field name="picking_id" domain="[('picking_type_id','in', allowed_picking_type_ids)]" options="{'no_create': True}"/>
+                            <field name="picking_id" domain="[('picking_type_id','in', allowed_picking_type_ids), ('product_id','=',product_id)]" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="schedule_date"/>
@@ -158,7 +159,7 @@
                         <group class="oe_subtotal_footer oe_right">
                             <field name="amount_untaxed" sum="Untaxed amount"/>
                             <field name="amount_tax"/>
-                            <div class="oe_subtotal_footer_separator oe_inline">
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
                                 <label for="amount_total" />
                                 <button name="button_dummy"
                                     states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>

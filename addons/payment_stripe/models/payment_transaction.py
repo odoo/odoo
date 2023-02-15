@@ -35,7 +35,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'stripe' or self.operation == 'online_token':
             return res
 
-        if self.operation == 'online_redirect':
+        if self.operation in ['online_redirect', 'validation']:
             checkout_session = self._stripe_create_checkout_session()
             return {
                 'publishable_key': stripe_utils.get_publishable_key(self.provider_id),
@@ -55,12 +55,12 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         # Filter payment method types by available payment method
-        existing_pms = [pm.name.lower() for pm in self.env['payment.icon'].search([])]
-        linked_pms = [pm.name.lower() for pm in self.provider_id.payment_icon_ids]
+        existing_pms = [pm.name.lower() for pm in self.env['payment.method'].search([])]
+        linked_pms = [pm.name.lower() for pm in self.provider_id.payment_method_ids]
         pm_filtered_pmts = filter(
             lambda pmt: pmt.name == 'card'
-            # If the PM (payment.icon) record related to a PMT doesn't exist, don't filter out the
-            # PMT because the user couldn't even have linked it to the provider in the first place.
+            # If the PM record related to a PMT doesn't exist, don't filter out the PMT because the
+            # user couldn't even have linked it to the provider in the first place.
             or (pmt.name in linked_pms or pmt.name not in existing_pms),
             PAYMENT_METHOD_TYPES
         )
@@ -146,9 +146,9 @@ class PaymentTransaction(models.Model):
                 'address[postal_code]': self.partner_zip or None,
                 'address[state]': self.partner_state_id.name or None,
                 'description': f'Odoo Partner: {self.partner_id.name} (id: {self.partner_id.id})',
-                'email': self.partner_email,
+                'email': self.partner_email or None,
                 'name': self.partner_name,
-                'phone': self.partner_phone or None,
+                'phone': self.partner_phone and self.partner_phone[:20] or None,
             }
         )
         return customer
@@ -218,6 +218,10 @@ class PaymentTransaction(models.Model):
                 'payment_intents',
                 payload=self._stripe_prepare_payment_intent_payload(payment_by_token=True),
                 offline=self.operation == 'offline',
+                # Prevent multiple offline payments by token (e.g., due to a cursor rollback).
+                idempotency_key=payment_utils.generate_idempotency_key(
+                    self, scope='payment_intents_token'
+                ) if self.operation == 'offline' else None,
             )
         else:  # 'online_direct' (express checkout).
             response = self.provider_id._stripe_make_request(
@@ -262,25 +266,18 @@ class PaymentTransaction(models.Model):
             )
         return payment_intent_payload
 
-    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None):
         """ Override of payment to send a refund request to Stripe.
 
         Note: self.ensure_one()
 
         :param float amount_to_refund: The amount to refund.
-        :param bool create_refund_transaction: Whether a refund transaction should be created or
-                                               not.
-        :return: The refund transaction, if any.
+        :return: The refund transaction created to process the refund request.
         :rtype: recordset of `payment.transaction`
         """
+        refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
         if self.provider_code != 'stripe':
-            return super()._send_refund_request(
-                amount_to_refund=amount_to_refund,
-                create_refund_transaction=create_refund_transaction,
-            )
-        refund_tx = super()._send_refund_request(
-            amount_to_refund=amount_to_refund, create_refund_transaction=True
-        )
+            return refund_tx
 
         # Make the refund request to stripe.
         data = self.provider_id._stripe_make_request(
@@ -441,17 +438,27 @@ class PaymentTransaction(models.Model):
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif status in STATUS_MAPPING['cancel']:
             self._set_canceled()
-        elif status in STATUS_MAPPING['error'] and self.operation == 'refund':
-            self._set_error("Stripe: " + _(
-                "The refund did not go through. Please log into your Stripe Dashboard to get more "
-                "information on that matter, and address any accounting discrepancies."
-            ))
+        elif status in STATUS_MAPPING['error']:
+            if self.operation != 'refund':
+                last_payment_error = notification_data.get('payment_intent', {}).get(
+                    'last_payment_error'
+                )
+                if last_payment_error:
+                    message = last_payment_error.get('message', {})
+                else:
+                    message = _("The customer left the payment page.")
+                self._set_error(message)
+            else:
+                self._set_error(_(
+                    "The refund did not go through. Please log into your Stripe Dashboard to get "
+                    "more information on that matter, and address any accounting discrepancies."
+                ))
         else:  # Classify unknown intent statuses as `error` tx state
             _logger.warning(
                 "received invalid payment status (%s) for transaction with reference %s",
                 status, self.reference
             )
-            self._set_error("Stripe: " + _("Received data with invalid intent status: %s", status))
+            self._set_error(_("Received data with invalid intent status: %s", status))
 
     def _stripe_tokenize_from_notification_data(self, notification_data):
         """ Create a new token based on the notification data.

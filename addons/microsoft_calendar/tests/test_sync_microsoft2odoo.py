@@ -295,6 +295,12 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(recurrent_event.calendar_event_ids[1].start, datetime(2021, 7, 17, 15, 00))
         self.assertEqual(recurrent_event.calendar_event_ids[1].stop, datetime(2021, 7, 17, 15, 30))
 
+        events = recurrent_event.calendar_event_ids.sorted(key=lambda e: e.start)
+        self.assertEqual(events[0].start, datetime(2021, 7, 15, 15, 00))
+        self.assertEqual(events[0].stop, datetime(2021, 7, 15, 15, 30))
+        self.assertEqual(events[1].start, datetime(2021, 7, 17, 15, 00))
+        self.assertEqual(events[1].stop, datetime(2021, 7, 17, 15, 30))
+
     def test_use_classic_location(self):
         ms_event = self.single_event
 

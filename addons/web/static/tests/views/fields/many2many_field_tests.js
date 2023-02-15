@@ -4,7 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
-    clickEdit,
     clickSave,
     clickOpenedDropdownItem,
     editInput,
@@ -13,15 +12,13 @@ import {
     getNodesTextContent,
     nextTick,
     patchWithCleanup,
+    addRow,
 } from "@web/../tests/helpers/utils";
 import { editSearch, validateSearch } from "@web/../tests/search/helpers";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { session } from "@web/session";
 import { companyService } from "@web/webclient/company_service";
 import { registry } from "@web/core/registry";
-
-import legacyFieldRegistry from "web.field_registry";
-import { FieldMany2ManyTags } from "web.relational_fields";
 
 let target;
 let serverData;
@@ -223,7 +220,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("Many2ManyField");
 
     QUnit.test("many2many kanban: edition", async function (assert) {
-        assert.expect(33);
+        assert.expect(31);
 
         serverData.views = {
             "partner_type,false,form": '<form><field name="display_name"/></form>',
@@ -295,17 +292,6 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-
-        assert.ok(
-            !$(target).find(".o_kanban_renderer .delete_icon").length,
-            "delete icon should not be visible in readonly"
-        );
-        assert.ok(
-            !$(target).find(".o_field_many2many .o-kanban-button-new").length,
-            '"Add" button should not be visible in readonly'
-        );
-
-        await clickEdit(target);
 
         assert.strictEqual(
             $(target).find(".o_kanban_record:not(.o_kanban_ghost)").length,
@@ -391,7 +377,7 @@ QUnit.module("Fields", (hooks) => {
         await click($(target).find(".o_field_many2many .o-kanban-button-new")[0]);
         await click($(".modal .modal-footer .btn-primary:nth(1)")[0]);
         assert.ok(
-            $(".modal .o_form_view.o_form_editable").length,
+            $(".modal .o_form_view .o_form_editable").length,
             "should have opened a form view in edit mode, in a modal"
         );
         await editInput(target, ".modal .o_form_view input", "A new type");
@@ -467,7 +453,6 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await clickEdit(target);
             assert.strictEqual(
                 target
                     .querySelector(".o_field_many2many[name=timmy] .o-kanban-button-new")
@@ -550,13 +535,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.ok(
-            !$(target).find(".o-kanban-button-new").length,
-            '"Add" button should not be available in readonly'
-        );
-
-        await clickEdit(target);
-
-        assert.ok(
             $(target).find(".o-kanban-button-new").length,
             '"Add" button should be available in edit'
         );
@@ -603,7 +581,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-        await clickEdit(target);
 
         // color is red
         assert.containsOnce(target, ".o-kanban-button-new", '"Add" button should be available');
@@ -653,7 +630,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2many list (non editable): edition", async function (assert) {
-        assert.expect(34);
+        assert.expect(32);
 
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.models.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });
@@ -693,18 +670,6 @@ QUnit.module("Fields", (hooks) => {
             "read", // main record
             "read", // relational field
         ]);
-        assert.containsNone(
-            target,
-            ".o_list_record_remove",
-            "delete icon should not be visible in readonly"
-        );
-        assert.containsNone(
-            target,
-            ".o_field_x2many_list_row_add",
-            '"Add an item" should not be visible in readonly'
-        );
-
-        await clickEdit(target);
 
         assert.containsN(
             target,
@@ -842,7 +807,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("many2many list (editable): edition", async function (assert) {
-        assert.expect(31);
+        assert.expect(29);
 
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.models.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });
@@ -878,11 +843,6 @@ QUnit.module("Fields", (hooks) => {
             },
             resId: 1,
         });
-
-        assert.containsNone(target, ".o_list_record_remove");
-        assert.containsNone(target, ".o_field_x2many_list_row_add");
-
-        await clickEdit(target);
 
         assert.containsN(
             target,
@@ -1020,8 +980,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        await clickEdit(target);
-
         assert.containsOnce(
             target,
             ".o_field_x2many_list_row_add",
@@ -1047,8 +1005,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-
-        await clickEdit(target);
 
         assert.containsOnce(
             target,
@@ -1079,8 +1035,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        assert.containsNone(target, ".o_field_x2many_list_row_add");
-        await clickEdit(target);
         assert.containsOnce(target, ".o_field_x2many_list_row_add");
     });
 
@@ -1138,7 +1092,6 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_field_many2many .o_field_x2many_list_row_add");
 
         await clickSave(target);
-        await clickEdit(target);
 
         assert.containsOnce(target, ".o_field_many2many .o_data_row .o_list_record_remove");
         await click(target.querySelector(".o_field_many2many .o_data_row .o_list_record_remove"));
@@ -1168,8 +1121,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-
-        await clickEdit(target);
 
         // color is red -> create and delete actions are available
         assert.containsOnce(
@@ -1239,8 +1190,6 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
 
-        await clickEdit(target);
-
         // color is red -> link and unlink actions are available
         assert.containsOnce(
             target,
@@ -1299,8 +1248,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
                 resId: 1,
             });
-
-            await clickEdit(target);
 
             // color is red -> link and unlink actions are available
             assert.containsOnce(
@@ -1364,7 +1311,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-        await clickEdit(target);
 
         // color is red -> link and unlink actions are available
         assert.containsOnce(target, ".o-kanban-button-new", "should have the 'Add' button");
@@ -1416,7 +1362,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-        await clickEdit(target);
 
         // color is red -> link and unlink actions are available
         assert.containsOnce(target, ".o-kanban-button-new", "should have the 'Add' button");
@@ -1502,8 +1447,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await clickEdit(target);
-
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         await click($(target).find(".modal .o_data_row:first .o_data_cell")[0]);
 
@@ -1569,7 +1512,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-        await clickEdit(target);
 
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.strictEqual($(".modal .o_data_row").length, 1, "should contain only one row (gold)");
@@ -1608,7 +1550,6 @@ QUnit.module("Fields", (hooks) => {
         });
         assert.verifySteps(["get_views", "read", "read"]);
 
-        await clickEdit(target);
         await click($(target).find("td.o_data_cell:first")[0]);
         assert.verifySteps(["get_views", "read"]);
 
@@ -1620,6 +1561,59 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.verifySteps([]);
     });
+
+    QUnit.test(
+        "many2many widget: creates a new record with a context containing the parentID",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,list": '<tree><field name="display_name"/></tree>',
+                "turtle,false,search": '<search><field name="display_name"/></search>',
+                "turtle,false,form":
+                    '<form string="Turtle Power"><field name="turtle_trululu"/></form>',
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="turtles" widget="many2many" context="{'default_turtle_trululu': id}" >
+                        <tree>
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+                mockRPC(route, args) {
+                    const { method, kwargs } = args;
+                    assert.step(method);
+                    if (method === "onchange") {
+                        assert.strictEqual(kwargs.context.default_turtle_trululu, 1);
+                        assert.deepEqual(args.args, [
+                            [],
+                            {},
+                            [],
+                            {
+                                turtle_trululu: "",
+                            },
+                        ]);
+                    }
+                },
+            });
+            assert.verifySteps(["get_views", "read", "read"]);
+
+            await addRow(target);
+            assert.verifySteps(["get_views", "web_search_read"]);
+
+            await click(target, ".o_create_button");
+            assert.strictEqual(
+                target.querySelector("[name='turtle_trululu'] input").value,
+                "first record"
+            );
+            assert.verifySteps(["get_views", "onchange"]);
+        }
+    );
 
     QUnit.test("onchange with 40+ commands for a many2many", async function (assert) {
         // this test ensures that the basic_model correctly handles more LINK_TO
@@ -1670,8 +1664,6 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-
-        await clickEdit(target);
 
         assert.verifySteps(["get_views", "read"]);
 
@@ -1823,7 +1815,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // First round: add 51 records in batch
-        await clickEdit(target);
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
 
         var $modal = $(".modal-lg");
@@ -1844,7 +1835,6 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
 
         // Secound round: remove one record
-        await clickEdit(target);
         var trash_buttons = $(target).find(
             ".o_field_many2many.o_field_widget .o_field_x2many.o_field_x2many_list .o_list_record_remove"
         );
@@ -1942,7 +1932,6 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        await clickEdit(target);
         await click(target, ".o_field_many2many_selection input");
         checkGetViews = true;
         await clickOpenedDropdownItem(target, "timmy", "Search More...");
@@ -2000,6 +1989,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".o_data_cell"));
         await editInput(target, ".o_field_many2many_selection input", "indianapolis");
+        await nextTick();
         await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
         assert.containsOnce(target, ".modal .o_field_many2one");
         assert.strictEqual(
@@ -2055,8 +2045,8 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await clickEdit(target);
         await editInput(target, ".o_field_many2many_selection input", "indianapolis");
+        await nextTick();
         await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
         assert.containsOnce(target, ".modal .o_field_many2one");
         assert.strictEqual(
@@ -2120,7 +2110,6 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await clickEdit(target);
             await click(target, ".o_data_cell");
             await editInput(target, ".o_field_many2many_selection input", "indianapolis");
             await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
@@ -2131,40 +2120,4 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
-
-    QUnit.test("many2many legacy field in list add a record", async (assert) => {
-        const myM2M = FieldMany2ManyTags.extend({});
-        legacyFieldRegistry.add("many2many_tags_legacy", myM2M);
-
-        await makeView({
-            type: "list",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <tree editable="top">
-                    <field name="timmy" widget="many2many_tags_legacy"/>
-                </tree>`,
-            mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.step(`write: ${JSON.stringify(args.args[1])}`);
-                }
-            },
-        });
-
-        assert.containsNone(target, ".o_badge_text");
-        await click(target.querySelectorAll(".o_data_cell")[0]);
-        await click(target, ".o_legacy_field_widget input");
-        await click(document.querySelectorAll(".ui-autocomplete .dropdown-item")[0]);
-
-        assert.strictEqual(target.querySelector(".o_badge_text").textContent, "gold");
-        await click(target);
-        assert.verifySteps([`write: {"timmy":[[6,false,[12]]]}`]);
-
-        await click(target.querySelectorAll(".o_data_cell")[0]);
-        await click(target.querySelector(".badge .o_delete"));
-        await click(target);
-        assert.containsNone(target, ".o_badge_text");
-        assert.verifySteps([`write: {"timmy":[[6,false,[]]]}`]);
-        delete legacyFieldRegistry.map["many2many_tags_legacy"];
-    });
 });

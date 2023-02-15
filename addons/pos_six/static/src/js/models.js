@@ -1,7 +1,6 @@
-odoo.define('pos_six.models', function (require) {
+/** @odoo-module */
 
-var models = require('point_of_sale.models');
-var PaymentSix = require('pos_six.payment');
+import { register_payment_method } from "@point_of_sale/js/models";
+import PaymentSix from "@pos_six/js/payment_six";
 
-models.register_payment_method('six', PaymentSix);
-});
+register_payment_method("six", PaymentSix);

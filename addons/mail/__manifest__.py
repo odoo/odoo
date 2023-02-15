@@ -2,7 +2,7 @@
 
 {
     'name': 'Discuss',
-    'version': '1.10',
+    'version': '1.12',
     'category': 'Productivity/Discuss',
     'sequence': 145,
     'summary': 'Chat, mail gateway and private channels',
@@ -91,6 +91,7 @@ For more specific needs, you may also assign custom-defined actions
         'data/mail_templates_mailgateway.xml',
         'data/mail_channel_data.xml',
         'data/mail_activity_data.xml',
+        'data/security_notifications_templates.xml',
         'data/ir_cron_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
@@ -114,11 +115,18 @@ For more specific needs, you may also assign custom-defined actions
     'installable': True,
     'application': True,
     'assets': {
-        'mail.assets_messaging': [
+        'mail.assets_core_messaging': [
+            'mail/static/src/model.js',
             'mail/static/src/model/*.js',
+            'mail/static/src/core_models/*.js',
+        ],
+        'mail.assets_messaging': [
+            ('include', 'mail.assets_core_messaging'),
             'mail/static/src/models/*.js',
-            'mail/static/src/models_data/*.js',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
+        ],
+        'mail.assets_model_data': [
+            'mail/static/src/models_data/*.js',
         ],
         # Custom bundle in case we want to remove things that are later added to web.assets_common
         'mail.assets_common_discuss_public': [
@@ -127,15 +135,14 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_discuss_public': [
             # SCSS dependencies (the order is important)
             ('include', 'web._assets_helpers'),
-            'web/static/src/legacy/scss/bootstrap_overridden.scss',
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/src/legacy/scss/import_bootstrap.scss',
-            'web/static/src/libs/bootstrap/utilities_custom.scss',
+            'web/static/src/scss/import_bootstrap.scss',
+            'web/static/src/scss/utilities_custom.scss',
             'web/static/lib/bootstrap/scss/utilities/_api.scss',
-            'web/static/src/legacy/scss/bootstrap_review.scss',
+            'web/static/src/scss/bootstrap_review.scss',
             'web/static/src/webclient/webclient.scss',
-            'web/static/src/webclient/webclient_extra.scss',
             'web/static/src/core/utils/*.scss',
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
@@ -147,7 +154,6 @@ For more specific needs, you may also assign custom-defined actions
             # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
             ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
             ('remove', 'mail/static/src/components/activity_menu_container/*'),
-            'mail/static/src/js/emojis.js',
             'mail/static/src/js/utils.js',
             ('include', 'mail.assets_messaging'),
             'mail/static/src/public/*',
@@ -173,14 +179,6 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/xml/base.xml',
         ],
-        'web.assets_frontend': [
-            'mail/static/src/utils/*.js',
-            'mail/static/src/js/emojis.js',
-            'mail/static/src/js/utils.js',
-            'mail/static/src/component_hooks/*.js',
-             ('include', 'mail.assets_messaging'),
-            'mail/static/src/services/messaging_service.js',
-        ],
         'web._assets_primary_variables': [
             'mail/static/src/scss/variables/primary_variables.scss',
         ],
@@ -190,21 +188,27 @@ For more specific needs, you may also assign custom-defined actions
             # defines mixins and variables used by multiple components
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
-            'mail/static/src/fields/*.js',
-            'mail/static/src/fields/*.xml',
             'mail/static/src/utils/*.js',
             'mail/static/src/scss/*.scss',
             'mail/static/src/xml/*.xml',
             'mail/static/src/component_hooks/*.js',
+            'mail/static/src/backend_components/*/*',
             'mail/static/src/components/*/*.js',
             'mail/static/src/components/*/*.scss',
             'mail/static/src/components/*/*.xml',
+            'mail/static/src/views/*/*.xml',
             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
             'mail/static/src/views/**/*.js',
+            'mail/static/src/views/**/*.xml',
+            'mail/static/src/views/**/*.scss',
             'mail/static/src/webclient/commands/*.js',
-            'mail/static/src/widgets/*/*.js',
-            'mail/static/src/widgets/*/*.scss',
+
+            # Don't include dark mode files in light mode
+            ('remove', 'mail/static/src/components/*/*.dark.scss'),
+        ],
+        "web.dark_mode_assets_backend": [
+            'mail/static/src/components/*/*.dark.scss',
         ],
         'web.assets_backend_prod_only': [
             'mail/static/src/main.js',

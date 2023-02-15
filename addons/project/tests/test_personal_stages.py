@@ -90,6 +90,28 @@ class TestPersonalStages(TestProjectCommon):
         self.assertEqual(1, total_stage_0)
         self.assertEqual(1, total_stage_1)
 
+    def test_default_personal_stage(self):
+        user_without_stage, user_with_stages = self.env['res.users'].create([{
+            'login': 'test_no_stage',
+            'name': "Test User without stage",
+        }, {
+            'login': 'test_stages',
+            'name': "Test User with stages",
+        }])
+        personal_stage = self.env['project.task.type'].create({
+            'name': 'personal stage',
+            'user_id': user_with_stages.id,
+        })
+        ProjectTaskTypeSudo = self.env['project.task.type'].sudo()
+        # ensure that a user without personal stage is getting the default stages
+        self.task_1.with_user(user_without_stage)._ensure_personal_stages()
+        stages = ProjectTaskTypeSudo.search([('user_id', '=', user_without_stage.id)])
+        self.assertEqual(len(stages), 7, "As this user had no personal stage, the default ones should have been created for him")
+        # ensure that the user's personal stages are not changing if the user already had some
+        self.task_1.with_user(user_with_stages)._ensure_personal_stages()
+        stages = ProjectTaskTypeSudo.search([('user_id', '=', user_with_stages.id)])
+        self.assertEqual(stages, personal_stage, "As this user already had a personal stage, none should be added")
+
 @tagged('-at_install', 'post_install')
 class TestPersonalStageTour(HttpCase, TestProjectCommon):
 

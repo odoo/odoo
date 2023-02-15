@@ -19,10 +19,10 @@ QUnit.test('livechat: no add attachment button', async function (assert) {
         },
     });
     await openDiscuss();
-    assert.containsOnce(document.body, '.o_Composer', "should have a composer");
+    assert.containsOnce(document.body, '.o_ComposerView', "should have a composer");
     assert.containsNone(
         document.body,
-        '.o_Composer_buttonAttachment',
+        '.o_ComposerView_buttonAttachment',
         "composer linked to livechat should not have a 'Add attachment' button"
     );
 });
@@ -38,10 +38,10 @@ QUnit.test('livechat: disable attachment upload via drag and drop', async functi
         },
     });
     await openDiscuss();
-    assert.containsOnce(document.body, '.o_Composer', "should have a composer");
+    assert.containsOnce(document.body, '.o_ComposerView', "should have a composer");
     assert.containsNone(
         document.body,
-        '.o_Composer_dropZone',
+        '.o_ComposerView_dropZone',
         "composer linked to livechat should not have a dropzone"
     );
 });

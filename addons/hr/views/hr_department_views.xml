@@ -18,11 +18,16 @@
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
-                        <group col="4">
-                            <field name="name"/>
-                            <field name="manager_id"/>
-                            <field name="parent_id"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="manager_id"/>
+                                <field name="parent_id"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            </group>
+                            <div>
+                                <widget name="hr_department_chart"/>
+                            </div>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -54,7 +59,7 @@
                 <search string="Departments">
                     <field name="name" string="Department"/>
                     <field name="manager_id" />
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
@@ -72,6 +77,17 @@
                     <field name="color"/>
                     <field name="total_employee"/>
                     <templates>
+                        <t t-name="kanban-menu" t-if="!selection_mode">
+                            <div class="o_kanban_card_manage_section">
+                                <div role="menuitem" class="o_kanban_manage_reports">
+                                    <div class="o_kanban_card_manage_title ps-4 pb-1">
+                                        <span class="fw-bolder">Reporting</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
+                            <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                        </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                                 <div t-attf-class="o_kanban_card_header">
@@ -82,9 +98,6 @@
                                                 <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"/> <field name="company_id"/>
                                             </small>
                                         </div>
-                                    </div>
-                                    <div class="o_kanban_manage_button_section" t-if="!selection_mode">
-                                        <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                     </div>
                                 </div>
                                 <div class="container o_kanban_card_content" t-if="!selection_mode">
@@ -101,17 +114,6 @@
                                          style="justify-content: end">
                                         <!-- placeholder for bottom content -->
                                     </div>
-                                </div>
-                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                    <div class="o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_card_manage_section o_kanban_manage_reports">
-                                            <div class="o_kanban_card_manage_title">
-                                                <strong><span>Reporting</span></strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a t-if="widget.editable" role="menuitem" class="dropdown-item" type="edit">Configuration</a>
-                                    <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                 </div>
                             </div>
                         </t>

@@ -37,7 +37,7 @@ QUnit.test('activity click on Reschedule', async function (assert) {
         },
     );
 
-    await click('.o_Activity_editButton');
+    await click('.o_ActivityView_editButton');
     assert.containsOnce(
         document.body,
         '.o_calendar_view',

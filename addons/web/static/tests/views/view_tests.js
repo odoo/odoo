@@ -15,7 +15,7 @@ import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { View } from "@web/views/view";
 import { actionService } from "@web/webclient/actions/action_service";
 
-const { Component, onWillStart, onWillUpdateProps, useState, xml } = owl;
+import { Component, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");

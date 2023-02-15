@@ -41,7 +41,8 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _get_compatible_providers(self, *args, currency_id=None, **kwargs):
-        """ Override of payment to unlist Alipay providers for unsupported currencies. """
+        """ Override of payment to unlist Alipay providers when the currency is not CNY in case of
+        express checkout. """
         providers = super()._get_compatible_providers(*args, currency_id=currency_id, **kwargs)
 
         currency = self.env['res.currency'].browse(currency_id).exists()
@@ -68,11 +69,3 @@ class PaymentProvider(models.Model):
             return 'https://mapi.alipay.com/gateway.do'
         else:  # test environment
             return 'https://openapi.alipaydev.com/gateway.do'
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('alipay', [
-            'alipay_merchant_partner_id',
-            'alipay_md5_signature_key',
-            'alipay_seller_email',
-        ])

@@ -2,6 +2,7 @@
 
 import {
     click,
+    clickSave,
     getFixture,
     nextTick,
     triggerEvent,
@@ -50,15 +51,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
-        assert.containsOnce(
-            target,
-            ".o_field_boolean input:disabled",
-            "checkbox should be disabled"
-        );
-
-        // switch to edit mode and check the result
-        await click(target, ".o_form_button_edit");
         assert.containsOnce(
             target,
             ".o_field_boolean input:checked",
@@ -79,15 +71,13 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.containsNone(
             target,
             ".o_field_boolean input:checked",
             "checkbox should still no longer be checked"
         );
 
-        // switch to edit mode and test the opposite change
-        await click(target, ".o_form_button_edit");
         assert.containsNone(
             target,
             ".o_field_boolean input:checked",
@@ -155,7 +145,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.containsOnce(
             target,
             ".o_field_boolean input:checked",
@@ -211,7 +201,7 @@ QUnit.module("Fields", (hooks) => {
         await click(cell, ".o-checkbox");
 
         // save
-        await click(target.querySelector(".o_list_button_save"));
+        await clickSave(target);
         cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.ok(
             cell.querySelector(".o-checkbox input:not(:checked)").disabled,
@@ -236,30 +226,7 @@ QUnit.module("Fields", (hooks) => {
         await click(cell, ".o-checkbox");
 
         // Save
-        await click(target.querySelector(".o_list_button_save"));
-        assert.containsN(
-            target,
-            "tbody td:not(.o_list_record_selector) .o-checkbox",
-            5,
-            "should still have 5 checkboxes"
-        );
-        assert.containsN(
-            target,
-            "tbody td:not(.o_list_record_selector) .o-checkbox input:checked",
-            3,
-            "should still have only 3 checked input"
-        );
-
-        // Re-Edit the line to check the checkbox back but this time click on
-        // the checkbox directly in readonly mode.
-        // This should not toggle the checkbox and only pass the record in edition.
-        cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
-        await click(cell, ".o_field_boolean");
-
-        assert.notOk(
-            cell.querySelector(".o-checkbox input").disabled,
-            "input should not have the disabled property in edit mode"
-        );
+        await clickSave(target);
         assert.containsN(
             target,
             "tbody td:not(.o_list_record_selector) .o-checkbox",
@@ -282,14 +249,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `<form><field name="bar" readonly="1"/></form>`,
         });
-        assert.containsOnce(target, ".o_field_boolean input:checked", "checkbox should be checked");
-        assert.containsOnce(
-            target,
-            ".o_field_boolean input:disabled",
-            "checkbox should be disabled"
-        );
 
-        await click(target, ".o_form_button_edit");
         assert.containsOnce(
             target,
             ".o_field_boolean input:checked",

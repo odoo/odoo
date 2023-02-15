@@ -8,9 +8,8 @@ from markupsafe import Markup
 from werkzeug.wrappers import Response
 
 import odoo
-from odoo.http import Controller, request, route
+from odoo.http import Controller, route, dispatch_rpc, request
 from odoo.fields import Date, Datetime, Command
-from odoo.service import dispatch_rpc
 from odoo.tools import lazy, ustr
 from odoo.tools.misc import frozendict
 

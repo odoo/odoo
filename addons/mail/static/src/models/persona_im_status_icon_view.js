@@ -1,79 +1,110 @@
 /** @odoo-module **/
 
-import { one } from '@mail/model/model_field';
-import { registerModel } from '@mail/model/model_core';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
+import { markEventHandled } from "@mail/utils/utils";
 
-registerModel({
-    name: 'PersonaImStatusIconView',
-    identifyingMode: 'xor',
+Model({
+    name: "PersonaImStatusIconView",
+    template: "mail.PersonaImStatusIconView",
+    identifyingMode: "xor",
     recordMethods: {
         /**
-         * @private
-         * @returns {FieldCommand|Persona}
+         * @param {MouseEvent} ev
          */
-        _computePersona() {
-            if (this.channelInvitationFormSelectablePartnerViewOwner) {
-                return this.channelInvitationFormSelectablePartnerViewOwner.partner.persona;
+        onClick(ev) {
+            markEventHandled(ev, "PersonaImStatusIcon.Click");
+            if (!this.hasOpenChat || !this.persona.partner) {
+                return;
             }
-            if (this.channelMemberViewOwner) {
-                return this.channelMemberViewOwner.channelMember.persona;
-            }
-            if (this.channelPreviewViewOwner) {
-                return this.channelPreviewViewOwner.channel.correspondent.persona;
-            }
-            if (this.composerSuggestionViewOwner) {
-                return this.composerSuggestionViewOwner.suggestable.partner.persona;
-            }
-            if (this.messageViewOwner) {
-                if (this.messageViewOwner.message.author) {
-                    return this.messageViewOwner.message.author.persona;
-                }
-                if (this.messageViewOwner.message.guestAuthor) {
-                    return this.messageViewOwner.message.guestAuthor.persona;
-                }
-            }
-            if (this.notificationRequestViewOwner) {
-                return this.messaging.partnerRoot.persona;
-            }
-            if (this.threadNeedactionPreviewViewOwner) {
-                return this.threadNeedactionPreviewViewOwner.thread.channel.correspondent.persona;
-            }
-            return clear();
+            this.persona.partner.openChat();
         },
     },
     fields: {
-        channelInvitationFormSelectablePartnerViewOwner: one('ChannelInvitationFormSelectablePartnerView', {
+        channelInvitationFormSelectablePartnerViewOwner: one(
+            "ChannelInvitationFormSelectablePartnerView",
+            { identifying: true, inverse: "personaImStatusIconView" }
+        ),
+        channelMemberViewOwner: one("ChannelMemberView", {
             identifying: true,
-            inverse: 'personaImStatusIconView',
+            inverse: "personaImStatusIconView",
         }),
-        channelMemberViewOwner: one('ChannelMemberView', {
+        channelPreviewViewOwner: one("ChannelPreviewView", {
             identifying: true,
-            inverse: 'personaImStatusIconView',
+            inverse: "personaImStatusIconView",
         }),
-        channelPreviewViewOwner: one('ChannelPreviewView', {
+        composerSuggestionViewOwner: one("ComposerSuggestionView", {
             identifying: true,
-            inverse: 'personaImStatusIconView',
+            inverse: "personaImStatusIconView",
         }),
-        composerSuggestionViewOwner: one('ComposerSuggestionView', {
+        hasBackground: attr({
+            default: true,
+            compute() {
+                if (this.composerSuggestionViewOwner) {
+                    return false;
+                }
+                return clear();
+            },
+        }),
+        /**
+         * Determines whether a click on this view should open a chat with the
+         * corresponding persona.
+         */
+        hasOpenChat: attr({
+            default: false,
+            compute() {
+                if (this.channelMemberViewOwner) {
+                    return this.channelMemberViewOwner.hasOpenChat;
+                }
+                if (this.messageViewOwner) {
+                    return this.messageViewOwner.hasAuthorOpenChat;
+                }
+                return clear();
+            },
+        }),
+        messageViewOwner: one("MessageView", {
             identifying: true,
-            inverse: 'personaImStatusIconView',
+            inverse: "personaImStatusIconView",
         }),
-        messageViewOwner: one('MessageView', {
+        notificationRequestViewOwner: one("NotificationRequestView", {
             identifying: true,
-            inverse: 'personaImStatusIconView',
+            inverse: "personaImStatusIconView",
         }),
-        notificationRequestViewOwner: one('NotificationRequestView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
-        persona: one('Persona', {
-            compute: '_computePersona',
+        persona: one("Persona", {
             required: true,
+            compute() {
+                if (this.channelInvitationFormSelectablePartnerViewOwner) {
+                    return this.channelInvitationFormSelectablePartnerViewOwner.partner.persona;
+                }
+                if (this.channelMemberViewOwner) {
+                    return this.channelMemberViewOwner.channelMember.persona;
+                }
+                if (this.channelPreviewViewOwner) {
+                    return this.channelPreviewViewOwner.channel.correspondent.persona;
+                }
+                if (this.composerSuggestionViewOwner) {
+                    return this.composerSuggestionViewOwner.suggestable.partner.persona;
+                }
+                if (this.messageViewOwner) {
+                    if (this.messageViewOwner.message.author) {
+                        return this.messageViewOwner.message.author.persona;
+                    }
+                    if (this.messageViewOwner.message.guestAuthor) {
+                        return this.messageViewOwner.message.guestAuthor.persona;
+                    }
+                }
+                if (this.notificationRequestViewOwner) {
+                    return this.messaging.partnerRoot.persona;
+                }
+                if (this.threadNeedactionPreviewViewOwner) {
+                    return this.threadNeedactionPreviewViewOwner.thread.channel.correspondent
+                        .persona;
+                }
+                return clear();
+            },
         }),
-        threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
+        threadNeedactionPreviewViewOwner: one("ThreadNeedactionPreviewView", {
             identifying: true,
-            inverse: 'personaImStatusIconView',
+            inverse: "personaImStatusIconView",
         }),
     },
 });

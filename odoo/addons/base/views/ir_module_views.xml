@@ -17,18 +17,6 @@
             </field>
         </record>
 
-        <record id="view_module_category_tree" model="ir.ui.view">
-            <field name="name">ir.module.category.tree</field>
-            <field name="model">ir.module.category</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Module Category">
-                    <field name="name"/>
-                    <field name="module_nr"/>
-                </tree>
-            </field>
-        </record>
-
         <!-- Click on a category -->
         <record id="view_module_filter" model="ir.ui.view">
             <field name="name">ir.module.module.list.select</field>
@@ -73,7 +61,7 @@
                             <field name="state" invisible="1"/>
                             <field name="to_buy" invisible="1"/>
                             <field name="has_iap" invisible="1"/>
-                            <button name="button_immediate_install" string="Install" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
+                            <button name="button_immediate_install" string="Activate" attrs="{'invisible': ['|', ('to_buy','=',True), ('state','!=', 'uninstalled')]}" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
                             <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-primary me-1"
                                attrs="{'invisible': ['|', ('to_buy','=',False), ('state', 'not in', ('uninstalled', 'uninstallable'))]}" role="button">Upgrade</a>
                             <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
@@ -174,20 +162,15 @@
                   <field name="website"/>
                   <field name="application"/>
                   <templates>
+                    <t t-name="kanban-menu">
+                        <a type="edit" class="dropdown-item">Module Info</a>
+                        <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item o-hidden-ios" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
+                        <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Upgrade</a>
+                        <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Uninstall</a>
+                    </t>
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <div class="o_dropdown_kanban dropdown" tabindex="-1">
-                            <a class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-offset="0,-2" href="#" role="button" aria-label="Dropdown menu" title="Dropdown menu">
-                                <span class="fa fa-ellipsis-v"/>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="dLabel">
-                                <a type="edit" class="dropdown-item">Module Info</a>
-                                <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item o-hidden-ios" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
-                                <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Upgrade</a>
-                                <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Uninstall</a>
-                            </div>
-                        </div>
                         <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon"/>
                         <div class="oe_module_desc" t-att-title="record.shortdesc.value">
                           <h4 class="o_kanban_record_title">
@@ -200,7 +183,7 @@
                           <div class="oe_module_action d-flex flex-wrap justify-content-between">
                             <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value" groups="base.group_system">Activate</button>
                             <div t-if="installed" class="d-flex align-items-center text-muted float-start">Installed</div>
-                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-sm btn-secondary float-end o-hidden-ios" role="button">Learn More</a>
+                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', 'in', (False, ''))]}" class="btn btn-sm btn-secondary float-end o-hidden-ios" role="button">Learn More</a>
                             <a type="edit" class="btn btn-secondary btn-sm float-end" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
                             <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-info btn-sm" states="uninstalled,uninstallable" t-if="record.to_buy.raw_value" role="button" groups="base.group_system">Upgrade</a>
                             <button states="to remove" type="object" class="btn btn-sm btn-primary" name="button_uninstall_cancel" groups="base.group_system">Cancel Uninstall</button>
@@ -248,21 +231,6 @@
             <field name='url'>https://apps.odoo.com/apps/themes</field>
         </record>
         <menuitem id="menu_theme_store" parent="menu_apps" name="Theme Store" sequence="10" action="action_theme_store"/>
-
-
-        <!-- Apps modules -->
-        <record model="ir.actions.client" id="modules_act_cl">
-            <field name="name">App Store</field>
-            <field name="tag">apps</field>
-        </record>
-        <menuitem id="module_mi" parent="base.menu_management" sequence="10" action="modules_act_cl" groups="base.group_no_one"/>
-
-        <record model="ir.actions.client" id="modules_updates_act_cl">
-            <field name="name">Updates</field>
-            <field name="tag">apps.updates</field>
-            <field name="params">{}</field>
-        </record>
-        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl" groups="base.group_no_one"/>
 
     </data>
 </odoo>

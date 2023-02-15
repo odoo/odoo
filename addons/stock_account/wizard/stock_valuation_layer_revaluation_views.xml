@@ -10,11 +10,13 @@
                     <group>
                         <label for="current_value_svl" string="Current Value"/>
                         <div class="o_row">
-                            <span><field name="current_value_svl" widget="monetary"/> for <field name="current_quantity_svl"/> <field name="product_uom_name" class="mx-1"/> </span>
+                            <span>
+                            <field name="current_value_svl" class="oe_inline" widget="monetary"/> for <field name="current_quantity_svl" class="oe_inline"/> <field name="product_uom_name" class="oe_inline"/>
+                            </span>
                         </div>
                         <label for="added_value" string="Added Value"/>
                         <div class="o_row">
-                            <span><field name="added_value" class="oe_inline"/> = <field name="new_value"/> (<field name="new_value_by_qty"/> by <field name="product_uom_name" class="mx-1"/>)
+                            <span><field name="added_value" class="oe_inline"/> = <field name="new_value" class="oe_inline"/> (<field name="new_value_by_qty" class="oe_inline ms-1"/> by <field name="product_uom_name" class="oe_inline me-1"/>)
                             <small class="mx-2 fst-italic">Use a negative added value to record a decrease in the product value</small></span>
                         </div>
                         <field name="company_id" invisible="1"/>

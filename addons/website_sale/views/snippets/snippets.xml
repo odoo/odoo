@@ -13,7 +13,7 @@
 <template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
     <xpath expr="." position="inside">
         <!-- All products page -->
-        <div data-js="WebsiteSaleGridLayout" data-page-options="true" data-selector="main:has(.o_wsale_products_page)" data-no-check="true"
+        <div data-js="WebsiteSaleGridLayout" data-page-options="true" groups="website.group_website_designer" data-selector="main:has(.o_wsale_products_page)" data-no-check="true"
             string="Products Page" data-target="#products_grid .o_wsale_products_grid_table_wrapper > table">
             <we-select string="Layout" data-no-preview="true" data-reload="/">
                 <we-button data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
@@ -80,7 +80,7 @@
                          data-customize-website-views="website_sale.products_description"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-row string="Categories" data-variable="filmstrip">
+            <we-row id="o_wsale_grid_left_panel" string="Categories" data-variable="filmstrip">
                 <we-button string="Left"
                            data-customize-website-views="website_sale.products_categories"
                            data-name="categories_opt"
@@ -92,7 +92,7 @@
                            data-no-preview="true"
                            data-reload="/"/>
             </we-row>
-            <we-checkbox string="Collapse Category Recursive"
+            <we-checkbox id="collapse_category_recursive" string="Collapse Category Recursive"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.option_collapse_products_categories"
                          data-dependencies="categories_opt"
@@ -113,7 +113,7 @@
             <we-checkbox string="Price Filter"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.filter_products_price"
-                         data-dependencies="categories_opt, attributes_opt"
+                         data-dependencies="attributes_opt, attributes_opt_top"
                          data-no-preview="true"
                          data-reload="/"/>
             <we-row string="Top Bar" class="o_we_full_row">
@@ -214,7 +214,7 @@
             </we-select>
         </div>
         <!-- Product page -->
-        <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" data-no-check="true" string="Product Page">
+        <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Product Page">
             <we-row string="Customers" class="o_we_full_row">
                 <we-button string="Rating"
                            data-customize-website-views="website_sale.product_comment"
@@ -285,7 +285,7 @@
             </we-row>
         </div>
         <!-- Checkout page  -->
-        <div data-selector="main:has(.oe_website_sale .wizard)" data-page-options="true" data-no-check="true" string="Checkout Pages">
+        <div data-selector="main:has(.oe_website_sale .wizard)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Checkout Pages">
             <we-checkbox string="Extra Step Option"
                          data-customize-website-views="website_sale.extra_info_option"
                          data-no-preview="true"

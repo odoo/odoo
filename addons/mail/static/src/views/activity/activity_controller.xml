@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ActivityController" owl="1">
+        <div t-att-class="props.className + (env.isSmall ? ' o_action_delegate_scroll': '')">
+            <Layout display="props.display">
+                <t t-component="props.Renderer" t-props="rendererProps" />
+            </Layout>
+        </div>
+    </t>
+</templates>

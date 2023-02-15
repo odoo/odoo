@@ -20,7 +20,7 @@ const chartId = "uuid1";
  * able to interact with it.
  */
 async function showChartMenu(fixture) {
-    const chartMenu = fixture.querySelector(".o-chart-menu");
+    const chartMenu = fixture.querySelector(".o-figure-menu");
     chartMenu.style.display = "flex";
     await nextTick();
 }
@@ -28,7 +28,7 @@ async function showChartMenu(fixture) {
 /** Click on external link of the first chart found in the page*/
 async function clickChartExternalLink(fixture) {
     await showChartMenu(fixture);
-    const chartMenuItem = fixture.querySelector(".o-chart-menu-item.o-chart-external-link");
+    const chartMenuItem = fixture.querySelector(".o-figure-menu-item.o-chart-external-link");
     await click(chartMenuItem);
 }
 

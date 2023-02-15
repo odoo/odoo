@@ -17,7 +17,6 @@
     <record id="sale_order_template_view_form" model="ir.ui.view">
         <field name="name">sale.order.template.form</field>
         <field name="model">sale.order.template</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Quotation Template">
                 <sheet>
@@ -34,8 +33,8 @@
                             <field name="active" invisible="1"/>
                             <label for="number_of_days" string="Quotation expires after"/>
                             <div id="number_of_days">
-                                <field name="number_of_days" class="oe_inline"/>
-                                days
+                                <field name="number_of_days" style="width: 3rem;"/>
+                                <div class="d-inline-block">days</div>
                             </div>
                             <label for="require_signature" string="Online confirmation"/>
                             <div>
@@ -92,7 +91,7 @@
                                 <field name="company_id" invisible="1"/>
                                 <field name="sequence" widget="handle"/>
                                 <field name="product_id"/>
-                                <field name="name" widget="section_and_note_text"/>
+                                <field name="name"/>
                                 <field name="product_uom_qty"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field
@@ -128,7 +127,6 @@
     <record id="sale_order_template_view_tree" model="ir.ui.view">
         <field name="name">sale.order.template.tree</field>
         <field name="model">sale.order.template</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Quotation Template">
                 <field name="name"/>

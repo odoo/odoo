@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <CreditNote xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2">
   <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
   <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
@@ -69,6 +70,18 @@
       </cac:Contact>
     </cac:Party>
   </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:StreetName>Rue des Bourlottes 9</cbc:StreetName>
+        <cbc:CityName>Ramillies</cbc:CityName>
+        <cbc:PostalZone>1367</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+  </cac:Delivery>
   <cac:PaymentMeans>
     <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
     <cbc:PaymentID>RINV/2017/01/0001</cbc:PaymentID>

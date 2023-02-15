@@ -4,21 +4,7 @@
     <Dialog contentClass="contentClass"
         size="size"
         title="title">
-        <div class="o_notebook">
-            <div class="o_notebook_headers">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li t-foreach="tabs" t-as="tab" t-key="tab.id" class="nav-item cursor-pointer">
-                        <a class="nav-link" t-att-class="{ active:  tab.id === state.activeTab }" t-on-click="() => state.activeTab = tab.id"><t t-esc="tab.title"/></a>
-                    </li>
-                </ul>
-            </div>
-            <!-- Tab panes -->
-            <div class="o_notebook_content tab-content">
-                <t t-foreach="tabs" t-as="tab" t-key="tab.id">
-                    <div class="tab-pane fade" t-att-class="tab.id === state.activeTab ? 'active show' : ''"><t t-component="tab.Component" t-props="tab.props"/></div>
-                </t>
-            </div>
-        </div>
+        <Notebook pages="tabs" onPageUpdate.bind="onTabChange" defaultPage="state.activeTab"/>
         <t t-set-slot="footer">
             <button class="btn btn-primary" t-on-click="() => this.save()">Add</button>
             <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>

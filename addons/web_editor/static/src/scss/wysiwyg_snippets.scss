@@ -18,13 +18,6 @@ body.editor_enable.editor_has_snippets {
         background-color: rgba(66, 66, 66, 0.4);
     }
 }
-.editor_has_snippets {
-    > .oe_overlay.ui-draggable {
-        .o_handles {
-            display: none;
-        }
-    }
-}
 
 // Mobile fix for mass mailing
 @include media-breakpoint-down(lg) {
@@ -548,7 +541,7 @@ body.editor_enable.editor_has_snippets {
 
                         we-button:not(.fa) {
                             text-align: left;
-                            font-family: Roboto, "Montserrat", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                            font-family: $o-we-font-family;
                             font-size: 12px;
                             font-weight: 400;
 
@@ -1416,13 +1409,16 @@ body.editor_enable.editor_has_snippets {
                 width: 100%;
                 max-height: 200px;
                 overflow-y: auto;
-                margin-bottom: $o-we-sidebar-content-field-spacing / 2;
 
                 table {
                     @include o-input-number-no-arrows();
                     table-layout: auto;
                     width: 100%;
+                    margin-bottom: $o-we-sidebar-content-field-spacing / 2;
 
+                    &:empty {
+                        margin-bottom: 0;
+                    }
                     input {
                         width: 100%;
                         border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
@@ -1520,6 +1516,10 @@ body.editor_enable.editor_has_snippets {
         .o_we_m2m {
             we-list, we-list > div, we-list we-select {
                 margin-top: 0;
+                max-width: 100%;
+            }
+            we-title {
+                align-self: flex-start;
             }
         }
 
@@ -1959,6 +1959,7 @@ body.editor_enable.editor_has_snippets {
         height: $o-we-dropzone-size;
         min-height: $o-we-dropzone-size;
         margin: (-$o-we-dropzone-size/2) 0;
+        padding: 0;
 
         &.oe_vertical {
             width: $o-we-dropzone-size;
@@ -2224,7 +2225,7 @@ body.editor_enable.editor_has_snippets {
                 &, > .o_overlay_move_options, .o_overlay_edit_options {
                     display: flex;
                 }
-                .o_overlay_move_options > *, .o_overlay_edit_options > *, > we-button {
+                .o_overlay_move_options > *, .o_overlay_edit_options > *:not(span), .o_overlay_edit_options > span > *, > we-button {
                     @extend %we-generic-button;
                     margin: 0 1px 0;
                     min-width: 22px;
@@ -2257,13 +2258,8 @@ body.editor_enable.editor_has_snippets {
                     background-repeat: no-repeat;
                 }
                 &:hover {
-                    .o_overlay_move_options > *, .o_overlay_edit_options > *, > we-button {
+                    .o_overlay_move_options > *, .o_overlay_edit_options > *:not(span), > we-button {
                         @include o-hover-opacity(.6);
-
-                        &:hover {
-                            border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
-                            background-color: $o-we-sidebar-content-field-pressed-bg;
-                        }
                     }
                 }
             }
@@ -2290,13 +2286,21 @@ body.editor_enable.editor_has_snippets {
         &.o_we_background_position_overlay {
             background-color: rgba(0,0,0,.7);
             pointer-events: auto;
-            bottom: 0;
 
             .o_we_overlay_content {
                 @include o-grab-cursor;
 
                 .o_we_grabbing {
                     cursor: grabbing;
+                }
+            }
+
+            .o_we_overlay_buttons {
+                .btn-primary {
+                    @include button-variant($o-brand-primary, $o-brand-primary);
+                }
+                .btn-secondary {
+                    @include button-variant($o-we-color-danger, $o-we-color-danger);
                 }
             }
 
@@ -2312,6 +2316,13 @@ body.editor_enable.editor_has_snippets {
             }
         }
     }
+
+    .o_edit_menu_popover {
+        pointer-events: auto;
+    }
+}
+.oe_overlay.ui-draggable-dragging .o_handles {
+    display: none;
 }
 
 .s-resize-important * {
@@ -2503,7 +2514,6 @@ we-button:hover .o_we_shape_animated_label > span {
     // be over the content being reloaded (with a covering similar to the editor
     // overlay covering).
     position: fixed;
-    right: $o-we-sidebar-width;
 }
 
 .o_we_force_no_transition {
@@ -2531,17 +2541,41 @@ we-button-group.o_grid {
 
 // Background grid.
 .o_we_background_grid {
-    padding: 0;
-}
+    padding: 0 !important;
 
-.o_we_cell {
-    fill: $o-brand-odoo;
-    fill-opacity: .2;
-    stroke: $o-we-border-color;
-    stroke-width: 1px;
+    .o_we_cell {
+        fill: $o-brand-odoo;
+        fill-opacity: .2;
+        stroke: $o-we-border-color;
+        stroke-width: 1px;
+        filter: drop-shadow(-1px -1px 0px rgba(255, 255, 255, 0.6));
+    }
 }
 
 .o_we_drag_helper {
     padding: 0;
     border: $o-we-handle-border-width solid $o-we-accent;
+}
+
+// Highlight of the grid items padding.
+@keyframes highlightPadding {
+    from {
+        border: solid rgba($o-we-handles-accent-color, 0.2);
+        border-width: var(--grid-item-padding-y) var(--grid-item-padding-x);
+    }
+    to {
+        border: solid rgba($o-we-handles-accent-color, 0);
+        border-width: var(--grid-item-padding-y) var(--grid-item-padding-x);
+    }
+}
+
+.o_we_padding_highlight > .o_grid_item {
+    position: relative;
+
+    &::after {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        animation: highlightPadding 2s;
+        pointer-events: none;
+    }
 }

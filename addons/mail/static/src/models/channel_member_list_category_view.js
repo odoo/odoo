@@ -1,96 +1,67 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-import { sprintf } from '@web/core/utils/strings';
+import { sprintf } from "@web/core/utils/strings";
 
-registerModel({
-    name: 'ChannelMemberListCategoryView',
-    identifyingMode: 'xor',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChannel() {
-            if (this.channelMemberListViewOwnerAsOffline) {
-                return this.channelMemberListViewOwnerAsOffline.channel;
-            }
-            if (this.channelMemberListViewOwnerAsOnline) {
-                return this.channelMemberListViewOwnerAsOnline.channel;
-            }
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChannelMemberViews() {
-            if (this.members.length === 0) {
-                return clear();
-            }
-            return this.members.map(channelMember => ({ channelMember }));
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMembers() {
-            if (!this.exists()) {
-                return clear();
-            }
-            if (this.channelMemberListViewOwnerAsOnline) {
-                return this.channel.orderedOnlineMembers;
-            }
-            if (this.channelMemberListViewOwnerAsOffline) {
-                return this.channel.orderedOfflineMembers;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeTitle() {
-            let categoryText = "";
-            if (this.channelMemberListViewOwnerAsOnline) {
-                categoryText = this.env._t("Online");
-            }
-            if (this.channelMemberListViewOwnerAsOffline) {
-                categoryText = this.env._t("Offline");
-            }
-            return sprintf(
-                this.env._t("%(categoryText)s - %(memberCount)s"),
-                {
-                    categoryText,
-                    memberCount: this.members.length,
-                }
-            );
-        },
-    },
+Model({
+    name: "ChannelMemberListCategoryView",
+    template: "mail.ChannelMemberListCategoryView",
+    identifyingMode: "xor",
     fields: {
-        channel: one('Channel', {
-            compute: '_computeChannel',
+        channel: one("Channel", {
             required: true,
+            compute() {
+                if (this.channelMemberListViewOwnerAsOffline) {
+                    return this.channelMemberListViewOwnerAsOffline.channel;
+                }
+                if (this.channelMemberListViewOwnerAsOnline) {
+                    return this.channelMemberListViewOwnerAsOnline.channel;
+                }
+            },
         }),
-        channelMemberListViewOwnerAsOffline: one('ChannelMemberListView', {
+        channelMemberListViewOwnerAsOffline: one("ChannelMemberListView", {
             identifying: true,
-            inverse: 'offlineCategoryView',
+            inverse: "offlineCategoryView",
         }),
-        channelMemberListViewOwnerAsOnline: one('ChannelMemberListView', {
+        channelMemberListViewOwnerAsOnline: one("ChannelMemberListView", {
             identifying: true,
-            inverse: 'onlineCategoryView',
+            inverse: "onlineCategoryView",
         }),
-        channelMemberViews: many('ChannelMemberView', {
-            compute: '_computeChannelMemberViews',
-            inverse: 'channelMemberListCategoryViewOwner',
+        channelMemberViews: many("ChannelMemberView", {
+            inverse: "channelMemberListCategoryViewOwner",
+            compute() {
+                if (this.members.length === 0) {
+                    return clear();
+                }
+                return this.members.map((channelMember) => ({ channelMember }));
+            },
         }),
-        members: many('ChannelMember', {
-            compute: '_computeMembers',
+        members: many("ChannelMember", {
+            compute() {
+                if (this.channelMemberListViewOwnerAsOnline) {
+                    return this.channel.orderedOnlineMembers;
+                }
+                if (this.channelMemberListViewOwnerAsOffline) {
+                    return this.channel.orderedOfflineMembers;
+                }
+                return clear();
+            },
         }),
         title: attr({
-            compute: '_computeTitle',
+            compute() {
+                let categoryText = "";
+                if (this.channelMemberListViewOwnerAsOnline) {
+                    categoryText = this.env._t("Online");
+                }
+                if (this.channelMemberListViewOwnerAsOffline) {
+                    categoryText = this.env._t("Offline");
+                }
+                return sprintf(this.env._t("%(categoryText)s - %(memberCount)s"), {
+                    categoryText,
+                    memberCount: this.members.length,
+                });
+            },
         }),
     },
 });

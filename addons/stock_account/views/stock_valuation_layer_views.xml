@@ -41,11 +41,18 @@
         <field name="name">stock.valuation.layer.tree</field>
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
-            <tree default_order="create_date desc, id desc" create="0"
+            <tree default_order="id desc" create="0"
                   import="0" js_class="inventory_report_list"
                   action="action_open_reference" type="object">
+                <header>
+                    <button name="action_valuation_at_date" string="Valuation at Date" type="object"
+                            invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
+                            class="btn-primary ms-1"
+                            display="always"/>
+                </header>
                 <field name="create_date" string="Date" />
                 <field name="reference"/>
+                <button name="action_open_layer" icon="fa-arrow-right" title="Open Valuation Layer" type="object"/>
                 <field name="product_id" />
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="quantity" string="Moved Quantity"/>
@@ -53,6 +60,7 @@
                 <field name="uom_id" groups="uom.group_uom" />
                 <field name="currency_id" invisible="1" />
                 <field name="value" sum="Total Value"/>
+                <field name="description" optional="hide"/>
                 <groupby name="product_id">
                     <field name="cost_method" invisible="1"/>
                     <field name="quantity_svl" invisible="1"/>
@@ -115,10 +123,13 @@
         <field name="inherit_id" ref="stock_valuation_layer_tree"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <field name="quantity" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
             <field name="unit_cost" position="after">
                 <field name="remaining_qty" sum="Total Remaining Quantity"/>
             </field>
-            <field name="value" position="replace">
+            <field name="value" position="before">
                 <field name="remaining_value" sum="Total Remaining Value"/>
             </field>
         </field>
@@ -131,6 +142,7 @@
         <field name="view_mode">tree,form,pivot</field>
         <field name="view_id" ref="stock_valuation_layer_report_tree"/>
         <field name="context">{'search_default_has_remaining_qty': 1}</field>
+        <field name="domain">[('product_id.type', '=', 'product')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face"/>
             <p>
@@ -139,7 +151,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_report_action" groups="base.group_no_one"/>
+    <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_action" groups="base.group_no_one"/>
 
     <record id="stock_valuation_layer_picking" model="ir.ui.view">
         <field name="name">stock.valuation.layer.picking</field>
@@ -154,5 +166,5 @@
             </xpath>
         </field>
     </record>
-    
+
 </odoo>

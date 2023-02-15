@@ -29,8 +29,8 @@ class TestPointOfSale(TransactionCase):
 
         self.env.user.company_id = self.company1
 
-    def test_default_pricelist_with_company(self):
-        """ Verify that the default pricelist belongs to the same company as the config """
+    def test_no_default_pricelist(self):
+        """ Verify that the default pricelist isn't automatically set in the config """
         company1_pricelist = self.env["product.pricelist"].create({
             "name": "company 1 pricelist",
             "currency_id": self.currency.id,
@@ -38,26 +38,10 @@ class TestPointOfSale(TransactionCase):
             "sequence": 2,
         })
 
-        # make sure this doesn't pick the company2 pricelist
+        # make sure this doesn't pick a pricelist as default
         new_config = self.env["pos.config"].create({
-            "name": "usd config"
+            "name": "usd config", "available_pricelist_ids": [(6, 0, [company1_pricelist.id])]
         })
 
-        self.assertEqual(new_config.pricelist_id, company1_pricelist,
-                         "POS config incorrectly has pricelist %s" % new_config.pricelist_id.display_name)
-
-    def test_default_pricelist_without_company(self):
-        """ Verify that a default pricelist without a company works """
-        universal_pricelist = self.env["product.pricelist"].create({
-            "name": "universal pricelist",
-            "currency_id": self.currency.id,
-            "sequence": 2,
-        })
-
-        # make sure this doesn't pick the company2 pricelist
-        new_config = self.env["pos.config"].create({
-            "name": "usd config"
-        })
-
-        self.assertEqual(new_config.pricelist_id, universal_pricelist,
+        self.assertEqual(new_config.pricelist_id, self.env['product.pricelist'],
                          "POS config incorrectly has pricelist %s" % new_config.pricelist_id.display_name)

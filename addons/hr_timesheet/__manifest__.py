@@ -39,6 +39,7 @@ up a management by affair.
         'views/project_sharing_views.xml',
         'views/rating_rating_views.xml',
         'views/project_update_views.xml',
+        'wizard/hr_employee_delete_wizard_views.xml',
     ],
     'demo': [
         'data/hr_timesheet_demo.xml',
@@ -52,6 +53,10 @@ up a management by affair.
         ],
         'web.qunit_suite_tests': [
             'hr_timesheet/static/tests/**/*',
+        ],
+        'project.webclient': [
+            'hr_timesheet/static/src/components/**/*',
+            'hr_timesheet/static/src/scss/timesheets_task_form.scss'
         ],
     },
     'license': 'LGPL-3',

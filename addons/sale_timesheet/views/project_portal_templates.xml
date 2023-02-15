@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_timesheet_table_inherit" inherit_id="hr_timesheet.portal_timesheet_table">
+        <xpath expr="//thead/tr/th[@t-if='is_uom_day']" position="before">
+	    <t t-set="display_sol" t-value="False"/>
+	    <t t-foreach="timesheets" t-as="timesheet">
+	        <t t-if="timesheet.so_line != task.sale_line_id">
+		    <t t-set="display_sol" t-value="True"/>
+		</t>
+	    </t>
+            <th t-if="display_sol">Sales Order Item</th>
+        </xpath>
+        <xpath expr="//tr/td[t[@t-esc='timesheet.name']]" position="after">
+            <td  t-if="display_sol">
+	        <t t-if="timesheet.so_line.order_id.access_url and so_accessible"><a t-att-href="'%s' % timesheet.so_line.order_id.access_url"><t t-out="timesheet.so_line.display_name"/></a></t>
+		<t t-else=""><t t-out="timesheet.so_line.display_name"/></t>
+	    </td>
+        </xpath>
+        <xpath expr="//tfoot/tr/th[@colspan='3']" position="replace">
+            <t t-if="display_sol"><th colspan="4"></th></t>
+            <t t-else=""><th colspan="3"></th></t>
+        </xpath>            
+    </template>
+
+</odoo>

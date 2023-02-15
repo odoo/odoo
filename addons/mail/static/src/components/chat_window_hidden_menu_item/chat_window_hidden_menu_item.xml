@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.ChatWindowHiddenMenuItem" owl="1">
-        <li class="o_ChatWindowHiddenMenuItem" t-att-class="{ 'border-bottom' : !props.isLast }" role="menuitem" t-attf-class="{{ className }}" t-ref="root">
-            <ChatWindowHeader
-                className="'o_ChatWindowHiddenMenuItem_chatWindowHeader opacity-100-hover'"
+    <t t-name="mail.ChatWindowHiddenMenuItemView" owl="1">
+        <li class="o_ChatWindowHiddenMenuItemView" t-att-class="{ 'border-bottom' : !isLast }" role="menuitem" t-attf-class="{{ className }}" t-ref="root">
+            <ChatWindowHeaderView
+                className="'o_ChatWindowHiddenMenuItemView_chatWindowHeader opacity-100-hover'"
                 record="chatWindowHeaderView"
-                chatWindow="chatWindowHeaderView.chatWindowOwner"
             />
         </li>
     </t>

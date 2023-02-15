@@ -17,114 +17,19 @@ const {
 // Options
 //--------------------------------------------------------------------------
 
-// Snippet option for resizing  image and column width inline like excel
-options.registry.mass_mailing_sizing_x = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        var def = this._super.apply(this, arguments);
-
-        this.containerWidth = this.$target.parent().closest("td, table, div").width();
-
-        var self = this;
-        var offset, sib_offset, target_width, sib_width;
-
-        this.$overlay.find(".o_handle.e, .o_handle.w").removeClass("readonly");
-        this.isIMG = this.$target.is("img");
-        if (this.isIMG) {
-            this.$overlay.find(".o_handle.w").addClass("readonly");
-        }
-
-        var $body = $(this.ownerDocument.body);
-        this.$overlay.find(".o_handle").on('mousedown', function (event) {
-            event.preventDefault();
-            var $handle = $(this);
-            var compass = false;
-
-            _.each(['n', 's', 'e', 'w'], function (handler) {
-                if ($handle.hasClass(handler)) { compass = handler; }
-            });
-            if (self.isIMG) { compass = "image"; }
-
-            $body.on("mousemove.mass_mailing_width_x", function (event) {
-                event.preventDefault();
-                offset = self.$target.offset().left;
-                target_width = self.get_max_width(self.$target);
-                if (compass === 'e' && self.$target.next().offset()) {
-                    sib_width = self.get_max_width(self.$target.next());
-                    sib_offset = self.$target.next().offset().left;
-                    self.change_width(event, self.$target, target_width, offset, true);
-                    self.change_width(event, self.$target.next(), sib_width, sib_offset, false);
-                }
-                if (compass === 'w' && self.$target.prev().offset()) {
-                    sib_width = self.get_max_width(self.$target.prev());
-                    sib_offset = self.$target.prev().offset().left;
-                    self.change_width(event, self.$target, target_width, offset, false);
-                    self.change_width(event, self.$target.prev(), sib_width, sib_offset, true);
-                }
-                if (compass === 'image') {
-                    self.change_width(event, self.$target, target_width, offset, true);
-                }
-            });
-            $body.one("mouseup", function () {
-                $body.off('.mass_mailing_width_x');
-            });
-        });
-
-        return def;
-    },
-    change_width: function (event, target, target_width, offset, grow) {
-        target.css("width", Math.round(grow ? (event.pageX - offset) : (offset + target_width - event.pageX)));
-        this.trigger_up('cover_update');
-    },
-    get_int_width: function (el) {
-        return parseInt($(el).css("width"), 10);
-    },
-    get_max_width: function ($el) {
-        return this.containerWidth - _.reduce(_.map($el.siblings(), this.get_int_width), function (memo, w) { return memo + w; });
-    },
-    onFocus: function () {
-        this._super.apply(this, arguments);
-
-        if (this.$target.is("td, th")) {
-            this.$overlay.find(".o_handle.e, .o_handle.w").toggleClass("readonly", this.$target.siblings().length === 0);
-        }
-    },
-});
-
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
-options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
+options.registry.MassMailingBackgroundImage = options.registry.BackgroundImage.extend({
     start: function () {
         this._super();
-        if (this.snippets && this.snippets.split('.')[0] === "mass_mailing") {
-            var $table_target = this.$target.find('table:first');
-            if ($table_target.length) {
-                this.$target = $table_target;
-            }
+        const $table_target = this.$target.find('table:first');
+        if ($table_target.length) {
+            this.$target = $table_target;
         }
     }
 });
 
-options.registry.ImageTools.include({
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUIVisibility() {
-        await this._super(...arguments);
-
-        // Transform is _very_ badly supported in mail clients. Hide the option.
-        const transformEl = this.el.querySelector('[data-transform="true"]');
-        if (transformEl) {
-            transformEl.classList.toggle('d-none', true);
-        }
-    },
+options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -138,14 +43,11 @@ options.registry.ImageTools.include({
             return color;
         }
         const doc = this.options.document;
-        if (doc && doc.querySelector('.o_mass_mailing_iframe') && !ColorpickerWidget.isCSSColor(color)) {
-            const tempEl = doc.body.appendChild(doc.createElement('div'));
-            tempEl.className = `bg-${color}`;
-            const colorValue = window.getComputedStyle(tempEl).getPropertyValue("background-color").trim();
-            tempEl.parentNode.removeChild(tempEl);
-            return ColorpickerWidget.normalizeCSSColor(colorValue).replace(/"/g, "'");
-        }
-        return this._super(...arguments);
+        const tempEl = doc.body.appendChild(doc.createElement('div'));
+        tempEl.className = `bg-${color}`;
+        const colorValue = window.getComputedStyle(tempEl).getPropertyValue("background-color").trim();
+        tempEl.parentNode.removeChild(tempEl);
+        return ColorpickerWidget.normalizeCSSColor(colorValue).replace(/"/g, "'");
     },
 });
 
@@ -318,6 +220,9 @@ options.registry.DesignTab = options.Class.extend({
             cssTexts.push(rule.cssText);
         }
         this.styleElement.textContent = cssTexts.join('\n');
+        // Flush the rules cache for convert_inline, to make sure they are
+        // recomputed to account for the change.
+        this.options.wysiwyg._rulesCache = undefined;
     },
     /**
      * @override
@@ -399,21 +304,6 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getRule(selectorText) {
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
-    },
-});
-
-options.registry.Parallax = options.Class.extend({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        // Parallax is not supported in emails.
-        return false;
     },
 });
 

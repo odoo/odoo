@@ -2,7 +2,12 @@
 <odoo>
 
 <template id="point_of_sale.qunit_suite_assets">
-    <t t-call-assets="web.assets_backend" t-js="false" />
+    <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+        <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
+    </t>
+    <t t-else="">
+        <t t-call-assets="web.assets_backend" t-js="false"/>
+    </t>
     <t t-call-assets="point_of_sale.tests_assets" t-js="false"/>
     <t t-call-assets="point_of_sale.tests_assets" t-css="false"/>
     <style>

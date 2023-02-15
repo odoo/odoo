@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ViewScaleSelector" owl="1">
+        <Dropdown t-if="Object.keys(props.scales).length > 1" class="'btn-group o_view_scale_selector'" togglerClass="'btn btn-secondary scale_button_selection text-uppercase'" hotkey="'v'" showCaret="true">
+            <t t-set-slot="toggler">
+                <t t-esc="props.scales[props.currentScale].description" />
+            </t>
+            <t t-foreach="scales" t-as="scale" t-key="scale.key">
+                <DropdownItem
+                    class="`o_scale_button_${scale.key} text-uppercase ${scale.key === props.currentScale ? 'active' : ''}`"
+                    hotkey="scale.hotkey or scale.key[0]"
+                    onSelected="() => this.props.setScale(scale.key)"
+                >
+                    <t t-esc="scale.description" />
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

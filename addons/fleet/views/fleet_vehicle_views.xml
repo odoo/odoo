@@ -98,6 +98,7 @@
                         </group>
                         <group string="Vehicle">
                             <field name="category_id"/>
+                            <field name="order_date"/>
                             <field name="acquisition_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="write_off_date" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="vin_sn"/>

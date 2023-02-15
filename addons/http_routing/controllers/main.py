@@ -20,6 +20,6 @@ class Routing(Home):
 
 class SessionWebsite(Session):
 
-    @http.route('/web/session/logout', type='http', auth="none", website=True, multilang=False, sitemap=False)
+    @http.route('/web/session/logout', website=True, multilang=False, sitemap=False)
     def logout(self, redirect='/web'):
         return super().logout(redirect=redirect)

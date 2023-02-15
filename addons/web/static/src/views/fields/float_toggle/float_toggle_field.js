@@ -4,22 +4,27 @@ import { registry } from "@web/core/registry";
 import { formatFloat } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FloatToggleField extends Component {
     // TODO perf issue (because of update round trip)
     // we probably want to have a state and a useEffect or onWillUpateProps
     onChange() {
-        let currentIndex = this.props.range.indexOf(this.props.value * this.props.factor);
+        let currentIndex = this.props.range.indexOf(this.props.value * this.factor);
         currentIndex++;
         if (currentIndex > this.props.range.length - 1) {
             currentIndex = 0;
         }
-        this.props.update(this.props.range[currentIndex] / this.props.factor);
+        this.props.update(this.props.range[currentIndex] / this.factor);
+    }
+
+    // This property has been created in order to allow overrides in other modules.
+    get factor() {
+        return this.props.factor;
     }
 
     get formattedValue() {
-        return formatFloat(this.props.value * this.props.factor, {
+        return formatFloat(this.props.value * this.factor, {
             digits: this.props.digits,
         });
     }
@@ -43,8 +48,16 @@ FloatToggleField.supportedTypes = ["float"];
 
 FloatToggleField.isEmpty = () => false;
 FloatToggleField.extractProps = ({ attrs, field }) => {
+    let digits;
+    if (attrs.digits) {
+        digits = JSON.parse(attrs.digits);
+    } else if (attrs.options.digits) {
+        digits = attrs.options.digits;
+    } else if (Array.isArray(field.digits)) {
+        digits = field.digits;
+    }
     return {
-        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
+        digits,
         range: attrs.options.range,
         factor: attrs.options.factor,
         disableReadOnly: attrs.options.force_button || false,

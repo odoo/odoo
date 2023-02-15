@@ -1,7 +1,7 @@
 odoo.define('website_sale.recently_viewed', function (require) {
 
 var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
+const {getCookie, setCookie} = require('web.utils.cookies');
 
 publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend({
     selector: '#product_detail',
@@ -33,7 +33,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
         if (! parseInt(this.el.dataset.viewTrack, 10)) {
             return; // Is not tracked
         }
-        if (utils.get_cookie(cookieName)) {
+        if (getCookie(cookieName)) {
             return; // Already tracked in the last 30min
         }
         if ($(this.el).find('.js_product.css_not_available').length) {
@@ -45,7 +45,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
                 product_id: productId,
             }
         }).then(function (res) {
-            utils.set_cookie(cookieName, productId, 30 * 60);
+            setCookie(cookieName, productId, 30 * 60, 'optional');
         });
     },
 

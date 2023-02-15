@@ -265,7 +265,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu',
+                'name': 'turlututu installment #1',
                 'partner_id': self.partner_b.id,
                 'account_id': self.partner_b.property_account_payable_id.id,
                 'amount_currency': 338.4,
@@ -273,7 +273,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu',
+                'name': 'turlututu installment #2',
                 'partner_id': self.partner_b.id,
                 'account_id': self.partner_b.property_account_payable_id.id,
                 'amount_currency': 789.6,
@@ -322,7 +322,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu',
+                'name': 'turlututu installment #1',
                 'account_id': self.partner_b.property_account_payable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 331.2,
@@ -330,7 +330,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': 'turlututu',
+                'name': 'turlututu installment #2',
                 'account_id': self.partner_b.property_account_payable_id.id,
                 'partner_id': self.partner_b.id,
                 'amount_currency': 772.8,
@@ -1026,6 +1026,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
             tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({

@@ -102,6 +102,11 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
             message: "XmlHttpRequestError abort",
             event: $.Event('abort')
         });
+
+        if (!shadow) {
+            core.bus.trigger('rpc_response');
+        }
+
         if (xhr.abort) {
             xhr.abort();
         }
@@ -201,7 +206,7 @@ function get_file(options) {
             try { // Case of a serialized Odoo Exception: It is Json Parsable
                 var node = nodes[1] || nodes[0];
                 err = JSON.parse(node.textContent);
-            } catch (_e) { // Arbitrary uncaught python side exception
+            } catch { // Arbitrary uncaught python side exception
                 err = {
                     message: nodes.length > 1 ? nodes[1].textContent : '',
                     data: {

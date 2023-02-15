@@ -2,8 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
-import FormController from "web.FormController";
-import { patch } from "../../src/core/utils/patch";
 import { SERVICES_METADATA } from "../../src/env";
 import { registerCleanup } from "./cleanup";
 import { makeMockServer } from "./mock_server";
@@ -41,7 +39,12 @@ export function clearServicesMetadataWithCleanup() {
     for (const key of Object.keys(SERVICES_METADATA)) {
         delete SERVICES_METADATA[key];
     }
-    registerCleanup(() => patch(SERVICES_METADATA, servicesMetadata));
+    registerCleanup(() => {
+        for (const key of Object.keys(SERVICES_METADATA)) {
+            delete SERVICES_METADATA[key];
+        }
+        Object.assign(SERVICES_METADATA, servicesMetadata);
+    });
 }
 
 function prepareRegistriesWithCleanup() {
@@ -73,7 +76,6 @@ function prepareRegistriesWithCleanup() {
     clearRegistryWithCleanup(registry.category("user_menuitems"));
     clearRegistryWithCleanup(registry.category("kanban_examples"));
     clearRegistryWithCleanup(registry.category("__processed_archs__"));
-    clearRegistryWithCleanup(registry.category("action_menus"));
     // fun fact: at least one registry is missing... this shows that we need a
     // better design for the way we clear these registries...
 }
@@ -113,14 +115,6 @@ export async function makeTestEnv(config = {}) {
     if (config.serverData || config.mockRPC || config.activateMockServer) {
         await makeMockServer(config.serverData, config.mockRPC);
     }
-
-    // remove the multi-click delay for the quick edit in form views
-    // todo: move this elsewhere (setup?)
-    const initialQuickEditDelay = FormController.prototype.multiClickTime;
-    FormController.prototype.multiClickTime = 0;
-    registerCleanup(() => {
-        FormController.prototype.multiClickTime = initialQuickEditDelay;
-    });
 
     let env = makeEnv();
     await startServices(env);

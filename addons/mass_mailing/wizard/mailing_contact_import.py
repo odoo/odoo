@@ -15,8 +15,7 @@ class MailingContactImport(models.TransientModel):
     def action_import(self):
         """Import each lines of "contact_list" as a new contact."""
         self.ensure_one()
-
-        contacts = tools.email_split_tuples(', '.join(self.contact_list.splitlines()))
+        contacts = tools.email_split_tuples(', '.join((self.contact_list or '').splitlines()))
         if not contacts:
             return {
                 'type': 'ir.actions.client',

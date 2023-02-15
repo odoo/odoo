@@ -49,3 +49,6 @@ class TestSnippets(HttpCase):
 
     def test_07_image_gallery(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image_gallery', login='admin')
+
+    def test_08_table_of_content(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_table_of_content', login='admin')

@@ -40,7 +40,6 @@ Ask questions, get answers, no distractions
         'data/forum_demo.xml',
     ],
     'installable': True,
-    'application': True,
     'assets': {
         'website.assets_editor': [
             'website_forum/static/src/js/systray_items/*.js',

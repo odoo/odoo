@@ -439,7 +439,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                                                 'type': 'sale',
                                                 'company_id': main_company.id})
 
-        all_pricelists = env['product.pricelist'].search([('id', '!=', excluded_pricelist.id)])
+        all_pricelists = env['product.pricelist'].search([
+            ('id', '!=', excluded_pricelist.id),
+            '|', ('company_id', '=', main_company.id), ('company_id', '=', False)
+        ])
         all_pricelists.write(dict(currency_id=main_company.currency_id.id))
 
         src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
@@ -470,11 +473,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
-        env['ir.property']._set_default(
-            "property_product_pricelist",
-            "res.partner",
-            public_pricelist,
-        )
+        env['ir.property']._set_default("property_product_pricelist", "res.partner", public_pricelist, main_company)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -577,3 +576,96 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[1].balance, 0)
         self.assertEqual(lines[2].account_id, tax_received_account)
         self.assertAlmostEqual(lines[2].balance, 1)
+
+    def test_change_without_cash_method(self):
+        #create bank payment method
+        bank_pm = self.env['pos.payment.method'].create({
+            'name': 'Bank',
+            'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+            'is_cash_count': False,
+            'split_transactions': False,
+            'company_id': self.env.company.id,
+        })
+        self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)]})
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="accountman")
+
+    def test_rounding_up(self):
+        rouding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding up',
+            'rounding': 0.05,
+            'rounding_method': 'UP',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 1.98,
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.write({
+            'rounding_method': rouding_method.id,
+            'cash_rounding': True,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingUp', login="accountman")
+
+    def test_rounding_down(self):
+        rouding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding down',
+            'rounding': 0.05,
+            'rounding_method': 'DOWN',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 1.98,
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.write({
+            'rounding_method': rouding_method.id,
+            'cash_rounding': True,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="accountman")
+
+    def test_rounding_half_up(self):
+        rouding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding HALF-UP',
+            'rounding': 0.5,
+            'rounding_method': 'HALF-UP',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test 1.2',
+            'available_in_pos': True,
+            'list_price': 1.2,
+            'taxes_id': False,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test 1.25',
+            'available_in_pos': True,
+            'list_price': 1.25,
+            'taxes_id': False,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test 1.4',
+            'available_in_pos': True,
+            'list_price': 1.4,
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.write({
+            'rounding_method': rouding_method.id,
+            'cash_rounding': True,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="accountman")

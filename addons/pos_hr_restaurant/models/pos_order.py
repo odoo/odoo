@@ -13,10 +13,10 @@ class PosOrder(models.Model):
         return fields
 
     @api.model
-    def get_table_draft_orders(self, table_id):
-        table_orders = super().get_table_draft_orders(table_id)
+    def get_table_draft_orders(self, table_ids):
+        table_orders = super().get_table_draft_orders(table_ids)
         for order in table_orders:
             if order['employee_id']:
-                order['employee_id'] = order['employee_id'][0] if order['employee_id'] else False
+                order['employee_id'] = order['employee_id'][0]
 
         return table_orders

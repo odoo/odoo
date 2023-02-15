@@ -13,7 +13,7 @@
             <t t-esc="duration"/>
         </span>
         <div class="text-uppercase">
-            <t t-if="data.request_unit == 'hour'">hours</t>
+            <t t-if="data.request_unit == 'hour'" name="duration_unit">hours</t>
             <t t-else="">days</t>
             <t t-if="props.requires_allocation" name="duration_type">
                 available

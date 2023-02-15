@@ -19,7 +19,7 @@ $(function () {
             this.defaultpage = parseInt($viewer.find('#PDFSlideViewer').data('defaultpage'));
             this.canvas = $viewer.find('canvas')[0];
 
-            this.pdf_viewer = new PDFSlidesViewer(this.slide_url, this.canvas, true);
+            this.pdf_viewer = new PDFSlidesViewer(this.slide_url, this.canvas);
             this.pdf_viewer.loadDocument().then(function () {
                 self.on_loaded_file();
             });

@@ -58,12 +58,3 @@ class PaymentProvider(models.Model):
         key = self.aps_sha_response if incoming else self.aps_sha_request
         signing_string = ''.join([key, sign_data, key])
         return hashlib.sha256(signing_string.encode()).hexdigest()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('aps', [
-            'aps_merchant_identifier',
-            'aps_access_code',
-            'aps_sha_request',
-            'aps_sha_response',
-        ])

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_sale_picking
-#: model_terms:payment.acquirer,pending_msg:website_sale_picking.payment_acquirer_onsite
+#: model_terms:payment.provider,pending_msg:website_sale_picking.payment_provider_onsite
 msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products"
@@ -30,6 +30,11 @@ msgstr ""
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
 msgid "Config Settings"
+msgstr ""
+
+#. module: website_sale_picking
+#: model:ir.model.fields,field_description:website_sale_picking.field_payment_provider__custom_mode
+msgid "Custom Mode"
 msgstr ""
 
 #. module: website_sale_picking
@@ -47,15 +52,15 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_picking
-#: model:ir.model.fields,field_description:website_sale_picking.field_payment_acquirer__is_onsite_acquirer
-msgid "Is Onsite Acquirer"
-msgstr ""
-
-#. module: website_sale_picking
 #. openerp-web
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid "No suitable payment option could be found."
+msgstr ""
+
+#. module: website_sale_picking
+#: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
+msgid "On Site"
 msgstr ""
 
 #. module: website_sale_picking
@@ -65,15 +70,15 @@ msgid "On site picking"
 msgstr ""
 
 #. module: website_sale_picking
-#: model:payment.acquirer,name:website_sale_picking.payment_acquirer_onsite
+#: model:payment.provider,name:website_sale_picking.payment_provider_onsite
 #: model_terms:product.product,description:website_sale_picking.onsite_delivery_product
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in store when picking the product"
 msgstr ""
 
 #. module: website_sale_picking
-#: model:ir.model,name:website_sale_picking.model_payment_acquirer
-msgid "Payment Acquirer"
+#: model:ir.model,name:website_sale_picking.model_payment_provider
+msgid "Payment Provider"
 msgstr ""
 
 #. module: website_sale_picking
@@ -127,17 +132,17 @@ msgid "You cannot pay onsite if the delivery is not onsite"
 msgstr ""
 
 #. module: website_sale_picking
-#: model_terms:payment.acquirer,auth_msg:website_sale_picking.payment_acquirer_onsite
+#: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
 msgid "Your payment has been authorized."
 msgstr ""
 
 #. module: website_sale_picking
-#: model_terms:payment.acquirer,cancel_msg:website_sale_picking.payment_acquirer_onsite
+#: model_terms:payment.provider,cancel_msg:website_sale_picking.payment_provider_onsite
 msgid "Your payment has been cancelled."
 msgstr ""
 
 #. module: website_sale_picking
-#: model_terms:payment.acquirer,done_msg:website_sale_picking.payment_acquirer_onsite
+#: model_terms:payment.provider,done_msg:website_sale_picking.payment_provider_onsite
 msgid "Your payment has been successfully processed. Thank you!"
 msgstr ""
 

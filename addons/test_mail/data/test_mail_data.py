@@ -214,6 +214,36 @@ Content-Type: text/html;
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
 """
 
+
+MAIL_MULTIPART_BINARY_OCTET_STREAM = """X-Original-To: raoul@grosbedon.fr
+Delivered-To: raoul@grosbedon.fr
+Received: by mail1.grosbedon.com (Postfix, from userid 10002)
+    id E8166BFACA; Fri, 10 Nov 2021 06:04:01 +0200 (CEST)
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+Content-Type: multipart/alternative;
+ boundary="Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227"
+Message-Id: <6BB1FAB2-2104-438E-9447-07AE2C8C4A92@sexample.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \\(1878.6\\))
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+    charset=us-ascii
+
+The attached file contains b"Hello world\\n"
+
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227
+Content-Disposition: attachment;
+ filename="hello_world.dat"
+Content-Type: binary/octet-stream;
+ name="hello_world.dat"
+Content-Transfer-Encoding: base64
+
+SGVsbG8gd29ybGQK
+--Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
+"""
+
+
 MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
@@ -926,6 +956,90 @@ OyI+T2RvbzwvYT4uCjwvcD4KPC9kaXY+CiAgICAgICAg
 --===============7355787381227985247==--
 
 --92726A5F09.1555335666/mail2.test.ironsky--
+"""
+
+
+MAIL_BOUNCE_QP_RFC822_HEADERS = """\
+Received: by mailserver.odoo.com (Postfix)
+        id EA0B917B8E4; Tue, 29 Feb 2023 11:11:11 +0100 (CET)
+From: {email_from} 
+Subject: Undelivered Mail Returned to Sender
+To: {email_to}
+Auto-Submitted: auto-replied
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+        boundary="DFFDC17AA03.1673346179/mailserver.odoo.com"
+Message-Id: <40230110102259.EA0B917B8E4@mailserver.odoo.com>
+Content-Transfer-Encoding: 7bit
+Delivered-To: {delivered_to}
+Return-Path: <>
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Notification
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients.
+
+<rdesfrdgtfdrfesd@outlook.com>: host
+    outlook-com.olc.protection.outlook.com[104.47.56.33] said: 550 5.5.0
+    Requested action not taken: mailbox unavailable (S2017062302). (in re=
+ply to
+    RCPT TO command)
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mailserver.odoo.com
+X-Postfix-Queue-ID: DFFDC17AA03
+X-Postfix-Sender: rfc822; bounce@xxx.odoo.com
+Arrival-Date: Tue, 29 Feb 2023 10:10:10 +0100 (CET)
+
+Final-Recipient: rfc822; rdesfrdgtfdrfesd@outlook.com
+Original-Recipient: rfc822;rdesfrdgtfdrfesd@outlook.com
+Action: failed
+Status: 5.5.0
+Remote-MTA: dns; outlook-com.olc.protection.outlook.com
+Diagnostic-Code: smtp; 550 5.5.0 Requested action not taken: mailbox
+    unavailable (S2017062302).
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com
+Content-Description: Undelivered Message Headers
+Content-Type: text/rfc822-headers
+Content-Transfer-Encoding: quoted-printable
+
+Return-Path: <bounce@xxx.odoo.com>
+Received: from eupp00.odoo.com (00.72.79.34.bc.googleusercontent.com [34.=
+79.72.00])
+        by mailserver.odoo.com (Postfix) with ESMTPS id DFFDC17AA03;
+        Tue, 10 Jan 2023 11:22:57 +0100 (CET)
+DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Dsimple/simple; d=3Dxxx.be;
+        s=3Dodoo; t=3D1673346178;
+        bh=3DYPJOqkUi8B28X1MrRUsgmsL8KRz/ZIkpbYyc6wNITXA=3D;
+        h=3Dreferences:Subject:From:Reply-To:To:Date:From;
+        b=3DCMqh7mUvpgUw+JpCeGluv1+MZ3y6EsXd0acmsfzpYBjcoy1InvD6FLT1/lQCcgetf
+         cGyL/8R4vvDKATyE0AtOIpoYDsbpnMoiYWqaSXnDVuLTrEZzyrK/2j10ZTnHZ2uDTC
+         b7wPjFfQ9pted/t6CAUhVT1XydDNalSwEZovy/QI=3D
+Message-Id: <368396033905967.1673346177.695352554321289-openerp-11-sale.o=
+rder@eupp00>
+references: <792105153140463.1673746527.352018594741821-openerp-11-sale.o=
+rder@xxx.odoo.com> <368396033905967.1673346177.695352554321289-openerp-11=
+-sale.order@eupp00>
+Subject: Thi is a SO (Ref SO/11)
+From: info@xxx.odoo.com
+Reply-To: "SO/11" <catchall@xxx.odoo.com=
+>
+To: "rdesfrdgtfdrfesd@outlook.com" <rdesfrdgtfdrfesd@outlook.com>
+Date: Tue, 29 Feb 2023 06:09:06 -0000
+X-Odoo-Objects: sale.order-11
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=3D"=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D5706316606908750110=3D=3D"
+
+--DFFDC17AA03.1673346179/mailserver.odoo.com--
+
 """
 
 MAIL_NO_BODY = '''\

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="stock.StockReportSearchPanel" t-inherit="web.SearchPanel" owl="1">
+<t t-name="stock.StockReportSearchPanel.Regular" t-inherit="web.SearchPanel.Regular" owl="1">
     <xpath expr="//div/section[1]" position="before">
         <section t-if="warehouses.length > 1" class="o_search_panel_section o_search_panel_warehouse">
             <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
@@ -21,4 +21,11 @@
         </section>
     </xpath>
 </t>
+
+<t t-name="stock.StockReportSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary" owl="1">
+    <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="replace">
+        <t t-call="stock.StockReportSearchPanel.Regular"/>
+    </xpath>
+</t>
+
 </templates>

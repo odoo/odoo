@@ -25,12 +25,15 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.scrolledPoint = 0;
         this.hasScrolled = false;
         this.closeOpenedMenus = false;
+        this.scrollHeightTooShort = false;
+        this.scrollableEl = $().getScrollingElement()[0];
     },
     /**
      * @override
      */
     start: function () {
         this.$main = this.$el.next('main');
+        this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
         this.$navbarCollapses = this.$el.find('.navbar-collapse');
 
@@ -70,12 +73,30 @@ const BaseAnimatedHeader = animations.Animation.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Adapt the 'right' css property of the header by adding the size of a
+     * scrollbar if any.
+     *
+     * @private
+     */
+    _adaptFixedHeaderPosition() {
+        // Compensate scrollbar
+        this.el.style.removeProperty('right');
+        if (this.fixedHeader) {
+            const scrollableEl = $(this.el).parent().closestScrollable()[0];
+            const style = window.getComputedStyle(this.el);
+            const borderLeftWidth = parseInt(style.borderLeftWidth.replace('px', ''));
+            const borderRightWidth = parseInt(style.borderRightWidth.replace('px', ''));
+            const bordersWidth = borderLeftWidth + borderRightWidth;
+            const newValue = parseInt(style['right']) + scrollableEl.offsetWidth - scrollableEl.clientWidth - bordersWidth;
+            this.el.style.setProperty('right', `${newValue}px`, 'important');
+        }
+    },
+    /**
      * @private
      */
     _adaptToHeaderChange: function () {
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
-        this.headerHeight = this.$el.outerHeight();
-        this.topGap = this._computeTopGap();
+        this._updateMainPaddingTop();
         // Take menu into account when `dom.scrollTo()` is used whenever it is
         // visible - be it floating, fully displayed or partially hidden.
         this.el.classList.toggle('o_top_fixed_element', this._isShown());
@@ -116,6 +137,18 @@ const BaseAnimatedHeader = animations.Animation.extend({
         }
     },
     /**
+     * Scrolls to correctly display the section specified in the URL
+     *
+     * @private
+     */
+    _adjustUrlAutoScroll() {
+        // When the url contains #aRandomSection, prevent the navbar to overlap
+        // on the section, for this, we scroll as many px as the navbar height.
+        if (!this.editableMode) {
+            this.scrollableEl.scrollBy(0, -this.el.offsetHeight);
+        }
+    },
+    /**
      * @private
      */
     _computeTopGap() {
@@ -135,6 +168,46 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.fixedHeader = useFixed;
         this._adaptToHeaderChange();
         this.el.classList.toggle('o_header_affixed', useFixed);
+        this._adaptFixedHeaderPosition();
+    },
+    /**
+     * @private
+     */
+    _updateMainPaddingTop: function () {
+        this.headerHeight = this.$el.outerHeight();
+        this.topGap = this._computeTopGap();
+
+        if (this.isOverlayHeader) {
+            return;
+        }
+        this.$main.css('padding-top', this.fixedHeader ? this.headerHeight : '');
+    },
+    /**
+     * Checks if the size of the header will decrease by adding the
+     * 'o_header_is_scrolled' class. If so, we do not add this class if the
+     * remaining scroll height is not enough to stay above 'this.scrolledPoint'
+     * after the transition, otherwise it causes the scroll position to move up
+     * again below 'this.scrolledPoint' and trigger an infinite loop.
+     *
+     * @todo header effects should be improved in the future to not ever change
+     * the page scroll-height during their animation. The code would probably be
+     * simpler but also prevent having weird scroll "jumps" during animations
+     * (= depending on the logo height after/before scroll, a scroll step (one
+     * mousewheel event for example) can be bigger than other ones).
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _scrollHeightTooShort() {
+        const scrollEl = this.scrollableEl;
+        const remainingScroll = (scrollEl.scrollHeight - scrollEl.clientHeight) - this.scrolledPoint;
+        const clonedHeader = this.el.cloneNode(true);
+        scrollEl.append(clonedHeader);
+        clonedHeader.classList.add('o_header_is_scrolled', 'o_header_affixed', 'o_header_no_transition');
+        const endHeaderHeight = clonedHeader.offsetHeight;
+        clonedHeader.remove();
+        const heightDiff = this.headerHeight - endHeaderHeight;
+        return heightDiff > 0 ? remainingScroll <= heightDiff : false;
     },
 
     //--------------------------------------------------------------------------
@@ -153,6 +226,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
             this.hasScrolled = true;
             if (scroll > 0) {
                 this.$el.addClass('o_header_no_transition');
+                this._adjustUrlAutoScroll();
             }
         } else {
             this.$el.removeClass('o_header_no_transition');
@@ -162,9 +236,12 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // Indicates the page is scrolled, the logo size is changed.
         const headerIsScrolled = (scroll > this.scrolledPoint);
         if (this.headerIsScrolled !== headerIsScrolled) {
-            this.el.classList.toggle('o_header_is_scrolled', headerIsScrolled);
-            this.$el.trigger('odoo-transitionstart');
-            this.headerIsScrolled = headerIsScrolled;
+            this.scrollHeightTooShort = headerIsScrolled && this._scrollHeightTooShort();
+            if (!this.scrollHeightTooShort) {
+                this.el.classList.toggle('o_header_is_scrolled', headerIsScrolled);
+                this.$el.trigger('odoo-transitionstart');
+                this.headerIsScrolled = headerIsScrolled;
+            }
         }
 
         if (this.closeOpenedMenus) {
@@ -178,6 +255,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _updateHeaderOnResize: function () {
+        this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
                 && config.device.size_class > config.device.SIZES.SM) {
             document.body.classList.remove('overflow-hidden');
@@ -204,6 +282,13 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         this.headerHeight = this.$el.outerHeight();
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$el.css('transform', '');
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -218,14 +303,14 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
     /**
      * Called when the window is scrolled
      *
-     * @private
+     * @override
      * @param {integer} scroll
      */
     _updateHeaderOnScroll: function (scroll) {
         this._super(...arguments);
 
         const mainPosScrolled = (scroll > this.headerHeight + this.topGap);
-        const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap);
+        const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap) && !this.scrollHeightTooShort;
         const fixedUpdate = (this.fixedHeader !== mainPosScrolled);
         const showUpdate = (this.fixedHeaderShow !== reachPosScrolled);
 
@@ -371,6 +456,10 @@ publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
     /**
      * @override
      */
+    _adjustUrlAutoScroll() {},
+    /**
+     * @override
+     */
     _hideHeader: function () {
         this._super(...arguments);
         this.$el.css('transform', 'translate(0, -100%)');
@@ -391,6 +480,10 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _adjustUrlAutoScroll() {},
     /**
      * @override
      */
@@ -564,6 +657,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
 
 publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
     selector: 'header#top',
+    disabledInEditableMode: false,
     events: {
         'show.bs.collapse #top_menu_collapse': '_onCollapseShow',
         'hidden.bs.collapse #top_menu_collapse': '_onCollapseHidden',

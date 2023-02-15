@@ -21,26 +21,26 @@ class AccountMoveLine(models.Model):
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
         values['sale_line_ids'] = [(6, None, self.sale_line_ids.ids)]
 
-    def _prepare_analytic_line(self):
-        """ Note: This method is called only on the move.line that having an analytic account, and
+    def _prepare_analytic_lines(self):
+        """ Note: This method is called only on the move.line that having an analytic distribution, and
             so that should create analytic entries.
         """
-        values_list = super(AccountMoveLine, self)._prepare_analytic_line()
+        values_list = super(AccountMoveLine, self)._prepare_analytic_lines()
 
         # filter the move lines that can be reinvoiced: a cost (negative amount) analytic line without SO line but with a product can be reinvoiced
         move_to_reinvoice = self.env['account.move.line']
-        for index, move_line in enumerate(self):
-            values = values_list[index]
-            if 'so_line' not in values:
-                if move_line._sale_can_be_reinvoice():
-                    move_to_reinvoice |= move_line
+        if len(values_list) > 0:
+            for index, move_line in enumerate(self):
+                values = values_list[index]
+                if 'so_line' not in values:
+                    if move_line._sale_can_be_reinvoice():
+                        move_to_reinvoice |= move_line
 
         # insert the sale line in the create values of the analytic entries
         if move_to_reinvoice:
             map_sale_line_per_move = move_to_reinvoice._sale_create_reinvoice_sale_line()
-
             for values in values_list:
-                sale_line = map_sale_line_per_move.get(values.get('move_id'))
+                sale_line = map_sale_line_per_move.get(values.get('move_line_id'))
                 if sale_line:
                     values['so_line'] = sale_line.id
 
@@ -133,23 +133,20 @@ class AccountMoveLine(models.Model):
         """ Get the mapping of move.line with the sale.order record on which its analytic entries should be reinvoiced
             :return a dict where key is the move line id, and value is sale.order record (or None).
         """
-        analytic_accounts = self.mapped('analytic_account_id')
-
-        # link the analytic account with its open SO by creating a map: {AA.id: sale.order}, if we find some analytic accounts
         mapping = {}
-        if analytic_accounts:  # first, search for the open sales order
-            sale_orders = self.env['sale.order'].search([('analytic_account_id', 'in', analytic_accounts.ids), ('state', '=', 'sale')], order='create_date DESC')
-            for sale_order in sale_orders:
-                mapping[sale_order.analytic_account_id.id] = sale_order
-
-            analytic_accounts_without_open_order = analytic_accounts.filtered(lambda account: not mapping.get(account.id))
-            if analytic_accounts_without_open_order:  # then, fill the blank with not open sales orders
-                sale_orders = self.env['sale.order'].search([('analytic_account_id', 'in', analytic_accounts_without_open_order.ids)], order='create_date DESC')
-            for sale_order in sale_orders:
-                mapping[sale_order.analytic_account_id.id] = sale_order
+        for move_line in self:
+            if move_line.analytic_distribution:
+                distribution_json = move_line.analytic_distribution
+                sale_order = self.env['sale.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys())),
+                                                            ('state', '=', 'sale')], order='create_date ASC', limit=1)
+                if sale_order:
+                    mapping[move_line.id] = sale_order
+                else:
+                    sale_order = self.env['sale.order'].search([('analytic_account_id', 'in', list(int(account_id) for account_id in distribution_json.keys()))], order='create_date ASC', limit=1)
+                    mapping[move_line.id] = sale_order
 
         # map of AAL index with the SO on which it needs to be reinvoiced. Maybe be None if no SO found
-        return {move_line.id: mapping.get(move_line.analytic_account_id.id) for move_line in self}
+        return mapping
 
     def _sale_prepare_sale_line_values(self, order, price):
         """ Generate the sale.line creation value from the current move line """

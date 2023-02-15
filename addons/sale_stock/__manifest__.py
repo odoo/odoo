@@ -31,7 +31,6 @@ Preferences
         'views/stock_lot_views.xml',
         'views/res_users_views.xml',
 
-        'report/report_stock_forecasted.xml',
         'report/sale_order_report_templates.xml',
         'report/stock_report_deliveryslip.xml',
 
@@ -46,8 +45,7 @@ Preferences
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'sale_stock/static/src/js/**/*',
-            'sale_stock/static/src/xml/**/*',
+            'sale_stock/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',

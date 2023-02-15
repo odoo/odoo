@@ -1,13 +1,13 @@
 odoo.define('test_apikeys.tour', function(require) {
 "use strict";
 
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 const ajax = require('web.ajax');
 
-tour.register('apikeys_tour_setup', {
+registry.category("web_tour.tours").add('apikeys_tour_setup', {
     test: true,
     url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
-}, [{
+    steps: [{
     content: 'Open user account menu',
     trigger: '.o_user_menu .oe_topbar_name',
     run: 'click',
@@ -68,13 +68,13 @@ tour.register('apikeys_tour_setup', {
 }, {
     content: "check that our key is present",
     trigger: '[name=api_key_ids] td:contains("my key")',
-}]);
+}]});
 
 // deletes the previously created key
-tour.register('apikeys_tour_teardown', {
+registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     test: true,
     url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
-}, [{
+    steps: [{
     content: 'Open preferences',
     trigger: '.o_user_menu .oe_topbar_name',
 }, {
@@ -111,5 +111,5 @@ tour.register('apikeys_tour_teardown', {
             throw new Error("Expected API keys to be hidden (because empty), but it's not");
         };
     }
-}]);
+}]});
 });

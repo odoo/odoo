@@ -8,7 +8,7 @@ export class BurndownChartModel extends GraphModel {
      * @override
      */
     async _loadDataPoints(metaData) {
-        metaData.measures.__count.string = '# of Tasks';
+        metaData.measures.__count.string = this.env._t('# of Tasks');
         return super._loadDataPoints(metaData);
     }
 }

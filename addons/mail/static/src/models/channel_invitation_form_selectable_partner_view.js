@@ -1,32 +1,24 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ChannelInvitationFormSelectablePartnerView',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            return this.partner.isImStatusSet ? {} : clear();
-        },
-    },
+Model({
+    name: "ChannelInvitationFormSelectablePartnerView",
+    template: "mail.ChannelInvitationFormSelectablePartnerView",
     fields: {
-        channelInvitationFormOwner: one('ChannelInvitationForm', {
+        channelInvitationFormOwner: one("ChannelInvitationForm", {
             identifying: true,
-            inverse: 'selectablePartnerViews',
+            inverse: "selectablePartnerViews",
         }),
-        partner: one('Partner', {
+        partner: one("Partner", {
             identifying: true,
-            inverse: 'channelInvitationFormSelectablePartnerViews',
+            inverse: "channelInvitationFormSelectablePartnerViews",
         }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
-            inverse: 'channelInvitationFormSelectablePartnerViewOwner',
+        personaImStatusIconView: one("PersonaImStatusIconView", {
+            inverse: "channelInvitationFormSelectablePartnerViewOwner",
+            compute() {
+                return this.partner.isImStatusSet ? {} : clear();
+            },
         }),
     },
 });

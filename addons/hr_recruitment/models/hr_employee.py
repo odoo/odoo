@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools.translate import _
 from datetime import timedelta
 
 
@@ -28,8 +27,9 @@ class HrEmployee(models.Model):
         employees = super().create(vals_list)
         for employee in employees:
             if employee.applicant_id:
-                employee.applicant_id.message_post_with_view(
+                employee.applicant_id.message_post_with_source(
                     'hr_recruitment.applicant_hired_template',
-                    values={'applicant': employee.applicant_id},
-                    subtype_id=self.env.ref("hr_recruitment.mt_applicant_hired").id)
+                    render_values={'applicant': employee.applicant_id},
+                    subtype_xmlid='hr_recruitment.mt_applicant_hired',
+                )
         return employees

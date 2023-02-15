@@ -17,6 +17,7 @@ from odoo import api, models
 from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.http_routing.models import ir_http
@@ -63,7 +64,8 @@ class Http(models.AbstractModel):
 
     @classmethod
     def routing_map(cls, key=None):
-        key = key or (request and request.website_routing)
+        if not key and request:
+            key = request.website_routing
         return super(Http, cls).routing_map(key=key)
 
     @classmethod
@@ -81,6 +83,10 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _generate_routing_rules(cls, modules, converters):
+        if not request:
+            yield from super()._generate_routing_rules(modules, converters)
+            return
+
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
         domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
@@ -116,6 +122,14 @@ class Http(models.AbstractModel):
             super()._get_converters(),
             model=ModelConverter,
         )
+
+    @classmethod
+    def _get_public_users(cls):
+        public_users = super()._get_public_users()
+        website = request.env(user=SUPERUSER_ID)['website'].get_current_website()  # sudo
+        if website:
+            public_users.append(website._get_cached('user_id'))
+        return public_users
 
     @classmethod
     def _auth_method_public(cls):
@@ -188,8 +202,7 @@ class Http(models.AbstractModel):
 
         if not request.context.get('tz'):
             with contextlib.suppress(pytz.UnknownTimeZoneError):
-                tz = request.geoip.get('time_zone', '')
-                request.update_context(tz=pytz.timezone(tz).zone)
+                request.update_context(tz=pytz.timezone(request.geoip.location.time_zone).zone)
 
         website = request.env['website'].get_current_website()
         user = request.env.user
@@ -252,13 +265,22 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
-        page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
-        published_domain = page_domain
+        def _search_page(comparator='='):
+            page_domain = [('url', comparator, req_page)] + request.website.website_domain()
+            return request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+
         # specific page first
-        page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+        page = _search_page()
 
-        # redirect withtout trailing /
+        # case insensitive search
+        if not page:
+            page = _search_page('=ilike')
+            if page:
+                logger.info("Page %r not found, redirecting to existing page %r", req_page, page.url)
+                return request.redirect(page.url)
+
+        # redirect without trailing /
         if not page and req_page != "/" and req_page.endswith("/"):
             # mimick `_postprocess_args()` redirect
             path = request.httprequest.path[:-1]
@@ -365,7 +387,7 @@ class Http(models.AbstractModel):
     @api.model
     def get_frontend_session_info(self):
         session_info = super(Http, self).get_frontend_session_info()
-        geoip_country_code = request.geoip.get('country_code')
+        geoip_country_code = request.geoip.country_code
         geoip_phone_code = request.env['res.country']._phone_code_for(geoip_country_code) if geoip_country_code else None
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
@@ -379,6 +401,29 @@ class Http(models.AbstractModel):
             })
         session_info['bundle_params']['website_id'] = request.website.id
         return session_info
+
+    @classmethod
+    def _is_allowed_cookie(cls, cookie_type):
+        result = super()._is_allowed_cookie(cookie_type)
+        if result and cookie_type == 'optional':
+            if not request.env['website'].get_current_website().cookies_bar:
+                # Cookies bar is disabled on this website
+                return True
+            accepted_cookie_types = json_scriptsafe.loads(request.httprequest.cookies.get('website_cookies_bar', '{}'))
+
+            # pre-16.0 compatibility, `website_cookies_bar` was `"true"`.
+            # In that case we delete that cookie and let the user choose again.
+            if not isinstance(accepted_cookie_types, dict):
+                request.future_response.set_cookie('website_cookies_bar', expires=0, max_age=0)
+                return False
+
+            if 'optional' in accepted_cookie_types:
+                return accepted_cookie_types['optional']
+            return False
+
+        # Pass-through if already forbidden for another reason or a type that
+        # is not restricted by the website module.
+        return result
 
 
 class ModelConverter(ir_http.ModelConverter):

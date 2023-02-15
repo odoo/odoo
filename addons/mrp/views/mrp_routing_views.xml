@@ -7,12 +7,13 @@
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
                 <tree string="Routing Work Centers" multi_edit="1">
+                    <field name="company_id" invisible="1"/>
                     <field name="name"/>
                     <field name="bom_id"/>
                     <field name="workcenter_id"/>
                     <field name="time_mode" optional="show"/>
                     <field name="time_computed_on" optional="hide"/>
-                    <field name="time_cycle" widget="float_time" string="Duration (minutes)" width="1.5"/>
+                    <field name="time_cycle" widget="float_time" string="Duration (minutes)"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                     <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
@@ -48,11 +49,12 @@
                     <attribute name="attrs">{'column_invisible': [('parent.product_id', '!=', False)]}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="after">
-                    <button name="action_archive" class="btn-link" type="object" string="Archive Operation" icon="fa-times"/>
+                    <button name="action_archive" class="oe_right" type="object" string="Archive Operation"/>
                 </xpath>
                 <xpath expr="//field[@name='blocked_by_operation_ids']" position="replace">
                 </xpath>
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="bom_id" invisible="1"/>
                     <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" attrs="{'column_invisible': [('parent.allow_operation_dependencies', '=', False)]}"/>
                 </xpath>
             </field>

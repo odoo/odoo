@@ -5,11 +5,12 @@ import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useSetupView } from "@web/views/view_hook";
+import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { useSetupView } from "@web/views/view_hook";
 import { KanbanRenderer } from "./kanban_renderer";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
@@ -25,19 +26,25 @@ export class KanbanController extends Component {
             resModel,
             handleField: archInfo.handleField,
             limit: archInfo.limit || limit,
+            countLimit: archInfo.countLimit,
             onCreate: archInfo.onCreate,
             quickCreateView: archInfo.quickCreateView,
             defaultGroupBy,
+            defaultOrder: archInfo.defaultOrder,
             viewMode: "kanban",
             openGroupsByDefault: true,
             tooltipInfo: archInfo.tooltipInfo,
             rootState,
         });
+        this.headerButtons = archInfo.headerButtons;
 
-        const rootRef = useRef("root");
-        useViewButtons(this.model, rootRef);
+        this.rootRef = useRef("root");
+        useViewButtons(this.model, this.rootRef, {
+            beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
+            afterExecuteAction: this.afterExecuteActionButton.bind(this),
+        });
         useSetupView({
-            rootRef,
+            rootRef: this.rootRef,
             getGlobalState: () => {
                 return {
                     resIds: this.model.root.records.map((rec) => rec.resId), // WOWL: ask LPE why?
@@ -61,6 +68,7 @@ export class KanbanController extends Component {
                         this.model.root.offset = offset;
                         this.model.root.limit = limit;
                         await this.model.root.load();
+                        await this.onUpdatedPager();
                         this.render(true); // FIXME WOWL reactivity
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
@@ -93,6 +101,7 @@ export class KanbanController extends Component {
                 additionalContext: root.context,
                 onClose: async () => {
                     await this.model.root.load();
+                    this.model.useSampleModel = false;
                     this.render(true); // FIXME WOWL reactivity
                 },
             };
@@ -103,17 +112,27 @@ export class KanbanController extends Component {
     }
 
     get canCreate() {
-        const { create, groupCreate } = this.props.archInfo.activeActions;
+        const { create, createGroup } = this.props.archInfo.activeActions;
         const list = this.model.root;
         if (!create) {
             return false;
         }
-        return list.isGrouped ? list.groups.length > 0 || !groupCreate : true;
+        return list.isGrouped ? list.groups.length > 0 || !createGroup : true;
+    }
+
+    async beforeExecuteActionButton(clickParams) {}
+
+    async afterExecuteActionButton(clickParams) {}
+
+    async onUpdatedPager() {}
+
+    scrollTop() {
+        this.rootRef.el.querySelector(".o_content").scrollTo({ top: 0 });
     }
 }
 
 KanbanController.template = `web.KanbanView`;
-KanbanController.components = { Layout, KanbanRenderer };
+KanbanController.components = { Layout, KanbanRenderer, MultiRecordViewButton };
 KanbanController.props = {
     ...standardViewProps,
     defaultGroupBy: { validate: (dgb) => !dgb || typeof dgb === "string", optional: true },
@@ -121,6 +140,7 @@ KanbanController.props = {
     forceGlobalClick: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },
     showButtons: { type: Boolean, optional: true },
+    Compiler: { type: Function, optional: true }, // optional in stable for backward compatibility
     Model: Function,
     Renderer: Function,
     buttonTemplate: String,

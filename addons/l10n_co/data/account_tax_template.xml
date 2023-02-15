@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="l10n_co_tax_0" model="account.tax.template">
-        <field name="sequence">1</field>
-        <field name="name">IVA Compra 5%</field>
-        <field name="amount">5</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
-        <field name="tax_group_id" ref="tax_group_iva_5"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408100510'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408101010'),
-            }),
-        ]"/>
-    </record>
+    <!-- PURCHASE TAXES -->
     <record id="l10n_co_tax_1" model="account.tax.template">
         <field name="sequence">0</field>
         <field name="name">IVA Compra 19%</field>
@@ -35,14 +13,37 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408100505'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408101005'),
+                'account_id': ref('co_puc_135505'),
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_co_tax_0" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="name">IVA Compra 5%</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('co_puc_135505'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -58,49 +59,15 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408100515'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408101015'),
+                'account_id': ref('co_puc_135505'),
             }),
-        ]"/>
-    </record>
-    <record id="l10n_co_tax_3" model="account.tax.template">
-        <field name="sequence">1</field>
-        <field name="name">RteFte Salarios y Pagos Laborales</field>
-        <field name="amount">0</field>
-        <field name="amount_type">fixed</field>
-        <field name="type_tax_use">none</field>
-        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
-        <field name="tax_group_id" ref="tax_group_r_ren_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="l10n_co_tax_4" model="account.tax.template">
-        <field name="sequence">1</field>
-        <field name="name">IVA Devoluciones Ventas 16% 2016</field>
-        <field name="amount">16</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
-        <field name="tax_group_id" ref="tax_group_iva_16"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="l10n_co_tax_5" model="account.tax.template">
@@ -154,86 +121,6 @@
             (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
-    <record id="l10n_co_tax_8" model="account.tax.template">
-        <field name="sequence">0</field>
-        <field name="name">IVA Ventas 19%</field>
-        <field name="amount">19</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
-        <field name="tax_group_id" ref="tax_group_iva_19"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408050505'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408051005'),
-            }),
-        ]"/>
-    </record>
-    <record id="l10n_co_tax_9" model="account.tax.template">
-        <field name="sequence">1</field>
-        <field name="name">IVA Ventas 5%</field>
-        <field name="amount">5</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
-        <field name="tax_group_id" ref="tax_group_iva_5"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408050510'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_2408051010'),
-            }),
-        ]"/>
-    </record>
-    <record id="l10n_co_tax_10" model="account.tax.template">
-        <field name="sequence">1</field>
-        <field name="name">IVA Excento</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
-        <field name="tax_group_id" ref="tax_group_iva_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="l10n_co_tax_11" model="account.tax.template">
-        <field name="sequence">1</field>
-        <field name="name">IVA Excluido</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
-        <field name="tax_group_id" ref="tax_group_iva_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
     <record id="l10n_co_tax_12" model="account.tax.template">
         <field name="sequence">1</field>
         <field name="name">RteIVA 15% sobre el 19% IVA</field>
@@ -244,16 +131,13 @@
         <field name="tax_group_id" ref="tax_group_r_iva_285"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_236705'),
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236705'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -267,16 +151,13 @@
         <field name="tax_group_id" ref="tax_group_r_iva_075"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_236705'),
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236705'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -292,14 +173,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_24082005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_24082005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -315,14 +196,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_24082005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_24082005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -336,16 +217,13 @@
         <field name="tax_group_id" ref="tax_group_r_ren_01"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654025'),
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654025'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -359,16 +237,13 @@
         <field name="tax_group_id" ref="tax_group_r_ren_05"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654020'),
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654020'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -384,14 +259,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -407,14 +282,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -430,14 +305,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23655005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23655005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -453,14 +328,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654030'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654030'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -476,14 +351,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654040'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654040'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -499,14 +374,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652505'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652505'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -522,14 +397,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652515'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652515'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -545,14 +420,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652510'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652510'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -568,14 +443,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652535'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652535'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -591,14 +466,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23651515'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23651515'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -614,14 +489,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652550'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652550'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -637,14 +512,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23653005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23653005'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -660,14 +535,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23653010'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23653010'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -683,14 +558,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23653510'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23653510'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -706,14 +581,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23651505'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23651505'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -729,14 +604,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23651520'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23651520'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -752,14 +627,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654035'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654035'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -775,14 +650,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654010'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654010'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -798,14 +673,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652010'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652010'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -821,14 +696,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654015'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23654015'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -844,14 +719,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652520'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652520'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -867,14 +742,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652530'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652530'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -890,14 +765,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23651510'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23651510'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -913,14 +788,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652540'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652540'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -936,14 +811,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652545'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_23652545'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -976,14 +851,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -999,14 +874,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -1022,14 +897,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -1045,14 +920,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -1068,14 +943,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_236805'),
+                'account_id': ref('co_puc_135505'),
             }),
         ]"/>
     </record>
@@ -1119,6 +994,104 @@
         <field name="tax_group_id" ref="tax_group_iva_5"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('l10n_co_tax_0'),ref('l10n_co_tax_13')])]"/>
     </record>
+    <!-- SALES TAXES -->
+    <record id="l10n_co_tax_8" model="account.tax.template">
+        <field name="sequence">0</field>
+        <field name="name">IVA Ventas 19%</field>
+        <field name="amount">19</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
+        <field name="tax_group_id" ref="tax_group_iva_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('co_puc_240805'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('co_puc_240805'),
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_co_tax_9" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="name">IVA Ventas 5%</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('co_puc_240805'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('co_puc_240805'),
+            }),
+        ]"/>
+    </record>
+    <record id="l10n_co_tax_4" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="name">IVA Devoluciones Ventas 16% 2016</field>
+        <field name="amount">16</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
+        <field name="tax_group_id" ref="tax_group_iva_16"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="l10n_co_tax_10" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="name">IVA Excento</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
+    <record id="l10n_co_tax_11" model="account.tax.template">
+        <field name="sequence">1</field>
+        <field name="name">IVA Excluido</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_co_chart_template_generic"/>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
+        ]"/>
+    </record>
     <record id="l10n_co_tax_53" model="account.tax.template">
         <field name="sequence">1</field>
         <field name="name">RteFte -2.50% Ventas</field>
@@ -1131,14 +1104,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135515'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135515'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
     </record>
@@ -1154,14 +1127,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135515'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135515'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
     </record>
@@ -1177,14 +1150,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135517'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135517'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
     </record>
@@ -1200,14 +1173,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135517'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135517'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
     </record>
@@ -1223,14 +1196,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135518'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135518'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
     </record>
@@ -1246,14 +1219,14 @@
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135518'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {'repartition_type': 'base'}),
             (0,0, {
                 'repartition_type': 'tax',
-                'account_id': ref('co_puc_135518'),
+                'account_id': ref('co_puc_240805'),
             }),
         ]"/>
     </record>

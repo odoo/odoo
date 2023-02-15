@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="web.neutralize_banner"  name="Neutralize Banner" inherit_id="web.layout" active="False">
+        <xpath expr="//body" position="inside">
+            <div>
+                <span id="oe_neutralize_banner" t-attf-style="
+                        text-align: center;
+                        color: #FFFFFF;
+                        background-color: #D0442C;
+                        position: relative;
+                        display: block;
+                        font-size: 16px;
+                        {{ neutralize_banner_style or '' }}">
+                    <t t-out="neutralize_banner_text">This database is neutralized.</t>
+                </span>
+            </div>
+        </xpath>
+    </template>
+</odoo>

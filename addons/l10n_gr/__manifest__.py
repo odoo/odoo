@@ -5,7 +5,7 @@
 
 {
     'name': 'Greece - Accounting',
-    'author': 'P. Christeas, OpenERP SA.',
+    'author': 'P. Christeas, Odoo S.A.',
     'website': 'http://openerp.hellug.gr/',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

@@ -49,13 +49,16 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
 }
 
 .bootstrap-datetimepicker-widget .datepicker table {
+    --datepicker-color: #{map-get($grays, '900')};
+    --datepicker__thead-bg: #{map-get($grays, '100')};
+
     th, td {
         border-radius: 0;
         border-bottom-width: $border-width;
         width: percentage(1/8);
         height: 30px;
         line-height: 30px;
-        color: map-get($grays, '900');
+        color: var(--datepicker-color);
 
         &.prev, &.next, &.old, &.new {
             @include o-hover-opacity(.5);
@@ -72,7 +75,7 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
     }
 
     thead tr:nth-child(2) th, td.cw {
-        background-color: map-get($grays, '100');
+        background-color: var(--datepicker__thead-bg);
         font-size: $font-size-sm;
         font-weight: $font-weight-bold;
         color: $o-main-text-color;
@@ -102,8 +105,8 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
             margin: 0;
             border-radius: 0;
             color: $o-main-text-color;
-            border-top: 1px solid $border-color;
-            box-shadow: 0 1px 0 $border-color; // overlaps with main box border
+            border-top: 1px solid var(--datepicker-border-color, #{$border-color});
+            box-shadow: 0 1px 0 var(--datepicker-border-color, #{$border-color}); // overlaps with main box border
 
             &.primary {
                 color: $o-brand-primary;

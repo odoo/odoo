@@ -60,7 +60,7 @@
                 },
                 "A20": {
                     "style": 2,
-                    "content": "Location",
+                    "content": "=_t(\"Location\")",
                     "border": 2
                 },
                 "A21": {
@@ -162,7 +162,7 @@
                 },
                 "B20": {
                     "style": 6,
-                    "content": "Reserved",
+                    "content": "=_t(\"Reserved\")",
                     "border": 2
                 },
                 "B21": {
@@ -216,7 +216,7 @@
                 },
                 "B33": {
                     "style": 6,
-                    "content": "Reserved",
+                    "content": "=_t(\"Reserved\")",
                     "border": 2
                 },
                 "B34": {
@@ -273,7 +273,7 @@
                 },
                 "C20": {
                     "style": 6,
-                    "content": "On Hand",
+                    "content": "=_t(\"On Hand\")",
                     "border": 2
                 },
                 "C21": {
@@ -327,7 +327,7 @@
                 },
                 "C33": {
                     "style": 6,
-                    "content": "On Hand",
+                    "content": "=_t(\"On Hand\")",
                     "border": 2
                 },
                 "C34": {
@@ -389,7 +389,7 @@
                 },
                 "E20": {
                     "style": 2,
-                    "content": "Product",
+                    "content": "=_t(\"Product\")",
                     "border": 2
                 },
                 "E21": {
@@ -442,7 +442,7 @@
                 },
                 "F20": {
                     "style": 6,
-                    "content": "Reserved",
+                    "content": "=_t(\"Reserved\")",
                     "border": 2
                 },
                 "F21": {
@@ -500,7 +500,7 @@
                 },
                 "G20": {
                     "style": 6,
-                    "content": "On Hand",
+                    "content": "=_t(\"On Hand\")",
                     "border": 2
                 },
                 "G21": {
@@ -598,7 +598,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "d84bdd18-3c66-4153-ae2e-7f4ec1672cfb",
                         "background": "#FFFFFF",
                         "legendPosition": "right",
                         "metaData": {
@@ -651,18 +650,18 @@
             "cells": {
                 "A1": {
                     "style": 2,
-                    "content": "KPI"
+                    "content": "=_t(\"KPI\")"
                 },
                 "A2": {
-                    "content": "Total inventory value"
+                    "content": "=_t(\"Total inventory value\")"
                 },
                 "B1": {
                     "style": 2,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "B2": {
                     "style": 7,
-                    "content": "=ODOO.PIVOT(1,\"value\")"
+                    "content": "=FORMAT.LARGE.NUMBER(ODOO.PIVOT(1,\"value\"))"
                 }
             },
             "conditionalFormats": [],
@@ -717,9 +716,10 @@
             ]
         }
     },
-    "revisionId": "START_REVISION",
+    "revisionId": "b36049b5-b8cf-4375-9c14-6c99017ea26c",
     "chartOdooMenusReferences": {
-        "d84bdd18-3c66-4153-ae2e-7f4ec1672cfb": "stock.menu_stock_root"
+        "d84bdd18-3c66-4153-ae2e-7f4ec1672cfb": "stock.menu_stock_root",
+        "09d4da42-d66e-47b4-bc71-c6cfab7be7b9": "stock_account.menu_valuation"
     },
     "odooVersion": 4,
     "lists": {},
@@ -775,10 +775,7 @@
                     []
                 ],
                 "measure": "quantity",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         },
         "3": {
@@ -822,10 +819,7 @@
                     []
                 ],
                 "measure": "quantity",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         },
         "4": {
@@ -863,10 +857,7 @@
                     []
                 ],
                 "measure": "quantity",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         }
     },
@@ -882,6 +873,10 @@
             "rangeType": "year",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
+                "1": {
+                    "field": "stock_move_id.location_dest_id",
+                    "type": "many2one"
+                },
                 "2": {
                     "field": "location_id",
                     "type": "many2one"
@@ -948,6 +943,10 @@
             "rangeType": "year",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
+                "1": {
+                    "field": "stock_move_id.lot_ids",
+                    "type": "many2many"
+                },
                 "2": {
                     "field": "lot_id",
                     "type": "many2one"

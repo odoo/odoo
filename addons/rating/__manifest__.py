@@ -31,7 +31,7 @@ This module allows a customer to give rating.
             'rating/static/src/scss/rating_templates.scss',
         ],
         'web.tests_assets': [
-            'rating/static/tests/helpers/*.js',
+            'rating/static/tests/helpers/**/*.js',
         ],
     },
     'license': 'LGPL-3',

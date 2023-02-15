@@ -116,16 +116,6 @@
             <field name="accessory_product_ids" eval="[(6, 0, [ref('product.product_product_7')])]"/>
         </record>
 
-        <record id="item1" model="product.pricelist.item">
-            <field name="base">list_price</field>
-            <field name="applied_on">1_product</field>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
-            <field name="price_discount">20</field>
-            <field name="min_quantity">2</field>
-            <field name="compute_price">formula</field>
-        </record>
-
     <!-- product.public.category -->
 
         <record id="public_category_desks" model="product.public.category">
@@ -268,16 +258,15 @@
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_lamps')])]"/>
         </record>
 
-        <record model="product.pricelist" id="product.list0">
-            <field name="selectable" eval="True" />
-            <field name="sequence">3</field>
-            <field name="currency_id" ref="base.USD"/>
-        </record>
-
         <record id="benelux" model="res.country.group">
             <field name="name">BeNeLux</field>
             <field name="country_ids" eval="[(6,0,[
                 ref('base.be'),ref('base.lu'),ref('base.nl')])]"/>
+        </record>
+
+        <!-- Since we are adding pricelists, we activate the feature -->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('product.group_product_pricelist'))]"/>
         </record>
 
         <record id="list_christmas" model="product.pricelist">
@@ -325,7 +314,6 @@
         </record>
 
         <record id="item_us" model="product.pricelist.item">
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="compute_price">formula</field>
             <field name="base">list_price</field>
         </record>
@@ -337,7 +325,6 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
@@ -358,7 +345,6 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
@@ -379,7 +365,6 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor2'))]"/>
@@ -401,7 +386,6 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
@@ -422,7 +406,6 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
@@ -443,7 +426,6 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
@@ -465,7 +447,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="state">sale</field>
@@ -486,7 +467,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
             <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor1'))]"/>
@@ -508,7 +488,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
@@ -538,7 +517,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
             <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor5'))]"/>
@@ -560,7 +538,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
@@ -581,7 +558,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
             <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -604,7 +580,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
@@ -624,7 +599,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1)"/>
             <field name="state">sale</field>
@@ -646,7 +620,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=1, days=2)"/>
         </record>
@@ -668,7 +641,6 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="website_id" ref="website.default_website"/>
-            <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()-relativedelta(months=2)"/>
         </record>

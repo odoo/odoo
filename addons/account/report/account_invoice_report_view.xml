@@ -128,17 +128,6 @@
         </field>
     </record>
 
-    <record id="view_account_invoice_report_search_analytic_accounting" model="ir.ui.view">
-        <field name="name">account.invoice.report.search_analytic_accounting</field>
-        <field name="model">account.invoice.report</field>
-        <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
-        <field name="arch" type="xml">
-            <filter name="status" position="after">
-                <filter string="Analytic Account" name="analytic_account_id" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
-            </filter>
-        </field>
-    </record>
-
     <record id="action_account_invoice_report_all_supp" model="ir.actions.act_window">
         <field name="name">Invoices Analysis</field>
         <field name="res_model">account.invoice.report</field>

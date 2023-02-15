@@ -140,7 +140,7 @@ class User(models.Model):
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
 
-    create_employee = fields.Boolean(store=False, default=True, copy=False, string="Technical field, whether to create an employee")
+    create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")
 
     can_edit = fields.Boolean(compute='_compute_can_edit')
@@ -222,6 +222,9 @@ class User(models.Model):
         """
         return ['name', 'email', 'image_1920', 'tz']
 
+    def _get_personal_info_partner_ids_to_notify(self):
+        return self.env.ref('hr.group_hr_manager').users.filtered(lambda u: u.company_id == self.env.company).partner_id.ids
+
     def write(self, vals):
         """
         Synchronize user and its related employee
@@ -238,6 +241,14 @@ class User(models.Model):
             # Raise meaningful error message
             raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other information."))
 
+        employee_domain = [('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)]
+        if hr_fields:
+            employees = self.env['hr.employee'].sudo().search(employee_domain)
+            for employee in employees:
+                employee.message_notify(
+                    body=_('Personal information update.'),
+                    partner_ids=self._get_personal_info_partner_ids_to_notify(),
+                )
         result = super(User, self).write(vals)
 
         employee_values = {}
@@ -248,14 +259,16 @@ class User(models.Model):
             if 'email' in employee_values:
                 employee_values['work_email'] = employee_values.pop('email')
             if 'image_1920' in vals:
-                without_image = self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids), ('image_1920', '=', False)])
-                with_image = self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids), ('image_1920', '!=', False)])
+                without_image = self.env['hr.employee'].sudo().search(employee_domain + [('image_1920', '=', False)])
+                with_image = self.env['hr.employee'].sudo().search(employee_domain + [('image_1920', '!=', False)])
                 without_image.write(employee_values)
                 if not can_edit_self:
                     employee_values.pop('image_1920')
                 with_image.write(employee_values)
             else:
-                self.env['hr.employee'].sudo().search([('user_id', 'in', self.ids)]).write(employee_values)
+                employees = self.env['hr.employee'].sudo().search(employee_domain)
+                if employees:
+                    employees.write(employee_values)
         return result
 
     @api.model

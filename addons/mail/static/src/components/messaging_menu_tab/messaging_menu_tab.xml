@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="mail.MessagingMenuTab" owl="1">
-        <button class="o_MessagingMenuTab o-desktop btn btn-link" t-att-class="{ 'o-active fw-bolder': messagingMenu.activeTabId === props.tabId, 'text-500': messagingMenu.activeTabId !== props.tabId }" t-on-click="messagingMenu.onClickDesktopTabButton" type="button" role="tab" t-att-data-tab-id="props.tabId" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="props.tabId === 'all'">All</t>
-            <t t-elif="props.tabId === 'chat'">Chat</t>
-            <t t-elif="props.tabId === 'channel'">Channels</t>
-        </button>
+    <t t-name="mail.MessagingMenuTabView" owl="1">
+        <button class="o_MessagingMenuTabView o-desktop btn btn-link" t-att-class="{ 'o-active fw-bolder': isActive, 'text-dark': !isActive }" t-on-click="onClick" type="button" role="tab" t-out="name" t-att-data-tab-id="id" t-attf-class="{{ className }}" t-ref="root"/>
     </t>
 
 </templates>

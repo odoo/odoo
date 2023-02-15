@@ -1,52 +1,38 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
+import { many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'LinkPreviewListView',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {LinkPreviewCardView[]}
-         */
-        _computeLinkPreviewAsCardViews() {
-            return this.messageViewOwner.message.linkPreviews.filter(linkPreview => linkPreview.isCard).map(linkPreview => ({ linkPreview }));
-        },
-        /**
-         * @private
-         * @returns {LinkPreviewImageView[]}
-         */
-        _computeLinkPreviewAsImageViews() {
-            return this.messageViewOwner.message.linkPreviews.filter(linkPreview => linkPreview.isImage).map(linkPreview => ({ linkPreview }));
-        },
-        /**
-         * @private
-         * @returns {LinkPreviewVideoView[]}
-         */
-        _computeLinkPreviewAsVideoViews() {
-            return this.messageViewOwner.message.linkPreviews.filter(linkPreview => linkPreview.isVideo).map(linkPreview => ({ linkPreview }));
-        },
-    },
+Model({
+    name: "LinkPreviewListView",
+    template: "mail.LinkPreviewListView",
     fields: {
         /**
          * Determines if we are in the ChatWindow view AND if the message is left aligned
          */
-        linkPreviewAsCardViews: many('LinkPreviewCardView', {
-            compute: '_computeLinkPreviewAsCardViews',
-            inverse: 'linkPreviewListViewOwner',
+        linkPreviewAsCardViews: many("LinkPreviewCardView", {
+            inverse: "linkPreviewListViewOwner",
+            compute() {
+                return this.messageViewOwner.message.linkPreviews
+                    .filter((linkPreview) => linkPreview.isCard)
+                    .map((linkPreview) => ({ linkPreview }));
+            },
         }),
-        linkPreviewAsImageViews: many('LinkPreviewImageView', {
-            compute: '_computeLinkPreviewAsImageViews',
-            inverse: 'linkPreviewListViewOwner',
+        linkPreviewAsImageViews: many("LinkPreviewImageView", {
+            inverse: "linkPreviewListViewOwner",
+            compute() {
+                return this.messageViewOwner.message.linkPreviews
+                    .filter((linkPreview) => linkPreview.isImage)
+                    .map((linkPreview) => ({ linkPreview }));
+            },
         }),
-        linkPreviewAsVideoViews: many('LinkPreviewVideoView', {
-            compute: '_computeLinkPreviewAsVideoViews',
-            inverse: 'linkPreviewListViewOwner',
+        linkPreviewAsVideoViews: many("LinkPreviewVideoView", {
+            inverse: "linkPreviewListViewOwner",
+            compute() {
+                return this.messageViewOwner.message.linkPreviews
+                    .filter((linkPreview) => linkPreview.isVideo)
+                    .map((linkPreview) => ({ linkPreview }));
+            },
         }),
-        messageViewOwner: one('MessageView', {
-            identifying: true,
-            inverse: 'linkPreviewListView',
-        }),
+        messageViewOwner: one("MessageView", { identifying: true, inverse: "linkPreviewListView" }),
     },
 });

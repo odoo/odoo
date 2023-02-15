@@ -1,15 +1,20 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, link, unlink } from '@mail/model/model_field_command';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, clear, link, many, one, Model, unlink } from "@mail/model";
+import { cleanSearchTerm } from "@mail/utils/utils";
 
-import { sprintf } from '@web/core/utils/strings';
+import { sprintf } from "@web/core/utils/strings";
 
-registerModel({
-    name: 'ChannelInvitationForm',
-    identifyingMode: 'xor',
+Model({
+    name: "ChannelInvitationForm",
+    template: "mail.ChannelInvitationForm",
+    componentSetup() {
+        useComponentToModel({ fieldName: "component" });
+        useUpdateToModel({ methodName: "onComponentUpdate" });
+    },
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * Handles click on the "copy" button.
@@ -19,8 +24,8 @@ registerModel({
         async onClickCopy(ev) {
             await navigator.clipboard.writeText(this.thread.invitationLink);
             this.messaging.notify({
-                message: this.env._t('Link copied!'),
-                type: 'success',
+                message: this.env._t("Link copied!"),
+                type: "success",
             });
         },
         /**
@@ -29,13 +34,19 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickInvite(ev) {
-            if (this.thread.channel.channel_type === 'chat') {
-                const partners_to = [...new Set([
-                    this.messaging.currentPartner.id,
-                    ...this.thread.channel.channelMembers.filter(member => member.persona && member.persona.partner).map(member => member.persona.partner.id),
-                    ...this.selectedPartners.map(partner => partner.id),
-                ])];
-                const channel = await this.messaging.models['Thread'].createGroupChat({ partners_to });
+            if (this.thread.channel.channel_type === "chat") {
+                const partners_to = [
+                    ...new Set([
+                        this.messaging.currentPartner.id,
+                        ...this.thread.channel.channelMembers
+                            .filter((member) => member.persona && member.persona.partner)
+                            .map((member) => member.persona.partner.id),
+                        ...this.selectedPartners.map((partner) => partner.id),
+                    ]),
+                ];
+                const channel = await this.messaging.models["Thread"].createGroupChat({
+                    partners_to,
+                });
                 if (this.thread.rtc) {
                     /**
                      * if we were in a RTC call on the current thread, we move to the new group chat.
@@ -44,22 +55,22 @@ registerModel({
                      */
                     await channel.toggleCall({
                         startWithVideo: !!this.thread.rtc.videoTrack,
-                        videoType: this.thread.rtc.sendUserVideo ? 'user-video' : 'display',
+                        videoType: this.thread.rtc.sendUserVideo ? "user-video" : "display",
                     });
                 }
                 if (channel.exists()) {
                     channel.open();
                 }
             } else {
-                await this.messaging.rpc(({
-                    model: 'mail.channel',
-                    method: 'add_members',
+                await this.messaging.rpc({
+                    model: "mail.channel",
+                    method: "add_members",
                     args: [[this.thread.id]],
                     kwargs: {
-                        partner_ids: this.selectedPartners.map(partner => partner.id),
+                        partner_ids: this.selectedPartners.map((partner) => partner.id),
                         invite_to_rtc_call: !!this.thread.rtc,
                     },
-                }));
+                });
             }
             if (this.exists()) {
                 this.delete();
@@ -87,7 +98,10 @@ registerModel({
         onComponentUpdate() {
             if (this.doFocusOnSearchInput && this.searchInputRef.el) {
                 this.searchInputRef.el.focus();
-                this.searchInputRef.el.setSelectionRange(this.searchTerm.length, this.searchTerm.length);
+                this.searchInputRef.el.setSelectionRange(
+                    this.searchTerm.length,
+                    this.searchTerm.length
+                );
                 this.update({ doFocusOnSearchInput: clear() });
             }
         },
@@ -130,11 +144,14 @@ registerModel({
                 hasSearchRpcInProgress: true,
             });
             try {
-                const channelId = (this.thread && this.thread.model === 'mail.channel') ? this.thread.id : undefined;
+                const channelId =
+                    this.thread && this.thread.model === "mail.channel"
+                        ? this.thread.id
+                        : undefined;
                 const { count, partners: partnersData } = await this.messaging.rpc(
                     {
-                        model: 'res.partner',
-                        method: 'search_for_channel_invite',
+                        model: "res.partner",
+                        method: "search_for_channel_invite",
                         kwargs: {
                             channel_id: channelId,
                             search_term: cleanSearchTerm(this.searchTerm),
@@ -158,84 +175,22 @@ registerModel({
                 }
             }
         },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeAccessRestrictedToGroupText() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (!this.thread.authorizedGroupFullName) {
-                return clear();
-            }
-            return sprintf(
-                this.env._t('Access restricted to group "%(groupFullName)s"'),
-                { 'groupFullName': this.thread.authorizedGroupFullName }
-            );
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeInviteButtonText() {
-            if (!this.thread || !this.thread.channel) {
-                return clear();
-            }
-            switch (this.thread.channel.channel_type) {
-                case 'chat':
-                    return this.env._t("Create group chat");
-                case 'group':
-                    return this.env._t("Invite to group chat");
-            }
-            return this.env._t("Invite to Channel");
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeSelectablePartnerViews() {
-            if (this.selectablePartners.length === 0) {
-                return clear();
-            }
-            return this.selectablePartners.map(partner => ({ partner }));
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeSelectedPartnerViews() {
-            if (this.selectedPartners.length === 0) {
-                return clear();
-            }
-            return this.selectedPartners.map(partner => ({ partner }));
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            if (
-                this.popoverViewOwner &&
-                this.popoverViewOwner.threadViewTopbarOwnerAsInvite &&
-                this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread
-            ) {
-                return this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread;
-            }
-            if (this.chatWindow && this.chatWindow.thread) {
-                return this.chatWindow.thread;
-            }
-            return clear();
-        },
     },
     fields: {
         accessRestrictedToGroupText: attr({
-            compute: '_computeAccessRestrictedToGroupText',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (!this.thread.authorizedGroupFullName) {
+                    return clear();
+                }
+                return sprintf(this.env._t('Access restricted to group "%(groupFullName)s"'), {
+                    groupFullName: this.thread.authorizedGroupFullName,
+                });
+            },
         }),
-        chatWindow: one('ChatWindow', {
-            identifying: true,
-            inverse: 'channelInvitationForm',
-        }),
+        chatWindow: one("ChatWindow", { identifying: true, inverse: "channelInvitationForm" }),
         /**
          * States the OWL component of this channel invitation form.
          * Useful to be able to close it with popover trigger, or to know when
@@ -249,69 +204,94 @@ registerModel({
         /**
          * States whether there is a pending search RPC.
          */
-        hasPendingSearchRpc: attr({
-            default: false,
-        }),
+        hasPendingSearchRpc: attr({ default: false }),
         /**
          * States whether there is search RPC in progress.
          */
-        hasSearchRpcInProgress: attr({
-            default: false,
-        }),
+        hasSearchRpcInProgress: attr({ default: false }),
         /**
          * Determines the text of the invite button.
          */
         inviteButtonText: attr({
-            compute: '_computeInviteButtonText',
+            compute() {
+                if (!this.thread || !this.thread.channel) {
+                    return clear();
+                }
+                switch (this.thread.channel.channel_type) {
+                    case "chat":
+                        return this.env._t("Create group chat");
+                    case "group":
+                        return this.env._t("Invite to group chat");
+                }
+                return this.env._t("Invite to Channel");
+            },
         }),
         /**
          * If set, this channel invitation form is content of related popover view.
          */
-        popoverViewOwner: one('PopoverView', {
+        popoverViewOwner: one("PopoverView", {
             identifying: true,
-            inverse: 'channelInvitationForm',
+            inverse: "channelInvitationForm",
             isCausal: true,
         }),
         /**
          * States the OWL ref of the "search" input of this channel invitation
          * form. Useful to be able to focus it.
          */
-        searchInputRef: attr(),
+        searchInputRef: attr({ ref: "searchInput" }),
         /**
          * States the number of results of the last search.
          */
-        searchResultCount: attr({
-            default: 0,
-        }),
+        searchResultCount: attr({ default: 0 }),
         /**
          * Determines the search term used to filter this list.
          */
-        searchTerm: attr({
-            default: "",
-        }),
+        searchTerm: attr({ default: "" }),
         /**
          * States all partners that are potential choices according to this
          * search term.
          */
-        selectablePartners: many('Partner'),
-        selectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
-            compute: '_computeSelectablePartnerViews',
-            inverse: 'channelInvitationFormOwner',
+        selectablePartners: many("Partner"),
+        selectablePartnerViews: many("ChannelInvitationFormSelectablePartnerView", {
+            inverse: "channelInvitationFormOwner",
+            compute() {
+                if (this.selectablePartners.length === 0) {
+                    return clear();
+                }
+                return this.selectablePartners.map((partner) => ({ partner }));
+            },
         }),
         /**
          * Determines all partners that are currently selected.
          */
-        selectedPartners: many('Partner'),
-        selectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
-            compute: '_computeSelectedPartnerViews',
-            inverse: 'channelInvitationFormOwner',
+        selectedPartners: many("Partner"),
+        selectedPartnerViews: many("ChannelInvitationFormSelectedPartnerView", {
+            inverse: "channelInvitationFormOwner",
+            compute() {
+                if (this.selectedPartners.length === 0) {
+                    return clear();
+                }
+                return this.selectedPartners.map((partner) => ({ partner }));
+            },
         }),
         /**
          * States the thread on which this list operates (if any).
          */
-        thread: one('Thread', {
-            compute: '_computeThread',
+        thread: one("Thread", {
             required: true,
+            compute() {
+                if (
+                    this.popoverViewOwner &&
+                    this.popoverViewOwner.threadViewTopbarOwnerAsInvite &&
+                    this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread
+                ) {
+                    return this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread;
+                }
+                if (this.chatWindow && this.chatWindow.thread) {
+                    return this.chatWindow.thread;
+                }
+                return clear();
+            },
         }),
     },
 });

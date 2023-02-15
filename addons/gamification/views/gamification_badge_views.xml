@@ -63,7 +63,7 @@
                         </h1>
                     </div>
                     <group>
-                        <field name="description" nolabel="1" placeholder="Badge Description"/>
+                        <field name="description" nolabel="1" placeholder="Badge Description" colspan="2"/>
                     </group>
                     <group string="Granting">
                         <div class="oe_grey" colspan="2">
@@ -89,8 +89,8 @@
                         </group>
                     </group>
                     <group string="Rewards for challenges">
-                        <field name="challenge_ids" mode="kanban" widget="many2many" nolabel="1" context="{'default_reward_id': active_id}" />
-                        <field name="level"/>
+                        <field name="challenge_ids" mode="kanban" widget="many2many" nolabel="1" context="{'default_reward_id': active_id}" colspan="2"/>
+                        <field name="level" colspan="2"/>
                     </group>
                     <group id="badge_statistics" string="Statistics">
                         <group>

@@ -14,8 +14,6 @@ class TestSaleCouponCommon(TestSaleProductAttributeValueCommon):
 
         # set currency to not rely on demo data and avoid possible race condition
         cls.currency_ratio = 1.0
-        pricelist = cls.env.ref('product.list0')
-        pricelist.currency_id = cls._setup_currency(cls.currency_ratio)
 
         # Set all the existing programs to active=False to avoid interference
         cls.env['loyalty.program'].search([]).write({'active': False})

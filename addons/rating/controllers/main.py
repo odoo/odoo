@@ -46,20 +46,20 @@ class Rating(http.Controller):
             'rate': rate,
         })
 
-    @http.route(['/rate/<string:token>/submit_feedback'], type="http", auth="public", methods=['post'], website=True)
-    def action_submit_rating(self, token, rate, **kwargs):
-        rate = int(rate)
-        if rate not in (1, 3, 5):
-            raise ValueError(_("Incorrect rating: should be 1, 3 or 5 (received %d)"), rate)
+    @http.route(['/rate/<string:token>/submit_feedback'], type="http", auth="public", methods=['post', 'get'], website=True)
+    def action_submit_rating(self, token, rate=0, **kwargs):
 
         rating, record_sudo = self._get_rating_and_record(token)
-
-        record_sudo.rating_apply(
-             rate,
-             rating=rating,
-             feedback=kwargs.get('feedback'),
-             subtype_xmlid=None,  # force default subtype choice
-        )
+        if request.httprequest.method == "POST":
+            rate = int(rate)
+            if rate not in (1, 3, 5):
+                raise ValueError(_("Incorrect rating: should be 1, 3 or 5 (received %d)"), rate)
+            record_sudo.rating_apply(
+                rate,
+                rating=rating,
+                feedback=kwargs.get('feedback'),
+                subtype_xmlid=None,  # force default subtype choice
+            )
 
         lang = rating.partner_id.lang or get_lang(request.env).code
         return request.env['ir.ui.view'].with_context(lang=lang)._render_template('rating.rating_external_page_view', {

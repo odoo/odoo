@@ -1,13 +1,11 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
-import { clear } from "@mail/model/model_field_command";
+import { attr, clear, Model } from "@mail/model";
 
-import { url } from '@web/core/utils/urls';
+import { url } from "@web/core/utils/urls";
 
-registerModel({
-    name: 'UserNotificationManager',
+Model({
+    name: "UserNotificationManager",
     recordMethods: {
         /**
          * Send a notification, preferably a native one. If native
@@ -27,7 +25,7 @@ registerModel({
                 this._sendOdooNotification(message, { title, type });
                 return;
             }
-            if (!this.messaging.env.services['multi_tab'].isOnMainTab()) {
+            if (!this.messaging.env.services["multi_tab"].isOnMainTab()) {
                 return;
             }
             try {
@@ -36,39 +34,12 @@ registerModel({
                 // Notification without Serviceworker in Chrome Android doesn't works anymore
                 // So we fallback to the notification service in this case
                 // https://bugs.chromium.org/p/chromium/issues/detail?id=481856
-                if (error.message.includes('ServiceWorkerRegistration')) {
+                if (error.message.includes("ServiceWorkerRegistration")) {
                     this._sendOdooNotification(message, { title, type });
                 } else {
                     throw error;
                 }
             }
-        },
-        /**
-         * @private
-         * @returns {HTMLAudioElement}
-         */
-        _computeAudio() {
-            if (!this.canPlayAudio) {
-                return clear();
-            }
-            const audioElement = new Audio();
-            audioElement.src = audioElement.canPlayType("audio/ogg; codecs=vorbis")
-                ? url('/mail/static/src/audio/ting.ogg')
-                : url('mail/static/src/audio/ting.mp3');
-            return audioElement;
-        },
-        /**
-         * Determines whether or not sending native notification is
-         * allowed.
-         *
-         * @private
-         * @returns {boolean}
-         */
-        _computeCanSendNativeNotification() {
-            return Boolean(
-                this.messaging.browser.Notification &&
-                this.messaging.browser.Notification.permission === 'granted'
-            );
         },
         /**
          * Method to be called when the users click on a notification.
@@ -98,7 +69,7 @@ registerModel({
                     icon: this.icon,
                 }
             );
-            notification.addEventListener('click', this._onClickNotification);
+            notification.addEventListener("click", this._onClickNotification);
         },
         /**
          * Send a notification through the notification service.
@@ -107,8 +78,8 @@ registerModel({
          * @param {Object} options
          */
         async _sendOdooNotification(message, options) {
-            this.messaging.env.services['notification'].add(message, options);
-            if (this.canPlayAudio && this.messaging.env.services['multi_tab'].isOnMainTab()) {
+            this.messaging.env.services["notification"].add(message, options);
+            if (this.canPlayAudio && this.messaging.env.services["multi_tab"].isOnMainTab()) {
                 try {
                     await this.audio.play();
                 } catch {
@@ -124,19 +95,33 @@ registerModel({
          * sent.
          */
         audio: attr({
-            compute: '_computeAudio',
+            compute() {
+                if (!this.canPlayAudio) {
+                    return clear();
+                }
+                const audioElement = new Audio();
+                audioElement.src = audioElement.canPlayType("audio/ogg; codecs=vorbis")
+                    ? url("/mail/static/src/audio/ting.ogg")
+                    : url("/mail/static/src/audio/ting.mp3");
+                return audioElement;
+            },
         }),
-        canPlayAudio: attr({
-            default: typeof(Audio) !== 'undefined',
-        }),
+        canPlayAudio: attr({ default: typeof Audio !== "undefined" }),
         canSendNativeNotification: attr({
-            compute: '_computeCanSendNativeNotification',
+            /**
+             * Determines whether or not sending native notification is
+             * allowed.
+             */
+            compute() {
+                return Boolean(
+                    this.messaging.browser.Notification &&
+                        this.messaging.browser.Notification.permission === "granted"
+                );
+            },
         }),
         /**
          * Icon to be displayed by the notification.
          */
-        icon: attr({
-            default: '/mail/static/src/img/odoobot_transparent.png',
-        }),
+        icon: attr({ default: "/mail/static/src/img/odoobot_transparent.png" }),
     },
 });

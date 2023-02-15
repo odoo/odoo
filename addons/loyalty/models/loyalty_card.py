@@ -32,7 +32,7 @@ class LoyaltyCard(models.Model):
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     points_display = fields.Char(compute='_compute_points_display')
 
-    code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True)
+    code = fields.Char(default=lambda self: self._generate_code(), required=True)
     expiration_date = fields.Date()
 
     use_count = fields.Integer(compute='_compute_use_count')
@@ -69,6 +69,9 @@ class LoyaltyCard(models.Model):
         self.ensure_one()
         return None
 
+    def _has_source_order(self):
+        return False
+
     def action_coupon_send(self):
         """ Open a window to compose an email, with the default template returned by `_get_default_template`
             message loaded by default
@@ -78,12 +81,10 @@ class LoyaltyCard(models.Model):
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
         ctx = dict(
             default_model='loyalty.card',
-            default_res_id=self.id,
-            default_use_template=bool(default_template),
+            default_res_ids=self.ids,
             default_template_id=default_template and default_template.id,
             default_composition_mode='comment',
             default_email_layout_xmlid='mail.mail_notification_light',
-            mark_coupon_as_sent=True,
             force_email=True,
         )
         return {

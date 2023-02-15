@@ -17,8 +17,8 @@ class AccountMove(models.Model):
         return {
             'name': self.expense_sheet_id.name,
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
+            'views': [(False, 'form')],
             'res_model': 'hr.expense.sheet',
             'res_id': self.expense_sheet_id.id
         }
@@ -28,10 +28,21 @@ class AccountMove(models.Model):
     def is_purchase_document(self, include_receipts=False):
         return bool(self.expense_sheet_id and include_receipts) or super().is_purchase_document(include_receipts)
 
+    # Expenses can be written on journal other than purchase, hence don't include them in the constraint check
+    def _check_journal_move_type(self):
+        return super(AccountMove, self.filtered(lambda x: not x.expense_sheet_id))._check_journal_move_type()
+
     def _creation_message(self):
         if self.line_ids.expense_id:
             return _("Expense entry Created")
         return super()._creation_message()
+
+    @api.depends('expense_sheet_id.payment_mode')
+    def _compute_payment_state(self):
+        company_paid = self.filtered(lambda m: m.expense_sheet_id.payment_mode == 'company_account')
+        for move in company_paid:
+            move.payment_state = move._get_invoice_in_payment_state()
+        super(AccountMove, self - company_paid)._compute_payment_state()
 
     @api.depends('expense_sheet_id')
     def _compute_needed_terms(self):

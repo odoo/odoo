@@ -4,7 +4,6 @@ import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteDialog, AddPageDialog } from "@website/components/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { csrf_token } from 'web.core';
 import { sprintf } from '@web/core/utils/strings';
 
 const { Component, xml, useState, onWillStart } = owl;
@@ -61,7 +60,6 @@ export class NewContentModal extends Component {
         this.dialogs = useService('dialog');
         this.website = useService('website');
         this.action = useService('action');
-        this.http = useService('http');
         this.isSystem = this.user.isSystem;
 
         this.newContentText = {
@@ -74,18 +72,21 @@ export class NewContentModal extends Component {
         this.state = useState({
             newContentElements: [
                 {
+                    moduleName: 'website_blog',
                     moduleXmlId: 'base.module_website_blog',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-rss"/>`,
+                    icon: xml`<i class="fa fa-newspaper-o"/>`,
                     title: this.env._t('Blog Post'),
                 },
                 {
+                    moduleName: 'website_event',
                     moduleXmlId: 'base.module_website_event',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-ticket"/>`,
                     title: this.env._t('Event'),
                 },
                 {
+                    moduleName: 'website_forum',
                     moduleXmlId: 'base.module_website_forum',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-comment"/>`,
@@ -93,24 +94,28 @@ export class NewContentModal extends Component {
                     title: this.env._t('Forum'),
                 },
                 {
+                    moduleName: 'website_hr_recruitment',
                     moduleXmlId: 'base.module_website_hr_recruitment',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-briefcase"/>`,
                     title: this.env._t('Job Position'),
                 },
                 {
+                    moduleName: 'website_sale',
                     moduleXmlId: 'base.module_website_sale',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-shopping-cart"/>`,
                     title: this.env._t('Product'),
                 },
                 {
+                    moduleName: 'website_slides',
                     moduleXmlId: 'base.module_website_slides',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa module_icon" style="background-image: url('/website/static/src/img/apps_thumbs/website_slide.svg');background-repeat: no-repeat; background-position: center;"/>`,
                     title: this.env._t('Course'),
                 },
                 {
+                    moduleName: 'website_livechat',
                     moduleXmlId: 'base.module_website_livechat',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-comments"/>`,
@@ -133,10 +138,16 @@ export class NewContentModal extends Component {
     async onWillStart() {
         this.isDesigner = await this.user.hasGroup('website.group_website_designer');
         this.canInstall = await this.user.isAdmin;
-
-        const xmlIds = this.state.newContentElements.filter(({status}) => status === MODULE_STATUS.NOT_INSTALLED).map(({moduleXmlId}) => moduleXmlId);
         if (this.canInstall) {
-            this.modulesInfo = await this.rpc('/website/get_modules_info', {xml_ids: xmlIds});
+            const moduleNames = this.state.newContentElements.filter(({status}) => status === MODULE_STATUS.NOT_INSTALLED).map(({moduleName}) => moduleName);
+            this.modulesInfo = {};
+            for (const record of await this.orm.searchRead(
+                "ir.module.module",
+                [['name', 'in', moduleNames]],
+                ["id", "name", "shortdesc"],
+            )) {
+                this.modulesInfo[record.name] = {id: record.id, name: record.shortdesc};
+            }
         }
     }
 
@@ -146,22 +157,7 @@ export class NewContentModal extends Component {
 
     createNewPage() {
         this.dialogs.add(AddPageDialog, {
-            addPage: async (name, addMenu) => {
-                const url = `/website/add/${encodeURIComponent(name)}`;
-                const data = await this.http.post(url, { 'add_menu': addMenu || '', csrf_token });
-                if (data.view_id) {
-                    this.action.doAction({
-                        'res_model': 'ir.ui.view',
-                        'res_id': data.view_id,
-                        'views': [[false, 'form']],
-                        'type': 'ir.actions.act_window',
-                        'view_mode': 'form',
-                    });
-                } else {
-                    this.website.goToWebsite({ path: data.url, edition: true });
-                }
-                this.websiteContext.showNewContentModal = false;
-            },
+            onAddPage: () => this.websiteContext.showNewContentModal = false,
         });
     }
 
@@ -174,10 +170,14 @@ export class NewContentModal extends Component {
         if (redirectUrl) {
             window.location.replace(redirectUrl);
         } else {
-            const { id, metadata: { path } } = this.website.currentWebsite;
+            const { id, metadata: { path, viewXmlid } } = this.website.currentWebsite;
+            const url = new URL(path);
+            if (viewXmlid === 'website.page_404') {
+                url.pathname = '';
+            }
             // A reload is needed after installing a new module, to instantiate
             // a NewContentModal with patches from the installed module.
-            window.location.replace(`/web#action=website.website_preview&website_id=${id}&path=${encodeURIComponent(path)}&display_new_content=true`);
+            window.location.replace(`/web#action=website.website_preview&website_id=${id}&path=${encodeURIComponent(url.toString())}&display_new_content=true`);
         }
     }
 
@@ -186,7 +186,7 @@ export class NewContentModal extends Component {
             return element.createNewContent();
         }
 
-        const {id, name} = this.modulesInfo[element.moduleXmlId];
+        const {id, name} = this.modulesInfo[element.moduleName];
         const dialogProps = {
             title: element.title,
             installationText: _.str.sprintf(this.newContentText.installNeeded, name),
@@ -221,6 +221,33 @@ export class NewContentModal extends Component {
             },
         };
         this.dialogs.add(InstallModuleDialog, dialogProps);
+    }
+
+    /**
+     * This method registers the action to perform when a new content is
+     * saved. The path must be computed once the record is saved, to
+     * perform the 'ir.act_window_close' action, which will be used when
+     * the dialog is closed to go to the correct website page.
+     */
+    async onAddContent(action, edition = false) {
+        this.action.doAction(action, {
+            onClose: (infos) => {
+                if (infos) {
+                    this.website.goToWebsite({ path: infos.path, edition: edition });
+                }
+            },
+            props: {
+                onSave: (record, params) => {
+                    if (record.resId) {
+                        const path = params.computePath();
+                        this.action.doAction({
+                            type: "ir.actions.act_window_close",
+                            infos: { path }
+                        });
+                    }
+                }
+            }
+        });
     }
 }
 NewContentModal.template = "website.NewContentModal";

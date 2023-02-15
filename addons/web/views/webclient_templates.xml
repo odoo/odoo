@@ -3,7 +3,10 @@
 
     <!-- Call this template instead of "web.assets_tests" to have the proper conditional check -->
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
-        <t t-call-assets="web.assets_tests" t-if="'tests' in debug or test_mode_enabled" defer_load="True" />
+        <t t-if="'tests' in debug or test_mode_enabled">
+            <!-- To allow all tests assets and tours to be in the same bundle, the assets_tests bundle ignores missing dependencies -->
+            <t t-call-assets="web.__assets_tests_call__" defer_load="True" />
+        </t>
     </template>
 
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
@@ -82,8 +85,9 @@
                 t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
                 class="badge text-bg-light">
                 <img alt="Odoo"
-                        src="/web/static/img/odoo_logo_tiny.png"
-                        style="height: 1em; vertical-align: baseline;"/>
+                    src="/web/static/img/odoo_logo_tiny.png"
+                    width="62" height="20"
+                    style="width: auto; height: 1em; vertical-align: baseline;"/>
             </a>
         </t>
         <t t-set="final_message">Powered by %s%s</t>
@@ -243,53 +247,11 @@
         </t>
     </template>
 
-    <template id="web.benchmark_suite">
-        <t t-call="web.layout">
-            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
-            <t t-set="title">Web Benchmarks</t>
-            <t t-set="head">
-                <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
-                <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>
-
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
-                <t t-call-assets="web.assets_common" t-css="false"/>
-                <t t-call-assets="web.assets_backend" t-css="false"/>
-
-                <t t-call="web.test_helpers"/>
-
-                <script type="text/javascript">
-                    QUnit.config.hidepassed = false;
-                </script>
-
-                <style>
-                    body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
-                        opacity: 0 !important;
-                    }
-                    #qunit-testrunner-toolbar label {
-                        font-weight: inherit;
-                        margin-bottom: inherit;
-                    }
-                    #qunit-testrunner-toolbar input[type=text] {
-                        width: inherit;
-                        display: inherit;
-                    }
-                </style>
-
-                <script type="text/javascript" src="/web/static/tests/views/list_benchmarks.js"></script>
-                <script type="text/javascript" src="/web/static/tests/views/kanban_benchmarks.js"></script>
-                <script type="text/javascript" src="/web/static/tests/views/form_benchmarks.js"></script>
-
-            </t>
-
-            <div id="qunit"/>
-            <div id="qunit-fixture"/>
-        </t>
-    </template>
-
     <template id="web.webclient_bootstrap">
         <t t-call="web.layout">
             <t t-set="head_web">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <meta name="theme-color" content="#71639e"/>
                 <script type="text/javascript">
                     odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
                     odoo.reloadMenus = () => fetch(`/web/webclient/load_menus/${odoo.__session_info__.cache_hashes.load_menus}`).then(res => res.json());
@@ -302,8 +264,14 @@
                         fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);
                     }
                 </script>
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
+                    <t t-call-assets="web.dark_mode_assets_common" t-js="false"/>
+                    <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
+                </t>
+                <t t-else="">
+                    <t t-call-assets="web.assets_common" t-js="false"/>
+                    <t t-call-assets="web.assets_backend" t-js="false"/>
+                </t>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
                 <t t-call-assets="web.assets_backend_prod_only" t-css="false"/>

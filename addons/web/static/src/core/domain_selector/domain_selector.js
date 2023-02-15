@@ -3,7 +3,7 @@
 import { Domain } from "@web/core/domain";
 import { DomainSelectorRootNode } from "./domain_selector_root_node";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class DomainSelector extends Component {
     setup() {
@@ -33,7 +33,7 @@ export class DomainSelector extends Component {
             this.traverseNode(ctx);
 
             return ctx.parent;
-        } catch (_e) {
+        } catch {
             // WOWL TODO: rethrow error when not the expected type
             return false;
         }

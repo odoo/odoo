@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -114,8 +114,6 @@ QUnit.module("Fields", (hooks) => {
             'the label should say "Add to Favorites"'
         );
 
-        // switch to edit mode
-        await click(target, ".o_form_button_edit");
         assert.containsOnce(
             target,
             ".o_field_widget .o_favorite > a i.fa.fa-star-o",
@@ -141,7 +139,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.containsOnce(
             target,
             ".o_field_widget .o_favorite > a i.fa.fa-star",
@@ -188,7 +186,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(target, ".o_list_button_save");
+        await clickSave(target);
         assert.containsOnce(
             target,
             ".o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star-o",

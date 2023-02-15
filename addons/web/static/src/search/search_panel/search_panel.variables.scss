@@ -3,3 +3,25 @@
 
 $o-search-panel-width: 200px;
 $o-search-panel-font-size: 1em;
+
+@mixin o-details-modal($top: 0, $bottom: 0) {
+    position: fixed;
+    z-index: $zindex-modal;
+    right: 0;
+    top: $top;
+    bottom: $bottom;
+    left: 0;
+}
+
+@mixin o-details-modal-header {
+    padding: 0.7rem 1.4rem;
+    height: $o-navbar-height;
+}
+
+@mixin o-details-hide-caret {
+    // Hide the caret. For details see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/summary
+    list-style-type: none;
+    &::-webkit-details-marker {
+        display: none;
+    }
+}

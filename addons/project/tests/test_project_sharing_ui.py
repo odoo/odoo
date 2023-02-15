@@ -39,7 +39,7 @@ class TestProjectSharingUi(HttpCase):
 
     def test_01_project_sharing(self):
         """ Test Project Sharing UI with an internal user """
-        self.start_tour("/web?debug=assets", 'project_sharing_tour', login="admin")
+        self.start_tour("/web", 'project_sharing_tour', login="admin")
 
     def test_02_project_sharing(self):
         """ Test project sharing ui with a portal user.

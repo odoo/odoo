@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarMobileFilterPanel" owl="1">
+        <div class="o_other_calendar_panel d-flex align-items-center" t-on-click="props.toggleSideBar">
+            <i class="fa fa-fw fa-filter me-3" />
+            <div class="o_filter me-auto d-flex overflow-auto">
+                <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
+                    <t t-if="section.filters.length gt 0">
+                        <span class="text-nowrap fw-bold text-uppercase me-1" t-esc="section.label" />
+
+                        <t t-foreach="getSortedFilters(section)" t-as="filter" t-key="filter.value">
+                            <span t-if="filter.active" class="d-flex align-items-center text-nowrap ms-1 me-2">
+                                <span t-attf-class="o_color_{{filter.colorIndex}}">⬤</span>
+                                <span class="ms-1 fw-bold text-nowrap" t-esc="filter.label" />
+                            </span>
+                        </t>
+                    </t>
+                </t>
+            </div>
+            <i t-attf-class="fa fa-fw fa-caret-{{caretDirection}} ms-2" />
+        </div>
+    </t>
+
+</templates>

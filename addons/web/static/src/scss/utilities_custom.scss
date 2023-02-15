@@ -1,0 +1,244 @@
+// Extend utilities
+
+$rounded-sizes: () !default;
+$rounded-sizes: map-merge(
+    $rounded-sizes,
+    (
+        null: $border-radius,
+        0: 0,
+        1: $border-radius-sm,
+        2: $border-radius,
+        3: $border-radius-lg,
+        circle: 50%,
+        pill: $border-radius-pill,
+    )
+);
+
+$utilities-opacity: () !default;
+$utilities-opacity: map-merge(
+    $utilities-opacity,
+    (
+        0: 0,
+        25: .25,
+        50: .5,
+        75: .75,
+        100: 1,
+        disabled: $o-opacity-disabled,
+    )
+);
+
+$utilities-sizes: () !default;
+$utilities-sizes: map-merge(
+    $utilities-sizes,
+    (
+        0: 0,
+        25: 25%,
+        50: 50%,
+        75: 75%,
+        100: 100%,
+        auto: auto,
+    )
+);
+
+$order-array: (
+    first: -1,
+    last: $grid-columns + 1,
+) !default;
+@for $i from 0 through $grid-columns {
+    $order-array: map-merge(
+        $order-array,
+        (#{$i}: $i)
+    );
+}
+
+
+$utilities: () !default;
+$utilities: map-merge(
+    $utilities,
+    (
+        "display": map-merge(
+            map-get($utilities, "display"),
+            (
+                values: join(map-get(map-get($utilities, "display"), "values"), contents),
+            ),
+        ),
+        "position": map-merge(
+            map-get($utilities, "position"),
+            (
+                responsive: true,
+            ),
+        ),
+        "opacity": map-merge(
+            map-get($utilities, "opacity"),
+            (
+                values: $utilities-opacity,
+            ),
+        ),
+        "background-color": map-merge(
+            map-get($utilities, "background-color"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "background-color"), "values"),
+                    (
+                        "view": $o-view-background-color,
+                    )
+                )
+            )
+        ),
+        "border-color":  map-merge(
+            map-get($utilities, "border-color"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "border-color"), "values"),
+                    ("transparent": transparent),
+                ),
+            ),
+        ),
+        "rounded-top": (
+            property: border-top-left-radius border-top-right-radius,
+            class: rounded-top,
+            values: $rounded-sizes,
+        ),
+        "rounded-end": (
+            property: border-top-right-radius border-bottom-right-radius,
+            class: rounded-end,
+            values: $rounded-sizes,
+        ),
+        "rounded-bottom": (
+            property: border-bottom-right-radius border-bottom-left-radius,
+            class: rounded-bottom,
+            values: $rounded-sizes,
+        ),
+        "rounded-start": (
+            property: border-bottom-left-radius border-top-left-radius,
+            class: rounded-start,
+            values: $rounded-sizes,
+        ),
+        "width": map-merge(
+            map-get($utilities, "width"),
+            (
+                responsive: true,
+                values: $utilities-sizes,
+            ),
+        ),
+        "height": map-merge(
+            map-get($utilities, "height"),
+            (
+                responsive: true,
+                values: $utilities-sizes,
+            ),
+        ),
+        "max-width": map-merge(
+            map-get($utilities, "max-width"),
+            (
+                responsive: true,
+                values: $utilities-sizes,
+            ),
+        ),
+        "max-height": map-merge(
+            map-get($utilities, "max-height"),
+            (
+                responsive: true,
+                values: $utilities-sizes,
+            ),
+        ),
+        "font-family":  map-merge(
+            map-get($utilities, "font-family"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "font-family"), "values"),
+                    (sans-serif: var(--#{$variable-prefix}font-sans-serif)),
+                ),
+            ),
+        ),
+        "order": map-merge(
+            map-get($utilities, "order"),
+            (
+                values: $order-array,
+            ),
+        ),
+    ),
+);
+
+// Odoo Custom Utility Classes
+$utilities: map-merge(
+    $utilities,
+    (
+        "cursor": (
+            property: cursor,
+            values: default pointer,
+        ),
+        "bg-opacity": (
+            css-var: true,
+            class: bg-opacity,
+            values: $utilities-opacity,
+        ),
+        "flex-basis": (
+            responsive: true,
+            property: flex-basis,
+            values: $utilities-sizes,
+        ),
+        "z-index": (
+            property: z-index,
+            values: 0 1,
+        ),
+        "overflow-x": (
+            property: overflow-x,
+            values: auto hidden visible scroll,
+        ),
+        "overflow-y": (
+            property: overflow-y,
+            values: auto hidden visible scroll,
+        ),
+        "transition": (
+            property: transition,
+            values: (
+                none: none,
+                base: $transition-base,
+                fade: $transition-fade,
+            ),
+        ),
+        "min-width": (
+            class: min-w,
+            property: min-width,
+            values: 0,
+        ),
+    )
+);
+
+// Restore text-X from BS4 that use text-emphasis-variant
+// we don't merge $utilities-text-colors into $utilities
+// to avoid same utilises classes generated twice.
+// See bootstrap_review.scss
+$utilities: map-merge(
+    $utilities,
+    (
+        "color": (
+            property: color,
+            class: text,
+            local-vars: (
+                "text-opacity": 1
+            ),
+            values: (
+                "body": $body-color,
+                "black": $black,
+                "white": $white,
+                "muted": $text-muted,
+                "black-50": rgba($black, .5), // deprecated
+                "white-50": rgba($white, .5), // deprecated
+                "reset": inherit,
+            ),
+        ),
+    )
+);
+
+// Define opacity:hover classes while defining the triggerer behavior.
+// Use'.opacity-trigger-hover' class to allow hovered parents to
+// trigger their children ':hover' opacity state.
+@each $-opacity-key, $-opacity-level in $utilities-opacity {
+    .opacity-#{$-opacity-key}-hover {
+        &:hover, .opacity-trigger-hover:hover & {
+            opacity: $-opacity-level!important;
+        }
+    }
+}

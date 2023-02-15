@@ -55,7 +55,7 @@ export function useSurveyLoadSampleHook(selector) {
 export class SurveyListRenderer extends ListRenderer {
     setup() {
         super.setup();
-        this.canCreate = this.props.archInfo.activeActions.create;
+
         if (this.canCreate) {
             useSurveyLoadSampleHook('.o_survey_load_sample');
         }

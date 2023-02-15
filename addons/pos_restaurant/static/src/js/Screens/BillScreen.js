@@ -1,31 +1,24 @@
-odoo.define('pos_restaurant.BillScreen', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const ReceiptScreen = require('point_of_sale.ReceiptScreen');
-    const Registries = require('point_of_sale.Registries');
+import { ReceiptScreen } from "@point_of_sale/js/Screens/ReceiptScreen/ReceiptScreen";
+import { registry } from "@web/core/registry";
 
-    const BillScreen = (ReceiptScreen) => {
-        class BillScreen extends ReceiptScreen {
-            confirm() {
-                this.props.resolve({ confirmed: true, payload: null });
-                this.trigger('close-temp-screen');
-            }
-            whenClosing() {
-                this.confirm();
-            }
-            /**
-             * @override
-             */
-            async printReceipt() {
-                await super.printReceipt();
-                this.currentOrder._printed = false;
-            }
-        }
-        BillScreen.template = 'BillScreen';
-        return BillScreen;
-    };
+export class BillScreen extends ReceiptScreen {
+    static template = "pos_restaurant.BillScreen";
+    confirm() {
+        this.props.resolve({ confirmed: true, payload: null });
+        this.pos.closeTempScreen();
+    }
+    whenClosing() {
+        this.confirm();
+    }
+    /**
+     * @override
+     */
+    async printReceipt() {
+        await super.printReceipt();
+        this.currentOrder._printed = false;
+    }
+}
 
-    Registries.Component.addByExtending(BillScreen, ReceiptScreen);
-
-    return BillScreen;
-});
+registry.category("pos_screens").add("BillScreen", BillScreen);

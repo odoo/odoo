@@ -30,7 +30,6 @@ Odoo Web Editor widget.
             'web_editor/static/lib/jQuery.transfo.js',
             'web/static/lib/nearest/jquery.nearest.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
-            'web_editor/static/lib/html2canvas.js', # needed for convert_inline.js
             'web_editor/static/lib/DOMPurify.js',
 
             # odoo-editor
@@ -59,7 +58,7 @@ Odoo Web Editor widget.
             ('include', 'web._assets_helpers'),
 
             'web_editor/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web_editor/static/src/js/editor/odoo-editor/src/style.scss',
 
@@ -92,6 +91,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/components/**/*',
         ],
         'web_editor.assets_tests_styles': [
+            ('include', 'web._assets_helpers'),
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/src/js/editor/odoo-editor/src/checklist.scss',
         ],
@@ -113,6 +113,13 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
+        ],
+        "web.dark_mode_assets_backend": [
+            'web_editor/static/src/scss/odoo-editor/powerbox.dark.scss',
+            'web_editor/static/src/scss/odoo-editor/tablepicker.dark.scss',
+            'web_editor/static/src/scss/odoo-editor/tableui.dark.scss',
+            'web_editor/static/src/scss/wysiwyg.dark.scss',
+            'web_editor/static/src/scss/web_editor.common.dark.scss',
         ],
         'web.assets_frontend_minimal': [
             'web_editor/static/src/js/frontend/loader_loading.js',
@@ -140,6 +147,7 @@ Odoo Web Editor widget.
 
         'web._assets_primary_variables': [
             'web_editor/static/src/scss/web_editor.variables.scss',
+            'web_editor/static/src/scss/wysiwyg.variables.scss',
         ],
         'web._assets_secondary_variables': [
             'web_editor/static/src/scss/secondary_variables.scss',

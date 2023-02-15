@@ -118,12 +118,12 @@
                                     </group>
                                 </group>
                                 <group name="general" attrs="{'invisible':[('delivery_type', '!=', 'base_on_rule')]}">
-                                    <field name="price_rule_ids" nolabel="1"/>
+                                    <field name="price_rule_ids" nolabel="1" colspan="2"/>
                                 </group>
                             </page>
                             <page string="Destination Availability" name="destination">
                                 <group>
-                                    <p>
+                                    <p colspan="2">
                                         Filling this form allows you to filter delivery carriers according to the delivery address of your customer.
                                     </p>
                                 </group>
@@ -298,9 +298,9 @@
                 <field name="company_id" position="before">
                     <label for="shipping_weight"/>
                     <div class="o_row" name="Shipping Weight">
-                        <field name="shipping_weight"/>
+                        <field name="shipping_weight" class="oe_inline"/>
                         <span><field name="weight_uom_name"/></span>
-                        <span class="text-muted">(computed: <field name="weight" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1"/>)</span>
+                        <span class="text-muted">(computed: <field name="weight" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1" class="oe_inline"/>)</span>
                     </div>
                 </field>
             </field>
@@ -309,7 +309,7 @@
         <record id="view_order_form_with_carrier" model="ir.ui.view">
             <field name="name">delivery.sale.order.form.view.with_carrier</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='partner_id']" position='after'>
@@ -353,7 +353,11 @@
                     <xpath expr="//field[@name='order_line']/tree" position="attributes">
                         <attribute name="decoration-warning">recompute_delivery_price and is_delivery</attribute>
                     </xpath>
+                    <field name="picking_policy" position="after">
+                        <field name="shipping_weight" readonly="True"/>
+                    </field>
                 </data>
+                
             </field>
         </record>
 

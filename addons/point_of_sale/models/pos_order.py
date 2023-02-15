@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from datetime import timedelta
+from markupsafe import Markup
 from functools import partial
 from itertools import groupby
 from collections import defaultdict
@@ -30,7 +31,7 @@ class PosOrder(models.Model):
         taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         taxes = fiscal_position_id.map_tax(taxes)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-        taxes = taxes.compute_all(price, line.order_id.pricelist_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
+        taxes = taxes.compute_all(price, line.order_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
         return sum(tax.get('amount', 0.0) for tax in taxes)
 
     @api.model
@@ -45,14 +46,14 @@ class PosOrder(models.Model):
             'partner_id':   ui_order['partner_id'] or False,
             'date_order':   ui_order['creation_date'].replace('T', ' ')[:19],
             'fiscal_position_id': ui_order['fiscal_position_id'],
-            'pricelist_id': ui_order['pricelist_id'],
+            'pricelist_id': ui_order.get('pricelist_id'),
             'amount_paid':  ui_order['amount_paid'],
             'amount_total':  ui_order['amount_total'],
             'amount_tax':  ui_order['amount_tax'],
             'amount_return':  ui_order['amount_return'],
             'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
             'to_invoice': ui_order['to_invoice'] if "to_invoice" in ui_order else False,
-            'to_ship': ui_order['to_ship'] if "to_ship" in ui_order else False,
+            'shipping_date': ui_order['shipping_date'] if "shipping_date" in ui_order else False,
             'is_tipped': ui_order.get('is_tipped', False),
             'tip_amount': ui_order.get('tip_amount', 0),
             'access_token': ui_order.get('access_token', '')
@@ -166,7 +167,7 @@ class PosOrder(models.Model):
         :param draft: Indicate that the pos_order is not validated yet.
         :type draft: bool.
         """
-        prec_acc = order.pricelist_id.currency_id.decimal_places
+        prec_acc = order.currency_id.decimal_places
 
         order_bank_statement_lines= self.env['pos.payment'].search([('pos_order_id', '=', order.id)])
         order_bank_statement_lines.unlink()
@@ -195,7 +196,7 @@ class PosOrder(models.Model):
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
-            'name': order_line.full_product_name or order_line.product_id.display_name,
+            'name': order_line.product_id.display_name or order_line.full_product_name,
             'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
         }
@@ -204,7 +205,7 @@ class PosOrder(models.Model):
         invoice_lines = []
         for line in self.lines:
             invoice_lines.append((0, None, self._prepare_invoice_line(line)))
-            if line.order_id.pricelist_id.discount_policy == 'without_discount' and line.price_unit != line.product_id.lst_price:
+            if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %s -> %s',
                               float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
@@ -247,7 +248,7 @@ class PosOrder(models.Model):
         help="Allows to know if all the total cost of the order lines have already been computed")
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
-    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', states={
                                    'draft': [('readonly', False)]}, readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null', states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
@@ -265,7 +266,7 @@ class PosOrder(models.Model):
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
         'Status', readonly=True, copy=False, default='draft')
 
-    account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index=True)
+    account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index="btree_not_null")
     picking_ids = fields.One2many('stock.picking', 'pos_order_id')
     picking_count = fields.Integer(compute='_compute_picking_count')
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
@@ -284,7 +285,7 @@ class PosOrder(models.Model):
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
-    to_ship = fields.Boolean('To ship')
+    shipping_date = fields.Date('Shipping Date')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
@@ -366,7 +367,9 @@ class PosOrder(models.Model):
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
         for order in self:
-            currency = order.pricelist_id.currency_id
+            if not order.currency_id:
+                raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
+            currency = order.currency_id
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
             order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
@@ -389,12 +392,11 @@ class PosOrder(models.Model):
             amounts[order['order_id'][0]]['taxes'] = order['price_subtotal_incl'] - order['price_subtotal']
 
         for order in self:
-            currency = order.pricelist_id.currency_id
             order.write({
                 'amount_paid': amounts[order.id]['paid'],
                 'amount_return': amounts[order.id]['return'],
-                'amount_tax': currency.round(amounts[order.id]['taxes']),
-                'amount_total': currency.round(amounts[order.id]['taxed'])
+                'amount_tax': order.currency_id.round(amounts[order.id]['taxes']),
+                'amount_total': order.currency_id.round(amounts[order.id]['taxed'])
             })
 
     @api.onchange('partner_id')
@@ -438,6 +440,7 @@ class PosOrder(models.Model):
     def action_stock_picking(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action['display_name'] = _('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -601,8 +604,7 @@ class PosOrder(models.Model):
             'ref': self.name,
             'partner_id': self.partner_id.id,
             'partner_bank_id': self._get_partner_bank_id(),
-            # considering partner's sale pricelist's currency
-            'currency_id': self.pricelist_id.currency_id.id,
+            'currency_id': self.currency_id.id,
             'invoice_user_id': self.user_id.id,
             'invoice_date': invoice_date.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
@@ -848,12 +850,11 @@ class PosOrder(models.Model):
     def _apply_invoice_payments(self):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id
         payment_moves = self.payment_ids.sudo().with_company(self.company_id)._create_payment_moves()
-        invoice_receivable = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account)
-        # Reconcile the invoice to the created payment moves.
-        # But not when the invoice's total amount is zero because it's already reconciled.
-        if not invoice_receivable.reconciled and receivable_account.reconcile:
-            payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account)
-            (invoice_receivable | payment_receivables).sudo().with_company(self.company_id).reconcile()
+        if receivable_account.reconcile:
+            invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
+            if invoice_receivables:
+                payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account and line.partner_id)
+                (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
         return payment_moves
 
     @api.model
@@ -885,7 +886,7 @@ class PosOrder(models.Model):
 
     def _create_order_picking(self):
         self.ensure_one()
-        if self.to_ship:
+        if self.shipping_date:
             self.lines._launch_stock_rule_from_pos_order_lines()
         else:
             if self._should_create_picking_real_time():
@@ -921,7 +922,12 @@ class PosOrder(models.Model):
         }
 
     def _prepare_mail_values(self, name, client, ticket):
-        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
+        message = Markup(
+            _("<p>Dear %(client_name)s,<br/>Here is your electronic ticket for the %(pos_name)s. </p>")
+        ) % {
+            'client_name': client['name'],
+            'pos_name': name,
+        }
 
         return {
             'subject': _('Receipt %s', name),
@@ -1026,7 +1032,7 @@ class PosOrder(models.Model):
             'creation_date': order.date_order.astimezone(timezone),
             'fiscal_position_id': order.fiscal_position_id.id,
             'to_invoice': order.to_invoice,
-            'to_ship': order.to_ship,
+            'shipping_date': order.shipping_date,
             'state': order.state,
             'account_move': order.account_move.id,
             'id': order.id,
@@ -1038,6 +1044,9 @@ class PosOrder(models.Model):
     def _get_fields_for_order_line(self):
         """This function is here to be overriden"""
         return []
+
+    def _prepare_order_line(self, order_line):
+        return order_line
 
     def export_for_ui(self):
         """ Returns a list of dict with each item having similar signature as the return of
@@ -1161,22 +1170,18 @@ class PosOrderLine(models.Model):
         fpos = self.order_id.fiscal_position_id
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
+        taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
         return {
             'price_subtotal_incl': taxes['total_included'],
             'price_subtotal': taxes['total_excluded'],
-            'taxes': taxes['taxes']
         }
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            if not self.order_id.pricelist_id:
-                raise UserError(
-                    _('You have to select a pricelist in the sale form !\n'
-                      'Please set one before choosing a product.'))
             price = self.order_id.pricelist_id._get_product_price(
-                self.product_id, self.qty or 1.0)
+                self.product_id, self.qty or 1.0, currency=self.currency_id
+            )
             self.tax_ids = self.product_id.taxes_id.filtered(lambda r: not self.company_id or r.company_id == self.company_id)
             tax_ids_after_fiscal_position = self.order_id.fiscal_position_id.map_tax(self.tax_ids)
             self.price_unit = self.env['account.tax']._fix_tax_included_price_company(price, self.tax_ids, tax_ids_after_fiscal_position, self.company_id)
@@ -1185,12 +1190,10 @@ class PosOrderLine(models.Model):
     @api.onchange('qty', 'discount', 'price_unit', 'tax_ids')
     def _onchange_qty(self):
         if self.product_id:
-            if not self.order_id.pricelist_id:
-                raise UserError(_('You have to select a pricelist in the sale form.'))
             price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
             self.price_subtotal = self.price_subtotal_incl = price * self.qty
             if (self.tax_ids):
-                taxes = self.tax_ids.compute_all(price, self.order_id.pricelist_id.currency_id, self.qty, product=self.product_id, partner=False)
+                taxes = self.tax_ids.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=False)
                 self.price_subtotal = taxes['total_excluded']
                 self.price_subtotal_incl = taxes['total_included']
 
@@ -1236,7 +1239,11 @@ class PosOrderLine(models.Model):
         """
         self.ensure_one()
         # Use the delivery date if there is else use date_order and lead time
-        date_deadline = self.order_id.date_order
+        if self.order_id.shipping_date:
+            date_deadline = self.order_id.shipping_date
+        else:
+            date_deadline = self.order_id.date_order
+
         values = {
             'group_id': group_id,
             'date_planned': date_deadline,
@@ -1398,8 +1405,8 @@ class ReportSaleDetails(models.AbstractModel):
         products_sold = {}
         taxes = {}
         for order in orders:
-            if user_currency != order.pricelist_id.currency_id:
-                total += order.pricelist_id.currency_id._convert(
+            if user_currency != order.currency_id:
+                total += order.currency_id._convert(
                     order.amount_total, user_currency, order.company_id, order.date_order or fields.Date.today())
             else:
                 total += order.amount_total
@@ -1423,13 +1430,13 @@ class ReportSaleDetails(models.AbstractModel):
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
             self.env.cr.execute("""
-                SELECT method.name, sum(amount) total
+                SELECT COALESCE(method.name->>%s, method.name->>'en_US') as name, sum(amount) total
                 FROM pos_payment AS payment,
                      pos_payment_method AS method
                 WHERE payment.payment_method_id = method.id
                     AND payment.id IN %s
                 GROUP BY method.name
-            """, (tuple(payment_ids),))
+            """, (self.env.lang, tuple(payment_ids),))
             payments = self.env.cr.dictfetchall()
         else:
             payments = []

@@ -12,6 +12,7 @@
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
+                        <field name="image" class="oe_avatar" widget='image'/>
                     </div>
                     <group name="Payment methods">
                         <field name="hide_use_payment_terminal" invisible="1"/>
@@ -23,7 +24,7 @@
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                         </group>
                         <group attrs="{'invisible': ['|', ('hide_use_payment_terminal', '=', False), ('type', 'in', ['cash', 'pay_later'])]}">
-                            <div>
+                            <div colspan="2">
                                 <h2>Tips:</h2>
                                 <p>
                                     Go to <a href="#" name="%(action_pos_configuration)d" type="action" class="btn-link o_form_uri" role="button">Configurations > Settings</a>
@@ -53,6 +54,7 @@
                 <field name="outstanding_account_id" groups="account.group_account_readonly" optional="hide" attrs="{'invisible': [('type', '!=', 'bank')]}" />
                 <field name="receivable_account_id" groups="account.group_account_readonly" optional="hide" attrs="{'invisible': [('split_transactions', '=', True)]}" />
                 <field name="company_id" groups="base.group_multi_company" />
+                <field name="config_ids" widget="many2many_tags"/>
             </tree>
         </field>
     </record>
@@ -66,6 +68,9 @@
                 <field name="receivable_account_id" groups="account.group_account_readonly" />
                 <group expand="1" string="Group By">
                     <filter name="group_by_receivable_account" string="Account" domain="[]"  context="{'group_by':'receivable_account_id'}"/>
+                    <filter name="group_by_pos_config" string="Point of Sale" domain="[]" context="{'group_by':'config_ids'}"/>
+                    <filter name="group_by_method_name" string="Method Name" domain="[]" context="{'group_by':'name'}"/>
+                    <filter name="group_by_journal_id" string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
                 </group>
                 <filter string="Archived" name="active" domain="[('active', '=', False)]"/>
             </search>

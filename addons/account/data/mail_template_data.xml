@@ -6,11 +6,12 @@
     <data noupdate="1">
         <!--Email template -->
         <record id="email_template_edi_invoice" model="mail.template">
-            <field name="name">Invoice: Send by email</field>
+            <field name="name">Invoice: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="subject">{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})</field>
+            <field name="description">Sent to customers with their invoices in attachment</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -53,17 +54,17 @@
     </p>
 </div>
             </field>
-            <field name="report_template" ref="account_invoices"/>
-            <field name="report_name">Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
+            <field name="report_template_ids" eval="[(4, ref('account.account_invoices'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
         <record id="mail_template_data_payment_receipt" model="mail.template">
-            <field name="name">Payment Receipt: Send by email</field>
+            <field name="name">Payment: Payment Receipt</field>
             <field name="model_id" ref="account.model_account_payment"/>
             <field name="subject">{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent manually to customer when clicking on 'Send receipt by email' in payment action</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -82,18 +83,18 @@
     </p>
 </div>
 </field>
-            <field name="report_template" ref="account.action_report_payment_receipt"/>
-            <field name="report_name">{{ (object.name or '').replace('/','-') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('account.action_report_payment_receipt'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
         <!-- Credit note template -->
         <record id="email_template_edi_credit_note" model="mail.template">
-            <field name="name">Credit note: Send by email</field>
+            <field name="name">Credit Note: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="subject">{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})</field>
+            <field name="description">Sent to customers with the credit note in attachment</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -126,8 +127,7 @@
     </p>
 </div>
             </field>
-            <field name="report_template" ref="account_invoices"/>
-            <field name="report_name">Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
+            <field name="report_template_ids" eval="[(4, ref('account.account_invoices'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>

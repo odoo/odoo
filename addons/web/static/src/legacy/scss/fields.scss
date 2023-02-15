@@ -9,18 +9,22 @@
 
 :root {
     @include print-variable(o-input-border-color, $o-form-lightsecondary);
+    @include print-variable(o-caret-color, $input-color);
 }
 
 .o_required_modifier {
     @include print-variable(o-input-border-color, $o-input-border-required);
+    @include print-variable(o-caret-color, $o-input-border-required);
 }
 
 .o_field_widget:focus-within {
     @include print-variable(o-input-border-color, $o-brand-primary);
+    @include print-variable(o-caret-color, $o-brand-primary);
 }
 
 .o_field_invalid {
     @include print-variable(o-input-border-color, map-get($theme-colors, 'danger'));
+    @include print-variable(o-caret-color, map-get($theme-colors, 'danger'));
 }
 
 //------------------------------------------------------------------------------
@@ -29,8 +33,9 @@
 
 .o_input {
     border:$input-border-width solid var(--o-input-border-color);
+    border-width: 0 0 $input-border-width 0;
     padding: $o-input-padding-y $o-input-padding-x;
-    background-color: var(--o-input-background-color, unset);
+    background-color: var(--o-input-background-color, #{$input-bg});
 
     // -- Nested o_input(s)
     .o_input {
@@ -65,14 +70,15 @@
     text-align: inherit;
     display: inline-block;
 
+    textarea.o_input,
     input.o_input {
         display: inline-block;
         text-align: inherit;
     }
 
     // Dropdowns inputs
-    .o_input_dropdown, &.o_datepicker {
-        > input {
+    .o_input_dropdown, .o_datepicker {
+        .o_input, > input {
             padding-right: ($caret-width * 2.5) + $o-input-padding-x;
         }
 
@@ -158,7 +164,8 @@
         }
         .o_m2o_avatar_empty {
             display: block;
-            background-color: #e9ecef;
+            background: $o-black;
+            opacity: .1;
         }
     }
 
@@ -254,25 +261,6 @@
             }
         }
 
-        @for $size from 1 through length($o-colors) {
-            .o_tag_color_#{$size - 1} {
-                @if $size == 1 {
-                    & {
-                        background-color: $o-view-background-color;
-                        color: nth($o-colors, $size);
-                        box-shadow: inset 0 0 0 1px;
-                    }
-                    &::after {
-                        background-color: nth($o-colors, $size);
-                    }
-                } @else {
-                    &, &::after {
-                        background-color: nth($o-colors, $size);
-                        color: color-contrast(nth($o-colors, $size), $min-contrast-ratio: 2.2);
-                    }
-                }
-            }
-        }
         .o_tag_error {
             box-shadow: inset 0 0 0 2px #FF0000;
 
@@ -395,8 +383,8 @@
                 border-color: $o-brand-primary;
             }
             &:hover:not(.active) {
-                color: darken(map-get($grays, '300'), 30%);
-                border-color: darken(map-get($grays, '300'), 30%);
+                color: $o-gray-600;
+                border-color: $o-gray-600;
             }
         }
     }

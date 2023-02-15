@@ -6,10 +6,9 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 class WebSocketMock extends EventTarget {
-    constructor(url) {
+    constructor() {
         super();
         this.readyState = 0;
-        this.url = url;
 
         queueMicrotask(() => {
             this.readyState = 1;
@@ -19,7 +18,7 @@ class WebSocketMock extends EventTarget {
         });
     }
 
-    close(code, reason) {
+    close(code = 1000, reason) {
         this.readyState = 3;
         const closeEv = new CloseEvent('close', {
             code,
@@ -44,8 +43,9 @@ class WebSocketMock extends EventTarget {
     }
 }
 
-class SharedWorkerMock {
+class SharedWorkerMock extends EventTarget {
     constructor(websocketWorker) {
+        super();
         this._websocketWorker = websocketWorker;
         this._messageChannel = new MessageChannel();
         this.port = this._messageChannel.port1;
@@ -70,10 +70,15 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
         },
     }, { pure: true });
     patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
-    websocketWorker = websocketWorker || new WebsocketWorker('wss://odoo.com/websocket');
+    websocketWorker = websocketWorker || new WebsocketWorker();
     patchWithCleanup(browser, {
         SharedWorker: function () {
-            return new SharedWorkerMock(websocketWorker);
+            const sharedWorker = new SharedWorkerMock(websocketWorker);
+            registerCleanup(() => {
+                sharedWorker._messageChannel.port1.close();
+                sharedWorker._messageChannel.port2.close();
+            });
+            return sharedWorker;
         },
     }, { pure: true });
     registerCleanup(() => {

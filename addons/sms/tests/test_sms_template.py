@@ -114,7 +114,7 @@ class TestSmsTemplateAccessRights(TransactionCase):
 class TestSMSTemplateReset(TransactionCase):
 
     def _load(self, module, *args):
-        convert_file(self.cr, module='sms',
+        convert_file(self.env, module='sms',
                      filename=get_module_resource(module, *args),
                      idref={}, mode='init', noupdate=False, kind='test')
 

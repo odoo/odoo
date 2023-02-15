@@ -35,8 +35,9 @@ class Project(models.Model):
         search='_search_pricing_type',
         help='The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.')
     sale_line_employee_ids = fields.One2many('project.sale.line.employee.map', 'project_id', "Sale line/Employee map", copy=False,
-        help="Employee/Sale Order Item Mapping:\n Defines to which sales order item an employee's timesheet entry will be linked."
-        "By extension, it defines the rate at which an employee's time on the project is billed.")
+        help="Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+             "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+             "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee.")
     billable_percentage = fields.Integer(
         compute='_compute_billable_percentage', groups='hr_timesheet.group_hr_timesheet_approver',
         help="% of timesheets that are billable compared to the total number of timesheets linked to the AA of the project, rounded to the unit.")
@@ -48,7 +49,7 @@ class Project(models.Model):
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
-        help='Select a Service product with which you would like to bill your time spent on tasks.',
+        help='Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item.',
         compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)
@@ -183,43 +184,6 @@ class Project(models.Model):
             ], limit=1)
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
 
-    @api.depends('sale_line_id.product_uom_qty', 'sale_line_id.product_uom')
-    def _compute_allocated_hours(self):
-        sol_ids = self._fetch_sale_order_item_ids()
-        sols_read_group = self.env['sale.order.line']._read_group([
-            ('id', 'in', sol_ids), ('is_service', '=', True),
-            ('is_downpayment', '=', False),
-            ('product_id.service_tracking', 'in', ['task_in_project', 'project_only'])],
-            ['project_id', 'product_uom_qty', 'product_uom'],
-            ['project_id', 'product_uom'],
-            lazy=False)
-
-        uom_hour = self.env.ref('uom.product_uom_hour')
-        sol_qty_dict = defaultdict(list)
-        uom_ids = set(self.timesheet_encode_uom_id.ids)
-
-        for result in sols_read_group:
-            uom_id = result['product_uom'] and result['product_uom'][0]
-            if uom_id:
-                uom_ids.add(uom_id)
-            if result.get('project_id'):
-                sol_qty_dict[result['project_id'][0]].append((uom_id, result['product_uom_qty']))
-
-        uoms_dict = {uom.id: uom for uom in self.env['uom.uom'].browse(uom_ids)}
-
-        for project in self:
-            project_id = project.id or project._origin.id
-            # sale order line may be stored in a different unit of measure, so first
-            # we convert all of them to the reference unit
-            # if the sol has no product_uom_id then we take the one of the project
-            allocated_hours = sum([
-                product_uom_qty * uoms_dict.get(product_uom, project.timesheet_encode_uom_id.id).factor_inv
-                for product_uom, product_uom_qty in sol_qty_dict[project_id]
-            ], 0.0)
-            # Now convert to the unit of measure to hours
-            allocated_hours *= uom_hour.factor
-            project.allocated_hours = allocated_hours
-
     @api.depends('sale_line_employee_ids.sale_line_id', 'allow_billable')
     def _compute_sale_order_count(self):
         billable_projects = self.filtered('allow_billable')
@@ -312,7 +276,7 @@ class Project(models.Model):
             action['context'].update(search_default_groupby_timesheet_invoice_type=False, **self.env.context)
             graph_view = False
             if section_name == 'billable_time':
-                graph_view = self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id
+                graph_view = self.env.ref('sale_timesheet.view_hr_timesheet_line_graph_invoice_employee').id
             action['views'] = [
                 (view_id, view_type) if view_type != 'graph' else (graph_view or view_id, view_type)
                 for view_id, view_type in action['views']
@@ -394,6 +358,7 @@ class Project(models.Model):
             'billable_milestones': _lt('Timesheets (Billed on Milestones)'),
             'billable_manual': _lt('Timesheets (Billed Manually)'),
             'non_billable': _lt('Timesheets (Non Billable)'),
+            'timesheet_revenues': _lt('Timesheets revenues'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
@@ -404,6 +369,7 @@ class Project(models.Model):
             'billable_milestones': 3,
             'billable_manual': 4,
             'non_billable': 5,
+            'timesheet_revenues': 6,
         }
 
     def _get_profitability_aal_domain(self):
@@ -476,7 +442,6 @@ class Project(models.Model):
                 if record_ids:
                     if invoice_type not in ['other_costs', 'other_revenues'] and can_see_timesheets:  # action to see the timesheets
                         action = get_timesheets_action(invoice_type, record_ids)
-                        action['context'] = json.dumps({'search_default_groupby_invoice': 1 if not cost and invoice_type == 'billable_time' else 0})
                         data['action'] = action
                 profitability_data.append(data)
             return profitability_data
@@ -495,7 +460,6 @@ class Project(models.Model):
             record_ids = aal_revenue.get('record_ids', [])
             if can_see_timesheets and record_ids:
                 action = get_timesheets_action(revenue_id, record_ids)
-                action['context'] = json.dumps({'search_default_groupby_invoice': 1 if revenue_id == 'billable_time' else 0})
                 revenue['action'] = action
 
         for cost in profitability_items['costs']['data']:
@@ -550,7 +514,6 @@ class ProjectTask(models.Model):
     pricing_type = fields.Selection(related="project_id.pricing_type")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
-    allow_billable = fields.Boolean(related="project_id.allow_billable")
     timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
     remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', search='_search_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
@@ -558,7 +521,6 @@ class ProjectTask(models.Model):
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | {
-            'allow_billable',
             'remaining_hours_available',
             'remaining_hours_so',
         }
@@ -593,19 +555,11 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.so_analytic_account_id.active
 
-    @api.depends('allow_billable')
-    def _compute_sale_order_id(self):
-        billable_tasks = self.filtered('allow_billable')
-        super(ProjectTask, billable_tasks)._compute_sale_order_id()
-        (self - billable_tasks).sale_order_id = False
-
     @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
-        billable_tasks = self.filtered('allow_billable')
-        (self - billable_tasks).update({'sale_line_id': False})
-        super(ProjectTask, billable_tasks)._compute_sale_line()
-        for task in billable_tasks:
-            if not task.sale_line_id:
+        super()._compute_sale_line()
+        for task in self:
+            if task.allow_billable and not task.sale_line_id:
                 task.sale_line_id = task._get_last_sol_of_customer()
 
     @api.depends('project_id.sale_line_employee_ids')

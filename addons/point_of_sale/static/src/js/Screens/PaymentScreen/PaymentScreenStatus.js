@@ -1,27 +1,21 @@
-odoo.define('point_of_sale.PaymentScreenStatus', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class PaymentScreenStatus extends PosComponent {
-        get changeText() {
-            return this.env.pos.format_currency(this.props.order.get_change());
-        }
-        get totalDueText() {
-            return this.env.pos.format_currency(
-                this.props.order.get_total_with_tax() + this.props.order.get_rounding_applied()
-            );
-        }
-        get remainingText() {
-            return this.env.pos.format_currency(
-                this.props.order.get_due() > 0 ? this.props.order.get_due() : 0
-            );
-        }
+export class PaymentScreenStatus extends LegacyComponent {
+    static template = "PaymentScreenStatus";
+
+    get changeText() {
+        return this.env.pos.format_currency(this.props.order.get_change());
     }
-    PaymentScreenStatus.template = 'PaymentScreenStatus';
-
-    Registries.Component.add(PaymentScreenStatus);
-
-    return PaymentScreenStatus;
-});
+    get totalDueText() {
+        return this.env.pos.format_currency(
+            this.props.order.get_total_with_tax() + this.props.order.get_rounding_applied()
+        );
+    }
+    get remainingText() {
+        return this.env.pos.format_currency(
+            this.props.order.get_due() > 0 ? this.props.order.get_due() : 0
+        );
+    }
+}

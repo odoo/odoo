@@ -163,7 +163,9 @@ class WebsiteAccount(CustomerPortal):
             "website_crm_partner_assign.portal_my_opportunity", {
                 'opportunity': opp,
                 'user_activity': opp.sudo().activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
-                'stages': request.env['crm.stage'].search([('is_won', '!=', True)], order='sequence desc, name desc, id desc'),
+                'stages': request.env['crm.stage'].search([
+                    ('is_won', '!=', True), '|', ('team_id', '=', False), ('team_id', '=', opp.team_id.id)
+                ], order='sequence desc, name desc, id desc'),
                 'activity_types': request.env['mail.activity.type'].sudo().search(['|', ('res_model', '=', opp._name), ('res_model', '=', False)]),
                 'states': request.env['res.country.state'].sudo().search([]),
                 'countries': request.env['res.country'].sudo().search([]),
@@ -222,9 +224,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         # group by grade
         grade_domain = list(base_partner_domain)
         if not country and not country_all:
-            country_code = request.geoip.get('country_code')
-            if country_code:
-                country = country_obj.search([('code', '=', country_code)], limit=1)
+            if request.geoip.country_code:
+                country = country_obj.search([('code', '=', request.geoip.country_code)], limit=1)
         if country:
             grade_domain += [('country_id', '=', country.id)]
         grades = partner_obj.sudo().read_group(
@@ -309,7 +310,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
 
 
     # Do not use semantic controller due to sudo()
-    @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
+    @http.route()
     def partners_detail(self, partner_id, **post):
         _, partner_id = unslug(partner_id)
         current_grade, current_country = None, None

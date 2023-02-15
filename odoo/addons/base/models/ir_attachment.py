@@ -110,7 +110,7 @@ class IrAttachment(models.Model):
             os.makedirs(dirname)
         # prevent sha-1 collision
         if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
-            raise UserError("The attachment is colliding with an existing file.")
+            raise UserError(_("The attachment collides with an existing file."))
         return fname, full_path
 
     @api.model
@@ -412,7 +412,7 @@ class IrAttachment(models.Model):
     db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename', index=True, unaccent=False)
     file_size = fields.Integer('File Size', readonly=True)
-    checksum = fields.Char("Checksum/SHA1", size=40, index=True, readonly=True)
+    checksum = fields.Char("Checksum/SHA1", size=40, readonly=True)
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
 
@@ -434,7 +434,7 @@ class IrAttachment(models.Model):
             if attachment.type == 'binary' and attachment.url:
                 has_group = self.env.user.has_group
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
-                    raise ValidationError("Sorry, you are not allowed to write on this document")
+                    raise ValidationError(_("Sorry, you are not allowed to write on this document"))
 
     @api.model
     def check(self, mode, values=None):
@@ -592,7 +592,7 @@ class IrAttachment(models.Model):
         if len(orig_ids) == limit and len(result) < self._context.get('need', limit):
             need = self._context.get('need', limit) - len(result)
             result.extend(self.with_context(need=need)._search(args, offset=offset + len(orig_ids),
-                                       limit=limit, order=order, count=count,
+                                       limit=limit, order=order, count=False,
                                        access_rights_uid=access_rights_uid)[:limit - len(result)])
 
         return len(result) if count else list(result)

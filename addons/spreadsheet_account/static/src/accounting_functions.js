@@ -116,18 +116,27 @@ export function parseAccountingDate(dateRange) {
             parseAccountingYear(dateRange) ||
             parseAccountingDay(dateRange)
         );
-    } catch (_) {
-        throw new Error(sprintf(_t(`'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`), dateRange));
+    } catch {
+        throw new Error(
+            sprintf(
+                _t(
+                    `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
+                ),
+                dateRange
+            )
+        );
     }
 }
 
 const ODOO_FIN_ARGS = `
     account_codes (string) ${_t("The prefix of the accounts.")}
-    date_range (string, date) ${_t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)}
+    date_range (string, date) ${_t(
+        `The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
+    )}
     offset (number, default=0) ${_t("Year offset applied to date_range.")}
     company_id (number, optional) ${_t("The company to target (Advanced).")}
     include_unposted (boolean, default=TRUE) ${_t("Set to TRUE to include unposted entries.")}
-`
+`;
 
 functionRegistry.add("ODOO.CREDIT", {
     description: _t("Get the total credit for the specified account(s) and period."),

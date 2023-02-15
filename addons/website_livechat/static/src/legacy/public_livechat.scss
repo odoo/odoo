@@ -11,6 +11,7 @@
     justify-content: center;
     align-items: center;
     transition: filter 0.3s;
+    padding: 0px;
     margin: 0 30px 30px 0;
     box-shadow: $box-shadow;
     border: none;
@@ -21,6 +22,10 @@
     font-size: 24px;
     font-weight: normal;
     text-shadow: none;
+
+    &.o-isExternalLib::before {
+        content: "💬";
+    }
 
     &:hover {
         filter: brightness(90%);

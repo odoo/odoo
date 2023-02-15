@@ -5,8 +5,8 @@
     <record id="btw_0" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet onbelast (nul-tarief)</field>
-        <field name="description">0% BTW</field>
+        <field name="name">Sales/turnover untaxed (zero rate)</field>
+        <field name="description">0% VAT</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -29,8 +29,8 @@
     <record id="btw_6" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet laag 6%</field>
-        <field name="description">6% BTW</field>
+        <field name="name">Sales/turnover low 6%</field>
+        <field name="description">6% VAT</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -61,8 +61,8 @@
     <record id="btw_9" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet laag 9%</field>
-        <field name="description">9% BTW</field>
+        <field name="name">Sales/turnover low 9%</field>
+        <field name="description">9% VAT</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -93,8 +93,8 @@
     <record id="btw_21" model="account.tax.template">
         <field name="sequence">5</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet hoog</field>
-        <field name="description">21% BTW</field>
+        <field name="name">Sales/turnover high</field>
+        <field name="description">21% VAT</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -125,8 +125,8 @@
     <record id="btw_overig" model="account.tax.template">
         <field name="sequence">15</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet overig</field>
-        <field name="description">variabel BTW</field>
+        <field name="name">Sales/turnover other</field>
+        <field name="description">variable VAT</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -158,8 +158,8 @@
     <record id="btw_0_d" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet onbelast (nul-tarief) diensten</field>
-        <field name="description">0% BTW diensten</field>
+        <field name="name">Sales/turnover untaxed (zero rate) services</field>
+        <field name="description">0% VAT services</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -182,8 +182,8 @@
     <record id="btw_6_d" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet laag diensten 6%</field>
-        <field name="description">6% BTW diensten</field>
+        <field name="name">Sales/turnover low services 6%</field>
+        <field name="description">6% VAT services</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -214,8 +214,8 @@
     <record id="btw_9_d" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet laag diensten 9%</field>
-        <field name="description">9% BTW diensten</field>
+        <field name="name">Sales/turnover low services 9%</field>
+        <field name="description">9% VAT services</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -246,8 +246,8 @@
     <record id="btw_21_d" model="account.tax.template">
         <field name="sequence">6</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet hoog diensten</field>
-        <field name="description">21% BTW diensten</field>
+        <field name="name">Sales/turnover high services</field>
+        <field name="description">21% VAT services</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -278,8 +278,8 @@
     <record id="btw_overig_d" model="account.tax.template">
         <field name="sequence">15</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen/omzet overig diensten</field>
-        <field name="description">variabel BTW diensten</field>
+        <field name="name">Sales/turnover other services</field>
+        <field name="description">variable VAT services</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -311,8 +311,8 @@
     <record id="btw_6_buy" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen laag (inkopen) 6%</field>
-        <field name="description">6% BTW</field>
+        <field name="name">VAT receivable low (purchases) 6%</field>
+        <field name="description">6% VAT</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -337,8 +337,8 @@
     <record id="btw_9_buy" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen laag (inkopen) 9%</field>
-        <field name="description">9% BTW</field>
+        <field name="name">VAT receivable low (purchases) 9%</field>
+        <field name="description">9% VAT</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -363,8 +363,8 @@
     <record id="btw_6_buy_incl" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen laag (inkopen incl. BTW) 6%</field>
-        <field name="description">6% BTW Incl.</field>
+        <field name="name">VAT receivable low (purchases incl. VAT) 6%</field>
+        <field name="description">6% VAT Incl.</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="price_include">True</field>
@@ -390,8 +390,8 @@
     <record id="btw_9_buy_incl" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen laag (inkopen incl. BTW) 9%</field>
-        <field name="description">9% BTW Incl.</field>
+        <field name="name">VAT receivable low (purchases incl. VAT) 9%</field>
+        <field name="description">9% VAT Incl.</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="price_include">True</field>
@@ -417,8 +417,8 @@
     <record id="btw_21_buy" model="account.tax.template">
         <field name="sequence">5</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen hoog (inkopen)</field>
-        <field name="description">21% BTW</field>
+        <field name="name">VAT receivable high (purchases)</field>
+        <field name="description">21% VAT</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -443,8 +443,8 @@
     <record id="btw_21_buy_incl" model="account.tax.template">
         <field name="sequence">7</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen hoog (inkopen incl. BTW)</field>
-        <field name="description">21% BTW Incl.</field>
+        <field name="name">VAT receivable high (purchases incl. VAT)</field>
+        <field name="description">21% VAT Incl.</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="price_include">True</field>
@@ -470,8 +470,8 @@
     <record id="btw_overig_buy" model="account.tax.template">
         <field name="sequence">15</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen overig (inkopen)</field>
-        <field name="description">variabel BTW</field>
+        <field name="name">VAT receivable other (purchases)</field>
+        <field name="description">variable VAT</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -497,8 +497,8 @@
     <record id="btw_6_buy_d" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen laag (inkopen) diensten 6%</field>
-        <field name="description">6% BTW diensten</field>
+        <field name="name">VAT receivable low (purchases) services 6%</field>
+        <field name="description">6% VAT services</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -523,8 +523,8 @@
     <record id="btw_9_buy_d" model="account.tax.template">
         <field name="sequence">10</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen laag (inkopen) diensten 9%</field>
-        <field name="description">9% BTW diensten</field>
+        <field name="name">VAT receivable low (purchases) services 9%</field>
+        <field name="description">9% VAT services</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -549,8 +549,8 @@
     <record id="btw_21_buy_d" model="account.tax.template">
         <field name="sequence">6</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen hoog (inkopen) diensten</field>
-        <field name="description">21% BTW diensten</field>
+        <field name="name">VAT receivable high (purchases) services</field>
+        <field name="description">21% VAT services</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -575,8 +575,8 @@
     <record id="btw_overig_buy_d" model="account.tax.template">
         <field name="sequence">15</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW te vorderen overig (inkopen) diensten</field>
-        <field name="description">variabel BTW diensten</field>
+        <field name="name">VAT receivable other (purchases) services</field>
+        <field name="description">variable VAT services</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -602,8 +602,8 @@
     <record id="btw_verk_0" model="account.tax.template">
         <field name="sequence">15</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW af te dragen verlegd (verkopen)</field>
-        <field name="description">0% BTW verlegd</field>
+        <field name="name">Referred VAT to be paid (sales)</field>
+        <field name="description">0% VAT reverse charge</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -626,8 +626,8 @@
     <record id="btw_ink_0" model="account.tax.template">
         <field name="sequence">15</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">BTW af te dragen verlegd (inkopen)</field>
-        <field name="description">21% BTW verlegd</field>
+        <field name="name">Referred VAT to be paid (purchases)</field>
+        <field name="description">21% VAT reverse charge</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -672,8 +672,8 @@
     <record id="btw_I_6" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import binnen EU laag 6%</field>
-        <field name="description">6% BTW import binnen EU</field>
+        <field name="name">Imports within EU low 6%</field>
+        <field name="description">6% VAT import within EU</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -716,8 +716,8 @@
     <record id="btw_I_9" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import binnen EU laag 9%</field>
-        <field name="description">9% BTW import binnen EU</field>
+        <field name="name">Imports within EU 9%</field>
+        <field name="description">9% VAT import within EU</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -760,8 +760,8 @@
     <record id="btw_I_21" model="account.tax.template">
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
         <field name="sequence">20</field>
-        <field name="name">Inkopen import binnen EU hoog</field>
-        <field name="description">21% BTW import binnen EU</field>
+        <field name="name">Purchases of imports within EU high</field>
+        <field name="description">21% VAT import within EU</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -804,8 +804,8 @@
     <record id="btw_I_overig" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import binnen EU overig</field>
-        <field name="description">0% BTW import binnen EU</field>
+        <field name="name">Imports within EU other</field>
+        <field name="description">0% VAT import within EU</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -829,8 +829,8 @@
     <record id="btw_X0_producten" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen export binnen EU (producten)</field>
-        <field name="description">BTW export binnen EU (producten)</field>
+        <field name="name">Export sales within EU (products)</field>
+        <field name="description">VAT export within EU (products)</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -853,8 +853,8 @@
     <record id="btw_X0_diensten" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen export binnen EU (diensten)</field>
-        <field name="description">BTW export binnen EU (diensten)</field>
+        <field name="name">Export sales within EU (services)</field>
+        <field name="description">VAT export within EU (services)</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -877,8 +877,8 @@
     <record id="btw_X2" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Installatie/afstandsverkopen binnen EU</field>
-        <field name="description">Inst./afst.verkopen binnen EU</field>
+        <field name="name">Installation/remote sales within EU</field>
+        <field name="description">Inst./rem. sales within EU</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -902,8 +902,8 @@
     <record id="btw_I_6_d" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import binnen EU laag diensten 6%</field>
-        <field name="description">6% BTW import binnen EU diensten</field>
+        <field name="name">Purchasing imports within EU low services 6%</field>
+        <field name="description">6% VAT import within EU services</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -946,8 +946,8 @@
     <record id="btw_I_9_d" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import binnen EU laag diensten 9%</field>
-        <field name="description">9% BTW import binnen EU diensten</field>
+        <field name="name">Purchasing imports within EU low services 9%</field>
+        <field name="description">9% VAT import within EU services</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -990,8 +990,8 @@
     <record id="btw_I_21_d" model="account.tax.template">
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
         <field name="sequence">20</field>
-        <field name="name">Inkopen import binnen EU hoog diensten</field>
-        <field name="description">21% BTW import binnen EU diensten</field>
+        <field name="name">Purchasing imports within EU high services</field>
+        <field name="description">21% VAT import within EU services</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1034,8 +1034,8 @@
     <record id="btw_I_overig_d" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import binnen EU overig diensten</field>
-        <field name="description">0% BTW import binnen EU diensten</field>
+        <field name="name">Purchases of imports within EU other services</field>
+        <field name="description">0% VAT import within EU services</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1060,8 +1060,8 @@
     <record id="btw_E1" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import buiten EU laag 6%</field>
-        <field name="description">BTW import buiten EU laag inkopen</field>
+        <field name="name">Purchasing imports outside EU low 6%</field>
+        <field name="description">Low VAT import outside EU</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1104,8 +1104,8 @@
     <record id="btw_E1_9" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import buiten EU laag 9%</field>
-        <field name="description">BTW import buiten EU laag inkopen</field>
+        <field name="name">Buying imports outside EU low 9%</field>
+        <field name="description">Low VAT import outside EU</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1148,8 +1148,8 @@
     <record id="btw_E2" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import buiten EU hoog</field>
-        <field name="description">BTW import buiten EU hoog inkopen</field>
+        <field name="name">Buying imports outside EU high</field>
+        <field name="description">VAT import outside EU high purchasing</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1192,8 +1192,8 @@
     <record id="btw_E_overig" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import buiten EU overig</field>
-        <field name="description">BTW import buiten EU overig inkopen</field>
+        <field name="name">Imports outside EU other</field>
+        <field name="description">VAT import outside EU other purchases</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1237,8 +1237,8 @@
     <record id="btw_X1" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Verkopen export buiten EU</field>
-        <field name="description">BTW export buiten EU</field>
+        <field name="name">Export sales outside EU</field>
+        <field name="description">VAT export outside EU</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -1261,8 +1261,8 @@
     <record id="btw_X3" model="account.tax.template">
         <field name="sequence">21</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Installatie/afstandsverkopen buiten EU</field>
-        <field name="description">Inst./afst.verkopen buiten EU</field>
+        <field name="name">Installation/remote sales outside EU</field>
+        <field name="description">Installation/remote sales outside EU</field>
         <field eval="0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -1286,8 +1286,8 @@
     <record id="btw_E1_d" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import buiten EU laag diensten 6%</field>
-        <field name="description">BTW import buiten EU laag inkopen diensten</field>
+        <field name="name">Purchasing imports outside EU low services 6%</field>
+        <field name="description">VAT import outside EU low purchasing services</field>
         <field eval="6" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1330,8 +1330,8 @@
     <record id="btw_E1_d_9" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import buiten EU laag diensten 9%</field>
-        <field name="description">BTW import buiten EU laag inkopen diensten</field>
+        <field name="name">Purchasing imports outside EU low services 9%</field>
+        <field name="description">VAT import outside EU low purchasing services</field>
         <field eval="9" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1374,8 +1374,8 @@
     <record id="btw_E2_d" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import buiten EU hoog diensten</field>
-        <field name="description">BTW import buiten EU hoog inkopen diensten</field>
+        <field name="name">Purchasing imports outside EU high services</field>
+        <field name="description">VAT import outside EU high purchasing services</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -1418,8 +1418,8 @@
     <record id="btw_E_overig_d" model="account.tax.template">
         <field name="sequence">20</field>
         <field name="chart_template_id" ref="l10nnl_chart_template"/>
-        <field name="name">Inkopen import buiten EU overig diensten</field>
-        <field name="description">BTW import buiten EU overig inkopen diensten</field>
+        <field name="name">Purchases of imports outside EU other services</field>
+        <field name="description">VAT import outside EU other procurement services</field>
         <field eval="21" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>

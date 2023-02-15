@@ -7,76 +7,28 @@
             <field name="priority" eval="75"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Recruitment" string="Recruitment" data-key="hr_recruitment" groups="hr_recruitment.group_hr_recruitment_manager">
-                        <h2>Job Posting</h2>
-                        <div class="row mt16 o_settings_container" name="online_posting_setting_container">
-                            <div class="col-12 col-lg-6 o_setting_box" id="publish_available_jobs_setting">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_website_hr_recruitment"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_website_hr_recruitment" string="Online Posting"/>
-                                    <div class="text-muted">
-                                        Publish available jobs on your website
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2>Recruitment Process</h2>
-                        <div class="row mt16 o_settings_container" name="recruitment_process_div">
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                id="interview_forms_setting"
-                                title="Use interview forms tailored to each job position during the recruitment process. Select the form to use in the job position detail form. This relies on the Survey app.">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_hr_recruitment_survey"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_hr_recruitment_survey" string="Send Interview Survey"/>
-                                    <div class="text-muted">
-                                        Send an Interview Survey to the applicant during
-                                        the recruitment process
-                                    </div>
-                                    <div class="content-group" id="interview_forms"/>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="sms">
-                                <div class="o_setting_right_pane" id="sms_settings">
-                                    <div class="o_form_label">
-                                        Send SMS
-                                        <a href="https://www.odoo.com/documentation/master/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" title="Documentation" class="ms-1 o_doc_link" target="_blank"></a>
-                                    </div>
-                                    <div class="text-muted">
-                                        Send texts to your contacts
-                                    </div>
-                                    <widget name="iap_buy_more_credits" service_name="sms" hide_service="1"/>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="display_cv">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_applicant_cv_display"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_applicant_cv_display" string="CV Display"/>
-                                    <div class="text-muted">
-                                        Display CV on application form
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Use OCR to fill data from a picture of the CV or the file itself">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_hr_recruitment_extract" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane" id="recruitment_extract_settings">
-                                    <label string="CV Digitization (OCR)" for="module_hr_recruitment_extract"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
-                                    <div class="text-muted">
-                                        Digitize your CV to extract name and email automatically.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <xpath expr="//form" position="inside">
+                    <app data-string="Recruitment" string="Recruitment" name="hr_recruitment" groups="hr_recruitment.group_hr_recruitment_manager">
+                        <block title="Job Posting" name="online_posting_setting_container">
+                            <setting id="publish_available_jobs_setting" string="Online Posting" help="Publish available jobs on your website">
+                                <field name="module_website_hr_recruitment"/>
+                            </setting>
+                        </block>
+                        <block title="Recruitment Process" name="recruitment_process_div">
+                            <setting id="interview_forms_setting" string="Send Interview Survey" help="Send an Interview Survey to the applicant during the recruitment process" title="Use interview forms tailored to each job position during the recruitment process. Select the form to use in the job position detail form. This relies on the Survey app.">
+                                <field name="module_hr_recruitment_survey"/>
+                            </setting>
+                            <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts">
+                                <widget name="iap_buy_more_credits" service_name="sms" hide_service="1"/>
+                            </setting>
+                            <setting string="CV Display" help="Display CV on application form" id="display_cv">
+                                <field name="group_applicant_cv_display"/>
+                            </setting>
+                            <setting id="recruitment_extract_settings" string="CV Digitization (OCR)" company_dependent="1" help="Digitize your CV to extract name and email automatically." title="Use OCR to fill data from a picture of the CV or the file itself">
+                                <field name="module_hr_recruitment_extract" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
+                    </app>
                 </xpath>
             </field>
         </record>

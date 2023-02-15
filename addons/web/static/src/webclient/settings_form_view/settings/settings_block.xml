@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.SettingsBlock" owl="1">
+        <h2 t-if="props.title" t-ref="settingsContainerTitle"><HighlightText originalText="props.title"/></h2>
+        <h3 t-if="props.tip" class="o_setting_tip text-muted" t-ref="settingsContainerTip"><HighlightText originalText="props.tip"/></h3>
+        <div class="row mt16 o_settings_container" t-att-class="props.class" t-ref="settingsContainer">
+            <t t-slot="default"/>
+        </div>
+    </t>
+</templates>

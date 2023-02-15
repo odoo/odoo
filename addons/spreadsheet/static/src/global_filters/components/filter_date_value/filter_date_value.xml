@@ -2,7 +2,7 @@
 <templates>
     <div t-name="spreadsheet_edition.DateFilterValue" class="date_filter_values" owl="1">
         <select t-if="!isYear()" class="o_input" t-on-change="onPeriodChanged">
-            <option value="empty"/>
+            <option value="empty">Select period...</option>
             <t t-set="type" t-value="props.type"/>
             <t t-foreach="dateOptions(type)" t-as="periodOption" t-key="periodOption.id">
                 <option t-if="isSelected(periodOption.id)" selected="1" t-att-value="periodOption.id">
@@ -16,6 +16,7 @@
         <YearPicker
             date="date"
             onDateTimeChanged.bind="onYearChanged"
+            placeholder="env._t('Select year...')"
         />
     </div>
 </templates>

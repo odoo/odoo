@@ -79,7 +79,7 @@ const GallerySliderWidget = publicWidget.Widget.extend({
      */
     start: function () {
         var self = this;
-        this.$carousel = this.$target.is('.carousel') ? this.$target : this.$target.find('.carousel');
+        this.$carousel = this.$el.is('.carousel') ? this.$el : this.$('.carousel');
         this.$indicator = this.$carousel.find('.carousel-indicators');
         this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
         this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');

@@ -93,10 +93,11 @@ class AccountMove(models.Model):
 
         for move in self:
             for doc in move.edi_document_ids:
+                move_applicability = doc.edi_format_id._get_move_applicability(move)
                 if doc.edi_format_id._needs_web_services() \
-                        and doc.state in ('sent', 'to_cancel') \
-                        and move.is_invoice(include_receipts=True) \
-                        and doc.edi_format_id._is_required_for_invoice(move):
+                    and doc.state in ('sent', 'to_cancel') \
+                    and move_applicability \
+                    and move_applicability.get('cancel'):
                     move.show_reset_to_draft_button = False
                     break
 
@@ -107,20 +108,28 @@ class AccountMove(models.Model):
                 move.edi_show_cancel_button = False
                 continue
 
-            move.edi_show_cancel_button = any([doc.edi_format_id._needs_web_services()
-                                               and doc.state == 'sent'
-                                               and move.is_invoice(include_receipts=True)
-                                               and doc.edi_format_id._is_required_for_invoice(move)
-                                              for doc in move.edi_document_ids])
+            move.edi_show_cancel_button = False
+            for doc in move.edi_document_ids:
+                move_applicability = doc.edi_format_id._get_move_applicability(move)
+                if doc.edi_format_id._needs_web_services() \
+                    and doc.state == 'sent' \
+                    and move_applicability \
+                    and move_applicability.get('cancel'):
+                    move.edi_show_cancel_button = True
+                    break
 
     @api.depends('edi_document_ids.state')
     def _compute_edi_show_abandon_cancel_button(self):
         for move in self:
-            move.edi_show_abandon_cancel_button = any(doc.edi_format_id._needs_web_services()
-                                                      and doc.state == 'to_cancel'
-                                                      and move.is_invoice(include_receipts=True)
-                                                      and doc.edi_format_id._is_required_for_invoice(move)
-                                                      for doc in move.edi_document_ids)
+            move.edi_show_abandon_cancel_button = False
+            for doc in move.edi_document_ids:
+                move_applicability = doc.edi_format_id._get_move_applicability(move)
+                if doc.edi_format_id._needs_web_services() \
+                    and doc.state == 'to_cancel' \
+                    and move_applicability \
+                    and move_applicability.get('cancel'):
+                    move.edi_show_abandon_cancel_button = True
+                    break
 
     ####################################################
     # Export Electronic Document
@@ -250,8 +259,9 @@ class AccountMove(models.Model):
             edi_formats = self.env['account.edi.format'].browse(edi_formats.ids) # Avoid duplicates
             for edi_format in edi_formats:
                 existing_edi_document = payment.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
+                move_applicability = edi_format._get_move_applicability(payment)
 
-                if edi_format._is_required_for_payment(payment):
+                if move_applicability:
                     if existing_edi_document:
                         existing_edi_document.write({
                             'state': 'to_send',
@@ -293,16 +303,16 @@ class AccountMove(models.Model):
         edi_document_vals_list = []
         for move in posted:
             for edi_format in move.journal_id.edi_format_ids:
-                is_edi_needed = move.is_invoice(include_receipts=False) and edi_format._is_required_for_invoice(move)
+                move_applicability = edi_format._get_move_applicability(move)
 
-                if is_edi_needed:
+                if move_applicability:
                     errors = edi_format._check_move_configuration(move)
                     if errors:
                         raise UserError(_("Invalid invoice configuration:\n\n%s") % '\n'.join(errors))
 
                     existing_edi_document = move.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
                     if existing_edi_document:
-                        existing_edi_document.write({
+                        existing_edi_document.sudo().write({
                             'state': 'to_send',
                             'attachment_id': False,
                         })
@@ -350,13 +360,14 @@ class AccountMove(models.Model):
         '''
         to_cancel_documents = self.env['account.edi.document']
         for move in self:
+            move._check_fiscalyear_lock_date()
             is_move_marked = False
             for doc in move.edi_document_ids:
+                move_applicability = doc.edi_format_id._get_move_applicability(move)
                 if doc.edi_format_id._needs_web_services() \
-                        and doc.attachment_id \
                         and doc.state == 'sent' \
-                        and move.is_invoice(include_receipts=True) \
-                        and doc.edi_format_id._is_required_for_invoice(move):
+                        and move_applicability \
+                        and move_applicability.get('cancel'):
                     to_cancel_documents |= doc
                     is_move_marked = True
             if is_move_marked:
@@ -371,9 +382,8 @@ class AccountMove(models.Model):
         for move in self:
             is_move_marked = False
             for doc in move.edi_document_ids:
-                if doc.state == 'to_cancel' \
-                        and move.is_invoice(include_receipts=True) \
-                        and doc.edi_format_id._is_required_for_invoice(move):
+                move_applicability = doc.edi_format_id._get_move_applicability(move)
+                if doc.state == 'to_cancel' and move_applicability and move_applicability.get('cancel'):
                     documents |= doc
                     is_move_marked = True
             if is_move_marked:
@@ -385,7 +395,7 @@ class AccountMove(models.Model):
         return self.edi_document_ids.filtered(lambda d: d.edi_format_id == edi_format)
 
     def _get_edi_attachment(self, edi_format):
-        return self._get_edi_document(edi_format).attachment_id
+        return self._get_edi_document(edi_format).sudo().attachment_id
 
     ####################################################
     # Import Electronic Document
@@ -424,6 +434,21 @@ class AccountMove(models.Model):
         self._retry_edi_documents_error_hook()
         self.edi_document_ids.write({'error': False, 'blocking_level': False})
         self.action_process_edi_web_services()
+
+    ####################################################
+    # Mailing
+    ####################################################
+
+    def _process_attachments_for_template_post(self, mail_template):
+        """ Add Edi attachments to templates. """
+        result = super()._process_attachments_for_template_post(mail_template)
+        for move in self.filtered('edi_document_ids'):
+            move_result = result.setdefault(move.id, {})
+            for edi_doc in move.edi_document_ids:
+                edi_attachments = edi_doc._filter_edi_attachments_for_mailing()
+                move_result.setdefault('attachment_ids', []).extend(edi_attachments.get('attachment_ids', []))
+                move_result.setdefault('attachments', []).extend(edi_attachments.get('attachments', []))
+        return result
 
 
 class AccountMoveLine(models.Model):

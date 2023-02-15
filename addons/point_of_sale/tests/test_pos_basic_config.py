@@ -305,7 +305,7 @@ class TestPoSBasicConfig(TestPoSCommon):
                     'invoice': {
                         'line_ids': [
                             {'account_id': self.sales_account.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': False},
-                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': False},
+                            {'account_id': self.c1_receivable.id, 'partner_id': self.customer.id, 'debit': 0, 'credit': 0, 'reconciled': True},
                         ]
                     },
                     'payments': [
@@ -822,18 +822,16 @@ class TestPoSBasicConfig(TestPoSCommon):
         session.post_closing_cash_details(amount_paid)
         session.close_session_from_ui()
 
-        cash_register = session.cash_register_id
-        self.assertEqual(cash_register.balance_start, 0)
-        self.assertEqual(cash_register.balance_end_real, amount_paid)
+        self.assertEqual(session.cash_register_balance_start, 0)
+        self.assertEqual(session.cash_register_balance_end_real, amount_paid)
 
         # Open/Close session without any order in cash control
         self.open_new_session(amount_paid)
         session = self.pos_session
         session.post_closing_cash_details(amount_paid)
         session.close_session_from_ui()
-        cash_register = session.cash_register_id
-        self.assertEqual(cash_register.balance_start, amount_paid)
-        self.assertEqual(cash_register.balance_end_real, amount_paid)
+        self.assertEqual(session.cash_register_balance_start, amount_paid)
+        self.assertEqual(session.cash_register_balance_end_real, amount_paid)
         self.assertEqual(self.config.last_session_closing_cash, amount_paid)
 
     def test_start_balance_with_two_pos(self):
@@ -844,10 +842,20 @@ class TestPoSBasicConfig(TestPoSCommon):
             self.open_new_session()
             session = self.pos_session
             session.set_cashbox_pos(pos_data['amount_paid'], False)
-            self.assertEqual(session.cash_register_id.balance_start, pos_data['amount_paid'])
+            self.assertEqual(session.cash_register_balance_start, pos_data['amount_paid'])
 
         pos01_config = self.config
-        pos02_config = pos01_config.copy()
+        self.cash_journal = self.env['account.journal'].create(
+            {'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
+        self.cash_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Cash Test',
+            'journal_id': self.cash_journal.id,
+            'receivable_account_id': pos01_config.payment_method_ids.filtered(lambda s: s.is_cash_count)[
+                1].receivable_account_id.id
+        })
+        pos02_config = pos01_config.copy({
+            'payment_method_ids': self.cash_payment_method
+        })
         pos01_data = {'config': pos01_config, 'p_qty': 1, 'amount_paid': 0}
         pos02_data = {'config': pos02_config, 'p_qty': 3, 'amount_paid': 0}
 

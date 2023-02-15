@@ -56,8 +56,7 @@ patch(NavBar.prototype, 'website_navbar', {
     onNavBarDropdownItemSelection(menu) {
         const websiteMenu = this.websiteCustomMenus.get(menu.xmlid);
         if (websiteMenu) {
-            return this.websiteCustomMenus.open(menu.xmlid);
-
+            return this.websiteCustomMenus.open(menu);
         }
         return this._super(menu);
     },

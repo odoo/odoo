@@ -39,10 +39,9 @@ class ProjectShareWizard(models.TransientModel):
         self.ensure_one()
         if self.access_mode == 'edit':
             portal_partners = self.partner_ids.filtered('user_ids')
-            note = self._get_note()
             self.resource_ref._add_collaborators(self.partner_ids)
-            self._send_public_link(note, portal_partners)
-            self._send_signup_link(note, partners=self.partner_ids - portal_partners)
+            self._send_public_link(portal_partners)
+            self._send_signup_link(partners=self.partner_ids - portal_partners)
             self.resource_ref.message_subscribe(partner_ids=self.partner_ids.ids)
             return {'type': 'ir.actions.act_window_close'}
         return super().action_send_mail()

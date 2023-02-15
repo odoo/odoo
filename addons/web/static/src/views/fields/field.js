@@ -10,7 +10,7 @@ import {
 } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
@@ -56,7 +56,7 @@ function getFieldClassFromRegistry(fieldType, widget, viewType, jsClass) {
 export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo) {
     const modifiers = fieldInfo.modifiers || {};
     const readonly = evalDomain(modifiers.readonly, record.evalContext);
-    const inEdit = record.mode !== "readonly";
+    const inEdit = record.isInEdition;
 
     let empty = !record.isVirtual;
     if ("isEmpty" in FieldComponent) {
@@ -99,6 +99,11 @@ export class Field extends Component {
             [`o_field_${this.type}`]: true,
             [_class]: Boolean(_class),
         };
+        if (this.FieldComponent.additionalClasses) {
+            for (const cls of this.FieldComponent.additionalClasses) {
+                classNames[cls] = true;
+            }
+        }
 
         // generate field decorations classNames (only if field-specific decorations
         // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
@@ -191,10 +196,7 @@ export class Field extends Component {
         return false;
     }
 }
-Field.template = xml/* xml */ `
-    <div t-att-name="props.name" t-att-class="classNames" t-att-style="props.style" t-att-data-tooltip-template="tooltip and 'web.FieldTooltip'" t-att-data-tooltip-info="tooltip">
-        <t t-component="FieldComponent" t-props="fieldComponentProps"/>
-    </div>`;
+Field.template = "web.Field";
 
 Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
@@ -270,24 +272,23 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
                 viewMode = "list";
             } else if (!views.list && views.kanban) {
                 viewMode = "kanban";
-            } else {
+            } else if (views.list && views.kanban) {
                 viewMode = "list,kanban";
             }
         } else {
             viewMode = viewMode.replace("tree", "list");
         }
         fieldInfo.viewMode = viewMode;
-
-        const fieldsToFetch = { ...fieldInfo.FieldComponent.fieldsToFetch }; // should become an array?
-        // special case for color field
-        // GES: this is not nice, we will look for something better.
-        const colorField = fieldInfo.options.color_field;
-        if (colorField) {
-            fieldsToFetch[colorField] = { name: colorField, type: "integer", active: true };
-        }
-        fieldInfo.fieldsToFetch = fieldsToFetch;
         fieldInfo.relation = field.relation; // not really necessary
         fieldInfo.views = views;
+
+        let fieldsToFetch = fieldInfo.FieldComponent.fieldsToFetch;
+        if (fieldsToFetch) {
+            if (fieldsToFetch instanceof Function) {
+                fieldsToFetch = fieldsToFetch(fieldInfo);
+            }
+            fieldInfo.fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
+        }
     }
 
     return fieldInfo;
@@ -296,4 +297,5 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
 Field.forbiddenAttributeNames = {
     decorations: `You cannot use the "decorations" attribute name as it is used as generated prop name for the composite decoration-<something> attributes.`,
 };
-Field.defaultProps = { fieldInfo: {} };
+Field.props = ["fieldInfo?", "*"];
+Field.defaultProps = { fieldInfo: {}, setDirty: () => {} };

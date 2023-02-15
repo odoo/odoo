@@ -26,18 +26,19 @@ PAYMENT_METHOD_TYPES = [
 # https://stripe.com/docs/api/charges/object#charge_object-status
 # https://stripe.com/docs/api/refunds/object#refund_object-status
 STATUS_MAPPING = {
-    'draft': ('requires_payment_method', 'requires_confirmation', 'requires_action'),
+    'draft': ('requires_confirmation', 'requires_action'),
     'pending': ('processing', 'pending'),
     'authorized': ('requires_capture',),
     'done': ('succeeded',),
     'cancel': ('canceled',),
-    'error': ('failed',),
+    'error': ('requires_payment_method', 'failed',),
 }
 
 # Events which are handled by the webhook
 HANDLED_WEBHOOK_EVENTS = [
     'payment_intent.amount_capturable_updated',
     'payment_intent.succeeded',
+    'payment_intent.payment_failed',
     'setup_intent.succeeded',
     'charge.refunded',  # A refund has been issued.
     'charge.refund.updated',  # The refund status has changed, possibly from succeeded to failed.

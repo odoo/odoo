@@ -407,6 +407,34 @@ class WithContext(HttpCase):
         self.assertEqual(r.url, home_url_full)
         self.assertIn(b'o_website_info', r.content)
 
+        # Case 6: Check controller redirect which has different `auth` method
+        website.homepage_url = '/my'
+        # -------------------------------------------
+        # / page exists | first menu  |  homepage_url
+        # -------------------------------------------
+        #     no        | /contactus  | /my
+        # -------------------------------------------
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertNotIn(b'<title> My Portal', r.content)
+        self.assertIn(b'<title> Contact Us', r.content)
+        self.assertEqual(r.url, contactus_url_full)
+        self.assertEqual(r.history[0].status_code, 303)
+        # Now with /contactus which is a public content
+        self.env['website.menu'].create({
+            'name': '/my first menu',
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+            'url': '/my',
+            'sequence': 1,
+        })
+        r = self.url_open(home_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertNotIn(b'<title> My Portal', r.content)
+        self.assertIn(b'<title> Login', r.content)
+        self.assertIn('/web/login?redirect', r.url)
+        self.assertEqual(r.history[0].status_code, 303)
+
     def test_07_alternatives(self):
         website = self.env.ref('website.default_website')
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
@@ -455,3 +483,10 @@ class WithContext(HttpCase):
         # Check that is is rendered as a website page.
         self.assertEqual(403, r.status_code, "Must fail with 403")
         self.assertTrue('id="wrap"' in r.text, "Must be rendered as a website page")
+
+    def test_page_url_case_insensitive_match(self):
+        r = self.url_open('/page_1')
+        self.assertEqual(r.status_code, 200, "Reaching page URL, common case")
+        r2 = self.url_open('/Page_1', allow_redirects=False)
+        self.assertEqual(r2.status_code, 303, "URL exists only in different casing, should redirect to it")
+        self.assertTrue(r2.headers.get('Location').endswith('/page_1'), "Should redirect /Page_1 to /page_1")

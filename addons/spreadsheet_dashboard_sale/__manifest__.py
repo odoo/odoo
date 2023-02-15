@@ -10,16 +10,6 @@
     'data': [
         "data/dashboards.xml",
     ],
-    'demo': [],
-    'installable': True,
     'auto_install': ['sale'],
     'license': 'LGPL-3',
-    'assets': {
-        'spreadsheet_dashboard.o_spreadsheet': [],
-        'web.assets_backend': [],
-        'web.qunit_suite_tests': [],
-        'web.assets_tests': [
-            'spreadsheet_dashboard_sale/static/tests/**/*',
-        ],
-    }
 }

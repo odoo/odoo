@@ -8,16 +8,11 @@
             <field name="priority" eval="40"/>
             <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name=%(base.action_apikeys_admin)d]//ancestor::div[hasclass('o_setting_box')]" position="inside">
+                <xpath expr="//button[@name=%(base.action_apikeys_admin)d]//ancestor::setting" position="inside">
                     <div groups="base.group_no_one">
-                        <div class="o_setting_left_pane">
+                        <div class="mt16 content-group">
                             <field name="portal_allow_api_keys"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="portal_allow_api_keys"/>
-                            <div class="text-muted">
-                                Let your customers create developer API keys
-                            </div>
+                            <label string="Customers can generate API Keys" for="portal_allow_api_keys"/>
                         </div>
                     </div>
                 </xpath>

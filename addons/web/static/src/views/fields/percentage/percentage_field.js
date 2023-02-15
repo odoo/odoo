@@ -8,12 +8,16 @@ import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class PercentageField extends Component {
     setup() {
         useInputField({
-            getValue: () => this.props.value * 100,
+            getValue: () =>
+                formatPercentage(this.props.value, {
+                    digits: this.props.digits,
+                    noSymbol: true,
+                }),
             refName: "numpadDecimal",
             parse: (v) => parsePercentage(v),
         });
@@ -38,8 +42,16 @@ PercentageField.displayName = _lt("Percentage");
 PercentageField.supportedTypes = ["integer", "float"];
 
 PercentageField.extractProps = ({ attrs, field }) => {
+    let digits;
+    if (attrs.digits) {
+        digits = JSON.parse(attrs.digits);
+    } else if (attrs.options.digits) {
+        digits = attrs.options.digits;
+    } else if (Array.isArray(field.digits)) {
+        digits = field.digits;
+    }
     return {
-        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
+        digits,
         placeholder: attrs.placeholder,
     };
 };

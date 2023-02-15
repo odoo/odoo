@@ -6,13 +6,18 @@
         <field name="arch" type="xml">
             <form string="Backorder creation">
                 <group>
-                    <div><p name="explanation-text">
-                        You have processed less products than the initial demand.
-                    </p></div><div class="text-muted">
-                        Create a backorder if you expect to process the remaining
-                        products later. Do not create a backorder if you will not
-                        process the remaining products.
-                    </div>
+                    <group>
+                        <div colspan="2"><p name="explanation-text">
+                            You have processed less products than the initial demand.
+                        </p></div>
+                    </group>
+                    <group>
+                        <div colspan="2" class="text-muted">
+                            Create a backorder if you expect to process the remaining
+                            products later. Do not create a backorder if you will not
+                            process the remaining products.
+                        </div>
+                    </group>
                 </group>
 
                 <!-- Added to ensure a correct default_get behavior
@@ -35,8 +40,8 @@
 
                 <footer>
                     <button name="process" string="Create Backorder" type="object" class="oe_highlight" data-hotkey="q"/>
-                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_transfers', '=', True)]}" data-hotkey="w"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-danger text-uppercase" attrs="{'invisible': [('show_transfers', '=', True)]}" data-hotkey="w"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
                 </footer>
             </form>
         </field>

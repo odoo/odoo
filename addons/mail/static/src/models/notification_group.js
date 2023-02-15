@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, clear, insert, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'NotificationGroup',
+Model({
+    name: "NotificationGroup",
     recordMethods: {
         /**
          * Cancel notifications of the group.
@@ -13,7 +11,7 @@ registerModel({
         notifyCancel() {
             this.messaging.rpc({
                 model: this.res_model,
-                method: 'notify_cancel_by_type',
+                method: "notify_cancel_by_type",
                 kwargs: { notification_type: this.notification_type },
             });
         },
@@ -30,47 +28,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Thread|undefined}
-         */
-        _computeThread() {
-            const notificationsThreadIds = this.notifications
-                  .filter(notification => notification.message && notification.message.originThread)
-                  .map(notification => notification.message.originThread.id);
-            const threadIds = new Set(notificationsThreadIds);
-            if (threadIds.size !== 1) {
-                return clear();
-            }
-            return insert({
-                id: notificationsThreadIds[0],
-                model: this.res_model,
-            });
-        },
-        /**
-         * Compute the most recent date inside the notification messages.
-         *
-         * @private
-         * @returns {moment|undefined}
-         */
-        _computeDate() {
-            const dates = this.notifications
-                  .filter(notification => notification.message && notification.message.date)
-                  .map(notification => notification.message.date);
-            if (dates.length === 0) {
-                return clear();
-            }
-            return moment.max(dates);
-        },
-        /**
-         * Compute the position of the group inside the notification list.
-         *
-         * @private
-         * @returns {number}
-         */
-        _computeSequence() {
-            return -Math.max(...this.notifications.map(notification => notification.message.id));
-        },
-        /**
-         * @private
          */
         _onChangeNotifications() {
             if (this.notifications.length === 0) {
@@ -83,17 +40,21 @@ registerModel({
          * @private
          */
         _openDocuments() {
-            if (this.notification_type !== 'email') {
+            if (this.notification_type !== "email") {
                 return;
             }
             this.env.services.action.doAction({
                 name: this.env._t("Mail Failures"),
-                type: 'ir.actions.act_window',
-                view_mode: 'kanban,list,form',
-                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                target: 'current',
+                type: "ir.actions.act_window",
+                view_mode: "kanban,list,form",
+                views: [
+                    [false, "kanban"],
+                    [false, "list"],
+                    [false, "form"],
+                ],
+                target: "current",
                 res_model: this.res_model,
-                domain: [['message_has_error', '=', true]],
+                domain: [["message_has_error", "=", true]],
                 context: { create: false },
             });
             if (this.messaging.device.isSmall) {
@@ -108,42 +69,66 @@ registerModel({
          * States the most recent date of all the notification message.
          */
         date: attr({
-            compute: '_computeDate',
+            /**
+             * Compute the most recent date inside the notification messages.
+             */
+            compute() {
+                const dates = this.notifications
+                    .filter(
+                        (notification) => notification.message && notification.message.momentDate
+                    )
+                    .map((notification) => notification.message.momentDate);
+                if (dates.length === 0) {
+                    return clear();
+                }
+                return moment.max(dates);
+            },
         }),
-        notification_type: attr({
-            identifying: true,
-        }),
-        notifications: many('Notification', {
-            inverse: 'notificationGroup',
-        }),
-        notificationGroupViews: many('NotificationGroupView', {
-            inverse: 'notificationGroup',
-        }),
-        res_id: attr({
-            identifying: true,
-        }),
-        res_model: attr({
-            identifying: true,
-        }),
+        notification_type: attr({ identifying: true }),
+        notifications: many("Notification", { inverse: "notificationGroup" }),
+        notificationGroupViews: many("NotificationGroupView", { inverse: "notificationGroup" }),
+        res_id: attr({ identifying: true }),
+        res_model: attr({ identifying: true }),
         res_model_name: attr(),
         /**
          * States the position of the group inside the notification list.
          */
         sequence: attr({
-            compute: '_computeSequence',
             default: 0,
+            /**
+             * Compute the position of the group inside the notification list.
+             */
+            compute() {
+                return -Math.max(
+                    ...this.notifications.map((notification) => notification.message.id)
+                );
+            },
         }),
         /**
          * Related thread when the notification group concerns a single thread.
          */
-        thread: one('Thread', {
-            compute: '_computeThread',
+        thread: one("Thread", {
+            compute() {
+                const notificationsThreadIds = this.notifications
+                    .filter(
+                        (notification) => notification.message && notification.message.originThread
+                    )
+                    .map((notification) => notification.message.originThread.id);
+                const threadIds = new Set(notificationsThreadIds);
+                if (threadIds.size !== 1) {
+                    return clear();
+                }
+                return insert({
+                    id: notificationsThreadIds[0],
+                    model: this.res_model,
+                });
+            },
         }),
     },
     onChanges: [
         {
-            dependencies: ['notifications'],
-            methodName: '_onChangeNotifications',
+            dependencies: ["notifications"],
+            methodName: "_onChangeNotifications",
         },
     ],
 });

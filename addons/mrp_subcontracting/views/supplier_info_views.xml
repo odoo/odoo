@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="is_subcontractor" readonly="1"/>
+                <field name="is_subcontractor" readonly="1" optional="hide"/>
             </xpath>
         </field>
     </record>

@@ -366,7 +366,7 @@ class TestBoM(TestMrpCommon):
         # ending the recurse call to not call the compute method and just left the Falsy value `0.0`
         # for the components available qty.
         kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).mapped("qty_available")
-        self.assertEqual(kit_product_qty, 2)
+        self.assertEqual(kit_product_qty, 8)
 
     def test_14_bom_kit_qty_multi_uom(self):
         uom_dozens = self.env.ref('uom.product_uom_dozen')
@@ -979,6 +979,52 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
         self.assertAlmostEqual(report_values['lines']['bom_cost'], 2.92)
+
+    def test_bom_report_capacity_with_quantity_of_0(self):
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        location = self.env.ref('stock.stock_location_stock')
+
+        target = self.env['product.product'].create({
+            'name': 'Target',
+            'type': 'product',
+        })
+
+        product_one = self.env['product.product'].create({
+            'name': 'Component one',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product_one, location, 3.0)
+
+        product_two = self.env['product.product'].create({
+            'name': 'Component two',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product_two, location, 4.0)
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': target.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': product_one.id,
+                    'product_qty': 0,
+                    'product_uom_id': uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': product_two.id,
+                    'product_qty': 1,
+                    'product_uom_id': uom_unit.id,
+                })
+            ]
+        })
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+
+        # The first product shouldn't affect the producible quantity because the target needs none of it
+        # So with 4 of the second product available, we can produce 4 items
+        self.assertEqual(report_values["lines"]["producible_qty"], 4)
 
     def test_validate_no_bom_line_with_same_product(self):
         """

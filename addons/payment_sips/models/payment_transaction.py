@@ -10,8 +10,8 @@ from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_sips.const import RESPONSE_CODES_MAPPING, SUPPORTED_CURRENCIES
 from odoo.addons.payment_sips.controllers.main import SipsController
-from .const import RESPONSE_CODES_MAPPING, SUPPORTED_CURRENCIES
 
 _logger = logging.getLogger(__name__)
 
@@ -150,6 +150,6 @@ class PaymentTransaction(models.Model):
     def _sips_notification_data_to_object(self, data):
         res = {}
         for element in data.split('|'):
-            key, value = element.split('=')
+            key, value = element.split('=', 1)
             res[key] = value
         return res

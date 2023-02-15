@@ -6,6 +6,6 @@ class SpreadsheetDashboardGroup(models.Model):
     _description = 'Group of dashboards'
     _order = 'sequence'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     dashboard_ids = fields.One2many('spreadsheet.dashboard', 'dashboard_group_id')
     sequence = fields.Integer()

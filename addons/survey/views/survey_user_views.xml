@@ -66,10 +66,10 @@
                             <field name="deadline" attrs="{'invisible': [('state', '=', 'done'), ('deadline', '=', False)]}"/>
                             <field name="is_attempts_limited" invisible="1"/>
                             <label for="attempts_number" string="Attempt n°" attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}"/>
-                            <div attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}">
+                            <div attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}" class="d-inline-flex">
                                 <field name="attempts_number" nolabel="1"/>
                                  / 
-                                <field name="attempts_limit" nolabel="1" />
+                                <field name="attempts_limit" nolabel="1"/>
                             </div>
                             <field name="test_entry" groups="base.group_no_one"/>
                         </group>
@@ -77,7 +77,7 @@
                             <field name="scoring_type" invisible="1"/>
                             <field name="scoring_success" invisible="1"/>
                             <label for="scoring_percentage" string="Score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
-                            <div attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}">
+                            <div attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" class="d-inline-flex">
                                 <field name="scoring_percentage" nolabel="1"/>
                                 <span>%</span>
                             </div>

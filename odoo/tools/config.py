@@ -77,7 +77,7 @@ class configmanager(object):
             'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
             'reportgz': False,
             'root_path': None,
-            'websocket_keep_alive_timeout': 600,
+            'websocket_keep_alive_timeout': 3600,
             'websocket_rate_limit_burst': 10,
             'websocket_rate_limit_delay': 0.2,
         }
@@ -85,7 +85,8 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
             'publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode', 'shell_interface'
+            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode', 'shell_interface',
+            'longpolling_port',
         ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
@@ -135,7 +136,7 @@ class configmanager(object):
                               "Keep empty to listen on all interfaces (0.0.0.0)")
         group.add_option("-p", "--http-port", dest="http_port", my_default=8069,
                          help="Listen port for the main HTTP service", type="int", metavar="PORT")
-        group.add_option("--longpolling-port", dest="longpolling_port", my_default=None,
+        group.add_option("--longpolling-port", dest="longpolling_port", my_default=0,
                          help="Deprecated alias to the gevent-port option", type="int", metavar="PORT")
         group.add_option("--gevent-port", dest="gevent_port", my_default=8072,
                          help="Listen port for the gevent worker", type="int", metavar="PORT")
@@ -306,16 +307,15 @@ class configmanager(object):
                          help="Time limit (decimal value in hours) records created with a "
                               "TransientModel (mostly wizard) are kept in the database. Default to 1 hour.",
                          type="float")
-        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=False,
-                         help="Deprecated alias to the transient-age-limit option",
-                         type="float")
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Try to enable the unaccent extension when creating new databases.")
-        group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
-                         help="Absolute path to the GeoIP database file.")
+        group.add_option("--geoip-city-db", "--geoip-db", dest="geoip_city_db", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
+                         help="Absolute path to the GeoIP City database file.")
+        group.add_option("--geoip-country-db", dest="geoip_country_db", my_default='/usr/share/GeoIP/GeoLite2-Country.mmdb',
+                         help="Absolute path to the GeoIP Country database file.")
         parser.add_option_group(group)
 
         if os.name == 'posix':
@@ -342,8 +342,8 @@ class configmanager(object):
                              help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
                                   "Set to 0 for no limit. ",
                              type="int")
-            group.add_option("--limit-request", dest="limit_request", my_default=8192,
-                             help="Maximum number of request to be processed per worker (default 8192).",
+            group.add_option("--limit-request", dest="limit_request", my_default=2**16,
+                             help="Maximum number of request to be processed per worker (default 65536).",
                              type="int")
             parser.add_option_group(group)
 
@@ -407,10 +407,6 @@ class configmanager(object):
             "The config file '%s' selected with -c/--config doesn't exist or is not readable, "\
             "use -s/--save if you want to generate it"% opt.config)
 
-        die(bool(opt.osv_memory_age_limit) and bool(opt.transient_memory_age_limit),
-            "the osv-memory-count-limit option cannot be used with the "
-            "transient-age-limit option, please only use the latter.")
-
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
         # if the server is run by an unprivileged user, he has to specify location of a config file where he has the rights to write,
@@ -455,7 +451,8 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
+                'shell_interface',
         ]
 
         for arg in keys:
@@ -478,7 +475,7 @@ class configmanager(object):
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
+            'osv_memory_count_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
         ]
@@ -543,7 +540,7 @@ class configmanager(object):
             self.save()
 
         # normalize path options
-        for key in ['data_dir', 'logfile', 'pidfile', 'test_file', 'screencasts', 'screenshots', 'pg_path', 'translate_out', 'translate_in', 'geoip_database']:
+        for key in ['data_dir', 'logfile', 'pidfile', 'test_file', 'screencasts', 'screenshots', 'pg_path', 'translate_out', 'translate_in', 'geoip_city_db', 'geoip_country_db']:
             self.options[key] = self._normalize(self.options[key])
 
         conf.addons_paths = self.options['addons_path'].split(',')
@@ -554,12 +551,6 @@ class configmanager(object):
         return opt
 
     def _warn_deprecated_options(self):
-        if self.options['osv_memory_age_limit']:
-            warnings.warn(
-                "The osv-memory-age-limit is a deprecated alias to "
-                "the transient-age-limit option, please use the latter.",
-                DeprecationWarning)
-            self.options['transient_age_limit'] = self.options.pop('osv_memory_age_limit')
         if self.options['longpolling_port']:
             warnings.warn(
                 "The longpolling-port is a deprecated alias to "

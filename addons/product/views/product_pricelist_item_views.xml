@@ -12,7 +12,7 @@
                 <field name="pricelist_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter string="Active" name="visible" domain="[('pricelist_id.active', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                     <filter string="Variant"
@@ -99,10 +99,8 @@
                         <group name="pricelist_rule_method">
                             <field name="compute_price" string="Computation" widget="radio"/>
                         </group>
-                        <div>
-                            <div class="alert alert-info" role="alert" groups="uom.group_uom">
-                                The computed price is expressed in the default Unit of Measure of the product.
-                            </div>
+                        <div class="alert alert-info" role="alert" groups="uom.group_uom">
+                            The computed price is expressed in the default Unit of Measure of the product.
                         </div>
                     </group>
                     <group name="pricelist_rule_base" groups="product.group_sale_pricelist">
@@ -132,11 +130,9 @@
                                 <field name="price_max_margin" string="Max. Margin" class="oe_inline" widget="monetary" nolabel="1"/>
                             </div>
                         </group>
-                        <group>
-                            <div class="alert alert-info" role="alert" style="white-space: pre;" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
-                                <field name="rule_tip"/>
-                            </div>
-                        </group>
+                        <div class="alert alert-info" role="alert" style="white-space: pre;" attrs="{'invisible': [('compute_price', '!=', 'formula')]}">
+                            <field name="rule_tip"/>
+                        </div>
                     </group>
 
                     <group string="Conditions">

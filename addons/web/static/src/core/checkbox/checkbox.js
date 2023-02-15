@@ -2,7 +2,7 @@
 
 import { useHotkey } from "../hotkeys/hotkey_hook";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 /**
  * Custom checkbox
@@ -48,12 +48,14 @@ export class CheckBox extends Component {
         if (!this.props.disabled) {
             ev.stopPropagation();
             input.checked = !input.checked;
+            this.props.onChange(input.checked);
         }
-        this.props.onChange(input.checked);
     }
 
     onChange(ev) {
-        this.props.onChange(ev.target.checked);
+        if (!this.props.disabled) {
+            this.props.onChange(ev.target.checked);
+        }
     }
 }
 

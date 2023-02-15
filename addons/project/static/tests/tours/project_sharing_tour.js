@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project App.'), {
-    trigger: '.oe_kanban_global_click :contains("Project Sharing") button.o_dropdown_kanban',
+const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project App.'), {
+    trigger: '.o_kanban_record:contains("Project Sharing") .o_dropdown_kanban .dropdown-toggle',
     content: 'Open the project dropdown.'
 }, {
     trigger: '.o_kanban_record:contains("Project Sharing") .dropdown-menu a:contains("Share")',
@@ -49,14 +50,14 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     trigger: '.o_kanban_quick_create .o_kanban_edit',
     content: 'Go to the form view of this new task',
 }, {
-    trigger: 'div.o_statusbar_status[name="stage_id"] button[aria-checked="false"]:contains(Done)',
+    trigger: 'div[name="stage_id"] div.o_statusbar_status button[aria-checked="false"]:contains(Done)',
     content: 'Change the stage of the task.',
 }, {
-    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea[name="message"]',
+    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',
     content: 'Write a message in the chatter of the task',
     run: 'text I create a new task for testing purpose.',
 }, {
-    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body button[data-action="/mail/chatter_post"]',
+    trigger: '.o_portal_chatter_composer_input .o_portal_chatter_composer_body button[name="send_message"]',
     content: 'Send the message',
 }, {
     trigger: 'ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',
@@ -102,14 +103,14 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     content: 'Go to the list view',
 }];
 
-tour.register('project_sharing_tour', {
+registry.category("web_tour.tours").add('project_sharing_tour', {
     test: true,
     url: '/web',
-}, projectSharingSteps);
+    steps: projectSharingSteps });
 
 // The begining of the project sharing feature
 const projectSharingStepIndex = projectSharingSteps.findIndex(s => s.id && s.id === 'project_sharing_feature');
-tour.register('portal_project_sharing_tour', {
+registry.category("web_tour.tours").add('portal_project_sharing_tour', {
     test: true,
     url: '/my/projects',
-}, projectSharingSteps.slice(projectSharingStepIndex, projectSharingSteps.length));
+    steps: projectSharingSteps.slice(projectSharingStepIndex, projectSharingSteps.length) });

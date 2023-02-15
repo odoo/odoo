@@ -17,10 +17,10 @@
                 <t t-set-slot="control-panel-bottom-left">
                     <t t-if="props.info.actionMenus and model.root.selection.length">
                         <ActionMenus
-                            activeIds="model.root.selection.map((r) => r.resId)"
+                            getActiveIds="() => model.root.selection.map((r) => r.resId)"
                             context="props.context"
                             domain="props.domain"
-                            items="getActionMenuItems()"
+                            items="actionMenuItems"
                             isDomainSelected="model.root.isDomainSelected"
                             resModel="model.root.resModel"
                             onActionExecuted="() => model.load()"/>
@@ -32,7 +32,7 @@
     </t>
 
     <t t-name="web.ListView.Buttons" owl="1">
-        <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
+        <div class="o_list_buttons d-flex flex-wrap" role="toolbar" aria-label="Main actions">
             <t t-if="props.showButtons">
                 <t t-if="model.root.editedRecord">
                     <button type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
@@ -42,48 +42,46 @@
                         Discard
                     </button>
                 </t>
-                <t t-elif="activeActions['create'] and (!model.root.isGrouped or !editable)">
+                <t t-elif="activeActions.create and (!model.root.isGrouped or !editable)">
                     <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
-                        Create
+                        New
                     </button>
                 </t>
-                <t t-if="nbTotal and !nbSelected and activeActions['exportXlsx'] and isExportEnable and !env.isSmall">
-                    <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All" t-on-click="onDirectExportData"/>
-                </t>
-            </t>
-            <t t-if="nbSelected">
                 <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
-                    <ListViewHeaderButton
+                    <MultiRecordViewButton
+                        t-if="nbSelected || (button.display === 'always')"
                         list="model.root"
+                        className="button.className"
                         clickParams="button.clickParams"
-                        defaultRank="button.defaultRank"
+                        defaultRank="'btn-secondary'"
                         domain="props.domain"
                         icon="button.icon"
                         string="button.string"
                         title="button.title"
                     />
                 </t>
-                <t t-if="!env.isSmall">
-                    <t t-call="web.ListView.Selection"/>
+                <t t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable and !env.isSmall">
+                    <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All" t-on-click="onDirectExportData"/>
                 </t>
+            </t>
+            <t t-if="!env.isSmall and nbSelected">
+                <t t-call="web.ListView.Selection"/>
             </t>
         </div>
     </t>
 
     <t t-name="web.ListView.Selection" owl="1">
-        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center ps-0 px-lg-2 py-0 mb-0 ms-0 ms-md-2" role="alert">
-            <t t-if="env.isSmall">
-                <button class="btn btn-link py-0 o_discard_selection" t-on-click="discardSelection">
-                    <span class="fa-2x">&#215;</span>
-                </button>
-            </t>
-            <span t-if="isDomainSelected">All <span class="font-monospace" t-esc="nbTotal"/> selected</span>
+        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center p-1" role="alert">
+            <span t-if="isDomainSelected" class="p-1">All <t t-esc="nbTotal"/> selected</span>
             <t t-else="">
-                <span class="font-monospace me-1" t-esc="nbSelected"/> selected
-                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info px-2 py-1 border-0 fw-normal" t-on-click="onSelectDomain">
-                    <i class="fa fa-arrow-right"/> Select all <span class="font-monospace" t-esc="nbTotal"/>
+                <span class="me-1" t-esc="nbSelected"/> selected
+                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info p-1 border-0 fw-normal" t-on-click="onSelectDomain">
+                    <i class="fa fa-fw fa-arrow-right"/> Select all <span t-esc="nbTotal"/>
                 </a>
             </t>
+            <a t-if="nbSelected > 1" href="#" class="o_list_unselect_all ms-2 btn btn-sm btn-info p-1 border-0 fw-normal" t-att-class="{'btn-link': env.isSmall}" t-on-click="onUnselectAll">
+                <i class="fa fa-fw fa-times"/><t t-if="!env.isSmall"> Unselect all</t>
+            </a>
         </div>
     </t>
 

@@ -102,8 +102,26 @@ class Employee(models.Model):
                 employee.resource_calendar_id = employee.contract_id.resource_calendar_id
         return res
 
-    def action_open_contract_history(self):
+    def action_open_contract(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id('hr_contract.hr_contract_history_view_form_action')
-        action['res_id'] = self.id
+        action = self.env["ir.actions.actions"]._for_xml_id('hr_contract.action_hr_contract')
+        action['views'] = [(False, 'form')]
+        if not self.contract_ids:
+            action['context'] = {
+                'default_employee_id': self.id,
+            }
+            action['target'] = 'new'
+            return action
+
+        target_contract = self.contract_id
+        if target_contract:
+            action['res_id'] = target_contract.id
+            return action
+
+        target_contract = self.contract_ids.filtered(lambda c: c.state == 'draft')
+        if target_contract:
+            action['res_id'] = target_contract[0].id
+            return action
+
+        action['res_id'] = self.contract_ids[0].id
         return action

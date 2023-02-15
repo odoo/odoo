@@ -35,10 +35,12 @@ class TestResUsersSettings(MailCommon):
         with self.assertBus(
                 [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
                 [{
-                    'type': 'res.users.settings/insert',
+                    'type': 'mail.record/insert',
                     'payload': {
-                        'id': settings.id,
-                        'is_discuss_sidebar_category_chat_open': True,
+                        'res.users.settings': {
+                            'id': settings.id,
+                            'is_discuss_sidebar_category_chat_open': True,
+                        },
                     },
                 }]):
             settings.set_res_users_settings({'is_discuss_sidebar_category_chat_open': True})

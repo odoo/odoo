@@ -19,13 +19,11 @@
         <field name="model">slide.channel</field>
         <field name="inherit_id" ref="website_slides.slide_channel_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='action_channel_invite']" position="after">
-                <div role="menuitem">
-                    <a name="action_mass_mailing_attendees" type="object"
-                       groups="mass_mailing.group_mass_mailing_user" class="float-start pe-1">
-                        Contact Attendees
-                    </a>
-                </div>
+            <xpath expr="//a[@name='action_channel_invite']" position="after">
+                <a role="menuitem" name="action_mass_mailing_attendees" type="object"
+                   groups="mass_mailing.group_mass_mailing_user" class="dropdown-item">
+                    Contact Attendees
+                </a>
             </xpath>
         </field>
     </record>

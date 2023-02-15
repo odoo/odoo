@@ -4,7 +4,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { decodeObjectForTemplate } from "@web/views/view_compiler";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
 
 function findWidgetComponent(name) {
@@ -25,11 +25,17 @@ export class Widget extends Component {
     }
 
     get classNames() {
-        return {
+        const classNames = {
             o_widget: true,
             [`o_widget_${this.props.name}`]: true,
             [this.props.className]: Boolean(this.props.className),
         };
+        if (this.Widget.additionalClasses) {
+            for (const cls of this.Widget.additionalClasses) {
+                classNames[cls] = true;
+            }
+        }
+        return classNames;
     }
     get widgetProps() {
         const { node: rawNode } = this.props;
@@ -60,5 +66,18 @@ Widget.template = xml/*xml*/ `
 Widget.parseWidgetNode = function (node) {
     const name = node.getAttribute("name");
     const WidgetComponent = findWidgetComponent(name);
-    return { WidgetComponent };
+    const attrs = Object.fromEntries(
+        [...node.attributes].map(({ name, value }) => {
+            return [name, name === "modifiers" ? JSON.parse(value || "{}") : value];
+        })
+    );
+    return {
+        options: evaluateExpr(node.getAttribute("options") || "{}"),
+        name,
+        rawAttrs: attrs,
+        WidgetComponent,
+    };
+};
+Widget.props = {
+    "*": true,
 };

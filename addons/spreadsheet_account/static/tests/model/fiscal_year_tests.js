@@ -4,7 +4,7 @@ import {
     createModelWithDataSource,
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
-import { getCell } from "@spreadsheet/../tests/utils/getters";
+import { getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
 import "@spreadsheet_account/index";
 
 QUnit.module("spreadsheet_account > fiscal year", {}, () => {
@@ -29,8 +29,8 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
         setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020")`);
         await waitForDataSourcesLoaded(model);
         assert.verifySteps(["get_fiscal_dates"]);
-        assert.equal(getCell(model, "A1").formattedValue, "1/1/2020");
-        assert.equal(getCell(model, "A2").formattedValue, "12/31/2020");
+        assert.equal(getEvaluatedCell(model, "A1").formattedValue, "1/1/2020");
+        assert.equal(getEvaluatedCell(model, "A2").formattedValue, "12/31/2020");
     });
 
     QUnit.test("with a given company id", async (assert) => {
@@ -54,8 +54,8 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
         setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020", 1)`);
         await waitForDataSourcesLoaded(model);
         assert.verifySteps(["get_fiscal_dates"]);
-        assert.equal(getCell(model, "A1").formattedValue, "1/1/2020");
-        assert.equal(getCell(model, "A2").formattedValue, "12/31/2020");
+        assert.equal(getEvaluatedCell(model, "A1").formattedValue, "1/1/2020");
+        assert.equal(getEvaluatedCell(model, "A2").formattedValue, "12/31/2020");
     });
 
     QUnit.test("with a wrong company id", async (assert) => {
@@ -80,11 +80,11 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
         await waitForDataSourcesLoaded(model);
         assert.verifySteps(["get_fiscal_dates"]);
         assert.equal(
-            getCell(model, "A1").evaluated.error.message,
+            getEvaluatedCell(model, "A1").error.message,
             "The company fiscal year could not be found."
         );
         assert.equal(
-            getCell(model, "A2").evaluated.error.message,
+            getEvaluatedCell(model, "A2").error.message,
             "The company fiscal year could not be found."
         );
     });
@@ -94,11 +94,11 @@ QUnit.module("spreadsheet_account > fiscal year", {}, () => {
         setCellContent(model, "A1", `=ODOO.FISCALYEAR.START("not a number")`);
         setCellContent(model, "A2", `=ODOO.FISCALYEAR.END("11/11/2020", "not a number")`);
         assert.equal(
-            getCell(model, "A1").evaluated.error.message,
+            getEvaluatedCell(model, "A1").error.message,
             "The function ODOO.FISCALYEAR.START expects a number value, but 'not a number' is a string, and cannot be coerced to a number."
         );
         assert.equal(
-            getCell(model, "A2").evaluated.error.message,
+            getEvaluatedCell(model, "A2").error.message,
             "The function ODOO.FISCALYEAR.END expects a number value, but 'not a number' is a string, and cannot be coerced to a number."
         );
     });

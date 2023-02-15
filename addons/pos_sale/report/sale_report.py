@@ -52,6 +52,7 @@ class SaleReport(models.Model):
             pos.name AS name,
             pos.date_order AS date,
             CASE WHEN pos.state = 'draft' THEN 'pos_draft' WHEN pos.state = 'done' THEN 'pos_done' else pos.state END AS state,
+            NULL as invoice_status,
             pos.partner_id AS partner_id,
             pos.user_id AS user_id,
             pos.company_id AS company_id,
@@ -75,12 +76,21 @@ class SaleReport(models.Model):
             AS discount_amount,
             NULL AS order_id"""
 
-        additional_fields_info = self._select_additional_fields()
+        additional_fields = self._select_additional_fields()
+        additional_fields_info = self._fill_pos_fields(additional_fields)
         template = """,
-            NULL AS %s"""
-        for fname in additional_fields_info.keys():
-            select_ += template % fname
+            %s AS %s"""
+        for fname, value in additional_fields_info.items():
+            select_ += template % (value, fname)
         return select_
+
+    def _fill_pos_fields(self, additional_fields):
+        """Hook to fill additional fields for the pos_sale.
+
+        :param values: dictionary of values to fill
+        :type values: dict
+        """
+        return {x: 'NULL' for x in additional_fields}
 
     def _from_pos(self):
         return """

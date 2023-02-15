@@ -3,6 +3,7 @@ odoo.define('website.wysiwyg', function (require) {
 
 var Wysiwyg = require('web_editor.wysiwyg');
 var snippetsEditor = require('website.snippet.editor');
+let socialMediaOptions = require('@website/snippets/s_social_media/options')[Symbol.for("default")];
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -17,15 +18,14 @@ var snippetsEditor = require('website.snippet.editor');
  */
 function toggleDropdown($toggles, show) {
     return Promise.all(_.map($toggles, toggle => {
-        var $toggle = $(toggle);
-        var $dropdown = $toggle.parent();
-        var shown = $dropdown.hasClass('show');
+        const $toggle = $(toggle);
+        const shown = toggle.classList.contains('show');
         if (shown === show) {
             return;
         }
-        var toShow = !shown;
+        const toShow = !shown;
         return new Promise(resolve => {
-            $dropdown.one(
+            $toggle.parent().one(
                 toShow ? 'shown.bs.dropdown' : 'hidden.bs.dropdown',
                 () => resolve()
             );
@@ -51,6 +51,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         this.options.toolbarHandler = $('#web_editor-top-edit');
         // Do not insert a paragraph after each column added by the column commands:
         this.options.insertParagraphAfterColumns = false;
+        this.options.dropImageAsAttachment = true;
 
         const $editableWindow = this.$editable[0].ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
@@ -102,6 +103,15 @@ const WebsiteWysiwyg = Wysiwyg.extend({
      * @override
      */
     destroy: function () {
+        // We do not need the cache to live longer than the edition.
+        // Keeping it alive could end up in a corrupt state without the user
+        // even noticing. (If the values were changed in another tab or by
+        // someone else, when edit starts again here, without a clear cache at
+        // destroy, options will have wrong social media values).
+        // It would also survive (multi) website switch, not fetching the values
+        // from the accessed website.
+        socialMediaOptions.clearDbSocialValuesCache();
+
         this._restoreMegaMenus();
         this._super.apply(this, arguments);
     },
@@ -271,6 +281,9 @@ snippetsEditor.SnippetsMenu.include({
      */
     start() {
         const _super = this._super(...arguments);
+        if (this.options.enableTranslation) {
+            return _super;
+        }
         if (this.$body[0].ownerDocument !== this.ownerDocument) {
             this.$body.on('click.snippets_menu', '*', this._onClick);
         }

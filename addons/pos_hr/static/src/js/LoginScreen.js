@@ -1,43 +1,30 @@
-odoo.define('pos_hr.LoginScreen', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
-    const SelectCashierMixin = require('pos_hr.SelectCashierMixin');
-    const { useBarcodeReader } = require('point_of_sale.custom_hooks');
+import { LegacyComponent } from "@web/legacy/legacy_component";
+import { useCashierSelector } from "@pos_hr/js/SelectCashierMixin";
+import { registry } from "@web/core/registry";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
-    class LoginScreen extends SelectCashierMixin(PosComponent) {
-        setup() {
-            super.setup();
-            useBarcodeReader({cashier: this.barcodeCashierAction}, true);
-        }
-        async selectCashier() {
-            if (await super.selectCashier()) {
-                this.back();
-            }
-        }
-        async barcodeCashierAction(code) {
-            if (await super.barcodeCashierAction(code)) {
-                this.back();
-            }
-        }
-        back() {
-            this.props.resolve({ confirmed: false, payload: false });
-            this.trigger('close-temp-screen');
-            this.env.pos.hasLoggedIn = true;
-            this.env.posbus.trigger('start-cash-control');
-        }
-        confirm() {
-            this.props.resolve({ confirmed: true, payload: true });
-            this.trigger('close-temp-screen');
-        }
-        get shopName() {
-            return this.env.pos.config.name;
-        }
+export class LoginScreen extends LegacyComponent {
+    static template = "LoginScreen";
+    setup() {
+        super.setup(...arguments);
+        this.selectCashier = useCashierSelector({
+            onCashierChanged: () => this.back(),
+        });
+        this.pos = usePos();
     }
-    LoginScreen.template = 'LoginScreen';
 
-    Registries.Component.add(LoginScreen);
+    back() {
+        this.props.resolve({ confirmed: false, payload: false });
+        this.pos.closeTempScreen();
+        this.env.pos.hasLoggedIn = true;
+        this.env.posbus.trigger("start-cash-control");
+    }
 
-    return LoginScreen;
-});
+    get shopName() {
+        return this.env.pos.config.name;
+    }
+}
+
+registry.category("pos_screens").add("LoginScreen", LoginScreen);

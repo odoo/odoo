@@ -6,7 +6,6 @@
         <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_tree"/>
         <field name="priority" eval="50"/>
         <field name="mode">primary</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='opened']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -23,7 +22,6 @@
         <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_pivot"/>
         <field name="priority" eval="50"/>
         <field name="mode">primary</field>
-        <field name="type">pivot</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='opened']" position="attributes">
                 <attribute name="invisible">1</attribute>

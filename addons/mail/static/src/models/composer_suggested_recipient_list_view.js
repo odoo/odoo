@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ComposerSuggestedRecipientListView',
+Model({
+    name: "ComposerSuggestedRecipientListView",
+    template: "mail.ComposerSuggestedRecipientListView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -25,43 +24,35 @@ registerModel({
             }
             this.update({ hasShowMoreButton: true });
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeComposerSuggestedRecipientViews() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (this.hasShowMoreButton) {
-                return this.thread.suggestedRecipientInfoList.map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
-            } else {
-                return this.thread.suggestedRecipientInfoList.slice(0, 3).map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
-            }
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            return this.composerViewOwner.composer.activeThread;
-        },
     },
     fields: {
-        composerSuggestedRecipientViews: many('ComposerSuggestedRecipientView', {
-            compute: '_computeComposerSuggestedRecipientViews',
-            inverse: 'composerSuggestedRecipientListViewOwner',
+        composerSuggestedRecipientViews: many("ComposerSuggestedRecipientView", {
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (this.hasShowMoreButton) {
+                    return this.thread.suggestedRecipientInfoList.map((suggestedRecipientInfo) => ({
+                        suggestedRecipientInfo,
+                    }));
+                } else {
+                    return this.thread.suggestedRecipientInfoList
+                        .slice(0, 3)
+                        .map((suggestedRecipientInfo) => ({ suggestedRecipientInfo }));
+                }
+            },
+            inverse: "composerSuggestedRecipientListViewOwner",
         }),
-        composerViewOwner: one('ComposerView', {
+        composerViewOwner: one("ComposerView", {
             identifying: true,
-            inverse: 'composerSuggestedRecipientListView',
+            inverse: "composerSuggestedRecipientListView",
         }),
-        hasShowMoreButton: attr({
-            default: false,
-        }),
-        thread: one('Thread', {
-            compute: '_computeThread',
+        hasShowMoreButton: attr({ default: false }),
+        thread: one("Thread", {
             required: true,
+            compute() {
+                return this.composerViewOwner.composer.activeThread;
+            },
         }),
     },
 });

@@ -91,6 +91,7 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" multi_edit="1">
+                <field name="company_id" invisible="1"/>
                 <field name="active" invisible="1"/>
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
@@ -194,32 +195,25 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>
-                    <separator string="Applicable On"/>
-                    <p class="oe_grey">Select the places where this route can be selected</p>
-                    <group>
+                    <group string="Applicable On" name="route_selector">
+                        <p colspan="2" class="oe_grey">Select the places where this route can be selected</p>
                         <group>
-                            <label for="product_categ_selectable" string="Product Categories"/>
-                            <div>
-                                <field name="product_categ_selectable" class="oe_inline"/>
-                            </div>
-                            <label for="product_selectable" string="Products"/>
-                            <div>
-                                <field name="product_selectable" class="oe_inline"/>
-                            </div>
-                            <label for="packaging_selectable" string="Packagings" groups="product.group_stock_packaging"/>
-                            <div groups="product.group_stock_packaging">
-                                <field name="packaging_selectable" class="oe_inline"/>
-                            </div>
+                            <field name="product_categ_selectable" string="Product Categories"/>
+                            <field name="product_selectable" string="Products"/>
+                            <field name="packaging_selectable" string="Packagings" groups="product.group_stock_packaging"/>
                         </group>
                         <group>
-                            <field name="warehouse_selectable" string="Warehouses"/>
-                            <field name="warehouse_domain_ids" invisible="1"/>
-                            <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
-                                   attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
+                            <label for="warehouse_selectable" string="Warehouses"/>
+                            <div class="o_row">
+                                <field name="warehouse_selectable" class="oe_inline" nolabel="1"/>
+                                <field name="warehouse_domain_ids" invisible="1"/>
+                                <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
+                                       attrs="{'invisible': [('warehouse_selectable', '=', False)]}"/>
+                            </div>
                         </group>
                     </group>
-                    <group string="Rules" colspan="4" >
-                        <field name="rule_ids" colspan="4" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
+                    <group string="Rules" >
+                        <field name="rule_ids" colspan="2" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
                             <tree>
                                 <field name="sequence" widget="handle"/>
                                 <field name="action"/>

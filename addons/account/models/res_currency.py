@@ -10,7 +10,7 @@ class ResCurrency(models.Model):
 
     display_rounding_warning = fields.Boolean(string="Display Rounding Warning", compute='_compute_display_rounding_warning',
         help="The warning informs a rounding factor change might be dangerous on res.currency's form view.")
-
+    fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
 
     @api.depends('rounding')
     def _compute_display_rounding_warning(self):
@@ -18,6 +18,12 @@ class ResCurrency(models.Model):
             record.display_rounding_warning = record.id \
                                               and record._origin.rounding != record.rounding \
                                               and record._origin._has_accounting_entries()
+
+    @api.depends_context('allowed_company_ids')
+    def _compute_fiscal_country_codes(self):
+        for record in self:
+            companies = self.env['res.company'].search([('id', 'in', self.env.context.get('allowed_company_ids', []))])
+            record.fiscal_country_codes = ",".join(companies.mapped('account_fiscal_country_id.code'))
 
     def write(self, vals):
         if 'rounding' in vals:

@@ -4,7 +4,7 @@ import { registry } from '@web/core/registry';
 import { UploadProgressToast } from './upload_progress_toast';
 import { getDataURLFromFile } from 'web.utils';
 
-const { reactive } = owl;
+import { reactive } from "@odoo/owl";
 
 export const AUTOCLOSE_DELAY = 3000;
 

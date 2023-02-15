@@ -44,7 +44,7 @@ Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
 
 German accounting chart and localization.
     """,
-    'depends': ['l10n_de'],
+    'depends': ['l10n_de', 'l10n_multilang'],
     'data': [
         'data/l10n_de_skr03_chart_data.xml',
         'data/account.account.template.csv',

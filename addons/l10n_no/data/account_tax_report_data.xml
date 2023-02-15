@@ -10,15 +10,16 @@
             <record id="tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
+                <field name="figure_type">monetary_without_symbol</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="account_tax_report_line_samlet_omsetning" model="account.report.line">
-                <field name="name">A. Samlet omsetning, uttak og innførsel</field>
+                <field name="name">A. Total turnover, withdrawals and imports</field>
                 <field name="aggregation_formula">NOTAX_01.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_post_1" model="account.report.line">
-                        <field name="name">Post 1 Samlet omsetning og uttak utenfor merverdiavgiftsloven</field>
+                        <field name="name">Post 1 Total turnover and withdrawals outside the VAT Act</field>
                         <field name="code">NOTAX_01</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_1_tag" model="account.report.expression">
@@ -29,18 +30,18 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_2" model="account.report.line">
-                        <field name="name">Post 2 Samlet omsetning og uttak innenfor merverdiavgiftloven og innførsel</field>
+                        <field name="name">Post 2 Total sales and withdrawals within the Value Added Tax Act and imports</field>
                         <field name="code">NOTAX_02</field>
                         <field name="aggregation_formula">NOTAX_03.balance+NOTAX_04.balance+NOTAX_05.balance+NOTAX_06.balance+NOTAX_07.balance+NOTAX_08.balance</field>
                     </record>
                 </field>
             </record>
             <record id="account_tax_report_line_innenlands_omsetning" model="account.report.line">
-                <field name="name">B. Innenlands omsetning og uttak</field>
+                <field name="name">B. Domestic sales and withdrawals</field>
                 <field name="aggregation_formula">NOTAX_03.balance + NOTAX_03_1.balance + NOTAX_04.balance + NOTAX_04_1.balance + NOTAX_05.balance + NOTAX_05_1.balance + NOTAX_06.balance + NOTAX_07.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_post_3" model="account.report.line">
-                        <field name="name">Post 3 Innenlands omsetning og uttak, og beregnet avgift 25 %</field>
+                        <field name="name">Post 3 Domestic sales and withdrawals, and calculated fee 25%</field>
                         <field name="code">NOTAX_03</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_3_tag" model="account.report.expression">
@@ -51,7 +52,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_3_tax" model="account.report.line">
-                        <field name="name">Post 3 Innenlands omsetning og uttak, og beregnet avgift 25 % Tax</field>
+                        <field name="name">Post 3 Domestic sales and withdrawals, and calculated fee 25% Tax</field>
                         <field name="code">NOTAX_03_1</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_3_tax_tag" model="account.report.expression">
@@ -62,7 +63,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_4" model="account.report.line">
-                        <field name="name">Post 4 Innenlands omsetning og uttak, og beregnet avgift 15 %</field>
+                        <field name="name">Post 4 Domestic sales and withdrawals, and calculated fee 15%</field>
                         <field name="code">NOTAX_04</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_4_tag" model="account.report.expression">
@@ -73,7 +74,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_4_tax" model="account.report.line">
-                        <field name="name">Post 4 Innenlands omsetning og uttak, og beregnet avgift 15 % Tax</field>
+                        <field name="name">Post 4 Domestic sales and withdrawals, and calculated fee 15% Tax</field>
                         <field name="code">NOTAX_04_1</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_4_tax_tag" model="account.report.expression">
@@ -84,7 +85,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_5" model="account.report.line">
-                        <field name="name">Post 5 Innenlands omsetning og uttak, og beregnet avgift 12 %</field>
+                        <field name="name">Post 5 Domestic sales and withdrawals, and calculated fee 12%</field>
                         <field name="code">NOTAX_05</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_5_tag" model="account.report.expression">
@@ -95,7 +96,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_5_tax" model="account.report.line">
-                        <field name="name">Post 5 Innenlands omsetning og uttak, og beregnet avgift 12 % Tax</field>
+                        <field name="name">Post 5 Domestic sales and withdrawals, and calculated fee 12% Tax</field>
                         <field name="code">NOTAX_05_1</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_5_tax_tag" model="account.report.expression">
@@ -106,7 +107,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_6" model="account.report.line">
-                        <field name="name">Post 6 Innenlands omsetning og uttak fritatt for merverdiavgift</field>
+                        <field name="name">Post 6 Domestic sales and withdrawals exempt from value added tax</field>
                         <field name="code">NOTAX_06</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_6_tag" model="account.report.expression">
@@ -117,7 +118,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_7" model="account.report.line">
-                        <field name="name">Post 7 Innenlands omsetning med omvendt avgiftsplikt</field>
+                        <field name="name">Post 7 Domestic turnover with reverse tax liability</field>
                         <field name="code">NOTAX_07</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_7_tag" model="account.report.expression">
@@ -130,11 +131,11 @@
                 </field>
             </record>
             <record id="account_tax_report_line_utforsel" model="account.report.line">
-                <field name="name">C. Utførsel</field>
+                <field name="name">C. Export</field>
                 <field name="aggregation_formula">NOTAX_08.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_post_8" model="account.report.line">
-                        <field name="name">Post 8 Utførsel av varer og tjenester fritatt for merverdiavgift</field>
+                        <field name="name">Post 8 Export of goods and services exempt from value added tax</field>
                         <field name="code">NOTAX_08</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_8_tag" model="account.report.expression">
@@ -147,11 +148,11 @@
                 </field>
             </record>
             <record id="account_tax_report_line_innforsel_av_varer" model="account.report.line">
-                <field name="name">D. Innførsel av varer</field>
+                <field name="name">D. Import of goods</field>
                 <field name="aggregation_formula">NOTAX_09.balance + NOTAX_09_1.balance + NOTAX_10.balance + NOTAX_10_1.balance + NOTAX_11.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_post_9" model="account.report.line">
-                        <field name="name">Post 9 Innførsel av varer, og beregnet avgift 25 %</field>
+                        <field name="name">Post 9 Import of goods, and calculated tax 25%</field>
                         <field name="code">NOTAX_09</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_9_tag" model="account.report.expression">
@@ -162,7 +163,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_9_tax" model="account.report.line">
-                        <field name="name">Post 9 Innførsel av varer, og beregnet avgift 25 % Tax</field>
+                        <field name="name">Post 9 Import of goods, and calculated tax 25% Tax</field>
                         <field name="code">NOTAX_09_1</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_9_tax_tag" model="account.report.expression">
@@ -173,7 +174,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_10" model="account.report.line">
-                        <field name="name">Post 10 Innførsel av varer, og beregnet avgift 15 %</field>
+                        <field name="name">Post 10 Import of goods, and calculated tax 15%</field>
                         <field name="code">NOTAX_10</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_10_tag" model="account.report.expression">
@@ -184,7 +185,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_10_tax" model="account.report.line">
-                        <field name="name">Post 10 Innførsel av varer, og beregnet avgift 15 % Tax</field>
+                        <field name="name">Post 10 Import of goods, and calculated tax 15% Tax</field>
                         <field name="code">NOTAX_10_1</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_10_tax_tag" model="account.report.expression">
@@ -195,7 +196,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_11" model="account.report.line">
-                        <field name="name">Post 11 Innførsel av varer som det ikke skal beregnes merverdiavgift av</field>
+                        <field name="name">Post 11 Import of goods on which no VAT is to be calculated</field>
                         <field name="code">NOTAX_11</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_11_tag" model="account.report.expression">
@@ -208,11 +209,11 @@
                 </field>
             </record>
             <record id="account_tax_report_line_kjop_med_omvendt_avgiftsplikt" model="account.report.line">
-                <field name="name">E. Kjøp med omvendt avgiftsplikt</field>
+                <field name="name">E. Purchases with reverse charge obligation</field>
                 <field name="aggregation_formula">NOTAX_12.balance + NOTAX_12_1.balance + NOTAX_13.balance + NOTAX_13_1.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_post_12" model="account.report.line">
-                        <field name="name">Post 12 Tjenester kjøpt fra utlandet, og beregnet avgift 25 %</field>
+                        <field name="name">Post 12 Services purchased from abroad, and calculated fee 25%</field>
                         <field name="code">NOTAX_12</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_12_tag" model="account.report.expression">
@@ -223,7 +224,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_12_tax" model="account.report.line">
-                        <field name="name">Post 12 Tjenester kjøpt fra utlandet, og beregnet avgift 25 % Tax</field>
+                        <field name="name">Post 12 Services purchased from abroad, and calculated fee 25% Tax</field>
                         <field name="code">NOTAX_12_1</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_12_tax_tag" model="account.report.expression">
@@ -234,7 +235,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_13" model="account.report.line">
-                        <field name="name">Post 13 Innenlands kjøp av varer og tjenester, og beregnet avgift 25 %</field>
+                        <field name="name">Post 13 Domestic purchase of goods and services, and calculated tax 25%</field>
                         <field name="code">NOTAX_13</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_13_tag" model="account.report.expression">
@@ -245,7 +246,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_13_tax" model="account.report.line">
-                        <field name="name">Post 13 Innenlands kjøp av varer og tjenester, og beregnet avgift 25 % Tax</field>
+                        <field name="name">Post 13 Domestic purchase of goods and services, and calculated tax 25% Tax</field>
                         <field name="code">NOTAX_13_1</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_13_tax_tag" model="account.report.expression">
@@ -258,11 +259,11 @@
                 </field>
             </record>
             <record id="account_tax_report_line_fradragsberettigen_innenlands" model="account.report.line">
-                <field name="name">F. Fradragsberettiget innenlands inngående avgift</field>
+                <field name="name">F. Deductible domestic input tax</field>
                 <field name="aggregation_formula">NOTAX_14.balance + NOTAX_15.balance + NOTAX_16.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_post_14" model="account.report.line">
-                        <field name="name">Post 14 Fradragsberettiget innenlands inngående avgift 25 %</field>
+                        <field name="name">Post 14 Deductible domestic input tax 25%</field>
                         <field name="code">NOTAX_14</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_14_tag" model="account.report.expression">
@@ -273,7 +274,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_15" model="account.report.line">
-                        <field name="name">Post 15 Fradragsberettiget innenlands inngående avgift 15 %</field>
+                        <field name="name">Post 15 Deductible domestic input tax 15%</field>
                         <field name="code">NOTAX_15</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_15_tag" model="account.report.expression">
@@ -284,7 +285,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_16" model="account.report.line">
-                        <field name="name">Post 16 Fradragsberettiget innenlands inngående avgift 12 %</field>
+                        <field name="name">Post 16 Deductible domestic input tax 12%</field>
                         <field name="code">NOTAX_16</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_16_tag" model="account.report.expression">
@@ -297,11 +298,11 @@
                 </field>
             </record>
             <record id="account_tax_report_line_fradragsberettiget_innforselsmerverdiavgift" model="account.report.line">
-                <field name="name">G. Fradragsberettiget innførselsmerverdiavgift</field>
+                <field name="name">G. Deductible import value added tax</field>
                 <field name="aggregation_formula">NOTAX_17.balance + NOTAX_18.balance</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_post_17" model="account.report.line">
-                        <field name="name">Post 17 Fradragsberettiget innførselsmerverdiavgift 25 %</field>
+                        <field name="name">Post 17 Deductible import value added tax 25%</field>
                         <field name="code">NOTAX_17</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_17_tag" model="account.report.expression">
@@ -312,7 +313,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_post_18" model="account.report.line">
-                        <field name="name">Post 18 Fradragsberettiget innførselsmerverdiavgift 15 %</field>
+                        <field name="name">Post 18 Deductible import value added tax 15%</field>
                         <field name="code">NOTAX_18</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_post_18_tag" model="account.report.expression">
@@ -336,7 +337,7 @@
                 </field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_post_19" model="account.report.line">
-                        <field name="name">Post 19 Avgift å betale</field>
+                        <field name="name">Post 19 Fee to be paid</field>
                         <field name="code">NOTAX_19</field>
                         <field name="aggregation_formula">NOTAX_03_1.balance+NOTAX_04_1.balance+NOTAX_05_1.balance+NOTAX_09_1.balance+NOTAX_10_1.balance+NOTAX_12_1.balance+NOTAX_13_1.balance-NOTAX_14.balance-NOTAX_15.balance-NOTAX_16.balance-NOTAX_17.balance-NOTAX_18.balance</field>
                     </record>

@@ -10,11 +10,32 @@ class TestFrontend(odoo.tests.HttpCase):
         self.env = self.env(user=self.env.ref('base.user_admin'))
         account_obj = self.env['account.account']
 
+        account_receivable = account_obj.create({'code': 'X1012',
+                                                 'name': 'Account Receivable - Test',
+                                                 'account_type': 'asset_receivable',
+                                                 'reconcile': True})
+
         printer = self.env['restaurant.printer'].create({
             'name': 'Kitchen Printer',
             'proxy_ip': 'localhost',
         })
         drinks_category = self.env['pos.category'].create({'name': 'Drinks'})
+
+        main_company = self.env.ref('base.main_company')
+
+        second_cash_journal = self.env['account.journal'].create({
+            'name': 'Cash 2',
+            'code': 'CSH2',
+            'type': 'cash',
+            'company_id': main_company.id
+            })
+
+        self.env['pos.payment.method'].create({
+            'name': 'Cash 2',
+            'split_transactions': False,
+            'receivable_account_id': account_receivable.id,
+            'journal_id': second_cash_journal.id,
+        })
 
         pos_config = self.env['pos.config'].create({
             'name': 'Bar',
@@ -26,7 +47,6 @@ class TestFrontend(odoo.tests.HttpCase):
             'printer_ids': [(4, printer.id)],
             'iface_start_categ_id': drinks_category.id,
             'start_category': True,
-            'pricelist_id': self.env.ref('product.list0').id,
         })
 
         main_floor = self.env['restaurant.floor'].create({
@@ -78,13 +98,6 @@ class TestFrontend(odoo.tests.HttpCase):
             'position_v': 250,
         })
 
-        main_company = self.env.ref('base.main_company')
-
-        account_receivable = account_obj.create({'code': 'X1012',
-                                                 'name': 'Account Receivable - Test',
-                                                 'account_type': 'asset_receivable',
-                                                 'reconcile': True})
-
         self.env['ir.property']._set_default(
             'property_account_receivable_id',
             'res.partner',
@@ -110,8 +123,8 @@ class TestFrontend(odoo.tests.HttpCase):
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'payment_method_ids': [(0, 0, {
-                'name': 'Cash restaurant',
-                'split_transactions': True,
+                'name': 'Cash',
+                'split_transactions': False,
                 'receivable_account_id': account_receivable.id,
                 'journal_id': cash_journal.id,
             })],
@@ -190,3 +203,7 @@ class TestFrontend(odoo.tests.HttpCase):
         self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)
         self.assertTrue(order3.is_tipped and order3.tip_amount == 1.50)
         self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
+
+    def test_06_split_bill_screen(self):
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour2', login="admin")

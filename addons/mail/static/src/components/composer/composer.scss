@@ -2,7 +2,7 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_Composer {
+.o_ComposerView {
     // Could be replaced by .d-grid after the migration to BS5.
     display: grid;
     grid-template-areas:
@@ -17,7 +17,7 @@
     }
 }
 
-.o_Composer_attachmentList {
+.o_ComposerView_attachmentList {
     max-height: 300px;
 
     &.o-composer-is-compact {
@@ -25,38 +25,43 @@
     }
 }
 
-.o_Composer_buttons {
+.o_ComposerView_buttons {
     min-height: $o-mail-composer-text-input-height + $border-width; // match minimal-height of input, including border width
 }
 
-.o_Composer_coreFooter {
+.o_ComposerView_buttonEmojis:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.o_ComposerView_coreFooter {
     grid-area: core-footer;
 }
 
-.o_Composer_coreHeader {
+.o_ComposerView_coreHeader {
     grid-area: core-header;
 }
 
-.o_Composer_coreMain {
+.o_ComposerView_coreMain {
     grid-area: core-main;
     min-width: 0;
 }
 
-.o_Composer_currentPartnerAvatar {
+.o_ComposerView_currentPartnerAvatar {
     width: $o-mail-thread-avatar-size;
     height: $o-mail-thread-avatar-size;
 }
 
-.o_Composer_sidebarMain {
+.o_ComposerView_sidebarMain {
     grid-area: sidebar-main;
     justify-self: center;
 }
 
-.o_Composer_textInput:not(.o-composer-is-compact) {
+.o_ComposerView_textInput:not(.o-composer-is-compact) {
     min-height: $o-mail-composer-text-input-height;
 }
 
-.o_Composer_threadTextualTypingStatus:before {
+.o_ComposerView_threadTextualTypingStatus:before {
     // invisible character so that typing status bar has constant height, regardless of text content.
     content: "\200b"; /* unicode zero width space character */
 }
@@ -65,6 +70,6 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_Composer_buttonDiscard {
+.o_ComposerView_buttonDiscard {
     border: $border-width solid lighten($gray-400, 5%);
 }

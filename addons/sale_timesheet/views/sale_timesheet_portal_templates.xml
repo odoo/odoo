@@ -5,9 +5,7 @@
         <xpath expr="//li[.//a[@id='print_invoice_report']]" position="after">
             <li t-if="sale_order.timesheet_count > 0 and sale_order.state in ('sale', 'done')" class="list-group-item flex-grow-1">
                 <div class="btn-toolbar flex-sm-nowrap justify-content-center">
-                    <div class="btn-group">
-                        <a t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name">View Timesheets</a>
-                    </div>
+                    <a class="btn btn-primary w-100" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name">View Timesheets</a>
                 </div>
             </li>
         </xpath>
@@ -108,10 +106,10 @@
         <xpath expr="//div[@name='portal_my_task_second_column']" position="inside">
             <t t-if="task.project_id.allow_billable">
                 <div t-if="task.sale_order_id"><strong>Sales Order:</strong>
-                    <span t-if="so_accessible"><a t-attf-href="/my/orders/{{ task.sale_order_id.id }}" t-field="task.sale_order_id"></a></span>
+                    <span t-if="so_accessible"><a t-attf-href="{{ task.sale_order_id.access_url }}" t-field="task.sale_order_id"></a></span>
                     <span t-else="" t-field="task.sale_order_id"></span>
                 </div>
-                <div t-if="task.sale_order_id.invoice_ids"><strong>Invoices:</strong>
+                <div t-if="invoices_accessible"><strong>Invoices:</strong>
                     <span t-foreach="task.sale_order_id.invoice_ids" t-as="invoice_line">
                         <t t-if="invoice_line.id in invoices_accessible">
                             <a t-attf-href="/my/invoices/{{ invoice_line.id }}">

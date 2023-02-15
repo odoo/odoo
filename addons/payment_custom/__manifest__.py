@@ -1,14 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Custom Payment Modes',
+    'name': 'Payment Provider: Custom Payment Modes',
     'version': '2.0',
     'category': 'Accounting/Payment Providers',
-    'summary': 'Payment Provider: Custom payment modes',
+    'sequence': 350,
+    'summary': "A payment provider for custom flows like wire transfers.",
     'depends': ['payment'],
     'data': [
         'views/payment_custom_templates.xml',
-        'views/payment_views.xml',
+        'views/payment_provider_views.xml',
+
         'data/payment_provider_data.xml',
     ],
     'assets': {

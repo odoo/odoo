@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
-import { htmlToTextContentInline } from '@mail/js/utils';
+import { attr, clear, one, Model } from "@mail/model";
+import { htmlToTextContentInline } from "@mail/js/utils";
 
-registerModel({
-    name: 'ThreadNeedactionPreviewView',
+Model({
+    name: "ThreadNeedactionPreviewView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -30,97 +28,73 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickMarkAsRead(ev) {
-            this.messaging.models['Message'].markAllAsRead([
-                ['model', '=', this.thread.model],
-                ['res_id', '=', this.thread.id],
+            this.messaging.models["Message"].markAllAsRead([
+                ["model", "=", this.thread.model],
+                ["res_id", "=", this.thread.id],
             ]);
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeInlineLastNeedactionMessageAsOriginThreadBody() {
-            if (!this.thread.lastNeedactionMessageAsOriginThread) {
-                return clear();
-            }
-            return htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsEmpty() {
-            return !this.inlineLastNeedactionMessageAsOriginThreadBody && !this.lastTrackingValue;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLastTrackingValue() {
-            if (this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
-                return this.thread.lastMessage.lastTrackingValue;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessageAuthorPrefixView() {
-            if (
-                this.thread.lastNeedactionMessageAsOriginThread &&
-                this.thread.lastNeedactionMessageAsOriginThread.author
-            ) {
-                return {};
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computePersonaImStatusIconView() {
-            if (
-                this.thread.channel &&
-                this.thread.channel.correspondent &&
-                this.thread.channel.correspondent.isImStatusSet
-            ) {
-                return {};
-            }
-            return clear();
         },
     },
     fields: {
         inlineLastNeedactionMessageAsOriginThreadBody: attr({
-            compute: '_computeInlineLastNeedactionMessageAsOriginThreadBody',
             default: "",
+            compute() {
+                if (!this.thread.lastNeedactionMessageAsOriginThread) {
+                    return clear();
+                }
+                return htmlToTextContentInline(
+                    this.thread.lastNeedactionMessageAsOriginThread.prettyBody
+                );
+            },
         }),
         isEmpty: attr({
-            compute: '_computeIsEmpty',
+            compute() {
+                return (
+                    !this.inlineLastNeedactionMessageAsOriginThreadBody && !this.lastTrackingValue
+                );
+            },
         }),
-        lastTrackingValue: one('TrackingValue', {
-            compute: '_computeLastTrackingValue',
+        lastTrackingValue: one("TrackingValue", {
+            compute() {
+                if (this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
+                    return this.thread.lastMessage.lastTrackingValue;
+                }
+                return clear();
+            },
         }),
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.
          */
         markAsReadRef: attr(),
-        messageAuthorPrefixView: one('MessageAuthorPrefixView', {
-            compute: '_computeMessageAuthorPrefixView',
-            inverse: 'threadNeedactionPreviewViewOwner',
+        messageAuthorPrefixView: one("MessageAuthorPrefixView", {
+            inverse: "threadNeedactionPreviewViewOwner",
+            compute() {
+                if (
+                    this.thread.lastNeedactionMessageAsOriginThread &&
+                    this.thread.lastNeedactionMessageAsOriginThread.author
+                ) {
+                    return {};
+                }
+                return clear();
+            },
         }),
-        notificationListViewOwner: one('NotificationListView', {
+        notificationListViewOwner: one("NotificationListView", {
             identifying: true,
-            inverse: 'threadNeedactionPreviewViews',
+            inverse: "threadNeedactionPreviewViews",
         }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
-            compute: '_computePersonaImStatusIconView',
-            inverse: 'threadNeedactionPreviewViewOwner',
+        personaImStatusIconView: one("PersonaImStatusIconView", {
+            inverse: "threadNeedactionPreviewViewOwner",
+            compute() {
+                if (
+                    this.thread.channel &&
+                    this.thread.channel.correspondent &&
+                    this.thread.channel.correspondent.isImStatusSet
+                ) {
+                    return {};
+                }
+                return clear();
+            },
         }),
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'threadNeedactionPreviewViews',
-        }),
+        thread: one("Thread", { identifying: true, inverse: "threadNeedactionPreviewViews" }),
     },
 });

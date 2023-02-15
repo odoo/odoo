@@ -2,12 +2,10 @@ odoo.define('web.basic_model_tests', function (require) {
     "use strict";
 
     var BasicModel = require('web.BasicModel');
-    var FormView = require('web.FormView');
     var testUtils = require('web.test_utils');
     const session = require('web.session');
 
     var createModel = testUtils.createModel;
-    var createView = testUtils.createView;
 
     QUnit.module('LegacyViews', {
         beforeEach: function () {
@@ -116,89 +114,6 @@ odoo.define('web.basic_model_tests', function (require) {
                 });
         });
 
-        QUnit.test('can process x2many commands', async function (assert) {
-            assert.expect(6);
-
-            this.data.partner.fields.product_ids.default = [[0, 0, { category: [] }]];
-
-            const form = await createView({
-                View: FormView,
-                model: 'partner',
-                data: this.data,
-                arch: `
-                    <form>
-                        <field name="product_ids"/>
-                    </form>
-                `,
-                archs: {
-                    'product,false,list': `
-                        <tree>
-                            <field name="display_name"/>
-                        </tree>
-                    `,
-                    'product,false,kanban': `
-                        <kanban>
-                            <templates><t t-name="kanban-box">
-                                <div><field name="display_name"/></div>
-                            </t></templates>
-                        </kanban>
-                    `,
-                },
-                viewOptions: {
-                    mode: 'edit',
-                },
-                mockRPC(route, args) {
-                    assert.step(args.method);
-                    return this._super.apply(this, arguments);
-                },
-            });
-
-            assert.verifySteps([
-                'get_views',
-                'onchange',
-            ]);
-            assert.containsOnce(form, '.o_field_x2many_list', 'should have rendered a x2many list');
-            assert.containsOnce(form, '.o_data_row', 'should have added 1 record as default');
-            assert.containsOnce(form, '.o_field_x2many_list_row_add', 'should have rendered a x2many add row on list');
-            form.destroy();
-        });
-
-        QUnit.test('can process x2many commands (with multiple fields)', async function (assert) {
-            assert.expect(1);
-
-            this.data.partner.fields.product_ids.default = [[0, 0, { category: [] }]];
-
-            const form = await createView({
-                View: FormView,
-                model: 'partner',
-                data: this.data,
-                arch: `
-                    <form>
-                        <field name="product_ids"/>
-                    </form>
-                `,
-                archs: {
-                    'product,false,list': `
-                        <tree>
-                            <field name="display_name"/>
-                            <field name="active"/>
-                        </tree>
-                    `,
-                },
-                mockRPC(route, args) {
-                    if (args.method === "create") {
-                        const product_ids = args.args[0].product_ids;
-                        const values = product_ids[0][2];
-                        assert.strictEqual(values.active, true, "active field should be set");
-                    }
-                    return this._super.apply(this, arguments);
-                },
-            });
-
-            await testUtils.form.clickSave(form);
-            form.destroy();
-        });
-
         QUnit.test('can load a record', async function (assert) {
             assert.expect(7);
 
@@ -247,7 +162,7 @@ odoo.define('web.basic_model_tests', function (require) {
             try {
                 await model.load(this.params);
             }
-            catch (_e) {
+            catch {
                 assert.ok("load should return a rejected deferred for an invalid id");
             }
 

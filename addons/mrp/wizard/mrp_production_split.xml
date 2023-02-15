@@ -5,7 +5,6 @@
         <record id="view_mrp_production_split_multi_form" model="ir.ui.view">
             <field name="name">mrp.production.split.multi.form</field>
             <field name="model">mrp.production.split.multi</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Split Productions">
                     <field name="production_ids">
@@ -15,7 +14,7 @@
                             <field name="product_qty"/>
                             <field name="production_capacity"/>
                             <field name="product_uom_id" groups="uom.group_uom"/>
-                            <button name="action_prepare_split" type="object" icon="fa-scissors" width="0.1" title="Split Production"/>
+                            <button name="action_prepare_split" type="object" icon="fa-scissors" title="Split Production"/>
                         </tree>
                     </field>
                     <footer>

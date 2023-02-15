@@ -3,12 +3,13 @@
 import { useService } from '@web/core/utils/hooks';
 import { useWowlService } from '@web/legacy/utils';
 import { Dialog } from '@web/core/dialog/dialog';
+import { Notebook } from '@web/core/notebook/notebook';
 import { ImageSelector } from './image_selector';
 import { DocumentSelector } from './document_selector';
 import { IconSelector } from './icon_selector';
 import { VideoSelector } from './video_selector';
 
-const { Component, useState, onRendered, xml } = owl;
+import { Component, useState, onRendered, xml } from "@odoo/owl";
 
 export const TABS = {
     IMAGES: {
@@ -82,6 +83,7 @@ export class MediaDialog extends Component {
                 selectedMedia: this.selectedMedia,
                 selectMedia: (...args) => this.selectMedia(...args, tab.id, additionalProps.multiSelect),
                 save: this.save.bind(this),
+                onAttachmentChange: this.props.onAttachmentChange,
             },
         });
     }
@@ -206,6 +208,10 @@ export class MediaDialog extends Component {
         }
         this.props.close();
     }
+
+    onTabChange(tab) {
+        this.state.activeTab = tab;
+    }
 }
 MediaDialog.template = 'web_editor.MediaDialog';
 MediaDialog.defaultProps = {
@@ -214,6 +220,7 @@ MediaDialog.defaultProps = {
 MediaDialog.components = {
     ...Object.keys(TABS).map(key => TABS[key].Component),
     Dialog,
+    Notebook,
 };
 
 export class MediaDialogWrapper extends Component {

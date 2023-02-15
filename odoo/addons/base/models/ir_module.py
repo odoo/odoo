@@ -31,6 +31,7 @@ from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
+from odoo.tools.translate import TranslationImporter
 from odoo.http import request
 from odoo.modules import get_module_path, get_module_resource
 
@@ -80,28 +81,9 @@ class ModuleCategory(models.Model):
     _description = "Application"
     _order = 'name'
 
-    @api.depends('module_ids')
-    def _compute_module_nr(self):
-        self.env['ir.module.module'].flush_model(['category_id'])
-        self.flush_model(['parent_id'])
-        cr = self._cr
-        cr.execute('SELECT category_id, COUNT(*) \
-                      FROM ir_module_module \
-                     WHERE category_id IN %(ids)s \
-                        OR category_id IN (SELECT id \
-                                             FROM ir_module_category \
-                                            WHERE parent_id IN %(ids)s) \
-                     GROUP BY category_id', {'ids': tuple(self.ids)}
-                   )
-        result = dict(cr.fetchall())
-        for cat in self.filtered('id'):
-            cr.execute('SELECT id FROM ir_module_category WHERE parent_id=%s', (cat.id,))
-            cat.module_nr = sum([result.get(c, 0) for (c,) in cr.fetchall()], result.get(cat.id, 0))
-
     name = fields.Char(string='Name', required=True, translate=True, index=True)
     parent_id = fields.Many2one('ir.module.category', string='Parent Application', index=True)
     child_ids = fields.One2many('ir.module.category', 'parent_id', string='Child Applications')
-    module_nr = fields.Integer(string='Number of Apps', compute='_compute_module_nr')
     module_ids = fields.One2many('ir.module.module', 'category_id', string='Modules')
     description = fields.Text(string='Description', translate=True)
     sequence = fields.Integer(string='Sequence')
@@ -156,6 +138,7 @@ STATES = [
 class Module(models.Model):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
+    _rec_names_search = ['name', 'shortdesc', 'summary']
     _description = "Module"
     _order = 'application desc,sequence,name'
 
@@ -327,6 +310,10 @@ class Module(models.Model):
         self.clear_caches()
         return super(Module, self).unlink()
 
+    def _get_modules_to_load_domain(self):
+        """ Domain to retrieve the modules that should be loaded by the registry. """
+        return [('state', '=', 'installed')]
+
     @staticmethod
     def _check_python_external_dependency(pydep):
         try:
@@ -345,7 +332,6 @@ class Module(models.Model):
         except Exception as e:
             _logger.warning("get_distribution(%s) failed: %s", pydep, e)
             raise Exception('Error finding python library %s' % (pydep,))
-
 
     @staticmethod
     def _check_external_dependencies(terp):
@@ -585,6 +571,9 @@ class Module(models.Model):
         }
 
     def _button_immediate_function(self, function):
+        if not self.env.registry.ready or self.env.registry._init:
+            raise UserError(_('The method _button_immediate_install cannot be called on init or non loaded registries. Please use button_install instead.'))
+
         if getattr(threading.current_thread(), 'testing', False):
             raise RuntimeError(
                 "Module operations inside tests are not transactional and thus forbidden.\n"
@@ -633,8 +622,9 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        if 'base' in self.mapped('name'):
-            raise UserError(_("The `base` module cannot be uninstalled"))
+        un_installable_modules = set(odoo.conf.server_wide_modules) & set(self.mapped('name'))
+        if un_installable_modules:
+            raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
             raise UserError(_(
                 "One or more of the selected modules have already been uninstalled, if you "
@@ -796,110 +786,6 @@ class Module(models.Model):
 
         return res
 
-    @assert_log_admin_access
-    def download(self, download=True):
-        return []
-
-    @assert_log_admin_access
-    @api.model
-    def install_from_urls(self, urls):
-        if not self.env.user.has_group('base.group_system'):
-            raise AccessDenied()
-
-        # One-click install is opt-in - cfr Issue #15225
-        ad_dir = tools.config.addons_data_dir
-        if not os.access(ad_dir, os.W_OK):
-            msg = (_("Automatic install of downloaded Apps is currently disabled.") + "\n\n" +
-                   _("To enable it, make sure this directory exists and is writable on the server:") +
-                   "\n%s" % ad_dir)
-            _logger.warning(msg)
-            raise UserError(msg)
-
-        apps_server = werkzeug.urls.url_parse(self.get_apps_server())
-
-        OPENERP = odoo.release.product_name.lower()
-        tmp = tempfile.mkdtemp()
-        _logger.debug('Install from url: %r', urls)
-        try:
-            # 1. Download & unzip missing modules
-            for module_name, url in urls.items():
-                if not url:
-                    continue    # nothing to download, local version is already the last one
-
-                up = werkzeug.urls.url_parse(url)
-                if up.scheme != apps_server.scheme or up.netloc != apps_server.netloc:
-                    raise AccessDenied()
-
-                try:
-                    _logger.info('Downloading module `%s` from OpenERP Apps', module_name)
-                    response = requests.get(url)
-                    response.raise_for_status()
-                    content = response.content
-                except Exception:
-                    _logger.exception('Failed to fetch module %s', module_name)
-                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.', module_name))
-                else:
-                    zipfile.ZipFile(io.BytesIO(content)).extractall(tmp)
-                    assert os.path.isdir(os.path.join(tmp, module_name))
-
-            # 2a. Copy/Replace module source in addons path
-            for module_name, url in urls.items():
-                if module_name == OPENERP or not url:
-                    continue    # OPENERP is special case, handled below, and no URL means local module
-                module_path = modules.get_module_path(module_name, downloaded=True, display_warning=False)
-                bck = backup(module_path, False)
-                _logger.info('Copy downloaded module `%s` to `%s`', module_name, module_path)
-                shutil.move(os.path.join(tmp, module_name), module_path)
-                if bck:
-                    shutil.rmtree(bck)
-
-            # 2b.  Copy/Replace server+base module source if downloaded
-            if urls.get(OPENERP):
-                # special case. it contains the server and the base module.
-                # extract path is not the same
-                base_path = os.path.dirname(modules.get_module_path('base'))
-
-                # copy all modules in the SERVER/odoo/addons directory to the new "odoo" module (except base itself)
-                for d in os.listdir(base_path):
-                    if d != 'base' and os.path.isdir(os.path.join(base_path, d)):
-                        destdir = os.path.join(tmp, OPENERP, 'addons', d)    # XXX 'odoo' subdirectory ?
-                        shutil.copytree(os.path.join(base_path, d), destdir)
-
-                # then replace the server by the new "base" module
-                server_dir = tools.config['root_path']      # XXX or dirname()
-                bck = backup(server_dir)
-                _logger.info('Copy downloaded module `odoo` to `%s`', server_dir)
-                shutil.move(os.path.join(tmp, OPENERP), server_dir)
-                #if bck:
-                #    shutil.rmtree(bck)
-
-            self.update_list()
-
-            with_urls = [module_name for module_name, url in urls.items() if url]
-            downloaded = self.search([('name', 'in', with_urls)])
-            installed = self.search([('id', 'in', downloaded.ids), ('state', '=', 'installed')])
-
-            to_install = self.search([('name', 'in', list(urls)), ('state', '=', 'uninstalled')])
-            post_install_action = to_install.button_immediate_install()
-
-            if installed or to_install:
-                # in this case, force server restart to reload python code...
-                self._cr.commit()
-                odoo.service.server.restart()
-                return {
-                    'type': 'ir.actions.client',
-                    'tag': 'home',
-                    'params': {'wait': True},
-                }
-            return post_install_action
-
-        finally:
-            shutil.rmtree(tmp)
-
-    @api.model
-    def get_apps_server(self):
-        return tools.config.get('apps_server', 'https://apps.odoo.com/apps')
-
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
         self.env['ir.module.module.dependency'].flush_model()
         existing = set(dep.name for dep in self.dependencies_id)
@@ -1029,13 +915,14 @@ class Module(models.Model):
     def _load_module_terms(self, modules, langs, overwrite=False):
         """ Load PO files of the given modules for the given languages. """
         # load i18n files
+        translation_importer = TranslationImporter(self.env.cr, verbose=False)
+
         for module_name in modules:
             modpath = get_module_path(module_name)
             if not modpath:
                 continue
             for lang in langs:
                 lang_code = tools.get_iso_codes(lang)
-                lang_overwrite = overwrite
                 base_lang_code = None
                 if '_' in lang_code:
                     base_lang_code = lang_code.split('_')[0]
@@ -1045,29 +932,28 @@ class Module(models.Model):
                     base_trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
                     if base_trans_file:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
-                        tools.trans_load(self._cr, base_trans_file, lang, verbose=False, overwrite=lang_overwrite)
-                        lang_overwrite = True  # make sure the requested translation will override the base terms later
+                        translation_importer.load_file(base_trans_file, lang)
 
                     # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
                     base_trans_extra_file = get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
                     if base_trans_extra_file:
                         _logger.info('module %s: loading extra base translation file %s for language %s', module_name, base_lang_code, lang)
-                        tools.trans_load(self._cr, base_trans_extra_file, lang, verbose=False, overwrite=lang_overwrite)
-                        lang_overwrite = True  # make sure the requested translation will override the base terms later
+                        translation_importer.load_file(base_trans_extra_file, lang)
 
                 # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
                 trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
                 if trans_file:
-                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
-                    tools.trans_load(self._cr, trans_file, lang, verbose=False, overwrite=lang_overwrite)
+                    _logger.info('module %s: loading translation file %s for language %s', module_name, lang_code, lang)
+                    translation_importer.load_file(trans_file, lang)
                 elif lang_code != 'en_US':
                     _logger.info('module %s: no translation for language %s', module_name, lang_code)
 
                 trans_extra_file = get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
                 if trans_extra_file:
-                    _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
-                    tools.trans_load(self._cr, trans_extra_file, lang, verbose=False, overwrite=lang_overwrite)
-        return True
+                    _logger.info('module %s: loading extra translation file %s for language %s', module_name, lang_code, lang)
+                    translation_importer.load_file(trans_extra_file, lang)
+
+        translation_importer.save(overwrite=overwrite)
 
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]

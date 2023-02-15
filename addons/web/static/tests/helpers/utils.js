@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { templates } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { download } from "@web/core/network/download";
@@ -7,9 +8,8 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { isVisible } from "@web/core/utils/ui";
 import { registerCleanup } from "./cleanup";
-import { templates } from "@web/core/assets";
 
-const { App, onMounted, onPatched, useComponent } = owl;
+import { App, onMounted, onPatched, useComponent } from "@odoo/owl";
 
 /**
  * Patch the native Date object
@@ -138,7 +138,7 @@ export function patchWithCleanup(obj, patchValue, options) {
 }
 
 /**
- * @returns {HTMLElement}
+ * @returns {Element}
  */
 export function getFixture() {
     if (QUnit.config.debug) {
@@ -157,7 +157,7 @@ export function makeDeferred() {
     return new Deferred();
 }
 
-function findElement(el, selector) {
+export function findElement(el, selector) {
     let target = el;
     if (selector) {
         const els = el.querySelectorAll(selector);
@@ -316,7 +316,7 @@ export async function triggerEvents(el, querySelector, events, options) {
  * the end of the scrollable area, the event can be transmitted
  * to its nearest parent until it can be triggered
  *
- * @param {HTMLElement} target target of the scroll event
+ * @param {Element} target target of the scroll event
  * @param {Object} coordinates
  * @param {Number} coordinates[left] coordinates to scroll horizontally
  * @param {Number} coordinates[top] coordinates to scroll vertically
@@ -385,16 +385,17 @@ export function clickCreate(htmlElement) {
 }
 
 export function clickEdit(htmlElement) {
-    if (htmlElement.querySelectorAll(".o_form_button_edit").length) {
-        return click(htmlElement, ".o_form_button_edit");
-    } else if (htmlElement.querySelectorAll(".o_list_button_edit").length) {
+    if (htmlElement.querySelectorAll(".o_list_button_edit").length) {
         return click(htmlElement, ".o_list_button_edit");
     } else {
         throw new Error("No edit button found to be clicked.");
     }
 }
 
-export function clickSave(htmlElement) {
+export async function clickSave(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_status_indicator").length) {
+        await mouseEnter(htmlElement, ".o_form_status_indicator");
+    }
     if (htmlElement.querySelectorAll(".o_form_button_save").length) {
         return click(htmlElement, ".o_form_button_save");
     } else if (htmlElement.querySelectorAll(".o_list_button_save").length) {
@@ -404,7 +405,10 @@ export function clickSave(htmlElement) {
     }
 }
 
-export function clickDiscard(htmlElement) {
+export async function clickDiscard(htmlElement) {
+    if (htmlElement.querySelectorAll(".o_form_status_indicator").length) {
+        await mouseEnter(htmlElement, ".o_form_status_indicator");
+    }
     if (htmlElement.querySelectorAll(".o_form_button_cancel").length) {
         return click(htmlElement, ".o_form_button_cancel");
     } else if (htmlElement.querySelectorAll(".o_list_button_discard").length) {
@@ -419,7 +423,7 @@ export function clickDiscard(htmlElement) {
  * coordinates are given, the event is located by default
  * in the middle of the target to simplify the test process
  *
- * @param {HTMLElement} el
+ * @param {Element} el
  * @param {string} selector
  * @param {Object} coordinates position of the mouseenter event
  */
@@ -479,12 +483,23 @@ export function editSelect(el, selector, value) {
     return triggerEvent(select, null, "change");
 }
 
+export async function editSelectMenu(el, selector, value) {
+    const dropdown = el.querySelector(selector);
+    await click(dropdown.querySelector(".dropdown-toggle"));
+    for (const item of Array.from(dropdown.querySelectorAll(".dropdown-item"))) {
+        if (item.textContent === value) {
+            return click(item);
+        }
+    }
+}
+
 /**
  * Triggers an hotkey properly disregarding the operating system.
  *
  * @param {string} hotkey
  * @param {boolean} addOverlayModParts
  * @param {KeyboardEventInit} eventAttrs
+ * @returns {{ keydownEvent: KeyboardEvent, keyupEvent: KeyboardEvent }}
  */
 export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
     eventAttrs.key = hotkey.split("+").pop();
@@ -513,8 +528,11 @@ export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {
         eventAttrs.bubbles = true;
     }
 
-    document.activeElement.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
-    document.activeElement.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
+    const keydownEvent = new KeyboardEvent("keydown", eventAttrs);
+    const keyupEvent = new KeyboardEvent("keyup", eventAttrs);
+    document.activeElement.dispatchEvent(keydownEvent);
+    document.activeElement.dispatchEvent(keyupEvent);
+    return { keydownEvent, keyupEvent };
 }
 
 export async function legacyExtraNextTick() {
@@ -569,21 +587,39 @@ export function mockTimeout() {
 
 export function mockAnimationFrame() {
     const callbacks = new Map();
+    let currentTime = 0;
     let id = 1;
     patchWithCleanup(browser, {
         requestAnimationFrame(fn) {
-            callbacks.set(id, fn);
+            callbacks.set(id, { fn, scheduledFor: 16 + currentTime, id });
             return id++;
         },
         cancelAnimationFrame(id) {
             callbacks.delete(id);
         },
+        performance: { now: () => currentTime },
     });
-    return function execRegisteredCallbacks() {
-        for (const fn of callbacks.values()) {
-            fn();
-        }
-        callbacks.clear();
+    return {
+        execRegisteredAnimationFrames() {
+            for (const { fn } of callbacks.values()) {
+                fn(currentTime);
+            }
+            callbacks.clear();
+        },
+        async advanceFrame(count = 1) {
+            // wait here so all microtasktick scheduled in this frame can be
+            // executed and possibly register their own timeout
+            await nextTick();
+            currentTime += 16 * count;
+            for (const { fn, scheduledFor, id } of callbacks.values()) {
+                if (scheduledFor <= currentTime) {
+                    fn(currentTime);
+                    callbacks.delete(id);
+                }
+            }
+            // wait here to make sure owl can update the UI
+            await nextTick();
+        },
     };
 }
 
@@ -679,10 +715,8 @@ function getDifferentParents(n1, n2) {
 /**
  * Helper performing a drag and drop sequence.
  *
- * - the 'fromSelector' is used to determine the element on which the drag will
- *  start;
- * - the 'toSelector' will determine the element on which the first one will be
- * dropped.
+ * - 'from' is used to determine the element on which the drag will start;
+ * - 'target' will determine the element on which the first one will be dropped.
  *
  * The first element will be dragged by its center, and will be dropped on the
  * bottom-right inner pixel of the target element. This behavior covers both
@@ -696,14 +730,13 @@ function getDifferentParents(n1, n2) {
  * Note that only the last event is awaited, since all the others are
  * considered to be synchronous.
  *
- * @param {Element|string} from
- * @param {Element|string} to
- * @param {string} [position] "top" | "bottom" | "left" | "right"
- * @returns {Promise<void>}
+ * @param {Element | string} from
+ * @param {Element | string} to
+ * @param {"top" | "bottom" | "left" | "right"} [position]
  */
 export async function dragAndDrop(from, to, position) {
-    const dropFunction = drag(from, to, position);
-    await dropFunction();
+    const { drop } = await drag(from);
+    await drop(to, position);
 }
 
 /**
@@ -711,67 +744,130 @@ export async function dragAndDrop(from, to, position) {
  *
  * - the 'from' selector is used to determine the element on which the drag will
  *  start;
- * - the 'to' selector will determine the element on which the dragged element will be
+ * - the 'target' selector will determine the element on which the dragged element will be
  * moved.
  *
  * Returns a drop function
- * @param {Element|string} from
- * @param {Element|string} to
- * @param {string} [position] "top" | "bottom" | "left" | "right"
- * @returns {function: Promise<void>}
+ *
+ * @param {Element | string} from
  */
-export function drag(from, to, position) {
+export async function drag(from) {
+    const assertIsDragging = (fn, endDrag) => {
+        return {
+            async [fn.name](...args) {
+                if (dragEndReason) {
+                    throw new Error(
+                        `Cannot execute drag helper '${fn.name}': drag sequence has been ended by '${dragEndReason}'.`
+                    );
+                }
+                await fn(...args);
+                if (endDrag) {
+                    dragEndReason = fn.name;
+                }
+            },
+        }[fn.name];
+    };
+
+    const cancel = assertIsDragging(async function cancel() {
+        await triggerEvent(window, null, "keydown", { key: "Escape" });
+    }, true);
+
+    /**
+     * @param {Element | string} [to]
+     * @param {"top" | "bottom" | "left" | "right"} [position]
+     */
+    const drop = assertIsDragging(async function drop(to, position) {
+        if (to) {
+            await moveTo(to, position);
+        }
+        await triggerEvent(target || source, null, "mouseup", targetPosition);
+    }, true);
+
+    /**
+     * @param {Element | string} selector
+     */
+    const getEl = (selector) =>
+        selector instanceof Element ? selector : fixture.querySelector(selector);
+
+    /**
+     * @param {"top" | "bottom" | "left" | "right" | { x?: number, y?: number }} [position]
+     */
+    const getTargetPosition = (position) => {
+        const tRect = target.getBoundingClientRect();
+        const tPos = { clientX: tRect.x, clientY: tRect.y };
+        if (position && typeof position === "object") {
+            // x and y coordinates start from the element's initial coordinates
+            tPos.clientX += position.x || 0;
+            tPos.clientY += position.y || 0;
+        } else {
+            // relative positionning starts from the center of the element
+            tPos.clientX += tRect.width / 2;
+            tPos.clientY += tRect.height / 2;
+            switch (position) {
+                case "top": {
+                    tPos.clientY = tRect.y - 1;
+                    break;
+                }
+                case "bottom": {
+                    tPos.clientY = tRect.y + tRect.height + 1;
+                    break;
+                }
+                case "left": {
+                    tPos.clientX = tRect.x - 1;
+                    break;
+                }
+                case "right": {
+                    tPos.clientX = tRect.x + tRect.width + 1;
+                    break;
+                }
+            }
+        }
+        return tPos;
+    };
+
+    /**
+     * @param {Element | string} [to]
+     * @param {"top" | "bottom" | "left" | "right"} [position]
+     */
+    const moveTo = assertIsDragging(async function moveTo(to, position) {
+        target = getEl(to);
+        if (!target) {
+            return;
+        }
+
+        // Recompute target position
+        targetPosition = getTargetPosition(position);
+
+        // Move, enter and drop the element on the target
+        await triggerEvent(window, null, "mousemove", targetPosition);
+
+        // "mouseenter" is fired on every parent of `target` that do not contain
+        // `from` (typically: different parent lists).
+        for (const parent of getDifferentParents(source, target)) {
+            triggerEvent(parent, null, "mouseenter", targetPosition);
+        }
+        await nextTick();
+
+        return dragHelpers;
+    }, false);
+
+    const dragHelpers = { cancel, drop, moveTo };
     const fixture = getFixture();
-    from = from instanceof Element ? from : fixture.querySelector(from);
-    to = to instanceof Element ? to : fixture.querySelector(to);
+
+    const source = getEl(from instanceof Element ? from : fixture.querySelector(from));
+    const sourceRect = source.getBoundingClientRect();
+
+    let dragEndReason = null;
+    let target;
+    let targetPosition;
 
     // Mouse down on main target
-    const fromRect = from.getBoundingClientRect();
-    const toRect = to.getBoundingClientRect();
-    triggerEvent(from, null, "mousedown", {
-        clientX: fromRect.x + fromRect.width / 2,
-        clientY: fromRect.y + fromRect.height / 2,
+    await triggerEvent(source, null, "mousedown", {
+        clientX: sourceRect.x + sourceRect.width / 2,
+        clientY: sourceRect.y + sourceRect.height / 2,
     });
 
-    // Find target position
-    const toPos = {
-        clientX: toRect.x + toRect.width / 2,
-        clientY: toRect.y + toRect.height / 2,
-    };
-    switch (position) {
-        case "top": {
-            toPos.clientY = toRect.y - 1;
-            break;
-        }
-        case "bottom": {
-            toPos.clientY = toRect.y + toRect.height + 1;
-            break;
-        }
-        case "left": {
-            toPos.clientX = toRect.x - 1;
-            break;
-        }
-        case "right": {
-            toPos.clientX = toRect.x + toRect.width + 1;
-            break;
-        }
-    }
-
-    // Move, enter and drop the element on the target
-    triggerEvent(window, null, "mousemove", toPos);
-    // "mouseenter" is fired on every parent of `to` that do not contain
-    // `from` (typically: different parent lists).
-    for (const target of getDifferentParents(from, to)) {
-        triggerEvent(target, null, "mouseenter", toPos);
-    }
-
-    return function () {
-        return drop(from, toPos);
-    };
-}
-
-function drop(from, toPos) {
-    return triggerEvent(from, null, "mouseup", toPos);
+    return dragHelpers;
 }
 
 export async function clickDropdown(target, fieldName) {

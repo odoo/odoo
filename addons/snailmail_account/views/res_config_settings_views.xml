@@ -14,7 +14,7 @@
                 </div>
             </xpath>
 
-            <div id="snailmail_settings" position="inside">
+            <setting id="send_invoices_followups" position="inside">
                 <div class="mt16" attrs="{'invisible': [('module_snailmail_account', '=', False)]}">
                     <div>
                         <field name="snailmail_color"/>
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <widget name="iap_buy_more_credits" service_name="snailmail"/>
-            </div>
+            </setting>
         </field>
     </record>
 </odoo>

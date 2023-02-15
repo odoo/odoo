@@ -8,8 +8,8 @@ class Warehouse(models.Model):
 
     pos_type_id = fields.Many2one('stock.picking.type', string="Point of Sale Operation Type")
 
-    def _get_sequence_values(self):
-        sequence_values = super(Warehouse, self)._get_sequence_values()
+    def _get_sequence_values(self, name=False, code=False):
+        sequence_values = super(Warehouse, self)._get_sequence_values(name=name, code=code)
         sequence_values.update({
             'pos_type_id': {
                 'name': self.name + ' ' + _('Picking POS'),

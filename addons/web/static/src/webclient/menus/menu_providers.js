@@ -4,11 +4,17 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
+import { DefaultCommandItem } from "@web/core/commands/command_palette";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 class AppIconCommand extends Component {}
 AppIconCommand.template = "web.AppIconCommand";
+AppIconCommand.props = {
+    webIconData: { type: String, optional: true },
+    webIcon: { type: Object, optional: true },
+    ...DefaultCommandItem.props,
+};
 
 const commandCategoryRegistry = registry.category("command_categories");
 commandCategoryRegistry.add("apps", { namespace: "/" }, { sequence: 10 });

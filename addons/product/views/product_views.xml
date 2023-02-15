@@ -75,20 +75,20 @@
                                     <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <label for="list_price" class="mt-1"/>
-                                    <div name="pricing">
+                                    <label for="list_price"/>
+                                    <div name="pricing" class="o_row">
                                       <field name="list_price" class="oe_inline" widget='monetary'
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                     </div>
-                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
-                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
-                                        <span groups="uom.group_uom" class="oe_read_only">per
+                                    <label for="standard_price" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                                    <div name="standard_price_uom" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                                        <field name="standard_price" class="oe_inline" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
+                                        <span groups="uom.group_uom" >per
                                             <field name="uom_name" class="oe_inline"/>
                                         </span>
                                     </div>
                                     <field name="categ_id" string="Product Category"/>
-                                    <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                                    <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/>
@@ -97,7 +97,7 @@
                                 </group>
                             </group>
                             <group string="Internal Notes">
-                                <field name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
+                                <field colspan="2" name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
                             </group>
                         </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales" invisible="1">
@@ -106,7 +106,7 @@
                             </group>
                             <group>
                                 <group string="Sales Description" name="description">
-                                    <field name="description_sale" nolabel="1" placeholder="This note is added to sales orders and invoices."/>
+                                    <field colspan="2" name="description_sale" nolabel="1" placeholder="This note is added to sales orders and invoices."/>
                                 </group>
                             </group>
                         </page>
@@ -120,12 +120,12 @@
                                 <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
                                     <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
                                     <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
-                                        <field name="weight"/>
+                                        <field name="weight" class="oe_inline"/>
                                         <field name="weight_uom_name"/>
                                     </div>
                                     <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
                                     <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
-                                        <field name="volume" string="Volume"/>
+                                        <field name="volume" string="Volume" class="oe_inline"/>
                                         <field name="volume_uom_name"/>
                                     </div>
                                 </group>
@@ -134,7 +134,7 @@
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"
                                 groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
+                                <field colspan="2" name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </page>
                     </notebook>
@@ -266,10 +266,13 @@
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
                                 <label for="lst_price" string="Sales Price"/>
-                                <div class="o_row col-5 ps-0">
-                                    <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                                <div class="o_row">
+                                    <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
                                 </div>
-                                <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
+                                <label for="standard_price"/>
+                                <div class="o_row">
+                                    <field name="standard_price" widget='monetary' class="oe_inline" options="{'currency_field': 'cost_currency_id'}"/>
+                                </div>
                                 <field name="currency_id" invisible='1'/>
                                 <field name="cost_currency_id" invisible="1"/>
                             </group>
@@ -278,24 +281,24 @@
                             <group name="weight" string="Logistics" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
                                 <label for="volume"/>
                                 <div class="o_row">
-                                    <field name="volume"/>
+                                    <field name="volume" class="oe_inline"/>
                                     <span><field name="volume_uom_name"/></span>
                                 </div>
                                 <label for="weight"/>
                                 <div class="o_row">
-                                    <field name="weight"/>
+                                    <field name="weight" class="oe_inline"/>
                                     <span><field name="weight_uom_name"/></span>
                                 </div>
                             </group>
-                            <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1"
-                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
-                            </group>
-                        </group>
-                        <group>
                             <group name="tags" string="Tags">
                                 <field name="product_tag_ids" string="Product Template Tags" widget="many2many_tags" readonly="1" options="{'no_open': True, 'color_field': 'color'}"/>
                                 <field name="additional_product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
+                                <field colspan="2" name="packaging_ids" nolabel="1"
+                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </group>
                     </sheet>
@@ -479,7 +482,7 @@
         </record>
 
     <record id="action_product_price_list_report" model="ir.actions.server">
-        <field name="name">Generate Pricelist</field>
+        <field name="name">Generate Pricelist Report</field>
         <field name="groups_id" eval="[(4, ref('group_product_pricelist'))]"/>
         <field name="model_id" ref="product.model_product_product"/>
         <field name="binding_model_id" ref="product.model_product_product"/>
@@ -490,7 +493,7 @@ ctx.update({'default_pricelist': env['product.pricelist'].search([], limit=1).id
 action = {
     'name': 'Pricelist Report',
     'type': 'ir.actions.client',
-    'tag': 'generate_pricelist',
+    'tag': 'generate_pricelist_report',
     'context': ctx,
 }
         </field>

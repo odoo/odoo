@@ -8,6 +8,7 @@
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'author': 'OpenERP Italian Community',
     'description': """
@@ -35,4 +36,5 @@ Italian accounting chart and localization.
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
+    'post_init_hook': 'load_translations',
 }

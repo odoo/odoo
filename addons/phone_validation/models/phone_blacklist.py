@@ -78,43 +78,54 @@ class PhoneBlackList(models.Model):
             new_args = args
         return super(PhoneBlackList, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    def add(self, number):
+    def add(self, number, message=None):
         sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
-        return self._add([sanitized])
+        return self._add([sanitized], message=message)
 
-    def _add(self, numbers):
+    def _add(self, numbers, message=None):
         """ Add or re activate a phone blacklist entry.
 
         :param numbers: list of sanitized numbers """
         records = self.env["phone.blacklist"].with_context(active_test=False).search([('number', 'in', numbers)])
         todo = [n for n in numbers if n not in records.mapped('number')]
         if records:
+            if message:
+                records._track_set_log_message(message)
             records.action_unarchive()
         if todo:
-            records += self.create([{'number': n} for n in todo])
+            new_records = self.create([{'number': n} for n in todo])
+            if message:
+                for record in new_records:
+                    record.with_context(mail_create_nosubscribe=True).message_post(
+                        body=message,
+                        subtype_xmlid='mail.mt_note',
+                    )
+            records += new_records
         return records
 
-    def action_remove_with_reason(self, number, reason=None):
-        records = self.remove(number)
-        if reason:
-            for record in records:
-                record.message_post(body=_("Unblacklisting Reason: %s", reason))
-        return records
-
-    def remove(self, number):
+    def remove(self, number, message=None):
         sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
-        return self._remove([sanitized])
+        return self._remove([sanitized], message=message)
 
-    def _remove(self, numbers):
+    def _remove(self, numbers, message=None):
         """ Add de-activated or de-activate a phone blacklist entry.
 
         :param numbers: list of sanitized numbers """
         records = self.env["phone.blacklist"].with_context(active_test=False).search([('number', 'in', numbers)])
         todo = [n for n in numbers if n not in records.mapped('number')]
         if records:
+            if message:
+                records._track_set_log_message(message)
             records.action_archive()
         if todo:
-            records += self.create([{'number': n, 'active': False} for n in todo])
+            new_records = self.create([{'number': n, 'active': False} for n in todo])
+            if message:
+                for record in new_records:
+                    record.with_context(mail_create_nosubscribe=True).message_post(
+                        body=message,
+                        subtype_xmlid='mail.mt_note',
+                    )
+            records += new_records
         return records
 
     def phone_action_blacklist_remove(self):

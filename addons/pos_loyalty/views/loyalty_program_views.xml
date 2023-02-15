@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
         <field name="arch" type="xml">
             <field name="mail_template_id" position="after">
-                <field name="pos_report_print_id" attrs="{'invisible': [('program_type', 'not in', ('gift_card', 'ewallet'))]}" />
+                <field name="pos_report_print_id" attrs="{'invisible': [('program_type', '!=', 'gift_card')]}" />
             </field>
             <xpath expr="//label[@for='available_on']" position="attributes">
                 <attribute name="invisible">0</attribute>

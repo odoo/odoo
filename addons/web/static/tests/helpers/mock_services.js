@@ -13,7 +13,7 @@ import { patchWithCleanup } from "./utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
 
-const { Component, status } = owl;
+import { Component, status } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Mock Services
@@ -69,8 +69,11 @@ export function makeFakeRPCService(mockRPC) {
                         .then(resolve)
                         .catch(reject);
                 });
-                rpcProm.abort = () =>
-                    rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+                rpcProm.abort = (rejectError = true) => {
+                    if (rejectError) {
+                        rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+                    }
+                };
                 return rpcProm;
             };
         },
@@ -107,13 +110,13 @@ export function makeMockXHR(response, sendCb, def) {
                     if (typeof data === "string") {
                         try {
                             data = JSON.parse(data);
-                        } catch (_e) {
+                        } catch {
                             // Ignore
                         }
                     }
                     try {
                         await sendCb.call(this, data);
-                    } catch (_e) {
+                    } catch {
                         listener = this._errorListener;
                     }
                 }
@@ -148,7 +151,7 @@ export function makeMockFetch(mockRPC) {
         try {
             res = await _rpc(route, params);
             status = 200;
-        } catch (_e) {
+        } catch {
             status = 500;
         }
         const blob = new Blob([JSON.stringify(res || {})], { type: "application/json" });
@@ -233,6 +236,14 @@ export const fakeTitleService = {
     },
 };
 
+export const fakeColorSchemeService = {
+    start() {
+        return {
+            switchToColorScheme() {},
+        };
+    },
+};
+
 export function makeFakeNotificationService(mock) {
     return {
         start() {
@@ -306,6 +317,7 @@ export function makeFakeHTTPService(getResponse, postResponse) {
 }
 
 export const mocks = {
+    color_scheme: () => fakeColorSchemeService,
     company: () => fakeCompanyService,
     command: () => fakeCommandService,
     cookie: () => fakeCookieService,

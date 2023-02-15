@@ -1,21 +1,15 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
+import { many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'EmojiInCategory',
+Model({
+    name: "EmojiInCategory",
     fields: {
-        category: one('EmojiCategory', {
+        category: one("EmojiCategory", {
             identifying: true,
-            inverse: 'allEmojiInCategoryOfCurrent',
+            inverse: "allEmojiInCategoryOfCurrent",
         }),
-        emoji: one('Emoji', {
-            identifying: true,
-            inverse: 'allEmojiInCategoryOfCurrent',
-        }),
-        emojiOrEmojiInCategory: many('EmojiOrEmojiInCategory', {
-            inverse: 'emojiInCategory',
-        }),
+        emoji: one("Emoji", { identifying: true, inverse: "allEmojiInCategoryOfCurrent" }),
+        emojiOrEmojiInCategory: many("EmojiOrEmojiInCategory", { inverse: "emojiInCategory" }),
     },
 });

@@ -1549,13 +1549,10 @@ describe('Utils', () => {
             splitTextNode(cd, 1);
             const d = cd;
             const result = splitAroundUntil(d, p.childNodes[1]);
-            window.chai.expect(result.every(node => node.tagName === 'FONT')).to.be.ok;
+            window.chai.expect(result.tagName === 'FONT').to.be.ok;
             window.chai.expect(p.outerHTML).to.eql(
                 '<p>a<font>b<span>c</span></font><font><span>d</span></font><font><span>e</span>f</font>g</p>'
             );
-            window.chai.expect(result[0]).to.eql(p.childNodes[2]);
-            // "before" split happened so "after" split is not in the DOM anymore:
-            window.chai.expect(result[1].parentElement).to.eql(null);
         });
         it('should split a slice of text from its inline ancestry', () => {
             const [p] = insertTestHtml('<p>a<font>b<span>cdefg</span>h</font>i</p>');
@@ -1570,21 +1567,27 @@ describe('Utils', () => {
             splitTextNode(cd, 1);
             const d = cd;
             const result = splitAroundUntil([d, d.nextSibling.nextSibling], p.childNodes[1]);
-            window.chai.expect(result.every(node => node.tagName === 'FONT')).to.be.ok;
+            window.chai.expect(result.tagName === 'FONT').to.be.ok;
             window.chai.expect(p.outerHTML).to.eql(
                 '<p>a<font>b<span>c</span></font><font><span>def</span></font><font><span>g</span>h</font>i</p>'
             );
-            window.chai.expect(result[0]).to.eql(p.childNodes[2]);
-            // "before" split happened so "after" split is not in the DOM anymore:
-            window.chai.expect(result[1].parentElement).to.eql(null);
+        });
+        it('should split from a textNode that has no siblings', () => {
+            const [p] = insertTestHtml('<p>a<font>b<span>cde</span>f</font>g</p>');
+            const font = p.querySelector('font');
+            const cde = p.querySelector('span').firstChild;
+            const result = splitAroundUntil(cde, font);
+            window.chai.expect(result.tagName === 'FONT' && result !== font).to.be.ok;
+            window.chai.expect(p.outerHTML).to.eql('<p>a<font>b</font><font><span>cde</span></font><font>f</font>g</p>');
         });
         it('should not do anything (nothing to split)', () => {
-            const [p] = insertTestHtml('<p>a<font>b<span>cde</span>f</font>g</p>');
-            const cde = p.childNodes[1].childNodes[1].firstChild;
-            const result = splitAroundUntil(cde, p.childNodes[1]);
-            window.chai.expect(result.every(node => node === undefined)).to.be.ok;
-            window.chai.expect(p.outerHTML).to.eql('<p>a<font>b<span>cde</span>f</font>g</p>');
+            const [p] = insertTestHtml('<p>a<font><span>bcd</span></font>e</p>');
+            const bcd = p.querySelector('span').firstChild;
+            const result = splitAroundUntil(bcd, p.childNodes[1]);
+            window.chai.expect(result === p.childNodes[1]).to.be.ok;
+            window.chai.expect(p.outerHTML).to.eql('<p>a<font><span>bcd</span></font>e</p>');
         });
+
     });
 
     describe('CleanUp Html', () => {

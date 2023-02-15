@@ -28,7 +28,7 @@ class MailingTrace(models.Model):
         # mass_mailing_sms mass mode specific codes
         'sms_blacklist', 'sms_duplicate', 'sms_optout',
       * cancel:
-        * mail: set in get_mail_values in composer, if email is blacklisted
+        * mail: set in _prepare_mail_values in composer, if email is blacklisted
           (mail) or in opt_out / seen list (mass_mailing) or email_to is void
           or incorrectly formatted (mass_mailing) - based on mail cancel state
         * sms: set in _prepare_mass_sms_trace_values in composer if sms is

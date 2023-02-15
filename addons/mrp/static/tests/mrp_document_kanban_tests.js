@@ -33,11 +33,12 @@ QUnit.module('MrpDocumentsKanbanView', {
         this.ORIGINAL_CREATE_XHR = fileUploadService.createXhr;
         this.patchDocumentXHR = (mockedXHRs, customSend) => {
             fileUploadService.createXhr = () => {
-                const xhr = {
+                const xhr = new window.EventTarget();
+                Object.assign(xhr, {
                     upload: new window.EventTarget(),
-                    open() { },
+                    open() {},
                     send(data) { customSend && customSend(data); },
-                };
+                });
                 mockedXHRs.push(xhr);
                 return xhr;
             };

@@ -6,7 +6,7 @@ import { getDefaultConfig } from "@web/views/view";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { useEnrichWithActionLinks } from "@web/webclient/actions/reports/report_hook";
 
-const { Component, useRef, useSubEnv } = owl;
+import { Component, useRef, useSubEnv } from "@odoo/owl";
 
 /**
  * Most of the time reports are printed as pdfs.

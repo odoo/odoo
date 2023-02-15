@@ -7,7 +7,7 @@
                 <t t-if="!env.isMobile">
                     <div class="top-content">
                         <div class="button back"
-                              t-on-click="() => this.showScreen('ProductScreen')">
+                              t-on-click="() => pos.showScreen('ProductScreen')">
                             <i class="fa fa-angle-double-left fa-fw"></i>
                             <span class="back_text">Back</span>
                         </div>
@@ -28,8 +28,9 @@
                                    t-key="paymentMethod.id">
                                     <div class="button paymentmethod"
                                         t-on-click="() => this.trigger('new-payment-line', paymentMethod)">
-                                        <div class="payment-name">
-                                            <t t-esc="paymentMethod.name" />
+                                        <div class="payment-method-display">
+                                            <div><img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)"/></div>
+                                            <span class="payment-name"><t t-esc="paymentMethod.name" /></span>
                                         </div>
                                     </div>
                                 </t>
@@ -89,9 +90,12 @@
                                     <i class="fa fa-archive" /> Open Cashbox
                                 </div>
                                 <div t-if="env.pos.config.ship_later" class="button"
-                                        t-att-class="{ highlight: currentOrder.is_to_ship() }"
-                                        t-on-click="toggleIsToShip">
+                                        t-att-class="{ highlight: currentOrder.getShippingDate() }"
+                                        t-on-click="toggleShippingDatePicker">
                                     <i class="fa fa-clock-o" /> Ship Later
+                                    <span t-if="currentOrder.getShippingDate()">
+                                        (<t t-esc="currentOrder.getShippingDate()"/>)
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +108,7 @@
                             t-on-click="() => this.trigger('validate-order')">
                             <h1>Validate</h1>
                         </button>
-                        <button class="btn-switchpane secondary" t-on-click="() => this.showScreen('ProductScreen', {mobile_pane: 'left'})">
+                        <button class="btn-switchpane secondary" t-on-click="() => pos.showScreen('ProductScreen', {mobile_pane: 'left'})">
                             <h1>Review</h1>
                         </button>
                     </div>

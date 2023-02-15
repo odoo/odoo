@@ -161,7 +161,7 @@ def retrying(func, env):
         env.registry.reset_changes()
         raise
 
-    if not env.cr._closed:
+    if not env.cr.closed:
         env.cr.commit()  # effectively commits and execute post-commits
     env.registry.signal_changes()
     return result

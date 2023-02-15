@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'K.S.A. - Point of Sale',
-    'author': 'Odoo S.A',
+    'name': 'Saudi Arabia - Point of Sale',
     'category': 'Accounting/Localizations/Point of Sale',
     'description': """
 K.S.A. POS Localization

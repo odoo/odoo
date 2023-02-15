@@ -15,8 +15,10 @@ import {
     patchWithCleanup,
     mount,
     nextTick,
+    makeDeferred,
+    editInput,
 } from "../../helpers/utils";
-import { toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
+import { pagerNext, toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { session } from "@web/session";
 import {
     createWebClient,
@@ -27,7 +29,7 @@ import {
 } from "./../helpers";
 import { errorService } from "@web/core/errors/error_service";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let serverData;
 let target;
@@ -966,6 +968,34 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("should not crash while commiting changes", async (assert) => {
+        serverData.views["partner,false,form"] = `<form><field name="display_name" /></form>`;
+        const webClient = await createWebClient({ serverData });
+        await doAction(
+            webClient,
+            {
+                type: "ir.actions.act_window",
+                id: 1337,
+                res_id: 1,
+                res_model: "partner",
+                views: [[false, "form"]],
+            },
+            { props: { resIds: [1, 2] } }
+        );
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "First record");
+        await pagerNext(target);
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Second record");
+        await editInput(target, "[name=display_name] input", "new name");
+
+        // without saving we now make a loadState which should commit changes
+        await loadState(webClient, { action: 1337, id: 1, model: "partner", view_type: "form" });
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "First record");
+
+        // loadState again just to check if changes were commited
+        await loadState(webClient, { action: 1337, id: 2, model: "partner", view_type: "form" });
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "new name");
+    });
+
     QUnit.test("initial action crashes", async (assert) => {
         assert.expect(8);
 
@@ -1010,12 +1040,14 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("concurrent hashchange during action mounting -- 1", async (assert) => {
-        assert.expect(5);
-
+        const hashchangeDef = makeDeferred();
         class MyAction extends Component {
             setup() {
                 owl.onMounted(() => {
                     assert.step("myAction mounted");
+                    browser.addEventListener("hashchange", () => {
+                        hashchangeDef.resolve();
+                    });
                     browser.location.hash = "#action=__test__client__action__&menu_id=1";
                 });
             }
@@ -1027,7 +1059,10 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         assert.verifySteps(["myAction mounted"]);
+        assert.containsOnce(target, ".not-here");
 
+        // hashchange event isn't trigerred synchronously, so we have to wait for it
+        await hashchangeDef;
         await nextTick();
         assert.containsNone(target, ".not-here");
         assert.containsOnce(target, ".test_client_action");
@@ -1069,4 +1104,45 @@ QUnit.module("ActionManager", (hooks) => {
             menu_id: 1,
         });
     });
+
+    QUnit.test(
+        "'no content helper' is markuped when action is retrieved from session storage",
+        async function (assert) {
+            // for the no content helper to show, we empty the data
+            serverData.models.partner.records = [];
+            serverData.actions[4].help = "<p>Some nice help</p>";
+
+            patchWithCleanup(browser.sessionStorage, {
+                getItem(k) {
+                    assert.step(`getItem session ${k}`);
+                    return this._super(k);
+                },
+            });
+
+            const webClient = await createWebClient({ serverData });
+
+            await doAction(webClient, 4);
+            assert.containsOnce(target, ".o_kanban_view", "should display a kanban view");
+
+            assert.strictEqual(
+                "Some nice help",
+                target.querySelector(".o_nocontent_help").innerText
+            );
+
+            await loadState(webClient, {
+                model: "partner",
+                view_type: "list",
+            });
+
+            assert.containsNone(target, ".o_kanban_view", "should no longer display a kanban view");
+            assert.containsOnce(target, ".o_list_view", "should display a list view");
+
+            assert.strictEqual(
+                "Some nice help",
+                target.querySelector(".o_nocontent_help").innerText
+            );
+
+            assert.verifySteps(["getItem session current_action"]);
+        }
+    );
 });

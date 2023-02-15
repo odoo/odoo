@@ -71,6 +71,30 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo09.id)]), 'The supplier info should be removed')
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo13.id)]), 'The supplier info should be removed')
 
+    def test_03_blanket_order_rfq(self):
+        """ Create a blanket order + an RFQ for it """
+        requisition_type = self.env['purchase.requisition.type'].create({
+            'name': 'Blanket test',
+            'quantity_copy': 'none'
+        })
+
+        bo_form = Form(self.env['purchase.requisition'])
+        bo_form.vendor_id = self.res_partner_1
+        bo_form.type_id = requisition_type
+        with bo_form.line_ids.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 5.0
+            line.price_unit = 21
+        bo = bo_form.save()
+        bo.action_in_progress()
+
+        # lazy reproduction of clicking on "New Quotation" act_window button
+        po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": bo.id, "default_user_id": False}))
+        po = po_form.save()
+        po.button_confirm()
+        self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should have been copied to purchase order')
+        self.assertEqual(po.partner_id, bo.vendor_id, 'The blanket order vendor should have been copied to purchase order')
+
     def test_06_purchase_requisition(self):
         """ Create a blanket order for a product and a vendor already linked via
         a supplier info"""
@@ -150,11 +174,13 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_1.order_line.date_planned += timedelta(days=1)
         alt_po_1.order_line.price_unit = unit_price - 10
         action = orig_po.action_compare_alternative_lines()
-        params = action['context']['params']
-        best_price_pol = self.env['purchase.order.line'].browse(params['best_price_ids'])
-        best_date_pol = self.env['purchase.order.line'].browse(params['best_date_ids'])
+        best_price_ids, best_date_ids, best_price_unit_ids = orig_po.get_tender_best_lines()
+        best_price_pol = self.env['purchase.order.line'].browse(best_price_ids)
+        best_date_pol = self.env['purchase.order.line'].browse(best_date_ids)
+        best_unit_price_pol = self.env['purchase.order.line'].browse(best_price_unit_ids)
         self.assertEqual(best_price_pol.order_id.id, alt_po_1.id, "Best price PO line was not correctly calculated")
         self.assertEqual(best_date_pol.order_id.id, orig_po.id, "Best date PO line was not correctly calculated")
+        self.assertEqual(best_unit_price_pol.order_id.id, alt_po_1.id, "Best unit price PO line was not correctly calculated")
 
         # second flow: create extra alt PO, check that all 3 POs are correctly auto-linked
         action = orig_po.action_create_alternative()
@@ -215,3 +241,35 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
         self.assertEqual(len(po_5.alternative_po_ids), 0, "Last PO should auto unlink from itself since group should have auto-deleted")
         self.assertEqual(len(groups), 0, "The group should have auto-deleted")
+
+    def test_09_alternative_po_line_price_unit(self):
+        """Checks PO line's `price_unit` is keep even if a line from an
+        alternative is chosen and thus the PO line's quantity was set to 0. """
+        # Creates a first Purchase Order.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.res_partner_1
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 1
+            line.price_unit = 16
+        po_1 = po_form.save()
+
+        # Creates an alternative PO.
+        action = po_1.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = self.res_partner_1
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+
+        # Set a lower price on the alternative and choses this PO line.
+        po_2 = po_1.alternative_po_ids - po_1
+        po_2.order_line.price_unit = 12
+        po_2.order_line.action_choose()
+
+        self.assertEqual(
+            po_1.order_line.product_uom_qty, 0,
+            "Line's quantity from the original PO should be reset to 0")
+        self.assertEqual(
+            po_1.order_line.price_unit, 16,
+            "Line's unit price from the original PO shouldn't be changed")

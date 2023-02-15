@@ -4,19 +4,17 @@
 <template id="submenu" name="Submenu">
     <t t-set="show_dropdown" t-value="(submenu.is_mega_menu and submenu.is_visible) or submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
     <li t-if="submenu.is_visible and not (submenu.child_id or submenu.is_mega_menu)" t-attf-class="#{item_class or ''}">
-        <a t-att-href="submenu.clean_url()"
-            t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
+        <a t-att-href="submenu._clean_url()"
+            t-attf-class="#{link_class or ''} #{submenu._is_active() and 'active'}"
             role="menuitem"
             t-ignore="true"
             t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} dropdown #{
-        (submenu.clean_url() and submenu.clean_url() != '/' and any(request.httprequest.path == child.url for child in submenu.child_id if child.url) or
-         (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
-        } #{submenu.is_mega_menu and 'position-static'}">
-        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'}" data-bs-toggle="dropdown" href="#">
+    <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} dropdown #{submenu.is_mega_menu and 'position-static'}">
+        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'} #{submenu._is_active() and 'active'}"
+           data-bs-toggle="dropdown" href="#">
             <span t-field="submenu.name"/>
         </a>
         <div t-if="submenu.is_mega_menu"
@@ -36,23 +34,23 @@
 
 <template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
     <xpath expr="//html" position="before">
-        <t t-set="editable_in_backend" t-value="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')"/>
         <t t-set="html_data" t-value="{
             'lang': lang and lang.replace('_', '-'),
             'data-website-id': website.id if website else None,
             'data-edit_translations': '1' if edit_translations else None,
+            'data-main-object': repr(main_object) if main_object else None,
+            'data-seo-object': repr(seo_object) if seo_object else None,
         }"/>
+        <t t-if="not request.env.user._is_public()" t-set="nothing" t-value="html_data.update({
+            'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
+            'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
+            'data-editable-in-backend': edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page'),
+        })"/>
         <t t-if="editable or translatable" t-set="nothing" t-value="html_data.update({
             'data-editable': '1' if editable else None,
             'data-translatable': '1' if translatable else None,
             'data-view-xmlid': xmlid,
             'data-viewid': viewid,
-            'data-main-object': repr(main_object) if main_object else None,
-            'data-seo-object': repr(seo_object) if seo_object else None,
-            'data-oe-company-name': res_company.name,
-            'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
-            'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
-            'data-editable-in-backend': editable_in_backend,
         })"/>
     </xpath>
 
@@ -64,7 +62,7 @@
             <t t-if="not additional_title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
-            <t t-set="default_title"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="(website or res_company).name"/> </t>
+            <t t-set="default_title" t-translation="off"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="(website or res_company).name"/> </t>
             <t t-set="seo_object" t-value="seo_object or main_object"/>
             <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
                 <t t-set="title" t-value="seo_object.website_meta_title"/>
@@ -120,6 +118,9 @@
             </t>
         </t>
         <link t-if="request and website and website.is_public_user()" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
+        <!-- TODO: Once we have style in DB, add this preconnect only if a
+        google font is actually used. Note that if no font is used, the
+        preconnect is actually not connecting to the google servers. -->
         <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin=""/>
     </xpath>
 
@@ -156,7 +157,7 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <t t-if="website and website.google_analytics_key and not editable">
+        <t t-if="website and website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
             <script id="tracking_code" async="1" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
@@ -295,11 +296,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                         </t>
-                    </t>
-
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="my-auto ms-lg-2"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item my-auto ms-lg-2"/>
+                        </t>
                     </t>
                 </div>
                 <!-- Call To Action -->
@@ -386,10 +386,10 @@
                             <t t-set="_link_class" t-valuef="nav-link"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-start"/>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="d-block d-sm-none"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item d-block d-sm-none"/>
+                        </t>
                     </t>
                     <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_3"/>
                 </div>
@@ -526,11 +526,11 @@
                                 <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-3"/>
                                 <t t-set="_link_class" t-valuef="nav-link fw-bold"/>
                             </t>
-                        </t>
-                        <!-- Language Selector -->
-                        <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_div_classes" t-valuef="d-block d-lg-none mb-2"/>
-                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
+                            <!-- Language Selector -->
+                            <t t-call="website.placeholder_header_language_selector">
+                                <t t-set="_div_classes" t-valuef="nav-item d-block d-lg-none mb-2"/>
+                                <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
+                            </t>
                         </t>
                         <!-- Call To Action -->
                         <t t-call="website.placeholder_header_call_to_action">
@@ -757,11 +757,11 @@
                                 <t t-set="link_class" t-valuef="nav-link"/>
                             </t>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="mb-4 mb-lg-0 align-self-lg-center ms-lg-auto"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="float-lg-end"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item mb-4 mb-lg-0 align-self-lg-center ms-lg-auto"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="float-lg-end"/>
+                        </t>
                     </t>
                 </div>
             </div>
@@ -841,10 +841,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="my-auto ms-lg-2 align-self-lg-center"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item my-auto ms-lg-2 align-self-lg-center"/>
+                        </t>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
@@ -941,15 +941,19 @@
                                 <t t-set="link_class" t-valuef="nav-link"/>
                             </t>
                         </t>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item d-block d-sm-none mb-2"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
+                        </t>
+                        <!-- Call To Action (mobile) -->
+                        <t t-call="website.placeholder_header_call_to_action">
+                            <t t-set="_div_classes" t-valuef="nav-item d-block d-lg-none"/>
+                        </t>
                     </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="d-block d-sm-none mb-2"/>
-                        <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end position-static float-none"/>
-                    </t>
-                    <!-- Call To Action -->
+                    <!-- Call To Action (desktop) -->
                     <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="ms-lg-3"/>
+                        <t t-set="_div_classes" t-valuef="ms-3 d-none d-lg-block"/>
                     </t>
                 </div>
             </t>
@@ -1020,10 +1024,10 @@
                                 <t t-set="link_class" t-valuef="nav-link"/>
                             </t>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="ms-lg-1 mb-2 mb-lg-0 align-self-lg-center"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item ms-lg-1 mb-2 mb-lg-0 align-self-lg-center"/>
+                        </t>
                     </t>
                 </div>
             </div>
@@ -1068,10 +1072,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown ms-lg-auto"/>
                             <t t-set="_link_class" t-valuef="nav-link"/>
                         </t>
-                    </t>
-                    <!-- Language Selector -->
-                    <t t-call="website.placeholder_header_language_selector">
-                        <t t-set="_div_classes" t-valuef="ms-lg-2"/>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-valuef="nav-item ms-lg-2 align-self-lg-center"/>
+                        </t>
                     </t>
                     <!-- Call To Action -->
                     <t t-call="website.placeholder_header_call_to_action">
@@ -1137,10 +1141,10 @@
                             <t t-set="_item_class" t-valuef="nav-item dropdown"/>
                             <t t-set="_link_class" t-valuef="nav-link fw-bold ms-lg-3"/>
                         </t>
-                    </t>
-                    <!-- Call To Action -->
-                    <t t-call="website.placeholder_header_call_to_action">
-                        <t t-set="_div_classes" t-valuef="mx-auto mt-4"/>
+                        <!-- Call To Action -->
+                        <t t-call="website.placeholder_header_call_to_action">
+                            <t t-set="_div_classes" t-valuef="nav-item mt-3 mt-lg-0 ms-lg-3"/>
+                        </t>
                     </t>
                     <!-- Social Icons -->
                     <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_hamburger_full_1"/>
@@ -1347,7 +1351,27 @@
 <template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
     <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
         <a href="/" t-attf-class="navbar-brand logo #{_link_class}">
-            <span t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+            <!--
+            Note: setting width *and* height attributes allows to reserve some
+            space to avoid layout shift during page loading. Of course, CSS
+            rules set the height the user chose, while the width is set to
+            'auto'. But while the image is loading, it is best to already
+            reserve some width to reduce layout shift (like making the menu move
+            or even re-render itself into a "+" menu).
+
+            The chosen values for the space reservation are the ones of the
+            default logo and theme, but it does not really matter as long as
+            they are coherent. While the image is being loaded, the chosen user
+            height is still applied and the 'auto' width rule induces a width
+            that respects the aspect ratio set by the width and height
+            attributes. That could be a problem if the real logo has a larger
+            height than width, in which case the layout shift would be increased
+            because of the arbitrary values set as width and height, but in most
+            cases, this should reduce it.
+
+            This also allows to gain some page speed scoring.
+            -->
+            <span t-field="website.logo" t-options="{'widget': 'image', 'width': 95, 'height': 40}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
         </a>
     </xpath>
 </template>
@@ -1859,7 +1883,7 @@
 <!-- Cookie Bar -->
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
-        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
+        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible d-none o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
             <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete"
                  data-show-after="500"
                  data-display="afterDelay"
@@ -1871,15 +1895,21 @@
                  role="dialog">
                 <div class="modal-dialog d-flex s_popup_size_full">
                     <div class="modal-content oe_structure">
+                        <!-- Keep this section equivalent to the rendering of the `website.cookies_bar.discrete` client template -->
                         <section class="o_colored_level o_cc o_cc1">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-8 pt16">
-                                        <p>We use cookies to provide you a better user experience.</p>
+                                        <p>
+                                            <span class="pe-1">We use cookies to provide you a better user experience on this website.</span>
+                                            <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm px-0">Cookie Policy</a>
+                                        </p>
                                     </div>
-                                    <div class="col-lg-4 pt16 text-end">
-                                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm">Cookie Policy</a>
-                                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
+                                    <div class="col-lg-4 text-end pt16 pb16">
+                                        <a href="#" id="cookies-consent-essential" role="button"
+                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2">Only essentials</a>
+                                        <a href="#" id="cookies-consent-all" role="button"
+                                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm">I agree</a>
                                     </div>
                                 </div>
                             </div>
@@ -1897,6 +1927,8 @@
 </template>
 
 <template id="language_selector_add_language">
+    <!-- When clicked from the iframe preview in backend, the click will be
+    prevented to directly call the action in the top window -->
     <a t-attf-class="o_add_language d-none #{dropdown and 'd-sm-block dropdown-item' or 'd-sm-inline-block list-inline-item'}"
        groups="website.group_website_restricted_editor"
        t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{quote_plus(url_for('', '[lang]') + '?' + keep_query())}">

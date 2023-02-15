@@ -40,7 +40,7 @@ class CashmoveReport(models.Model):
                     lol.date as date,
                     lol.currency_id as currency_id,
                     lol.user_id as user_id,
-                    format('Order: %%s x %%s %%s', lol.quantity::text, lp.name, lol.display_toppings) as description
+                    format('Order: %%s x %%s %%s', lol.quantity::text, lp.name->>'en_US', lol.display_toppings) as description
                 FROM lunch_order lol
                 JOIN lunch_product lp ON lp.id = lol.product_id
                 WHERE

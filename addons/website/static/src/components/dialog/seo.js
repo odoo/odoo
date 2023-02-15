@@ -4,7 +4,7 @@ import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
 
-const { Component, useState, reactive, onMounted, onWillStart } = owl;
+const { Component, useState, reactive, onMounted, onWillStart, useEffect } = owl;
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
@@ -267,7 +267,22 @@ class TitleDescription extends Component {
 
         this.maxRecommendedDescriptionSize = 300;
         this.minRecommendedDescriptionSize = 50;
+
+        // Update the title when its input value changes
+        useEffect(() => {
+            document.title = this.title;
+        }, () => [this.seoContext.title]);
+
+        // Restore the original title when unmounting the component
+        useEffect(() => {
+            const initialTitle = document.title;
+            return () => document.title = initialTitle;
+        }, () => []);
     }
+
+    //--------------------------------------------------------------------------
+    // Getters
+    //--------------------------------------------------------------------------
 
     get seoNameUrl() {
         return this.previousSeoName || this.props.seoNameDefault;
@@ -311,6 +326,23 @@ class TitleDescription extends Component {
         }
         return false;
     }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {InputEvent} ev
+     */
+    _updateInputValue(ev) {
+        // `NFKD` as in `http_routing` python `slugify()`
+        ev.target.value = ev.target.value.trim().normalize('NFKD').toLowerCase()
+            .replace(/\s+/g, '-') // Replace spaces with -
+            .replace(/[^\w-]+/g, '') // Remove all non-word chars
+            .replace(/--+/g, '-'); // Replace multiple - with single -
+        this.seoContext.seoName = ev.target.value;
+    }
 }
 TitleDescription.template = 'website.TitleDescription';
 TitleDescription.props = {
@@ -343,7 +375,7 @@ export class OptimizeSEODialog extends Component {
         onWillStart(async () => {
             const { metadata: { mainObject, seoObject, path } } = this.website.currentWebsite;
 
-            this.object = mainObject || seoObject;
+            this.object = seoObject || mainObject;
             this.data = await this.rpc('/website/get_seo_data', {
                 'res_id': this.object.id,
                 'res_model': this.object.model,
@@ -422,7 +454,9 @@ export class OptimizeSEODialog extends Component {
             }
         }
         data.website_meta_og_img = seoContext.metaImage;
-        await this.orm.write(this.object.model, [this.object.id], data);
+        await this.orm.write(this.object.model, [this.object.id], data, {
+            context: {lang: this.website.currentWebsite.metadata.lang},
+        });
         this.website.goToWebsite({path: this.url.replace(this.previousSeoName || this.seoNameDefault, seoContext.seoName)});
     }
 }

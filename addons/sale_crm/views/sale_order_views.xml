@@ -15,7 +15,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='technical']" position="inside">
-                <field name="opportunity_id" help="Log in the chatter from which opportunity the order originates" groups="base.group_no_one"/>
+                <field name="opportunity_id" context="{'default_type': 'opportunity'}"/>
             </xpath>
         </field>
     </record>

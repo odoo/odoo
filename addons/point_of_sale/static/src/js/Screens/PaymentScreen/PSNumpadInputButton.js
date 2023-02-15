@@ -1,17 +1,11 @@
-odoo.define('point_of_sale.PSNumpadInputButton', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class PSNumpadInputButton extends PosComponent {
-        get _class() {
-            return this.props.changeClassTo || 'input-button number-char';
-        }
+export class PSNumpadInputButton extends LegacyComponent {
+    static template = "PSNumpadInputButton";
+
+    get _class() {
+        return this.props.changeClassTo || "input-button number-char";
     }
-    PSNumpadInputButton.template = 'PSNumpadInputButton';
-
-    Registries.Component.add(PSNumpadInputButton);
-
-    return PSNumpadInputButton;
-});
+}

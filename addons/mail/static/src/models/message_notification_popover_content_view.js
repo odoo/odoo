@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { one, Model } from "@mail/model";
 
-registerModel({
-    name: 'MessageNotificationPopoverContentView',
+Model({
+    name: "MessageNotificationPopoverContentView",
+    template: "mail.MessageNotificationPopoverContentView",
     fields: {
-        messageView: one('MessageView', {
-            related: 'popoverViewOwner.messageViewOwnerAsNotificationContent',
+        messageView: one("MessageView", {
+            related: "popoverViewOwner.messageViewOwnerAsNotificationContent",
         }),
-        popoverViewOwner: one('PopoverView', {
+        popoverViewOwner: one("PopoverView", {
             identifying: true,
-            inverse: 'messageNotificationPopoverContentView',
+            inverse: "messageNotificationPopoverContentView",
         }),
     },
 });

@@ -1,16 +1,17 @@
 odoo.define('mass_mailing.mass_mailing_tour', function (require) {
     "use strict";
 
+    const { registry } = require("@web/core/registry");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
     const {_t} = require('web.core');
     const {Markup} = require('web.utils');
-    var tour = require('web_tour.tour');
     var now = moment();
 
-    tour.register('mass_mailing_tour', {
+    registry.category("web_tour.tours").add('mass_mailing_tour', {
         url: '/web',
         rainbowManMessage: _t('Congratulations, I love your first mailing. :)'),
         sequence: 200,
-    }, [tour.stepUtils.showAppsMenuItem(), {
+        steps: [stepUtils.showAppsMenuItem(), {
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
         width: 225,
@@ -65,7 +66,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
     }, {
         trigger: 'button[name="action_set_favorite"]',
         content: _t('Click on this button to add this mailing to your templates.'),
-        position: 'right',
+        position: 'bottom',
         run: 'click',
     }, {
         trigger: 'button[name="action_test"]',
@@ -90,5 +91,5 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         position: 'bottom',
         run: 'click',
     }]
-    );
+});
 });

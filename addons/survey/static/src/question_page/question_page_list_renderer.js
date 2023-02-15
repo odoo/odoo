@@ -50,6 +50,14 @@ export class QuestionPageListRenderer extends ListRenderer {
         return classNames.join(" ");
     }
 
+    getCellClass(column, record) {
+        const classNames = super.getCellClass(column, record);
+        if (column.type === "button_group") {
+            return `${classNames} text-end`;
+        }
+        return classNames;
+    }
+
     getSectionColumns(columns) {
         const sectionColumns = [];
 
@@ -95,5 +103,25 @@ export class QuestionPageListRenderer extends ListRenderer {
             }
         }
         return super.onCellKeydownEditMode(...arguments);
+    }
+
+    /**
+     * Save the survey after a question used as trigger is deleted. This allows
+     * immediate feedback on the form view as the triggers will be removed
+     * anyway on the records by the ORM.
+     *
+     * @override
+     * @param record
+     * @return {Promise<void>}
+     */
+    async onDeleteRecord(record) {
+        const triggeredRecords = this.props.list.records.filter(rec => rec.data.triggering_question_id[0] === record.data.id);
+        if (triggeredRecords.length) {
+            const res = await super.onDeleteRecord(record);
+            await this.props.list.model.root.save({stayInEdition: true});
+            return res;
+        } else {
+            return super.onDeleteRecord(record);
+        }
     }
 }

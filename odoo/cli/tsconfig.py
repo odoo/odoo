@@ -43,11 +43,15 @@ class TSConfig(Command):
 
         paths = list(map(self.clean_path, args.paths[0].split(',')))
         modules = {}
+        owl_path = ""
         for path in paths:
             for module in self.get_module_list(path):
                 modules[module] = self.prefix_suffix_path(module, path, "/static/src/*")
+                if module == "web":
+                    owl_path = self.prefix_suffix_path(module, path, "/static/lib/owl/owl.js")
 
         content = self.generate_file_content(modules, paths)
+        content["compilerOptions"]["paths"]["@odoo/owl"] = [owl_path]
         # pylint: disable=bad-builtin
         print(json.dumps(content, indent=2))
 

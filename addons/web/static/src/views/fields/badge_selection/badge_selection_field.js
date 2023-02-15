@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class BadgeSelectionField extends Component {
     get options() {
@@ -68,6 +68,7 @@ BadgeSelectionField.props = {
 
 BadgeSelectionField.displayName = _lt("Badges");
 BadgeSelectionField.supportedTypes = ["many2one", "selection"];
+BadgeSelectionField.legacySpecialData = "_fetchSpecialMany2ones";
 
 BadgeSelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 

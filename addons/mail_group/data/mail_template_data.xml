@@ -5,6 +5,7 @@
         <field name="model_id" ref="mail_group.model_mail_group_member"/>
         <field name="subject">Guidelines of group {{ object.mail_group_id.name }}</field>
         <field name="email_to">{{ object.email }}</field>
+        <field name="description">Sent to people who subscribed to a mailing group with group guidelines</field>
         <field name="body_html" type="html">
             <div>
                 <p>Hello <t t-out="object.partner_id.name or ''"></t>,</p>
@@ -18,9 +19,10 @@
 
     <!-- Confirm subscription email -->
     <record id="mail_template_list_subscribe" model="mail.template">
-        <field name="name">Mail Group: Mailing list subscription</field>
+        <field name="name">Mail Group: Mailing List Subscription</field>
         <field name="model_id" ref="mail_group.model_mail_group"/>
         <field name="subject">Confirm subscription to {{ object.name }}</field>
+        <field name="description">Subscription confirmation to a mailing group</field>
         <field name="body_html" type="html">
             <div style="margin: 0px; padding: 0px;">
                 Hello,<br/><br/>
@@ -36,9 +38,10 @@
 
     <!-- Confirm unsubscription email -->
     <record id="mail_template_list_unsubscribe" model="mail.template">
-        <field name="name">Mail Group: Mailing list unsubscription</field>
+        <field name="name">Mail Group: Mailing List Unsubscription</field>
         <field name="model_id" ref="mail_group.model_mail_group"/>
         <field name="subject">Confirm unsubscription to {{ object.name }}</field>
+        <field name="description">Sent to people who unsubscribed from a mailing group</field>
         <field name="body_html" type="html">
             <div style="margin: 0px; padding: 0px;">
                 Hello,<br/><br/>

@@ -104,7 +104,7 @@ class DescriptionScreen extends Component {
             open: this._customizeNoResultMenuStyle.bind(this),
             focus: this._disableKeyboardNav.bind(this),
             classes: {
-                'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast',
+                'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown',
             },
         });
         if (this.state.selectedIndustry) {
@@ -411,7 +411,7 @@ class ApplyConfiguratorScreen extends Component {
     }
 }
 
-class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
+export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
     setup() {
         super.setup();
 
@@ -601,7 +601,7 @@ function useStore() {
     return useState(env.store);
 }
 
-class Configurator extends Component {
+export class Configurator extends Component {
     setup() {
         this.orm = useService('orm');
         this.action = useService('action');

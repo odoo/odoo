@@ -14,9 +14,7 @@ from odoo.addons.sale.controllers.portal import CustomerPortal
 class WebsiteSaleDigital(CustomerPortal):
     orders_page = '/my/orders'
 
-    @http.route([
-        '/my/orders/<int:order_id>',
-    ], type='http', auth='public', website=True)
+    @http.route()
     def portal_order_page(self, order_id=None, **post):
         response = super(WebsiteSaleDigital, self).portal_order_page(order_id=order_id, **post)
         if not 'sale_order' in response.qcontext:
@@ -85,19 +83,4 @@ class WebsiteSaleDigital(CustomerPortal):
         else:
             return request.redirect(self.orders_page)
 
-        # The client has bought the product, otherwise it would have been blocked by now
-        if attachment["type"] == "url":
-            if attachment["url"]:
-                return request.redirect(attachment["url"])
-            else:
-                return request.not_found()
-        elif attachment["datas"]:
-            data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
-            # we follow what is done in ir_http's binary_content for the extension management
-            extension = os.path.splitext(attachment["name"] or '')[1]
-            extension = extension if extension else mimetypes.guess_extension(attachment["mimetype"] or '')
-            filename = attachment['name']
-            filename = filename if os.path.splitext(filename)[1] else filename + extension
-            return http.send_file(data, filename=filename, as_attachment=True)
-        else:
-            return request.not_found()
+        return self.env['ir.binary']._get_stream_from(attachment).get_response(as_attachment=True)

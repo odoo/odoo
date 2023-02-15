@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data>
     <!-- EVENT TYPE SPECIFIC -->
-    <record id="event_type_data_conference_question_0" model="event.question">
-        <field name="title">Participate in Social Event</field>
+    <record id="event_type_data_sports_question_0" model="event.question">
+        <field name="title">How did you learn about this event?</field>
         <field name="once_per_order" eval="False"/>
-        <field name="event_type_id" ref="event.event_type_data_conference"/>
+        <field name="event_type_id" ref="event.event_type_2"/>
     </record>
-    <record id="event_type_data_conference_question_0_answer_0" model="event.question.answer">
-        <field name="name">Yes</field>
+    <record id="event_type_data_sports_question_0_answer_0" model="event.question.answer">
+        <field name="name">Social Media</field>
         <field name="sequence">1</field>
-        <field name="question_id" ref="website_event_questions.event_type_data_conference_question_0"/>
+        <field name="question_id" ref="website_event_questions.event_type_data_sports_question_0"/>
     </record>
-    <record id="event_type_data_conference_question_0_answer_1" model="event.question.answer">
-        <field name="name">No</field>
+    <record id="event_type_data_sports_question_0_answer_1" model="event.question.answer">
+        <field name="name">Blog Post</field>
         <field name="sequence">2</field>
-        <field name="question_id" ref="website_event_questions.event_type_data_conference_question_0"/>
+        <field name="question_id" ref="website_event_questions.event_type_data_sports_question_0"/>
+    </record>
+    <record id="event_type_data_sports_question_0_answer_2" model="event.question.answer">
+        <field name="name">Radio Ad</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event_questions.event_type_data_sports_question_0"/>
     </record>
 
     <!-- EVENT SPECIFIC -->
@@ -65,6 +70,58 @@
         <field name="name">A friend</field>
         <field name="sequence">3</field>
         <field name="question_id" ref="website_event_questions.event_0_question_2"/>
+    </record>
+
+    <!-- Questions of: "Great Reno Ballon Race" -->
+    <record id="event_1_question_0" model="event.question">
+        <field name="title">How did you learn about this event?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_id" ref="event.event_1"/>
+    </record>
+    <record id="event_1_question_0_answer_0" model="event.question.answer">
+        <field name="name">Social Media</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event_questions.event_1_question_0"/>
+    </record>
+    <record id="event_1_question_0_answer_1" model="event.question.answer">
+        <field name="name">Blog Post</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event_questions.event_1_question_0"/>
+    </record>
+    <record id="event_1_question_0_answer_2" model="event.question.answer">
+        <field name="name">Radio Ad</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event_questions.event_1_question_0"/>
+    </record>
+
+    <!-- Questions of: "Hockey Tournament" -->
+    <record id="event_5_question_0" model="event.question">
+        <field name="title">How did you learn about this event?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_id" ref="event.event_5"/>
+    </record>
+    <record id="event_5_question_0_answer_0" model="event.question.answer">
+        <field name="name">Social Media</field>
+        <field name="sequence">1</field>
+        <field name="question_id" ref="website_event_questions.event_5_question_0"/>
+    </record>
+    <record id="event_5_question_0_answer_1" model="event.question.answer">
+        <field name="name">Blog Post</field>
+        <field name="sequence">2</field>
+        <field name="question_id" ref="website_event_questions.event_5_question_0"/>
+    </record>
+    <record id="event_5_question_0_answer_2" model="event.question.answer">
+        <field name="name">Radio Ad</field>
+        <field name="sequence">3</field>
+        <field name="question_id" ref="website_event_questions.event_5_question_0"/>
+    </record>
+    <record id="event_5_question_1" model="event.question">
+        <field name="title">What's your Hockey level?</field>
+        <field name="question_type">text_box</field>
+        <field name="once_per_order" eval="False"/>
+        <field name="event_id" ref="event.event_5"/>
     </record>
 
     <!-- Questions of: "OpenWood: Furniture Collection Online Reveal" -->

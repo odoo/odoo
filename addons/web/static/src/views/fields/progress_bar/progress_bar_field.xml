@@ -33,7 +33,6 @@
                             t-att-required="props.required"
                             t-on-change="onCurrentValueChange"
                             t-on-input="onCurrentValueInput"
-                            t-on-blur="onBlur"
                         />
                         <span>%</span>
                     </div>
@@ -48,7 +47,6 @@
                         t-att-value="formatCurrentValue()"
                         t-on-change="onCurrentValueChange"
                         t-on-input="onCurrentValueInput"
-                        t-on-blur="onBlurDebounced"
                     />
                     <span t-if="props.isCurrentValueEditable and props.isMaxValueEditable" t-esc="'/'" />
                     <input
@@ -60,7 +58,6 @@
                         t-att-value="formatMaxValue()"
                         t-on-change="onMaxValueChange"
                         t-on-input="onMaxValueInput"
-                        t-on-blur="onBlurDebounced"
                     />
                 </t>
             </div>

@@ -1171,7 +1171,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner_title".id
             FROM "res_partner_title"
-            WHERE jsonb_path_query_array("res_partner_title"."name", '$.*')::text like %s
+            WHERE (COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US') like %s)
             ORDER BY COALESCE("res_partner_title"."name"->>'fr_FR', "res_partner_title"."name"->>'en_US')   
         ''']):
             Model.search([('name', 'like', 'foo')])
@@ -1220,7 +1220,10 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "ir_model".id
             FROM "ir_model"
-            WHERE (jsonb_path_query_array("ir_model"."name",'$.*')::text ILIKE %s OR ("ir_model"."model"::text ILIKE %s))
+            WHERE (
+                ("ir_model"."name"->>'en_US' ILIKE %s)
+                OR ("ir_model"."model"::text ILIKE %s)
+            )
             ORDER BY "ir_model"."model"
             LIMIT 100
         ''']):
@@ -1231,7 +1234,7 @@ class TestQueries(TransactionCase):
             SELECT "ir_model".id
             FROM "ir_model"
             WHERE (
-                jsonb_path_query_array("ir_model"."name",'$.*')::text NOT ILIKE %s
+                ("ir_model"."name" is NULL OR "ir_model"."name"->>'en_US' not ilike %s)
                 AND (("ir_model"."model"::text NOT ILIKE %s) OR "ir_model"."model" IS NULL)
             )
             ORDER BY "ir_model"."model"
@@ -1339,7 +1342,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company".id
                 FROM "res_company"
-                WHERE ("res_company"."name"::text like %s)
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text like %s))
             ))
             ORDER BY "res_partner"."display_name", "res_partner"."id"
         ''']):
@@ -1353,7 +1356,7 @@ class TestMany2one(TransactionCase):
             WHERE ("res_partner"."company_id" IN (
                 SELECT "res_company".id
                 FROM "res_company"
-                WHERE ("res_company"."name"::text like %s)
+                WHERE (("res_company"."active" = %s) AND ("res_company"."name"::text like %s))
                 ORDER BY "res_company"."id"
                 LIMIT 1
             ))

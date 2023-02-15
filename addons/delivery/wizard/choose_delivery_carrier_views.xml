@@ -9,6 +9,11 @@
                 <group>
                     <group>
                         <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]"/>
+                        <label for="total_weight"/>
+                        <div class="o_row">
+                            <field name="total_weight" />
+                            <field name="weight_uom_name" />
+                        </div>
                         <field name="delivery_type" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="order_id" invisible="1"/>

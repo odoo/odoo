@@ -61,7 +61,9 @@
                     <header style="min-height:31px;">
                         <button name="action_launch" type="object" class="oe_highlight" string="Send"
                             attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}" data-hotkey="v"
-                            confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
+                            confirm="This will send the email to all recipients. Are you sure you want to proceed ?"
+                            confirm-title="Send Confirmation" confirm-label="Send to all"
+                            />
                         <button name="action_schedule" type="object" class="btn-secondary" string="Schedule"
                             attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}" data-hotkey="x"/>
                         <button name="action_duplicate" type="object" class="btn-secondary" string="Duplicate"
@@ -194,14 +196,14 @@
                                         <field name="mailing_model_id" options="{'no_open': True, 'no_create': True}"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </div>
-                                    <div attrs="{'invisible': [('mailing_model_name', '!=', 'mailing.list')]}" class="o_mass_mailing_contact_list_ids pt-1">
+                                    <div attrs="{'invisible': [('mailing_on_mailing_list', '=', False)]}" class="o_mass_mailing_contact_list_ids pt-1">
                                         <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
                                         <div class="d-inline-flex flex-row align-items-center">
                                             <field name="contact_list_ids" widget="many2many_tags"
                                                 placeholder="Select mailing lists..." class="oe_inline mb-0"
                                                 context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}"
                                                 attrs="{
-                                                    'required':[('mailing_model_name','=','mailing.list')],
+                                                    'required':[('mailing_on_mailing_list', '=', True)],
                                                     'readonly': [('state', 'in', ('sending', 'done'))]
                                             }"/>
                                             <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ms-1"
@@ -209,7 +211,7 @@
                                                 name="action_view_mailing_contacts" title="Add Mailing Contacts"/>
                                         </div>
                                     </div>
-                                    <div attrs="{'invisible': [('mailing_model_name', '=', 'mailing.list')]}" class="o_td_label">
+                                    <div attrs="{'invisible': [('mailing_on_mailing_list', '=', True)]}" class="o_td_label">
                                         <!-- We don't want to display label in edit mode, unless mailing is in sending or done state (where filter will be readonly) -->
                                         <label for="mailing_filter_id" string="Filter" class="oe_read_only me-4"
                                                attrs="{'invisible': ['|', ('state', 'in', ('sending', 'done')), ('mailing_filter_id', '=', False)]}"/>
@@ -225,8 +227,9 @@
                                 </div>
 
                                 <field name="mailing_model_name" invisible="1"/>
+                                <field name="mailing_on_mailing_list" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
-                                <div attrs="{'invisible': [('mailing_model_name', '=', 'mailing.list')]}">
+                                <div attrs="{'invisible': [('mailing_on_mailing_list', '=', True)]}">
                                     <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}"
                                     attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                 </div>
@@ -249,10 +252,7 @@
                                     <div class="o_view_nocontent oe_read_only" attrs="{'invisible': ['|', ('is_body_empty', '=', False), ('state', 'in', ('sending', 'done'))]}">
                                         <div class="o_nocontent_help">
                                             <p class="o_view_nocontent_smiling_face">
-                                                No template picked yet.
-                                            </p>
-                                            <p>
-                                                Start editing your mailing to design something awesome.
+                                                This mailing has no selected design (yet!).
                                             </p>
                                         </div>
                                     </div>
@@ -343,6 +343,7 @@
                                         <field name="campaign_id"
                                             string="Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"
+                                            options="{'create_name_field': 'title', 'always_reload': True}"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="medium_id"
                                              string="Medium"
@@ -444,7 +445,10 @@
                     <xpath expr="//div[hasclass('oe_chatter')]" position="move"/>
                 </xpath>
                 <xpath expr="//div[hasclass('oe_chatter')]" position="attributes">
-                    <attribute name="class" remove="o-aside"/>
+                    <attribute name="class" remove="o-aside" add="o-full-width" separator=" "/>
+                </xpath>
+                <xpath expr="//notebook/page[@name='mail_body']//field[@name='body_arch']" position="attributes">
+                    <attribute name="iframeHtmlClass">o_mass_mailing_iframe</attribute>
                 </xpath>
                 <xpath expr="//notebook/page[@name='mail_body']" position="after">
                     <!-- test_01_mass_mailing_editor_tour -->
@@ -459,10 +463,7 @@
                             <div class="o_view_nocontent oe_read_only" attrs="{'invisible': ['|', ('is_body_empty', '=', False), ('state', 'in', ('sending', 'done'))]}">
                                 <div class="o_nocontent_help">
                                     <p class="o_view_nocontent_smiling_face">
-                                        No template picked yet.
-                                    </p>
-                                    <p>
-                                        Start editing your mailing to design something awesome.
+                                        This mailing has no selected design (yet!).
                                     </p>
                                 </div>
                             </div>
@@ -486,29 +487,24 @@
                     <field name='failed'/>
                     <field name='total'/>
                     <field name='mailing_model_id'/>
-                    <field name='mailing_model_name'/>
+                    <field name='mailing_on_mailing_list'/>
                     <field name='sent_date'/>
                     <field name='schedule_date'/>
                     <field name='next_departure'/>
                     <field name='active'/>
                     <templates>
+                        <t t-name="kanban-menu" t-if="!selection_mode">
+                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                            <t t-if="widget.deletable">
+                                <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                            </t>
+                            <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
+                                <t t-if="record.active.raw_value">Archive</t>
+                                <t t-if="!record.active.raw_value">Restore</t>
+                            </a>
+                        </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
-                                <div class="o_dropdown_kanban dropdown" t-if="!selection_mode">
-                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" data-bs-display="static" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v"/>
-                                    </a>
-                                    <div class="dropdown-menu" role="menu">
-                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                        <t t-if="widget.deletable">
-                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                        </t>
-                                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
-                                            <t t-if="record.active.raw_value">Archive</t>
-                                            <t t-if="!record.active.raw_value">Restore</t>
-                                        </a>
-                                    </div>
-                                </div>
                                  <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">
                                         <div class="o_kanban_record_headings">
@@ -537,10 +533,10 @@
                                     </div>
                                     <div class="o_kanban_record_body" t-if="!selection_mode" attrs="{'invisible': [('sent_date', '=', False), ('schedule_date', '=', False), ('state', '!=', 'in_queue')]}">
                                         <div>
-                                            <span attrs="{'invisible': [('sent_date', '=', False)]}"><b><field name="delivered"/> / <field name="expected"/></b> Delivered to</span>
-                                            <span attrs="{'invisible': [('sent_date', '!=', False)]}"><b><field name='total'/></b></span>
-                                            <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
-                                            <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
+                                            <span attrs="{'invisible': [('sent_date', '=', False)]}" class="me-1"><b><field name="delivered"/> / <field name="expected"/></b> Delivered to</span>
+                                            <span attrs="{'invisible': [('sent_date', '!=', False)]}" class="me-1"><b><field name='total'/></b></span>
+                                            <field name='mailing_model_id' attrs="{'invisible': [('mailing_on_mailing_list', '=', True)]}"/>
+                                            <span attrs="{'invisible': [('mailing_on_mailing_list', '=', False)]}">Mailing Contact</span>
                                         </div>
                                         <div attrs="{'invisible': [('sent_date', '=', False)]}" class="d-flex justify-content-between">
                                             <div name="stat_opened">
@@ -569,9 +565,9 @@
                                         </span>
                                         <span attrs="{'invisible': ['|', '|', ('sent_date', '!=', False), ('schedule_date', '!=', False), ('state', '=', 'in_queue')]}"
                                             class="clearfix">
-                                            <b><field name='total'/></b>
-                                            <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
-                                            <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
+                                            <b><field name='total' class="me-1"/></b>
+                                            <field name='mailing_model_id' attrs="{'invisible': [('mailing_on_mailing_list', '=', True)]}"/>
+                                            <span attrs="{'invisible': [('mailing_on_mailing_list', '=', False)]}">Mailing Contact</span>
                                         </span>
                                         <span attrs="{'invisible': ['|', '|', ('schedule_date', '!=', False), ('state', '!=', 'in_queue'), ('next_departure', '=', False)]}"
                                             t-attf-title="Scheduled on #{record.next_departure.value}" class="d-inline-flex">

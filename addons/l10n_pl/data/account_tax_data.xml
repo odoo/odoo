@@ -4,8 +4,8 @@
         <!-- VAT domestic sale-->
         <record id="vs_kraj_23" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-23%</field>
-            <field name="description">V23</field>
+            <field name="name">23% G</field>
+            <field name="description">23%</field>
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -36,8 +36,8 @@
         </record>
         <record id="vs_kraj_22" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-22%</field>
-            <field name="description">V22</field>
+            <field name="name">22% G</field>
+            <field name="description">22%</field>
             <field name="amount">22</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -67,8 +67,8 @@
         </record>
         <record id="vs_kraj_8" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-8%</field>
-            <field name="description">V8</field>
+            <field name="name">8%</field>
+            <field name="description">8%</field>
             <field name="amount">8</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -98,8 +98,8 @@
         </record>
         <record id="vs_kraj_7" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-7%</field>
-            <field name="description">V7</field>
+            <field name="name">7%</field>
+            <field name="description">7%</field>
             <field name="amount">7</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -129,8 +129,8 @@
         </record>
         <record id="vs_kraj_5" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-5%</field>
-            <field name="description">V5</field>
+            <field name="name">5%</field>
+            <field name="description">5%</field>
             <field name="amount">5</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -160,8 +160,8 @@
         </record>
         <record id="vs_kraj_3" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-3%</field>
-            <field name="description">V3</field>
+            <field name="name">3%</field>
+            <field name="description">3%</field>
             <field name="amount">3</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -191,8 +191,8 @@
         </record>
         <record id="vs_kraj_0" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-0%</field>
-            <field name="description">V0</field>
+            <field name="name">0%</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -216,10 +216,37 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
+        <record id="vs_zwrot_podróżnych_0" model="account.tax.template">
+            <field name="chart_template_id" ref="pl_chart_template"/>
+            <field name="name">0% Travel</field>
+            <field name="description">0%</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                  (0,0, {
+                      'repartition_type': 'base',
+                      'plus_report_expression_ids': [ref('account_tax_report_line_towary_art_129_tag')],
+                  }),
+                  (0,0, {
+                      'repartition_type': 'tax',
+                  }),
+                        ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                  (0,0, {
+                      'repartition_type': 'base',
+                      'minus_report_expression_ids': [ref('account_tax_report_line_towary_art_129_tag')],
+                  }),
+                  (0,0, {
+                      'repartition_type': 'tax',
+                  }),
+            ]"/>
+            <field name="tax_group_id" ref="tax_group_vat_0"/>
+        </record>
         <record id="vs_kraj_zw" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT-ZW</field>
-            <field name="description">VZW</field>
+            <field name="name">0% Exempt</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
@@ -245,11 +272,12 @@
         </record>
         <record id="vs_kraj_usl_23" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT usł-23%</field>
-            <field name="description">VU23</field>
+            <field name="name">23% S</field>
+            <field name="description">23%</field>
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">service</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -276,11 +304,12 @@
         </record>
         <record id="vs_kraj_usl_22" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT usł-22%</field>
-            <field name="description">VU22</field>
+            <field name="name">22% S</field>
+            <field name="description">22%</field>
             <field name="amount">22</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">service</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -308,8 +337,8 @@
         <!-- VAT domestic purchase -->
         <record id="vz_kraj_23" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-23%</field>
-            <field name="description">Z23</field>
+            <field name="name">23% G</field>
+            <field name="description">23%</field>
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
             <field name="sequence" eval="0"/>
@@ -340,8 +369,8 @@
         </record>
         <record id="vz_kraj_22" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-22%</field>
-            <field name="description">Z22</field>
+            <field name="name">22% G</field>
+            <field name="description">22%</field>
             <field name="amount">22</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -371,8 +400,8 @@
         </record>
         <record id="vz_kraj_8" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-8%</field>
-            <field name="description">Z8</field>
+            <field name="name">8%</field>
+            <field name="description">8%</field>
             <field name="amount">8</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -402,8 +431,8 @@
         </record>
         <record id="vz_kraj_7" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-7%</field>
-            <field name="description">Z7</field>
+            <field name="name">7%</field>
+            <field name="description">7%</field>
             <field name="amount">7</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -433,8 +462,8 @@
         </record>
         <record id="vz_kraj_5" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-5%</field>
-            <field name="description">Z5</field>
+            <field name="name">5%</field>
+            <field name="description">5%</field>
             <field name="amount">5</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -464,8 +493,8 @@
         </record>
         <record id="vz_kraj_3" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-3%</field>
-            <field name="description">Z3</field>
+            <field name="name">3%</field>
+            <field name="description">3%</field>
             <field name="amount">3</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -495,8 +524,8 @@
         </record>
         <record id="vz_kraj_0" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-0%</field>
-            <field name="description">Z0</field>
+            <field name="name">0%</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -522,8 +551,8 @@
         </record>
         <record id="vz_kraj_zw" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT naliczony-ZW</field>
-            <field name="description">ZZW</field>
+            <field name="name">0% Exempt</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -549,11 +578,12 @@
         </record>
         <record id="vz_kraj_usl_23" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT usł nalicz-23%</field>
-            <field name="description">ZU23</field>
+            <field name="name">23% S</field>
+            <field name="description">23%</field>
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">service</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -580,11 +610,12 @@
         </record>
         <record id="vz_kraj_usl_22" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT usł nalicz-22%</field>
-            <field name="description">ZU22</field>
+            <field name="name">22% S</field>
+            <field name="description">22%</field>
             <field name="amount">22</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">service</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -613,8 +644,8 @@
         <!-- ================================================ -->
         <record id="vp_leas_sale" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT - leasing pojazdu(sale)</field>
-            <field name="description">VLP</field>
+            <field name="name">23% - vehicle leasing</field>
+            <field name="description">23%</field>
             <field name="amount">23.00</field>
             <field name="sequence" eval="1"/>
             <field name="amount_type">percent</field>
@@ -657,8 +688,8 @@
         </record>
         <record id="vp_leas_purchase" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">VAT - leasing pojazdu(purchase)</field>
-            <field name="description">VLP</field>
+            <field name="name">23% - vehicle leasing</field>
+            <field name="description">23%</field>
             <field name="amount">23.00</field>
             <field name="sequence" eval="1"/>
             <field name="amount_type">percent</field>
@@ -702,11 +733,13 @@
         <!-- Steel trade -->
         <record id="vs_stal" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Sprzedaż stali</field>
-            <field name="description">VST</field>
+            <field name="name">0% Steel</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -729,11 +762,13 @@
         </record>
         <record id="vz_stal" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Zakup stali</field>
-            <field name="description">ZST</field>
+            <field name="name">23% Steel</field>
+            <field name="description">23%</field>
             <field name="amount">23.0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">consu</field>
+            <field name="active" eval="False"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -770,15 +805,16 @@
       ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
-        <!-- Eurpean Union -->
+        <!-- European Union -->
         <!-- =========================================================== -->
         <record id="vs_unia" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Dost tow. unia</field>
-            <field name="description">UDT</field>
+            <field name="name">0% EU G</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -801,11 +837,12 @@
         </record>
         <record id="vz_unia" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Nab tow unia</field>
-            <field name="description">UNT</field>
+            <field name="name">23% EU G</field>
+            <field name="description">23%</field>
             <field name="amount">23.0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">consu</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -844,11 +881,12 @@
         </record>
         <record id="vs_dostu" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Świad Usł</field>
-            <field name="description">UDU</field>
+            <field name="name">0% EU S</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">service</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -871,11 +909,12 @@
         </record>
         <record id="vz_nabu" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Nab Usł</field>
-            <field name="description">UNU</field>
+            <field name="name">23% EU S</field>
+            <field name="description">23%</field>
             <field name="amount">23.0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">service</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -916,11 +955,12 @@
         <!-- ================================================ -->
         <record id="vs_eksp_tow" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Eksp Tow</field>
-            <field name="description">EXT</field>
+            <field name="name">0% EX G</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -943,11 +983,12 @@
         </record>
         <record id="vz_imp_tow" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Imp Tow</field>
-            <field name="description">IMT</field>
+            <field name="name">23% EX G</field>
+            <field name="description">23%</field>
             <field name="amount">23.0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">consu</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -986,11 +1027,12 @@
         </record>
         <record id="vs_ekspu" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Eksp Usł</field>
-            <field name="description">EXU</field>
+            <field name="name">0% EX S</field>
+            <field name="description">0%</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">service</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',
@@ -1013,11 +1055,12 @@
         </record>
         <record id="vz_impu" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
-            <field name="name">Imp Usł</field>
-            <field name="description">IMU</field>
+            <field name="name">23% EX S</field>
+            <field name="description">23%</field>
             <field name="amount">23.00</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">service</field>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
           (0,0, {
               'repartition_type': 'base',

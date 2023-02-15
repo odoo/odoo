@@ -284,16 +284,17 @@ export function getFurthestUneditableParent(node, parentLimit) {
  *
  * @param {Node} node
  * @param {string} [selector=undefined]
- * @param {boolean} [restrictToEditable=false]
  * @returns {HTMLElement}
  */
 export function closestElement(node, selector) {
-    const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
-    if (selector && element) {
-        const elementFound = element.closest(selector);
-        return elementFound && elementFound.querySelector('.odoo-editor-editable') ? null : elementFound;
+    let element = node;
+    while (element && element.nodeType !== Node.ELEMENT_NODE) {
+        element = element.parentNode;
     }
-    return selector && element ? element.closest(selector) : element || node;
+    if (element && selector) {
+        element = element.closest(selector);
+    }
+    return element && element.querySelector('.odoo-editor-editable') ? null : element;
 }
 
 /**
@@ -661,14 +662,15 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
     do {
         node = iterator.nextNode();
     } while (node && node !== range.startContainer && !(selectedTableCells.length && node === selectedTableCells[0]));
-    const traversedNodes = new Set([node]);
+    const traversedNodes = new Set([node, ...descendants(node)]);
     while (node && node !== range.endContainer) {
         node = iterator.nextNode();
         if (node) {
             const selectedTable = closestElement(node, '.o_selected_table');
             if (selectedTable) {
                 for (const selectedTd of selectedTable.querySelectorAll('.o_selected_td')) {
-                    traversedNodes.add(selectedTd, ...descendants(selectedTd));
+                    traversedNodes.add(selectedTd);
+                    descendants(selectedTd).forEach(descendant => traversedNodes.add(descendant));
                 }
             } else {
                 traversedNodes.add(node);
@@ -691,7 +693,7 @@ export function getSelectedNodes(editable) {
         return [];
     }
     const range = sel.getRangeAt(0);
-    return getTraversedNodes(editable).flatMap(
+    return [...new Set(getTraversedNodes(editable).flatMap(
         node => {
             const td = closestElement(node, '.o_selected_td');
             if (td) {
@@ -702,7 +704,7 @@ export function getSelectedNodes(editable) {
                 return [];
             }
         },
-    );
+    ))];
 }
 
 /**
@@ -762,17 +764,18 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
             }
         }
     }
-    // A selection spanning multiple nodes and ending at position 0 of a
-    // node, like the one resulting from a triple click, are corrected so
-    // that it ends at the last position of the previous node instead.
-    const beforeEnd = end.previousSibling;
+    // A selection spanning multiple nodes and ending at position 0 of a node,
+    // like the one resulting from a triple click, is corrected so that it ends
+    // at the last position of the previous node instead.
+    const endLeaf = firstLeaf(end);
+    const beforeEnd = endLeaf.previousSibling;
     if (
         correctTripleClick &&
         !endOffset &&
         (start !== end || startOffset !== endOffset) &&
         (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)))
     ) {
-        const previous = previousLeaf(end, editable, true);
+        const previous = previousLeaf(endLeaf, editable, true);
         if (previous && closestElement(previous).isContentEditable) {
             [end, endOffset] = [previous, nodeSize(previous)];
         }
@@ -868,6 +871,217 @@ export function preserveCursor(document) {
         cursorPos[2] = replace.get(cursorPos[2]) || cursorPos[2];
         setSelection(...cursorPos);
     };
+}
+
+//------------------------------------------------------------------------------
+// Format utils
+//------------------------------------------------------------------------------
+
+const formatsSpecs = {
+    italic: {
+        tagName: 'em',
+        isFormatted: isItalic,
+        isTag: (node) => ['EM', 'I'].includes(node.tagName),
+        hasStyle: (node) => Boolean(node.style && node.style['font-style']),
+        addStyle: (node) => node.style['font-style'] = 'italic',
+        addNeutralStyle: (node) => node.style['font-style'] = 'normal',
+        removeStyle: (node) => removeStyle(node, 'font-style'),
+    },
+    bold: {
+        tagName: 'strong',
+        isFormatted: isBold,
+        isTag: (node) => ['STRONG', 'B'].includes(node.tagName),
+        hasStyle: (node) => Boolean(node.style && node.style['font-weight']),
+        addStyle: (node) => node.style['font-weight'] = 'bolder',
+        addNeutralStyle: (node) => {
+            node.style['font-weight'] = 'normal'
+        },
+        removeStyle: (node) => removeStyle(node, 'font-weight'),
+    },
+    underline: {
+        tagName: 'u',
+        isFormatted: isUnderline,
+        isTag: (node) => node.tagName === 'U',
+        hasStyle: (node) => node.style && node.style['text-decoration-line'].includes('underline'),
+        addStyle: (node) => node.style['text-decoration-line'] += ' underline',
+        removeStyle: (node) => removeStyle(node, 'text-decoration-line', 'underline'),
+    },
+    strikeThrough: {
+        tagName: 's',
+        isFormatted: isStrikeThrough,
+        isTag: (node) => node.tagName === 'S',
+        hasStyle: (node) => node.style && node.style['text-decoration-line'].includes('line-through'),
+        addStyle: (node) => node.style['text-decoration-line'] += ' line-through',
+        removeStyle: (node) => removeStyle(node, 'text-decoration-line', 'line-through'),
+    },
+    fontSize: {
+        isFormatted: isFontSize,
+        hasStyle: (node) => node.style && node.style['font-size'],
+        addStyle: (node, props) => node.style['font-size'] = props.size,
+        removeStyle: (node) => removeStyle(node, 'font-size'),
+    },
+    switchDirection: {
+        isFormatted: isDirectionSwitched,
+    }
+}
+
+const removeStyle = (node, styleName, item) => {
+    if (item) {
+        const newStyle = node.style[styleName].split(' ').filter(x => x !== item).join(' ');
+        node.style[styleName] = newStyle || null;
+    } else {
+        node.style[styleName] = null;
+    }
+    if (node.getAttribute('style') === '') {
+        node.removeAttribute('style');
+    }
+};
+const getOrCreateSpan = (node, ancestors) => {
+    const span = ancestors.find((element) => element.tagName === 'SPAN' && element.isConnected);
+    if (span) {
+        return span;
+    } else {
+        const span = document.createElement('span');
+        node.after(span);
+        span.append(node);
+        return span;
+    }
+}
+const removeFormat = (node, formatSpec) => {
+    node = closestElement(node);
+    if (formatSpec.hasStyle(node)) {
+        formatSpec.removeStyle(node);
+        if (['SPAN', 'FONT'].includes(node.tagName) && !node.getAttributeNames().length) {
+            return unwrapContents(node);
+        }
+    }
+
+    if (formatSpec.isTag && formatSpec.isTag(node)) {
+        const attributesNames = node.getAttributeNames().filter((name)=> {
+            return name !== 'data-oe-zws-empty-inline';
+        });
+        if (attributesNames.length) {
+            // Change tag name
+            const newNode = document.createElement('span');
+            while (node.firstChild) {
+                newNode.appendChild(node.firstChild);
+            }
+            for (let index = node.attributes.length - 1; index >= 0; --index) {
+                newNode.attributes.setNamedItem(node.attributes[index].cloneNode());
+            }
+            node.parentNode.replaceChild(newNode, node);
+        } else {
+            unwrapContents(node);
+        }
+    }
+}
+
+export const formatSelection = (editor, formatName, {applyStyle, formatProps} = {}) => {
+    const selection = editor.document.getSelection();
+    let direction
+    let wasCollapsed;
+    if (editor.editable.querySelector('.o_selected_td')) {
+        direction = DIRECTIONS.RIGHT;
+    } else {
+        if (!selection.rangeCount) return;
+        wasCollapsed = selection.getRangeAt(0).collapsed;
+
+        direction = getCursorDirection(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
+    }
+    getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
+
+    if (typeof applyStyle === 'undefined') {
+        applyStyle = !isSelectionFormat(editor.editable, formatName);
+    }
+
+    let zws;
+    if (wasCollapsed) {
+        if (selection.anchorNode.nodeType === Node.TEXT_NODE && selection.anchorNode.textContent === '\u200b') {
+            zws = selection.anchorNode;
+            selection.getRangeAt(0).selectNode(zws);
+        } else {
+            zws = insertAndSelectZws(selection);
+        }
+        getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
+    }
+
+    const selectedTextNodes = getSelectedNodes(editor.editable)
+        .filter(n => n.nodeType === Node.TEXT_NODE);
+
+    const formatSpec = formatsSpecs[formatName];
+    for (const selectedTextNode of selectedTextNodes) {
+        const inlineAncestors = [];
+        let currentNode = selectedTextNode;
+        let parentNode = selectedTextNode.parentElement;
+
+        // Remove the format on all inline ancestors until a block or an element
+        // with a class (in case the formating comes from the class).
+        while (parentNode && (!isBlock(parentNode) && !(parentNode.classList && parentNode.classList.length))) {
+            const isUselessZws = parentNode.tagName === 'SPAN' &&
+                parentNode.hasAttribute('data-oe-zws-empty-inline') &&
+                parentNode.getAttributeNames().length === 1;
+
+            if (isUselessZws) {
+                unwrapContents(parentNode);
+            } else {
+                const newLastAncestorInlineFormat = splitAroundUntil(currentNode, parentNode);
+                removeFormat(newLastAncestorInlineFormat, formatSpec);
+                if (newLastAncestorInlineFormat.isConnected) {
+                    inlineAncestors.push(newLastAncestorInlineFormat);
+                    currentNode = newLastAncestorInlineFormat;
+                }
+            }
+
+            parentNode = currentNode.parentElement;
+        }
+
+        const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
+
+        if (firstBlockOrClassHasFormat && !applyStyle) {
+            formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+        } else if (!firstBlockOrClassHasFormat && applyStyle) {
+            const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
+            if (tag) {
+                selectedTextNode.after(tag);
+                tag.append(selectedTextNode);
+
+                if (!formatSpec.isFormatted(tag, formatProps)) {
+                    tag.after(selectedTextNode);
+                    tag.remove();
+                    formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+                }
+            } else if (formatName !== 'fontSize' || formatProps.size !== undefined) {
+                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
+            }
+        }
+    }
+
+    if (zws) {
+        const siblings = [...zws.parentElement.childNodes];
+        if (
+            selectedTextNodes.includes(siblings[0]) &&
+            selectedTextNodes.includes(siblings[siblings.length - 1])
+        ) {
+            zws.parentElement.setAttribute('data-oe-zws-empty-inline', '');
+        } else {
+            const span = document.createElement('span');
+            span.setAttribute('data-oe-zws-empty-inline', '');
+            zws.before(span);
+            span.append(zws);
+        }
+    }
+
+    if (selectedTextNodes[0] && selectedTextNodes[0].textContent === '\u200B') {
+        setSelection(selectedTextNodes[0], 0);
+    } else if (selectedTextNodes.length) {
+        const firstNode = selectedTextNodes[0];
+        const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
+        if (direction === DIRECTIONS.RIGHT) {
+            setSelection(firstNode, 0, lastNode, lastNode.length, false);
+        } else {
+            setSelection(lastNode, lastNode.length, firstNode, 0, false);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -1000,7 +1214,7 @@ export function isItalic(node) {
 export function isUnderline(node) {
     let parent = closestElement(node);
     while (parent) {
-        if (getComputedStyle(parent).textDecorationLine === 'underline') {
+        if (getComputedStyle(parent).textDecorationLine.includes('underline')) {
             return true;
         }
         parent = parent.parentElement;
@@ -1016,12 +1230,25 @@ export function isUnderline(node) {
 export function isStrikeThrough(node) {
     let parent = closestElement(node);
     while (parent) {
-        if (getComputedStyle(parent).textDecorationLine === 'line-through') {
+        if (getComputedStyle(parent).textDecorationLine.includes('line-through')) {
             return true;
         }
         parent = parent.parentElement;
     }
     return false;
+}
+/**
+ * Return true if the given node font-size is equal to `props.size`.
+ *
+ * @param {Object} props
+ * @param {Node} props.node A node to compare the font-size against.
+ * @param {String} props.size The font-size value of the node that will be
+ *     checked against.
+ * @returns {boolean}
+ */
+export function isFontSize(node, props) {
+    const element = closestElement(node);
+    return getComputedStyle(element)['font-size'] === props.size;
 }
 /**
  * Return true if the given node appears in a different direction than that of
@@ -1038,13 +1265,6 @@ export function isStrikeThrough(node) {
     const defaultDirection = editable.getAttribute('dir');
     return getComputedStyle(closestElement(node)).direction !== defaultDirection;
 }
-export const isFormat = {
-    bold: isBold,
-    italic: isItalic,
-    underline: isUnderline,
-    strikeThrough: isStrikeThrough,
-    switchDirection: isDirectionSwitched,
-};
 /**
  * Return true if the current selection on the editable appears as the given
  * format. The selection is considered to appear as that format if every text
@@ -1055,13 +1275,12 @@ export const isFormat = {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedText = getSelectedNodes(editable)
+    const selectedNodes = getSelectedNodes(editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
-    if (selectedText.length) {
-        return selectedText.every(n => isFormat[format](n.parentElement, editable))
-    } else {
-        return isFormat[format](closestElement(editable.ownerDocument.getSelection().anchorNode), editable);
-    }
+    const isFormatted = formatsSpecs[format].isFormatted;
+    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().anchorNode));
+    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().focusNode));
+    return selectedNodes.every(n => isFormatted(n, editable));
 }
 
 export function isUnbreakable(node) {
@@ -1090,14 +1309,14 @@ export function isUnbreakable(node) {
 }
 
 export function isUnremovable(node) {
-    if (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) {
-        return true;
-    }
     return (
+        (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) ||
         node.oid === 'root' ||
         (node.nodeType === Node.ELEMENT_NODE &&
             (node.classList.contains('o_editable') || node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
-        (node.classList && node.classList.contains('oe_unremovable'))
+        (node.classList && node.classList.contains('oe_unremovable')) ||
+        (node.nodeName === 'SPAN' && node.parentElement && node.parentElement.getAttribute('data-oe-type') === 'monetary') ||
+        (node.ownerDocument && node.ownerDocument.defaultWindow && !ancestors(node).find(ancestor => ancestor.oid === 'root')) // Node is in DOM but not in editable.
     );
 }
 
@@ -1134,6 +1353,9 @@ export function isMediaElement(node) {
             (node.classList.contains('o_image') || node.classList.contains('media_iframe_video')))
     );
 }
+export function isVoidElement(node) {
+    return isMediaElement(node) || node.tagName === 'HR';
+}
 
 export function containsUnremovable(node) {
     if (!node) {
@@ -1145,13 +1367,17 @@ export function containsUnremovable(node) {
 export function getInSelection(document, selector) {
     const selection = document.getSelection();
     const range = selection && !!selection.rangeCount && selection.getRangeAt(0);
-    return (
-        range &&
-        (closestElement(range.startContainer, selector) ||
-            [...closestElement(range.commonAncestorContainer).querySelectorAll(selector)].find(
+    if (range) {
+        const selectorInStartAncestors = closestElement(range.startContainer, selector);
+        if (selectorInStartAncestors) {
+            return selectorInStartAncestors;
+        } else {
+            const commonElementAncestor = closestElement(range.commonAncestorContainer);
+            return commonElementAncestor && [...commonElementAncestor.querySelectorAll(selector)].find(
                 node => range.intersectsNode(node),
-            ))
-    );
+            );
+        }
+    }
 }
 
 /**
@@ -1197,6 +1423,7 @@ const paragraphRelatedElements = [
     'H4',
     'H5',
     'H6',
+    'PRE',
 ];
 
 /**
@@ -1261,6 +1488,15 @@ export function getOuid(node, optimize = false) {
         node = node.parentNode;
     }
     return node && node.oid;
+}
+/**
+ * Returns true if the provided node can suport html content.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isHtmlContentSupported(node) {
+    return !closestElement(node, '[data-oe-model]:not([data-oe-field="arch"]),[data-oe-translation-id]', true);
 }
 /**
  * Returns whether the given node is a element that could be considered to be
@@ -1575,8 +1811,8 @@ export function splitElement(element, offset) {
 /**
  * Split around the given elements, until a given ancestor (included). Elements
  * will be removed in the process so caution is advised in dealing with their
- * references. Returns a tuple containing the new elements on both sides of the
- * split.
+ * references. Returns the new split root element that is a clone of
+ * limitAncestor or the original limitAncestor if no split occured.
  *
  * @see splitElement
  * @param {Node[] | Node} elements
@@ -1585,29 +1821,34 @@ export function splitElement(element, offset) {
  */
 export function splitAroundUntil(elements, limitAncestor) {
     elements = Array.isArray(elements) ? elements : [elements];
-    let after = elements[elements.length - 1].nextSibling;
-    let newUntil = limitAncestor;
+    const firstNode = elements[0];
+    const lastNode = elements[elements.length - 1];
+    if ([firstNode, lastNode].includes(limitAncestor)) {
+        return limitAncestor;
+    }
+    let before = firstNode.previousSibling;
+    let after = lastNode.nextSibling;
     let beforeSplit, afterSplit;
+    if (!before && !after && elements[0] !== limitAncestor) {
+        return splitAroundUntil(elements[0].parentElement, limitAncestor);
+    }
     // Split up ancestors up to font
     while (after && after.parentElement !== limitAncestor) {
         afterSplit = splitElement(after.parentElement, childNodeIndex(after))[0];
-        newUntil = afterSplit;
-        after = newUntil.nextSibling;
+        after = afterSplit.nextSibling;
     }
     if (after) {
         afterSplit = splitElement(limitAncestor, childNodeIndex(after))[0];
         limitAncestor = afterSplit;
     }
-    let before = elements[0].previousSibling;
     while (before && before.parentElement !== limitAncestor) {
         beforeSplit = splitElement(before.parentElement, childNodeIndex(before) + 1)[1];
-        newUntil = beforeSplit;
-        before = newUntil.previousSibling;
+        before = beforeSplit.previousSibling;
     }
     if (before) {
         beforeSplit = splitElement(limitAncestor, childNodeIndex(before) + 1)[1];
     }
-    return [beforeSplit, afterSplit];
+    return beforeSplit || afterSplit || limitAncestor;
 }
 
 export function insertText(sel, content) {
@@ -1716,8 +1957,11 @@ export function setTagName(el, newTagName) {
     while (el.firstChild) {
         n.append(el.firstChild);
     }
-    if (el.tagName === 'LI') {
+    const closestLi = el.closest('li');
+    if (el.tagName === 'LI' && newTagName !== 'p') {
         el.append(n);
+    } else if (closestLi && newTagName === 'p') {
+        closestLi.replaceChildren(...n.childNodes);
     } else {
         el.parentNode.replaceChild(n, el);
     }
@@ -1948,6 +2192,12 @@ const priorityRestoreStateRules = [
         // Replace a space by &nbsp; when it was content before and now it is
         // a BR.
         { direction: DIRECTIONS.LEFT, cType1: CTGROUPS.INLINE, cType2: CTGROUPS.BR },
+        { spaceVisibility: true },
+    ],
+    [
+        // Replace a space by &nbsp; when it was content before and now it is
+        // a BR (removal of last character before a BR for example).
+        { direction: DIRECTIONS.RIGHT, cType1: CTGROUPS.CONTENT, cType2: CTGROUPS.BR },
         { spaceVisibility: true },
     ],
     [
@@ -2253,6 +2503,11 @@ export function getRangePosition(el, document, options = {}) {
         offset.left = marginLeft;
     }
 
+    if (options.parentContextRect) {
+        offset.left += options.parentContextRect.left;
+        offset.top += options.parentContextRect.top;
+    }
+
     if (
         offset.top - marginTop + offset.height + el.offsetHeight > window.innerHeight &&
         offset.top - el.offsetHeight - marginBottom > 0
@@ -2313,4 +2568,22 @@ export const rightLeafOnlyNotBlockNotEditablePath = createDOMPathGenerator(DIREC
 //------------------------------------------------------------------------------
 export function peek(arr) {
     return arr[arr.length - 1];
+}
+/**
+ * Check user OS 
+ * @returns {boolean} 
+ */
+export function isMacOS() {
+    return window.navigator.userAgent.includes('Mac');
+}
+
+/**
+ * Remove zero-width spaces from the provided node and its descendants.
+ *
+ * @param {Node} node
+ */
+export function cleanZWS(node) {
+    [node, ...descendants(node)]
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
 }

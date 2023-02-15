@@ -15,13 +15,13 @@ class LinkPreview(models.Model):
     _description = "Store link preview data"
 
     message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade', required=True)
-    source_url = fields.Char('url', required=True)
-    og_type = fields.Char('type')
-    og_title = fields.Char('title')
-    og_image = fields.Char('image')
-    og_description = fields.Text('description')
-    og_mimetype = fields.Char('mimetype')
-    image_mimetype = fields.Char('image_mimetype')
+    source_url = fields.Char('URL', required=True)
+    og_type = fields.Char('Type')
+    og_title = fields.Char('Title')
+    og_image = fields.Char('Image')
+    og_description = fields.Text('Description')
+    og_mimetype = fields.Char('MIME type')
+    image_mimetype = fields.Char('Image MIME type')
     create_date = fields.Datetime(index=True)
 
     @api.model
@@ -29,7 +29,7 @@ class LinkPreview(models.Model):
         if not message.body:
             return
         tree = html.fromstring(message.body)
-        urls = tree.xpath('//a/@href')
+        urls = tree.xpath('//a[not(@data-oe-model)]/@href')
         link_previews = self.env['mail.link.preview']
         requests_session = requests.Session()
         # Some websites are blocking non browser user agent.
@@ -49,7 +49,9 @@ class LinkPreview(models.Model):
             target = guest
         else:
             target = self.env.user.partner_id
-        self.env['bus.bus']._sendmany([(target, 'mail.link.preview/insert', link_previews._link_preview_format())])
+        self.env['bus.bus']._sendone(target, 'mail.record/insert', {
+            'LinkPreview': link_previews._link_preview_format()
+        })
 
     @api.model
     def _create_link_preview(self, url, message_id, request_session):

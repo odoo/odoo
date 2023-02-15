@@ -27,6 +27,4 @@ class StockLocation(models.Model):
         be considered when valuating the stock of a company.
         """
         self.ensure_one()
-        if self.usage == 'internal' or (self.usage == 'transit' and self.company_id):
-            return True
-        return False
+        return self.usage == 'internal' or (self.usage == 'transit' and self.company_id)

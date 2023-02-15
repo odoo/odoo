@@ -1,6 +1,8 @@
 import {
     BasicEditor,
-    testEditor
+    testEditor,
+    triggerEvent,
+    undo,
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
 
@@ -21,8 +23,137 @@ const pasteData = async function (editor, text, type) {
 
 const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
 const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
+const pasteOdooEditorHtml = async (editor, html) => pasteData(editor, html, 'text/odoo-editor');
 
-describe('Copy and paste', () => {
+describe('Copy', () => {
+    describe('range collapsed', async () => {
+        it('should ignore copying an empty selection', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    // Check that nothing was set as clipboard content
+                    window.chai.expect(clipboardData.types.length).to.be.equal(0);
+                },
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    clipboardData.setData('text/plain', 'should stay');
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    // Check that clipboard data was not overwritten
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('should stay');
+                },
+            });
+        });
+    });
+    describe('range not collapsed', async () => {
+        it('should copy a selection as text/plain, text/html and text/odoo-editor', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[bcd]e</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('bcd');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('bcd');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('bcd');
+                },
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[abc<br>efg]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('abc\nefg');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('abc<br>efg');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('abc<br>efg');
+                },
+            });
+        });
+    });
+});
+describe('Cut', () => {
+    describe('range collapsed', async () => {
+        it('should ignore cutting an empty selection', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'cut', { clipboardData });
+                    // Check that nothing was set as clipboard content
+                    window.chai.expect(clipboardData.types.length).to.be.equal(0);
+                },
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    clipboardData.setData('text/plain', 'should stay');
+                    triggerEvent(editor.editable, 'cut', { clipboardData });
+                    // Check that clipboard data was not overwritten
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('should stay');
+                },
+            });
+        });
+    });
+    describe('range not collapsed', async () => {
+        it('should cut a selection as text/plain, text/html and text/odoo-editor', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[bcd]e</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'cut', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('bcd');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('bcd');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('bcd');
+                },
+                contentAfter: '<p>a[]e</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[abc<br>efg]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'cut', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('abc\nefg');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('abc<br>efg');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('abc<br>efg');
+                },
+                contentAfter: '<p>[]<br></p>',
+            });
+        });
+        it('should cut selection and register it as a history step', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[bcd]e</p>',
+                stepFunction: async editor => {
+                    const historyStepsCount = editor._historySteps.length;
+                    triggerEvent(editor.editable, 'cut', { clipboardData: new DataTransfer() });
+                    window.chai.expect(editor._historySteps.length).to.be.equal(historyStepsCount + 1);
+                    undo(editor);
+                },
+                contentAfter: '<p>a[bcd]e</p>',
+            });
+        });
+        it('should not restore cut content when cut followed by delete forward', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[]bcde</p>',
+                stepFunction: async editor => {
+                    // Set selection to a[bcd]e.
+                    const selection = editor.document.getSelection();
+                    selection.extend(selection.anchorNode, 4);
+                    triggerEvent(editor.editable, 'cut', { clipboardData: new DataTransfer() });
+                    triggerEvent(editor.editable, 'input', {
+                        inputType: 'deleteContentForward'
+                    });
+                },
+                contentAfter: '<p>a[]</p>',
+            });
+        });
+    });
+});
+
+describe('Paste', () => {
     describe('Html Paste cleaning', () => {
         describe('whitelist', async () => {
             it('should keep whitelisted Tags tag', async () => {
@@ -1181,7 +1312,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<ul><li>abc</li><li>def</li><li>ghi</li></ul>');
                     },
-                    contentAfter: '<p>12</p><ul><li>abc</li><li>def</li><li>ghi</li></ul>[]<p>34</p>',
+                    contentAfter: '<p>12</p><ul><li>abc</li><li>def</li><li>ghi</li></ul><p>[]34</p>',
                 });
             });
             it('should paste the text of an li into another li', async () => {
@@ -1282,6 +1413,15 @@ describe('Copy and paste', () => {
                         await pasteText(editor, 'oom');
                     },
                     contentAfter: '<p>a<a href="https://boom.com">boom[].com</a>d</p>',
+                });
+            });
+            it('should paste and transform URL over the existing url', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[<a href="http://www.xyz.com">http://www.xyz.com</a>]cd</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'https://www.xyz.xdc ');
+                    },
+                    contentAfter: '<p>ab<a href="https://www.xyz.xdc">https://www.xyz.xdc</a> []cd</p>',
                 });
             });
         });
@@ -1476,6 +1616,26 @@ describe('Copy and paste', () => {
                     },
                     contentAfter: '<p>a<a href="http://existing.com">bhttps://www.youtube.com/watch?v=dQw4w9WgXcQ[]c</a>d</p>',
                 });
+            });
+        });
+    });
+    describe('Odoo editor own html', () => {
+        it('should paste html as is', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[]b</p>',
+                stepFunction: async editor => {
+                    await pasteOdooEditorHtml(editor, '<div class="custom-paste">b</div>');
+                },
+                contentAfter: '<p>a</p><div class="custom-paste">b</div><p>[]b</p>',
+            });
+        });
+        it('should not paste unsafe content', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[]b</p>',
+                stepFunction: async editor => {
+                    await pasteOdooEditorHtml(editor, `<script>console.log('xss attack')</script>`);
+                },
+                contentAfter: '<p>a[]b</p>',
             });
         });
     });

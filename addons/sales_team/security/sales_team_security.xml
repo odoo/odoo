@@ -27,11 +27,6 @@
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
-        <record model="ir.ui.menu" id="sales_team.menu_sale_config">
-            <field name="name">Configuration</field>
-            <field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
-        </record>
-
     <data noupdate="1">
         <record id="crm_rule_all_salesteam" model="ir.rule">
             <field name="name">All Salesteam</field>

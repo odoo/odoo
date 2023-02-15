@@ -24,11 +24,23 @@ models which only purpose is to run tests.""",
     ],
     'installable': True,
     'assets': {
+        'test_website.test_bundle': [
+            '/web/static/lib/qweb/qweb2.js',
+            'http://test.external.link/javascript1.js',
+            '/web/static/lib/jquery.ui/jquery-ui.css',
+            'http://test.external.link/style1.css',
+            '/web/static/src/boot.js',
+            'http://test.external.link/javascript2.js',
+            'http://test.external.link/style2.css',
+        ],
         'web.assets_frontend': [
             'test_website/static/src/js/test_error.js',
         ],
         'web.assets_tests': [
-            'test_website/static/tests/**/*',
+            'test_website/static/tests/tours/*',
+        ],
+        'web.qunit_suite_tests': [
+            'test_website/static/tests/*.js',
         ],
     },
     'license': 'LGPL-3',

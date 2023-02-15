@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { publicLivechatService } from '@im_livechat/services/public_livechat_service';
-import { isAvailable, options, serverUrl } from 'im_livechat.loaderData';
+import { isAvailable, options, serverUrl } from '@im_livechat/livechat_data';
 
 import { messagingService } from '@mail/services/messaging_service';
 import { makeMessagingToLegacyEnv } from '@mail/utils/make_messaging_to_legacy_env';

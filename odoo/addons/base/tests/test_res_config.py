@@ -85,6 +85,68 @@ class TestResConfig(TransactionCase):
         # Check returned value
         self.assertEqual(res.args[0], self.expected_final_error_msg_wo_menu)
 
+    # TODO: ASK DLE if this test can be removed
+    def test_40_view_expected_architecture(self):
+        """Tests the res.config.settings form view architecture expected by the web client.
+        The res.config.settings form view is handled with a custom widget expecting a very specific
+        structure. This architecture is tested extensively in Javascript unit tests.
+        Here we briefly ensure the view sent by the server to the web client has the right architecture,
+        the right blocks with the right classes in the right order.
+        This tests is to ensure the specification/requirements are listed and tested server side, and
+        if a change occurs in future development, this test will need to be adapted to specify these changes."""
+        view = self.env['ir.ui.view'].create({
+            'name': 'foo',
+            'type': 'form',
+            'model': 'res.config.settings',
+            'inherit_id': self.env.ref('base.res_config_settings_view_form').id,
+            'arch': """
+                <xpath expr="//form" position="inside">
+                    <t groups="base.group_system">
+                        <app data-string="Foo" string="Foo" name="foo">
+                            <h2>Foo</h2>
+                        </app>
+                    </t>
+                </xpath>
+            """,
+        })
+        arch = self.env['res.config.settings'].get_view(view.id)['arch']
+        tree = etree.fromstring(arch)
+        self.assertTrue(tree.xpath("""
+            //form[@class="oe_form_configuration o_base_settings"]
+            /app[@name="foo"]
+        """), 'The res.config.settings form view architecture is not what is expected by the web client.')
+
+    # TODO: ASK DLE if this test can be removed
+    def test_50_view_expected_architecture_t_node_groups(self):
+        """Tests the behavior of the res.config.settings form view postprocessing when a block `app`
+        is wrapped in a `<t groups="...">`, which is used when you need to display an app settings section
+        only for users part of two groups at the same time."""
+        view = self.env['ir.ui.view'].create({
+            'name': 'foo',
+            'type': 'form',
+            'model': 'res.config.settings',
+            'inherit_id': self.env.ref('base.res_config_settings_view_form').id,
+            'arch': """
+                <xpath expr="//form" position="inside">
+                    <t groups="base.group_system">
+                        <app data-string="Foo"
+                            string="Foo" name="foo" groups="base.group_no_one">
+                            <h2>Foo</h2>
+                        </app>
+                    </t>
+                </xpath>
+            """,
+        })
+        with self.debug_mode():
+            arch = self.env['res.config.settings'].get_view(view.id)['arch']
+            tree = etree.fromstring(arch)
+            # The <t> must be removed from the structure
+            self.assertFalse(tree.xpath('//t'), 'The `<t groups="...">` block must not remain in the view')
+            self.assertTrue(tree.xpath("""
+                //form
+                /app[@name="foo"]
+            """), 'The `app` block must be a direct child of the `form` block')
+
 
 @tagged('post_install', '-at_install')
 class TestResConfigExecute(TransactionCase):
@@ -127,6 +189,15 @@ class TestResConfigExecute(TransactionCase):
             ('model', '=', 'res.config.settings'),
         ]).groups_id
 
+        # Semi hack to recover part of the coverage lost when the groups_id
+        # were moved from the views records to the view nodes (with groups attributes)
+        groups_data = self.env['res.groups'].get_groups_by_application()
+        for group_data in groups_data:
+            if group_data[1] == 'selection' and group_data[3] != (100, 'Other'):
+                manager_group = group_data[2][-1]
+                settings_view_conditional_groups += manager_group
+        settings_view_conditional_groups -= group_system  # Already tested above
+
         for group in settings_view_conditional_groups:
             group_name = group.full_name
             _logger.info("Testing settings access for group %s", group_name)
@@ -159,7 +230,12 @@ class TestResConfigExecute(TransactionCase):
         settings_view_arch = etree.fromstring(settings.get_view(view_id=self.settings_view.id)['arch'])
         seen_fields = set()
         for node in settings_view_arch.iterdescendants(tag='field'):
-            seen_fields.add(node.get('name'))
+            fname = node.get('name')
+            if fname not in settings._fields:
+                # fname isn't a settings fields, but the field of a model
+                # linked to settings through a relational field
+                continue
+            seen_fields.add(fname)
 
         models_to_check = defaultdict(set)
         for field_name in seen_fields:

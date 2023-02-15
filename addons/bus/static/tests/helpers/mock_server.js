@@ -4,16 +4,19 @@ import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { patchWebsocketWorkerWithCleanup } from '@bus/../tests/helpers/mock_websocket';
 
 import { patch } from "@web/core/utils/patch";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { MockServer } from "@web/../tests/helpers/mock_server";
-import { makeDeferred } from "@web/../tests/helpers/utils";
 
 patch(MockServer.prototype, 'bus', {
     init() {
         this._super(...arguments);
         Object.assign(this, TEST_USER_IDS);
-        this.websocketWorker = patchWebsocketWorkerWithCleanup();
-        this.pendingLongpollingPromise = null;
+        const self = this;
+        this.websocketWorker = patchWebsocketWorkerWithCleanup({
+            _sendToServer(message) {
+                self._performWebsocketRequest(message);
+                this._super(message);
+            },
+        });
         this.notificationsToBeResolved = [];
         this.lastBusNotificationId = 0;
     },
@@ -23,23 +26,16 @@ patch(MockServer.prototype, 'bus', {
     //--------------------------------------------------------------------------
 
     /**
-     * @override
+     * @param {Object} message Message sent through the websocket to the
+     * server.
+     * @param {string} [message.event_name]
+     * @param {any} [message.data]
      */
-    async _performRPC(route, args) {
-        if (route === '/longpolling/poll') {
-            const longpollingPromise = makeDeferred();
-            if (this.hasLostConnection) {
-                longpollingPromise.reject(new ConnectionLostError());
-                this.hasLostConnection = false;
-            } else if (this.notificationsToBeResolved.length) {
-                longpollingPromise.resolve(this.notificationsToBeResolved);
-                this.notificationsToBeResolved = [];
-            } else {
-                this.pendingLongpollingPromise = longpollingPromise;
-            }
-            return longpollingPromise;
+    _performWebsocketRequest({ event_name, data }) {
+        if (event_name === 'update_presence') {
+            const { inactivity_period, im_status_ids_by_model } = data;
+            this._mockIrWebsocket__updatePresence(inactivity_period, im_status_ids_by_model);
         }
-        return this._super(route, args);
     },
     /**
      * Simulates `_sendone` on `bus.bus`.
@@ -71,7 +67,6 @@ patch(MockServer.prototype, 'bus', {
         this.websocketWorker.broadcast('notification', values);
 
     },
-
     /**
      * Simulate the lost of the connection by simulating a closeEvent on
      * the worker websocket.
@@ -79,8 +74,6 @@ patch(MockServer.prototype, 'bus', {
      * @param {number} clodeCode the code to close the connection with.
      */
     _simulateConnectionLost(closeCode) {
-        this.websocketWorker.websocket.dispatchEvent(new CloseEvent('close', {
-            code: closeCode,
-        }));
+        this.websocketWorker.websocket.close(closeCode);
     },
 });

@@ -48,14 +48,14 @@
                                 <p class="text-muted" attrs="{'invisible': [('program_type', '!=', 'coupons')]}" colspan="2">
                                     Generate &amp; share coupon codes manually. It can be used in eCommerce, Point of Sale or regular orders to claim the Reward. You can define constraints on its usage through conditional rule.
                                     <div groups="base.group_no_one">
-                                        When generating coupon, you can define a specific points value that can be exchanged for rewards. 
+                                        When generating coupon, you can define a specific points value that can be exchanged for rewards.
                                     </div>
                                 </p>
                                 <p class="text-muted" attrs="{'invisible': [('program_type', '!=', 'loyalty')]}" colspan="2">
                                     When customers make an order, they accumulate points they can exchange for rewards on the current order or on a future one.
                                 </p>
                                 <p class="text-muted" attrs="{'invisible': [('program_type', '!=', 'promotion')]}" colspan="2">
-                                    Set up conditional rules on the order that will give access to rewards for customers                                            
+                                    Set up conditional rules on the order that will give access to rewards for customers
                                     <div groups="base.group_no_one">
                                         Each rule can grant points to the customer he will be able to exchange against rewards
                                     </div>
@@ -163,9 +163,9 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[('program_type', 'not in', ('gift_card', 'ewallet'))]</field>
         <field name="help" type="html">
-            <div class="o_loyalty_not_found container">
-                <h1>No loyalty program found.</h1>
-                <p class="lead">Create a new one from scratch, or use one of the templates below.</p>
+            <div class="o_loyalty_not_found container mt64">
+                <h1>No program found.</h1>
+                <p class="lead">Create one from scratch, or use a templates below:</p>
             </div>
         </field>
     </record>
@@ -207,7 +207,7 @@
         <field name="context">{'menu_type': 'gift_ewallet', 'default_program_type': 'gift_card'}</field>
         <field name="domain">[('program_type', 'in', ('gift_card', 'ewallet'))]</field>
         <field name="help" type="html">
-            <div class="o_loyalty_not_found container">
+            <div class="o_loyalty_not_found container mt64">
                 <h1>No loyalty program found.</h1>
                 <p class="lead">Create a new one from scratch, or use one of the templates below.</p>
             </div>

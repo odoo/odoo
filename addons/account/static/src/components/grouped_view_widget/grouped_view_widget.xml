@@ -4,7 +4,7 @@
         <table t-if="data.groups_vals.length" class="table table-sm o_list_table table table-sm table-hover table-striped o_list_table_grouped">
             <thead><tr>
                 <t t-foreach="data.options.columns" t-as="col" t-key="col_index">
-                    <th t-esc="col['label']" t-attf-class="{{col['class']}}"/>
+                    <th t-out="col['label']" t-attf-class="{{col['class']}}"/>
                 </t>
             </tr></thead>
             <t t-foreach="data.groups_vals" t-as="group_vals" t-key="group_vals_index">
@@ -12,14 +12,14 @@
             </t>
         </table>
         <t t-if="data.options.discarded_number">
-            <span><t t-esc="data.options.discarded_number"/> are not shown in the preview</span>
+            <span><t t-out="data.options.discarded_number"/> are not shown in the preview</span>
         </t>
     </t>
 
     <tbody t-name="account.GroupedItemsTemplate" owl="1">
         <tr style="background-color: #dee2e6;">
             <td t-attf-colspan="{{props.options.columns.length}}">
-                <t t-esc="props.group_vals.group_name"/>
+                <t t-out="props.group_vals.group_name"/>
             </td>
         </tr>
         <t t-foreach="props.group_vals.items_vals" t-as="item_vals" t-key="item_vals_index">
@@ -29,12 +29,12 @@
 
     <tr t-name="account.GroupedItemTemplate" owl="1">
         <t t-foreach="props.options.columns" t-as="col" t-key="col_index">
-            <td t-esc="props.item_vals[col['field']]" t-attf-class="{{col['class']}}"/>
+            <td t-out="props.item_vals[col['field']]" t-attf-class="{{col['class']}}"/>
         </t>
     </tr>
 
     <t t-name="account.OpenMoveTemplate">
-        <a href="#" t-esc="widget.value"/>
+        <a href="#" t-out="widget.value"/>
     </t>
 
 </templates>

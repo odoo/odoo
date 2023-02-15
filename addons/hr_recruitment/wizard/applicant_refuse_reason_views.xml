@@ -8,10 +8,10 @@
                     <div class="alert alert-danger" role="alert" attrs="{'invisible': [('applicant_without_email', '=', False)]}">
                         <field name="applicant_without_email" class="mr4"/>
                     </div>
-                    <group class="oe_title">
-                        <field name="refuse_reason_id"/>
+                    <group col="1">
+                        <field name="refuse_reason_id" class="w-50"/>
                         <field name="send_mail" attrs="{'invisible': [('refuse_reason_id', '=', False)]}"/>
-                        <field name="template_id" attrs="{'invisible': [('send_mail', '=', False)], 'required': [('send_mail', '=', True)]}"/>
+                        <field name="template_id" attrs="{'invisible': [('send_mail', '=', False)], 'required': [('send_mail', '=', True)]}" class="w-50"/>
                         <field name="applicant_ids" invisible="1"/>
                     </group>
                     <footer>

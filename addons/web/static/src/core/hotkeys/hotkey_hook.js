@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { useEffect } = owl;
+import { useEffect } from "@odoo/owl";
 
 /**
  * This hook will register/unregister the given registration

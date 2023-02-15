@@ -60,6 +60,42 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                     fields.Date.from_string('2019-01-11') or False
                 )
 
+    # ========================== Tests Taxes Amounts =============================
+    def test_fixed_tax_amount_discounted_payment_mixed(self):
+        self.env.company.early_pay_discount_computation = 'mixed'
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'Test 0.05',
+            'amount_type': 'fixed',
+            'amount': 0.05,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(self.product_a.taxes_id.ids + fixed_tax.ids)],
+            })],
+            'invoice_payment_term_id': self.early_pay_mixed_5_10.id,
+        })
+        self.assertInvoiceValues(invoice, [
+            # pylint: disable=bad-whitespace
+            {'display_type': 'epd',             'balance': -75.0},
+            {'display_type': 'epd',             'balance': 75.0},
+            {'display_type': 'product',         'balance': -1000.0},
+            {'display_type': 'tax',             'balance': -138.75},
+            {'display_type': 'tax',             'balance': -0.05},
+            {'display_type': 'payment_term',    'balance': 569.4},
+            {'display_type': 'payment_term',    'balance': 569.4},
+        ], {
+            'amount_untaxed': 1000.0,
+            'amount_tax': 138.8,
+            'amount_total': 1138.8,
+        })
+
     # ========================== Tests Payment Register ==========================
     def test_register_discounted_payment_on_single_invoice(self):
         self.company_data['company'].early_pay_discount_computation = 'included'
@@ -86,6 +122,40 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 'amount_currency': 100.0,
             },
             {'amount_currency': 900.0},
+        ])
+
+    def test_register_discounted_payment_on_single_invoice_with_fixed_tax(self):
+        self.company_data['company'].early_pay_discount_computation = 'included'
+        fixed_tax = self.env['account.tax'].create({
+            'name': 'Test 0.05',
+            'amount_type': 'fixed',
+            'amount': 0.05,
+        })
+
+        inv = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'price_unit': 1500.0,
+                'tax_ids': [Command.set(self.product_a.taxes_id.ids + fixed_tax.ids)]
+            })],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        inv.action_post()
+        active_ids = inv.ids
+        payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'payment_date': '2017-01-01',
+        })._create_payments()
+
+        self.assertTrue(payments.is_reconciled)
+        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+            {'amount_currency': -1552.55},
+            {'amount_currency': -150.0},
+            {'amount_currency': -22.5},
+            {'amount_currency': 1725.05},
         ])
 
     def test_register_discounted_payment_on_single_invoice_with_tax(self):
@@ -217,9 +287,9 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
-            {'amount_currency': -2902.50},
+            {'amount_currency': -2913.75},
             {'amount_currency': -225.0},
-            {'amount_currency': 3127.50},
+            {'amount_currency': 3138.75},
         ])
 
     def test_register_discounted_payment_multi_line_multi_discount_tax_mixed_too_late(self):

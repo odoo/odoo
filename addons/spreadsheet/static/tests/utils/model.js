@@ -13,10 +13,11 @@ const { Model } = spreadsheet;
 
 /**
  * @typedef {import("@spreadsheet/../tests/utils/data").ServerData} ServerData
+ * @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model
  */
 
 export function setupDataSourceEvaluation(model) {
-    model.config.dataSources.addEventListener("data-source-updated", () => {
+    model.config.custom.dataSources.addEventListener("data-source-updated", () => {
         const sheetId = model.getters.getActiveSheetId();
         model.dispatch("EVALUATE_CELLS", { sheetId });
     });
@@ -37,9 +38,10 @@ export async function createModelWithDataSource(params = {}) {
         mockRPC: params.mockRPC,
     });
     const model = new Model(params.spreadsheetData, {
-        evalContext: { env },
-        //@ts-ignore
-        dataSources: new DataSources(env.services.orm.silent),
+        custom: {
+            env,
+            dataSources: new DataSources(env.services.orm),
+        },
     });
     setupDataSourceEvaluation(model);
     await nextTick(); // initial async formulas loading
@@ -52,16 +54,16 @@ export async function createModelWithDataSource(params = {}) {
 export async function waitForDataSourcesLoaded(model) {
     function readAllCellsValue() {
         for (const sheetId of model.getters.getSheetIds()) {
-            const cells = model.getters.getCells(sheetId);
+            const cells = model.getters.getEvaluatedCells(sheetId);
             for (const cellId in cells) {
-                cells[cellId].evaluated.value;
+                cells[cellId].value;
             }
         }
     }
     // Read a first time in order to trigger the RPC
     readAllCellsValue();
     //@ts-ignore
-    await model.config.dataSources.waitForAllLoaded();
+    await model.config.custom.dataSources.waitForAllLoaded();
     await nextTick();
     // Read a second time to trigger the compute format (which could trigger a RPC for currency, in list)
     readAllCellsValue();

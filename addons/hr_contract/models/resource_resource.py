@@ -5,7 +5,7 @@ from datetime import datetime
 from pytz import timezone
 
 from odoo import models
-from odoo.addons.resource.models.resource import Intervals
+from odoo.addons.resource.models.utils import Intervals
 
 class ResourceResource(models.Model):
     _inherit = 'resource.resource'
@@ -15,7 +15,24 @@ class ResourceResource(models.Model):
         if not self:
             return super()._get_calendars_validity_within_period(start, end, default_company=default_company)
         calendars_within_period_per_resource = defaultdict(lambda: defaultdict(Intervals))  # keys are [resource id:integer][calendar:self.env['resource.calendar']]
-        resource_without_contract = self.filtered(lambda r: not r.employee_id or r.employee_id.employee_type not in ['employee', 'student'])
+        # Employees that have ever had an active contract
+        employee_ids_with_active_contracts = {
+            contract['employee_id'][0] for contract in
+            self.env['hr.contract']._read_group(
+                domain=[
+                    ('employee_id', 'in', self.employee_id.ids),
+                    '|', ('state', '=', 'open'),
+                    '|', ('state', '=', 'close'),
+                         '&', ('state', '=', 'draft'), ('kanban_state', '=', 'done')
+                ],
+                fields=['employee_id'], groupby=['employee_id']
+            )
+        }
+        resource_without_contract = self.filtered(
+            lambda r: not r.employee_id\
+                   or not r.employee_id.id in employee_ids_with_active_contracts\
+                   or r.employee_id.employee_type not in ['employee', 'student']
+        )
         if resource_without_contract:
             calendars_within_period_per_resource.update(
                 super(ResourceResource, resource_without_contract)._get_calendars_validity_within_period(start, end, default_company=default_company)

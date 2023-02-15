@@ -2,24 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-import logging
 from lxml import etree
-from freezegun import freeze_time
 
-from odoo import tools
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 from odoo.exceptions import UserError
 
-_logger = logging.getLogger(__name__)
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdiExport(TestItEdi):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
-                           edi_format_ref='l10n_it_edi.edi_fatturaPA')
+        super().setUpClass()
 
         cls.price_included_tax = cls.env['account.tax'].create({
             'name': '22% price included tax',
@@ -58,18 +53,6 @@ class TestItEdiExport(TestItEdi):
                 (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
                 (0, 0, {'factor_percent': 0, 'repartition_type': 'tax'}),
             ],
-        })
-
-        cls.italian_partner_a = cls.env['res.partner'].create({
-            'name': 'Alessi',
-            'vat': 'IT00465840031',
-            'l10n_it_codice_fiscale': '00465840031',
-            'country_id': cls.env.ref('base.it').id,
-            'street': 'Via Privata Alessi 6',
-            'zip': '28887',
-            'city': 'Milan',
-            'company_id': cls.company.id,
-            'is_company': True,
         })
 
         cls.italian_partner_b = cls.env['res.partner'].create({
@@ -287,6 +270,24 @@ class TestItEdiExport(TestItEdi):
             ],
         })
 
+        cls.negative_price_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'partner_id': cls.italian_partner_a.id,
+            'partner_bank_id': cls.test_bank.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.standard_line,
+                    }),
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': 'negative_line',
+                    'price_unit': -100.0,
+                    }),
+                ],
+            })
+
         # post the invoices
         cls.price_included_invoice._post()
         cls.partial_discount_invoice._post()
@@ -296,16 +297,7 @@ class TestItEdiExport(TestItEdi):
         cls.total_400_VAT_simplified_invoice._post()
         cls.pa_partner_invoice._post()
         cls.zero_tax_invoice._post()
-
-        cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
-        cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
-
-    @classmethod
-    def _get_test_file_content(cls, filename):
-        """ Get the content of a test file inside this module """
-        path = 'l10n_it_edi/tests/expected_xmls/' + filename
-        with tools.file_open(path, mode='rb') as test_file:
-            return test_file.read()
+        cls.negative_price_invoice._post()
 
     def test_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not
@@ -380,7 +372,7 @@ class TestItEdiExport(TestItEdi):
                     2577.29
                 </xpath>
             ''')
-        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.price_included_invoice))
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.price_included_invoice))
         # Remove the attachment and its details
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
@@ -389,7 +381,7 @@ class TestItEdiExport(TestItEdi):
         # The EDI can account for discounts, but a line with, for example, a 100% discount should still have
         # a corresponding tax with a base amount of 0
 
-        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.partial_discount_invoice))
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.partial_discount_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
             '''
@@ -446,7 +438,7 @@ class TestItEdiExport(TestItEdi):
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
     def test_fully_discounted_inovice(self):
-        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.full_discount_invoice))
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.full_discount_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
             '''
@@ -483,7 +475,7 @@ class TestItEdiExport(TestItEdi):
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
     def test_non_latin_and_latin_invoice(self):
-        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.non_latin_and_latin_invoice))
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.non_latin_and_latin_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
             '''
@@ -516,23 +508,23 @@ class TestItEdiExport(TestItEdi):
               <DatiRiepilogo>
                 <AliquotaIVA>22.00</AliquotaIVA>
                 <ImponibileImporto>2401.20</ImponibileImporto>
-                <Imposta>528.27</Imposta>
+                <Imposta>528.26</Imposta>
                 <EsigibilitaIVA>I</EsigibilitaIVA>
               </DatiRiepilogo>
             </DatiBeniServizi>
             </xpath>
             <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
-              2929.47
+              2929.46
             </xpath>
             <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
-              2929.47
+              2929.46
             </xpath>
             ''')
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
     def test_below_400_codice_simplified_invoice(self):
-        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.below_400_codice_simplified_invoice))
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.below_400_codice_simplified_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_simplified_basis_xml),
             '''
@@ -562,7 +554,7 @@ class TestItEdiExport(TestItEdi):
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
     def test_total_400_VAT_simplified_invoice(self):
-        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.total_400_VAT_simplified_invoice))
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.total_400_VAT_simplified_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_simplified_basis_xml),
             '''
@@ -600,7 +592,7 @@ class TestItEdiExport(TestItEdi):
         self.assertEqual(res[self.pa_partner_invoice], {'attachment': self.pa_partner_invoice.l10n_it_edi_attachment_id, 'success': True})
 
     def test_zero_percent_taxes(self):
-        invoice_etree = etree.fromstring(self.edi_format._export_as_xml(self.zero_tax_invoice))
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.zero_tax_invoice))
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
             '''
@@ -644,5 +636,46 @@ class TestItEdiExport(TestItEdi):
             </xpath>
             '''
         )
+        invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
+        self.assertXmlTreeEqual(invoice_etree, expected_etree)
+
+    def test_negative_price_invoice(self):
+        invoice_etree = etree.fromstring(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.negative_price_invoice))
+        expected_etree = self.with_applied_xpath(
+            etree.fromstring(self.edi_basis_xml),
+            '''
+                <xpath expr="//FatturaElettronicaBody//DatiBeniServizi" position="replace">
+                    <DatiBeniServizi>
+                      <DettaglioLinee>
+                        <NumeroLinea>1</NumeroLinea>
+                        <Descrizione>standard_line</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>800.400000</PrezzoUnitario>
+                        <PrezzoTotale>800.40</PrezzoTotale>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                      </DettaglioLinee>
+                      <DettaglioLinee>
+                        <NumeroLinea>2</NumeroLinea>
+                        <Descrizione>negative_line</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>-100.000000</PrezzoUnitario>
+                        <PrezzoTotale>-100.00</PrezzoTotale>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                      </DettaglioLinee>
+                      <DatiRiepilogo>
+                        <AliquotaIVA>22.00</AliquotaIVA>
+                        <ImponibileImporto>700.40</ImponibileImporto>
+                        <Imposta>154.09</Imposta>
+                        <EsigibilitaIVA>I</EsigibilitaIVA>
+                      </DatiRiepilogo>
+                    </DatiBeniServizi>
+                </xpath>
+                <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
+                    854.49
+                </xpath>
+                <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
+                    854.49
+                </xpath>
+            ''')
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)

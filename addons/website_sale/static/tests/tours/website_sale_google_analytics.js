@@ -1,7 +1,7 @@
 odoo.define('website_sale.google_analytics', function (require) {
 'use strict';
 
-const tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 const websiteSaleTracking = require('website_sale.tracking');
 
 let itemId;
@@ -16,11 +16,10 @@ websiteSaleTracking.include({
     },
 });
 
-tour.register('google_analytics_view_item', {
+registry.category("web_tour.tours").add('google_analytics_view_item', {
     test: true,
     url: '/shop?search=Customizable Desk',
-},
-[
+    steps: [
     {
         content: "select customizable desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk")',
@@ -47,13 +46,12 @@ tour.register('google_analytics_view_item', {
         timeout: 25000,
         run: () => {}, // it's a check
     },
-]);
+]});
 
-tour.register('google_analytics_add_to_cart', {
+registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
     test: true,
     url: '/shop?search=Acoustic Bloc Screens',
-},
-[
+    steps: [
     {
         content: "select Acoustic Bloc Screens",
         trigger: '.oe_product_cart a:contains("Acoustic Bloc Screens")',
@@ -69,6 +67,6 @@ tour.register('google_analytics_add_to_cart', {
         timeout: 25000,
         run: () => {}, // it's a check
     },
-]);
+]});
 
 });

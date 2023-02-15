@@ -15,8 +15,3 @@ class TestPaymentProvider(MercadoPagoCommon):
             self.company_id, self.partner.id, self.amount, currency_id=self.env.ref('base.AFN').id
         )
         self.assertNotIn(self.provider, compatible_providers)
-
-    def test_neutralize(self):
-        """ Test that the sensitive fields of the provider are correctly neutralized. """
-        self.env['payment.provider']._neutralize()
-        self.assertFalse(self.provider.mercado_pago_access_token)

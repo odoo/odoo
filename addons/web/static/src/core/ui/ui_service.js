@@ -8,7 +8,7 @@ import { browser } from "@web/core/browser/browser";
 import { getTabableElements } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
-const { EventBus, useEffect, useRef } = owl;
+import { EventBus, useEffect, useRef } from "@odoo/owl";
 
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 
@@ -92,7 +92,7 @@ export const MEDIAS_BREAKPOINTS = [
     { maxWidth: 474 },
     { minWidth: 475, maxWidth: 575 },
     { minWidth: 576, maxWidth: 767 },
-    { minWidth: 769, maxWidth: 991 },
+    { minWidth: 768, maxWidth: 991 },
     { minWidth: 992, maxWidth: 1199 },
     { minWidth: 1200, maxWidth: 1533 },
     { minWidth: 1534 },

@@ -1,14 +1,11 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models';
-// ensure components are registered beforehand.
-import '@mail/components/chatter/chatter';
-import { clear } from '@mail/model/model_field_command';
-import { getMessagingComponent } from "@mail/utils/messaging_component";
+import { useMessagingContainer } from "@mail/component_hooks/use_messaging_container";
+import { clear } from "@mail/model";
 
-const { Component, onWillDestroy, onWillUpdateProps } = owl;
+import { Component, onWillDestroy, onWillUpdateProps } from "@odoo/owl";
 
-const getChatterNextTemporaryId = (function () {
+export const getChatterNextTemporaryId = (function () {
     let tmpId = 0;
     return () => {
         tmpId += 1;
@@ -25,30 +22,27 @@ const getChatterNextTemporaryId = (function () {
  * this component delays the mounting of chatter until it becomes initialized.
  */
 export class ChatterContainer extends Component {
-
     /**
      * @override
      */
     setup() {
-        useModels();
+        useMessagingContainer();
         super.setup();
-        this.chatter = undefined;
-        this.chatterId = getChatterNextTemporaryId();
+        this.localChatter = undefined;
         this._insertFromProps(this.props);
-        onWillUpdateProps(nextProps => this._willUpdateProps(nextProps));
-        onWillDestroy(() => this._onWillDestroy());
+        onWillUpdateProps((nextProps) => {
+            this._insertFromProps(nextProps);
+        });
+        onWillDestroy(() => this.deleteLocalChatter());
     }
 
-    _willUpdateProps(nextProps) {
-        this._insertFromProps(nextProps);
+    get chatter() {
+        return this.props.chatter || this.localChatter;
     }
 
-    /**
-     * @override
-     */
-    _onWillDestroy() {
-        if (this.chatter && this.chatter.exists()) {
-            this.chatter.delete();
+    deleteLocalChatter() {
+        if (this.localChatter && this.localChatter.exists()) {
+            this.localChatter.delete();
         }
     }
 
@@ -64,15 +58,26 @@ export class ChatterContainer extends Component {
         if (owl.status(this) === "destroyed") {
             return;
         }
-        const values = { id: this.chatterId, ...props };
+        const values = { ...props };
+        delete values.chatter;
         delete values.className;
         if (values.threadId === undefined) {
             values.threadId = clear();
         }
-        this.chatter = messaging.models['Chatter'].insert(values);
+        const hasToCreateChatter = !props.chatter && !this.localChatter;
+        if (hasToCreateChatter) {
+            this.localChatter = messaging.models["Chatter"].insert({
+                id: getChatterNextTemporaryId(),
+                ...values,
+            });
+        }
+        const chatter = props.chatter || this.localChatter;
+        if (!hasToCreateChatter) {
+            chatter.update(values);
+        }
         if (owl.status(this) === "destroyed") {
             // insert might trigger a re-render which might destroy the current component
-            this.chatter.delete();
+            this.deleteLocalChatter();
             return;
         }
         /**
@@ -90,15 +95,19 @@ export class ChatterContainer extends Component {
          * calling the props change method but it is in general not a good
          * assumption to make.
          */
-        this.chatter.refresh();
+        if (chatter.thread) {
+            chatter.refresh();
+        }
         this.render();
     }
-
 }
 
 Object.assign(ChatterContainer, {
-    components: { Chatter: getMessagingComponent('Chatter') },
     props: {
+        chatter: {
+            type: Object,
+            optional: true,
+        },
         className: {
             type: String,
             optional: true,
@@ -155,7 +164,11 @@ Object.assign(ChatterContainer, {
         webRecord: {
             type: Object,
             optional: true,
-        }
+        },
+        saveRecord: {
+            type: Function,
+            optional: true,
+        },
     },
-    template: 'mail.ChatterContainer',
+    template: "mail.ChatterContainer",
 });

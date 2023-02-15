@@ -90,6 +90,13 @@
         <xpath expr="//t[@t-if='fees_by_provider.get(provider)']/span" position="attributes">
             <attribute name="class" add="o_payment_fee" separator=" "/>
         </xpath>
+        <xpath expr="//span[@t-if='fees_by_provider.get(provider)']" position="attributes">
+            <attribute name="class" add="o_payment_fee" separator=" "/>
+        </xpath>
+        <!-- Allow to find the provider id from the radio of tokens -->
+        <xpath expr="//t[@t-foreach='tokens']//input[@name='o_payment_radio']" position="attributes">
+            <attribute name="t-att-data-payment-provider-id">provider.id</attribute>
+        </xpath>
         <!-- Adapt Pay confirm button -->
         <xpath expr="//t[@t-set='label']" position="after">
             <t t-set="label" t-value="donation_confirm_button_label or label"/>

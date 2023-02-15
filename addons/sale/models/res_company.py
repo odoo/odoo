@@ -1,30 +1,65 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
 from odoo import api, fields, models, _
+from odoo.fields import Command
 from odoo.modules.module import get_module_resource
+
+from odoo.addons.account.models.company import DASHBOARD_ONBOARDING_STATES, ONBOARDING_STEP_STATES
 
 
 class ResCompany(models.Model):
-    _inherit = "res.company"
+    _inherit = 'res.company'
+    _check_company_auto = True
 
-    portal_confirmation_sign = fields.Boolean(string='Online Signature', default=True)
-    portal_confirmation_pay = fields.Boolean(string='Online Payment')
-    quotation_validity_days = fields.Integer(default=30, string="Default Quotation Validity (Days)")
+    _sql_constraints = [
+        ('check_quotation_validity_days',
+            'CHECK(quotation_validity_days >= 0)',
+            "You cannot set a negative number for the default quotation validity."
+            " Leave empty (or 0) to disable the automatic expiration of quotations."),
+    ]
 
-    # sale quotation onboarding
-    sale_quotation_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the sale onboarding panel", default='not_done')
-    sale_onboarding_order_confirmation_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding confirmation order step", default='not_done')
-    sale_onboarding_sample_quotation_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding sample quotation step", default='not_done')
+    portal_confirmation_sign = fields.Boolean(string="Online Signature", default=True)
+    portal_confirmation_pay = fields.Boolean(string="Online Payment")
+    quotation_validity_days = fields.Integer(
+        string="Default Quotation Validity",
+        default=30,
+        help="Days between quotation proposal and expiration."
+            " 0 days means automatic expiration is disabled",
+    )
+    sale_down_payment_product_id = fields.Many2one(
+        comodel_name='product.product',
+        string="Deposit Product",
+        domain=[
+            ('type', '=', 'service'),
+            ('invoice_policy', '=', 'order'),
+        ],
+        help="Default product used for down payments",
+        check_company=True,
+    )
 
-    sale_onboarding_payment_method = fields.Selection([
-        ('digital_signature', 'Sign online'),
-        ('paypal', 'PayPal'),
-        ('stripe', 'Stripe'),
-        ('other', 'Pay with another payment provider'),
-        ('manual', 'Manual Payment'),
-    ], string="Sale onboarding selected payment method")
+    # sale onboarding
+    sale_quotation_onboarding_state = fields.Selection(
+        selection=DASHBOARD_ONBOARDING_STATES,
+        string="State of the sale onboarding panel",
+        default='not_done')
+    sale_onboarding_order_confirmation_state = fields.Selection(
+        selection=ONBOARDING_STEP_STATES,
+        string="State of the onboarding confirmation order step",
+        default='not_done')
+    sale_onboarding_sample_quotation_state = fields.Selection(
+        selection=ONBOARDING_STEP_STATES,
+        string="State of the onboarding sample quotation step",
+        default='not_done')
+    sale_onboarding_payment_method = fields.Selection(
+        selection=[
+            ('digital_signature', "Sign online"),
+            ('paypal', "PayPal"),
+            ('stripe', "Stripe"),
+            ('other', "Pay with another payment provider"),
+            ('manual', "Manual Payment"),
+        ],
+        string="Sale onboarding selected payment method")
 
     @api.model
     def action_close_sale_quotation_onboarding(self):
@@ -35,8 +70,7 @@ class ResCompany(models.Model):
     def action_open_sale_onboarding_payment_provider(self):
         """ Called by onboarding panel above the quotation list."""
         self.env.company.get_chart_of_accounts_or_fail()
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_payment_provider_onboarding_wizard")
-        return action
+        return self.env['ir.actions.actions']._for_xml_id('sale.action_open_sale_payment_provider_onboarding_wizard')
 
     def _mark_payment_onboarding_step_as_done(self):
         """ Override of payment to mark the sale onboarding step as done.
@@ -57,30 +91,32 @@ class ResCompany(models.Model):
         partner = self.env.user.partner_id
         company_id = self.env.company.id
         # is there already one?
-        sample_sales_order = self.env['sale.order'].search(
-            [('company_id', '=', company_id), ('partner_id', '=', partner.id),
-             ('state', '=', 'draft')], limit=1)
-        if len(sample_sales_order) == 0:
-            sample_sales_order = self.env['sale.order'].create({
-                'partner_id': partner.id
-            })
+        sample_sales_order = self.env['sale.order'].search([
+            ('company_id', '=', company_id),
+            ('partner_id', '=', partner.id),
+            ('state', '=', 'draft'),
+        ], limit=1)
+        if not sample_sales_order:
             # take any existing product or create one
             product = self.env['product.product'].search([], limit=1)
-            if len(product) == 0:
-                default_image_path = get_module_resource('product', 'static/img', 'product_product_13-image.png')
+            if not product:
+                default_image_path = get_module_resource('product', 'static/img', 'product_product_13-image.jpg')
                 product = self.env['product.product'].create({
-                    'name': _('Sample Product'),
+                    'name': _("Sample Product"),
                     'active': False,
                     'image_1920': base64.b64encode(open(default_image_path, 'rb').read())
                 })
                 product.product_tmpl_id.write({'active': False})
-            self.env['sale.order.line'].create({
-                'name': _('Sample Order Line'),
-                'product_id': product.id,
-                'product_uom_qty': 10,
-                'price_unit': 123,
-                'order_id': sample_sales_order.id,
-                'company_id': sample_sales_order.company_id.id,
+            sample_sales_order = self.env['sale.order'].create({
+                'partner_id': partner.id,
+                'order_line': [
+                    Command.create({
+                        'name': _("Sample Order Line"),
+                        'product_id': product.id,
+                        'product_uom_qty': 10,
+                        'price_unit': 123,
+                    })
+                ]
             })
         return sample_sales_order
 
@@ -91,29 +127,23 @@ class ResCompany(models.Model):
         sample_sales_order = self._get_sample_sales_order()
         template = self.env.ref('sale.email_template_edi_sale', False)
 
-        message_composer = self.env['mail.compose.message'].with_context(
-            default_use_template=bool(template),
+        self.env['mail.compose.message'].with_context(
             mark_so_as_sent=True,
             default_email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
             proforma=self.env.context.get('proforma', False),
-            force_email=True, mail_notify_author=True
+            force_email=True,
         ).create({
-            'res_id': sample_sales_order.id,
-            'template_id': template and template.id or False,
-            'model': 'sale.order',
-            'composition_mode': 'comment'})
-
-        # Simulate the onchange (like trigger in form the view)
-        update_values = message_composer._onchange_template_id(template.id, 'comment', 'sale.order', sample_sales_order.id)['value']
-        message_composer.write(update_values)
-
-        message_composer._action_send_mail()
+            'res_ids': sample_sales_order.ids,
+            'template_id': template.id if template else False,
+            'model': sample_sales_order._name,
+            'composition_mode': 'comment',
+        })._action_send_mail()
 
         self.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
 
         self.action_close_sale_quotation_onboarding()
 
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
+        action = self.env['ir.actions.actions']._for_xml_id('sale.action_orders')
         action.update({
             'views': [[self.env.ref('sale.view_order_form').id, 'form']],
             'view_mode': 'form',
@@ -121,7 +151,7 @@ class ResCompany(models.Model):
         })
         return action
 
-    def get_and_update_sale_quotation_onboarding_state(self):
+    def _get_and_update_sale_quotation_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
         steps = [
@@ -131,5 +161,3 @@ class ResCompany(models.Model):
             'sale_onboarding_sample_quotation_state',
         ]
         return self._get_and_update_onboarding_state('sale_quotation_onboarding_state', steps)
-
-    _sql_constraints = [('check_quotation_validity_days', 'CHECK(quotation_validity_days > 0)', 'Quotation Validity is required and must be greater than 0.')]

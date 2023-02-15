@@ -58,7 +58,7 @@
                 <field name="slide_channel_count"/>
             </xpath>
             <xpath expr="//div[@name='o_survey_kanban_card_section_success']" position="after">
-                <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                <div class="col-lg-1 col-sm-4 col-6 py-0 my-2" groups="website_slides.group_website_slides_officer">
                     <a t-if="record.slide_channel_count.raw_value"
                        type="object"
                        name="action_survey_view_slide_channels"

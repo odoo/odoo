@@ -36,6 +36,7 @@
             <!-- Allows to take a custom View widget for handling -->
             <rng:optional><rng:attribute name="js_class"/></rng:optional>
             <rng:optional><rng:attribute name="default_order"/></rng:optional>
+            <rng:optional><rng:attribute name="default_group_by"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-bf"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-it"/></rng:optional>
             <rng:optional><rng:attribute name="decoration-danger"/></rng:optional>
@@ -50,6 +51,11 @@
             <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="limit">
+                    <rng:data type="int"/>
+                </rng:attribute>
+            </rng:optional>
+            <rng:optional>
+                <rng:attribute name="count_limit">
                     <rng:data type="int"/>
                 </rng:attribute>
             </rng:optional>
@@ -76,6 +82,7 @@
                     </rng:element>
                     <rng:ref name="control"/>
                     <rng:ref name="field"/>
+                    <rng:ref name="widget"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="tree"/>
                     <rng:ref name="groupby"/>

@@ -1,59 +1,28 @@
-.o_web_client .o_matrix_input_table {
-    table {
-        margin-bottom: 0;
-        table-layout: fixed;
-        min-width: 100%;
-        width: auto;
-        max-width: none;
+.o_matrix_input_table {
+    .o_matrix_ps {
+        padding-left: $modal-inner-padding;
     }
-    th, td {
-        border: 0 !important;
-        vertical-align: middle;
-        width: 5em;
+    .o_matrix_pe {
+        padding-right: $modal-inner-padding;
     }
-    .o_matrix_title_header {
-        width: 10em;
-    }
-    thead {
-        color: $o-main-text-color;
-        background-color: $o-brand-lightsecondary;
-        th {
-            text-align: center;
-            white-space: pre-line;
+    //removing input field=number arrows as their size might
+    //change depending on browser default styling and shift input's position
+    .o_matrix_input {
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        &[type=number] {
+            -moz-appearance: textfield;
         }
     }
-    tbody {
-        background-color: $o-view-background-color;
-        text-align: right;
-        tr {
-            border-top: 1px solid $o-form-lightsecondary;
-            border-bottom: 1px solid $o-form-lightsecondary;
-        }
-        .o_matrix_input {
-            text-align: right;
-            border: none;
-        }
-    }
-    .o_matrix_text_muted{
-        color: lighten($o-main-text-color, 15%);
-        font-style: italic;
-    }
-
-    // ensure white background completely surrounds nocontent bubble
-    .o_matrix_nocontent_container {
-        overflow: auto;
-
-        .oe_view_nocontent_img_link {
-            padding:10px;
-        }
-    }
-}
-
-.o_product_variant_matrix {
-    .form-control {
-        &:focus {
-            box-shadow: none;
-            border: 1px solid $gray-400;
+    .o_matrix_input_td {
+        border: none;
+        &:focus-within {
+            --table-accent-bg: none;
+            background-color: $o-view-background-color;
+            border-bottom: $o-black 1px solid;
         }
     }
 }

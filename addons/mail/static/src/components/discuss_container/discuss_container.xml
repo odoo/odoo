@@ -3,7 +3,9 @@
 
     <t t-name="mail.DiscussContainer" owl="1">
         <div class="o_DiscussContainer h-100 d-flex flex-column">
-            <Discuss t-if="messaging and messaging.discuss and messaging.discuss.discussView and messaging.isInitialized" className="'flex-grow-1'" record="messaging.discuss.discussView"/>
+            <t t-if="isLoaded and messaging and messaging.discuss and messaging.discuss.discussView and messaging.isInitialized">
+                <DiscussView className="'flex-grow-1'" record="messaging.discuss.discussView"/>
+            </t>
             <div t-else="" class="o_DiscussContainer_spinner d-flex flex-grow-1 align-items-center justify-content-center">
                 <i class="o_DiscussContainer_spinnerIcon fa fa-circle-o-notch fa-spin me-2"/>Please wait...
             </div>

@@ -66,5 +66,6 @@ export class ProjectSharingWebClient extends Component {
     }
 }
 
+ProjectSharingWebClient.props = {};
 ProjectSharingWebClient.components = { ActionContainer, MainComponentsContainer };
 ProjectSharingWebClient.template = 'project.ProjectSharingWebClient';

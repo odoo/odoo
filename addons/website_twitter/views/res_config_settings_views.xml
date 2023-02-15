@@ -5,53 +5,47 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="website_email_marketing" position="inside">
-                <div class="col-12 col-lg-6 o_setting_box" id="twitter_roller_install_setting">
-                    <div class="o_setting_right_pane">
-                        <span class="o_form_label">Twitter Roller</span>
-                        <div class="text-muted">
-                            Twitter API Credentials
+            <block id="website_email_marketing" position="inside">
+                <setting id="twitter_roller_install_setting" string="Twitter Roller" help="Twitter API Credentials">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label class="col-lg-3 o_light_label" string="API Key" for="twitter_api_key"/>
+                            <field name="twitter_api_key" class="oe_inline"/>
                         </div>
-                        <div class="content-group">
-                            <div class="row mt16">
-                                <label class="col-lg-3 o_light_label" string="API Key" for="twitter_api_key"/>
-                                <field name="twitter_api_key" class="oe_inline"/>
-                            </div>
-                            <div class="row">
-                                <label class="col-lg-3 o_light_label" string="API secret" for="twitter_api_secret"/>
-                                <field name="twitter_api_secret" password="True" class="oe_inline"/>
-                            </div>
-                            <a data-bs-toggle="collapse" href="#" data-bs-target="#twitter_tutorial" aria-label="Twitter tutorial">
-                                <i class="fa fa-arrow-right"/>
-                                Show me how to obtain the Twitter API key and Twitter API secret
-                            </a>
-                            <div class="row mt16 collapse" id="twitter_tutorial">
-                                <blockquote class="small">
-                                    <h2>How to configure the Twitter API access</h2>
-                                    <ol>
-                                        <li>Log in or create an account on <a href="https://developer.twitter.com/" target="new"> https://developer.twitter.com/</a></li>
-                                        <li>Once connected, and if not already done, complete the Twitter portal access process on <a href="https://developer.twitter.com/portal/" target="new">https://developer.twitter.com/portal/</a></li>
-                                        <li>On the <a href="https://developer.twitter.com/portal/" target="new">Twitter Portal</a>, <strong>create a project</strong> with the following information:
-                                            <ul>
-                                                <li><strong>Name: </strong> Odoo Twitter Integration</li>
-                                                <li><strong>Use Case: </strong> Embedding Tweets in a website</li>
-                                                <li><strong>Description: </strong> Odoo Twitter Integration</li>
-                                                <li><strong>App Name: </strong> choose a unique name</li>
-                                            </ul>
-                                        </li>
-                                        <li>Copy/Paste the API Key and API Key Secret values into the above fields</li>
-                                        <li>Get Elevated access by going to <a href="https://developer.twitter.com/en/portal/products" target="new">https://developer.twitter.com/en/portal/products</a>, click on <strong>Elevated</strong> then on <strong>Apply</strong> and finally complete the form.</li>
-                                    </ol>
-                                </blockquote>
-                            </div>
-                            <div class="row">
-                                <label class="col-lg-3 o_light_label" string="Favorites From" for="twitter_screen_name"/>
-                                <field name="twitter_screen_name" class="oe_inline"/>
-                            </div>
+                        <div class="row">
+                            <label class="col-lg-3 o_light_label" string="API secret" for="twitter_api_secret"/>
+                            <field name="twitter_api_secret" password="True" class="oe_inline"/>
+                        </div>
+                        <a data-bs-toggle="collapse" href="#" data-bs-target="#twitter_tutorial" aria-label="Twitter tutorial">
+                            <i class="fa fa-arrow-right"/>
+                            Show me how to obtain the Twitter API key and Twitter API secret
+                        </a>
+                        <div class="row mt16 collapse" id="twitter_tutorial">
+                            <blockquote class="small">
+                                <h2>How to configure the Twitter API access</h2>
+                                <ol>
+                                    <li>Log in or create an account on <a href="https://developer.twitter.com/" target="new"> https://developer.twitter.com/</a></li>
+                                    <li>Once connected, and if not already done, complete the Twitter portal access process on <a href="https://developer.twitter.com/portal/" target="new">https://developer.twitter.com/portal/</a></li>
+                                    <li>On the <a href="https://developer.twitter.com/portal/" target="new">Twitter Portal</a>, <strong>create a project</strong> with the following information:
+                                        <ul>
+                                            <li><strong>Name: </strong> Odoo Twitter Integration</li>
+                                            <li><strong>Use Case: </strong> Embedding Tweets in a website</li>
+                                            <li><strong>Description: </strong> Odoo Twitter Integration</li>
+                                            <li><strong>App Name: </strong> choose a unique name</li>
+                                        </ul>
+                                    </li>
+                                    <li>Copy/Paste the API Key and API Key Secret values into the above fields</li>
+                                    <li>Get Elevated access by going to <a href="https://developer.twitter.com/en/portal/products" target="new">https://developer.twitter.com/en/portal/products</a>, click on <strong>Elevated</strong> then on <strong>Apply</strong> and finally complete the form.</li>
+                                </ol>
+                            </blockquote>
+                        </div>
+                        <div class="row">
+                            <label class="col-lg-3 o_light_label" string="Favorites From" for="twitter_screen_name"/>
+                            <field name="twitter_screen_name" class="oe_inline"/>
                         </div>
                     </div>
-                </div>
-            </div>
+                </setting>
+            </block>
         </field>
     </record>
 </odoo>

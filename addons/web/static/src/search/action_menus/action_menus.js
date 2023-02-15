@@ -3,13 +3,11 @@
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { session } from "@web/session";
-import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, onWillUpdateProps } = owl;
-let registryActionId = 0;
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 /**
  * Action menus (or Action/Print bar, previously called 'Sidebar')
  *
@@ -25,10 +23,10 @@ export class ActionMenus extends Component {
         this.orm = useService("orm");
         this.actionService = useService("action");
         onWillStart(async () => {
-            this.actionItems = await this.setActionItems(this.props);
+            this.actionItems = await this.getActionItems(this.props);
         });
         onWillUpdateProps(async (nextProps) => {
-            this.actionItems = await this.setActionItems(nextProps);
+            this.actionItems = await this.getActionItems(nextProps);
         });
     }
 
@@ -45,32 +43,18 @@ export class ActionMenus extends Component {
     // Private
     //---------------------------------------------------------------------
 
-    async setActionItems(props) {
-        // Callback based actions
-        const callbackActions = (props.items.other || []).map((action) =>
-            Object.assign({ key: `action-${action.description}` }, action)
-        );
-        // Action based actions
-        const actionActions = props.items.action || [];
-        const formattedActions = actionActions.map((action) => ({
-            action,
-            description: action.name,
-            key: action.id,
-        }));
-        // ActionMenus action registry components
-        const registryActions = [];
-        for (const { Component, getProps } of registry.category("action_menus").getAll()) {
-            const itemProps = await getProps(props, this.env);
-            if (itemProps) {
-                registryActions.push({
-                    Component,
-                    key: `registry-action-${registryActionId++}`,
-                    props: itemProps,
-                });
+    async getActionItems(props) {
+        return (props.items.action || []).map((action) => {
+            if (action.callback) {
+                return Object.assign({ key: `action-${action.description}` }, action);
+            } else {
+                return {
+                    action,
+                    description: action.name,
+                    key: action.id,
+                };
             }
-        }
-
-        return [...callbackActions, ...formattedActions, ...registryActions];
+        });
     }
 
     //---------------------------------------------------------------------
@@ -78,7 +62,7 @@ export class ActionMenus extends Component {
     //---------------------------------------------------------------------
 
     async executeAction(action) {
-        let activeIds = this.props.activeIds;
+        let activeIds = this.props.getActiveIds();
         if (this.props.isDomainSelected) {
             activeIds = await this.orm.search(this.props.resModel, this.props.domain, {
                 limit: session.active_ids_limit,
@@ -111,7 +95,10 @@ export class ActionMenus extends Component {
      * @private
      * @param {Object} item
      */
-    onItemSelected(item) {
+    async onItemSelected(item) {
+        if (!(await this.props.shouldExecuteAction(item))) {
+            return;
+        }
         if (item.callback) {
             item.callback([item]);
         } else if (item.action) {
@@ -128,7 +115,7 @@ ActionMenus.components = {
     DropdownItem,
 };
 ActionMenus.props = {
-    activeIds: { type: Array, element: [Number, String] }, // virtual IDs are strings.
+    getActiveIds: Function,
     context: Object,
     resModel: String,
     domain: { type: Array, optional: true },
@@ -138,12 +125,13 @@ ActionMenus.props = {
         shape: {
             action: { type: Array, optional: true },
             print: { type: Array, optional: true },
-            other: { type: Array, optional: true },
         },
     },
     onActionExecuted: { type: Function, optional: true },
+    shouldExecuteAction: { type: Function, optional: true },
 };
 ActionMenus.defaultProps = {
     onActionExecuted: () => {},
+    shouldExecuteAction: () => true,
 };
 ActionMenus.template = "web.ActionMenus";

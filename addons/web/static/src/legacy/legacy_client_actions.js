@@ -10,7 +10,7 @@ import { breadcrumbsToLegacy } from "./backend_utils";
 import { useLegacyRefs } from "./utils";
 import { LegacyComponent } from "./legacy_component";
 
-const { xml } = owl;
+import { xml } from "@odoo/owl";
 const actionRegistry = registry.category("actions");
 
 const legacyClientActionTemplate = xml`
@@ -50,9 +50,17 @@ function registerClientAction(name, action) {
                 this.widget = this.props.state && this.props.state.__legacy_widget__;
                 this.onReverseBreadcrumb =
                     this.props.state && this.props.state.__on_reverse_breadcrumb__;
+
+                const rootRef = {
+                    get el() {
+                        return legacyRefs.widget && legacyRefs.widget.el;
+                    },
+                };
+
                 useSetupAction({
                     beforeLeave: () => legacyRefs.widget.canBeRemoved(),
                     getLocalState: () => legacyRefs.component.exportState(),
+                    rootRef,
                 });
             }
         }

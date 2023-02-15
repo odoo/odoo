@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { TranslationDataBase } from 'web.translation';
+import { TranslationDataBase } from "web.translation";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 TranslationDataBase.include({
     /**
@@ -14,7 +14,7 @@ TranslationDataBase.include({
             // During boot `env.services` might not even be set yet, in this
             // case this can safely be ignored as messaging will then load
             // locale information during its initialization.
-            Component.env.services.messaging.get().then(messaging => {
+            Component.env.services.messaging.get().then((messaging) => {
                 // Update messaging locale whenever the translation bundle changes.
                 // In particular if messaging is created before the end of the
                 // `load_translations` RPC, the default values have to be

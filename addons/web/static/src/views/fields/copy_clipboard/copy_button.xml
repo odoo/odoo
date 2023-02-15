@@ -5,7 +5,8 @@
         <button
             class="text-nowrap"
             t-ref="button"
-            t-attf-class="btn btn-sm btn-primary o_clipboard_button {{ props.className || '' }}"
+            t-att-disabled="props.disabled"
+            t-attf-class="btn btn-primary o_clipboard_button {{ props.className || '' }}"
             t-on-click.stop="onClick"
         >
             <span class="fa fa-clipboard mx-1"/>

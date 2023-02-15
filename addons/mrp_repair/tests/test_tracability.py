@@ -90,9 +90,7 @@ class TestRepairTraceability(TestMrpCommon):
             mo = mo_form.save()
             mo.action_confirm()
             mo.action_assign()
-            action = mo.button_mark_done()
-            wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-            wizard.process()
+            mo.button_mark_done()
             return mo
 
         stock_location = self.env.ref('stock.stock_location_stock')

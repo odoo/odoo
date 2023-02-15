@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
-from odoo import fields
+from odoo import Command
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, test_reports
 
@@ -90,7 +90,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'employee_requests': 'no',
                 'allocation_validation_type': 'officer',
                 'leave_validation_type': 'both',
-                'responsible_id': self.env.ref('base.user_admin').id,
+                'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
             })
 
             self.env['hr.leave.allocation'].create([
@@ -244,7 +244,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'employee_requests': 'no',
             'allocation_validation_type': 'officer',
             'leave_validation_type': 'both',
-            'responsible_id': self.env.ref('base.user_admin').id,
+            'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
         })
 
         self.env['hr.leave.allocation'].create({

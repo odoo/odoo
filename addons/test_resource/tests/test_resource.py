@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
+from freezegun import freeze_time
 from pytz import timezone, utc
 
 from odoo import fields
 from odoo.exceptions import ValidationError
-from odoo.addons.resource.models.resource import Intervals, sum_intervals
+from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.addons.test_resource.tests.common import TestResourceCommon
 from odoo.tests.common import TransactionCase
 
@@ -123,7 +124,7 @@ class TestCalendar(TestResourceCommon):
 
     def test_get_work_hours_count(self):
         self.env['resource.calendar.leaves'].create({
-            'name': 'Global Leave',
+            'name': 'Global Time Off',
             'resource_id': False,
             'calendar_id': self.calendar_jean.id,
             'date_from': datetime_str(2018, 4, 3, 0, 0, 0, tzinfo=self.jean.tz),
@@ -247,7 +248,7 @@ class TestCalendar(TestResourceCommon):
 
         # 2 weeks calendar week 2, leave during a day where he doesn't work this week
         leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Leave Jules week 2',
+            'name': 'Time Off Jules week 2',
             'calendar_id': self.calendar_jules.id,
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 11, 4, 0, 0, tzinfo=self.jules.tz),
@@ -264,7 +265,7 @@ class TestCalendar(TestResourceCommon):
 
         # 2 weeks calendar week 2, leave during a day where he works this week
         leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Leave Jules week 2',
+            'name': 'Time Off Jules week 2',
             'calendar_id': self.calendar_jules.id,
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
@@ -1236,6 +1237,19 @@ class TestTimezones(TestResourceCommon):
             (date(2018, 4, 11), 8),
             (date(2018, 4, 12), 8),
             (date(2018, 4, 13), 8),
+        ])
+
+    @freeze_time("2022-09-21 15:30:00", tz_offset=-10)
+    def test_unavailable_intervals(self):
+        resource = self.env['resource.resource'].create({
+            'name': 'resource',
+            'tz': self.tz3,
+        })
+        intervals = resource._get_unavailable_intervals(datetime(2022, 9, 21), datetime(2022, 9, 22))
+        self.assertEqual(list(intervals.values())[0], [
+            (datetime(2022, 9, 21, 0, 0, tzinfo=utc), datetime(2022, 9, 21, 6, 0, tzinfo=utc)),
+            (datetime(2022, 9, 21, 10, 0, tzinfo=utc), datetime(2022, 9, 21, 11, 0, tzinfo=utc)),
+            (datetime(2022, 9, 21, 15, 0, tzinfo=utc), datetime(2022, 9, 22, 0, 0, tzinfo=utc)),
         ])
 
 class TestResource(TestResourceCommon):

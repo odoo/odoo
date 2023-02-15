@@ -64,7 +64,7 @@
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="calendar_id" optional="show" />
                 <field name="tz" optional="hide" />
-                <field name="resource_type" optional="show" />
+                <field name="resource_type" optional="hide" />
                 <field name="time_efficiency"/>
             </tree>
         </field>
@@ -104,7 +104,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Leave Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave"/>
+                    <filter string="Time Off Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Time Off"/>
                 </group>
            </search>
         </field>
@@ -126,7 +126,7 @@
         <field name="name">resource.calendar.leaves.form</field>
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
-            <form string="Leave Detail">
+            <form string="Time Off Detail">
             <field name="company_id" invisible="1"/>
             <sheet>
                 <group>
@@ -151,7 +151,7 @@
         <field name="model">resource.calendar.leaves</field>
         <field name="priority">1</field>
         <field name="arch" type="xml">
-            <tree string="Leave Detail">
+            <tree string="Time Off Detail">
                 <field name="name" string="Reason"/>
                 <field name="resource_id" />
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -207,7 +207,7 @@
             <tree string="Working Time" editable="top">
                 <field name="sequence" widget="handle"/>
                 <field name="display_type" invisible="1"/>
-                <field name="display_name" width="1" string=" " attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
+                <field name="display_name" string=" " attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
                 <field name="name" attrs="{'invisible': [('display_type', '=', 'line_section')]}"/>
                 <field name="dayofweek"/>
                 <field name="day_period"/>
@@ -262,6 +262,11 @@
         <field name="model">resource.calendar</field>
         <field name="arch" type="xml">
             <form string="Working Time">
+                <field name="two_weeks_calendar" invisible="1"/>
+                <header>
+                    <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"/>
+                    <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar ? All entries will be lost"/>
+                </header>
                 <sheet string="Working Time">
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
@@ -272,6 +277,12 @@
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
                                 string="Work Resources" icon="fa-cogs"
                                 class="oe_stat_button"
+                                context="{'search_default_material': 1}"
+                                groups="base.group_user"/>
+                        <button name="%(resource_resource_action_from_calendar)d" type="action"
+                                string="Employees" icon="fa-users"
+                                class="oe_stat_button"
+                                context="{'search_default_human': 1}"
                                 groups="base.group_user"/>
                     </div>
                     <h1>
@@ -288,13 +299,7 @@
                     </group>
                     <notebook>
                         <page string="Working Hours" name="working_hours">
-                        <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"/>
-                        <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar ? All entries will be lost"/>
-                        <field name="two_weeks_calendar" invisible="1"/>
-
-                        <group attrs="{'invisible':[('two_weeks_calendar', '=', False)]}">
-                            <field name="two_weeks_explanation" nolabel="1"/>
-                        </group>
+                            <field name="two_weeks_explanation" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}"/>
                             <field name="attendance_ids" widget="section_one2many"/>
                         </page>
                     </notebook>

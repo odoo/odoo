@@ -20,7 +20,7 @@ class Digest(models.Model):
                 ('date', '>=', start),
                 ('date', '<', end),
                 ('state', 'not in', ['draft', 'cancel', 'sent']),
-                ('company_id', '=', company.id)], ['price_total'], ['price_total'])
+                ('company_id', '=', company.id)], ['price_total'], ['company_id'])
             record.kpi_all_sale_total_value = sum([channel_sale['price_total'] for channel_sale in all_channels_sales])
 
     def _compute_kpis_actions(self, company, user):

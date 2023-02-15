@@ -119,7 +119,6 @@ class Department(models.Model):
             res.update({
                 'name': self.name,
                 'res_model': 'hr.employee.public',
-                'view_type': 'kanban',
                 'view_mode': 'kanban',
                 'views': [(False, 'kanban'), (False, 'form')],
                 'context': {'searchpanel_default_department_id': self.id},
@@ -134,3 +133,29 @@ class Department(models.Model):
 
     def get_children_department_ids(self):
         return self.env['hr.department'].search([('id', 'child_of', self.ids)])
+
+    def get_department_hierarchy(self):
+        if not self:
+            return {}
+
+        hierarchy = {
+            'parent': {
+                'id': self.parent_id.id,
+                'name': self.parent_id.name,
+                'employees': self.parent_id.total_employee,
+            } if self.parent_id else False,
+            'self': {
+                'id': self.id,
+                'name': self.name,
+                'employees': self.total_employee,
+            },
+            'children': [
+                {
+                    'id': child.id,
+                    'name': child.name,
+                    'employees': child.total_employee
+                } for child in self.child_ids
+            ]
+        }
+
+        return hierarchy

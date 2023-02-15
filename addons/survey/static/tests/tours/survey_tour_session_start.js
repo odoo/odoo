@@ -1,7 +1,7 @@
 odoo.define('survey.test_survey_session_start_tour', function (require) {
 "use strict";
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 var surveySessionTools = require('survey.session_tour_tools');
 
 /**
@@ -9,10 +9,10 @@ var surveySessionTools = require('survey.session_tour_tools');
  * that the attendees are accounted for, then start the session
  * by going to the first question.
  */
-tour.register('test_survey_session_start_tour', {
+registry.category("web_tour.tours").add('test_survey_session_start_tour', {
     url: "/web",
     test: true,
-}, [].concat(surveySessionTools.accessSurveySteps, [{
+    steps: [].concat(surveySessionTools.accessSurveySteps, [{
     trigger: 'button[name="action_open_session_manager"]',
 }, {
     trigger: '.o_survey_session_attendees_count:contains("3")',
@@ -27,6 +27,6 @@ tour.register('test_survey_session_start_tour', {
 }, {
     trigger: 'h1:contains("Nickname")',
     run: function () {} // check first question is displayed
-}]));
+}])});
 
 });

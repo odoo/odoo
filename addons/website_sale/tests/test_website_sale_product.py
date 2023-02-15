@@ -12,10 +12,13 @@ class WebsiteSaleProductTests(TestSaleProductAttributeValueCommon):
 
     def test_website_sale_contextual_price(self):
         contextual_price = self.computer._get_contextual_price()
-        self.assertEqual(0.0, contextual_price, "With no pricelist context, the contextual price should be 0.")
+        self.assertEqual(
+            self.computer.list_price,
+            contextual_price,
+            "With no pricelist context, the contextual price should be the computer list price."
+        )
 
-        current_website = self.env['website'].get_current_website()
-        pricelist = current_website.get_current_pricelist()
+        pricelist = self.env['product.pricelist'].create({'name': 'Base Pricelist'})
 
         # make sure the pricelist has a 10% discount
         self.env['product.pricelist.item'].create({

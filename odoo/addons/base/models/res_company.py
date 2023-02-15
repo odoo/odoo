@@ -5,7 +5,7 @@ import base64
 import io
 import logging
 import os
-import re
+import warnings
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
@@ -57,13 +57,14 @@ class Company(models.Model):
             return base64.b64encode(stream.getvalue())
 
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)
+    active = fields.Boolean(default=True)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
-    report_header = fields.Html(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
+    report_header = fields.Html(string='Company Tagline', translate=True, help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    company_details = fields.Html(string='Company Details', help="Header text displayed at the top of all reports.")
+    company_details = fields.Html(string='Company Details', translate=True, help="Header text displayed at the top of all reports.")
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
@@ -190,8 +191,8 @@ class Company(models.Model):
         _logger.warning("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore")
         return self.env.company
 
-    # deprecated, use clear_caches() instead
     def cache_restart(self):
+        warnings.warn("Since 17.0, deprecated method, use `clear_caches` instead", DeprecationWarning, 2)
         self.clear_caches()
 
     @api.model_create_multi
@@ -257,16 +258,35 @@ class Company(models.Model):
             self.invalidate_model(company_address_fields)
         return res
 
+    @api.constrains('active')
+    def _check_active(self):
+        for company in self:
+            if not company.active:
+                company_active_users = self.env['res.users'].search_count([
+                    ('company_id', '=', company.id),
+                    ('active', '=', True),
+                ])
+                if company_active_users:
+                    # You cannot disable companies with active users
+                    raise ValidationError(_(
+                        'The company %(company_name)s cannot be archived because it is still used '
+                        'as the default company of %(active_users)s users.',
+                        company_name=company.name,
+                        active_users=company_active_users,
+                    ))
+
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive companies.'))
 
     def open_company_edit_report(self):
+        warnings.warn("Since 17.0.", DeprecationWarning, 2)
         self.ensure_one()
         return self.env['res.config.settings'].open_company()
 
     def write_company_and_print_report(self):
+        warnings.warn("Since 17.0.", DeprecationWarning, 2)
         context = self.env.context
         report_name = context.get('default_report_name')
         active_ids = context.get('active_ids')

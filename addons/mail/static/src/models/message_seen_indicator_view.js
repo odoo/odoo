@@ -1,33 +1,30 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'MessageSeenIndicatorView',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessageSeenIndicator() {
-            if (this.messageViewOwner.messageListViewItemOwner && this.messageViewOwner.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread) {
-                return {
-                    message: this.messageViewOwner.message,
-                    thread: this.messageViewOwner.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread,
-                };
-            }
-            return clear();
-        },
-    },
+Model({
+    name: "MessageSeenIndicatorView",
+    template: "mail.MessageSeenIndicatorView",
     fields: {
-        messageViewOwner: one('MessageView', {
+        messageViewOwner: one("MessageView", {
             identifying: true,
-            inverse: 'messageSeenIndicatorView',
+            inverse: "messageSeenIndicatorView",
         }),
-        messageSeenIndicator: one('MessageSeenIndicator', {
-            compute: '_computeMessageSeenIndicator',
+        messageSeenIndicator: one("MessageSeenIndicator", {
+            compute() {
+                if (
+                    this.messageViewOwner.messageListViewItemOwner &&
+                    this.messageViewOwner.messageListViewItemOwner.messageListViewOwner
+                        .threadViewOwner.thread
+                ) {
+                    return {
+                        message: this.messageViewOwner.message,
+                        thread: this.messageViewOwner.messageListViewItemOwner.messageListViewOwner
+                            .threadViewOwner.thread,
+                    };
+                }
+                return clear();
+            },
         }),
     },
 });

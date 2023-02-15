@@ -6,20 +6,11 @@
     'category': 'Hidden',
     'summary': 'Spreadsheet',
     'description': 'Spreadsheet',
-    'depends': ['spreadsheet_dashboard', 'hr_expense'],
+    'depends': ['spreadsheet_dashboard', 'sale_expense'],
     'data': [
         "data/dashboards.xml",
     ],
-    'demo': [],
     'installable': True,
-    'auto_install': ['hr_expense'],
+    'auto_install': ['sale_expense'],
     'license': 'LGPL-3',
-    'assets': {
-        'spreadsheet_dashboard.o_spreadsheet': [],
-        'web.assets_backend': [],
-        'web.qunit_suite_tests': [],
-        'web.assets_tests': [
-            'spreadsheet_dashboard_hr_expense/static/tests/**/*',
-        ],
-    }
 }

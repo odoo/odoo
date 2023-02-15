@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class RadioField extends Component {
     setup() {
@@ -56,6 +56,7 @@ RadioField.defaultProps = {
 
 RadioField.displayName = _lt("Radio");
 RadioField.supportedTypes = ["many2one", "selection"];
+RadioField.legacySpecialData = "_fetchSpecialMany2ones";
 
 RadioField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 RadioField.extractProps = ({ attrs }) => {

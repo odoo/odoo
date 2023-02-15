@@ -42,3 +42,6 @@ class StockMove(models.Model):
         if self.unbuild_id:
             return True
         return super()._is_returned(valued_type)
+
+    def _ignore_automatic_valuation(self):
+        return bool(self.raw_material_production_id)

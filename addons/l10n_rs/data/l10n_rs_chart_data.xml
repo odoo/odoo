@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Account Chart Template -->
+    <record id="l10n_rs_chart_template" model="account.chart.template">
+        <field name="name">Serbia - Chart of Accounts</field>
+        <field name="property_account_expense_categ_id" ref="rs_501"/>
+        <field name="property_account_income_categ_id" ref="rs_604"/>
+        <field name="property_account_payable_id" ref="rs_435"/>
+        <field name="property_account_receivable_id" ref="rs_204"/>
+        <field name="property_tax_payable_account_id" ref="rs_470"/>
+        <field name="property_tax_receivable_account_id" ref="rs_270"/>
+        <field name="income_currency_exchange_account_id" ref="rs_663"/>
+        <field name="expense_currency_exchange_account_id" ref="rs_563"/>
+        <field name="default_cash_difference_expense_account_id" ref="rs_5791" />
+        <field name="default_cash_difference_income_account_id" ref="rs_6791" />
+    </record>
+
+</odoo>

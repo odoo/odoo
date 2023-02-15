@@ -2059,7 +2059,7 @@ var BasicModel = AbstractModel.extend({
                         model: list.model,
                         method: 'read',
                         args: [_.pluck(data, 'id'), fieldNames],
-                        context: _.extend({}, record.context, field.context),
+                        context: _.extend({}, record.context, field.context, list.getContext()),
                     }).then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
@@ -2858,9 +2858,14 @@ var BasicModel = AbstractModel.extend({
         return Promise.all(_.map(fieldNames, function (name) {
             var viewType = (options && options.viewType) || record.viewType;
             var fieldInfo = record.fieldsInfo[viewType][name] || {};
-            var Widget = fieldInfo.Widget;
-            if (Widget && Widget.prototype.specialData) {
-                return self[Widget.prototype.specialData](record, name, fieldInfo).then(function (data) {
+            let specialData;
+            if ("specialData" in fieldInfo) {
+                specialData = fieldInfo.specialData;
+            } else if (fieldInfo.Widget) {
+                specialData = fieldInfo.Widget.prototype.specialData;
+            }
+            if (specialData) {
+                return self[specialData](record, name, fieldInfo).then(function (data) {
                     if (data === undefined) {
                         return;
                     }
@@ -3091,9 +3096,18 @@ var BasicModel = AbstractModel.extend({
                 var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                 var fieldsInfo = view ? view.fieldsInfo : (fieldInfo.fieldsInfo || {});
                 var ids = record.data[fieldName] || [];
+
+                // remove default_* & *_view_ref keys from record context
+                const recordContext = { ...record.context };
+                for (const key in recordContext) {
+                    if (key.startsWith("default_") || key.endsWith("_view_ref")) {
+                        delete recordContext[key];
+                    }
+                }
+
                 var list = self._makeDataPoint({
                     count: ids.length,
-                    context: _.extend({}, record.context, field.context),
+                    context: Object.assign({}, recordContext, field.context),
                     fieldsInfo: fieldsInfo,
                     fields: view ? view.fields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,
@@ -4594,12 +4608,16 @@ var BasicModel = AbstractModel.extend({
         var fields = view ? view.fields : fieldInfo.relatedFields;
         var viewType = view ? view.type : fieldInfo.viewType;
 
-        // remove default_* keys from parent context to avoid issue of same field name in x2m
-        var parentContext = _.omit(record.context, function (val, key) {
-            return _.str.startsWith(key, 'default_');
-        });
+        // remove default_* & *_view_ref keys from record context
+        const recordContext = { ...record.context };
+        for (const key in recordContext) {
+            if (key.startsWith("default_") || key.endsWith("_view_ref")) {
+                delete recordContext[key];
+            }
+        }
+
         var x2manyList = self._makeDataPoint({
-            context: parentContext,
+            context: recordContext,
             fieldsInfo: fieldsInfo,
             fields: fields,
             limit: fieldInfo.limit,

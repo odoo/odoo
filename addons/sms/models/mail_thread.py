@@ -363,6 +363,9 @@ class MailThread(models.AbstractModel):
 
         return True
 
+    def _get_notify_valid_parameters(self):
+        return super()._get_notify_valid_parameters() | {'put_in_queue', 'sms_numbers', 'sms_pid_to_number'}
+
     @api.model
     def notify_cancel_by_type(self, notification_type):
         super().notify_cancel_by_type(notification_type)

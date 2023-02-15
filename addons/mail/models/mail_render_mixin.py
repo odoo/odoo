@@ -12,8 +12,9 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.base.models.ir_qweb import QWebException
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, AccessError
-from odoo.tools import is_html_empty, safe_eval
+from odoo.tools import is_html_empty
 from odoo.tools.rendering_tools import convert_inline_template_to_qweb, parse_inline_template, render_inline_template, template_env_globals
 
 _logger = logging.getLogger(__name__)
@@ -241,7 +242,10 @@ class MailRenderMixin(models.AbstractModel):
     def _check_access_right_dynamic_template(self):
         if not self.env.su and not self.env.user.has_group('mail.group_mail_template_editor') and self._is_dynamic():
             group = self.env.ref('mail.group_mail_template_editor')
-            raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
+            raise AccessError(
+                _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                  group_name=group.name)
+            )
 
     # ------------------------------------------------------------
     # RENDERING
@@ -256,14 +260,15 @@ class MailRenderMixin(models.AbstractModel):
           * various formatting tools;
         """
         render_context = {
+            'ctx': self._context,
             'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
             'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
             'format_time': lambda time, tz=False, time_format=False, lang_code=False: format_time(self.env, time, tz, time_format, lang_code),
             'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
             'format_duration': lambda value: tools.format_duration(value),
-            'user': self.env.user,
-            'ctx': self._context,
             'is_html_empty': is_html_empty,
+            'slug': slug,
+            'user': self.env.user,
         }
         render_context.update(copy.copy(template_env_globals))
         return render_context
@@ -273,6 +278,10 @@ class MailRenderMixin(models.AbstractModel):
                               add_context=None, options=None):
         """ Render a raw QWeb template.
 
+        In addition to the generic evaluation context available, some other
+        variables are added:
+          * ``object``: record based on which the template is rendered;
+
         :param str template_src: raw QWeb template to render;
         :param str model: see ``MailRenderMixin._render_template()``;
         :param list res_ids: see ``MailRenderMixin._render_template()``;
@@ -280,14 +289,13 @@ class MailRenderMixin(models.AbstractModel):
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_eval_context()``;
-        :param dict options: options for rendering (not used currently);
+        :param dict options: options for rendering propagated to IrQweb render
+          (see docstring for available options);
 
         :return dict: {res_id: string of rendered template based on record}
-
-        :notice: Experimental. Use at your own risks only.
         """
         results = dict.fromkeys(res_ids, u"")
-        if not template_src:
+        if not template_src or not res_ids:
             return results
 
         # prepare template variables
@@ -311,15 +319,21 @@ class MailRenderMixin(models.AbstractModel):
             except Exception as e:
                 if isinstance(e, QWebException) and isinstance(e.__cause__, PermissionError):
                     group = self.env.ref('mail.group_mail_template_editor')
-                    raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name)) from e
+                    raise AccessError(
+                        _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                           group_name=group.name)
+                    ) from e
                 _logger.info("Failed to render template : %s", template_src, exc_info=True)
-                raise UserError(_("Failed to render QWeb template : %s)", template_src)) from e
+                raise UserError(
+                    _("Failed to render QWeb template : %(template_src)s)",
+                      template_src=template_src)
+                    ) from e
             results[record.id] = render_result
 
         return results
 
     @api.model
-    def _render_template_qweb_view(self, view_xmlid, model, res_ids,
+    def _render_template_qweb_view(self, view_ref, model, res_ids,
                                    add_context=None, options=None):
         """ Render a QWeb template based on an ir.ui.view content.
 
@@ -327,37 +341,46 @@ class MailRenderMixin(models.AbstractModel):
         variables are added:
           * ``object``: record based on which the template is rendered;
 
-        :param str view_xmlid: source QWeb template. It should be a string
-          XmlID allowing to fetch an ``ir.ui.view``;
+        :param str/int/record view_ref: source QWeb template. It should be an
+          XmlID allowing to fetch an ``ir.ui.view``, or an ID of a view or
+          an ``ir.ui.view`` record;
         :param str model: see ``MailRenderMixin._render_template()``;
         :param list res_ids: see ``MailRenderMixin._render_template()``;
 
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_eval_context()``;
-        :param dict options: options for rendering (not used currently);
+        :param dict options: options for rendering propagated to IrQweb render
+          (see docstring for available options);
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        # prevent wrong values (rendering on a void record set, ...)
-        if any(r is None for r in res_ids):
-            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
-
         results = {}
+        if not res_ids:
+            return results
 
         # prepare template variables
         variables = self._render_eval_context()
         if add_context:
             variables.update(**add_context)
 
+        view_ref = view_ref.id if isinstance(view_ref, models.BaseModel) else view_ref
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
-                render_result = self.env['ir.qweb']._render(view_xmlid, variables, minimal_qcontext=True, raise_if_not_found=False, **(options or {}))
+                render_result = self.env['ir.qweb']._render(
+                    view_ref,
+                    variables,
+                    minimal_qcontext=True,
+                    raise_if_not_found=False,
+                    **(options or {})
+                )
                 results[record.id] = render_result
             except Exception as e:
-                _logger.info("Failed to render template : %s", view_xmlid, exc_info=True)
-                raise UserError(_("Failed to render template : %s") % view_xmlid)
+                _logger.info("Failed to render template : %s", view_ref, exc_info=True)
+                raise UserError(
+                    _("Failed to render template : %(view_ref)s", view_ref=view_ref)
+                ) from e
 
         return results
 
@@ -378,16 +401,13 @@ class MailRenderMixin(models.AbstractModel):
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_inline_template_eval_context()``;
-        :param dict options: options for rendering;
+        :param dict options: options for rendering (no options available
+          currently);
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        # prevent wrong values (rendering on a void record set, ...)
-        if any(r is None for r in res_ids):
-            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
-
         results = dict.fromkeys(res_ids, u"")
-        if not template_txt:
+        if not template_txt or not res_ids:
             return results
 
         template_instructions = parse_inline_template(str(template_txt))
@@ -396,7 +416,10 @@ class MailRenderMixin(models.AbstractModel):
         if (not self._unrestricted_rendering and is_dynamic and not self.env.is_admin() and
            not self.env.user.has_group('mail.group_mail_template_editor')):
             group = self.env.ref('mail.group_mail_template_editor')
-            raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
+            raise AccessError(
+                _('Only users belonging to the "%(group_name)s" group can modify dynamic templates.',
+                  group_name=group.name)
+            )
 
         if not is_dynamic:
             # Either the content is a raw text without placeholders, either we fail to
@@ -415,10 +438,16 @@ class MailRenderMixin(models.AbstractModel):
             variables['object'] = record
 
             try:
-                results[record.id] = render_inline_template(template_instructions, variables)
+                results[record.id] = render_inline_template(
+                    template_instructions,
+                    variables
+                )
             except Exception as e:
                 _logger.info("Failed to render inline_template: \n%s", str(template_txt), exc_info=True)
-                raise UserError(_("Failed to render inline_template template : %s)", e))
+                raise UserError(
+                    _("Failed to render inline_template template : %(template_txt)s)",
+                      template_txt=template_txt)
+                ) from e
 
         return results
 
@@ -437,8 +466,17 @@ class MailRenderMixin(models.AbstractModel):
         return rendered
 
     @api.model
+    def _process_scheduled_date(self, scheduled_date):
+        if scheduled_date:
+            # parse scheduled_date to make it timezone agnostic UTC as expected
+            # by the ORM
+            parsed_datetime = self.env['mail.mail']._parse_scheduled_datetime(scheduled_date)
+            scheduled_date = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
+        return scheduled_date
+
+    @api.model
     def _render_template(self, template_src, model, res_ids, engine='inline_template',
-                         add_context=None, options=None, post_process=False):
+                         add_context=None, options=None):
         """ Render the given string on records designed by model / res_ids using
         the given rendering engine. Possible engine are small_web, qweb, or
         qweb_view.
@@ -453,16 +491,30 @@ class MailRenderMixin(models.AbstractModel):
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_<engine>_eval_context()``;
-        :param dict options: options for rendering;
-        :param boolean post_process: perform a post processing on rendered result
-          (notably html links management). See``_render_template_postprocess``;
+        :param dict options: options for rendering. Use in this method and also
+          propagated to rendering sub-methods. May contain notably
+
+            boolean post_process: perform a post processing on rendered result
+            (notably html links management). See``_render_template_postprocess``;
+            boolean preserve_comments: if set, comments are preserved. Default
+            behavior is to remove them. It is used notably for browser-specific
+            code implemented like comments;
 
         :return dict: {res_id: string of rendered template based on record}
         """
+        if options is None:
+            options = {}
+
         if not isinstance(res_ids, (list, tuple)):
-            raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
+            raise ValueError(
+                _('Template rendering should be called only using on a list of IDs; received %(res_ids)r instead.',
+                  res_ids=res_ids)
+            )
         if engine not in ('inline_template', 'qweb', 'qweb_view'):
-            raise ValueError(_('Template rendering supports only inline_template, qweb, or qweb_view (view or raw).'))
+            raise ValueError(
+                _('Template rendering supports only inline_template, qweb, or qweb_view (view or raw); received %(engine)s instead.',
+                  engine=engine)
+            )
 
         if engine == 'qweb_view':
             rendered = self._render_template_qweb_view(template_src, model, res_ids,
@@ -473,7 +525,8 @@ class MailRenderMixin(models.AbstractModel):
         else:
             rendered = self._render_template_inline_template(template_src, model, res_ids,
                                                              add_context=add_context, options=options)
-        if post_process:
+
+        if options.get('post_process'):
             rendered = self._render_template_postprocess(rendered)
 
         return rendered
@@ -490,8 +543,6 @@ class MailRenderMixin(models.AbstractModel):
         :return dict: {res_id: lang code (i.e. en_US)}
         """
         self.ensure_one()
-        if not isinstance(res_ids, (list, tuple)):
-            raise ValueError(_('Template rendering for language should be called with a list of IDs.'))
 
         rendered_langs = self._render_template(self.lang, self.render_model, res_ids, engine=engine)
         return dict(
@@ -526,7 +577,7 @@ class MailRenderMixin(models.AbstractModel):
 
     def _render_field(self, field, res_ids, engine='inline_template',
                       compute_lang=False, set_lang=False,
-                      add_context=None, options=None, post_process=False):
+                      add_context=None, options=None):
         """ Given some record ids, render a template located on field on all
         records. ``field`` should be a field of self (i.e. ``body_html`` on
         ``mail.template``). res_ids are record IDs linked to ``model`` field
@@ -543,13 +594,27 @@ class MailRenderMixin(models.AbstractModel):
         :param string set_lang: force language for rendering. It should be a
           valid lang code matching an activate res.lang. Checked only if
           ``compute_lang`` is False;
+
         :param dict add_context: additional context to give to renderer;
-        :param dict options: options for rendering;
-        :param boolean post_process: perform a post processing on rendered result
-          (notably html links management). See``_render_template_postprocess``);
+        :param dict options: options for rendering. Use in this method and also
+          propagated to rendering sub-methods. Base values come from the field
+          (coming from ``render_options`` parameter) and are updated by this
+          optional dictionary. May contain notably
+
+            boolean post_process: perform a post processing on rendered result
+            (notably html links management). See``_render_template_postprocess``;
+            boolean preserve_comments: if set, comments are preserved. Default
+            behavior is to remove them. It is used notably for browser-specific
+            code implemented like comments;
 
         :return dict: {res_id: string of rendered template based on record}
         """
+        if field not in self:
+            raise ValueError(
+                _('Rendering of %(field_name)s is not possible as not defined on template.',
+                  field_name=field
+                 )
+            )
         if options is None:
             options = {}
 
@@ -561,16 +626,21 @@ class MailRenderMixin(models.AbstractModel):
         else:
             templates_res_ids = {self._context.get('lang'): (self, res_ids)}
 
-        # rendering options
+        # rendering options (update default defined on field by asked options)
         engine = getattr(self._fields[field], 'render_engine', engine)
-        options.update(**getattr(self._fields[field], 'render_options', {}))
-        post_process = options.get('post_process') or post_process
+        field_options = getattr(self._fields[field], 'render_options', {})
+        if options:
+            field_options.update(**options)
 
         return dict(
             (res_id, rendered)
             for lang, (template, tpl_res_ids) in templates_res_ids.items()
             for res_id, rendered in template._render_template(
-                template[field], template.render_model, tpl_res_ids, engine=engine,
-                add_context=add_context, options=options, post_process=post_process
+                template[field],
+                template.render_model,
+                tpl_res_ids,
+                engine=engine,
+                add_context=add_context,
+                options=field_options,
             ).items()
         )

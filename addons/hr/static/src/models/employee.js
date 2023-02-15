@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, clear, insert, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'Employee',
     modelMethods: {
         /**
@@ -141,10 +139,10 @@ registerModel({
         /**
          * Opens the most appropriate view that is a profile for this employee.
          */
-        async openProfile() {
+        async openProfile(model = 'hr.employee.public') {
             return this.messaging.openDocument({
                 id: this.id,
-                model: 'hr.employee.public',
+                model: model,
             });
         },
     },

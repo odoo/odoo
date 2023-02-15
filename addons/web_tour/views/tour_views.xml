@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <record id="edit_tour_form" model="ir.ui.view">
+            <field name="model">web_tour.tour</field>
+            <field name="arch" type="xml">
+                <form create="0" edit="0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="user_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="edit_tour_list" model="ir.ui.view">
             <field name="model">web_tour.tour</field>
             <field name="arch" type="xml">
-                <tree string="Menu" editable="bottom">
+                <tree string="Menu" create="0" edit="0">
                     <field name="name"/>
                     <field name="user_id"/>
                 </tree>

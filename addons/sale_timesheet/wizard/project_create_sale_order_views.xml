@@ -13,16 +13,14 @@
                         <field name="partner_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
                     </group>
                 </group>
-                <group>
-                    <field name="line_ids" nolabel="1">
-                        <tree editable="bottom">
-                            <field name="employee_id" options="{'no_create_edit': True, 'no_create': True}"/>
-                            <field name="product_id" options="{'no_create_edit': True, 'no_create': True}"/>
-                            <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                            <field name="currency_id" invisible="1"/>
-                        </tree>
-                    </field>
-                </group>
+                <field name="line_ids" nolabel="1">
+                    <tree editable="bottom">
+                        <field name="employee_id" options="{'no_create_edit': True, 'no_create': True}"/>
+                        <field name="product_id" options="{'no_create_edit': True, 'no_create': True}"/>
+                        <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                        <field name="currency_id" invisible="1"/>
+                    </tree>
+                </field>
                 <group attrs="{'invisible': [('info_invoice', '=', False)]}">
                     <field name="info_invoice" nolabel="1"/>
                 </group>

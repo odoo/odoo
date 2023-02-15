@@ -80,7 +80,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page name="security" string="Security">
+                            <page name="security" string="Visibility">
                                 <field name="groups_id"/>
                             </page>
                             <page name='advanced' string="Advanced Properties">
@@ -132,6 +132,35 @@
             <field name="search_view_id" ref="act_report_xml_search_view"/>
         </record>
         <menuitem action="ir_action_report" id="menu_ir_action_report" parent="base.next_id_6"/>
+
+        <!-- ir.actions.client -->
+
+        <record id="view_client_action_form" model="ir.ui.view">
+            <field name="name">ir.actions.client.form</field>
+            <field name="model">ir.actions.client</field>
+            <field name="arch" type="xml">
+                <form string="Client Action">
+                    <sheet>
+                        <group>
+                            <group name="main_details">
+                                <field name="name"/>
+                                <field name="xml_id" string="External ID"/>
+                                <field name="binding_type"/>
+                                <field name="tag"/>
+                            </group>
+                            <group name="action_details">
+                                <field name="type" readonly="1"/>
+                                <field name="target"/>
+                                <field name="context"/>
+                            </group>
+                        </group>
+                        <group name="help" string="Help">
+                            <field name="help" colspan="2" nolabel="1" class="oe-bordered-editor"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
         <!-- ir.actions.act_window -->
 
@@ -201,7 +230,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Security" name="security">
+                        <page string="Visibility" name="security">
                             <field name="groups_id"/>
                         </page>
                     </notebook>
@@ -285,12 +314,12 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Python Code" name='code' autofocus="autofocus"
+                            <page string="Python Code" name='code'
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                             </page>
 
-                            <page string="Data to Write" name="page_object" autofocus="autofocus"
+                            <page string="Data to Write" name="page_object"
                                     attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
                                 <p attrs="{'invisible': [('model_id', '!=', False)]}">
                                     Please set the Model to Create before choosing values
@@ -312,11 +341,11 @@
                                 </field>
                             </page>
 
-                            <page name="security" string="Security">
+                            <page name="security" string="Access Rights">
                                 <field name="groups_id"/>
                             </page>
 
-                            <page string="Actions" name="actions" autofocus="autofocus"
+                            <page string="Actions" name="actions"
                                     attrs="{'invisible': [('state', '!=', 'multi')]}">
                                 <p class="oe_grey">
                                     If several child actions return an action, only the last one will be executed.
@@ -325,31 +354,32 @@
                                 <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
                             </page>
 
-                            <page string="Help" name="help_info" autofocus="autofocus"
+                            <page string="Help" name="help_info"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
-                                <group>
-                                    <div style="margin-top: 4px;">
-                                        <h3>Help with Python expressions</h3>
-                                        <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
-                                        <ul>
-                                            <li><code>env</code>: Odoo Environment on which the action is triggered</li>
-                                            <li><code>model</code>: Odoo Model of the record on which the action is triggered; is a void recordset</li>
-                                            <li><code>record</code>: record on which the action is triggered; may be be void</li>
-                                            <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
-                                            <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
-                                            <li><code>log(message, level='info')</code>:logging function to record debug information in <code>ir.logging</code> table</li>
-                                            <li><code>UserError</code>: Warning Exception to use with <code>raise</code></li>
-                                            <li>To return an action, assign: <code>action = {...}</code></li>
-                                        </ul>
-                                        <div attrs="{'invisible': [('state', '!=', 'code')]}">
-                                            <p>Example of Python code</p>
+                                <div style="margin-top: 4px;">
+                                    <h3>Help with Python expressions</h3>
+                                    <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
+                                    <ul>
+                                        <li><code>env</code>: environment on which the action is triggered</li>
+                                        <li><code>model</code>: model of the record on which the action is triggered; is a void recordset</li>
+                                        <li><code>record</code>: record on which the action is triggered; may be be void</li>
+                                        <li><code>records</code>: recordset of all records on which the action is triggered in multi mode; may be void</li>
+                                        <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
+                                        <li><code>float_compare()</code>: utility function to compare floats based on a specific precision</li>
+                                        <li><code>log(message, level='info')</code>: logging function to record debug information in <code>ir.logging</code> table</li>
+                                        <li><code>_logger.info(message)</code>: logger to emit messages in server logs</li>
+                                        <li><code>UserError</code>: exception class for raising user-facing warning messages</li>
+                                        <li><code>Command</code>: x2many commands namespace</li>
+                                        <li>To return an action, assign: <code>action = {...}</code></li>
+                                    </ul>
+                                    <div attrs="{'invisible': [('state', '!=', 'code')]}">
+                                        <p>Example of Python code</p>
 <code style='white-space: pre-wrap'>
-partner_name = record.name + '_code'
+partner_name = record.name + '_code' \n
 env['res.partner'].create({'name': partner_name})
 </code>
-                                        </div>
                                     </div>
-                                </group>
+                                </div>
                             </page>
                         </notebook>
                     </sheet>

@@ -252,11 +252,7 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self.env['website'].get_client_action_url(self._compute_website_url()),
-        }
+        return self.env['website'].get_client_action(self._compute_website_url())
 
     @api.model
     def _update_website_count(self):
@@ -341,7 +337,7 @@ class Post(models.Model):
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
     parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True, index=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', '=', self.forum_id.id)])
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', 'in', self.forum_id.ids)])
     child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
@@ -378,6 +374,9 @@ class Post(models.Model):
     can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights', compute_sudo=False)
     can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights', compute_sudo=False)
     can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights', compute_sudo=False)
+    can_use_full_editor = fields.Boolean(
+        compute='_get_post_karma_rights', compute_sudo=False,
+        help="Editor Features: image and links")
 
     def _search_can_view(self, operator, value):
         if operator not in ('=', '!=', '<>'):
@@ -499,6 +498,7 @@ class Post(models.Model):
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
             post.can_moderate = is_admin or user.karma >= post.forum_id.karma_moderate
+            post.can_use_full_editor = is_admin or user.karma >= post.forum_id.karma_editor
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
@@ -623,28 +623,31 @@ class Post(models.Model):
             tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
 
             if post.state == 'active' and post.parent_id:
-                post.parent_id.message_post_with_view(
+                post.parent_id.message_post_with_source(
                     'website_forum.forum_post_template_new_answer',
                     subject=_('Re: %s', post.parent_id.name),
-                    partner_ids=[(4, p.id) for p in tag_partners],
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('website_forum.mt_answer_new'))
+                    partner_ids=tag_partners.ids,
+                    subtype_xmlid='website_forum.mt_answer_new',
+                )
             elif post.state == 'active' and not post.parent_id:
-                post.message_post_with_view(
+                post.message_post_with_source(
                     'website_forum.forum_post_template_new_question',
                     subject=post.name,
-                    partner_ids=[(4, p.id) for p in tag_partners],
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('website_forum.mt_question_new'))
+                    partner_ids=tag_partners.ids,
+                    subtype_xmlid='website_forum.mt_question_new',
+                )
             elif post.state == 'pending' and not post.parent_id:
                 # TDE FIXME: in master, you should probably use a subtype;
                 # however here we remove subtype but set partner_ids
                 partners = post.sudo().message_partner_ids | tag_partners
                 partners = partners.filtered(lambda partner: partner.user_ids and any(user.karma >= post.forum_id.karma_moderate for user in partner.user_ids))
 
-                post.message_post_with_view(
+                post.message_post_with_source(
                     'website_forum.forum_post_template_validation',
                     subject=post.name,
                     partner_ids=partners.ids,
-                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'))
+                    subtype_xmlid='mail.mt_note',
+                )
         return True
 
     def reopen(self):
@@ -974,11 +977,7 @@ class Post(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self.env['website'].get_client_action_url(self.website_url),
-        }
+        return self.env['website'].get_client_action(self.website_url)
 
     @api.model
     def _search_get_detail(self, website, order, options):

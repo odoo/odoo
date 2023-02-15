@@ -163,7 +163,7 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
         ev.stopPropagation();
 
         // Prevent further clicking
-        this.$target.find('.o_wetrack_proposal_submit_button')
+        this.$el.find('.o_wetrack_proposal_submit_button')
             .addClass('disabled')
             .attr('disabled', 'disabled');
 
@@ -192,7 +192,7 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
         }
 
         // Restore button
-        this.$target.find('.o_wetrack_proposal_submit_button')
+        this.$el.find('.o_wetrack_proposal_submit_button')
             .removeAttr('disabled')
             .removeClass('disabled');
     },

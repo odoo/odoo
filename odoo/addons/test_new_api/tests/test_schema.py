@@ -577,3 +577,40 @@ class TestSchema(common.TransactionCase):
             (field.relation, field.column1, model._table, 'id', 'CASCADE'),
             (field.relation, field.column2, comodel._table, 'id', 'CASCADE'),
         ])
+
+    def test_20_unique_indexes(self):
+        """ Test uniqueness of indexes:
+        - test_new_api.order.line_short_field_name
+        - test_new_api.order.line.short_field_name
+        """
+        tablenames = ('test_new_api_order', 'test_new_api_order_line')
+        self.env.cr.execute("""
+            SELECT tablename
+            FROM pg_indexes
+            WHERE tablename IN %s AND indexdef LIKE %s
+        """, [tablenames, '%short_field_name%'])
+        tables = {table for table, in self.env.cr.fetchall()}
+        self.assertEqual(tables, {'test_new_api_order', 'test_new_api_order_line'})
+
+    def test_21_too_long_indexes(self):
+        """ Test too long indexes name:
+
+        Both indexes share same truncated name
+        'test_new_api_order_line__very_very_very_very_very_long_field_nam'
+        if no strategy is done to avoid duplicate too long index names
+
+        -  test_new_api.order.line.very_very_very_very_very_long_field_name_1
+        -> test_new_api_order_line__very_very_very_very_very_long_field_name_1_index
+        => test_new_api_order_line__very_very_very_very_very_long_ea4b39c9
+
+        -  test_new_api.order.line.very_very_very_very_very_long_field_name_2
+        -> test_new_api_order_line__very_very_very_very_very_long_field_name_2_index
+        => test_new_api_order_line__very_very_very_very_very_long_dba32354
+        """
+        self.env.cr.execute("""
+            SELECT COUNT(*)
+            FROM pg_indexes
+            WHERE tablename = 'test_new_api_order_line' AND indexdef LIKE %s
+        """, ['%very_very_very_very_long_field_name%'])
+        nb_field_index, = self.env.cr.fetchone()
+        self.assertEqual(nb_field_index, 2)

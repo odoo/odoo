@@ -1,8 +1,17 @@
 /** @odoo-module **/
 
 import { manageMessages } from "@mail/js/tools/debug_manager";
-import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { createWebClient, doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
+import {
+    click,
+    getFixture,
+    legacyExtraNextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
+import {
+    createWebClient,
+    doAction,
+    getActionManagerServerData,
+} from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
 
 QUnit.module("DebugMenu");
@@ -44,9 +53,7 @@ QUnit.test("Manage Messages", async function (assert) {
     await legacyExtraNextTick();
     await click(target, ".o_debug_manager .dropdown-toggle");
 
-    const dropdownItems = target.querySelectorAll(
-        ".o_debug_manager .dropdown-menu .dropdown-item"
-    );
+    const dropdownItems = target.querySelectorAll(".o_debug_manager .dropdown-menu .dropdown-item");
     assert.strictEqual(dropdownItems.length, 1);
     assert.strictEqual(
         dropdownItems[0].innerText.trim(),

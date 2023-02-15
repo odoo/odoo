@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from markupsafe import Markup
 
-from odoo import api, models, fields, tools
+from odoo import api, models, fields, tools, _
 
 BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
@@ -27,14 +28,21 @@ class MailThread(models.AbstractModel):
                 self.env['mailing.trace'].set_replied(domain=[('message_id', 'in', msg_references)])
         return super(MailThread, self)._message_route_process(message, message_dict, routes)
 
-    def message_post_with_template(self, template_id, **kwargs):
+    def message_mail_with_source(self, source_ref, **kwargs):
         # avoid having message send through `message_post*` methods being implicitly considered as
         # mass-mailing
-        no_massmail = self.with_context(
+        return super(MailThread, self.with_context(
             default_mass_mailing_name=False,
             default_mass_mailing_id=False,
-        )
-        return super(MailThread, no_massmail).message_post_with_template(template_id, **kwargs)
+        )).message_mail_with_source(source_ref, **kwargs)
+
+    def message_post_with_source(self, source_ref, **kwargs):
+        # avoid having message send through `message_post*` methods being implicitly considered as
+        # mass-mailing
+        return super(MailThread, self.with_context(
+            default_mass_mailing_name=False,
+            default_mass_mailing_id=False,
+        )).message_post_with_source(source_ref, **kwargs)
 
     @api.model
     def _routing_handle_bounce(self, email_message, message_dict):
@@ -59,9 +67,10 @@ class MailThread(models.AbstractModel):
             stats = self.env['mailing.trace'].search(['&', '&', ('trace_status', '=', 'bounce'), ('write_date', '>', three_months_ago), ('email', '=ilike', bounced_email)]).mapped('write_date')
             if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT and (not bounced_partner or any(p.message_bounce >= BLACKLIST_MAX_BOUNCED_LIMIT for p in bounced_partner)):
                 if max(stats) > min(stats) + datetime.timedelta(weeks=1):
-                    blacklist_rec = self.env['mail.blacklist'].sudo()._add(bounced_email)
-                    blacklist_rec._message_log(
-                        body='This email has been automatically blacklisted because of too much bounced.')
+                    self.env['mail.blacklist'].sudo()._add(
+                        bounced_email,
+                        message=Markup('<p>%s</p>') % _('This email has been automatically added in blocklist because of too much bounced.')
+                    )
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):

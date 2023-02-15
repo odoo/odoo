@@ -6,7 +6,7 @@
         <field name="data" type="base64" file="spreadsheet_dashboard_sale/data/files/sales_dashboard.json"/>
         <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_sales"/>
         <field name="group_ids" eval="[Command.link(ref('sales_team.group_sale_manager'))]"/>
-        <field name="sequence">50</field>
+        <field name="sequence">100</field>
     </record>
 
     <record id="spreadsheet_dashboard_product" model="spreadsheet.dashboard">
@@ -14,7 +14,7 @@
         <field name="data" type="base64" file="spreadsheet_dashboard_sale/data/files/product_dashboard.json"/>
         <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_sales"/>
         <field name="group_ids" eval="[Command.link(ref('sales_team.group_sale_manager'))]"/>
-        <field name="sequence">60</field>
+        <field name="sequence">200</field>
     </record>
 
 </odoo>

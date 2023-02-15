@@ -10,6 +10,7 @@
             <record id="tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
+                <field name="figure_type">monetary_without_symbol</field>
             </record>
         </field>
         <field name="line_ids">
@@ -234,7 +235,7 @@
                 </field>
             </record>
             <record id="account_tax_report_line_chtax_479" model="account.report.line">
-                <field name="name">479 TVA préalable</field>
+                <field name="name">479 Input VAT</field>
                 <field name="code">tax_ch_479</field>
                 <field name="aggregation_formula">tax_ch_400.balance + tax_ch_405.balance + tax_ch_410.balance + tax_ch_415.balance + tax_ch_420.balance</field>
                 <field name="children_ids">

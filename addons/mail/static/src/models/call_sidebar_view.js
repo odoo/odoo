@@ -1,27 +1,19 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
+import { many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'CallSidebarView',
-    recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeSidebarTiles() {
-            return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
-        },
-    },
+Model({
+    name: "CallSidebarView",
+    template: "mail.CallSidebarView",
     fields: {
-        callView: one('CallView', {
-            identifying: true,
-            inverse: 'callSidebarView',
-        }),
-        sidebarTiles: many('CallSidebarViewTile', {
-            compute: '_computeSidebarTiles',
-            inverse: 'callSidebarViewOwner',
+        callView: one("CallView", { identifying: true, inverse: "callSidebarView" }),
+        sidebarTiles: many("CallSidebarViewTile", {
+            inverse: "callSidebarViewOwner",
+            compute() {
+                return this.callView.filteredChannelMembers.map((channelMember) => ({
+                    channelMember,
+                }));
+            },
         }),
     },
 });

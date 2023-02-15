@@ -54,6 +54,9 @@
                 <xpath expr="//page[@name='purchase']" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="fiscal_country_codes" invisible="1"/>
+                </xpath>
                 <page name="inventory" position="after">
                     <page string="Accounting" name="invoicing" groups="account.group_account_readonly,account.group_account_invoice">
                         <group name="properties" groups="account.group_account_readonly">
@@ -89,8 +92,8 @@
                 <group name="first" position="after">
                     <group name="account_property" >
                         <group string="Account Properties" groups="account.group_account_readonly">
-                            <field name="property_account_income_categ_id" domain="[('internal_group', '=', 'income')]"/>
-                            <field name="property_account_expense_categ_id" domain="[('internal_group', '=', 'expense')]"/>
+                            <field name="property_account_income_categ_id"/>
+                            <field name="property_account_expense_categ_id"/>
                         </group>
                     </group>
                 </group>

@@ -8,10 +8,12 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
-                    <field name="job_title" string="Job Title"/>
-                    <field name="department_id" string="Department"/>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
                     <field name="parent_id" string="Manager"/>
-                    <field name="company_id" string="Company"/>
+                    <field name="job_title"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
@@ -22,10 +24,6 @@
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
-                    <searchpanel>
-                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                        <field name="department_id" icon="fa-users" enable_counters="1"/>
-                    </searchpanel>
                 </search>
              </field>
         </record>
@@ -48,9 +46,12 @@
                         <field name="avatar_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                             <div class="oe_title">
                                 <label for="name" string="Employee Name"/>
-                                <h1>
-                                    <field name="name" placeholder="e.g. John Doe" required="True"/>
-                                    <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                <h1 class="d-flex flex-row">
+                                    <span class="me-2">
+                                        <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                    </span>
+                                    <field name="name" placeholder="e.g. John Doe" required="True"
+                                        style="font-size: min(4vw, 2.6rem);"/>
                                 </h1>
                                 <h2>
                                     <field name="job_title" placeholder="Job Title" />
@@ -73,7 +74,7 @@
                         <notebook>
                             <page name="public" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
-                                    <div id="o_work_employee_main">
+                                    <div id="o_work_employee_main" class="flex-grow-1">
                                         <group string="Location" name="location">
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
@@ -182,7 +183,7 @@
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left"/>
                                         <div class="oe_kanban_bottom_right">
-                                            <a title="Chat" icon="fa-comments" href="#" t-on-click.prevent="() => props.record.openChat(props.record.resId)" class="ml8" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                            <widget name="hr_employee_chat"/>
                                         </div>
                                     </div>
                                 </div>

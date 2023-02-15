@@ -90,11 +90,17 @@ class Binary(http.Controller):
     # pylint: disable=redefined-builtin,invalid-name
     def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
         if not id:
-            domain = [('url', '=like', '/web/assets/%/' + (f'{extra}/{filename}' if extra else filename))]
-            attachments = request.env['ir.attachment'].sudo().search_read(domain, fields=['id'], limit=1)
-            if not attachments:
+            if extra:
+                domain = [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
+            else:
+                domain = [
+                    ('url', '=like', f'/web/assets/%/{filename}'),
+                    ('url', 'not like', f'/web/assets/%/%/{filename}')
+                ]
+            attachment = request.env['ir.attachment'].sudo().search(domain, limit=1)
+            if not attachment:
                 raise request.not_found()
-            id = attachments[0]['id']
+            id = attachment.id
         with replace_exceptions(UserError, by=request.not_found()):
             record = request.env['ir.binary']._find_record(res_id=int(id))
             stream = request.env['ir.binary']._get_stream_from(record, 'raw', filename)

@@ -57,6 +57,17 @@ QUnit.test("can be rendered", async (assert) => {
             sequence: 5,
         };
     });
+    userMenuRegistry.add("frodo_item", function () {
+        return {
+            type: "switch",
+            id: "frodo",
+            description: "Frodo",
+            callback: () => {
+                assert.step("callback frodo_item");
+            },
+            sequence: 11,
+        };
+    });
     userMenuRegistry.add("separator", function () {
         return {
             type: "separator",
@@ -93,26 +104,27 @@ QUnit.test("can be rendered", async (assert) => {
     assert.strictEqual(target.querySelector(".oe_topbar_name").textContent, "Sauron");
     assert.containsNone(target, ".dropdown-menu .dropdown-item");
     await click(target.querySelector("button.dropdown-toggle"));
-    assert.containsN(target, ".dropdown-menu .dropdown-item", 3);
+    assert.containsN(target, ".dropdown-menu .dropdown-item", 4);
+    assert.containsOnce(target, ".dropdown-menu .dropdown-item input.form-check-input");
     assert.containsOnce(target, "div.dropdown-divider");
     const children = [...(target.querySelector(".dropdown-menu").children || [])];
     assert.deepEqual(
         children.map((el) => el.tagName),
-        ["SPAN", "SPAN", "DIV", "SPAN"]
+        ["SPAN", "SPAN", "SPAN", "DIV", "SPAN"]
     );
     const items = [...target.querySelectorAll(".dropdown-menu .dropdown-item")] || [];
     assert.deepEqual(
         items.map((el) => el.dataset.menu),
-        ["ring", "bad", "eye"]
+        ["ring", "bad", "frodo", "eye"]
     );
     assert.deepEqual(
         items.map((el) => el.textContent),
-        ["Ring", "Bad", "Eye"]
+        ["Ring", "Bad", "Frodo", "Eye"]
     );
     for (const item of items) {
         click(item);
     }
-    assert.verifySteps(["callback ring_item", "callback bad_item", "callback eye_item"]);
+    assert.verifySteps(["callback ring_item", "callback bad_item", "callback frodo_item", "callback eye_item"]);
 });
 
 QUnit.test("display the correct name in debug mode", async (assert) => {

@@ -4,7 +4,7 @@ import { useService } from '@web/core/utils/hooks';
 import { throttle } from '@web/core/utils/timing';
 import { qweb } from 'web.core';
 
-const { Component, useState, useRef, onMounted, onWillStart } = owl;
+import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
 
 class VideoOption extends Component {}
 VideoOption.template = 'web_editor.VideoOption';

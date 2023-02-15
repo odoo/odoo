@@ -47,6 +47,9 @@ class SequenceMixin(models.AbstractModel):
                     field=sql.Identifier(self._sequence_field),
                 ))
 
+    def _must_check_constrains_date_sequence(self):
+        return True
+
     @api.constrains(lambda self: (self._sequence_field, self._sequence_date_field))
     def _constrains_date_sequence(self):
         # Make it possible to bypass the constraint to allow edition of already messed up documents.
@@ -56,6 +59,8 @@ class SequenceMixin(models.AbstractModel):
             '1970-01-01'
         ))
         for record in self:
+            if not record._must_check_constrains_date_sequence():
+                continue
             date = fields.Date.to_date(record[record._sequence_date_field])
             sequence = record[record._sequence_field]
             if sequence and date and date > constraint_date:

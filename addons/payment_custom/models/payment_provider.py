@@ -23,6 +23,12 @@ class PaymentProvider(models.Model):
     qr_code = fields.Boolean(
         string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer.")
 
+    @api.model_create_multi
+    def create(self, values_list):
+        providers = super().create(values_list)
+        providers.filtered(lambda p: p.custom_mode == 'wire_transfer').pending_msg = None
+        return providers
+
     @api.depends('code')
     def _compute_view_configuration_fields(self):
         """ Override of payment to hide the credentials page.
@@ -32,32 +38,39 @@ class PaymentProvider(models.Model):
         super()._compute_view_configuration_fields()
         self.filtered(lambda p: p.code == 'custom').update({
             'show_credentials_page': False,
-            'show_payment_icon_ids': False,
+            'show_payment_method_ids': False,
             'show_pre_msg': False,
             'show_done_msg': False,
             'show_cancel_msg': False,
         })
 
+    def action_recompute_pending_msg(self):
+        """ Recompute the pending message to include the existing bank accounts. """
+        account_payment_module = self.env['ir.module.module']._get('account_payment')
+        if account_payment_module.state == 'installed':
+            for provider in self.filtered(lambda p: p.custom_mode == 'wire_transfer'):
+                company_id = provider.company_id.id
+                accounts = self.env['account.journal'].search([
+                    ('type', '=', 'bank'), ('company_id', '=', company_id)
+                ]).bank_account_id
+                account_names = "".join(f"<li>{account.display_name}</li>" for account in accounts)
+                provider.pending_msg = f'<div>' \
+                    f'<h3>{_("Please use the following transfer details")}</h3>' \
+                    f'<h4>{_("Bank Account") if len(accounts) == 1 else _("Bank Accounts")}</h4>' \
+                    f'<ul>{account_names}</ul>' \
+                    f'<h4>{_("Communication")}</h4>' \
+                    f'<p>{_("Please use the order name as communication reference.")}</p>' \
+                    f'</div>'
+
+    def _get_removal_values(self):
+        """ Override of `payment` to nullify the `custom_mode` field. """
+        res = super()._get_removal_values()
+        res['custom_mode'] = None
+        return res
+
     def _transfer_ensure_pending_msg_is_set(self):
         transfer_providers_without_msg = self.filtered(
-            lambda p: p.code == 'custom' and not p.pending_msg)
-        if not transfer_providers_without_msg:
-            return
-
-        account_payment = self.env['ir.module.module']._get('account_payment')
-        if account_payment.state != 'installed':
-            return
-
-        for provider in transfer_providers_without_msg:
-            company_id = provider.company_id.id
-            # filter only bank accounts marked as visible
-            accounts = self.env['account.journal'].search([
-                ('type', '=', 'bank'), ('company_id', '=', company_id)
-            ]).bank_account_id
-            provider.pending_msg = f'<div>' \
-                f'<h3>{_("Please use the following transfer details")}</h3>' \
-                f'<h4>{_("Bank Account") if len(accounts) == 1 else _("Bank Accounts")}</h4>' \
-                f'<ul>{"".join(f"<li>{account.display_name}</li>" for account in accounts)}</ul>' \
-                f'<h4>{_("Communication")}</h4>' \
-                f'<p>{_("Please use the order name as communication reference.")}</p>' \
-                f'</div>'
+            lambda p: p.custom_mode == 'wire_transfer' and not p.pending_msg
+        )
+        if transfer_providers_without_msg:
+            transfer_providers_without_msg.action_recompute_pending_msg()

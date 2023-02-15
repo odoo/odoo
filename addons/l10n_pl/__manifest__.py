@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2009 - now Grzegorz Grzelak grzegorz.grzelak@openglobe.pl
@@ -6,7 +5,7 @@
 {
     'name' : 'Poland - Accounting',
     'version' : '2.0',
-    'author' : 'Grzegorz Grzelak (OpenGLOBE)',
+    'author': 'Odoo S.A., Grzegorz Grzelak (OpenGLOBE)',
     'website': 'http://www.openglobe.pl',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
@@ -21,13 +20,14 @@ Niniejszy moduł jest przeznaczony dla odoo 8.0.
 Wewnętrzny numer wersji OpenGLOBE 1.02
     """,
     'depends' : [
-        'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
               'data/l10n_pl_chart_data.xml',
               'data/account.account.template.csv',
+              'data/account.group.template.csv',
               'data/res.country.state.csv',
               'data/l10n_pl_chart_post_data.xml',
               'data/account_tax_group_data.xml',

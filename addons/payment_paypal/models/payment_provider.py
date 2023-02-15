@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 
 from odoo.addons.payment_paypal.const import SUPPORTED_CURRENCIES
 
@@ -35,16 +35,14 @@ class PaymentProvider(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    @api.model
-    def _get_compatible_providers(self, *args, currency_id=None, **kwargs):
-        """ Override of payment to unlist PayPal providers when the currency is not supported. """
-        providers = super()._get_compatible_providers(*args, currency_id=currency_id, **kwargs)
-
-        currency = self.env['res.currency'].browse(currency_id).exists()
-        if currency and currency.name not in SUPPORTED_CURRENCIES:
-            providers = providers.filtered(lambda p: p.code != 'paypal')
-
-        return providers
+    def _get_supported_currencies(self):
+        """ Override of `payment` to return the supported currencies. """
+        supported_currencies = super()._get_supported_currencies()
+        if self.code == 'paypal':
+            supported_currencies = supported_currencies.filtered(
+                lambda c: c.name in SUPPORTED_CURRENCIES
+            )
+        return supported_currencies
 
     def _paypal_get_api_url(self):
         """ Return the API URL according to the provider state.
@@ -77,11 +75,3 @@ class PaymentProvider(models.Model):
                 'author_id': self.create_uid.partner_id.id,
             }
             self.env['mail.mail'].sudo().create(mail_values).send()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('paypal', [
-            'paypal_email_account',
-            'paypal_seller_account',
-            'paypal_pdt_token',
-        ])

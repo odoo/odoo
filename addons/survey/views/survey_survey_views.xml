@@ -65,20 +65,27 @@
                     </group>
                     <notebook>
                         <page string="Questions" name="questions">
-                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id}">
                                 <tree decoration-bf="is_page">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title" widget="survey_description_page"/>
                                     <field name="background_image" invisible="1"/>
                                     <field name="question_type" />
+                                    <field name="constr_mandatory" optional="1"/>
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
+                                    <field name="suggested_answer_ids" invisible="1"/>
+                                    <field name="matrix_row_ids" invisible="1"/>
                                     <field name="survey_id" invisible="1"/>
-                                    <field name="triggering_question_id" invisible="1"/>
                                     <field name="random_questions_count"
                                         attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}"/>
-                                    <button disabled="disabled" icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
-                                        title="This question depends on another question's answer." class="icon_rotates"/>
+                                    <field name="is_conditional" invisible="1"/>
+                                    <field name="triggering_question_id" invisible="1"/>
+                                    <field name="triggering_answer_id" invisible="1"/>
+                                    <field name="is_placed_before_trigger" invisible="1"/>
+                                    <field name="allowed_triggering_question_ids" invisible="1"/>
+                                    <widget name="survey_question_trigger"/>
+                                    <button name="copy" type="object" icon="fa-clone" title="Duplicate Question"/>
                                     <control>
                                         <create name="add_question_control" string="Add a question"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
@@ -98,9 +105,10 @@
                                 <group string="Participants" name="participants">
                                     <field name="access_mode"/>
                                     <field name="users_login_required"/>
-                                    <div colspan="2" class="o_checkbox_optional_field"
+                                    <label for="is_attempts_limited" string="Limit Attempts"
+                                           attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}"/>
+                                    <div class="o_checkbox_optional_field"
                                         attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
-                                        <label for="is_attempts_limited" string="Limit Attempts"/>
                                         <field name="is_attempts_limited" nolabel="1"/>
                                         <div attrs="{'invisible': [('is_attempts_limited', '=', False)]}">
                                             to <field name="attempts_limit" nolabel="1" class="oe_inline"/> attempts
@@ -108,8 +116,8 @@
                                     </div>
                                 </group>
                                 <group string="Time &amp; Scoring" name="scoring">
-                                    <div colspan="2" class="o_checkbox_optional_field">
-                                        <label for="is_time_limited" string="Survey Time Limit"/>
+                                    <label for="is_time_limited" string="Survey Time Limit"/>
+                                    <div class="o_checkbox_optional_field">
                                         <field name="is_time_limited" nolabel="1"/>
                                         <div attrs="{'invisible': [('is_time_limited', '=', False)]}">
                                             <field name="time_limit" widget="float_time" nolabel="1" class="oe_inline"/> minutes
@@ -117,23 +125,27 @@
                                     </div>  
                                     <field name="scoring_type" widget="radio" />
                                     <field name="scoring_success_min" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
-                                    <div colspan="2" class="o_checkbox_optional_field">
-                                        <label for="certification"/>
+                                    <label for="certification"/>
+                                    <div class="o_checkbox_optional_field">
                                         <field name="certification" nolabel="1"/>
                                         <div attrs="{'invisible': [('certification', '=', False)]}" class="w-100">
-                                            <field name="certification_report_layout" class="w-50"/>
+                                            <field name="certification_report_layout" placeholder="Pick a Style..." class="w-50"/>
                                             <button name="action_survey_preview_certification_template"
                                                 string="Preview" type="object"
                                                 icon="fa-external-link"  target="_blank" class="btn-link pt-0"/>
                                         </div>
                                     </div> 
-                                    <field name="certification_mail_template_id" attrs="{'invisible': [('certification', '=', False)]}"/>
-                                    <div colspan="2" class="float-start o_checkbox_optional_field"
+                                    <field name="certification_mail_template_id"
+                                        placeholder="Pick a Template..."
+                                        attrs="{'invisible': [('certification', '=', False)]}"/>
+                                    <label for="certification_give_badge"
+                                           attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}"/>
+                                    <div class="float-start o_checkbox_optional_field"
                                         attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}">
-                                        <label for="certification_give_badge"/>
                                         <field name="certification_give_badge"/>
                                         <div attrs="{'invisible': [('certification_give_badge', '=', False)]}">
                                             <field name="certification_badge_id"
+                                                placeholder="Pick a Badge..."
                                                 attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)], 'required': [('certification_give_badge', '=', True)]}"
                                                 domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
                                                 context="{'default_name': title,
@@ -142,20 +154,15 @@
                                                         'default_level': None,
                                                         'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
                                             <field name="certification_badge_id_dummy" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '=', False)]}"
+                                                placeholder="Pick a Badge..."
                                                 options="{'no_create': True}"
                                                 context="{'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
                                         </div>
                                     </div>
                                 </group>
                                 <group string="Live Session">
-                                    <div class="o_td_label">
-                                        <label for="session_code" string="Session Code" class="oe_edit_only o_form_label" />
-                                        <label for="session_link" string="Session Link" class="oe_read_only o_form_label" />
-                                    </div>
-                                    <div class="d-flex">
-                                        <field name="session_code" nolabel="1" class="me-2 oe_edit_only" />
-                                        <field name="session_link" nolabel="1" widget="CopyClipboardChar" class="oe_read_only" />
-                                    </div>
+                                    <field name="session_code" />
+                                    <field name="session_link" widget="CopyClipboardChar" />
                                     <field name="session_speed_rating" />
                                 </group>
                             </group>
@@ -211,6 +218,14 @@
                 <field name="session_state"/>
                 <field name="success_ratio"/>
                 <templates>
+                    <div t-name="kanban-menu" t-if="widget.editable">
+                        <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                        <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <div role="separator" class="dropdown-divider"/>
+                        <div role="separator" class="dropdown-item-text">Color</div>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </div>
                     <div t-name="kanban-box"
                         t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)}
                                       oe_kanban_card oe_kanban_global_click
@@ -263,7 +278,7 @@
                                    type="object"
                                    name="action_survey_user_input_certified"
                                    class="fw-bold">
-                                    <field name="success_ratio" widget="progressbar"/>
+                                    <field name="success_ratio" widget="progressbar" class="d-block"/>
                                     <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>
@@ -309,22 +324,6 @@
                             <widget name="web_ribbon" title="Archived"
                                 bg_color="bg-danger"
                                 attrs="{'invisible': [('active', '=', True)]}"/>
-                            <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
-                                <a href="#" role="button"
-                                    class="dropdown-toggle o-no-caret btn"
-                                    data-bs-toggle="dropdown" data-bs-display="static"
-                                    aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
-                                    <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
-                                    <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                    <div role="separator" class="dropdown-divider"/>
-                                    <div role="separator" class="dropdown-item-text">Color</div>
-                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                </div>
-                            </div>
                             <div class="o_kanban_record_top">
                                 <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
                             </div>
@@ -369,8 +368,9 @@
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <search string="Survey">
-                <field string="Survey" name="title"/>
+                <field string="Survey" name="title" filter_domain="['|', ('title', 'ilike', self), ('session_code', 'ilike', self)]"/>
                 <field string="Question &amp; Pages" name="question_and_page_ids"/>
+                <field string="Responsible" name="user_id"/>
                 <filter string="Is a Certification" name="certification" domain="[('certification', '=', True)]"/>
                 <filter string="Is not a Certification" name="not_certification" domain="[('certification', '=', False)]"/>
                 <separator/>
@@ -396,52 +396,49 @@
         <field name="res_model">survey.survey</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="help" type="html">
+            <p>
+                No Survey Found
+            </p><p>
+                Ready to test? Pick a sample...
+            </p>
             <div class="row mb-4">
                 <div class="col-sm-4 o_survey_sample_container" action="action_load_sample_feedback_form">
                     <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
                         <img src="/survey/static/src/img/survey_sample_feedback_form.png" class="img-fluid"/>
                         <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
-                            Gather feedbacks from your employees and customers.
+                            Gather feedbacks from your employees and customers
                         </div>
                     </div>
                     <div class="my-3">
                         <a class="o_survey_load_sample h3 text-center text-primary">Feedback Form</a>
                     </div>
-                    <a class="btn btn-primary o_survey_load_sample text-white"><span>Try It</span></a>
+                    <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
                 <div class="col-sm-4 o_survey_sample_container" action="action_load_sample_certification">
                     <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
                         <img src="/survey/static/src/img/survey_sample_certification.png" class="img-fluid"/>
                         <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
-                            Handle quiz &amp; certifications online.
+                            Handle quiz &amp; certifications
                         </div>
                     </div>
                     <div class="my-3">
                         <a class="o_survey_load_sample h3 text-center text-primary">Certification</a>
                     </div>
-                    <a class="btn btn-primary o_survey_load_sample text-white"><span>Try It</span></a>
+                    <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
                 <div class="col-sm-4 o_survey_sample_container" action="action_load_sample_live_presentation">
                     <div class="o_survey_sample_tile position-relative w-100 d-flex align-items-center justify-content-center m-auto">
                         <img src="/survey/static/src/img/survey_sample_live_presentation.png" class="img-fluid"/>
                         <div class="o_survey_sample_tile_cover o_survey_load_sample w-100 h-100 position-absolute rounded-circle text-center text-white p-3">
-                            Add some fun to your presentations by sharing questions live.
+                            Add some fun to your presentations by sharing questions live
                         </div>
                     </div>
                     <div class="my-3">
                         <a class="o_survey_load_sample h3 text-center text-primary">Live Presentation</a>
                     </div>
-                    <a class="btn btn-primary o_survey_load_sample text-white"><span>Try It</span></a>
+                    <a class="btn btn-outline-primary o_survey_load_sample"><span>Try It</span></a>
                 </div>
             </div>
-            <p>
-                Create a Survey
-            </p>
-            <p>
-                Surveys can serve many purposes: collect customer feedback, gather market insights, structure employee evaluations, test and certify resellers, support a live presentation, ...
-            </p><p>
-                Not sure where to start? Try a sample Survey!
-            </p>
         </field>
     </record>
 

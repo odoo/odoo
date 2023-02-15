@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -14,6 +13,7 @@ class SaleOrder(models.Model):
     delivery_set = fields.Boolean(compute='_compute_delivery_state')
     recompute_delivery_price = fields.Boolean('Delivery cost should be recomputed')
     is_all_service = fields.Boolean("Service Product", compute="_compute_is_service_products")
+    shipping_weight = fields.Float("Shipping Weight", compute="_compute_shipping_weight", store=True, readonly=False)
 
     @api.depends('order_line')
     def _compute_is_service_products(self):
@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
-        return self.amount_total - delivery_cost
+        return self.env['delivery.carrier']._compute_currency(self, self.amount_total - delivery_cost, 'pricelist_to_company')
 
     @api.depends('order_line')
     def _compute_delivery_state(self):
@@ -36,6 +36,11 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered('is_delivery')
         if delivery_line:
             self.recompute_delivery_price = True
+
+    def _get_update_prices_lines(self):
+        """ Exclude delivery lines from price list recomputation based on product instead of carrier """
+        lines = super()._get_update_prices_lines()
+        return lines.filtered(lambda line: not line.is_delivery)
 
     def _remove_delivery_line(self):
         """Remove delivery products from the sales orders"""
@@ -79,6 +84,7 @@ class SaleOrder(models.Model):
             'context': {
                 'default_order_id': self.id,
                 'default_carrier_id': carrier.id,
+                'default_total_weight': self._get_estimated_weight()
             }
         }
 
@@ -143,52 +149,16 @@ class SaleOrder(models.Model):
             if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_lines):
                 order.invoice_status = 'no'
 
+    @api.depends('order_line.product_uom_qty', 'order_line.product_uom')
+    def _compute_shipping_weight(self):
+        for order in self:
+            order.shipping_weight = order._get_estimated_weight()
+
     def _get_estimated_weight(self):
         self.ensure_one()
+        if self.delivery_set:
+            return self.shipping_weight
         weight = 0.0
         for order_line in self.order_line.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not l.is_delivery and not l.display_type):
             weight += order_line.product_qty * order_line.product_id.weight
         return weight
-
-
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
-
-    is_delivery = fields.Boolean(string="Is a Delivery", default=False)
-    product_qty = fields.Float(compute='_compute_product_qty', string='Product Qty', digits='Product Unit of Measure')
-    recompute_delivery_price = fields.Boolean(related='order_id.recompute_delivery_price')
-
-    def _is_not_sellable_line(self):
-        return self.is_delivery or super(SaleOrderLine, self)._is_not_sellable_line()
-
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
-    def _compute_product_qty(self):
-        for line in self:
-            if not line.product_id or not line.product_uom or not line.product_uom_qty:
-                line.product_qty = 0.0
-                continue
-            line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
-
-    def unlink(self):
-        for line in self:
-            if line.is_delivery:
-                line.order_id.carrier_id = False
-        return super(SaleOrderLine, self).unlink()
-
-    def _is_delivery(self):
-        self.ensure_one()
-        return self.is_delivery
-
-    # override to allow deletion of delivery line in a confirmed order
-    def _check_line_unlink(self):
-        """
-        Extend the allowed deletion policy of SO lines.
-
-        Lines that are delivery lines can be deleted from a confirmed order.
-
-        :rtype: recordset sale.order.line
-        :returns: set of lines that cannot be deleted
-        """
-
-        undeletable_lines = super()._check_line_unlink()
-        return undeletable_lines.filtered(lambda line: not line.is_delivery)

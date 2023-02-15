@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_form_view_container')]" position="after">
+            <t t-if="mailTemplate">
+                <t t-call="{{ mailTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

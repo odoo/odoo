@@ -13,12 +13,13 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
         await this._super(...arguments);
         this.txContext = {};
         Object.assign(this.txContext, this.$el.data());
+        this.txContext.shippingInfoRequired = !!this.txContext.shippingInfoRequired;
         const expressCheckoutForms = this._getExpressCheckoutForms();
         for (const expressCheckoutForm of expressCheckoutForms) {
             await this._prepareExpressCheckoutForm(expressCheckoutForm.dataset);
         }
         // Monitor updates of the amount on eCommerce's cart pages.
-        core.bus.on('cart_amount_changed', this, this._updateAllAmounts.bind(this));
+        core.bus.on('cart_amount_changed', this, this._updateAmount.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -38,19 +39,9 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     },
 
     /**
-     * Return whether the shipping information is required or not.
-     *
-     * For a module to request shipping information to the customer, it must override this method.
-     *
-     * @private
-     * @return {Boolean} - Whether the shipping information is required or not.
-     */
-    _isShippingInformationRequired: () => false,
-
-    /**
      * Prepare the provider-specific express checkout form based on the provided data.
      *
-     * For an provider to manage an express checkout form, it must override this method.
+     * For a provider to manage an express checkout form, it must override this method.
      *
      * @private
      * @param {Object} providerData - The provider-specific data.
@@ -63,8 +54,8 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     /**
      * Prepare the params to send to the transaction route.
      *
-     * For an provider to overwrite generic params or to add provider-specific ones, it must
-     * override this method and return the extended transaction route params.
+     * For a provider to overwrite generic params or to add provider-specific ones, it must override
+     * this method and return the extended transaction route params.
      *
      * @private
      * @param {number} providerId - The id of the provider handling the transaction.
@@ -81,27 +72,9 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
             'flow': 'direct',
             'tokenization_requested': false,
             'landing_route': this.txContext.landingRoute,
-            'add_id_to_landing_route': true,
             'access_token': this.txContext.accessToken,
             'csrf_token': core.csrf_token,
         };
-    },
-
-    /**
-     * Retrieve all the express checkout forms and update the amount in each form.
-     *
-     * Note: triggered by bus event `cart_amount_changed`.
-     *
-     * @private
-     * @param {number} newAmount - The new amount.
-     * @param {number} newMinorAmount - The new minor amount.
-     * @return {undefined}
-     */
-    _updateAllAmounts(newAmount, newMinorAmount) {
-        const expressCheckoutForms = this._getExpressCheckoutForms();
-        for (const expressCheckoutForm of expressCheckoutForms) {
-            this._updateAmount(expressCheckoutForm.dataset, newAmount, newMinorAmount);
-        }
     },
 
     /**
@@ -110,12 +83,14 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
      * For a provider to manage an express form, it must override this method.
      *
      * @private
-     * @param {Object} providerData - The provider-specific data.
      * @param {number} newAmount - The new amount.
      * @param {number} newMinorAmount - The new minor amount.
      * @return {undefined}
      */
-    _updateAmount(providerData, newAmount, newMinorAmount) {},
+    _updateAmount(newAmount, newMinorAmount) {
+        this.txContext.amount = parseFloat(newAmount);
+        this.txContext.minorAmount = parseInt(newMinorAmount);
+    },
 
 });
 

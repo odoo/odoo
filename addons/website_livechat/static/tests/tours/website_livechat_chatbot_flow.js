@@ -1,31 +1,29 @@
 /** @odoo-module */
 
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
-import { patchRecordMethods } from '@mail/model/model_core';
-// ensure that the model definition is loaded before the patch
-import '@im_livechat/models/livechat_button_view';
-
-patchRecordMethods('LivechatButtonView', {
-    /**
-     * Let us make it a bit faster than the default delay (3500ms).
-     * Let us also debounce waiting for more user inputs for only 500ms.
-     */
-    start() {
-        this.messaging.publicLivechatGlobal.chatbot.update({ isWebsiteLivechatTourFlow: true });
-        this._super();
-    },
-});
-
+// Due to some issue with assets bundles, the current file can be loaded while
+// LivechatButtonView isn't, causing the patch to fail as the original model was
+// not registered beforehand. The following import is intended to stop the
+// execution of this file if @im_livechat/public_models/livechat_button_view is
+// not part of the current assets bundles (as trying to import it will silently
+// crash).
+import "@im_livechat/public_models/livechat_button_view";
 
 const messagesContain = (text) => `div.o_thread_message_content:contains("${text}")`;
 
-tour.register('website_livechat_chatbot_flow_tour', {
+registry.category("web_tour.tours").add('website_livechat_chatbot_flow_tour', {
     test: true,
-    url: '/',
-}, [{
+    steps: [{
     trigger: messagesContain("Hello! I'm a bot!"),
-    run: () => {}  // check first welcome message is posted
+    async run() {
+        const { messaging } = await odoo.__DEBUG__;
+        /**
+         * Make it a bit faster than the default delay (3500ms).
+         * Also debounce waiting for more user inputs for only 500ms.
+         */
+        messaging.publicLivechatGlobal.chatbot.update({ isWebsiteLivechatTourFlow: true });
+    },
 }, {
     trigger: messagesContain("I help lost visitors find their way."),
     run: () => {}  // check second welcome message is posted
@@ -152,5 +150,8 @@ tour.register('website_livechat_chatbot_flow_tour', {
     }
 }, {
     trigger: messagesContain("Ok bye!"),
-    run: () => {}  // last step is displayed
-}]);
+}, {
+    // wait for chatbot script to finish.
+    trigger: '.o_livechat_chatbot_restart',
+}
+]});

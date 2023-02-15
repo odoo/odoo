@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_round
-from odoo.addons.resource.models.resource import HOURS_PER_DAY
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -217,7 +217,7 @@ class HrEmployeeBase(models.AbstractModel):
 
         res = super(HrEmployeeBase, self).write(values)
         # remove users from the Responsible group if they are no longer leave managers
-        old_managers._clean_leave_responsible_users()
+        old_managers.sudo()._clean_leave_responsible_users()
 
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()
@@ -281,11 +281,12 @@ class HrEmployee(models.Model):
 
     def _get_stress_days(self, start_date, end_date):
         stress_days = self.env['hr.leave.stress.day'].search([
-            ('start_date', '>=', start_date),
-            ('end_date', '<=', end_date),
+            ('start_date', '<=', end_date),
+            ('end_date', '>=', start_date),
             '|',
                 ('resource_calendar_id', '=', False),
-                ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
+                ('resource_calendar_id', 'in', (self.resource_calendar_id | self.env.company.resource_calendar_id).ids),
+            ('company_id', 'in', self.env.companies.ids),
         ])
 
         # a user with hr_holidays permissions will be able to see all stress days from his calendar

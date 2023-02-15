@@ -22,7 +22,7 @@
             <t t-set="address">
                 <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' style="text-align: right"/>
                 <div t-if="o.partner_id.vat" class="mt16" style="text-align: right">
-                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                     <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/></div>
             </t>
 
@@ -36,19 +36,25 @@
                             <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
                                 Tax Invoice
                             </span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'draft'">
+                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
                                 Draft Invoice
                             </span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">
+                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
                                 Cancelled Invoice
                             </span>
-                            <span t-if="o.move_type == 'out_refund'">
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
                                 Credit Note
                             </span>
-                            <span t-if="o.move_type == 'in_refund'">
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
+                                Draft Credit Note
+                            </span>
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
+                                Cancelled Credit Note
+                            </span>
+                            <span t-elif="o.move_type == 'in_refund'">
                                 Vendor Credit Note
                             </span>
-                            <span t-if="o.move_type == 'in_invoice'">
+                            <span t-elif="o.move_type == 'in_invoice'">
                                 Vendor Bill
                             </span>
                         </div>
@@ -59,19 +65,25 @@
                             <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
                                 فاتورة ضريبية
                             </span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'draft'">
+                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
                                 مسودة فاتورة
                             </span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">
+                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
                                 فاتورة ملغاة
                             </span>
-                            <span t-if="o.move_type == 'out_refund'">
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
                                 إشعار خصم
                             </span>
-                            <span t-if="o.move_type == 'in_refund'">
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
+                                إشعار خصم المسودة
+                            </span>
+                            <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
+                                إشعار خصم ملغاة
+                            </span>
+                            <span t-elif="o.move_type == 'in_refund'">
                                 إشعار خصم المورد
                             </span>
-                            <span t-if="o.move_type == 'in_invoice'">
+                            <span t-elif="o.move_type == 'in_invoice'">
                                 فاتورة المورد
                             </span>
                         </div>
@@ -262,17 +274,26 @@
                             <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                                 <t t-if="line.display_type not in ('line_note', 'line_section')" name="account_invoice_line_accountable">
                                     <td name="account_invoice_line_name">
-                                        <t t-set="translation_name" t-value="line.with_context(lang='ar_001').product_id.name"/>
                                         <t t-if="line.product_id">
-                                            <span t-field="line.product_id.name" t-options="{'widget': 'text'}"/>
-                                            <t t-if="line.product_id.name != translation_name">
+                                            <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
+                                            <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
+
+                                            <span t-field="line.product_id.display_name"
+                                                t-options="{'widget': 'text'}"/>
+
+                                            <t t-if="arabic_name != english_name">
                                                 <br/>
-                                                <span t-field="line.with_context(lang='ar_001').product_id.name"
-                                                      t-options="{'widget': 'text'}"/>
+                                                <span t-out="line.with_context(lang='ar_001').product_id.name"
+                                                    style="text:right"
+                                                    t-options="{'widget': 'text'}"/>
+                                            </t>
+
+                                            <t t-if="line.name != english_name and line.name != arabic_name">
+                                                <br/>
+                                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                             </t>
                                         </t>
-                                        <t t-if="line.name and line.name != line.product_id.name and line.name != translation_name">
-                                            <t t-if="line.product_id"><br/></t>
+                                        <t t-else="">
                                             <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                         </t>
                                     </td>
@@ -428,10 +449,10 @@
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-field="o.invoice_payment_term_id.note"/>
+                            <span t-out="o.invoice_payment_term_id.note"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span dir="rtl" t-field="o_sec.invoice_payment_term_id.note"/>
+                            <span dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
                         </div>
 
                     </div>
@@ -439,20 +460,20 @@
                 <p t-if="o.narration" name="comment">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-field="o.narration"/>
+                            <span t-out="o.narration"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span t-field="o_sec.narration"/>
+                            <span t-out="o_sec.narration"/>
                         </div>
                     </div>
                 </p>
                 <p t-if="o.fiscal_position_id.note" name="note">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-field="o.fiscal_position_id.note"/>
+                            <span t-out="o.fiscal_position_id.note"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span t-field="o_sec.fiscal_position_id.note"/>
+                            <span t-out="o_sec.fiscal_position_id.note"/>
                         </div>
                     </div>
                 </p>
@@ -462,19 +483,19 @@
                             <strong>Incoterm:
                             </strong>
                             <span
-                                    t-field="o.invoice_incoterm_id.code"/>
+                                    t-out="o.invoice_incoterm_id.code"/>
                             -
                             <span
-                                    t-field="o.invoice_incoterm_id.name"/>
+                                    t-out="o.invoice_incoterm_id.name"/>
                         </div>
                         <div class="col-6 text-end">
                             <strong>شرط تجاري:
                             </strong>
                             <span
-                                    t-field="o_sec.invoice_incoterm_id.code"/>
+                                    t-out="o_sec.invoice_incoterm_id.code"/>
                             -
                             <span
-                                    t-field="o_sec.invoice_incoterm_id.name"/>
+                                    t-out="o_sec.invoice_incoterm_id.name"/>
                         </div>
                     </div>
                 </p>

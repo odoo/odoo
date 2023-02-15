@@ -34,7 +34,7 @@ html {
         > .o_control_panel {
           flex: 0 0 auto;
         }
-        > .o_content {
+        .o_content {
           flex: 1 1 auto;
           position: relative; // Allow to redistribute the 100% height to its child
           overflow: auto;
@@ -47,7 +47,7 @@ html {
           &:not(.o_action_delegate_scroll) {
             overflow: auto;
 
-            > .o_content {
+            .o_content {
               overflow: initial;
             }
           }

@@ -29,11 +29,11 @@ QUnit.test('thread icon of a chat when correspondent is on leave & online', asyn
 
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_online',
+        '.o_ThreadIconView_online',
         "thread icon should have online status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_ThreadIcon_online'),
+        document.querySelector('.o_ThreadIconView_online'),
         'fa-plane',
         "thread icon should have leave status rendering"
     );
@@ -59,11 +59,11 @@ QUnit.test('thread icon of a chat when correspondent is on leave & away', async 
 
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_away',
+        '.o_ThreadIconView_away',
         "thread icon should have away status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_ThreadIcon_away'),
+        document.querySelector('.o_ThreadIconView_away'),
         'fa-plane',
         "thread icon should have leave status rendering"
     );
@@ -89,11 +89,11 @@ QUnit.test('thread icon of a chat when correspondent is on leave & offline', asy
 
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_offline',
+        '.o_ThreadIconView_offline',
         "thread icon should have offline status rendering"
     );
     assert.hasClass(
-        document.querySelector('.o_ThreadIcon_offline'),
+        document.querySelector('.o_ThreadIconView_offline'),
         'fa-plane',
         "thread icon should have leave status rendering"
     );

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { click, clickEdit, getFixture } from "@web/../tests/helpers/utils";
+import { click, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 QUnit.module("SlideCategoryOneToManyField", (hooks) => {
@@ -92,6 +92,7 @@ QUnit.module("SlideCategoryOneToManyField", (hooks) => {
             resModel: "partner",
             resId: 1,
             serverData,
+            mode: "readonly",
             arch: `
                 <form>
                     <field name="lines" widget="slide_category_one2many">
@@ -126,7 +127,6 @@ QUnit.module("SlideCategoryOneToManyField", (hooks) => {
                     </field>
                 </form>`,
         });
-        await clickEdit(target);
         await click(target.querySelector(".o_data_cell"));
         assert.hasClass(target.querySelector(".o_is_section"), "o_selected_row");
         assert.containsNone(target, ".modal .o_form_view");
@@ -150,7 +150,6 @@ QUnit.module("SlideCategoryOneToManyField", (hooks) => {
                 </form>
             `,
         });
-        await clickEdit(target);
         await click(target.querySelector(".o_data_row:nth-child(2) .o_data_cell"));
         assert.containsNone(target, ".o_selected_row");
         assert.containsOnce(target, ".modal .o_form_view");
@@ -179,7 +178,6 @@ QUnit.module("SlideCategoryOneToManyField", (hooks) => {
             `,
         });
 
-        await clickEdit(target);
         assert.containsNone(target, ".o_selected_row.o_is_section");
 
         await click(target.querySelectorAll(".o_field_x2many_list_row_add a")[1]);
@@ -210,7 +208,6 @@ QUnit.module("SlideCategoryOneToManyField", (hooks) => {
             `,
         });
 
-        await clickEdit(target);
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
         assert.containsNone(target, ".o_selected_row");
         assert.containsOnce(target, ".modal .o_form_view");

@@ -73,10 +73,20 @@ class AccountJournal(models.Model):
 
         for journal in self:
             enabled_edi_formats = edi_formats.filtered(lambda e: e._is_compatible_with_journal(journal) and
-                                                                 e._is_enabled_by_default_on_journal(journal))
+                                                                 (e._is_enabled_by_default_on_journal(journal)
+                                                                  or (e in journal.edi_format_ids)))
 
             # The existing edi formats that are already in use so we can't remove it.
             protected_edi_format_ids = protected_edi_formats_per_journal.get(journal.id, set())
             protected_edi_formats = journal.edi_format_ids.filtered(lambda e: e.id in protected_edi_format_ids)
 
             journal.edi_format_ids = enabled_edi_formats + protected_edi_formats
+
+    def _create_document_from_attachment(self, attachment_ids=None):
+        # tries to match purchasing orders
+        moves = super()._create_document_from_attachment(attachment_ids)
+        for move in moves:
+            if move.move_type == 'in_invoice':
+                references = [move.invoice_origin] if move.invoice_origin else []
+                move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=4)
+        return moves

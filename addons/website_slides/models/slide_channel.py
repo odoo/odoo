@@ -6,6 +6,7 @@ import uuid
 from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
+import ast
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
@@ -131,13 +132,35 @@ class ChannelUsersRelation(models.Model):
                 template_to_records.setdefault(template, self.env['slide.channel.partner'])
                 template_to_records[template] += record
 
-        record_email_values = dict()
+        record_email_values = {}
         for template, records in template_to_records.items():
-            record_email_values.update(template.generate_email(records.ids, ['subject', 'body_html', 'email_from', 'partner_to']))
+            record_values = template._generate_template(
+                records.ids,
+                ['attachment_ids',
+                 'body_html',
+                 'email_cc',
+                 'email_from',
+                 'email_to',
+                 'mail_server_id',
+                 'model',
+                 'partner_to',
+                 'reply_to',
+                 'report_template_ids',
+                 'res_id',
+                 'scheduled_date',
+                 'subject',
+                ]
+            )
+            for res_id, values in record_values.items():
+                # attachments specific not supported currently, only attachment_ids
+                values.pop('attachments', False)
+                values['body'] = values.get('body_html')  # keep body copy in chatter
+                record_email_values[res_id] = values
 
         mail_mail_values = []
         for record in self:
             email_values = record_email_values.get(record.id)
+
             if not email_values or not email_values.get('partner_ids'):
                 continue
 
@@ -200,8 +223,8 @@ class Channel(models.Model):
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True, tracking=100)
-    description = fields.Html('Description', translate=True, help="The description that is displayed on top of the course page, just below the title")
-    description_short = fields.Html('Short Description', translate=True, help="The description that is displayed on the course card")
+    description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on top of the course page, just below the title")
+    description_short = fields.Html('Short Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('training', 'Training'), ('documentation', 'Documentation')],
@@ -264,7 +287,8 @@ class Channel(models.Model):
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.mail_template_channel_completed'),
         domain=[('model', '=', 'slide.channel.partner')])
     enroll = fields.Selection([
-        ('public', 'Public'), ('invite', 'On Invitation')],
+        ('public', 'Open'), ('invite', 'On Invitation')],
+        compute='_compute_enroll', store=True, readonly=False,
         default='public', string='Enroll Policy', required=True,
         help='Defines how people can enroll to your Course.', copy=False)
     enroll_msg = fields.Html(
@@ -272,8 +296,10 @@ class Channel(models.Model):
         default=_get_default_enroll_msg, translate=tools.html_translate, sanitize_attributes=False)
     enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
-        ('public', 'Open To All'), ('members', 'Members Only')],
-        default='public', string='Visibility', required=True,
+        ('public', 'Everyone'),
+        ('connected', 'Signed In'),
+        ('members', 'Course Attendees')
+    ], default='public', string='Show Course To', required=True,
         help='Defines who can access your courses and their content.')
     partner_ids = fields.Many2many(
         'res.partner', 'slide_channel_partner', 'channel_id', 'partner_id',
@@ -286,7 +312,7 @@ class Channel(models.Model):
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id', string='Upload Groups',
         help="Group of users allowed to publish contents on a documentation course.")
-    website_background_image_url = fields.Char('Background image URL', compute='_compute_website_background_image_url')
+    website_default_background_image_url = fields.Char('Background image URL', compute='_compute_website_default_background_image_url')
     # not stored access fields, depending on each user
     completed = fields.Boolean('Done', compute='_compute_user_statistics', compute_sudo=False)
     completion = fields.Integer('Completion', compute='_compute_user_statistics', compute_sudo=False)
@@ -303,6 +329,18 @@ class Channel(models.Model):
     can_review = fields.Boolean('Can Review', compute='_compute_action_rights', compute_sudo=False)
     can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights', compute_sudo=False)
     can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights', compute_sudo=False)
+
+    _sql_constraints = [
+        (
+            "check_enroll",
+            "CHECK(visibility != 'members' OR enroll = 'invite')",
+            "The Enroll Policy should be set to 'On Invitation' when visibility is set to 'Course Attendees'"
+        ),
+    ]
+
+    @api.depends('visibility')
+    def _compute_enroll(self):
+        self.filtered(lambda channel: channel.visibility == 'members').enroll = 'invite'
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
@@ -461,14 +499,10 @@ class Channel(models.Model):
             new_slides = new_published_slides.filtered(lambda slide: slide.channel_id == channel)
             channel.partner_has_new_content = any(slide not in slide_partner_completed for slide in new_slides)
 
-    @api.depends('image_1920', 'channel_type')
-    def _compute_website_background_image_url(self):
+    @api.depends('channel_type')
+    def _compute_website_default_background_image_url(self):
         for channel in self:
-            channel.website_background_image_url = (
-                channel.website_id.image_url(channel, 'image_256') if channel.image_1920
-                else '/website_slides/static/src/img/channel-%s-default.jpg'
-                     % ('training' if channel.channel_type == 'training' else 'documentation')
-            )
+            channel.website_default_background_image_url = f'website_slides/static/src/img/channel-{channel.channel_type}-default.jpg'
 
     @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
@@ -632,7 +666,6 @@ class Channel(models.Model):
         local_context = dict(
             self.env.context,
             default_channel_id=self.id,
-            default_use_template=bool(template),
             default_template_id=template and template.id or False,
             default_email_layout_xmlid='website_slides.mail_notification_channel_invite',
         )
@@ -644,20 +677,20 @@ class Channel(models.Model):
             'context': local_context,
         }
 
-    def action_add_member(self, **member_values):
+    def _action_add_member(self):
         """ Adds the logged in user in the channel members.
         (see '_action_add_members' for more info)
 
         Returns True if added successfully, False otherwise."""
-        return bool(self._action_add_members(self.env.user.partner_id, **member_values))
+        return bool(self._action_add_members(self.env.user.partner_id))
 
-    def _action_add_members(self, target_partners, **member_values):
+    def _action_add_members(self, target_partners):
         """ Add the target_partner as a member of the channel (to its slide.channel.partner).
         This will make the content (slides) of the channel available to that partner.
 
         Returns the added 'slide.channel.partner's (! as sudo !)
         """
-        to_join = self._filter_add_members(target_partners, **member_values)
+        to_join = self._filter_add_members(target_partners)
         if to_join:
             existing = self.env['slide.channel.partner'].sudo().search([
                 ('channel_id', 'in', self.ids),
@@ -668,7 +701,7 @@ class Channel(models.Model):
                 existing_map[item.channel_id.id].append(item.partner_id.id)
 
             to_create_values = [
-                dict(channel_id=channel.id, partner_id=partner.id, **member_values)
+                dict(channel_id=channel.id, partner_id=partner.id)
                 for channel in to_join
                 for partner in target_partners if partner.id not in existing_map[channel.id]
             ]
@@ -677,7 +710,7 @@ class Channel(models.Model):
             return slide_partners_sudo
         return self.env['slide.channel.partner'].sudo()
 
-    def _filter_add_members(self, target_partners, **member_values):
+    def _filter_add_members(self, target_partners):
         allowed = self.filtered(lambda channel: channel.enroll == 'public')
         on_invite = self.filtered(lambda channel: channel.enroll == 'invite')
         if on_invite:
@@ -785,7 +818,7 @@ class Channel(models.Model):
     def action_view_ratings(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
         action['name'] = _('Rating of %s') % (self.name)
-        action['domain'] = [('res_id', 'in', self.ids)]
+        action['domain'] = expression.AND([ast.literal_eval(action.get('domain', '[]')), [('res_id', 'in', self.ids)]])
         return action
 
     def action_request_access(self):
@@ -951,12 +984,9 @@ class Channel(models.Model):
             except Exception:
                 tags = ChannelTag
             # Group by group_id
-            grouped_tags = defaultdict(list)
-            for tag in tags:
-                grouped_tags[tag.group_id].append(tag)
             # OR inside a group, AND between groups.
-            for group in grouped_tags:
-                domain.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+            for tags in tags.grouped('group_id').values():
+                domain.append([('tag_ids', 'in', tags.ids)])
         if slide_category and 'nbr_%s' % slide_category in self:
             domain.append([('nbr_%s' % slide_category, '>', 0)])
         search_fields = ['name']
@@ -980,3 +1010,9 @@ class Channel(models.Model):
             'mapping': mapping,
             'icon': 'fa-graduation-cap',
         }
+
+    def _get_placeholder_filename(self, field):
+        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
+        if field in image_fields:
+            return self.website_default_background_image_url
+        return super()._get_placeholder_filename(field)

@@ -11,15 +11,16 @@ import { debounce } from "@web/core/utils/timing";
 import { isMacOS, isMobileOS } from "@web/core/browser/feature_detection";
 import { escapeRegExp } from "@web/core/utils/strings";
 
-const {
+import {
     Component,
     onWillStart,
     onWillDestroy,
+    EventBus,
     useRef,
     useState,
     markRaw,
     useExternalListener,
-} = owl;
+} from "@odoo/owl";
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
 const DEFAULT_EMPTY_MESSAGE = _lt("No result found");
@@ -87,6 +88,15 @@ export function splitCommandName(name, searchValue) {
 
 export class DefaultCommandItem extends Component {}
 DefaultCommandItem.template = "web.DefaultCommandItem";
+DefaultCommandItem.props = {
+    slots: { type: Object, optional: true },
+    // Props send by the command palette:
+    hotkey: { type: String, optional: true },
+    hotkeyOptions: { type: String, optional: true },
+    name: { type: String, optional: true },
+    searchValue: { type: String, optional: true },
+    executeCommand: { type: Function, optional: true },
+};
 
 export class CommandPalette extends Component {
     setup() {
@@ -366,5 +376,11 @@ export class CommandPalette extends Component {
     }
 }
 CommandPalette.lastSessionId = 0;
+CommandPalette.props = {
+    bus: { type: EventBus, optional: true },
+    close: Function,
+    config: Object,
+    closeMe: { type: Function, optional: true },
+};
 CommandPalette.template = "web.CommandPalette";
 CommandPalette.components = { Dialog };

@@ -1,18 +1,17 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ComposerSuggestedRecipientView',
+Model({
+    name: "ComposerSuggestedRecipientView",
     fields: {
-        composerSuggestedRecipientListViewOwner: one('ComposerSuggestedRecipientListView', {
+        composerSuggestedRecipientListViewOwner: one("ComposerSuggestedRecipientListView", {
             identifying: true,
-            inverse: 'composerSuggestedRecipientViews',
+            inverse: "composerSuggestedRecipientViews",
         }),
-        suggestedRecipientInfo: one('SuggestedRecipientInfo', {
+        suggestedRecipientInfo: one("SuggestedRecipientInfo", {
             identifying: true,
-            inverse: 'composerSuggestedRecipientViews',
+            inverse: "composerSuggestedRecipientViews",
         }),
     },
 });

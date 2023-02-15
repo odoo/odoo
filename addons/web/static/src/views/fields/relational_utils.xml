@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="web.X2ManyFieldDialog" owl="1">
-    <Dialog title="title" withBodyPadding="false" modalRef="modalRef">
-        <FormRenderer class="'o_form_view'" record="record" fields="archInfo.fields" archInfo="archInfo"/>
+    <Dialog title="title" withBodyPadding="false" modalRef="modalRef" contentClass="'o_form_view'">
+        <FormRenderer record="record" archInfo="archInfo"/>
         <t t-set-slot="footer">
             <t t-if="footerArchInfo">
                 <FormRenderer record="record" archInfo="footerArchInfo"/>
@@ -41,8 +41,10 @@
             t-att-id="props.id"
             class="o_input"
             readonly=""
+            t-att-placeholder="props.placeholder"
             t-att-value="props.value"
-            t-on-click="onSearchMoreSmall"
+            t-on-click="onSearchMore"
+            t-on-barcode-search="onBarcodeSearch"
         />
         <AutoComplete t-else=""
             value="props.value"

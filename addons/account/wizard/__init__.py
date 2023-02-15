@@ -5,7 +5,6 @@
 from . import account_automatic_entry_wizard
 from . import account_unreconcile
 from . import account_validate_account_move
-from . import pos_box
 from . import account_move_reversal
 from . import account_resequence
 from . import setup_wizards

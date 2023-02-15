@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { busService } from "@bus/services/bus_service";
+import { busParametersService } from "@bus/bus_parameters_service";
 import { presenceService } from "@bus/services/presence_service";
 import { multiTabService } from "@bus/multi_tab_service";
 import { getPyEnv } from '@bus/../tests/helpers/mock_python_environment';
@@ -18,6 +19,7 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
     hooks.beforeEach((assert) => {
         serviceRegistry.add("assetsWatchdog", assetsWatchdogService);
         serviceRegistry.add("bus_service", busService);
+        serviceRegistry.add("bus.parameters", busParametersService);
         serviceRegistry.add("presence", presenceService);
         serviceRegistry.add("multi_tab", multiTabService);
         patchWithCleanup(browser, {

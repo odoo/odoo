@@ -16,3 +16,4 @@ from . import test_crm_ui
 from . import test_crm_pls
 from . import test_performances
 from . import test_res_partner
+from . import test_sales_team_ui

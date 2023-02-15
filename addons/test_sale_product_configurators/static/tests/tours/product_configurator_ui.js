@@ -1,14 +1,15 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
 // Note: please keep this test without pricelist for maximum coverage.
 // The pricelist is tested on the other tours.
 
-tour.register('sale_product_configurator_tour', {
+registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     url: '/web',
     test: true,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: '.o_list_button_add',
@@ -41,37 +42,26 @@ tour.register('sale_product_configurator_tour', {
     run: function (){} // check confirm is available
 }, {
     trigger: 'span:contains("Aluminium"):eq(1)',
-    extra_trigger: '.oe_advanced_configurator_modal',
 }, {
-    trigger: '.js_product:has(strong:contains(Conference Chair)) .js_add',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: '.js_product:contains(Conference Chair) .js_add',
 }, {
-    trigger: '.js_product:has(strong:contains(Chair floor protection)) .js_add',
-    extra_trigger: '.oe_advanced_configurator_modal',
+    trigger: '.js_product:contains(Chair floor protection) .js_add',
 }, {
     trigger: 'button span:contains(Confirm)',
-    extra_trigger: '.oe_advanced_configurator_modal',
     id: 'quotation_product_selected',
 },
 // check that 3 products were added to the SO
 {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',
-    extra_trigger: 'div[name="order_line"]',
-    in_modal: false,
     run: function (){}
 }, {
     trigger: 'td.o_data_cell:contains("Conference Chair (TEST) (Aluminium)")',
-    extra_trigger: 'div[name="order_line"]',
-    in_modal: false,
     run: function (){}
 }, {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
-    extra_trigger: 'div[name="order_line"]',
-    in_modal: false,
     run: function (){}
 }, {
-    trigger: 'span[name=amount_total]:contains("0.00")',
-    in_modal: false,
+    trigger: 'span[name=amount_total]:contains("960.60")',
     run: function (){}
-}, ...tour.stepUtils.discardForm()
-]);
+}, ...stepUtils.discardForm()
+]});

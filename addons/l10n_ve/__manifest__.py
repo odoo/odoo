@@ -8,7 +8,7 @@
 
 {
     'name' : 'Venezuela - Accounting',
-    'author': ['Odoo S.A.', 'Vauxoo'],
+    'author': 'Odoo S.A., Vauxoo',
     'category': 'Accounting/Localizations/Account Charts',
     'description':
 """
@@ -40,8 +40,7 @@ stocks as Venezuela does with out invoices.
 If you install this module, and select Custom chart a basic chart will be proposed,
 but you will need set manually account defaults for taxes.
 """,
-    'depends': ['account',
-    ],
+    'depends': ['l10n_multilang'],
     'data': [
              'data/l10n_ve_chart_data.xml',
              'data/account.account.template.csv',

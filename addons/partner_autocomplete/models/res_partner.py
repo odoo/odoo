@@ -166,10 +166,10 @@ class ResPartner(models.Model):
             if partners.additional_info:
                 template_values = json.loads(partners.additional_info)
                 template_values['flavor_text'] = _("Partner created by Odoo Partner Autocomplete Service")
-                partners.message_post_with_view(
+                partners.message_post_with_source(
                     'iap_mail.enrich_company',
-                    values=template_values,
-                    subtype_id=self.env.ref('mail.mt_note').id,
+                    render_values=template_values,
+                    subtype_xmlid='mail.mt_note',
                 )
                 partners.write({'additional_info': False})
 

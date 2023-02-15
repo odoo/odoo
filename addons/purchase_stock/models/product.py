@@ -5,16 +5,29 @@ from odoo import api, fields, models
 from odoo.osv import expression
 
 
+class ProductCategory(models.Model):
+    _inherit = "product.category"
+
+    property_account_creditor_price_difference_categ = fields.Many2one(
+        'account.account', string="Price Difference Account",
+        company_dependent=True,
+        help="This account will be used to value price difference between purchase price and accounting cost.")
+
+
 class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
+    property_account_creditor_price_difference = fields.Many2one(
+        'account.account', string="Price Difference Account", company_dependent=True,
+        help="This account is used in automated inventory valuation to "\
+             "record the price difference between a purchase order and its related vendor bill when validating this vendor bill.")
+
     @api.model
     def _get_buy_route(self):
-        buy_route_id = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).id
-        buy_route = self.env['stock.route'].search([('id', '=', buy_route_id)])
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
         if buy_route:
-            return buy_route.ids
+            return self.env['stock.route'].search([('id', '=', buy_route.id)]).ids
         return []
 
     route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
@@ -34,7 +47,7 @@ class ProductProduct(models.Model):
 
         qty_by_product_location, qty_by_product_wh = super()._get_quantity_in_progress(location_ids, warehouse_ids)
         domain = self._get_lines_domain(location_ids, warehouse_ids)
-        groups = self.env['purchase.order.line'].read_group(domain,
+        groups = self.env['purchase.order.line']._read_group(domain,
             ['product_id', 'product_qty', 'order_id', 'product_uom', 'orderpoint_id'],
             ['order_id', 'product_id', 'product_uom', 'orderpoint_id'], lazy=False)
         for group in groups:

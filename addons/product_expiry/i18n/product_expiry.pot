@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
-"PO-Revision-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-20 09:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,16 +18,23 @@ msgstr ""
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid ""
-"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"<span class=\"badge text-bg-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
-msgid "<span> days</span>"
+msgid "<span> days after receipt</span>"
 msgstr ""
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days before expiration date</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__alert_date
 msgid "Alert Date"
 msgstr ""
@@ -38,15 +45,9 @@ msgid "Alert Date Reached"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
-msgid "Alert Time"
-msgstr ""
-
-#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
-msgid "Best Before Time"
+msgid "Best Before Date"
 msgstr ""
 
 #. module: product_expiry
@@ -131,19 +132,13 @@ msgid "Expiration Alerts"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__expiration_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
-#: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
-msgid "Expiration Date"
-msgstr ""
-
-#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
-msgid "Expiration Time"
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Expiration Date"
 msgstr ""
 
 #. module: product_expiry
@@ -247,7 +242,7 @@ msgid "Procurement Group"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_product
+#: model:ir.model,name:product_expiry.model_product_template
 msgid "Product"
 msgstr ""
 
@@ -263,8 +258,8 @@ msgid "Product Moves (Stock Move Line)"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model,name:product_expiry.model_product_template
-msgid "Product Template"
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product Variant"
 msgstr ""
 
 #. module: product_expiry
@@ -273,15 +268,11 @@ msgid "Quants"
 msgstr ""
 
 #. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__removal_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
-msgid "Removal Time"
 msgstr ""
 
 #. module: product_expiry
@@ -347,8 +338,12 @@ msgid "Transfer"
 msgstr ""
 
 #. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
 msgid "Use Expiration Date"
 msgstr ""
 
@@ -362,6 +357,7 @@ msgstr ""
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
 "When this box is ticked, you have the possibility to specify dates to manage"

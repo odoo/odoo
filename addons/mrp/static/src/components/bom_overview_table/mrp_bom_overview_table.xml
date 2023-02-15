@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <div t-name="mrp.BomOverviewTable" class="o_content" owl="1">
-        <div class="o_mrp_bom_report_page py-3 py-lg-5 px-0 overflow-auto border-bottom bg-white">
+        <div class="o_mrp_bom_report_page py-3 py-lg-5 px-0 overflow-auto border-bottom bg-view">
             <div t-if="!!data.components || !!data.lines || !!data.operations" class="container-fluid">
                 <div class="d-flex mb-5">
                     <div class="me-auto">
@@ -32,7 +32,7 @@
                             <th t-if="showAvailabilities" class="text-end" title="Availabilities on products.">Free to Use / On Hand</th>
                             <th t-if="showAvailabilities" class="text-center" title="Reception time estimation.">Availability</th>
                             <th t-if="showLeadTimes" class="text-end" title="Resupply lead time.">Lead Time</th>
-                            <th>Route</th>
+                            <th t-if="showLeadTimes">Route</th>
                             <th t-if="showCosts" class="text-end" title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">BoM Cost</th>
                             <th t-if="showCosts" class="text-end" title="This is the cost defined on the product.">Product Cost</th>
                             <th t-if="showAttachments" class="text-center" title="Files attached to the product.">Attachments</th>
@@ -40,16 +40,15 @@
                     </thead>
                     <tbody>
                         <BomOverviewLine
-                            bus="props.bus"
                             showOptions="props.showOptions"
                             currentWarehouseId="props.currentWarehouseId"
                             data="data"/>
 
                         <BomOverviewComponentsBlock
-                            bus="props.bus"
                             showOptions="props.showOptions"
                             currentWarehouseId="props.currentWarehouseId"
-                            data="data"/>
+                            data="data"
+                            changeFolded.bind="props.changeFolded"/>
                     </tbody>
                     <tfoot t-if="showCosts">
                         <tr>
@@ -62,8 +61,8 @@
                             <td t-if="showAvailabilities"/>
                             <td t-if="showAvailabilities"/>
                             <td t-if="showLeadTimes"/>
-                            <td/>
-                            <td class="text-end" t-esc="formatMonetary(data.cost_share * data.bom_cost / data.quantity)"/>
+                            <td t-if="showLeadTimes"/>
+                            <td class="text-end" t-esc="formatMonetary(data.bom_cost / data.quantity)"/>
                             <td class="text-end" t-esc="formatMonetary(data.prod_cost / data.quantity)"/>
                             <td t-if="showAttachments"/>
                         </tr>
@@ -76,8 +75,8 @@
                                 <td t-if="showAvailabilities"/>
                                 <td t-if="showAvailabilities"/>
                                 <td t-if="showLeadTimes"/>
-                                <td/>
-                                <td class="text-end" t-esc="formatMonetary(byproduct.cost_share * data.bom_cost / byproduct.quantity)"/>
+                                <td t-if="showLeadTimes"/>
+                                <td class="text-end" t-esc="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/>
                                 <td class="text-end" t-esc="formatMonetary(byproduct.prod_cost / byproduct.quantity)"/>
                                 <td t-if="showAttachments"/>
                             </tr>

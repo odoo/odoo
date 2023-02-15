@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one, many } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, many, Model } from "@mail/model";
 
-registerModel({
-    name: 'Channel',
+Model({
+    name: "Channel",
     modelMethods: {
         /**
          * Performs the `channel_get` RPC on `mail.channel`.
@@ -21,8 +19,8 @@ registerModel({
         async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
             // TODO FIX: potential duplicate chat task-2276490
             const data = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_get',
+                model: "mail.channel",
+                method: "channel_get",
                 kwargs: {
                     partners_to: partnerIds,
                     pin: pinForCurrentPartner,
@@ -31,8 +29,8 @@ registerModel({
             if (!data) {
                 return;
             }
-            const { channel } = this.messaging.models['Thread'].insert(
-                this.messaging.models['Thread'].convertData(data)
+            const { channel } = this.messaging.models["Thread"].insert(
+                this.messaging.models["Thread"].convertData(data)
             );
             return channel;
         },
@@ -40,11 +38,11 @@ registerModel({
     recordMethods: {
         async fetchChannelMembers() {
             const channelData = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'load_more_members',
+                model: "mail.channel",
+                method: "load_more_members",
                 args: [[this.id]],
                 kwargs: {
-                    known_member_ids: this.channelMembers.map(channelMember => channelMember.id),
+                    known_member_ids: this.channelMembers.map((channelMember) => channelMember.id),
                 },
             });
             if (!this.exists()) {
@@ -52,200 +50,84 @@ registerModel({
             }
             this.update(channelData);
         },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeAreAllMembersLoaded() {
-            return this.memberCount === this.channelMembers.length;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCallParticipants() {
-            if (!this.thread) {
-                return clear();
-            }
-            const callParticipants = this.thread.invitedMembers;
-            for (const rtcSession of this.thread.rtcSessions) {
-                callParticipants.push(rtcSession.channelMember);
-            }
-            return callParticipants;
-        },
-        /**
-         * @private
-         * @returns {Partner|FieldCommand}
-         */
-        _computeCorrespondent() {
-            if (this.channel_type === 'channel') {
-                return clear();
-            }
-            const correspondents = this.channelMembers
-                .filter(member => member.persona && member.persona.partner && !member.isMemberOfCurrentUser)
-                .map(member => member.persona.partner);
-            if (correspondents.length === 1) {
-                // 2 members chat
-                return correspondents[0];
-            }
-            const partners = this.channelMembers
-                .filter(member => member.persona && member.persona.partner)
-                .map(member => member.persona.partner);
-            if (partners.length === 1) {
-                // chat with oneself
-                return partners[0];
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Partner|FieldCommand}
-         */
-        _computeCorrespondentOfDmChat() {
-            if (
-                this.channel_type === 'chat' &&
-                this.correspondent
-            ) {
-                return this.correspondent;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {Object|FieldCommand}
-         */
-        _computeDiscussSidebarCategoryItem() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (!this.thread.isPinned) {
-                return clear();
-            }
-            if (!this.discussSidebarCategory) {
-                return clear();
-            }
-            return { category: this.discussSidebarCategory };
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeDisplayName() {
-            if (!this.thread) {
-                return;
-            }
-            if (this.channel_type === 'chat' && this.correspondent) {
-                return this.custom_channel_name || this.thread.getMemberName(this.correspondent.persona);
-            }
-            if (this.channel_type === 'group' && !this.thread.name) {
-                return this.channelMembers
-                    .filter(channelMember => channelMember.persona)
-                    .map(channelMember => this.thread.getMemberName(channelMember.persona))
-                    .join(this.env._t(", "));
-            }
-            return this.thread.name;
-        },
-        /**
-         * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeLocalMessageUnreadCounter() {
-            if (!this.thread) {
-                return clear();
-            }
-            // By default trust the server up to the last message it used
-            // because it's not possible to do better.
-            let baseCounter = this.serverMessageUnreadCounter;
-            let countFromId = this.thread.serverLastMessage ? this.thread.serverLastMessage.id : 0;
-            // But if the client knows the last seen message that the server
-            // returned (and by assumption all the messages that come after),
-            // the counter can be computed fully locally, ignoring potentially
-            // obsolete values from the server.
-            const firstMessage = this.thread.orderedMessages[0];
-            if (
-                firstMessage &&
-                this.thread.lastSeenByCurrentPartnerMessageId &&
-                this.thread.lastSeenByCurrentPartnerMessageId >= firstMessage.id
-            ) {
-                baseCounter = 0;
-                countFromId = this.thread.lastSeenByCurrentPartnerMessageId;
-            }
-            // Include all the messages that are known locally but the server
-            // didn't take into account.
-            return this.thread.orderedMessages.reduce((total, message) => {
-                if (message.id <= countFromId) {
-                    return total;
-                }
-                return total + 1;
-            }, baseCounter);
-        },
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeUnknownMemberCount() {
-            return this.memberCount - this.channelMembers.length;
-        },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortCallParticipants() {
-            return [
-                ['truthy-first', 'rtcSession'],
-                ['smaller-first', 'rtcSession.id'],
-            ];
-        },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortMembers() {
-            return [
-                ['truthy-first', 'persona.name'],
-                ['case-insensitive-asc', 'persona.name'],
-            ];
-        },
     },
     fields: {
-        activeRtcSession: one('RtcSession'),
+        activeRtcSession: one("RtcSession"),
         areAllMembersLoaded: attr({
-            compute: '_computeAreAllMembersLoaded',
+            compute() {
+                return this.memberCount === this.channelMembers.length;
+            },
         }),
         /**
          * Cache key to force a reload of the avatar when avatar is changed.
          */
         avatarCacheKey: attr(),
-        callParticipants: many('ChannelMember', {
-            compute: '_computeCallParticipants',
-            sort: '_sortCallParticipants',
+        callParticipants: many("ChannelMember", {
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                const callParticipants = this.thread.invitedMembers;
+                for (const rtcSession of this.thread.rtcSessions) {
+                    callParticipants.push(rtcSession.channelMember);
+                }
+                return callParticipants;
+            },
+            sort: [
+                ["truthy-first", "rtcSession"],
+                ["smaller-first", "rtcSession.id"],
+            ],
         }),
-        channelMembers: many('ChannelMember', {
-            inverse: 'channel',
-            isCausal: true,
-        }),
-        channelPreviewViews: many('ChannelPreviewView', {
-            inverse: 'channel',
-        }),
+        channelMembers: many("ChannelMember", { inverse: "channel", isCausal: true }),
+        channelPreviewViews: many("ChannelPreviewView", { inverse: "channel" }),
         channel_type: attr(),
-        correspondent: one('Partner', {
-            compute: '_computeCorrespondent',
+        correspondent: one("Partner", {
+            compute() {
+                if (this.channel_type === "channel") {
+                    return clear();
+                }
+                const correspondents = this.channelMembers
+                    .filter(
+                        (member) =>
+                            member.persona &&
+                            member.persona.partner &&
+                            !member.isMemberOfCurrentUser
+                    )
+                    .map((member) => member.persona.partner);
+                if (correspondents.length === 1) {
+                    // 2 members chat
+                    return correspondents[0];
+                }
+                const partners = this.channelMembers
+                    .filter((member) => member.persona && member.persona.partner)
+                    .map((member) => member.persona.partner);
+                if (partners.length === 1) {
+                    // chat with oneself
+                    return partners[0];
+                }
+                return clear();
+            },
         }),
-        correspondentOfDmChat: one('Partner', {
-            compute: '_computeCorrespondentOfDmChat',
-            inverse: 'dmChatWithCurrentPartner',
+        correspondentOfDmChat: one("Partner", {
+            inverse: "dmChatWithCurrentPartner",
+            compute() {
+                if (this.channel_type === "chat" && this.correspondent) {
+                    return this.correspondent;
+                }
+                return clear();
+            },
         }),
         custom_channel_name: attr(),
         /**
          * Useful to compute `discussSidebarCategoryItem`.
          */
-        discussSidebarCategory: one('DiscussSidebarCategory', {
+        discussSidebarCategory: one("DiscussSidebarCategory", {
             compute() {
                 switch (this.channel_type) {
-                    case 'channel':
+                    case "channel":
                         return this.messaging.discuss.categoryChannel;
-                    case 'chat':
-                    case 'group':
+                    case "chat":
+                    case "group":
                         return this.messaging.discuss.categoryChat;
                     default:
                         return clear();
@@ -256,37 +138,98 @@ registerModel({
          * Determines the discuss sidebar category item that displays this
          * channel.
          */
-        discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', {
-            compute: '_computeDiscussSidebarCategoryItem',
-            inverse: 'channel',
+        discussSidebarCategoryItem: one("DiscussSidebarCategoryItem", {
+            inverse: "channel",
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                if (!this.thread.isPinned) {
+                    return clear();
+                }
+                if (!this.discussSidebarCategory) {
+                    return clear();
+                }
+                return { category: this.discussSidebarCategory };
+            },
         }),
         displayName: attr({
-            compute: '_computeDisplayName',
+            compute() {
+                if (!this.thread) {
+                    return;
+                }
+                if (this.channel_type === "chat" && this.correspondent) {
+                    return (
+                        this.custom_channel_name ||
+                        this.thread.getMemberName(this.correspondent.persona)
+                    );
+                }
+                if (this.channel_type === "group" && !this.thread.name) {
+                    return this.channelMembers
+                        .filter((channelMember) => channelMember.persona)
+                        .map((channelMember) => this.thread.getMemberName(channelMember.persona))
+                        .join(this.env._t(", "));
+                }
+                return this.thread.name;
+            },
         }),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         /**
          * Local value of message unread counter, that means it is based on
          * initial server value and updated with interface updates.
          */
         localMessageUnreadCounter: attr({
-            compute: '_computeLocalMessageUnreadCounter',
+            compute() {
+                if (!this.thread) {
+                    return clear();
+                }
+                // By default trust the server up to the last message it used
+                // because it's not possible to do better.
+                let baseCounter = this.serverMessageUnreadCounter;
+                let countFromId = this.thread.serverLastMessage
+                    ? this.thread.serverLastMessage.id
+                    : 0;
+                // But if the client knows the last seen message that the server
+                // returned (and by assumption all the messages that come after),
+                // the counter can be computed fully locally, ignoring potentially
+                // obsolete values from the server.
+                const firstMessage = this.thread.orderedMessages[0];
+                if (
+                    firstMessage &&
+                    this.thread.lastSeenByCurrentPartnerMessageId &&
+                    this.thread.lastSeenByCurrentPartnerMessageId >= firstMessage.id
+                ) {
+                    baseCounter = 0;
+                    countFromId = this.thread.lastSeenByCurrentPartnerMessageId;
+                }
+                // Include all the messages that are known locally but the server
+                // didn't take into account.
+                return this.thread.orderedMessages.reduce((total, message) => {
+                    if (message.id <= countFromId) {
+                        return total;
+                    }
+                    return total + 1;
+                }, baseCounter);
+            },
         }),
         /**
          * States the number of members in this channel according to the server.
          */
         memberCount: attr(),
-        memberOfCurrentUser: one('ChannelMember', {
-            inverse: 'channelAsMemberOfCurrentUser',
+        memberOfCurrentUser: one("ChannelMember", { inverse: "channelAsMemberOfCurrentUser" }),
+        orderedOfflineMembers: many("ChannelMember", {
+            inverse: "channelAsOfflineMember",
+            sort: [
+                ["truthy-first", "persona.name"],
+                ["case-insensitive-asc", "persona.name"],
+            ],
         }),
-        orderedOfflineMembers: many('ChannelMember', {
-            inverse: 'channelAsOfflineMember',
-            sort: '_sortMembers',
-        }),
-        orderedOnlineMembers: many('ChannelMember', {
-            inverse: 'channelAsOnlineMember',
-            sort: '_sortMembers',
+        orderedOnlineMembers: many("ChannelMember", {
+            inverse: "channelAsOnlineMember",
+            sort: [
+                ["truthy-first", "persona.name"],
+                ["case-insensitive-asc", "persona.name"],
+            ],
         }),
         /**
          * Message unread counter coming from server.
@@ -298,25 +241,21 @@ registerModel({
          *
          * @see localMessageUnreadCounter
          */
-        serverMessageUnreadCounter: attr({
-            default: 0,
-        }),
+        serverMessageUnreadCounter: attr({ default: 0 }),
         /**
          * Determines whether we only display the participants who broadcast a video or all of them.
          */
-        showOnlyVideo: attr({
-            default: false,
-        }),
-        thread: one('Thread', {
+        showOnlyVideo: attr({ default: false }),
+        thread: one("Thread", {
+            inverse: "channel",
+            isCausal: true,
+            required: true,
             compute() {
                 return {
                     id: this.id,
-                    model: 'mail.channel',
+                    model: "mail.channel",
                 };
             },
-            inverse: 'channel',
-            isCausal: true,
-            required: true,
         }),
         /**
          * States how many members are currently unknown on the client side.
@@ -324,7 +263,9 @@ registerModel({
          * channel as reported in memberCount and those actually in members.
          */
         unknownMemberCount: attr({
-            compute: '_computeUnknownMemberCount',
+            compute() {
+                return this.memberCount - this.channelMembers.length;
+            },
         }),
     },
 });

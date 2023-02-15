@@ -3,6 +3,7 @@
 import base64
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.fields import Command
 from odoo.modules.module import get_module_resource
 from odoo.tests import tagged
 
@@ -146,22 +147,18 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             'list_price': 12.0,
         })
 
-        # fix runbot, sometimes one pricelist is chosen, sometimes the other...
-        pricelists = self.env['website'].get_current_website().get_current_pricelist() | self.env.ref('product.list0')
-
-        for pricelist in pricelists:
-            if not pricelist.item_ids.filtered(lambda i: i.product_tmpl_id == product_template and i.price_discount == 20):
-                self.env['product.pricelist.item'].create({
-                    'base': 'list_price',
-                    'applied_on': '1_product',
-                    'pricelist_id': pricelist.id,
-                    'product_tmpl_id': product_template.id,
-                    'price_discount': 20,
-                    'min_quantity': 2,
-                    'compute_price': 'formula',
-                })
-
-            pricelist.discount_policy = 'without_discount'
+        self.env['product.pricelist'].create({
+            'name': 'Base Pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [Command.create({
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'product_tmpl_id': product_template.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula',
+            })],
+        })
 
         self.start_tour("/", 'shop_custom_attribute_value', login="admin")
 
@@ -318,6 +315,10 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_list_view_b2c', login="admin")
 
     def test_07_editor_shop(self):
+        self.env['product.pricelist'].create([
+            {'name': 'Base Pricelist', 'selectable': True},
+            {'name': 'Other Pricelist', 'selectable': True}
+        ])
         self.start_tour("/", 'shop_editor', login="admin")
 
     def test_08_portal_tour_archived_variant_multiple_attributes(self):

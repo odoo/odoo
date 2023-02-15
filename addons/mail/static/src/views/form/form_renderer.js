@@ -1,45 +1,27 @@
 /** @odoo-module */
 
-import { useModels } from '@mail/component_hooks/use_models';
 import { ChatterContainer } from "@mail/components/chatter_container/chatter_container";
-import { WebClientViewAttachmentViewContainer } from '@mail/components/web_client_view_attachment_view_container/web_client_view_attachment_view_container';
+import { WebClientViewAttachmentViewContainer } from "@mail/components/web_client_view_attachment_view_container/web_client_view_attachment_view_container";
 
 import { patch } from "@web/core/utils/patch";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-patch(FormRenderer.prototype, 'mail', {
-    setup() {
-        this._super();
-        if (this.env.services.messaging) {
-            useModels();
-        }
+patch(FormRenderer.prototype, "mail", {
+    get compileParams() {
+        return {
+            ...this._super(),
+            hasAttachmentViewerInArch: this.props.hasAttachmentViewerInArch,
+            saveButtonClicked: this.props.saveButtonClicked,
+        };
     },
+});
 
-    //--------------------------------------------------------------------------
-    // Mail Methods
-    //--------------------------------------------------------------------------
-
-    /**
-     * @returns {Messaging|undefined}
-     */
-    getMessaging() {
-        return this.env.services.messaging && this.env.services.messaging.modelManager.messaging;
-    },
-    /**
-     * @returns {boolean}
-     */
-    hasAttachmentViewer() {
-        if (!this.getMessaging() || !this.props.record.resId) {
-            return false;
-        }
-        const thread = this.getMessaging().models['Thread'].insert({
-            id: this.props.record.resId,
-            model: this.props.record.resModel,
-        });
-        return (
-            thread.attachmentsInWebClientView.length > 0
-        );
-    },
+patch(FormRenderer.props, "mail", {
+    hasAttachmentViewerInArch: { type: Boolean, optional: true },
+    // Template props : added by the FormCompiler
+    hasAttachmentViewer: { type: Boolean, optional: true },
+    chatter: { type: Object, optional: true },
+    saveButtonClicked: { type: Function, optional: true },
 });
 
 Object.assign(FormRenderer.components, {

@@ -1,20 +1,21 @@
-odoo.define('point_of_sale.HeaderButton', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
+import { useService } from "@web/core/utils/hooks";
+import { ClosePosPopup } from "@point_of_sale/js/Popups/ClosePosPopup";
 
-    // Previously HeaderButtonWidget
-    // This is the close session button
-    class HeaderButton extends PosComponent {
-        async onClick() {
-            const info = await this.env.pos.getClosePosInfo();
-            this.showPopup('ClosePosPopup', { info: info, keepBehind: true });
-        }
+// Previously HeaderButtonWidget
+// This is the close session button
+export class HeaderButton extends LegacyComponent {
+    static template = "HeaderButton";
+
+    setup() {
+        super.setup(...arguments);
+        this.popup = useService("popup");
     }
-    HeaderButton.template = 'HeaderButton';
 
-    Registries.Component.add(HeaderButton);
-
-    return HeaderButton;
-});
+    async onClick() {
+        const info = await this.env.pos.getClosePosInfo();
+        this.popup.add(ClosePosPopup, { info: info, keepBehind: true });
+    }
+}

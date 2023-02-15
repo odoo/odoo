@@ -2,8 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.exceptions
+import werkzeug.urls
+
+from werkzeug.urls import url_parse
 
 from odoo import api, fields, models
+from odoo.addons.http_routing.models.ir_http import unslug_url
+from odoo.http import request
 from odoo.tools.translate import html_translate
 
 
@@ -114,15 +119,15 @@ class Menu(models.Model):
     def _compute_visible(self):
         for menu in self:
             visible = True
-            if (menu.page_id and not menu.user_has_groups('base.group_user')
-                and (not menu.page_id.sudo().is_visible
-                     or (not menu.page_id.view_id._handle_visibility(do_raise=False)
-                         and menu.page_id.view_id._get_cached_visibility() != "password"))):
-                visible = False
+            if menu.page_id and not menu.user_has_groups('base.group_user'):
+                page_sudo = menu.page_id.sudo()
+                if (not page_sudo.is_visible
+                    or (not page_sudo.view_id._handle_visibility(do_raise=False)
+                        and page_sudo.view_id._get_cached_visibility() != "password")):
+                    visible = False
             menu.is_visible = visible
 
-    @api.model
-    def clean_url(self):
+    def _clean_url(self):
         # clean the url with heuristic
         if self.page_id:
             url = self.page_id.sudo().url
@@ -135,6 +140,52 @@ class Menu(models.Model):
                 elif not self.url.startswith('http'):
                     url = '/%s' % self.url
         return url
+
+    def _is_active(self):
+        """ To be considered active, a menu should either:
+
+        - have its URL matching the request's URL and have no children
+        - or have a children menu URL matching the request's URL
+
+        Matching an URL means, either:
+
+        - be equal, eg ``/contact/on-site`` vs ``/contact/on-site``
+        - be equal after unslug, eg ``/shop/1`` and ``/shop/my-super-product-1``
+
+        Note that saving a menu URL with an anchor or a query string is
+        considered a corner case, and the following applies:
+
+        - anchor/fragment are ignored during the comparison (it would be
+          impossible to compare anyway as the client is not sending the anchor
+          to the server as per RFC)
+        - query string parameters should be the same to be considered equal, as
+          those could drasticaly alter a page result
+        """
+        if not request:
+            return False
+
+        request_url = url_parse(request.httprequest.url)
+
+        if not self.child_id:
+            # Don't compare to `url` as it could be shadowed by the linked
+            # website page's URL
+            menu_url = self._clean_url()
+            if not menu_url:
+                return False
+
+            menu_url = url_parse(menu_url)
+            if unslug_url(menu_url.path) == unslug_url(request_url.path) and menu_url.decode_query() == request_url.decode_query():
+                if menu_url.netloc and menu_url.netloc != request_url.netloc:
+                    # correct path but not correct domain
+                    return False
+                return True
+        else:
+            # Child match (dropdown menu), `self` is just a parent/container,
+            # don't check its URL, consider only its children
+            if any(child._is_active() for child in self.child_id):
+                return True
+
+        return False
 
     # would be better to take a menu_id as argument
     @api.model
@@ -182,11 +233,20 @@ class Menu(models.Model):
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
-            # if the url match a website.page, set the m2o relation
-            # except if the menu url is '#', meaning it will be used as a menu container, most likely for a dropdown
-            if not menu['url'] or menu['url'] == '#':
+            # Check if the url match a website.page (to set the m2o relation),
+            # except if the menu url contains '#', we then unset the page_id
+            if not menu['url'] or '#' in menu['url']:
+                # Multiple case possible
+                # 1. `#` => menu container (dropdown, ..)
+                # 2. `#anchor` => anchor on current page
+                # 3. `/url#something` => valid internal URL
+                # 4. https://google.com#smth => valid external URL
                 if menu_id.page_id:
                     menu_id.page_id = None
+                if request and menu['url'] and menu['url'].startswith('#') and len(menu['url']) > 1:
+                    # Working on case 2.: prefix anchor with referer URL
+                    referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
+                    menu['url'] = referer_url + menu['url']
             else:
                 domain = self.env["website"].website_domain(website_id) + [
                     "|",
