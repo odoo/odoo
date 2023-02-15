@@ -142,21 +142,21 @@ export class Rtc {
         void proxyAudioInputDevice.audioInputDeviceId;
         this.env.bus.addEventListener("THREAD-SERVICE:UPDATE_RTC_SESSIONS", ({ detail }) => {
             const thread = detail.thread;
-            const data = detail.data;
-            const sessionsData = data[1];
-            const command = data[0];
-            switch (command) {
-                case "insert-and-unlink":
-                    for (const rtcSessionData of sessionsData) {
-                        this.deleteSession(rtcSessionData.id);
-                    }
-                    break;
-                case "insert":
-                    for (const rtcSessionData of sessionsData) {
-                        const session = this.insertSession(rtcSessionData);
-                        thread.rtcSessions[session.id] = session;
-                    }
-                    break;
+            for (const command of detail.commands) {
+                const sessionsData = command[1];
+                switch (command[0]) {
+                    case "insert-and-unlink":
+                        for (const rtcSessionData of sessionsData) {
+                            this.deleteSession(rtcSessionData.id);
+                        }
+                        break;
+                    case "insert":
+                        for (const rtcSessionData of sessionsData) {
+                            const session = this.insertSession(rtcSessionData);
+                            thread.rtcSessions[session.id] = session;
+                        }
+                        break;
+                }
             }
         });
 

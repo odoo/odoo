@@ -459,7 +459,7 @@ export class ThreadService {
                 // FIXME this prevents cyclic dependencies between mail.thread and mail.rtc
                 this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
                     thread,
-                    data: serverData.rtcSessions[0],
+                    commands: serverData.rtcSessions,
                 });
             }
             if ("invitedPartners" in serverData) {
