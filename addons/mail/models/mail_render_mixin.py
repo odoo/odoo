@@ -515,6 +515,13 @@ class MailRenderMixin(models.AbstractModel):
                 _('Template rendering supports only inline_template, qweb, or qweb_view (view or raw); received %(engine)s instead.',
                   engine=engine)
             )
+        valid_render_options = {'post_process', 'preserve_comments'}
+        if not set((options or {}).keys()) <= valid_render_options:
+            raise ValueError(
+                _('Those values are not supported as options when rendering: %(param_names)s',
+                  param_names=', '.join(set(options.keys()) - valid_render_options)
+                 )
+            )
 
         if engine == 'qweb_view':
             rendered = self._render_template_qweb_view(template_src, model, res_ids,

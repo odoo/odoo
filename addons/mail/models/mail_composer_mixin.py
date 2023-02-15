@@ -110,16 +110,29 @@ class MailComposerMixin(models.AbstractModel):
           * for body: if current user cannot edit it, force template value back
             then bypass the check;
         """
-        if field not in self._fields:
-            raise ValueError(_("The field %s does not exist on the model %s", field, self._name))
+        if field not in self:
+            raise ValueError(
+                _('Rendering of %(field_name)s is not possible as not defined on template.',
+                  field_name=field
+                 )
+            )
 
         if not self.template_id:
             # Do not need to bypass the verification
             return super()._render_field(field, *args, **kwargs)
 
+        # template-based access check + translation check
+        template_field = {
+            'body': 'body_html',
+        }.get(field, field)
+        if template_field not in self.template_id:
+            raise ValueError(
+                _('Rendering of %(field_name)s is not possible as no counterpart on template.',
+                  field_name=field
+                 )
+            )
+
         composer_value = self[field]
-        template_field = 'body_html' if field == 'body' else field
-        assert template_field in self.template_id._fields
         template_value = self.template_id[template_field]
 
         call_sudo = False
