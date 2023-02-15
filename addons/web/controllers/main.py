@@ -1392,10 +1392,11 @@ class Binary(http.Controller):
         '/web/assets/<int:id>-<string:unique>/<string:filename>',
         '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
     def content_assets(self, id=None, filename=None, unique=None, extra=None, **kw):
+        domain = [('url', '!=', False)]
         if extra:
-            domain = [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
+            domain += [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
         else:
-            domain = [
+            domain += [
                 ('url', '=like', f'/web/assets/%/{filename}'),
                 ('url', 'not like', f'/web/assets/%/%/{filename}')
             ]
