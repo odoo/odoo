@@ -2039,30 +2039,23 @@ class TestComposerResultsMass(TestMailComposer):
                     email = self._find_sent_email(self.partner_employee_2.email_formatted, [record.customer_id.email_formatted])
                     self.assertTrue(bool(email), 'Email not found, check recipients')
 
-                    # Currently layouting in mailing mode is not supported.
-                    # Hence no translations.
-                    self.assertEqual(
-                        email['body'],
-                        f'<p>{exp_body}</p>'
-                    )
-                    # exp_layout_content_en = 'English Layout for Ticket-like model'
-                    # exp_layout_content_es = 'Spanish Layout para Spanish Model Description'
-                    # exp_button_en = 'View Ticket-like model'
-                    # exp_button_es = 'zefView Ticket-like model'
-                    # if email_layout_xmlid:
-                    #     if exp_lang == 'es_ES':
-                    #         self.assertIn(exp_layout_content_es, email['body'])
-                    #         self.assertIn(exp_button_en, email['body'])
-                    #     else:
-                    #         self.assertIn(exp_layout_content_en, email['body'])
-                    #         # self.assertIn(exp_button_es, email['body'])
-                    #         self.assertIn(exp_button_en, email['body'])
-                    # else:
-                    #     # check default layouting applies
-                    #     if exp_lang == 'es_ES':
-                    #         self.assertIn('html lang="es_ES"', email['body'])
-                    #     else:
-                    #         self.assertIn('html lang="en_US"', email['body'])
+                    if not email_layout_xmlid:
+                        self.assertEqual(
+                            email['body'],
+                            f'<p>{exp_body}</p>'
+                        )
+                    else:
+                        exp_layout_content_en = 'English Layout for Ticket-like model'
+                        exp_layout_content_es = 'Spanish Layout para Spanish Model Description'
+                        exp_button_en = 'View Ticket-like model'
+                        exp_button_es = 'Spanish Layout para Spanish Model Description'
+                        if exp_lang == 'es_ES':
+                            self.assertIn(exp_layout_content_es, email['body'])
+                            self.assertIn(exp_button_es, email['body'])
+                        else:
+                            self.assertIn(exp_layout_content_en, email['body'])
+                            # self.assertIn(exp_button_es, email['body'])
+                            self.assertIn(exp_button_en, email['body'])
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
