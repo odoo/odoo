@@ -221,13 +221,17 @@ class BaseModel(models.AbstractModel):
         return E.activity(templates, string=self._description)
 
     # ------------------------------------------------------------
-    # GATEWAY: NOTIFICATION
+    # DISCUSS
     # ------------------------------------------------------------
 
     def _mail_get_message_subtypes(self):
         return self.env['mail.message.subtype'].search([
             '&', ('hidden', '=', False),
             '|', ('res_model', '=', self._name), ('res_model', '=', False)])
+
+    # ------------------------------------------------------------
+    # GATEWAY: NOTIFICATION
+    # ------------------------------------------------------------
 
     def _notify_by_email_get_headers(self):
         """ Generate the email headers based on record """

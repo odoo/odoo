@@ -1518,8 +1518,9 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_lang_template_comment(self):
         """ When posting in comment mode, content is rendered using the lang
-        field of template. Notification layout lang is partly coming from
-        template, partly from environment (to be improved). """
+        field of template. Notification layout lang is the one from the
+        customer to personalize the context. When not found it fallbacks
+        on rendered template lang or environment lang. """
         test_record = self.test_records[0].with_user(self.env.user)
         test_template = self.test_template.with_user(self.env.user)
 
@@ -1566,9 +1567,8 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
                 else:
                     self.assertEqual(f'SpanishSubject for {test_record.name}', customer_email['subject'],
                                      'Subject based on template should be translated')
-                # check notification layout content: currently partly translated
-                # based only on template definition
-                if exp_content_lang == 'en_US':
+                # check notification layout content: depends on customer lang
+                if exp_notif_lang == 'en_US':
                     self.assertNotIn('Spanish Layout para', body, 'Layout translation failed')
                     self.assertIn('English Layout for Lang Chatter Model', body,
                                   'Layout / model translation failed')
@@ -1583,14 +1583,19 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
                     self.assertIn('NotificationButtonTitle', body,
                                   'Groups-based action names translation failed')
                 else:
+                    self.assertNotIn('English Layout for', body, 'Layout translation failed')
+                    self.assertIn('Spanish Layout para Spanish Model Description', body,
+                                  'Layout / model translation failed')
+                    self.assertNotIn('Lang Chatter Model', body, 'Model translation failed')
+                    # check notification layout strings
                     self.assertIn('SpanishView Spanish Model Description', body,
-                                  '"View document" should be translated')
+                                  '"View document" translation failed')
                     self.assertNotIn(f'View {test_record._description}', body,
-                                     '"View document" should be translated')
+                                    '"View document" translation failed')
                     self.assertIn('SpanishButtonTitle', body,
-                                  'Groups-based action names should be translated')
+                                  'Groups-based action names translation failed')
                     self.assertNotIn('NotificationButtonTitle', body,
-                                     'Groups-based action names should be translated')
+                                     'Groups-based action names translation failed')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -1658,7 +1663,8 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_layout_email_lang_template(self):
         """ Test language support when posting in batch using a template.
-        Content and layout are is translated based on template definition. """
+        Content is translated based on template definition, layout based on
+        customer lang. """
         test_records = self.test_records.with_user(self.env.user)
         test_template = self.test_template.with_user(self.env.user)
 
@@ -1673,7 +1679,11 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
         record0_customer = self.env['res.partner'].search([('email_normalized', '=', 'test.record.1@test.customer.com')], limit=1)
         self.assertTrue(record0_customer, 'Template usage should have created a contact based on record email')
 
-        for record, customer in zip(test_records, record0_customer + self.partner_2):
+        for record, customer, exp_notif_lang in zip(
+            test_records,
+            record0_customer + self.partner_2,
+            ('en_US', 'es_ES')  # new customer is en_US, partner_2 is es_ES
+        ):
             customer_email = self._find_sent_mail_wemail(customer.email_formatted)
             self.assertTrue(customer_email)
 
@@ -1688,19 +1698,34 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             self.assertEqual(f'SpanishSubject for {record.name}', customer_email['subject'],
                              'Subject based on template should be translated')
             # check notification layout translation
-            self.assertIn('Spanish Layout para', body,
-                          'Layout content should be translated')
-            self.assertNotIn('English Layout for', body)
-            self.assertIn('Spanish Layout para Spanish Model Description', body,
-                          'Model name should be translated')
-            self.assertIn('SpanishView Spanish Model Description', body,
-                          '"View document" should be translated')
-            self.assertNotIn(f'View {test_records[1]._description}', body,
-                             '"View document" should be translated')
-            self.assertIn('SpanishButtonTitle', body,
-                          'Groups-based action names should be translated')
-            self.assertNotIn('NotificationButtonTitle', body,
-                          'Fixme: groups-based action names should be translated')
+            if exp_notif_lang == 'en_US':
+                self.assertNotIn('Spanish Layout para', body,
+                                 'Layout content should be translated')
+                self.assertIn('English Layout for', body)
+                self.assertNotIn('Spanish Layout para Spanish Model Description', body,
+                                 'Model name should be translated')
+                self.assertNotIn('SpanishView Spanish Model Description', body,
+                                 '"View document" should be translated')
+                self.assertIn(f'View {test_records[1]._description}', body,
+                              '"View document" should be translated')
+                self.assertNotIn('SpanishButtonTitle', body,
+                                 'Groups-based action names should be translated')
+                self.assertIn('NotificationButtonTitle', body,
+                              'Groups-based action names should be translated')
+            else:
+                self.assertIn('Spanish Layout para', body,
+                              'Layout content should be translated')
+                self.assertNotIn('English Layout for', body)
+                self.assertIn('Spanish Layout para Spanish Model Description', body,
+                              'Model name should be translated')
+                self.assertIn('SpanishView Spanish Model Description', body,
+                              '"View document" should be translated')
+                self.assertNotIn(f'View {test_records[1]._description}', body,
+                                 '"View document" should be translated')
+                self.assertIn('SpanishButtonTitle', body,
+                              'Groups-based action names should be translated')
+                self.assertNotIn('NotificationButtonTitle', body,
+                                 'Groups-based action names should be translated')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -1743,29 +1768,34 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
                         )
 
                         # check created mail.mail and outgoing emails. One email
-                        # is generated for 'partner_1' and 'partner_2' (same email
-                        # as same configuration (aka all customers)).
-                        _mail = self.assertMailMail(
-                            self.partner_1 + self.partner_2, 'sent',
-                            mail_message=message,
-                            author=self.partner_employee,
-                            email_values={
-                                'body_content': '<p>Hi there</p>',
-                                'email_from': self.partner_employee.email_formatted,
-                                'subject': 'TeDeum',
-                            },
-                           )
+                        # is generated for each partner 'partner_1' and 'partner_2'
+                        # different language thus different layout
+                        for partner in self.partner_1 + self.partner_2:
+                            _mail = self.assertMailMail(
+                                partner, 'sent',
+                                mail_message=message,
+                                author=self.partner_employee,
+                                email_values={
+                                    'body_content': '<p>Hi there</p>',
+                                    'email_from': self.partner_employee.email_formatted,
+                                    'subject': 'TeDeum',
+                                },
+                            )
 
                         # Low-level checks on outgoing email for the recipient to
                         # check layouting and language. Note that standard layout
                         # is not tested against translations, only the custom one
                         # to ease translations checks.
-                        for partner in self.partner_1 + self.partner_2:
+                        for partner, exp_lang in zip(
+                            self.partner_1 + self.partner_2,
+                            ('en_US', 'es_ES')
+                        ):
                             email = self._find_sent_email(
                                 self.partner_employee.email_formatted,
                                 [partner.email_formatted]
                             )
                             self.assertTrue(bool(email), 'Email not found, check recipients')
+                            self.assertEqual(partner.lang, exp_lang, 'Test misconfiguration')
 
                             exp_layout_content_en = 'English Layout for Lang Chatter Model'
                             exp_layout_content_es = 'Spanish Layout para Spanish Model Description'
@@ -1774,7 +1804,7 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
                             exp_action_en = 'NotificationButtonTitle'
                             exp_action_es = 'SpanishButtonTitle'
                             if email_layout_xmlid:
-                                if employee_lang == 'es_ES':
+                                if exp_lang == 'es_ES':
                                     self.assertIn(exp_layout_content_es, email['body'])
                                     self.assertIn(exp_button_es, email['body'])
                                     self.assertIn(exp_action_es, email['body'])
@@ -1784,7 +1814,7 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
                                     self.assertIn(exp_action_en, email['body'])
                             else:
                                 # check default layouting applies
-                                if employee_lang == 'es_ES':
+                                if exp_lang == 'es_ES':
                                     self.assertIn('html lang="es_ES"', email['body'])
                                 else:
                                     self.assertIn('html lang="en_US"', email['body'])

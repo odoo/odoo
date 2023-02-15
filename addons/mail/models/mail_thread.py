@@ -3012,36 +3012,9 @@ class MailThread(models.AbstractModel):
         if not partners_data:
             return True
 
-        lang = force_email_lang if force_email_lang else self.env.context.get('lang')
-
-        if not model_description:
-            model_description = self.with_context(lang=lang)._get_model_description(
-                msg_vals['model'] if msg_vals and msg_vals.get('model') else message.model
-            )
-        recipients_groups_list = self.with_context(lang=lang)._notify_get_recipients_classify(
+        base_mail_values = self._notify_by_email_get_base_mail_values(
             message,
-            partners_data,
-            model_description,
-            msg_vals=msg_vals,
-        )
-
-        if not recipients_groups_list:
-            return True
-        force_send = self.env.context.get('mail_notify_force_send', force_send)
-
-        template_values = self.with_context(lang=lang)._notify_by_email_prepare_rendering_context(
-            message, msg_vals=msg_vals, model_description=model_description,
-            force_email_company=force_email_company,
-            force_email_lang=force_email_lang,
-        ) # 10 queries
-        if subtitles:
-            template_values['subtitles'] = subtitles
-
-        email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
-        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
-        base_mail_values = self.with_context(lang=lang)._notify_by_email_get_base_mail_values(
-            message,
-            additional_values={'auto_delete': mail_auto_delete},
+            additional_values={'auto_delete': mail_auto_delete}
         )
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
@@ -3057,18 +3030,23 @@ class MailThread(models.AbstractModel):
         # loop on groups (customer, portal, user,  ... + model specific like group_sale_salesman)
         notif_create_values = []
         recipients_max = 50
-        for recipients_group in recipients_groups_list:
+        for _lang, render_values, recipients_group in self._notify_get_classified_recipients_iterator(
+            message,
+            partners_data,
+            msg_vals=msg_vals,
+            model_description=model_description,
+            force_email_company=force_email_company,
+            force_email_lang=force_email_lang,
+            subtitles=subtitles,
+        ):
             # generate notification email content
+            mail_body = self._notify_by_email_render_layout(
+                message,
+                recipients_group,
+                msg_vals=msg_vals,
+                render_values=render_values,
+            )
             recipients_ids = recipients_group.pop('recipients')
-            render_values = {**template_values, **recipients_group}
-            # {company, is_discussion, lang, message, model_description, record, record_name, signature, subtype, tracking_values, website_url}
-            # {actions, button_access, has_button_access, recipients}
-
-            mail_body = self.env['ir.qweb']._render(template_xmlid, render_values, minimal_qcontext=True, raise_if_not_found=False, lang=template_values['lang'])
-            if not mail_body:
-                _logger.warning('QWeb template %s not found or is empty when sending notification emails. Sending without layouting.', template_xmlid)
-                mail_body = message.body
-            mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
 
             # create email
             for recipients_ids_chunk in split_every(recipients_max, recipients_ids):
@@ -3113,6 +3091,7 @@ class MailThread(models.AbstractModel):
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
         test_mode = getattr(threading.current_thread(), 'testing', False)
+        force_send = self.env.context.get('mail_notify_force_send', force_send)
         if force_send and len(emails) < recipients_max and (not self.pool._init or test_mode):
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails
@@ -3131,6 +3110,86 @@ class MailThread(models.AbstractModel):
                 emails.send()
 
         return True
+
+    def _notify_get_classified_recipients_iterator(
+            self, message, recipients_data, msg_vals=False,
+            model_description=False, force_email_company=False, force_email_lang=False,  # rendering
+            subtitles=None):
+        """ Make groups of recipients, based on 'recipients_data' which is a list
+        of recipients informations. Purpose of this method is to group them by
+        main usage ('user', 'portal_user', 'follower', 'customer', ... see
+        @_notify_get_recipients_classify) and lang. Each group is linked to
+        an evaluation context to render the notification layout.
+
+        :param message: ``mail.message`` record to notify;
+        :param list recipients_data: see ``MailThread._notify_get_recipients``;
+        :param msg_vals: dictionary of values used to create the message. If
+          given it may be used to access values related to ``message``;
+
+        :param str model_description: description of current model, given to
+          avoid fetching it and easing translation support;
+        :param record force_email_company: <res.company> record used when rendering
+          notification layout. Otherwise computed based on current record;
+        :param str force_email_lang: when no specific lang is found this is the
+          default lang to use notably to compute model name or translate access
+          buttons;
+        :param list subtitles: optional list set as template value "subtitles";
+
+        :return: iterator based on recipients classified by lang, with their
+          rendering evaluation context. Each item is a tuple containing (
+            lang: used for rendering (customer language, forced email, default
+              environment language,
+            render_values: used to render the notification layout and translated
+              using lang,
+            recipients_group: a recipients group is a dict containing data
+              defined in "_notify_get_recipients_groups" like {
+              'active': if not, it is skipped in notification process (ease
+                        inheritance to be already present);
+              'actions': list of actions to display as links or buttons in form
+                         {'url': link of the action, 'title': link or button
+                          string};
+              'button_access': main access document button information, {'url'
+                               link of the access, 'title': link or button
+                               string};
+              'has_button_access': display access document main button in email;
+              'notification_group_name': name of the group, to ease usage;
+              'recipients': list of partner IDs, will be fillup when evaluating
+                            groups;
+           }
+          );
+        """
+        lang_to_recipients = {}
+        for data in recipients_data:
+            lang_to_recipients.setdefault(
+                data.get('lang') or force_email_lang or self.env.lang,
+                [],
+            ).append(data)
+
+        for lang, lang_recipients_data in lang_to_recipients.items():
+            record_wlang = self.with_context(lang=lang)
+            lang_model_description = model_description
+            if not lang_model_description:
+                lang_model_description = record_wlang._get_model_description(
+                    msg_vals['model'] if msg_vals and msg_vals.get('model') else message.model
+                )
+            recipients_groups_list = record_wlang._notify_get_recipients_classify(
+                message,
+                lang_recipients_data,
+                lang_model_description,
+                msg_vals=msg_vals,
+            )
+            render_values = record_wlang._notify_by_email_prepare_rendering_context(
+                message,
+                msg_vals=msg_vals,
+                model_description=lang_model_description,
+                force_email_company=force_email_company,
+                force_email_lang=lang,
+            ) # 10 queries
+            if subtitles:
+                render_values['subtitles'] = subtitles
+
+            for recipients_group in recipients_groups_list:
+                yield (lang, render_values, recipients_group)
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False,
                                                    model_description=False,
@@ -3168,7 +3227,7 @@ class MailThread(models.AbstractModel):
         """
         if msg_vals is False:
             msg_vals = {}
-        lang = force_email_lang if force_email_lang else self.env.context.get('lang')
+        lang = force_email_lang if force_email_lang else self.env.lang
         record_wlang = self.with_context(lang=lang)
 
         # compute send user and its related signature; try to use self.env.user instead of browsing
@@ -3234,6 +3293,47 @@ class MailThread(models.AbstractModel):
             # tools
             'is_html_empty': is_html_empty,
         }
+
+    def _notify_by_email_render_layout(self, message, recipients_group,
+                                       msg_vals=False,
+                                       render_values=None):
+        """ Renders the email layout for a given recipients group which
+        encapsulate the message body.
+
+        :param record message: <mail.message> record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param dict recipients_group: a dict containing data for the recipients,
+          see @ _notify_get_recipients_groups;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
+        :param dict render_values: values to render the notification layout;
+
+        At this point expected values are
+          render_values: company, is_discussion, lang, message, model_description,
+                         record, record_name, signature, subtype, tracking_values,
+                         website_url
+          recipients_group: actions, button_access, has_button_access, recipients
+
+        :return str: rendered complete layout;
+        """
+        if render_values is None:
+            render_values = {}
+
+        email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
+        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
+
+        render_values = {**render_values, **recipients_group}
+        mail_body = self.env['ir.qweb']._render(
+            template_xmlid,
+            render_values,
+            minimal_qcontext=True,
+            raise_if_not_found=False,
+            lang=render_values.get('lang', self.env.lang),
+        )
+        if not mail_body:
+            _logger.warning('QWeb template %s not found or is empty when sending notification emails. Sending without layouting.', template_xmlid)
+            mail_body = message.body
+        return mail_body
 
     def _notify_by_email_get_base_mail_values(self, message, additional_values=None):
         """ Return model-specific and message-related values to be used when
