@@ -471,7 +471,7 @@ export class TicketScreen extends IndependentToOrderScreen {
 
         const toRefundDetail = this._getToRefundDetail(orderline);
         const refundableQty = orderline.get_quantity() - orderline.refunded_qty;
-        if (this.env.pos.isProductQtyZero(refundableQty - 1)) {
+        if (this.env.pos.isProductQtyZero(refundableQty - 1) && toRefundDetail.qty === 0) {
             toRefundDetail.qty = 1;
         }
         return true;
