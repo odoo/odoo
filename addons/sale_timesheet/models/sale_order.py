@@ -5,6 +5,7 @@ import math
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_compare
 
@@ -317,3 +318,39 @@ class SaleOrderLine(models.Model):
             if sol.is_service and len(timesheet_ids) > 0:
                 action_per_sol[sol.id] = timesheet_action, timesheet_ids[0] if len(timesheet_ids) == 1 else False
         return action_per_sol
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Note TODO: if multiple SOs in project.sale.line.employee.map, take the most recent one (highest ID)
+        if not 'create_from_linked_record' in self.env.context:
+            return super().create(vals_list)      
+
+        sale_order_id, partner_id = self.env.context.get('create_from_linked_record')
+        created_sales_orders = self.env['sale.order']
+        for vals in vals_list:
+            product_template = self.env['product.template'].search([('name', '=', vals.get('name'))], limit=1)
+            if not product_template:
+                if not self.env.user.has_group('sales_team.group_sale_manager'):
+                    raise UserError(_("Product '%s' does not exist.", vals.get('name')))
+                product_template = self.env['product.template'].create({
+                    'name': vals.get('name'),
+                    'sale_ok': True,
+                    'detailed_type': 'service',
+                    'list_price': 1,
+                    'service_type': 'timesheet',
+                    'invoice_policy': 'delivery',
+                })
+            product = self.env['product.product'].search([('product_tmpl_id', '=', product_template.id)], limit=1)
+            vals['product_id'] = product.id
+
+            if not sale_order_id:
+                sale_order = self.env['sale.order'].create({
+                    'partner_id': partner_id,
+                })
+                created_sales_orders |= sale_order
+                sale_order_id = sale_order.id
+            vals['order_id'] = sale_order_id
+            
+        new_recs = super().create(vals_list)
+        created_sales_orders.action_confirm()
+        return new_recs

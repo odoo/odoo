@@ -26,7 +26,7 @@ class ProjectProductEmployeeMap(models.Model):
     currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_currency_id', store=True, readonly=False)
     cost = fields.Monetary(currency_field='cost_currency_id', compute='_compute_cost', store=True, readonly=False,
                            help="This cost overrides the employee's default employee hourly wage in employee's HR Settings")
-    display_cost = fields.Monetary(currency_field='cost_currency_id', compute="_compute_display_cost", inverse="_inverse_display_cost", string="Hourly Cost")
+    display_cost = fields.Monetary(related='employee_id.hourly_cost')
     cost_currency_id = fields.Many2one('res.currency', string="Cost Currency", related='employee_id.currency_id', readonly=True)
     is_cost_changed = fields.Boolean('Is Cost Manually Changed', compute='_compute_is_cost_changed', store=True)
 
@@ -79,28 +79,6 @@ class ProjectProductEmployeeMap(models.Model):
                 resource_calendar_per_hours[calendar_id] = res.get('hours_per_day')
 
         return resource_calendar_per_hours
-
-    @api.depends_context('company')
-    @api.depends('cost', 'employee_id.resource_calendar_id')
-    def _compute_display_cost(self):
-        is_uom_day = self.env.ref('uom.product_uom_day') == self.env.company.timesheet_encode_uom_id
-        resource_calendar_per_hours = self._get_working_hours_per_calendar(is_uom_day)
-
-        for map_line in self:
-            if is_uom_day:
-                map_line.display_cost = map_line.cost * resource_calendar_per_hours.get(map_line.employee_id.resource_calendar_id.id, 1)
-            else:
-                map_line.display_cost = map_line.cost
-
-    def _inverse_display_cost(self):
-        is_uom_day = self.env.ref('uom.product_uom_day') == self.env.company.timesheet_encode_uom_id
-        resource_calendar_per_hours = self._get_working_hours_per_calendar(is_uom_day)
-
-        for map_line in self:
-            if is_uom_day:
-                map_line.cost = map_line.display_cost / resource_calendar_per_hours.get(map_line.employee_id.resource_calendar_id.id, 1)
-            else:
-                map_line.cost = map_line.display_cost
 
     @api.depends('cost')
     def _compute_is_cost_changed(self):

@@ -9,7 +9,7 @@
             </th>
             <th t-if="groupby == 'sale_line'" t-attf-colspan="{{grouped_tasks_colspan}}">
                 <span t-if="tasks[0].sudo().sale_line_id" class="text-truncate" t-field="tasks[0].sudo().sale_line_id"/>
-                <span t-else="">No Sales Order Item</span>
+                <span t-else="">Not Billed</span>
             </th>
         </xpath>
     </template>

@@ -12,13 +12,14 @@
             </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}">
+                    <field name="sale_order_id" invisible="1"/>
                     <field name="sale_line_employee_ids">
                         <tree editable="bottom">
                             <field name="company_id" invisible="1"/>
                             <field name="partner_id" invisible="1"/>
                             <field name="sale_order_id" invisible="1"/>
                             <field name="employee_id" options="{'no_create': True}" widget="many2one_avatar_user"/>
-                            <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}" context="{'search_default_order_id': sale_order_id}"/>
+                            <field name="sale_line_id" attrs="{'required': True}" options="{'no_create_edit': True}" context="{'search_default_order_id': sale_order_id', create_from_linked_record': (parent.sale_order_id, parent.partner_id)}"/>
                             <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
                             <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="is_cost_changed" invisible="1"/>
@@ -161,7 +162,7 @@
             <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
-                    <attribute name="context">{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True, 'with_remaining_hours': True}</attribute>
+                    <attribute name="context">{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True, 'with_remaining_hours': True, 'create_from_linked_record': (sale_order_id, partner_id)}</attribute>
                 </xpath>
             </field>
         </record>
