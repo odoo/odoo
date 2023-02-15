@@ -191,7 +191,7 @@
             </t>
 
             <div class="text-center mt16 mb256">
-                <button type="submit" value="finish" class="btn btn-primary disabled">Submit</button>
+                <button type="submit" value="finish" class="btn btn-secondary disabled">Submit</button>
                     <span class="fw-bold text-muted ms-2 d-none d-md-inline">
                         <span id="enter-tooltip">or press Enter</span>
                     </span>
@@ -209,9 +209,12 @@
 
             <div class="row">
                 <div class="col-12 text-center mt16">
-                    <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary disabled">
-                        <t t-if="not survey_last">Continue</t>
-                        <t t-else="">Submit</t>
+                    <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else 'next_skipped'
+                        if answer.survey_first_submitted and skipped_questions.page_id and page in skipped_questions.page_id else 'next'"/>
+                    <button type="submit" t-att-value="submit_value" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
+                        <t t-if="submit_value == 'finish'">Submit</t>
+                        <t t-elif="submit_value == 'next_skipped'">Next Skipped</t>
+                        <t t-else="">Continue</t>
                     </button>
                     <span class="fw-bold text-muted ms-2 d-none d-md-inline" id="enter-tooltip"> or press Enter</span>
                 </div>
@@ -247,8 +250,11 @@
 
                 <div class="row">
                     <div class="col-12 text-center mt16">
-                        <button type="submit" t-att-value="'next' if not survey_last else 'finish'" class="btn btn-primary disabled">
-                            <t t-if="answer.is_session_answer or survey_last">Submit</t>
+                        <t t-set="submit_value" t-value="'finish' if survey_last or answer.is_session_answer else
+                            'next_skipped' if answer.survey_first_submitted and skipped_questions and question in skipped_questions else 'next'"/>
+                        <button type="submit" t-att-value="submit_value" t-attf-class="btn #{'btn-secondary' if survey_last else 'btn-primary'} disabled">
+                            <t t-if="submit_value == 'finish'">Submit</t>
+                            <t t-elif="submit_value == 'next_skipped'">Next Skipped</t>
                             <t t-else="">Continue</t>
                         </button>
                         <span class="fw-bold text-muted ms-2 d-none d-md-inline">
@@ -318,10 +324,12 @@
         <t t-set="default_constr_error_msg">This question requires an answer.</t>
         <t t-set="default_validation_error_msg">The answer you entered is not valid.</t>
         <t t-set="default_comments_message">If other, please specify:</t>
+        <t t-set="is_skipped_question" t-value="skipped_questions and question in skipped_questions"/>
         <div t-att-class="'js_question-wrapper pb-4 %s %s' % ('d-none' if not display_question else '', 'me-2' if extra_right_margin else '')"
-             t-att-id="question.id" t-att-data-required="question.constr_mandatory"
-             t-att-data-constr-error-msg="question.constr_error_msg or default_constr_error_msg"
-             t-att-data-validation-error-msg="question.validation_error_msg or default_validation_error_msg">
+             t-att-id="question.id"
+             t-att-data-required="bool(question.constr_mandatory and (not survey.users_can_go_back or survey.questions_layout == 'one_page')) or None"
+             t-att-data-constr-error-msg="question.constr_error_msg or default_constr_error_msg if question.constr_mandatory else None"
+             t-att-data-validation-error-msg="question.validation_error_msg or default_validation_error_msg if question.validation_required else None">
             <div class="mb-4">
                 <h3 t-if="not hide_question_title">
                     <span t-field='question.title' class="text-break" />
@@ -337,7 +345,10 @@
             <t t-if="question.question_type == 'simple_choice'"><t t-call="survey.question_simple_choice"/></t>
             <t t-if="question.question_type == 'multiple_choice'"><t t-call="survey.question_multiple_choice"/></t>
             <t t-if="question.question_type == 'matrix'"><t t-call="survey.question_matrix"/></t>
-            <div class="o_survey_question_error overflow-hidden border-0 py-0 px-3 alert alert-danger" role="alert"></div>
+            <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
+                 border-0 py-0 px-3 alert alert-danger #{'slide_in' if is_skipped_question else ''}" role="alert">
+                <span t-if="is_skipped_question" t-out="question.constr_error_msg or default_constr_error_msg"/>
+            </div>
         </div>
     </template>
 
@@ -414,6 +425,7 @@
         <t t-set="comment_line" t-value="answer_lines.filtered(lambda line: line.value_char_box)"/>
         <div class="row o_survey_form_choice"
              t-att-data-name="question.id"
+             t-att-data-is-skipped-question="is_skipped_question or None"
              data-question-type="simple_choice_radio">
             <t t-set="item_idx" t-value="0"/>
             <div t-attf-class="col-lg-12 d-flex flex-wrap">

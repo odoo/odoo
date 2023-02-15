@@ -403,11 +403,11 @@ class SurveyQuestion(models.Model):
         if isinstance(answer, str):
             answer = answer.strip()
         # Empty answer to mandatory question
-        if self.constr_mandatory and not answer and self.question_type not in ['simple_choice', 'multiple_choice']:
-            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
-
         # because in choices question types, comment can count as answer
-        if answer or self.question_type in ['simple_choice', 'multiple_choice']:
+        if not answer and self.question_type not in ['simple_choice', 'multiple_choice']:
+            if self.constr_mandatory and not self.survey_id.users_can_go_back:
+                return {self.id: self.constr_error_msg or _('This question requires an answer.')}
+        else:
             if self.question_type == 'char_box':
                 return self._validate_char_box(answer)
             elif self.question_type == 'numerical_box':
@@ -473,7 +473,8 @@ class SurveyQuestion(models.Model):
 
     def _validate_choice(self, answer, comment):
         # Empty comment
-        if self.constr_mandatory \
+        if not self.survey_id.users_can_go_back \
+                and self.constr_mandatory \
                 and not answer \
                 and not (self.comments_allowed and self.comment_count_as_answer and comment):
             return {self.id: self.constr_error_msg or _('This question requires an answer.')}
