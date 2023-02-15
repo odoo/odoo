@@ -427,6 +427,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 return event.data.onSuccess();
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
+                    rootID: params[0],
                     save: () => {
                         const snippetsMenu = this.widget.snippetsMenu;
                         snippetsMenu.trigger_up('request_save', {reload: true, _toMutex: true});
