@@ -142,6 +142,15 @@ class Do {
             },
         ];
     }
+    enterOpeningAmount(amount) {
+        return [
+            {
+                content: 'enter opening amount',
+                trigger: '.cash-input-sub-section > .pos-input',
+                run: 'text ' + amount,
+            },
+        ];
+    }
 }
 
 class Check {
@@ -232,6 +241,24 @@ class Check {
                 content: `line has '${note}' as customer note`,
                 trigger: `.order .orderline .info-list .orderline-note:contains("${note}")`,
                 run: function () {}, // it's a check
+            },
+        ];
+    }
+    checkSecondCashClosingDetailsLineAmount(amount, sign) {
+        return [
+            {
+                content: 'Click close session button',
+                trigger: '.fa-sign-out',
+            },
+            {
+                content: 'Check closing details',
+                trigger: `.cash-overview tr:nth-child(2) td:contains("${amount}")`,
+                run: () => {}, // it's a check
+            },
+            {
+                content: 'Check closing details',
+                trigger: `.cash-overview tr:nth-child(2) .cash-sign:contains("${sign}")`,
+                run: () => {}, // it's a check
             },
         ];
     }
