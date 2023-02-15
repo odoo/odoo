@@ -12,6 +12,8 @@ import time
 import traceback
 import warnings
 
+import werkzeug.serving
+
 from . import release
 from . import sql_db
 from . import tools
@@ -208,6 +210,7 @@ def init_logger():
     else:
         formatter = DBFormatter(format)
         perf_filter = PerfFilter()
+        werkzeug.serving._log_add_style = False
     handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
     logging.getLogger('werkzeug').addFilter(perf_filter)
