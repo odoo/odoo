@@ -14,7 +14,6 @@ import re
 import threading
 import time
 import uuid
-import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from inspect import currentframe
@@ -22,7 +21,7 @@ from inspect import currentframe
 import psycopg2
 import psycopg2.extensions
 import psycopg2.extras
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
+from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from psycopg2.sql import SQL, Identifier
 from werkzeug import urls
@@ -237,11 +236,8 @@ class Cursor(BaseCursor):
     """
     IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
 
-    def __init__(self, pool, dbname, dsn, **kwargs):
+    def __init__(self, pool, dbname, dsn):
         super().__init__()
-        if 'serialized' in kwargs:
-            warnings.warn("Since 16.0, 'serialized' parameter is not used anymore.", DeprecationWarning, 2)
-        assert kwargs.keys() <= {'serialized'}
         self.sql_from_log = {}
         self.sql_into_log = {}
 
@@ -425,17 +421,6 @@ class Cursor(BaseCursor):
             keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
-    def autocommit(self, on):
-        warnings.warn(
-            f"Deprecated Methods since 16.0, use {'`_cnx.autocommit = True`' if on else '`_cnx.set_isolation_level`'} instead.",
-            DeprecationWarning, stacklevel=2
-        )
-        if on:
-            isolation_level = ISOLATION_LEVEL_AUTOCOMMIT
-        else:
-            isolation_level = ISOLATION_LEVEL_REPEATABLE_READ if self._serialized else ISOLATION_LEVEL_READ_COMMITTED
-        self._cnx.set_isolation_level(isolation_level)
-
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
@@ -527,9 +512,6 @@ class TestCursor(BaseCursor):
                 _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
 
             self._lock.release()
-
-    def autocommit(self, on):
-        warnings.warn("Deprecated method and does nothing since 16.0", DeprecationWarning, 2)
 
     def commit(self):
         """ Perform an SQL `COMMIT` """
@@ -684,16 +666,9 @@ class Connection(object):
         self.dsn = dsn
         self.__pool = pool
 
-    def cursor(self, **kwargs):
-        if 'serialized' in kwargs:
-            warnings.warn("Since 16.0, 'serialized' parameter is deprecated", DeprecationWarning, 2)
-        cursor_type = kwargs.pop('serialized', True) and 'serialized ' or ''
-        _logger.debug('create %scursor to %r', cursor_type, self.dsn)
+    def cursor(self):
+        _logger.debug('create cursor to %r', self.dsn)
         return Cursor(self.__pool, self.dbname, self.dsn)
-
-    def serialized_cursor(self, **kwargs):
-        warnings.warn("Since 16.0, 'serialized_cursor' is deprecated, use `cursor` instead", DeprecationWarning, 2)
-        return self.cursor(**kwargs)
 
     def __bool__(self):
         raise NotImplementedError()
