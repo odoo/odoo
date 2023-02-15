@@ -478,8 +478,8 @@
         <field name="date_to" eval="(datetime.today() + relativedelta(days=+8)).strftime('%Y-%m-%d 17:00:00')"></field>
     </record>
 
-    <!-- Stress day -->
-    <record id="hr_leave_stress_day_1" model="hr.leave.stress.day">
+    <!-- Mandatory day -->
+    <record id="hr_leave_mandatory_day_1" model="hr.leave.mandatory.day">
         <field name="name">Company Celebration</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="start_date" eval="(datetime.today() + relativedelta(days=+7)).strftime('%Y-%m-%d 07:00:00')"></field>

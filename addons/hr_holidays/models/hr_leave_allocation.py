@@ -9,7 +9,7 @@ import logging
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -136,6 +136,7 @@ class HolidaysAllocation(models.Model):
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     taken_leave_ids = fields.One2many('hr.leave', 'holiday_allocation_id', domain="[('state', 'in', ['confirm', 'validate1', 'validate'])]")
+    has_accrual_plan = fields.Boolean(compute='_compute_has_accrual_plan', string='Accrual Plan Available')
 
     _sql_constraints = [
         ('type_value',
@@ -168,7 +169,14 @@ class HolidaysAllocation(models.Model):
 
         for allocation in self:
             if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
-                allocation.name = allocation.sudo().private_name
+                title = allocation.sudo().private_name
+                if allocation.env.context.get('is_employee_allocation'):
+                    allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
+                    title = _(" %s Allocation Request ( %s %s)" % (
+                        allocation.holiday_status_id.name,
+                        allocation_duration,
+                        allocation.type_request_unit))
+                allocation.name = title
             else:
                 allocation.name = '*****'
 
@@ -187,6 +195,10 @@ class HolidaysAllocation(models.Model):
 
         allocations = self.sudo().search(domain)
         return [('id', 'in', allocations.ids)]
+
+    @api.depends('accrual_plan_id')
+    def _compute_has_accrual_plan(self):
+        self.has_accrual_plan = bool(self.env['hr.leave.accrual.plan'].sudo().search_count([('active', '=', True)]))
 
     @api.depends('name', 'date_from', 'date_to')
     def _compute_description_validity(self):

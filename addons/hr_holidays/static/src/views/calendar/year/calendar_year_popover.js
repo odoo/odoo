@@ -9,5 +9,5 @@ TimeOffCalendarYearPopover.components = { Dialog };
 TimeOffCalendarYearPopover.template = "web.CalendarYearPopover";
 TimeOffCalendarYearPopover.subTemplates = {
     ...CalendarYearPopover.subTemplates,
-    body: "hr_holidays.StressDayCalendarYearPopover.body",
+    body: "hr_holidays.MandatoryDayCalendarYearPopover.body",
 };

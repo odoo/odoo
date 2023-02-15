@@ -31,13 +31,13 @@
             background-color: $gray-200;
         }
 
-        &_stressday {
+        &_mandatoryday {
             font-weight: 600;
         }
     }
 
     @for $size from 1 through length($o-colors) {
-        .hr_stress_day_#{$size - 1}:not(.fc-disabled-day) {
+        .hr_mandatory_day_#{$size - 1}:not(.fc-disabled-day) {
             color: nth($o-colors, $size) !important;
         }
     }

@@ -4,21 +4,21 @@ import { useService } from "@web/core/utils/hooks";
 
 const { useEnv } = owl;
 
-export function useStressDays(props) {
+export function useMandatoryDays(props) {
     return (info) => {
         const date = luxon.DateTime.fromJSDate(info.date).toISODate();
-        const stressDay = props.model.stressDays[date];
-        if (stressDay) {
+        const mandatoryDay = props.model.mandatoryDays[date];
+        if (mandatoryDay) {
             const dayNumberElTop = info.view.el.querySelector(`.fc-day-top[data-date="${info.el.dataset.date }"]`)
             const dayNumberEl = info.view.el.querySelector(`.fc-day[data-date="${info.el.dataset.date }"]`)
             if (dayNumberElTop) {
-                dayNumberElTop.classList.add(`hr_stress_day_top_${stressDay}`);
+                dayNumberElTop.classList.add(`hr_mandatory_day_top_${mandatoryDay}`);
             }
             if (dayNumberEl) {
-                dayNumberEl.classList.add(`hr_stress_day_${stressDay}`);
+                dayNumberEl.classList.add(`hr_mandatory_day_${mandatoryDay}`);
             }
         }
-        return props.model.stressDays;
+        return props.model.mandatoryDays;
     }
 }
 

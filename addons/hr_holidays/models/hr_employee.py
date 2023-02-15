@@ -273,23 +273,23 @@ class HrEmployee(models.Model):
     def _is_leave_user(self):
         return self == self.env.user.employee_id and self.user_has_groups('hr_holidays.group_hr_holidays_user')
 
-    def get_stress_days(self, start_date, end_date):
+    def get_mandatory_days(self, start_date, end_date):
         all_days = {}
 
         self = self or self.env.user.employee_id
 
-        stress_days = self._get_stress_days(start_date, end_date)
-        for stress_day in stress_days:
-            num_days = (stress_day.end_date - stress_day.start_date).days
+        mandatory_days = self._get_mandatory_days(start_date, end_date)
+        for mandatory_day in mandatory_days:
+            num_days = (mandatory_day.end_date - mandatory_day.start_date).days
             for d in range(num_days + 1):
-                all_days[str(stress_day.start_date + relativedelta(days=d))] = stress_day.color
+                all_days[str(mandatory_day.start_date + relativedelta(days=d))] = mandatory_day.color
 
         return all_days
 
     @api.model
     def get_special_days_data(self, date_start, date_end):
         return {
-            'stressDays': self.get_stress_days_data(date_start, date_end),
+            'mandatoryDays': self.get_mandatory_days_data(date_start, date_end),
             'bankHolidays': self.get_public_holidays_data(date_start, date_end),
         }
 
@@ -328,9 +328,9 @@ class HrEmployee(models.Model):
         return self.env['resource.calendar.leaves'].search(domain)
 
     @api.model
-    def get_stress_days_data(self, date_start, date_end):
+    def get_mandatory_days_data(self, date_start, date_end):
         self = self._get_contextual_employee()
-        stress_days = self._get_stress_days(date_start, date_end).sorted('start_date')
+        mandatory_days = self._get_mandatory_days(date_start, date_end).sorted('start_date')
         return list(map(lambda sd: {
             'id': -sd.id,
             'colorIndex': sd.color,
@@ -340,16 +340,16 @@ class HrEmployee(models.Model):
             'start': datetime.datetime.combine(sd.start_date, datetime.datetime.min.time()).isoformat(),
             'startType': "datetime",
             'title': sd.name,
-        }, stress_days))
+        }, mandatory_days))
 
-    def _get_stress_days(self, start_date, end_date):
+    def _get_mandatory_days(self, start_date, end_date):
         domain = [
             ('start_date', '<=', end_date),
             ('end_date', '>=', start_date),
             ('company_id', 'in', self.env.companies.ids),
         ]
 
-        # a user with hr_holidays permissions will be able to see all stress days from his calendar
+        # a user with hr_holidays permissions will be able to see all mandatory days from his calendar
         if not self._is_leave_user():
             domain += [
                 '|',
@@ -365,4 +365,4 @@ class HrEmployee(models.Model):
             else:
                 domain += [('department_ids', '=', False)]
 
-        return self.env['hr.leave.stress.day'].search(domain)
+        return self.env['hr.leave.mandatory.day'].search(domain)
