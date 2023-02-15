@@ -246,8 +246,7 @@ class IrActionsReport(models.Model):
         if request and request.db:
             command_args.extend(['--cookie', 'session_id', request.session.sid])
 
-        # Less verbose error messages
-        command_args.extend(['--quiet'])
+        command_args.extend(['--log-level', 'error'])
 
         # Build paperformat args
         if paperformat_id:
