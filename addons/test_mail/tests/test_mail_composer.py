@@ -1581,25 +1581,20 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     email = self._find_sent_email(test_record.user_id.email_formatted, [test_record.customer_id.email_formatted])
                     self.assertTrue(bool(email), 'Email not found, check recipients')
 
-                    # TDE FIXME: as it currently depends on a context-based hack
-                    # translation is not supported when scheduling notifications
-                    # or when a domain is given. Moreover access buttons are not
-                    # translated
                     exp_layout_content_en = 'English Layout for Ticket-like model'
                     exp_layout_content_es = 'Spanish Layout para Spanish Model Description'
                     exp_button_en = 'View Ticket-like model'
-                    # exp_button_es = 'SpanishView Spanish Model Description'
+                    exp_button_es = 'SpanishView Spanish Model Description'
                     if email_layout_xmlid:
-                        if exp_lang == 'es_ES' and batch_mode != 'domain' and not scheduled_date:
+                        if exp_lang == 'es_ES':
                             self.assertIn(exp_layout_content_es, email['body'])
-                            self.assertIn(exp_button_en, email['body'],
-                                          'TODO: buttons should be translated')
+                            self.assertIn(exp_button_es, email['body'])
                         else:
                             self.assertIn(exp_layout_content_en, email['body'])
                             self.assertIn(exp_button_en, email['body'])
                     else:
                         # check default layouting applies
-                        if exp_lang == 'es_ES' and batch_mode != 'domain' and not scheduled_date:
+                        if exp_lang == 'es_ES':
                             self.assertIn('html lang="es_ES"', email['body'])
                         else:
                             self.assertIn('html lang="en_US"', email['body'])

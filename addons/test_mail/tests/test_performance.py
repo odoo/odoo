@@ -369,7 +369,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer.id)],
             })
 
-        with self.assertQueryCount(admin=37, employee=37):
+        with self.assertQueryCount(admin=35, employee=35):
             composer._action_send_mail()
 
     @users('admin', 'employee')
@@ -393,7 +393,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=48, employee=48):  # tm+com 47/47
+        with self.assertQueryCount(admin=46, employee=46):  # tm+com 45/45
             composer._action_send_mail()
 
         # notifications
@@ -479,7 +479,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=44, employee=44):
+        with self.assertQueryCount(admin=42, employee=42):
             composer._action_send_mail()
 
         # notifications
@@ -511,7 +511,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=44, employee=44):
+        with self.assertQueryCount(admin=43, employee=43):
             composer._action_send_mail()
 
         # notifications
@@ -541,7 +541,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=64, employee=64):
+        with self.assertQueryCount(admin=61, employee=61):
             composer._action_send_mail()
 
         # notifications
@@ -1309,7 +1309,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
         # enable_logging = self.cr._enable_logging() if self.warm else nullcontext()
         # with self.assertQueryCount(employee=63), enable_logging:
-        with self.assertQueryCount(employee=63):
+        with self.assertQueryCount(employee=60):
             record_container.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
                 subject='Test Subject',
