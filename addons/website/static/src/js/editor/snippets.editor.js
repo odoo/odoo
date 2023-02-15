@@ -81,6 +81,15 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _patchForComputeSnippetTemplates($html) {
+        this._super(...arguments);
+
+        // TODO remove me in master
+        $html.find('[data-attribute-name="interval"]')[0].dataset.attributeName = 'bsInterval';
+    },
+    /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
