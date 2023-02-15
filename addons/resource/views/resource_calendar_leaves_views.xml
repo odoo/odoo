@@ -13,7 +13,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Time Off Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Time Off"/>
+                    <filter string="Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Time Off"/>
                 </group>
            </search>
         </field>
@@ -63,7 +63,7 @@
             <tree string="Time Off Detail">
                 <field name="name" string="Reason"/>
                 <field name="resource_id" />
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="calendar_id"/>
                 <field name="date_from" />
                 <field name="date_to" />

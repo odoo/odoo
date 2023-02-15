@@ -11,7 +11,8 @@
                         </button>
                         <Dropdown togglerClass="'btn btn-primary'" showCaret="true" class="'btn-group'">
                                 <button class="btn btn-link" t-on-click="newAllocationRequest" type="button">
-                                    New Allocation Request
+                                    <t t-if="employeeId">Grant Time</t>
+                                    <t t-else="">New Allocation Request</t>
                                 </button>
                         </Dropdown>
                     </div>

@@ -17,7 +17,7 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
         this.getFormattedDateSpan = getFormattedDateSpan;
         this.leaveState = useState({
             holidays: [],
-            stressDays: [],
+            mandatoryDays: [],
             bankHolidays: [],
         });
 
@@ -45,12 +45,12 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
             bankHoliday.start = luxon.DateTime.fromISO(bankHoliday.start)
             bankHoliday.end = luxon.DateTime.fromISO(bankHoliday.end)
         });
-        specialDays['stressDays'].forEach(stressDay => {
-            stressDay.start = luxon.DateTime.fromISO(stressDay.start)
-            stressDay.end = luxon.DateTime.fromISO(stressDay.end)
+        specialDays['mandatoryDays'].forEach(mandatoryDay => {
+            mandatoryDay.start = luxon.DateTime.fromISO(mandatoryDay.start)
+            mandatoryDay.end = luxon.DateTime.fromISO(mandatoryDay.end)
         });
         this.leaveState.bankHolidays = specialDays['bankHolidays'];
-        this.leaveState.stressDays = specialDays['stressDays'];
+        this.leaveState.mandatoryDays = specialDays['mandatoryDays'];
     }
 
     async loadFilterData() {

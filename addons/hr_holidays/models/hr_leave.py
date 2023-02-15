@@ -300,7 +300,7 @@ class HolidaysRequest(models.Model):
     # view
     is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
-    has_stress_day = fields.Boolean(compute='_compute_has_stress_day')
+    has_mandatory_day = fields.Boolean(compute='_compute_has_mandatory_day')
 
     _sql_constraints = [
         ('type_value',
@@ -473,10 +473,10 @@ class HolidaysRequest(models.Model):
                 holiday.department_id = False
 
     @api.depends('date_from', 'date_to', 'holiday_status_id')
-    def _compute_has_stress_day(self):
+    def _compute_has_mandatory_day(self):
         date_from, date_to = min(self.mapped('date_from')), max(self.mapped('date_to'))
         if date_from and date_to:
-            stress_days = self.employee_id._get_stress_days(
+            mandatory_days = self.employee_id._get_mandatory_days(
                 date_from.date(),
                 date_to.date())
 
@@ -491,9 +491,9 @@ class HolidaysRequest(models.Model):
 
                 if leave.holiday_status_id.company_id:
                     domain += [('company_id', '=', leave.holiday_status_id.company_id.id)]
-                leave.has_stress_day = leave.date_from and leave.date_to and stress_days.filtered_domain(domain)
+                leave.has_mandatory_day = leave.date_from and leave.date_to and mandatory_days.filtered_domain(domain)
         else:
-            self.has_stress_day = False
+            self.has_mandatory_day = False
 
     @api.depends('date_from', 'date_to', 'employee_id')
     def _compute_number_of_days(self):
@@ -862,10 +862,10 @@ class HolidaysRequest(models.Model):
             self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
 
     @api.constrains('date_from', 'date_to')
-    def _check_stress_day(self):
+    def _check_mandatory_day(self):
         is_leave_user = self.user_has_groups('hr_holidays.group_hr_holidays_user')
-        if not is_leave_user and any(leave.has_stress_day for leave in self):
-            raise ValidationError(_('You are not allowed to request a time off on a Stress Day.'))
+        if not is_leave_user and any(leave.has_mandatory_day for leave in self):
+            raise ValidationError(_('You are not allowed to request a time off on a Mandatory Day.'))
 
     def _check_double_validation_rules(self, employees, state):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
