@@ -422,7 +422,7 @@ class ProjectCustomerPortal(CustomerPortal):
         if group:
             grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
         else:
-            grouped_tasks = [tasks]
+            grouped_tasks = [tasks] if tasks else []
 
         task_states = dict(request.env['project.task']._fields['kanban_state']._description_selection(request.env))
         if sortby == 'status':
