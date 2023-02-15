@@ -21,4 +21,4 @@ class WebsitePartnerPage(http.Controller):
                     'edit_page': False
                 }
                 return request.render("website_partner.partner_page", values)
-        return request.not_found()
+        raise request.not_found()

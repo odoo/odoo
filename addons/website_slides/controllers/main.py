@@ -827,7 +827,7 @@ class WebsiteSlides(WebsiteProfile):
     def slide_get_image(self, slide_id, field='image_128', width=0, height=0, crop=False):
         # Protect infographics by limiting access to 256px (large) images
         if field not in ('image_128', 'image_256', 'image_512', 'image_1024', 'image_1920'):
-            return werkzeug.exceptions.Forbidden()
+            raise werkzeug.exceptions.Forbidden()
 
         slide = request.env['slide.slide'].sudo().browse(slide_id).exists()
         if not slide:

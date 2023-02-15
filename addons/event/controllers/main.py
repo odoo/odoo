@@ -16,7 +16,7 @@ class EventController(Controller):
                 event = event.with_context(lang=frontend_lang)
         files = event._get_ics_file()
         if not event.id in files:
-            return NotFound()
+            raise NotFound()
         content = files[event.id]
         return request.make_response(content, [
             ('Content-Type', 'application/octet-stream'),

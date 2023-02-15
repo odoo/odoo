@@ -24,7 +24,7 @@ class Profiling(Controller):
     def speedscope(self, profile=None):
         # don't server speedscope index if profiling is not enabled
         if not request.env['ir.profile']._enabled_until():
-            return request.not_found()
+            raise request.not_found()
         icp = request.env['ir.config_parameter']
         context = {
             'profile': profile,

@@ -37,7 +37,7 @@ class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
     def portal_my_tasks_invoices(self, task_id=None, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
         task = request.env['project.task'].search([('id', '=', task_id)])
         if not task:
-            return NotFound()
+            raise NotFound()
 
         domain = [('id', 'in', task.sale_order_id.invoice_ids.ids)]
         values = self._prepare_my_invoices_values(page, date_begin, date_end, sortby, filterby, domain=domain)

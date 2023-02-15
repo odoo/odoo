@@ -51,7 +51,7 @@ class UserInputSession(http.Controller):
         survey = self._fetch_from_token(survey_token)
 
         if not survey:
-            return NotFound()
+            raise NotFound()
 
         if survey.session_state == 'ready':
             if not survey.question_ids:

@@ -140,11 +140,11 @@ class PosController(PortalAccount):
 
         # If the route is called directly, return a 404
         if not access_token:
-            return request.not_found()
+            raise request.not_found()
         # Get the order using the access token. We can't use the id in the route because we may not have it yet when the QR code is generated.
         pos_order = request.env['pos.order'].sudo().search([('access_token', '=', access_token)])
         if not pos_order:
-            return request.not_found()
+            raise request.not_found()
 
         # If the order was already invoiced, return the invoice directly by forcing the access token so that the non-connected user can see it.
         if pos_order.account_move and pos_order.account_move.is_sale_document():

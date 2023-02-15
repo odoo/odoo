@@ -424,7 +424,7 @@ class Survey(http.Controller):
     def survey_get_question_image(self, survey_token, answer_token, question_id, suggested_answer_id):
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
-            return werkzeug.exceptions.Forbidden()
+            raise werkzeug.exceptions.Forbidden()
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
@@ -437,7 +437,7 @@ class Survey(http.Controller):
             ])
 
         if not suggested_answer:
-            return werkzeug.exceptions.NotFound()
+            raise werkzeug.exceptions.NotFound()
 
         return request.env['ir.binary']._get_image_stream_from(
             suggested_answer, 'value_image'

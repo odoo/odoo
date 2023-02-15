@@ -124,7 +124,7 @@ class OAuthController(http.Controller):
         state = json.loads(kw['state'])
         dbname = state['d']
         if not http.db_filter([dbname]):
-            return BadRequest()
+            raise BadRequest()
         provider = state['p']
         context = state.get('c', {})
         registry = registry_get(dbname)

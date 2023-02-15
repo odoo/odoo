@@ -169,7 +169,7 @@ class ProjectCustomerPortal(CustomerPortal):
     def render_project_backend_view(self, project_id, task_id=None):
         project = request.env['project.project'].sudo().browse(project_id)
         if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
-            return request.not_found()
+            raise request.not_found()
         task = task_id and request.env['project.task'].browse(int(task_id))
         return request.render(
             'project.project_sharing_embed',
@@ -221,7 +221,7 @@ class ProjectCustomerPortal(CustomerPortal):
             })
             return request.render("project.portal_my_tasks", values)
         except (AccessError, MissingError):
-            return request.not_found()
+            raise request.not_found()
 
     # ------------------------------------------------------------
     # My Task

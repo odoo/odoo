@@ -1050,7 +1050,7 @@ class WebsiteSale(http.Controller):
                 order = request.website.sale_get_order()
                 shippings = Partner.sudo().search([("id", "child_of", order.partner_id.commercial_partner_id.ids)])
                 if partner_id not in shippings.mapped('id') and partner_id != order.partner_id.id:
-                    return Forbidden()
+                    raise Forbidden()
                 Partner.browse(partner_id).sudo().write(checkout)
         return partner_id
 
@@ -1134,7 +1134,7 @@ class WebsiteSale(http.Controller):
                     elif partner_id in shippings.mapped('id'):
                         mode = ('edit', 'shipping')
                     else:
-                        return Forbidden()
+                        raise Forbidden()
                 if mode and partner_id != -1:
                     values = Partner.browse(partner_id)
             elif partner_id == -1:

@@ -60,7 +60,7 @@ class CalendarController(http.Controller):
             ('access_token', '=', token),
             ('event_id', '=', int(id))])
         if not attendee:
-            return request.not_found()
+            raise request.not_found()
         timezone = attendee.partner_id.tz
         lang = attendee.partner_id.lang or get_lang(request.env).code
         event = request.env['calendar.event'].with_context(tz=timezone, lang=lang).sudo().browse(int(id))
@@ -88,7 +88,7 @@ class CalendarController(http.Controller):
         event = request.env['calendar.event'].sudo().search([
             ('access_token', '=', token)])
         if not event:
-            return request.not_found()
+            raise request.not_found()
         event.action_join_meeting(request.env.user.partner_id.id)
         attendee = request.env['calendar.attendee'].sudo().search([('partner_id', '=', request.env.user.partner_id.id), ('event_id', '=', event.id)])
         return request.redirect('/calendar/meeting/view?token=%s&id=%s' % (attendee.access_token, event.id))
@@ -106,7 +106,7 @@ class CalendarController(http.Controller):
     def calendar_join_videocall(self, access_token):
         event = request.env['calendar.event'].sudo().search([('access_token', '=', access_token)])
         if not event:
-            return request.not_found()
+            raise request.not_found()
 
         # if channel doesn't exist
         if not event.videocall_channel_id:

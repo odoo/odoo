@@ -266,7 +266,7 @@ class Website(Home):
                     break
 
             if not pages:
-                return request.not_found()
+                raise request.not_found()
             elif pages == 1:
                 # rename the -id-page.xml => -id.xml
                 last_sitemap.write({
