@@ -64,18 +64,28 @@ class TSConfig(Command):
     def generate_file_content(self, modules, paths):
         return {
             'compilerOptions': {
+                "moduleResolution": "node",
                 "baseUrl": ".",
-                "target": "es2019",
                 "checkJs": True,
                 "allowJs": True,
+                "target": "ES2022",
                 "noEmit": True,
+                "disableSizeLimit": True,
                 "typeRoots": list(map(lambda p: p + "/web/tooling/types", paths)),
                 "paths": self.generate_imports(modules)
-            }, "exclude": self.generate_excludes()
+            },
+            "include": ["**/*.js", "**/*.ts"],
+            "exclude": self.generate_excludes()
         }
 
     def generate_excludes(self):
         return [
+            "node_modules",
+            "setup",
+            "doc",
+            "**/lib",
+            "**/l10n*",
+            "addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js",
             "/**/*.po",
             "/**/*.py",
             "/**/*.pyc",
