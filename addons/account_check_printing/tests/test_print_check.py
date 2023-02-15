@@ -157,3 +157,19 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertEqual(set(payments.mapped('check_number')), {str(x) for x in range(11111, 11111 + nb_invoices_to_test)})
+
+    def test_print_great_pre_number_check(self):
+        """
+        Make sure we can use integer of more than 2147483647 in check sequence
+         limit of `integer` type in psql: https://www.postgresql.org/docs/current/datatype-numeric.html
+        """
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'amount': 100.0,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_method_line_id': self.payment_method_line_check.id,
+        })
+        payment.action_post()
+        self.assertTrue(payment.write({'check_number': '2147483647'}))
+        self.assertTrue(payment.write({'check_number': '2147483648'}))
