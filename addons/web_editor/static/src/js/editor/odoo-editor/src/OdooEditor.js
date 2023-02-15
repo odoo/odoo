@@ -2245,7 +2245,8 @@ export class OdooEditor extends EventTarget {
      */
     _handleSelectionInTable(ev=undefined) {
         const selection = this.document.getSelection();
-        const anchorNode = selection.anchorNode;
+        // Selection could be gone if the document comes from an iframe that has been removed.
+        const anchorNode = selection && selection.getRangeAt(0) && selection.anchorNode;
         if (anchorNode && (closestElement(anchorNode, '[data-oe-protected="true"]') || !ancestors(anchorNode).includes(this.editable))) {
             return false;
         }
