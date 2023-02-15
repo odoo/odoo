@@ -95,6 +95,7 @@ class PickingType(models.Model):
              " * Ask: users are asked to choose if they want to make a backorder for remaining products\n"
              " * Always: a backorder is automatically created for the remaining products\n"
              " * Never: remaining products are cancelled")
+    show_picking_type = fields.Boolean(compute='_compute_show_picking_type')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -266,6 +267,11 @@ class PickingType(models.Model):
 
     def get_stock_picking_action_picking_type(self):
         return self._get_action('stock.stock_picking_action_picking_type')
+
+    @api.depends('code')
+    def _compute_show_picking_type(self):
+        for record in self:
+            record.show_picking_type = record.code in ['incoming', 'outgoing', 'internal']
 
 
 class Picking(models.Model):

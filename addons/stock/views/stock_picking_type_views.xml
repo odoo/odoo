@@ -137,9 +137,10 @@
                 <field name="count_picking_waiting"/>
                 <field name="count_picking_late"/>
                 <field name="count_picking_backorders"/>
+                <field name="show_picking_type" invisible="1"/>
                 <templates>
                     <t t-name="kanban-menu" t-if="!selection_mode">
-                        <div class="container" t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1">
+                        <div class="container" t-if="record.show_picking_type.raw_value">
                             <div class="row">
                                 <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
                                     <div role="menuitem" class="o_kanban_card_manage_title">
@@ -183,7 +184,7 @@
                         </div>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking">
+                        <div t-if="record.show_picking_type.raw_value" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking">
                             <div t-attf-class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary" t-if="!selection_mode">
@@ -201,9 +202,7 @@
                                 <div class="row">
                                     <div class="col-6 o_kanban_primary_left">
                                         <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
-                                            <span t-if="record.code.raw_value == 'incoming'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
-                                            <span t-elif="record.code.raw_value == 'outgoing'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
-                                            <span t-elif="record.code.raw_value == 'internal'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
+                                            <span><t t-esc="record.count_picking_ready.value"/> To Process</span>
                                         </button>
                                     </div>
                                     <div class="col-6 o_kanban_primary_right">
