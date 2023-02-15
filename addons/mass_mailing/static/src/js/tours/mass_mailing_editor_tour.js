@@ -28,6 +28,10 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
             actions.drag_and_drop('[name="body_arch"] iframe .o_editable', this.$anchor);
         }
     }, {
+        content: 'wait for the snippet menu to finish the drop process',
+        trigger: '[name="body_arch"] iframe #email_designer_header_elements:not(:has(.o_we_already_dragging))',
+        run: () => {}
+    }, {
         content: 'verify that the title was inserted properly in the editor',
         trigger: '[name="body_arch"] iframe .o_editable h1',
         run: () => {},
