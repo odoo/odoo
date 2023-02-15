@@ -605,3 +605,22 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({"payment_method_ids": [(6, 0, bank_pm.ids)]})
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour3', login="accountman")
+
+    def test_pos_closing_cash_details(self):
+        """Test if the cash closing details correctly show the cash difference
+           if there is a difference at the opening of the PoS session. This also test if the accounting
+           move are correctly created for the opening cash difference.
+           e.g. If the previous session was closed with 100$ and the opening count is 50$,
+           the closing popup should show a difference of 50$.
+        """
+        self.main_pos_config.open_session_cb(check_coa=False)
+        current_session = self.main_pos_config.current_session_id
+        current_session.post_closing_cash_details(100)
+        current_session.close_session_from_ui()
+
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashClosingDetails', login="accountman")
+        #check accounting move for the pos opening cash difference
+        pos_session = self.main_pos_config.current_session_id
+        self.assertEqual(len(pos_session.statement_ids.line_ids), 1)
+        self.assertEqual(pos_session.statement_ids.line_ids[0].amount, -10)
