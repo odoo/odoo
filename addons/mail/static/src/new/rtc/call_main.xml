@@ -10,10 +10,11 @@
             t-on-mousemove="onMousemove"
             t-ref="grid"
         >
-            <CallParticipantCard t-foreach="visibleSessions" t-as="session" t-key="session.id"
+            <CallParticipantCard t-foreach="visibleCards" t-as="cardData" t-key="cardData.key"
+                cardData="cardData"
                 className="'o-mail-call-main-gridParticipantCard'"
-                session="session"
                 minimized="props.minimized"
+                thread="props.thread"
             />
         </div>
 

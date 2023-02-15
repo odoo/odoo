@@ -3,7 +3,7 @@
 import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
-import { useMessaging } from "../core/messaging_hook";
+import { useMessaging, useStore } from "../core/messaging_hook";
 import { useRtc } from "@mail/new/rtc/rtc_hook";
 import { CallMain } from "@mail/new/rtc/call_main";
 import { CallParticipantCard } from "@mail/new/rtc/call_participant_card";
@@ -19,6 +19,7 @@ export class Call extends Component {
         this.notification = useService("notification");
         this.userSettings = useState(useService("mail.user_settings"));
         this.rtc = useRtc();
+        this.store = useStore();
         this.state = useState({
             isFullscreen: false,
             sidebar: false,
@@ -84,12 +85,25 @@ export class Call extends Component {
         );
     }
 
-    get visibleSessions() {
-        if (this.userSettings.showOnlyVideo && this.props.thread.videoCount > 0) {
-            return Object.values(this.props.thread.rtcSessions).filter((session) =>
-                Boolean(session.videoStream)
-            );
+    get visibleCards() {
+        const cards = [];
+        const filterVideos = this.userSettings.showOnlyVideo && this.props.thread.videoCount > 0;
+        for (const session of Object.values(this.props.thread.rtcSessions)) {
+            if (!filterVideos || session.videoStream) {
+                cards.push({
+                    key: "session_" + session.id,
+                    session,
+                });
+            }
         }
-        return [...Object.values(this.props.thread.rtcSessions)];
+        if (!filterVideos) {
+            for (const memberId of this.props.thread.invitedMemberIds) {
+                cards.push({
+                    key: "member_" + memberId,
+                    member: this.store.channelMembers[memberId],
+                });
+            }
+        }
+        return cards;
     }
 }

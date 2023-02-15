@@ -140,9 +140,12 @@ export class Rtc {
             void proxyAudioInputDevice.audioInputDeviceId;
         });
         void proxyAudioInputDevice.audioInputDeviceId;
-        this.env.bus.addEventListener("THREAD-SERVICE:UPDATE_RTC_SESSIONS", ({ detail }) => {
-            const thread = detail.thread;
-            for (const command of detail.commands) {
+        this.env.bus.addEventListener("THREAD-SERVICE:UPDATE_RTC_SESSIONS", ({ detail: { commands = [], record, thread } }) => {
+            if (record) {
+                const singleSession = this.insertSession(record);
+                thread.rtcSessions[singleSession.id] = singleSession;
+            }
+            for (const command of commands) {
                 const sessionsData = command[1];
                 switch (command[0]) {
                     case "insert-and-unlink":
@@ -623,7 +626,7 @@ export class Rtc {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
         }
-        const { rtcSessions, iceServers, sessionId, invitedPartners } = await this.rpc(
+        const { rtcSessions, iceServers, sessionId, invitedMembers } = await this.rpc(
             "/mail/rtc/channel/join_call",
             {
                 channel_id: channel.id,
@@ -639,7 +642,7 @@ export class Rtc {
         this.threadService.update(this.state.channel, {
             serverData: {
                 rtcSessions,
-                invitedPartners,
+                invitedMembers,
             },
         });
         this.state.selfSession = this.store.rtcSessions[sessionId];
@@ -1182,7 +1185,11 @@ export class Rtc {
             session.channelId = channelMember.channel.id;
         }
         if (channelMember) {
-            session.channelMemberId = this.threadService.insertChannelMember(channelMember).id;
+            const channelMemberRecord = this.threadService.insertChannelMember(channelMember);
+            session.channelMemberId = channelMemberRecord.id;
+            if (channelMemberRecord.thread) {
+                channelMemberRecord.thread.rtcSessions[session.id] = session;
+            }
         }
         this.store.rtcSessions[session.id] = session;
         // return reactive version

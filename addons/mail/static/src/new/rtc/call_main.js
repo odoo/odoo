@@ -9,7 +9,7 @@ const { Component, useState, useRef, onMounted, onPatched, onWillUnmount } = owl
 
 export class CallMain extends Component {
     static components = { CallActionList, CallParticipantCard };
-    static props = ["thread", "fullscreen", "sidebar", "compact?", "minimized?"];
+    static props = ["thread", "fullscreen", "sidebar", "visibleCards", "compact?", "minimized?"];
     static template = "mail.call_main";
 
     overlayTimeout;
@@ -35,11 +35,14 @@ export class CallMain extends Component {
         });
     }
 
-    get visibleSessions() {
+    get visibleCards() {
         if (this.props.thread.activeRtcSession) {
-            return [this.props.thread.activeRtcSession];
+            return [{
+                key: "session_" + this.props.thread.activeRtcSession.id,
+                session: this.props.thread.activeRtcSession,
+            }];
         }
-        return [...Object.values(this.props.thread.rtcSessions)];
+        return this.props.visibleCards;
     }
 
     get hasSidebarButton() {

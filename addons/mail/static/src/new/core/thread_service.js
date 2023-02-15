@@ -429,6 +429,10 @@ export class ThreadService {
                 thread.defaultDisplayMode = serverData.defaultDisplayMode;
             }
             if ("rtc_inviting_session" in serverData) {
+                this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
+                    thread,
+                    record: serverData.rtc_inviting_session,
+                });
                 thread.invitingRtcSessionId = serverData.rtc_inviting_session.id;
                 if (!this.store.ringingThreads.includes(thread.localId)) {
                     this.store.ringingThreads.push(thread.localId);
@@ -442,6 +446,10 @@ export class ThreadService {
                     }
                     return;
                 }
+                this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
+                    thread,
+                    record: serverData.rtcInvitingSession,
+                });
                 thread.invitingRtcSessionId = serverData.rtcInvitingSession.id;
                 this.store.ringingThreads.push(thread.localId);
             }
@@ -470,12 +478,30 @@ export class ThreadService {
                     commands: serverData.rtcSessions,
                 });
             }
-            if ("invitedPartners" in serverData) {
-                thread.invitedPartners =
-                    serverData.invitedPartners &&
-                    serverData.invitedPartners.map((partner) =>
-                        this.personaService.insert({ ...partner, type: "partner" })
-                    );
+            if ("invitedMembers" in serverData) {
+                if (!serverData.invitedMembers) {
+                    thread.invitedMemberIds.clear();
+                    return;
+                }
+                const command = serverData.invitedMembers[0][0];
+                const members = serverData.invitedMembers[0][1];
+                switch (command) {
+                    case "insert":
+                        if (members) {
+                            for (const member of members) {
+                                const record = this.insertChannelMember(member);
+                                thread.invitedMemberIds.add(record.id);
+                            }
+                        }
+                        break;
+                    case "unlink":
+                    case "insert-and-unlink":
+                        // eslint-disable-next-line no-case-declarations
+                        for (const member of members) {
+                            thread.invitedMemberIds.delete(member.id);
+                        }
+                        break;
+                }
             }
             if ("seen_partners_info" in serverData) {
                 thread.seenInfos = serverData.seen_partners_info.map(

@@ -35,8 +35,8 @@ export class Thread {
     /** @type {RtcSession{}} */
     rtcSessions = {};
     invitingRtcSessionId;
-    /** @type {import("@mail/new/core/persona_model").Persona[]} */
-    invitedPartners = [];
+    /** @type {Set<number>} */
+    invitedMemberIds = new Set();
     /** @type {integer} */
     chatPartnerId;
     /** @type {import("@mail/new/composer/composer_model").Composer} */

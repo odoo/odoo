@@ -7,65 +7,89 @@ import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@mail/new/utils/misc";
 
 export class CallParticipantCard extends Component {
-    static props = ["session", "className", "minimized?"];
+    static props = ["className", "cardData", "thread", "minimized?"];
     static components = { CallParticipantVideo };
     static template = "mail.call_participant_card";
 
     setup() {
+        this.rpc = useService("rpc");
         this.rtc = useRtc();
+        this.threadService = useService("mail.thread");
         this.user = useService("user");
         onMounted(() => {
-            this.rtc.updateVideoDownload(this.props.session, {
+            if (!this.rtcSession) {
+                return;
+            }
+            this.rtc.updateVideoDownload(this.rtcSession, {
                 viewCountIncrement: 1,
             });
         });
         onWillUnmount(() => {
-            this.rtc.updateVideoDownload(this.props.session, {
+            if (!this.rtcSession) {
+                return;
+            }
+            this.rtc.updateVideoDownload(this.rtcSession, {
                 viewCountIncrement: -1,
             });
         });
     }
 
+    get rtcSession() {
+        return this.props.cardData.session;
+    }
+
+    get channelMember() {
+        return this.rtcSession ? this.rtcSession.channelMember : this.props.cardData.member;
+    }
+
     get isOfActiveCall() {
-        return Boolean(this.props.session.channelId === this.rtc.state.channel?.id);
+        return Boolean(this.rtcSession && this.rtcSession.channelId === this.rtc.state.channel?.id);
     }
 
     get showConnectionState() {
         return Boolean(
             this.isOfActiveCall &&
-                !(this.props.session.channelMember?.persona.id === this.user.partnerId) &&
-                !["connected", "completed"].includes(this.props.session.connectionState)
+                !(this.rtcSession.channelMember?.persona.id === this.user.partnerId) &&
+                !["connected", "completed"].includes(this.rtcSession.connectionState)
         );
     }
 
     get name() {
-        return this.props.session.channelMember?.persona.name;
+        return this.channelMember?.persona.name;
     }
 
     get hasVideo() {
-        return Boolean(this.props.session.videoStream);
+        return Boolean(this.rtcSession?.videoStream);
     }
 
     get isTalking() {
         return Boolean(
-            this.props.session && this.props.session.isTalking && !this.props.session.isMute
+            this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute
         );
     }
 
-    onClick(ev) {
+    async onClick(ev) {
         if (isEventHandled(ev, "CallParticipantCard.clickVolumeAnchor")) {
             return;
         }
-        if (this.props.session) {
-            const channel = this.props.session.channel;
-            if (channel.activeRtcSession === this.props.session) {
+        if (this.rtcSession) {
+            const channel = this.rtcSession.channel;
+            if (channel.activeRtcSession === this.rtcSession) {
                 channel.activeRtcSession = undefined;
             } else {
-                channel.activeRtcSession = this.props.session;
+                channel.activeRtcSession = this.rtcSession;
             }
             return;
         }
-        // TODO else if invitation => cancel invitation
+        const channelData = await this.rpc("/mail/rtc/channel/cancel_call_invitation", {
+            channel_id: this.props.thread.id,
+            member_ids: [this.channelMember.id],
+        });
+        this.threadService.update(this.props.thread, {
+            serverData: {
+                invitedMembers: channelData.invitedMembers,
+            },
+        });
     }
 
     onContextMenu() {
