@@ -334,4 +334,93 @@ QUnit.module("Components", (hooks) => {
         assert.containsOnce(target, ".page2");
         assert.strictEqual(target.querySelector(".nav-link.active").textContent, "page2");
     });
+
+    QUnit.test("disabled pages are greyed out and can't be toggled", async (assert) => {
+        class Parent extends Component {}
+        Parent.components = { Notebook };
+        Parent.template = xml`
+        <Notebook defaultPage="'1'">
+            <t t-set-slot="1" title="'page1'" isVisible="true">
+                <div class="page1" />
+            </t>
+             <t t-set-slot="2" title="'page2'" isVisible="true" isDisabled="true">
+                <div class="page2" />
+            </t>
+             <t t-set-slot="3" title="'page3'" isVisible="true">
+                <div class="page3" />
+            </t>
+        </Notebook>`;
+
+        const env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        assert.containsOnce(target, ".page1", "the default page is displayed");
+        assert.hasClass(
+            target.querySelector(".nav-item:nth-child(2)"),
+            "disabled",
+            "tab of the disabled page is greyed out"
+        );
+
+        await click(target.querySelector(".nav-item:nth-child(2) .nav-link"));
+        assert.containsOnce(target, ".page1", "the same page is still displayed");
+
+        await click(target.querySelector(".nav-item:nth-child(3) .nav-link"));
+        assert.containsOnce(target, ".page3", "the third page is now displayed");
+    });
+
+    QUnit.test("icons can be given for each page tab", async (assert) => {
+        class Parent extends Component {
+            get icons() {
+                return {
+                    1: "fa-trash",
+                    3: "fa-pencil",
+                };
+            }
+        }
+        Parent.components = { Notebook };
+        Parent.template = xml`
+        <Notebook defaultPage="'1'" icons="icons">
+            <t t-set-slot="1" title="'page1'" isVisible="true">
+                <div class="page1" />
+            </t>
+             <t t-set-slot="2" title="'page2'" isVisible="true">
+                <div class="page2" />
+            </t>
+             <t t-set-slot="3" title="'page3'" isVisible="true">
+                <div class="page3" />
+            </t>
+        </Notebook>`;
+
+        const env = await makeTestEnv();
+        await mount(Parent, target, { env });
+        assert.hasClass(
+            target.querySelector(".nav-item:nth-child(1) i"),
+            "fa-trash",
+            "tab of the first page has the given icon"
+        );
+        assert.strictEqual(
+            target.querySelector(".nav-item:nth-child(1)").textContent,
+            "page1",
+            "tab of the second page has the right text"
+        );
+        assert.containsNone(
+            target.querySelector(".nav-item:nth-child(2)"),
+            "i",
+            "tab of the second page doesn't have an icon"
+        );
+        assert.strictEqual(
+            target.querySelector(".nav-item:nth-child(2)").textContent,
+            "page2",
+            "tab of the second page has the right text"
+        );
+        assert.hasClass(
+            target.querySelector(".nav-item:nth-child(3) i"),
+            "fa-pencil",
+            "tab of the third page has the given icon"
+        );
+        assert.strictEqual(
+            target.querySelector(".nav-item:nth-child(3)").textContent,
+            "page3",
+            "tab of the second page has the right text"
+        );
+    });
 });

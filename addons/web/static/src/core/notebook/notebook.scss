@@ -26,6 +26,13 @@
     .nav-item {
         white-space: nowrap;
         margin: 0 -1px 0 0;
+
+        &.disabled {
+            .nav-link {
+                cursor: not-allowed;
+                opacity: .3;
+            }
+        }
     }
 
     .nav-link {
