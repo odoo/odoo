@@ -1583,19 +1583,14 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
                     self.assertIn('NotificationButtonTitle', body,
                                   'Groups-based action names translation failed')
                 else:
-                    self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
-                    self.assertNotIn('English Layout for', body)
-                    self.assertIn('Spanish Layout para Spanish Model Description', body, 'Model name should be translated')
-                    # check notification layout strings
-                    self.assertIn('View Lang Chatter Model', body,
-                                  'Fixme: "View document" should be translated')
-                    # self.assertIn('SpanishView Spanish Model Description', body,
-                    #               '"View document" should be translated')
-                    # self.assertNotIn(f'View {test_record._description}', body,
-                    #                  '"View document" should be translated')
-                    # self.assertIn('SpanishButtonTitle', body,
-                    #               'Groups-based action names should be translated')
-                    self.assertIn('NotificationButtonTitle', body, 'Fixme: Groups-based action names should be translated')
+                    self.assertIn('SpanishView Spanish Model Description', body,
+                                  '"View document" should be translated')
+                    self.assertNotIn(f'View {test_record._description}', body,
+                                     '"View document" should be translated')
+                    self.assertIn('SpanishButtonTitle', body,
+                                  'Groups-based action names should be translated')
+                    self.assertNotIn('NotificationButtonTitle', body,
+                                     'Groups-based action names should be translated')
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -1654,7 +1649,8 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
         # check notification layout strings
         self.assertIn('SpanishView Spanish Model Description', body,
                       '"View document" should be translated')
-        self.assertNotIn(f'View {test_records[1]._description}', body)
+        self.assertNotIn(f'View {test_records[1]._description}', body,
+                         '"View document" should be translated')
         self.assertIn('SpanishButtonTitle', body, 'Groups-based action names should be translated')
         self.assertNotIn('NotificationButtonTitle', body)
 
@@ -1697,13 +1693,13 @@ class TestMessagePostLang(TestMailCommon, TestRecipients):
             self.assertNotIn('English Layout for', body)
             self.assertIn('Spanish Layout para Spanish Model Description', body,
                           'Model name should be translated')
-            # self.assertIn('SpanishView Spanish Model Description', body,
-            #               '"View document" should be translated')
-            self.assertIn(f'View {test_records[1]._description}', body,
-                          'Fixme: "View document" should be translated')
-            # self.assertIn('NotificationButtonTitle', body,
-            #               'Groups-based action names should be translated')
-            self.assertIn('NotificationButtonTitle', body,
+            self.assertIn('SpanishView Spanish Model Description', body,
+                          '"View document" should be translated')
+            self.assertNotIn(f'View {test_records[1]._description}', body,
+                             '"View document" should be translated')
+            self.assertIn('SpanishButtonTitle', body,
+                          'Groups-based action names should be translated')
+            self.assertNotIn('NotificationButtonTitle', body,
                           'Fixme: groups-based action names should be translated')
 
     @users('employee')

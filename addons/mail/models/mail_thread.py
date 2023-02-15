@@ -3012,17 +3012,24 @@ class MailThread(models.AbstractModel):
         if not partners_data:
             return True
 
-        model = msg_vals.get('model') if msg_vals else message.model
-        model_name = model_description or (self.env['ir.model']._get(model).display_name if model else False) # one query for display name
-        recipients_groups_list = self._notify_get_recipients_classify(
-            message, partners_data, model_name, msg_vals=msg_vals
+        lang = force_email_lang if force_email_lang else self.env.context.get('lang')
+
+        if not model_description:
+            model_description = self.with_context(lang=lang)._get_model_description(
+                msg_vals['model'] if msg_vals and msg_vals.get('model') else message.model
+            )
+        recipients_groups_list = self.with_context(lang=lang)._notify_get_recipients_classify(
+            message,
+            partners_data,
+            model_description,
+            msg_vals=msg_vals,
         )
 
         if not recipients_groups_list:
             return True
         force_send = self.env.context.get('mail_notify_force_send', force_send)
 
-        template_values = self._notify_by_email_prepare_rendering_context(
+        template_values = self.with_context(lang=lang)._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,
@@ -3032,7 +3039,10 @@ class MailThread(models.AbstractModel):
 
         email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
         template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
-        base_mail_values = self._notify_by_email_get_base_mail_values(message, additional_values={'auto_delete': mail_auto_delete})
+        base_mail_values = self.with_context(lang=lang)._notify_by_email_get_base_mail_values(
+            message,
+            additional_values={'auto_delete': mail_auto_delete},
+        )
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
         # the mail.mail creation.
@@ -3158,6 +3168,8 @@ class MailThread(models.AbstractModel):
         """
         if msg_vals is False:
             msg_vals = {}
+        lang = force_email_lang if force_email_lang else self.env.context.get('lang')
+        record_wlang = self.with_context(lang=lang)
 
         # compute send user and its related signature; try to use self.env.user instead of browsing
         # user_ids if they are the author will give a sudo user, improving access performances and cache usage.
@@ -3174,33 +3186,19 @@ class MailThread(models.AbstractModel):
         if force_email_company:
             company = force_email_company
         else:
-            company = self.company_id.sudo() if self and 'company_id' in self and self.company_id else self.env.company
+            company = record_wlang.company_id.sudo() if (
+                record_wlang and 'company_id' in record_wlang and record_wlang.company_id
+            ) else record_wlang.env.company
         if company.website:
             website_url = 'http://%s' % company.website if not company.website.lower().startswith(('http:', 'https:')) else company.website
         else:
             website_url = False
 
-        # compute lang in which content was rendered or typed
-        lang = False
-        if force_email_lang:
-            lang = force_email_lang
-        elif {'default_template_id', 'default_model', 'default_res_ids'} <= self.env.context.keys():
-            # TDE FIXME: this whole brol should be cleaned !
-            if msg_vals.get('res_id'):
-                res_ids = [msg_vals['res_id']]
-            else:
-                res_ids = self.env['mail.compose.message']._parse_res_ids(self.env.context['default_res_ids'])
-            template = self.env['mail.template'].browse(self.env.context['default_template_id'])
-            if res_ids and template and template.lang:
-                lang = template._render_lang(res_ids)[res_ids[0]]
-        if not lang:
-            lang = self.env.context.get('lang')
-
         # record, model
         if not model_description:
-            model = msg_vals.get('model') if 'model' in msg_vals else message.model
-            if model:
-                model_description = self.env['ir.model'].with_context(lang=lang)._get(model).display_name
+            model_description = record_wlang._get_model_description(
+                msg_vals.get('model') if 'model' in msg_vals else message.model
+            )
         record_name = msg_vals.get('record_name') if 'record_name' in msg_vals else message.record_name
 
         # tracking
@@ -3224,7 +3222,7 @@ class MailThread(models.AbstractModel):
             'tracking_values': tracking,
             # record
             'model_description': model_description,
-            'record': self,
+            'record': record_wlang,
             'record_name': record_name,
             'subtitles': [record_name],
             # user / environment
@@ -3604,6 +3602,14 @@ class MailThread(models.AbstractModel):
         token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
         hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
         return hm
+
+    @api.model
+    def _get_model_description(self, model_name):
+        if not model_name:
+            return False
+        if not 'lang' in self.env.context:
+            raise ValueError(_('At this point lang should be correctly set'))
+        return self.env['ir.model']._get(model_name).display_name  # one query for display name
 
     def _is_thread_message(self, msg_vals=None):
         """ Tool method to compute thread validity in notification methods.
