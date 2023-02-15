@@ -130,8 +130,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         if (keyCode === 13 || keyCode === 39) {  // Enter or arrow-right: go Next
             event.preventDefault();
             if (!this.preventEnterSubmit) {
-                var isFinish = this.$('button[value="finish"]').length !== 0;
-                this._submitForm({isFinish: isFinish});
+                this._submitForm({
+                    isFinish: this.el.querySelectorAll('button[value="finish"]').length !== 0,
+                    nextSkipped: this.el.querySelectorAll('button[value="next_skipped"]').length !== 0 ? keyCode === 13 : false,
+                });
             }
         } else if (keyCode === 37) {  // arrow-left: previous (if available)
             // It's easier to actually click on the button (if in the DOM) as it contains necessary
@@ -172,7 +174,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     .closest('.o_survey_form_choice')
                     .find('.o_survey_comment').length !== 0;
                 if (!questionHasComment) {
-                    this._submitForm({});
+                    this._submitForm({'nextSkipped': $choiceItemGroup.data('isSkippedQuestion')});
                 }
             }
         }
@@ -243,11 +245,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
     _onSubmit: function (event) {
         event.preventDefault();
-        var options = {};
-        var $target = $(event.currentTarget);
-        if ($target.val() === 'previous') {
-            options.previousPageId = $target.data('previousPageId');
-        } else if ($target.val() === 'finish') {
+        const options = {};
+        const target = event.currentTarget;
+        if (target.value === 'previous') {
+            options.previousPageId = parseInt(target.dataset['previousPageId']);
+        } else if (target.value === 'next_skipped') {
+            options.nextSkipped = true;
+        } else if (target.value === 'finish') {
             options.isFinish = true;
         }
         this._submitForm(options);
@@ -365,6 +369,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         if (options.previousPageId) {
             params.previous_page_id = options.previousPageId;
         }
+        if (options.nextSkipped) {
+            params.next_skipped_page_or_question = true;
+        }
         var route = "/survey/submit";
 
         if (this.options.isStartScreen) {
@@ -417,7 +424,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var fadeOutPromise = new Promise(function (resolve, reject) {resolveFadeOut = resolve;});
 
         var selectorsToFadeout = ['.o_survey_form_content'];
-        if (options.isFinish) {
+        if (options.isFinish && !this.nextScreenResult.has_skipped_questions) {
             selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
             deleteCookie('survey_' + self.options.surveyToken);
         }
@@ -454,7 +461,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var self = this;
         var result = this.nextScreenResult;
 
-        if (!(options && options.isFinish)
+        if ((!(options && options.isFinish) || result.has_skipped_questions)
             && !this.options.sessionInProgress) {
             this.preventEnterSubmit = false;
         }
@@ -489,7 +496,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     this.surveyTimerWidget.destroy();
                 }
             }
-            if (options && options.isFinish) {
+            if (options && options.isFinish && !result.has_skipped_questions) {
                 this._initResultWidget();
                 if (this.surveyBreadcrumbWidget) {
                     this.$('.o_survey_breadcrumb_container').addClass('d-none');
@@ -518,6 +525,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
             this.$('button[type="submit"]').removeClass('disabled');
 
+            this._scrollToFirstError();
             self._focusOnFirstInput();
         } else if (result && result.fields && result.error === 'validation') {
             this.$('.o_survey_form_content').fadeIn(0);
@@ -1126,11 +1134,20 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var self = this;
         var errorKeys = Object.keys(errors || {});
         errorKeys.forEach(key => {
-            self.$("#" + key + '>.o_survey_question_error').append($('<p>', {text: errors[key]})).addClass("slide_in");
+            self.$("#" + key + '>.o_survey_question_error').append($('<span>', {text: errors[key]})).addClass("slide_in");
             if (errorKeys[0] === key) {
                 self._scrollToError(self.$('.js_question-wrapper#' + key));
             }
         });
+    },
+
+    /**
+     * This method is used to scroll to error generated in the backend.
+     * (Those errors are displayed when the user skip mandatory question(s))
+     */
+    _scrollToFirstError: function() {
+        const errorElem = this.el.querySelector('.o_survey_question_error :not(:empty)');
+        errorElem?.scrollIntoView();
     },
 
     _scrollToError: function ($target) {

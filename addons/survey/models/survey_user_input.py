@@ -52,6 +52,7 @@ class SurveyUserInput(models.Model):
     scoring_percentage = fields.Float("Score (%)", compute="_compute_scoring_values", store=True, compute_sudo=True)  # stored for perf reasons
     scoring_total = fields.Float("Total Score", compute="_compute_scoring_values", store=True, compute_sudo=True)  # stored for perf reasons
     scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
+    survey_first_submitted = fields.Boolean(string='Survey First Submitted')
     # live sessions
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
     question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
@@ -609,6 +610,55 @@ class SurveyUserInput(models.Model):
         else:
             inactive_questions = self._get_inactive_conditional_questions()
         return survey.question_ids - inactive_questions
+
+    def _get_next_skipped_page_or_question(self):
+        """Get next skipped question or page in case the option 'can_go_back' is set on the survey
+        It loops to the first skipped question or page if 'last_displayed_page_id' is the last
+        skipped question or page."""
+        self.ensure_one()
+        skipped_mandatory_answer_ids = self.user_input_line_ids.filtered(
+            lambda answer: answer.skipped and answer.question_id.constr_mandatory)
+
+        if not skipped_mandatory_answer_ids:
+            return self.env['survey.question']
+
+        page_or_question_key = 'page_id' if self.survey_id.questions_layout == 'page_per_section' else 'question_id'
+        page_or_question_ids = skipped_mandatory_answer_ids.mapped(page_or_question_key).sorted()
+
+        if self.last_displayed_page_id not in page_or_question_ids\
+            or self.last_displayed_page_id == page_or_question_ids[-1]:
+            return page_or_question_ids[0]
+
+        current_page_index = page_or_question_ids.ids.index(self.last_displayed_page_id.id)
+        return page_or_question_ids[current_page_index + 1]
+
+    def _get_skipped_questions(self):
+        self.ensure_one()
+
+        return self.user_input_line_ids.filtered(
+            lambda answer: answer.skipped and answer.question_id.constr_mandatory).question_id
+
+    def _is_last_skipped_page_or_question(self, page_or_question):
+        """In case of a submitted survey tells if the question or page is the last
+        skipped page or question.
+
+        This is used to :
+
+        - Display a Submit button if the actual question is the last skipped question.
+        - Avoid displaying a Submit button on the last survey question if there are
+          still skipped questions before.
+        - Avoid displaying the next page if submitting the latest skipped question.
+
+        :param page_or_question: page if survey's layout is page_per_section, question if page_per_question.
+        """
+        if self.survey_id.questions_layout == 'one_page':
+            return True
+        skipped = self._get_skipped_questions()
+        if not skipped:
+            return True
+        if self.survey_id.questions_layout == 'page_per_section':
+            skipped = skipped.page_id
+        return skipped == page_or_question
 
     # ------------------------------------------------------------
     # MESSAGING
