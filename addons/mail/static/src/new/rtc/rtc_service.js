@@ -761,8 +761,7 @@ export class Rtc {
             }
             const outdatedSessionsData = rtcSessions[1][1];
             for (const sessionData of outdatedSessionsData) {
-                const session = this.deleteSession(sessionData);
-                delete this.state.channel.rtcSessions[session.id];
+                this.deleteSession(sessionData);
             }
         }
     }
