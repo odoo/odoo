@@ -104,6 +104,37 @@ function setupMainComponentRegistry() {
     }
 }
 
+export const setupManager = {
+    setupServices(services, messagingValues) {
+        return {
+            bus_service: busService,
+            "bus.parameters": busParametersService,
+            im_status: imStatusService,
+            effect: effectService,
+            "mail.notification.permission": notificationPermissionService,
+            "mail.suggestion": suggestionService,
+            "mail.store": storeService,
+            "mail.activity": activityService,
+            "mail.attachment": attachmentService,
+            "mail.thread": threadService,
+            "mail.message": messageService,
+            "mail.chat_window": chatWindowService,
+            "mail.messaging": newMessagingService,
+            "mail.rtc": rtcService,
+            "mail.sound_effects": soundEffects,
+            "mail.user_settings": userSettingsService,
+            "mail.persona": personaService,
+            messaging: messagingService,
+            messagingValues,
+            presence: makeFakePresenceService({
+                isOdooFocused: () => true,
+            }),
+            multi_tab: multiTabService,
+            ...services,
+        };
+    },
+};
+
 /**
  * Setup both legacy and new service registries.
  *
@@ -154,32 +185,7 @@ async function setupMessagingServiceRegistries({
         },
     };
 
-    services = {
-        bus_service: busService,
-        "bus.parameters": busParametersService,
-        im_status: imStatusService,
-        effect: effectService,
-        "mail.notification.permission": notificationPermissionService,
-        "mail.suggestion": suggestionService,
-        "mail.store": storeService,
-        "mail.activity": activityService,
-        "mail.attachment": attachmentService,
-        "mail.thread": threadService,
-        "mail.message": messageService,
-        "mail.chat_window": chatWindowService,
-        "mail.messaging": newMessagingService,
-        "mail.rtc": rtcService,
-        "mail.sound_effects": soundEffects,
-        "mail.user_settings": userSettingsService,
-        "mail.persona": personaService,
-        messaging: messagingService,
-        messagingValues,
-        presence: makeFakePresenceService({
-            isOdooFocused: () => true,
-        }),
-        multi_tab: multiTabService,
-        ...services,
-    };
+    services = setupManager.setupServices(services, messagingValues);
     if (!serviceRegistry.contains("file_upload")) {
         serviceRegistry.add("file_upload", {
             ...fileUploadService,
