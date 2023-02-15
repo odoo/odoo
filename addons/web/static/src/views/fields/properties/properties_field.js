@@ -206,9 +206,9 @@ export class PropertiesField extends Component {
      * @param {string} propertyName
      */
     onPropertyEdit(event, propertyName) {
+        event.stopPropagation();
+        event.preventDefault();
         if (event.target.classList.contains("disabled")) {
-            event.stopPropagation();
-            event.preventDefault();
             // remove the glitch if we click on the edit button
             // while the popover is already opened
             return;
