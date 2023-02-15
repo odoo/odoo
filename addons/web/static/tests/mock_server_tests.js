@@ -1108,18 +1108,55 @@ QUnit.module("MockServer", (hooks) => {
                     __domain: [["bool", "=", false]],
                     bool: false,
                     float: 0,
-                    foo: 17,
+                    foo_sum: 17,
                 },
                 {
                     __count: 4,
                     __domain: [["bool", "=", true]],
                     bool: true,
                     float: 2,
-                    foo: 57,
+                    foo_sum: 57,
                 },
             ]);
         }
     );
+
+    QUnit.test("performRPC: read_group with array_agg", async function (assert) {
+        const server = new MockServer(data, {});
+        const aggregateValue = [null, 2, null, 1, null, 1];
+        const result1 = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["aggregateLabel:array_agg(partner_id)"],
+                domain: [],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result1, [
+            {
+                __count: 6,
+                aggregateLabel: aggregateValue,
+            },
+        ]);
+        const result2 = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["partner_id:array_agg"],
+                domain: [],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result2, [
+            {
+                __count: 6,
+                partner_id: aggregateValue,
+            },
+        ]);
+    });
 
     QUnit.test("performRPC: read_progress_bar grouped by boolean", async (assert) => {
         const server = new MockServer(data, {});
