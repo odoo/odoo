@@ -4,12 +4,14 @@ import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl
 import { useRtc } from "@mail/rtc/rtc_hook";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 
 export class CallSettings extends Component {
     static template = "mail.CallSettings";
     static props = ["thread", "className?"];
 
     setup() {
+        this.notification = useService("notification");
         this.userSettings = useState(useService("mail.user_settings"));
         this.rtc = useRtc();
         this.state = useState({
@@ -18,6 +20,15 @@ export class CallSettings extends Component {
         useExternalListener(browser, "keydown", this._onKeyDown);
         useExternalListener(browser, "keyup", this._onKeyUp);
         onWillStart(async () => {
+            if (!browser.navigator.mediaDevices) {
+                // zxing-js: isMediaDevicesSuported or canEnumerateDevices is false.
+                this.notification.add(
+                    _t("Media devices unobtainable. SSL might not be set up properly."),
+                    { type: "warning" }
+                );
+                console.warn("Media devices unobtainable. SSL might not be set up properly.");
+                return;
+            }
             this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
         });
     }
