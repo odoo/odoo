@@ -1251,7 +1251,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, ".fa-hashtag");
+        assert.containsOnce(target, ".o-mail-discuss-content .fa-hashtag");
     }
 );
 
@@ -1266,7 +1266,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, ".fa-globe");
+        assert.containsOnce(target, ".o-mail-discuss-content .fa-globe");
     }
 );
 

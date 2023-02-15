@@ -703,3 +703,14 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test("sidebar: public channel rendering", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create([
+        { name: "channel1", channel_type: "channel", group_public_id: false },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(target, "button:contains(channel1)");
+    assert.containsOnce(target, "button:contains(channel1) .fa-globe");
+});

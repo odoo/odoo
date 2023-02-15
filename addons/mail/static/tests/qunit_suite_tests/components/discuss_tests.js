@@ -52,39 +52,6 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.skipRefactoring("sidebar: public channel rendering", async function (assert) {
-            assert.expect(3);
-
-            const pyEnv = await startServer();
-            const mailChannelId1 = pyEnv["mail.channel"].create([
-                { name: "channel1", channel_type: "channel", group_public_id: false },
-            ]);
-            const { openDiscuss } = await start();
-            await openDiscuss();
-            assert.strictEqual(
-                document.querySelectorAll(`.o-mail-category-channel .o_DiscussSidebarCategory_item`)
-                    .length,
-                1,
-                "should have 1 channel items"
-            );
-            assert.strictEqual(
-                document.querySelectorAll(`
-            .o-mail-category-channel
-            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
-        `).length,
-                1,
-                "should have channel 1"
-            );
-            const channel1 = document.querySelector(`
-        .o-mail-category-channel
-        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
-    `);
-            assert.ok(
-                channel1.querySelectorAll(`:scope .o_ThreadIconView_publicChannel`).length,
-                "channel1 (public) should have globe icon"
-            );
-        });
-
         QUnit.skipRefactoring("restore thread scroll position", async function (assert) {
             assert.expect(6);
 
