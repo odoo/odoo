@@ -24,6 +24,8 @@ class AccountPaymentMethod(models.Model):
         methods_info = self._get_payment_method_information()
         for method in payment_methods:
             information = methods_info.get(method.code)
+            if not information:
+                raise UserError(_("Cannot add payment methods without valid information"))
 
             if information.get('mode') == 'multi':
                 method_domain = method._get_payment_method_domain()
