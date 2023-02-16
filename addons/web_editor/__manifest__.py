@@ -168,6 +168,7 @@ Odoo Web Editor widget.
             ('include', 'web_editor.assets_wysiwyg'),
 
             'web_editor/static/tests/**/*',
+            'web_editor/static/src/js/editor/odoo-editor/test/utils.js'
         ],
     },
     'auto_install': True,
