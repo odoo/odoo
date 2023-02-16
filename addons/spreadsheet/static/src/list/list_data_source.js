@@ -13,15 +13,6 @@ const { toNumber } = spreadsheet.helpers;
 /**
  * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
  *
- * @typedef {Object} ListMetaData
- * @property {Array<string>} columns
- * @property {string} resModel
- * @property {Record<string, Field>} fields
- *
- * @typedef {Object} ListSearchParams
- * @property {Array<string>} orderBy
- * @property {Object} domain
- * @property {Object} context
  */
 
 export default class ListDataSource extends OdooViewsDataSource {
@@ -29,14 +20,19 @@ export default class ListDataSource extends OdooViewsDataSource {
      * @override
      * @param {Object} services Services (see DataSource)
      * @param {Object} params
-     * @param {ListMetaData} params.metaData
-     * @param {ListSearchParams} params.searchParams
+     * @param {string} params.model
+     * @param {Object} params.domain
+     * @param {Object} params.context
+     * @param {Array<string>} params.columns
+     * @param {Array<Object>} params.orderBy
      * @param {number} params.limit
      */
     constructor(services, params) {
         super(services, params);
-        this.maxPosition = params.limit;
+        this.maxPosition = params.limit || 0;
         this.maxPositionFetched = 0;
+        this.columns = params.columns;
+        this.orderBy = orderByToString(params.orderBy || []);
         this.data = [];
     }
 
@@ -54,13 +50,13 @@ export default class ListDataSource extends OdooViewsDataSource {
             this.data = [];
             return;
         }
-        const { domain, orderBy, context } = this._searchParams;
+        const { domain, context } = this._searchParams;
         this.data = await this._orm.searchRead(
             this._metaData.resModel,
             domain,
             this._getFieldsToFetch(),
             {
-                order: orderByToString(orderBy),
+                order: this.orderBy,
                 limit: this.maxPosition,
                 context,
             }
@@ -73,7 +69,7 @@ export default class ListDataSource extends OdooViewsDataSource {
      * Automatically add the currency field if the field is a monetary field.
      */
     _getFieldsToFetch() {
-        const fields = this._metaData.columns.filter((f) => this.getField(f));
+        const fields = this.columns.filter((f) => this.getField(f));
         for (const field of fields) {
             if (this.getField(field).type === "monetary") {
                 fields.push(this.getField(field).currency_field);
@@ -129,8 +125,8 @@ export default class ListDataSource extends OdooViewsDataSource {
             );
         }
         if (!(fieldName in record)) {
-            this._metaData.columns.push(fieldName);
-            this._metaData.columns = [...new Set(this._metaData.columns)]; //Remove duplicates
+            this.columns.push(fieldName);
+            this.columns = [...new Set(this.columns)]; //Remove duplicates
             this._triggerFetching();
             throw new LoadingDataError();
         }

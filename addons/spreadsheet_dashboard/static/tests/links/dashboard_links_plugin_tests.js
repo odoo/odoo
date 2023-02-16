@@ -70,7 +70,7 @@ QUnit.test("click a menu link", async (assert) => {
     assert.verifySteps(["action1"]);
 });
 
-QUnit.test("click a menu link", async (assert) => {
+QUnit.test("click a view link", async (assert) => {
     const fakeActionService = {
         name: "action",
         start() {
@@ -96,7 +96,7 @@ QUnit.test("click a menu link", async (assert) => {
         name: "an odoo view",
         viewType: "list",
         action: {
-            modelName: "partner",
+            model: "partner",
             views: [[false, "list"]],
         },
     };

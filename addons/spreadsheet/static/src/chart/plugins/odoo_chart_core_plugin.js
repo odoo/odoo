@@ -36,7 +36,7 @@ export default class OdooChartCorePlugin extends CorePlugin {
                 this.getOdooChartFieldMatching(chartId, filterId),
             waitForReady: () => this.getOdooChartsWaitForReady(),
             getModel: (chartId) =>
-                this.getters.getChart(chartId).getDefinitionForDataSource().metaData.resModel,
+                this.getters.getChart(chartId).getDefinition().dataSourceDefinition.model,
             getFields: (chartId) => this.getChartDataSource(chartId).getFields(),
         };
     }
@@ -231,7 +231,7 @@ export default class OdooChartCorePlugin extends CorePlugin {
             dataSourceId,
             fieldMatching,
         };
-        const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
+        const definition = this.getters.getChart(chartId).getDefinition().dataSourceDefinition;
         if (!this.dataSources.contains(dataSourceId)) {
             this.dataSources.add(dataSourceId, ChartDataSource, definition);
         }

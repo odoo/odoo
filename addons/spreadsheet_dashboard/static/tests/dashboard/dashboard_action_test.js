@@ -1,6 +1,12 @@
 /** @odoo-module */
 
-import { getFixture, click, legacyExtraNextTick, nextTick, editInput } from "@web/../tests/helpers/utils";
+import {
+    getFixture,
+    click,
+    legacyExtraNextTick,
+    nextTick,
+    editInput,
+} from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 import { getBasicData, getBasicListArchs } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
@@ -128,7 +134,7 @@ QUnit.test(
                     id: 1,
                     colGroupBys: ["foo"],
                     domain: [],
-                    measures: [{ field: "probability", operator: "avg" }],
+                    measures: ["probability"],
                     model: "partner",
                     rowGroupBys: ["bar"],
                 },

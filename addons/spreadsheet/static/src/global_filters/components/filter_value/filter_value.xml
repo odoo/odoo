@@ -16,7 +16,7 @@
             </div>
             <span t-if="filter.type === 'relation'" class="w-100">
                 <RecordsSelector placeholder="' ' + env._t(filter.label)"
-                    resModel="filter.modelName"
+                    resModel="filter.model"
                     resIds="filterValue"
                     onValueChanged="(value) => this.onTagSelected(filter.id, value)" />
             </span>

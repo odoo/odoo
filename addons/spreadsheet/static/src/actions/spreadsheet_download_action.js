@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { migrate } from "@spreadsheet/o_spreadsheet/migration";
+import { migrate, upgradeRevisions } from "@spreadsheet/o_spreadsheet/migration";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
@@ -12,7 +12,7 @@ const { Model } = spreadsheet;
 async function downloadSpreadsheet(env, action) {
     const { orm, name, data, stateUpdateMessages } = action.params;
     const dataSources = new DataSources(orm);
-    const model = new Model(migrate(data), { dataSources }, stateUpdateMessages);
+    const model = new Model(migrate(data), { dataSources }, upgradeRevisions(stateUpdateMessages));
     await waitForDataLoaded(model);
     const { files } = model.exportXLSX();
     await download({

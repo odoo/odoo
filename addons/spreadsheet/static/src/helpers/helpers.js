@@ -39,7 +39,7 @@ export function getMaxObjectId(o) {
 
 /** converts and orderBy Object to a string equivalent that can be processed by orm.call */
 export function orderByToString(orderBy) {
-    return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
+    return orderBy.map((o) => `${o.name || o.field} ${o.asc ? "ASC" : "DESC"}`).join(", ");
 }
 
 /**
