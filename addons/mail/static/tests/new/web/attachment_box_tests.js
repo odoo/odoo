@@ -170,7 +170,7 @@ QUnit.test("scroll to attachment box when toggling on", async function (assert) 
         res_id: partnerId,
         res_model: "res.partner",
     });
-    const { click, openView } = await start();
+    const { openView } = await start();
     await openView({
         res_id: partnerId,
         res_model: "res.partner",

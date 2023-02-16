@@ -1456,12 +1456,11 @@ QUnit.test(
     "composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({ name: "test" });
+        const channelId = pyEnv["mail.channel"].create({ name: "test" });
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         await insertText(".o-mail-composer-textarea", "Dummy Message");
         await click(".o-mail-composer-send-button");
-
         assert.strictEqual(
             target.querySelector(".o-mail-composer-textarea"),
             document.activeElement
@@ -1473,7 +1472,7 @@ QUnit.test(
     "mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel [REQUIRE FOCUS]",
     async function (assert) {
         const pyEnv = await startServer();
-        const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
+        const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
             {
                 channel_member_ids: [
                     [
@@ -1505,16 +1504,16 @@ QUnit.test(
             {
                 body: "oldest message",
                 model: "mail.channel",
-                res_id: mailChannelId1,
+                res_id: channelId_1,
             },
             {
                 body: "newest message",
                 model: "mail.channel",
-                res_id: mailChannelId2,
+                res_id: channelId_2,
             },
         ]);
         const { openDiscuss } = await start();
-        await openDiscuss(mailChannelId2);
+        await openDiscuss(channelId_2);
         await click("button:contains(Bla)");
         assert.containsNone(target, ".o-unread");
     }
@@ -1524,7 +1523,7 @@ QUnit.test(
     "warning on send with shortcut when attempting to post message with still-uploading attachments",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({ name: "test" });
+        const channelId = pyEnv["mail.channel"].create({ name: "test" });
         const { openDiscuss } = await start({
             async mockRPC(route) {
                 if (route === "/mail/attachment/upload") {
@@ -1540,7 +1539,7 @@ QUnit.test(
                 }),
             },
         });
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         const file = await createFile({
             content: "hello, world",
             contentType: "text/plain",
@@ -1563,30 +1562,27 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async function (assert) {
     // remove from DOM right away from seeing last message.
     // AKU TODO: thread specific test
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({ name: "Foreigner partner" });
-    const resUsersId1 = pyEnv["res.users"].create({
+    const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+    const userId = pyEnv["res.users"].create({
         name: "Foreigner user",
-        partner_id: resPartnerId1,
+        partner_id: partnerId,
     });
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "test", uuid: "randomuuid" });
+    const channelId = pyEnv["mail.channel"].create({ name: "test", uuid: "randomuuid" });
     let lastMessageId;
     for (let i = 1; i <= 25; i++) {
         lastMessageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
         });
     }
-    const [mailChannelMemberId] = pyEnv["mail.channel.member"].search([
-        ["channel_id", "=", mailChannelId1],
+    const [memberId] = pyEnv["mail.channel.member"].search([
+        ["channel_id", "=", channelId],
         ["partner_id", "=", pyEnv.currentPartnerId],
     ]);
-    pyEnv["mail.channel.member"].write([mailChannelMemberId], {
-        seen_message_id: lastMessageId,
-    });
+    pyEnv["mail.channel.member"].write([memberId], { seen_message_id: lastMessageId });
     const { env, openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
-
+    await openDiscuss(channelId);
     assert.containsN(target, ".o-mail-message", 25);
     assert.containsNone(target, "hr + span:contains(New messages)");
 
@@ -1596,14 +1592,11 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async function (assert) {
     // simulate receiving a message
     await afterNextRender(async () =>
         env.services.rpc("/mail/chat_post", {
-            context: {
-                mockedUserId: resUsersId1,
-            },
+            context: { mockedUserId: userId },
             message_content: "hu",
             uuid: "randomuuid",
         })
     );
-
     assert.containsN(target, ".o-mail-message", 26);
     assert.containsOnce(target, "hr + span:contains(New messages)");
     const messageList = target.querySelector(".o-mail-discuss-content .o-mail-thread");
@@ -1616,7 +1609,7 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async function (assert) {
 
 QUnit.test("failure on loading messages should display error", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
         name: "General",
     });
@@ -1627,8 +1620,7 @@ QUnit.test("failure on loading messages should display error", async function (a
             }
         },
     });
-    await openDiscuss(mailChannelId1, { waitUntilMessagesLoaded: false });
-
+    await openDiscuss(channelId, { waitUntilMessagesLoaded: false });
     assert.containsOnce(
         target,
         ".o-mail-error-msg:contains(An error occurred while fetching messages.)"
@@ -1637,7 +1629,7 @@ QUnit.test("failure on loading messages should display error", async function (a
 
 QUnit.test("failure on loading messages should prompt retry button", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         channel_type: "channel",
         name: "General",
     });
@@ -1648,8 +1640,7 @@ QUnit.test("failure on loading messages should prompt retry button", async funct
             }
         },
     });
-    await openDiscuss(mailChannelId1, { waitUntilMessagesLoaded: false });
-
+    await openDiscuss(channelId, { waitUntilMessagesLoaded: false });
     assert.containsOnce(target, "button:contains(Click here to retry)");
 });
 
@@ -1661,7 +1652,7 @@ QUnit.test(
         // any later call should work so that retry button and load more clicks would now work
         let messageFetchShouldFail = false;
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
             name: "General",
         });
@@ -1670,7 +1661,7 @@ QUnit.test(
                 return {
                     body: "coucou",
                     model: "mail.channel",
-                    res_id: mailChannelId1,
+                    res_id: channelId,
                 };
             })
         );
@@ -1681,8 +1672,7 @@ QUnit.test(
                 }
             },
         });
-        await openDiscuss(mailChannelId1);
-
+        await openDiscuss(channelId);
         messageFetchShouldFail = true;
         await click("button:contains(Load More)");
         assert.containsN(target, ".o-mail-message", 30);
@@ -1697,7 +1687,7 @@ QUnit.test(
         // any later call should work so that retry button and load more clicks would now work
         let messageFetchShouldFail = false;
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
             name: "General",
         });
@@ -1706,7 +1696,7 @@ QUnit.test(
                 return {
                     body: "coucou",
                     model: "mail.channel",
-                    res_id: mailChannelId1,
+                    res_id: channelId,
                 };
             })
         );
@@ -1717,8 +1707,7 @@ QUnit.test(
                 }
             },
         });
-        await openDiscuss(mailChannelId1);
-
+        await openDiscuss(channelId);
         messageFetchShouldFail = true;
         await click("button:contains(Load More)");
         assert.containsOnce(
@@ -1738,7 +1727,7 @@ QUnit.test(
         // any later call should work so that retry button and load more clicks would now work
         let messageFetchShouldFail = false;
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             channel_type: "channel",
             name: "General",
         });
@@ -1747,7 +1736,7 @@ QUnit.test(
                 return {
                     body: "coucou",
                     model: "mail.channel",
-                    res_id: mailChannelId1,
+                    res_id: channelId,
                 };
             })
         );
@@ -1760,10 +1749,9 @@ QUnit.test(
                 }
             },
         });
-        await openDiscuss(mailChannelId1);
+        await openDiscuss(channelId);
         messageFetchShouldFail = true;
         await click("button:contains(Load More)");
-
         messageFetchShouldFail = false;
         await click("button:contains(Click here to retry)");
         assert.containsN(target, ".o-mail-message", 60);
@@ -1772,12 +1760,12 @@ QUnit.test(
 
 QUnit.test("composer state: attachments save and restore", async function (assert) {
     const pyEnv = await startServer();
-    const [mailChannelId1] = pyEnv["mail.channel"].create([
+    const [channelId] = pyEnv["mail.channel"].create([
         { name: "General" },
         { name: "Special" },
     ]);
     const { openDiscuss } = await start();
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     // Add attachment in a message for #general
     await afterNextRender(async () => {
         const file = await createFile({

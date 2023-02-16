@@ -13,7 +13,7 @@ QUnit.module("snail message menu", {
 
 QUnit.test("mark as read", async function (assert) {
     const pyEnv = await startServer();
-    const mailMessageId1 = pyEnv["mail.message"].create([
+    const messageId = pyEnv["mail.message"].create([
         {
             message_type: "snailmail",
             model: "res.partner",
@@ -22,7 +22,7 @@ QUnit.test("mark as read", async function (assert) {
         },
     ]);
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "snail",
     });
@@ -40,39 +40,39 @@ QUnit.test("mark as read", async function (assert) {
 
 QUnit.test("notifications grouped by notification_type", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = await pyEnv["res.partner"].create({});
-    const [mailMessageId1, mailMessageId2] = pyEnv["mail.message"].create([
+    const partnerId = await pyEnv["res.partner"].create({});
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "snailmail",
             model: "res.partner",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model_name: "Partner",
         },
         {
             message_type: "email",
             model: "res.partner",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model_name: "Partner",
         },
     ]);
     pyEnv["mail.notification"].create([
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "snail",
         },
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "snail",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "exception",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "exception",
             notification_type: "email",
         },
@@ -91,29 +91,29 @@ QUnit.test("notifications grouped by notification_type", async function (assert)
 
 QUnit.test("grouped notifications by document model", async function (assert) {
     const pyEnv = await startServer();
-    const [resPartnerId1, resPartnerId2] = await pyEnv["res.partner"].create([{}, {}]);
-    const [mailMessageId1, mailMessageId2] = pyEnv["mail.message"].create([
+    const [partnerId_1, partnerId_2] = await pyEnv["res.partner"].create([{}, {}]);
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "snailmail",
             model: "res.partner",
-            res_id: resPartnerId1,
+            res_id: partnerId_1,
             res_model_name: "Partner",
         },
         {
             message_type: "snailmail",
             model: "res.partner",
-            res_id: resPartnerId2,
+            res_id: partnerId_2,
             res_model_name: "Partner",
         },
     ]);
     pyEnv["mail.notification"].create([
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "snail",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "exception",
             notification_type: "snail",
         },

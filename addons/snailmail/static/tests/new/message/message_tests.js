@@ -14,24 +14,24 @@ QUnit.module("snail message", {
 
 QUnit.test("Sent", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
         partner_share: true,
     });
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "snailmail",
         model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "snail",
-        res_partner_id: resPartnerId1,
+        res_partner_id: partnerId,
     });
     const { openFormView } = await start();
-    await openFormView("res.partner", resPartnerId1);
+    await openFormView("res.partner", partnerId);
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification i");
@@ -46,24 +46,24 @@ QUnit.test("Sent", async function (assert) {
 
 QUnit.test("Canceled", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
         partner_share: true,
     });
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "snailmail",
         model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "canceled",
         notification_type: "snail",
-        res_partner_id: resPartnerId1,
+        res_partner_id: partnerId,
     });
     const { openFormView } = await start();
-    await openFormView("res.partner", resPartnerId1);
+    await openFormView("res.partner", partnerId);
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification i");
@@ -78,24 +78,24 @@ QUnit.test("Canceled", async function (assert) {
 
 QUnit.test("Pending", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
         partner_share: true,
     });
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "snailmail",
         model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "ready",
         notification_type: "snail",
-        res_partner_id: resPartnerId1,
+        res_partner_id: partnerId,
     });
     const { openFormView } = await start();
-    await openFormView("res.partner", resPartnerId1);
+    await openFormView("res.partner", partnerId);
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification i");
@@ -113,35 +113,35 @@ QUnit.test("Pending", async function (assert) {
 
 QUnit.test("No Price Available", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
         partner_share: true,
     });
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "snailmail",
         model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         failure_type: "sn_price",
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "snail",
-        res_partner_id: resPartnerId1,
+        res_partner_id: partnerId,
     });
     const { openFormView } = await start({
         async mockRPC(route, args) {
             if (
                 args.method === "cancel_letter" &&
                 args.model === "mail.message" &&
-                args.args[0][0] === mailMessageId1
+                args.args[0][0] === messageId
             ) {
                 assert.step(args.method);
             }
         },
     });
-    await openFormView("res.partner", resPartnerId1);
+    await openFormView("res.partner", partnerId);
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification i");
@@ -161,35 +161,35 @@ QUnit.test("No Price Available", async function (assert) {
 
 QUnit.test("Credit Error", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
         partner_share: true,
     });
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "snailmail",
         model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         failure_type: "sn_credit",
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "snail",
-        res_partner_id: resPartnerId1,
+        res_partner_id: partnerId,
     });
     const { openFormView } = await start({
         async mockRPC(route, args) {
             if (
                 args.method === "send_letter" &&
                 args.model === "mail.message" &&
-                args.args[0][0] === mailMessageId1
+                args.args[0][0] === messageId
             ) {
                 assert.step(args.method);
             }
         },
     });
-    await openFormView("res.partner", resPartnerId1);
+    await openFormView("res.partner", partnerId);
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification i");
@@ -210,35 +210,35 @@ QUnit.test("Credit Error", async function (assert) {
 
 QUnit.test("Trial Error", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
         partner_share: true,
     });
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "snailmail",
         model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         failure_type: "sn_trial",
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "snail",
-        res_partner_id: resPartnerId1,
+        res_partner_id: partnerId,
     });
     const { openFormView } = await start({
         async mockRPC(route, args) {
             if (
                 args.method === "send_letter" &&
                 args.model === "mail.message" &&
-                args.args[0][0] === mailMessageId1
+                args.args[0][0] === messageId
             ) {
                 assert.step(args.method);
             }
         },
     });
-    await openFormView("res.partner", resPartnerId1);
+    await openFormView("res.partner", partnerId);
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification i");
@@ -260,34 +260,33 @@ QUnit.test("Trial Error", async function (assert) {
 QUnit.test("Format Error", async function (assert) {
     const openFormatErrorActionDef = makeDeferred();
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({
+    const partnerId = pyEnv["res.partner"].create({
         name: "Someone",
         partner_share: true,
     });
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "snailmail",
         model: "res.partner",
-        res_id: resPartnerId1,
+        res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
         failure_type: "sn_format",
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "snail",
-        res_partner_id: resPartnerId1,
+        res_partner_id: partnerId,
     });
     const { env, openFormView } = await start();
-    await openFormView("res.partner", resPartnerId1);
+    await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step("do_action");
             assert.strictEqual(action, "snailmail.snailmail_letter_format_error_action");
-            assert.strictEqual(options.additionalContext.message_id, mailMessageId1);
+            assert.strictEqual(options.additionalContext.message_id, messageId);
             openFormatErrorActionDef.resolve();
         },
     });
-
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification i");
@@ -301,24 +300,24 @@ QUnit.test("Format Error", async function (assert) {
 QUnit.test("Missing Required Fields", async function (assert) {
     const openRequiredFieldsActionDef = makeDeferred();
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const partnerId = pyEnv["res.partner"].create({});
+    const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "snailmail",
-        res_id: resPartnerId1,
+        res_id: partnerId,
         model: "res.partner",
     });
     pyEnv["mail.notification"].create({
         failure_type: "sn_fields",
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "snail",
     });
     const snailMailLetterId1 = pyEnv["snailmail.letter"].create({
-        message_id: mailMessageId1,
+        message_id: messageId,
     });
     const { env, openFormView } = await start();
-    await openFormView("res.partner", resPartnerId1);
+    await openFormView("res.partner", partnerId);
     patchWithCleanup(env.services.action, {
         doAction(action, options) {
             assert.step("do_action");
@@ -327,7 +326,6 @@ QUnit.test("Missing Required Fields", async function (assert) {
             openRequiredFieldsActionDef.resolve();
         },
     });
-
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification i");

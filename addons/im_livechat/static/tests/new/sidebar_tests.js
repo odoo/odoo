@@ -30,18 +30,18 @@ QUnit.test("Unknown visitor", async function (assert) {
 
 QUnit.test("Known user with country", async function (assert) {
     const pyEnv = await startServer();
-    const resCountryId1 = pyEnv["res.country"].create({
+    const countryId = pyEnv["res.country"].create({
         code: "be",
         name: "Belgium",
     });
-    const resPartnerId1 = pyEnv["res.partner"].create({
-        country_id: resCountryId1,
+    const partnerId = pyEnv["res.partner"].create({
+        country_id: countryId,
         name: "Jean",
     });
     pyEnv["mail.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: partnerId }],
         ],
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
@@ -52,14 +52,12 @@ QUnit.test("Known user with country", async function (assert) {
 });
 
 QUnit.test("Do not show channel when visitor is typing", async function (assert) {
-    assert.expect(2);
-
     const pyEnv = await startServer();
     pyEnv["res.users"].write([pyEnv.currentUserId], { im_status: "online" });
-    const imLivechatChannelId1 = pyEnv["im_livechat.channel"].create({
+    const livechatChannelId = pyEnv["im_livechat.channel"].create({
         user_ids: [pyEnv.currentUserId],
     });
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["mail.channel"].create({
         channel_member_ids: [
             [
                 0,
@@ -72,14 +70,14 @@ QUnit.test("Do not show channel when visitor is typing", async function (assert)
             [0, 0, { partner_id: pyEnv.publicPartnerId }],
         ],
         channel_type: "livechat",
-        livechat_channel_id: imLivechatChannelId1,
+        livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const { env, openDiscuss } = await start();
     await openDiscuss();
     assert.containsNone(target, ".o-mail-category-livechat");
     // simulate livechat visitor typing
-    const channel = pyEnv["mail.channel"].searchRead([["id", "=", mailChannelId1]])[0];
+    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     await env.services.rpc("/im_livechat/notify_typing", {
         context: {
             mockedPartnerId: pyEnv.publicPartnerId,
@@ -168,7 +166,7 @@ QUnit.test("Open from the bus", async function (assert) {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const resUsersSettingsId1 = pyEnv["res.users.settings"].create({
+    const settingsId = pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: false,
     });
@@ -178,7 +176,7 @@ QUnit.test("Open from the bus", async function (assert) {
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
             "res.users.settings": {
-                id: resUsersSettingsId1,
+                id: settingsId,
                 is_discuss_sidebar_category_livechat_open: true,
             },
         });
@@ -197,7 +195,7 @@ QUnit.test("Close from the bus", async function (assert) {
         channel_type: "livechat",
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const resUsersSettingsId1 = pyEnv["res.users.settings"].create({
+    const settingsId = pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_livechat_open: true,
     });
@@ -207,7 +205,7 @@ QUnit.test("Close from the bus", async function (assert) {
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
             "res.users.settings": {
-                id: resUsersSettingsId1,
+                id: settingsId,
                 is_discuss_sidebar_category_livechat_open: false,
             },
         });
@@ -238,13 +236,11 @@ QUnit.test(
     "Partner profile picture for livechat item linked to a partner",
     async function (assert) {
         const pyEnv = await startServer();
-        const resPartnerId1 = pyEnv["res.partner"].create({
-            name: "Jean",
-        });
+        const partnerId = pyEnv["res.partner"].create({ name: "Jean" });
         const channelId = pyEnv["mail.channel"].create({
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: resPartnerId1 }],
+                [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "livechat",
             livechat_operator_id: pyEnv.currentPartnerId,
@@ -254,7 +250,7 @@ QUnit.test(
         assert.strictEqual(
             document.querySelector(".o-mail-category-livechat + .o-mail-category-item img").dataset
                 .src,
-            `/web/image/res.partner/${resPartnerId1}/avatar_128`
+            `/web/image/res.partner/${partnerId}/avatar_128`
         );
     }
 );

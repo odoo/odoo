@@ -13,14 +13,14 @@ QUnit.module("sms message menu", {
 
 QUnit.test("mark as read", async function (assert) {
     const pyEnv = await startServer();
-    const mailMessageId1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         message_type: "sms",
         model: "res.partner",
         res_id: pyEnv.currentPartnerId,
         res_model_name: "Partner",
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: mailMessageId1,
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "sms",
     });
@@ -38,39 +38,39 @@ QUnit.test("mark as read", async function (assert) {
 
 QUnit.test("notifications grouped by notification_type", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const [mailMessageId1, mailMessageId2] = pyEnv["mail.message"].create([
+    const partnerId = pyEnv["res.partner"].create({});
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "sms",
             model: "res.partner",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model_name: "Partner",
         },
         {
             message_type: "email",
             model: "res.partner",
-            res_id: resPartnerId1,
+            res_id: partnerId,
             res_model_name: "Partner",
         },
     ]);
     pyEnv["mail.notification"].create([
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "sms",
         },
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "sms",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "exception",
             notification_type: "email",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "exception",
             notification_type: "email",
         },
@@ -87,7 +87,7 @@ QUnit.test("notifications grouped by notification_type", async function (assert)
 
 QUnit.test("grouped notifications by document model", async function (assert) {
     const pyEnv = await startServer();
-    const [mailMessageId1, mailMessageId2] = pyEnv["mail.message"].create([
+    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "sms",
             model: "res.partner",
@@ -103,17 +103,17 @@ QUnit.test("grouped notifications by document model", async function (assert) {
     ]);
     pyEnv["mail.notification"].create([
         {
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId_1,
             notification_status: "exception",
             notification_type: "sms",
         },
         {
-            mail_message_id: mailMessageId2,
+            mail_message_id: messageId_2,
             notification_status: "exception",
             notification_type: "sms",
         },
     ]);
-    const { click, env } = await start();
+    const { env } = await start();
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step("do_action");

@@ -80,26 +80,22 @@ QUnit.test('Receives visitor typing status "is typing"', async function (assert)
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-
     assert.strictEqual(
         document.querySelector(".o-mail-composer-is-typing-space-holder").textContent,
         "",
         "Should display no one is currently typing"
     );
-    const mailChannel1 = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>
         env.services.rpc("/im_livechat/notify_typing", {
-            context: {
-                mockedPartnerId: pyEnv.publicPartnerId,
-            },
+            context: { mockedPartnerId: pyEnv.publicPartnerId },
             is_typing: true,
-            uuid: mailChannel1.uuid,
+            uuid: channel.uuid,
         })
     );
     assert.containsOnce(
         target,
         ".o-mail-composer-is-typing-space-holder:contains(Visitor 20 is typing...)",
-        "Should display that visitor is typing"
     );
 });

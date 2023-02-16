@@ -839,11 +839,8 @@ QUnit.test("Replying on a channel should focus composer initially", async functi
 
 QUnit.test("remove an uploading attachment", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["mail.channel"].create({ name: "test" });
     const { openDiscuss } = await start({
-        discuss: {
-            context: { active_id: mailChannelId1 },
-        },
         async mockRPC(route) {
             if (route === "/mail/attachment/upload") {
                 // simulates uploading indefinitely
@@ -851,7 +848,7 @@ QUnit.test("remove an uploading attachment", async function (assert) {
             }
         },
     });
-    await openDiscuss(mailChannelId1);
+    await openDiscuss(channelId);
     const file = await createFile({
         content: "hello, world",
         contentType: "text/plain",

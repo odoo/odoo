@@ -558,7 +558,7 @@ QUnit.test("basic rendering", async function (assert) {
             permission: "denied",
         },
     });
-    const { click } = await start();
+    await start();
     assert.containsOnce(target, ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.doesNotHaveClass(
         $('.o_menu_systray .dropdown-toggle:has(i[aria-label="Messages"])'),
@@ -588,7 +588,7 @@ QUnit.test("basic rendering", async function (assert) {
 });
 
 QUnit.test("switch tab", async function (assert) {
-    const { click } = await start();
+    await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.containsOnce(target, '.o-mail-messaging-menu button:contains("All")');
     assert.containsOnce(target, '.o-mail-messaging-menu button:contains("Chats")');
@@ -611,7 +611,7 @@ QUnit.test("switch tab", async function (assert) {
 });
 
 QUnit.test("new message [REQUIRE FOCUS]", async function (assert) {
-    const { click } = await start();
+    await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(`.o-mail-messaging-menu button:contains("New Message")`);
     assert.containsOnce(target, ".o-mail-chat-window");
@@ -621,17 +621,17 @@ QUnit.test("new message [REQUIRE FOCUS]", async function (assert) {
 
 QUnit.test("channel preview: basic rendering", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({ name: "Demo" });
-    const mailChannelId1 = pyEnv["mail.channel"].create({
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["mail.channel"].create({
         name: "General",
     });
     pyEnv["mail.message"].create({
-        author_id: resPartnerId1,
+        author_id: partnerId,
         body: "<p>test</p>",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
     });
-    const { click } = await start();
+    await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.containsOnce(target, ".o-mail-notification-item");
     assert.containsOnce(target, ".o-mail-notification-item img");
@@ -641,21 +641,21 @@ QUnit.test("channel preview: basic rendering", async function (assert) {
 
 QUnit.test("filtered previews", async function (assert) {
     const pyEnv = await startServer();
-    const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
+    const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
         { channel_type: "chat" },
         { name: "mailChannel1" },
     ]);
     pyEnv["mail.message"].create([
         {
             model: "mail.channel", // to link message to channel
-            res_id: mailChannelId1, // id of related channel
+            res_id: channelId_1, // id of related channel
         },
         {
             model: "mail.channel", // to link message to channel
-            res_id: mailChannelId2, // id of related channel
+            res_id: channelId_2, // id of related channel
         },
     ]);
-    const { click } = await start();
+    await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.strictEqual(document.querySelectorAll(`.o-mail-notification-item`).length, 2);
     assert.containsOnce(target, '.o-mail-notification-item:contains("Mitchell Admin")');
@@ -673,13 +673,13 @@ QUnit.test("filtered previews", async function (assert) {
 
 QUnit.test("no code injection in message body preview", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({});
+    const channelId = pyEnv["mail.channel"].create({});
     pyEnv["mail.message"].create({
         body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
     });
-    const { click } = await start();
+    await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.containsOnce(target, ".o-mail-notification-item");
     assert.strictEqual(
@@ -695,13 +695,13 @@ QUnit.test(
     "no code injection in message body preview from sanitized message",
     async function (assert) {
         const pyEnv = await startServer();
-        const mailChannelId1 = pyEnv["mail.channel"].create({});
+        const channelId = pyEnv["mail.channel"].create({});
         pyEnv["mail.message"].create({
             body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
             model: "mail.channel",
-            res_id: mailChannelId1,
+            res_id: channelId,
         });
-        const { click } = await start();
+        await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
         assert.containsOnce(target, ".o-mail-notification-item");
         assert.containsOnce(target, ".o-mail-notification-item-inlineText");
@@ -720,13 +720,13 @@ QUnit.test(
 
 QUnit.test("<br/> tags in message body preview are transformed in spaces", async function (assert) {
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv["mail.channel"].create({});
+    const channelId = pyEnv["mail.channel"].create({});
     pyEnv["mail.message"].create({
         body: "<p>a<br/>b<br>c<br   />d<br     ></p>",
         model: "mail.channel",
-        res_id: mailChannelId1,
+        res_id: channelId,
     });
-    const { click } = await start();
+    await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     assert.containsOnce(target, ".o-mail-notification-item");
     assert.containsOnce(target, ".o-mail-notification-item-inlineText");
@@ -740,10 +740,8 @@ QUnit.test(
     "Group chat should be displayed inside the chat section of the messaging menu",
     async function (assert) {
         const pyEnv = await startServer();
-        pyEnv["mail.channel"].create({
-            channel_type: "group",
-        });
-        const { click } = await start();
+        pyEnv["mail.channel"].create({ channel_type: "group" });
+        await start();
         await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
         await click(`.o-mail-messaging-menu button:contains("Chats")`);
         assert.containsOnce(target, ".o-mail-notification-item");

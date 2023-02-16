@@ -29,25 +29,18 @@ QUnit.test("Public website visitor is typing", async function (assert) {
         ".o-mail-thread-icon.fa.fa-comments",
         "should have default livechat icon"
     );
-    const mailChannel1 = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>
         env.services.rpc("/im_livechat/notify_typing", {
-            context: {
-                mockedPartnerId: pyEnv.publicPartnerId,
-            },
+            context: { mockedPartnerId: pyEnv.publicPartnerId },
             is_typing: true,
-            uuid: mailChannel1.uuid,
+            uuid: channel.uuid,
         })
     );
+    assert.containsOnce(target, ".o-mail-discuss-thread-icon .o-mail-typing-icon");
     assert.containsOnce(
         target,
-        ".o-mail-discuss-thread-icon .o-mail-typing-icon",
-        "should have thread icon with visitor currently typing"
-    );
-    assert.containsOnce(
-        target,
-        ".o-mail-discuss-thread-icon .o-mail-typing-icon[title='Visitor 20 is typing...']",
-        "title of icon should tell visitor is currently typing"
+        ".o-mail-discuss-thread-icon .o-mail-typing-icon[title='Visitor 20 is typing...']"
     );
 });
