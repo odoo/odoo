@@ -61,8 +61,11 @@ export class Many2OneField extends Component {
             activeActions: this.state.activeActions,
             isToMany: false,
             onRecordSaved: async (record) => {
-                await this.props.record.load();
-                await this.props.update(m2oTupleFromData(record.data));
+                const resId = this.props.value[0];
+                const fields = ["display_name"];
+                const context = this.props.record.getFieldContext(this.props.name);
+                const records = await this.orm.read(this.relation, [resId], fields, { context });
+                await this.props.update(m2oTupleFromData(records[0]));
                 if (this.props.record.model.root.id !== this.props.record.id) {
                     this.props.record.switchMode("readonly");
                 }
@@ -187,7 +190,7 @@ export class Many2OneField extends Component {
         }
     }
     onExternalBtnClick() {
-        if (this.props.openTarget === "current") {
+        if (this.props.openTarget === "current" && !this.env.inDialog) {
             this.openAction();
         } else {
             this.openDialog(this.resId);
