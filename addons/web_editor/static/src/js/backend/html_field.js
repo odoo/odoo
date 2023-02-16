@@ -597,7 +597,10 @@ HtmlField.components = {
     TranslationButton,
     HtmlFieldWysiwygAdapterComponent,
 };
-HtmlField.defaultProps = {dynamicPlaceholder: false};
+HtmlField.defaultProps = {
+    dynamicPlaceholder: false,
+    setDirty: () => {},
+};
 HtmlField.props = {
     ...standardFieldProps,
     isTranslatable: { type: Boolean, optional: true },
