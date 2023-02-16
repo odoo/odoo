@@ -106,13 +106,10 @@ export class BarcodeDialog extends Component {
      */
     async isVideoReady() {
         // FIXME: even if it shouldn't happened, a timeout could be useful here.
-        return new Promise(async (resolve) => {
-            while (!isVideoElementReady(this.videoPreviewRef.el)) {
-                await delay(10);
-            }
-            this.state.isReady = true;
-            resolve();
-        });
+        while (!isVideoElementReady(this.videoPreviewRef.el)) {
+            await delay(10);
+        }
+        this.state.isReady = true;
     }
 
     onResize(overlayInfo) {
