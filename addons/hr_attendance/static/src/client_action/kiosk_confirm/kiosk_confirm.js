@@ -34,11 +34,40 @@ export class KioskConfirm extends Component {
         this.employeeHoursToday = registry.category("formatters").get("float_time")(
             employee_hours_today
         );
+
         onWillStart(this.onWillStart);
     }
 
     async onWillStart() {
         this.use_pin = await this.user.hasGroup("hr_attendance.group_hr_attendance_use_pin");
+
+        if (this.use_pin) {
+            browser.addEventListener('keydown', async (ev) => {
+                const allowedKeys = [...Array(10).keys()].reduce((acc, value) => { // { from '0': '0' ... to '9': '9' }
+                    acc[value] = value;
+                    return acc;
+                }, {
+                    'Delete': 'C',
+                    'Enter': 'OK',
+                    'Backspace': null,
+                });
+                const key = ev.key;
+
+                if (!Object.keys(allowedKeys).includes(key)) {
+                    return;
+                }
+
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                if (allowedKeys[key]) {
+                    await this.onClickPadButton(allowedKeys[key]);
+                }
+                else {
+                    this.state.codePin = this.state.codePin.substring(0, this.state.codePin.length - 1);
+                }
+            });
+        }
     }
 
     onClickBack() {
