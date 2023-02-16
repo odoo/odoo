@@ -20,55 +20,6 @@ QUnit.module("mail", (hooks) => {
     QUnit.module("components", {}, function () {
         QUnit.module("composer_tests.js");
 
-        QUnit.skipRefactoring("remove an uploading attachment", async function (assert) {
-            assert.expect(4);
-
-            const pyEnv = await startServer();
-            const mailChannelId1 = pyEnv["mail.channel"].create({});
-            const { click, openDiscuss, messaging } = await start({
-                discuss: {
-                    context: { active_id: mailChannelId1 },
-                },
-                async mockRPC(route) {
-                    if (route === "/mail/attachment/upload") {
-                        // simulates uploading indefinitely
-                        await new Promise(() => {});
-                    }
-                },
-            });
-            await openDiscuss();
-            const file = await createFile({
-                content: "hello, world",
-                contentType: "text/plain",
-                name: "text.txt",
-            });
-            await afterNextRender(() =>
-                inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [file])
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ComposerView_attachmentList",
-                "should have an attachment list"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_ComposerView .o_AttachmentCard",
-                "should have only one attachment"
-            );
-            assert.containsOnce(
-                document.body,
-                ".o_AttachmentCard.o-isUploading",
-                "should have an uploading attachment"
-            );
-
-            await click(".o_AttachmentCard_asideItemUnlink");
-            assert.containsNone(
-                document.body,
-                ".o_ComposerView .o_AttachmentCard",
-                "should not have any attachment left after unlinking uploading one"
-            );
-        });
-
         QUnit.skipRefactoring(
             "remove an uploading attachment aborts upload",
             async function (assert) {

@@ -51,7 +51,7 @@ export class AttachmentList extends Component {
     }
 
     canDelete(attachment) {
-        return !attachment.uploading && this.props.editable;
+        return this.props.editable;
     }
 
     canDownload(attachment) {

@@ -836,3 +836,34 @@ QUnit.test("Replying on a channel should focus composer initially", async functi
     await click("i[aria-label='Reply']");
     assert.strictEqual(document.activeElement, target.querySelector(".o-mail-composer-textarea"));
 });
+
+QUnit.test("remove an uploading attachment", async function (assert) {
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "test" });
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: mailChannelId1 },
+        },
+        async mockRPC(route) {
+            if (route === "/mail/attachment/upload") {
+                // simulates uploading indefinitely
+                await new Promise(() => {});
+            }
+        },
+    });
+    await openDiscuss(mailChannelId1);
+    const file = await createFile({
+        content: "hello, world",
+        contentType: "text/plain",
+        name: "text.txt",
+    });
+    await afterNextRender(() =>
+        inputFiles(target.querySelector(".o-mail-composer-core-main .o_input_file"), [file])
+    );
+    assert.containsOnce(target, ".o-mail-attachment-list");
+    assert.containsOnce(target, ".o-mail-attachment-card");
+    assert.containsOnce(target, ".o-mail-attachment-card.o-mail-is-uploading");
+
+    await click(".o-mail-attachment-card-aside-unlink");
+    assert.containsNone(target, ".o-mail-composer .o-mail-attachment-card");
+});

@@ -57,12 +57,13 @@ export function useAttachmentUploader(thread, composer) {
         },
         async unlink(attachment) {
             const abort = abortByAttachmentId.get(attachment.id);
-            abortByAttachmentId.delete(attachment.id);
-            deferredByAttachmentId.delete(attachment.id);
+            const def = deferredByAttachmentId.get(attachment.id);
             if (abort) {
                 abort();
-                return;
+                def.resolve();
             }
+            abortByAttachmentId.delete(attachment.id);
+            deferredByAttachmentId.delete(attachment.id);
             await attachmentService.delete(attachment);
         },
         clear() {
