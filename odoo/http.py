@@ -137,10 +137,19 @@ from urllib.parse import urlparse
 from zlib import adler32
 
 import babel.core
-import geoip2.database
-import geoip2.models
-import geoip2.errors
-import maxminddb
+
+try:
+    import geoip2.database
+    import geoip2.models
+    import geoip2.errors
+except ImportError:
+    geoip2 = None
+
+try:
+    import maxminddb
+except ImportError:
+    maxminddb = None
+
 import psycopg2
 import werkzeug.datastructures
 import werkzeug.exceptions
@@ -225,8 +234,9 @@ def get_default_session():
 # Two empty objects used when the geolocalization failed. They have the
 # sames attributes as real countries/cities except that accessing them
 # evaluates to None.
-GEOIP_EMPTY_COUNTRY = geoip2.models.Country({})
-GEOIP_EMPTY_CITY = geoip2.models.City({})
+if geoip2:
+    GEOIP_EMPTY_COUNTRY = geoip2.models.Country({})
+    GEOIP_EMPTY_CITY = geoip2.models.City({})
 
 # The request mimetypes that transport JSON in their body.
 JSON_MIMETYPES = ('application/json', 'application/json-rpc')
