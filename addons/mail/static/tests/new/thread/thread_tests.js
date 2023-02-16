@@ -757,3 +757,53 @@ QUnit.test("basic rendering of canceled notification", async function (assert) {
         ".o-mail-message-notification-popover-partner-name:contains(Someone)"
     );
 });
+
+QUnit.test(
+    "first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]",
+    async function (assert) {
+        // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
+        // Indeed that would trigger set_last_seen_message no matter what, which is already covered by other tests.
+        // The goal of this test is to cover the conditions specific to transient messages,
+        // and the conditions from focus would otherwise shadow them.
+        const pyEnv = await startServer();
+        // Needed partner & user to allow simulation of message reception
+        const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+        const userId = pyEnv["res.users"].create({
+            name: "Foreigner user",
+            partner_id: partnerId,
+        });
+        const channelId = pyEnv["mail.channel"].create({
+            channel_type: "channel",
+            name: "General",
+            uuid: "channel20uuid",
+        });
+        pyEnv["mail.message"].create([
+            {
+                body: "not empty",
+                model: "mail.channel",
+                res_id: channelId,
+            },
+        ]);
+        const { openDiscuss, env } = await start();
+        await openDiscuss(channelId);
+        // send a command that leads to receiving a transient message
+        await insertText(".o-mail-composer-textarea", "/who");
+        await click(".o-mail-composer-send-button");
+        // composer is focused by default, we remove that focus
+        document.querySelector(".o-mail-composer-textarea").blur();
+        // simulate receiving a message
+        await afterNextRender(() =>
+            env.services.rpc("/mail/chat_post", {
+                context: { mockedUserId: userId },
+                message_content: "test",
+                uuid: "channel20uuid",
+            })
+        );
+        assert.containsN(target, ".o-mail-message", 3);
+        assert.containsOnce(target, "hr + span:contains(New messages)");
+        assert.containsOnce(
+            target,
+            ".o-mail-message[aria-label='Note'] + .o-mail-thread-new-message"
+        );
+    }
+);

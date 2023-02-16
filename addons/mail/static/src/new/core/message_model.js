@@ -58,7 +58,11 @@ export class Message {
     trackingValues = [];
     /** @type {string} */
     type;
-    now = DateTime.now();
+    /**
+     * We exclude the milliseconds because datetime string from the server don't
+     * have them. Message without date like transient message can be missordered
+     */
+    now = DateTime.now().set({ milliseconds: 0 });
     /** @type {import("@mail/new/core/store_service").Store} */
     _store;
 
