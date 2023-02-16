@@ -91,6 +91,7 @@ export class PropertyDefinition extends Component {
             ["tags", _lt("Tags")],
             ["many2one", _lt("Many2one")],
             ["many2many", _lt("Many2many")],
+            ["separator", _lt("Separator")],
         ];
     }
 

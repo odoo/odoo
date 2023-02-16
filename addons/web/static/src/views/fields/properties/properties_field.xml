@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertiesField" owl="1">
         <div t-ref="properties" class="row align-items-start">
+            <t t-set="foldedSeparators" t-value="state.foldedSeparators"/>
             <t t-foreach="groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">
                 <div class="o_inner_group grid col-lg-6">
                     <div
@@ -9,41 +10,52 @@
                         t-as="propertyConfiguration"
                         t-key="propertyConfiguration.name"
                         class="o_property_field d-sm-contents mb-3"
-                        t-att-property-name="propertyConfiguration.name">
+                        t-att-property-name="propertyConfiguration.name"
+                        t-att-property-group="propertyConfiguration.group">
                         <t t-set="domId" t-value="generateUniqueDomID()"/>
-                        <label
-                            t-attf-class="o_field_property_label o_form_label text-break {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex align-items-center"
-                            t-att-for="domId">
-                            <b
-                                t-if="propertyConfiguration.string &amp;&amp; propertyConfiguration.string.length"
-                                t-out="propertyConfiguration.string"
-                                class="text-900"/>
-                            <i
-                                t-else="" class="o_field_property_empty_label">
-                                New Property
-                            </i>
-                            <i
-                                t-if="state.canChangeDefinition &amp;&amp; !props.readonly"
-                                class="o_field_property_open_popover fa fa-pencil ms-2"
-                                t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
-                        </label>
-                        <div class="o_property_field_value">
-                            <PropertyValue
-                                id="domId"
-                                canChangeDefinition="state.canChangeDefinition"
-                                comodel="propertyConfiguration.comodel || ''"
-                                context="context"
-                                domain="propertyConfiguration.domain || '[]'"
-                                readonly="props.readonly"
-                                selection="propertyConfiguration.selection"
-                                string="propertyConfiguration.string"
-                                tags="propertyConfiguration.tags"
-                                type="propertyConfiguration.type"
-                                value="propertyConfiguration.value"
-                                onChange.bind="(value) => this.onPropertyValueChange(propertyConfiguration.name, value)"
-                                onTagsChange.bind="(newTags, newValue) => this.onTagsChange(propertyConfiguration.name, newTags, newValue)"
-                            />
-                        </div>
+                        <t t-set="isSeparator" t-value="propertyConfiguration.type === 'separator'"/>
+                        <t t-set="isFolded" t-value="_foldedSeparators.includes(propertyConfiguration.group)"/>
+                        <t t-if="!isFolded || isSeparator">
+                            <label
+                                t-attf-class="o_field_property_label o_form_label text-break {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex align-items-center"
+                                t-att-class="{'o_field_property_separator': isSeparator}"
+                                t-att-for="domId">
+                                <div t-if="isSeparator"
+                                    t-on-click="() => this.onSeparatorClick(propertyConfiguration.name)"
+                                    style="cursor: pointer">
+                                    <i class="fa fa-caret-down me-1"/>
+                                </div>
+                                <b
+                                    t-if="propertyConfiguration.string &amp;&amp; propertyConfiguration.string.length"
+                                    t-out="propertyConfiguration.string"
+                                    class="text-900"/>
+                                <i
+                                    t-else="" class="o_field_property_empty_label">
+                                    New Property
+                                </i>
+                                <i
+                                    t-if="state.canChangeDefinition &amp;&amp; !props.readonly"
+                                    class="o_field_property_open_popover fa fa-pencil ms-2"
+                                    t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
+                            </label>
+                            <div class="o_property_field_value" t-if="!isSeparator">
+                                <PropertyValue
+                                    id="domId"
+                                    canChangeDefinition="state.canChangeDefinition"
+                                    comodel="propertyConfiguration.comodel || ''"
+                                    context="context"
+                                    domain="propertyConfiguration.domain || '[]'"
+                                    readonly="props.readonly"
+                                    selection="propertyConfiguration.selection"
+                                    string="propertyConfiguration.string"
+                                    tags="propertyConfiguration.tags"
+                                    type="propertyConfiguration.type"
+                                    value="propertyConfiguration.value"
+                                    onChange.bind="(value) => this.onPropertyValueChange(propertyConfiguration.name, value)"
+                                    onTagsChange.bind="(newTags, newValue) => this.onTagsChange(propertyConfiguration.name, newTags, newValue)"
+                                />
+                            </div>
+                        </t>
                     </div>
                     <div 
                         t-if="propertiesList.length % props.columns === propertiesListGroup_index"

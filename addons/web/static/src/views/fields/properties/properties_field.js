@@ -42,6 +42,7 @@ export class PropertiesField extends Component {
         this.state = useState({
             canChangeDefinition: true,
             movedPropertyName: null,
+            foldedSeparators: [],
         });
 
         this._saveInitialPropertiesValues();
@@ -108,6 +109,20 @@ export class PropertiesField extends Component {
         this.propertiesList.forEach((val, index) => {
             res[index % columns].push(val);
         });
+
+        // Compute the group for each properties, based on the "separator" properties type
+        // A properties is in a given group, if it's separator is in the same column
+        // and is the nearest above it.
+        for (const column of res) {
+            let currentGroup = null;
+            for (const property of column) {
+                if (property.type === "separator") {
+                    currentGroup = property.name;
+                }
+                property.group = currentGroup;
+            }
+        }
+
         return res;
     }
 
@@ -311,6 +326,31 @@ export class PropertiesField extends Component {
     }
 
     /**
+     * Fold / unfold the given separator property.
+     *
+     * @param {string} propertyName, Name of the separator property
+     */
+    onSeparatorClick(propertyName) {
+        const fold = JSON.parse(window.localStorage.getItem("properties.fold")) || {};
+        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
+        const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
+        // store the fold / unfold information per definition record
+        // to clean the keys (to not keep information about removed separator)
+        const storageKey = `${definitionRecordModel},${definitionRecordId}`;
+        const allPropertiesNames = this.propertiesList.map(property => property.name);
+        let foldedSeparators = fold[storageKey] || [];
+        // remove element that do not exist anymore (e.g. if we remove a separator)
+        foldedSeparators = foldedSeparators.filter(name => allPropertiesNames.includes(name));
+        if (foldedSeparators.includes(propertyName)) {
+            foldedSeparators = foldedSeparators.filter(name => name !== propertyName);
+        } else {
+            foldedSeparators.push(propertyName);
+        }
+        fold[storageKey] = foldedSeparators;
+        window.localStorage.setItem("properties.fold", JSON.stringify(fold));
+    }
+
+    /**
      * The tags list has been changed.
      * If `newValue` is given, update the property value as well.
      *
@@ -494,6 +534,14 @@ export class PropertiesField extends Component {
                 },
             }
         );
+    }
+
+    _updateFoldedSeparatorsState() {
+        const fold = JSON.parse(window.localStorage.getItem("properties.fold")) || {};
+        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
+        const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
+        const storageKey = `${definitionRecordModel},${definitionRecordId}`;
+        this.state.foldedSeparators = fold[storageKey] || [];
     }
 }
 
