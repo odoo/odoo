@@ -28,6 +28,26 @@
     aspect-ratio: 16/9;
 }
 
+.o-mail-call-main {
+    min-width: 0;
+}
+
+.o-mail-call-main-gridParticipantCard {
+    width: var(--width);
+    height: var(--height);
+    min-width: var(--width);
+    min-height: var(--height);
+    aspect-ratio: 16/9;
+}
+
+.o-mail-call-main-sidebarButton {
+    font-size: 1.2rem;
+    padding: map-get($spacers, 2);
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+}
+
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
@@ -40,4 +60,11 @@
     &::-webkit-scrollbar-thumb {
         background: map-get($grays, '700');
     }
+}
+
+.o-mail-call-main-sidebarButton {
+    color: white;
+    border-radius: 10px 0px 0px 10px;
+    border-right: 0px;
+    background-color: lighten(black, 10%);
 }
