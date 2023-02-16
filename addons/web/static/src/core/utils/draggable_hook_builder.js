@@ -2,7 +2,7 @@
 
 import { onWillUnmount, reactive, useEffect, useExternalListener } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
-import { throttleForAnimation, setRecurringAnimationFrame } from "@web/core/utils/timing";
+import { useThrottleForAnimation, setRecurringAnimationFrame } from "@web/core/utils/timing";
 
 /**
  * @typedef CleanupManager
@@ -765,7 +765,7 @@ export function makeDraggableHook(hookParams) {
                 () => [ctx.ref.el]
             );
             // Other global event listeners.
-            const throttledOnMouseMove = throttleForAnimation(onMouseMove);
+            const throttledOnMouseMove = useThrottleForAnimation(onMouseMove);
             useExternalListener(window, "mousemove", throttledOnMouseMove);
             useExternalListener(window, "mouseup", onMouseUp);
             useExternalListener(window, "keydown", onKeyDown, true);

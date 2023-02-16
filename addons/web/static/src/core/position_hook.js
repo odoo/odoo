@@ -1,8 +1,7 @@
 /** @odoo-module */
 
-import { throttleForAnimation } from "./utils/timing";
-
-import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { useThrottleForAnimation } from "./utils/timing";
+import { useEffect, useExternalListener, useRef } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 
 /**
@@ -275,8 +274,7 @@ export function usePosition(reference, options) {
         }
     };
     useEffect(update);
-    const throttledUpdate = throttleForAnimation(update);
+    const throttledUpdate = useThrottleForAnimation(update);
     useExternalListener(document, "scroll", throttledUpdate, { capture: true });
     useExternalListener(window, "resize", throttledUpdate);
-    onWillUnmount(throttledUpdate.cancel);
 }
