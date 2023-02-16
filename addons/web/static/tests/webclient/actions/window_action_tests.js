@@ -490,7 +490,7 @@ QUnit.module("ActionManager", (hooks) => {
             <form>
                 <group>
                     <field name="display_name" />
-                    <field name="m2o" open_target="current" />
+                    <field name="m2o" />
                 </group>
             </form>
         `;
@@ -1309,12 +1309,12 @@ QUnit.module("ActionManager", (hooks) => {
         serverData.views["partner,false,form"] = `
             <form>
                 <field name="foo"/>
-                <field name="bar" open_target="new"/>
+                <field name="bar"/>
             </form>`;
         const mockRPC = async (route, args) => {
             assert.step(route);
-            if (args && args.method === "get_formview_id") {
-                return Promise.resolve(false);
+            if (args && args.method === "get_formview_action") {
+                return Promise.resolve(serverData.actions[24]);
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });
@@ -1329,7 +1329,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/web_search_read",
             "/web/dataset/call_kw/partner/read",
-            "/web/dataset/call_kw/partner/get_formview_id",
+            "/web/dataset/call_kw/partner/get_formview_action",
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/read",
         ]);
@@ -1919,8 +1919,7 @@ QUnit.module("ActionManager", (hooks) => {
                 res_id: 2,
                 views: [[44, "form"]],
             };
-            serverData.views["partner,44,form"] =
-                '<form><field name="m2o" open_target="current"/></form>';
+            serverData.views["partner,44,form"] = '<form><field name="m2o"/></form>';
             const mockRPC = async (route, args) => {
                 if (args.method === "get_formview_action") {
                     return Promise.resolve({
@@ -1965,8 +1964,7 @@ QUnit.module("ActionManager", (hooks) => {
                 res_id: 1,
                 views: [[44, "form"]],
             };
-            serverData.views["partner,44,form"] =
-                '<form><field name="m2o" open_target="current"/></form>';
+            serverData.views["partner,44,form"] = '<form><field name="m2o"/></form>';
             const mockRPC = async (route, { method }) => {
                 if (method === "get_formview_action") {
                     return Promise.resolve({ ...serverData.actions[999], res_id: 3 });

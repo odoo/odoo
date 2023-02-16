@@ -58,11 +58,6 @@ export class Many2OneField extends Component {
         string: { type: String, optional: true },
         canScanBarcode: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
-        openTarget: {
-            type: String,
-            validate: (v) => ["current", "new"].includes(v),
-            optional: true,
-        },
     };
     static defaultProps = {
         canOpen: true,
@@ -74,7 +69,6 @@ export class Many2OneField extends Component {
         searchLimit: 7,
         string: "",
         canScanBarcode: false,
-        openTarget: "current",
     };
 
     static SEARCH_MORE_LIMIT = 320;
@@ -101,8 +95,11 @@ export class Many2OneField extends Component {
             activeActions: this.state.activeActions,
             isToMany: false,
             onRecordSaved: async (record) => {
-                await this.props.record.load();
-                await this.updateRecord(m2oTupleFromData(record.data));
+                const resId = this.props.value[0];
+                const fields = ["display_name"];
+                const context = this.props.record.getFieldContext(this.props.name);
+                const records = await this.orm.read(this.relation, [resId], fields, { context });
+                await this.updateRecord(m2oTupleFromData(records[0]));
                 if (this.props.record.model.root.id !== this.props.record.id) {
                     this.props.record.switchMode("readonly");
                 }
@@ -237,10 +234,10 @@ export class Many2OneField extends Component {
         }
     }
     onExternalBtnClick() {
-        if (this.props.openTarget === "current") {
-            this.openAction();
-        } else {
+        if (this.env.inDialog) {
             this.openDialog(this.resId);
+        } else {
+            this.openAction();
         }
     }
     async onBarcodeBtnClick() {
@@ -309,7 +306,6 @@ export const many2OneField = {
             canCreateEdit: canCreate && !options.no_create_edit,
             nameCreateField: options.create_name_field,
             canScanBarcode: !!options.can_scan_barcode,
-            openTarget: attrs.open_target,
             string,
         };
     },

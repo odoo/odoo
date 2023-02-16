@@ -33,7 +33,7 @@ import {
     toggleMenuItem,
     validateSearch,
 } from "@web/../tests/search/helpers";
-import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { errorService } from "@web/core/errors/error_service";
@@ -247,7 +247,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         };
 
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -256,7 +256,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="trululu" string="custom label" open_target="new" />
+                            <field name="trululu" string="custom label"/>
                         </group>
                     </sheet>
                 </form>`,
@@ -283,7 +283,9 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target, ".o_external_button");
         assert.strictEqual(
-            target.querySelector(".modal .modal-title").textContent.trim(),
+            target
+                .querySelector(".o_dialog:not(.o_inactive_modal) .modal-title")
+                .textContent.trim(),
             "Open: custom label",
             "dialog title should display the custom string label"
         );
@@ -293,7 +295,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("editing a many2one, but not changing anything", async function (assert) {
-        assert.expect(2);
+        assert.expect(1);
 
         serverData.views = {
             "partner,false,form": `
@@ -302,16 +304,15 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         };
 
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             resModel: "partner",
             resId: 1,
-            resIds: [1, 2],
             serverData,
             arch: `
                 <form>
                     <sheet>
-                        <field name="trululu" open_target="new" />
+                        <field name="trululu"/>
                     </sheet>
                 </form>`,
             mockRPC(route, { args, method }) {
@@ -319,25 +320,18 @@ QUnit.module("Fields", (hooks) => {
                     assert.deepEqual(args[0], [4], "should call get_formview_id with correct id");
                     return Promise.resolve(false);
                 }
+                if (method === "write") {
+                    throw new Error("should not call write");
+                }
             },
         });
 
         // click on the external button (should do an RPC)
         await click(target, ".o_external_button");
         // save and close modal
-        await clickSave(target.querySelector(".modal"));
+        await clickSave(target.querySelectorAll(".modal")[1]);
         // save form
         await clickSave(target);
-        // click next on pager
-        await click(target, ".o_pager .o_pager_next");
-
-        // this checks that the view did not ask for confirmation that the
-        // record is dirty
-        assert.strictEqual(
-            target.querySelector(".o_pager").textContent.trim(),
-            "2 / 2",
-            "pager should be at second page"
-        );
     });
 
     QUnit.test("context in many2one and default get", async function (assert) {
@@ -378,21 +372,23 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             };
 
-            await makeView({
+            await makeViewInDialog({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
-                resIds: [1, 2],
                 serverData,
                 arch: `
                     <form>
                         <sheet>
-                            <field name="trululu" open_target="new" />
+                            <field name="trululu"/>
                         </sheet>
                     </form>`,
                 mockRPC(route, { method }) {
                     if (method === "get_formview_id") {
                         return Promise.resolve(false);
+                    }
+                    if (method === "write") {
+                        assert.step("write");
                     }
                 },
             });
@@ -400,24 +396,18 @@ QUnit.module("Fields", (hooks) => {
             // click on the external button (should do an RPC)
             await click(target, ".o_external_button");
 
-            const input = target.querySelector(".modal .o_field_widget[name='foo'] input");
+            const input = target.querySelector(
+                ".o_dialog:not(.o_inactive_modal) .o_field_widget[name='foo'] input"
+            );
             input.value = "brandon";
             await triggerEvent(input, null, "change");
 
             // save and close modal
-            await clickSave(target.querySelector(".modal"));
+            await clickSave(target.querySelectorAll(".modal")[1]);
+            assert.verifySteps(["write"]);
             // save form
             await clickSave(target);
-            // click next on pager
-            await click(target, ".o_pager .o_pager_next");
-
-            // this checks that the view did not ask for confirmation that the
-            // record is dirty
-            assert.strictEqual(
-                target.querySelector(".o_pager").textContent.trim(),
-                "2 / 2",
-                "pager should be at second page"
-            );
+            assert.verifySteps([]);
         }
     );
 
@@ -799,7 +789,7 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             };
 
-            await makeView({
+            await makeViewInDialog({
                 type: "form",
                 resModel: "partner",
                 resId: 1,
@@ -808,7 +798,7 @@ QUnit.module("Fields", (hooks) => {
                     <form>
                         <sheet>
                             <group>
-                                <field name="user_id" open_target="new" />
+                                <field name="user_id"/>
                             </group>
                         </sheet>
                     </form>`,
@@ -831,12 +821,12 @@ QUnit.module("Fields", (hooks) => {
             await click(target, ".o_external_button");
             await editInput(
                 target,
-                ".modal-body .o_field_widget[name='other_field'] input",
+                ".o_dialog:not(.o_inactive_modal) .o_field_widget[name='other_field'] input",
                 "wood"
             );
 
             // save the modal and make sure an onchange is triggered
-            await clickSave(target.querySelector(".modal"));
+            await clickSave(target.querySelectorAll(".modal")[1]);
             assert.verifySteps([
                 "get_views",
                 "read",
@@ -2570,7 +2560,7 @@ QUnit.module("Fields", (hooks) => {
         };
         serviceRegistry.add("action", fakeActionService, { force: true });
 
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -2579,7 +2569,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="p">
                         <tree editable="bottom">
-                            <field name="product_id" open_target="new" />
+                            <field name="product_id"/>
                         </tree>
                     </field>
                 </form>`,
@@ -2590,11 +2580,14 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
+        assert.containsOnce(target, ".modal");
         await click(target.querySelector("td.o_data_cell"));
         await click(target, ".o_external_button");
-        assert.containsOnce(target, ".modal");
+        assert.containsN(target, ".modal", 2);
 
-        let buttons = target.querySelectorAll(".modal .o_form_statusbar button");
+        let buttons = target.querySelectorAll(
+            ".o_dialog:not(.o_inactive_modal) .o_form_statusbar button"
+        );
 
         await click(buttons[0]);
         assert.verifySteps(["action"]);
@@ -2605,13 +2598,15 @@ QUnit.module("Fields", (hooks) => {
         def.resolve();
         await nextTick();
 
-        await clickDiscard(target.querySelector(".modal"));
-        assert.containsNone(target, ".modal");
-
-        await click(target, ".o_external_button");
+        await clickDiscard(target.querySelectorAll(".modal")[1]);
         assert.containsOnce(target, ".modal");
 
-        buttons = target.querySelectorAll(".modal .o_form_statusbar button");
+        await click(target, ".o_external_button");
+        assert.containsN(target, ".modal", 2);
+
+        buttons = target.querySelectorAll(
+            ".o_dialog:not(.o_inactive_modal) .o_form_statusbar button"
+        );
 
         await click(buttons[1]);
         assert.verifySteps(["object"]);
@@ -2667,7 +2662,7 @@ QUnit.module("Fields", (hooks) => {
                 </tree>`,
         };
 
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             resModel: "product",
             resId: 37,
@@ -2677,7 +2672,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="name" />
                     <field name="turtle_ids" widget="one2many">
                         <tree editable="bottom">
-                            <field name="type_id" open_target="new" />
+                            <field name="type_id"/>
                         </tree>
                     </field>
                 </form>`,
@@ -2702,25 +2697,27 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
+        assert.containsOnce(target, ".modal");
+
         await click(target, ".o_data_cell");
         await click(target, ".o_external_button");
 
-        assert.containsOnce(target, ".modal", "There should be 1 modal opened");
+        assert.containsN(target, ".modal", 2);
         assert.containsN(
-            target,
-            ".modal .ui-sortable-handle",
+            target.querySelectorAll(".modal")[1],
+            ".ui-sortable-handle",
             2,
             "There should be 2 sequence handlers"
         );
 
         await dragAndDrop(
-            ".modal .o_data_row:nth-child(2) .ui-sortable-handle",
-            ".modal tbody tr",
+            ".o_dialog:not(.o_inactive_modal) .o_data_row:nth-child(2) .ui-sortable-handle",
+            ".o_dialog:not(.o_inactive_modal) tbody tr",
             "top"
         );
 
         // Saving the modal and then the original model
-        await clickSave(target.querySelector(".modal"));
+        await clickSave(target.querySelectorAll(".modal")[1]);
         await clickSave(target);
 
         assert.verifySteps(["onchange sequence", "partner_type write"]);
@@ -3174,14 +3171,14 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         };
 
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             resModel: "partner",
             serverData,
             arch: `
                 <form>
                     <sheet>
-                        <field name="product_id" can_create="false" can_write="false" open_target="new" />
+                        <field name="product_id" can_create="false" can_write="false"/>
                     </sheet>
                 </form>`,
             mockRPC(route) {
@@ -3190,6 +3187,8 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
+
+        assert.containsOnce(target, ".modal");
 
         await click(target, ".o_field_many2one input");
         assert.containsNone(
@@ -3211,17 +3210,18 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click(target, ".o_field_many2one .o_external_button");
+        assert.containsN(target, ".modal", 2);
         assert.containsOnce(
             target,
             ".modal .o_form_view .o_form_readonly",
             "there should be a readonly form view opened"
         );
 
-        await click(target, ".modal .modal-footer .btn-primary");
+        await click(target, ".o_dialog:not(.o_inactive_modal) .modal-footer .btn-primary");
 
         await editInput(target, ".o_field_many2one input", "new product");
         await triggerEvent(target, ".o_field_many2one input", "blur");
-        assert.containsNone(target, ".modal", "should not display the create modal");
+        assert.containsOnce(target, ".modal");
     });
 
     QUnit.test("create_name_field option on a many2one", async function (assert) {
@@ -3980,7 +3980,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("updating a many2one from a many2many", async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         serverData.models.turtle.records[1].turtle_trululu = 1;
         serverData.views = {
@@ -3990,7 +3990,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         };
 
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -4000,7 +4000,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="turtles">
                         <tree editable="bottom">
                             <field name="display_name" />
-                            <field name="turtle_trululu" open_target="new" />
+                            <field name="turtle_trululu"/>
                         </tree>
                     </field>
                 </form>`,
@@ -4011,19 +4011,24 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
+        assert.containsOnce(target, ".modal");
 
         // Opening the modal
         await click(target.querySelectorAll(".o_data_row td")[1]);
         await click(target, ".o_external_button");
-        assert.containsOnce(target, ".modal");
+        assert.containsN(target, ".modal", 2);
 
         // Changing the 'trululu' value
-        await editInput(target, ".modal div[name=display_name] input", "test");
-        await clickSave(target.querySelector(".modal"));
+        await editInput(
+            target,
+            ".o_dialog:not(.o_inactive_modal) div[name=display_name] input",
+            "test"
+        );
+        await clickSave(target.querySelectorAll(".modal")[1]);
+
+        assert.containsOnce(target, ".modal");
 
         // Test whether the value has changed
-        assert.containsNone(target, ".modal");
-
         assert.strictEqual(
             target.querySelectorAll(".o_data_cell")[1].textContent,
             "test",
@@ -4177,15 +4182,15 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("focus when closing many2one modal in many2one modal", async function (assert) {
         serverData.views = {
-            "partner,false,form": '<form><field name="trululu" open_target="new" /></form>',
+            "partner,false,form": '<form><field name="trululu"/></form>',
         };
 
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             serverData,
             resModel: "partner",
             resId: 2,
-            arch: '<form><field name="trululu" open_target="new" /></form>',
+            arch: '<form><field name="trululu"/></form>',
             mockRPC(route, { method }) {
                 if (method === "get_formview_id") {
                     return Promise.resolve(false);
@@ -4193,31 +4198,34 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
+        assert.containsOnce(target, ".modal");
+        assert.hasClass(document.body, "modal-open");
+
         // Open many2one modal
         await click(target, ".o_external_button");
 
-        const originalModal = target.querySelector(".modal");
+        const originalModal = target.querySelectorAll(".modal")[1];
 
-        assert.containsOnce(target, ".modal");
+        assert.containsN(target, ".modal", 2);
         assert.doesNotHaveClass(originalModal, "o_inactive_modal");
         assert.hasClass(document.body, "modal-open");
 
         // Open many2one modal of field in many2one modal
         await click(originalModal, ".o_external_button");
 
-        const nextModal = target.querySelectorAll(".modal")[1];
+        const nextModal = target.querySelectorAll(".modal")[2];
 
-        assert.containsN(target, ".modal", 2);
+        assert.containsN(target, ".modal", 3);
         assert.doesNotHaveClass(nextModal, "o_inactive_modal");
         assert.hasClass(document.body, "modal-open");
 
         // Close second modal
         await click(nextModal, "button[class='btn-close']");
 
-        assert.containsOnce(target, ".modal");
+        assert.containsN(target, ".modal", 2);
         assert.strictEqual(
             originalModal,
-            target.querySelector(".modal"),
+            target.querySelectorAll(".modal")[1],
             "First modal is still opened"
         );
         assert.doesNotHaveClass(originalModal, "o_inactive_modal");
@@ -4225,8 +4233,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Close first modal
         await click(originalModal, "button[class='btn-close']");
-        assert.containsNone(target, ".modal");
-        assert.doesNotHaveClass(document.body, "modal-open");
+        assert.containsOnce(target, ".modal");
     });
 
     QUnit.test("search more pager is reset when doing a new search", async function (assert) {
@@ -4367,9 +4374,9 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("open_target prop = current", async function (assert) {
+    QUnit.test("external_button performs a doAction by default", async function (assert) {
         serverData.views = {
-            "partner,false,form": '<form><field name="trululu" open_target="current"/></form>',
+            "partner,false,form": '<form><field name="trululu"/></form>',
             "partner,false,search": "<search></search>",
         };
         serverData.actions = {
@@ -4408,12 +4415,12 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".breadcrumb").textContent, "first recordNew");
     });
 
-    QUnit.test("open_target prop = new", async function (assert) {
-        await makeView({
+    QUnit.test("external_button opens a FormViewDialog in dialogs", async function (assert) {
+        await makeViewInDialog({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form><field name="trululu" open_target="new" /></form>',
+            arch: '<form><field name="trululu"/></form>',
             mockRPC(route, { method }) {
                 if (method === "get_formview_id") {
                     assert.step("get_formview_id");
@@ -4421,12 +4428,115 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
+        assert.containsOnce(target, ".modal");
 
         await selectDropdownItem(target, "trululu", "first record");
         assert.containsOnce(target, ".o_field_widget .o_external_button.fa-external-link");
         await click(target, ".o_field_widget .o_external_button");
 
         assert.verifySteps(["get_formview_id"]);
+        assert.containsN(target, ".modal", 2);
+    });
+
+    QUnit.test("external_button opens a FormViewDialog in dialogs", async function (assert) {
+        await makeViewInDialog({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="trululu"/></form>',
+            mockRPC(route, { method }) {
+                if (method === "get_formview_id") {
+                    assert.step("get_formview_id");
+                    return false;
+                }
+            },
+        });
         assert.containsOnce(target, ".modal");
+
+        await selectDropdownItem(target, "trululu", "first record");
+        assert.containsOnce(target, ".o_field_widget .o_external_button.fa-external-link");
+        await click(target, ".o_field_widget .o_external_button");
+
+        assert.verifySteps(["get_formview_id"]);
+        assert.containsN(target, ".modal", 2);
+    });
+
+    QUnit.test("keep changes when editing related record in a dialog", async function (assert) {
+        serverData.views = {
+            "partner,98,form": '<form><field name="int_field"/></form>',
+        };
+        await makeViewInDialog({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="foo"/><field name="trululu"/></form>',
+            mockRPC(route, { method }) {
+                if (method === "get_formview_id") {
+                    return 98;
+                }
+                if (method === "write") {
+                    assert.step("write");
+                }
+            },
+        });
+        assert.containsOnce(target, ".modal");
+
+        await editInput(target, ".o_field_widget[name=foo] input", "some value");
+        await selectDropdownItem(target, "trululu", "first record");
+        assert.containsOnce(target, ".o_field_widget .o_external_button.fa-external-link");
+        await click(target, ".o_field_widget .o_external_button");
+        assert.containsN(target, ".modal", 2);
+
+        const secondDialog = target.querySelector(".o_dialog:not(.o_inactive_modal)");
+        await editInput(secondDialog, ".o_field_widget[name=int_field] input", "5464");
+        await click(secondDialog.querySelector(".modal-footer .btn-primary:not(.d-none)"));
+
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "some value"
+        );
+        assert.verifySteps(["write"]);
+    });
+
+    QUnit.test("create and edit, save and then discard", async function (assert) {
+        serverData.views = {
+            "partner,98,form": '<form><field name="name"/></form>',
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="trululu"/></form>',
+            resId: 1,
+            mockRPC(route, { method }) {
+                if (method === "get_formview_id") {
+                    return 98;
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=trululu] input").value,
+            "aaa"
+        );
+
+        await editInput(target, ".o_field_widget[name=trululu] input", "new m2o");
+        await click(target.querySelector(".o_field_widget[name=trululu] input"));
+        await selectDropdownItem(target, "trululu", "Create and edit...");
+        assert.containsOnce(target, ".modal");
+
+        await click(target.querySelector(".modal-footer .btn-primary:not(.d-none)"));
+        assert.containsNone(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=trululu] input").value,
+            "new m2o"
+        );
+
+        await clickDiscard(target);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=trululu] input").value,
+            "aaa"
+        );
     });
 });

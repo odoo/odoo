@@ -507,6 +507,31 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(changes)) {
             const fieldType = this.fields[fieldName].type;
             data[fieldName] = mapWowlValueToLegacy(value, fieldType);
+            // special case for many2ones: they can be updated with a new name (e.g. if edited from
+            // the dialog), but in the basic_model it worked differently, we had a datapoint for the
+            // many2one value and we reloaded it directly. In the new model, we directly update the
+            // value [id, display_name], so we reload beforehand, in the many2one field itself. In
+            // the next few lines, we thus manually apply the renaming on the legacy datapoint.
+            if (this.fields[fieldName].type === "many2one" && Array.isArray(changes[fieldName])) {
+                const newName = changes[fieldName][1];
+                if (newName || newName === "") {
+                    const bm = this.model.__bm__;
+                    const m2oDatapointId = bm.get(this.__bm_handle__).data[fieldName].id;
+                    const m2oDatapoint = bm.localData[m2oDatapointId];
+                    if (m2oDatapoint && m2oDatapoint.data.id === changes[fieldName][0]) {
+                        m2oDatapoint.data.display_name = newName;
+                    }
+                }
+            }
+            // same for reference fields
+            if (this.fields[fieldName].type === "reference" && changes[fieldName].displayName) {
+                const bm = this.model.__bm__;
+                const m2oDatapointId = bm.get(this.__bm_handle__).data[fieldName].id;
+                const m2oDatapoint = bm.localData[m2oDatapointId];
+                if (m2oDatapoint) {
+                    m2oDatapoint.data.display_name = changes[fieldName].displayName;
+                }
+            }
         }
         if (this._urgentSave) {
             const fieldNames = await this.model.__bm__.notifyChanges(this.__bm_handle__, data, {

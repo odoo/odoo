@@ -26,7 +26,7 @@ import BasicModel from "web.BasicModel";
 import { browser } from "@web/core/browser/browser";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { getNextTabableElement } from "@web/core/utils/ui";
-import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -6166,7 +6166,7 @@ QUnit.module("Fields", (hooks) => {
                 '<tree editable="bottom"><field name="display_name"/></tree>',
             "partner_type,false,search": "<search></search>",
         };
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6174,7 +6174,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <field name="turtles">
                         <tree editable="bottom">
-                            <field name="turtle_trululu" open_target="new"/>
+                            <field name="turtle_trululu"/>
                         </tree>
                     </field>
                 </form>`,
@@ -6199,13 +6199,13 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_external_button"));
 
         // click on add, to add a new partner in the m2m
-        await addRow(target, ".modal");
+        await addRow(target.querySelectorAll(".modal")[1]);
 
-        // select the partner_type 'gold' (this closes the 2nd modal)
-        await click(target.querySelector("div:not(o_inactive_modal) .modal td.o_data_cell")); // select gold
+        // select the partner_type 'gold' (this closes the 3rd modal)
+        await click(target.querySelector(".o_dialog:not(.o_inactive_modal) td.o_data_cell")); // select gold
 
         // confirm the changes in the modal
-        await clickSave(target.querySelector(".modal"));
+        await clickSave(target.querySelectorAll(".modal")[1]);
 
         await clickSave(target);
     });
