@@ -4,6 +4,7 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
+    createFile,
     insertText,
     isScrolledToBottom,
     nextAnimationFrame,
@@ -16,6 +17,8 @@ import {
     CHAT_WINDOW_WIDTH,
 } from "@mail/new/web/chat_window/chat_window_service";
 import { getFixture, nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
+import { file } from "web.test_utils";
+const { inputFiles } = file;
 
 let target;
 QUnit.module("chat window", {
@@ -779,3 +782,60 @@ QUnit.test(
         assert.containsNone(document.body, ".o-mail-chat-window-hidden-menu");
     }
 );
+
+QUnit.test("chat window: composer state conservation on toggle discuss", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({});
+    const { openDiscuss, openView } = await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-notification-item");
+    // Set content of the composer of the chat window
+    await insertText(".o-mail-composer-textarea", "XDU for the win !");
+    assert.containsNone(
+        document.body,
+        ".o-mail-composer-footer .o-mail-attachment-list .o-mail-attachment-card"
+    );
+    // Set attachments of the composer
+    const files = [
+        await createFile({
+            name: "text state conservation on toggle home menu.txt",
+            content: "hello, world",
+            contentType: "text/plain",
+        }),
+        await createFile({
+            name: "text2 state conservation on toggle home menu.txt",
+            content: "hello, xdu is da best man",
+            contentType: "text/plain",
+        }),
+    ];
+    await afterNextRender(() =>
+        inputFiles(document.querySelector(".o-mail-composer-core-main .o_input_file"), files)
+    );
+    assert.strictEqual(
+        document.querySelector(`.o-mail-composer-textarea`).value,
+        "XDU for the win !"
+    );
+    assert.containsN(
+        document.body,
+        ".o-mail-composer-footer .o-mail-attachment-list .o-mail-attachment-card",
+        2
+    );
+
+    await openDiscuss();
+    assert.containsNone(document.body, ".o-mail-chat-window");
+
+    await openView({
+        res_id: channelId,
+        res_model: "mail.channel",
+        views: [[false, "form"]],
+    });
+    assert.strictEqual(
+        document.querySelector(`.o-mail-composer-textarea`).value,
+        "XDU for the win !"
+    );
+    assert.containsN(
+        document.body,
+        ".o-mail-composer-footer .o-mail-attachment-list .o-mail-attachment-card",
+        2
+    );
+});

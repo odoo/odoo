@@ -8,87 +8,9 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { file } from "web.test_utils";
-const { createFile, inputFiles } = file;
-
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("chat_window_manager_tests.js");
-
-        QUnit.skipRefactoring(
-            "chat window: composer state conservation on toggle discuss",
-            async function (assert) {
-                assert.expect(6);
-
-                const pyEnv = await startServer();
-                const mailChannelId = pyEnv["mail.channel"].create({});
-                const { click, insertText, messaging, openDiscuss, openView } = await start();
-                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-                await click(`.o_MessagingMenu_dropdownMenu .o_NotificationListView_preview`);
-                // Set content of the composer of the chat window
-                await insertText(".o-mail-composer-textarea", "XDU for the win !");
-                assert.containsNone(
-                    document.body,
-                    ".o_ComposerView .o_AttachmentCard",
-                    "composer should have no attachment initially"
-                );
-                // Set attachments of the composer
-                const files = [
-                    await createFile({
-                        name: "text state conservation on toggle home menu.txt",
-                        content: "hello, world",
-                        contentType: "text/plain",
-                    }),
-                    await createFile({
-                        name: "text2 state conservation on toggle home menu.txt",
-                        content: "hello, xdu is da best man",
-                        contentType: "text/plain",
-                    }),
-                ];
-                await afterNextRender(() =>
-                    inputFiles(
-                        messaging.chatWindowManager.chatWindows[0].threadView.composerView
-                            .fileUploader.fileInput,
-                        files
-                    )
-                );
-                assert.strictEqual(
-                    document.querySelector(`.o-mail-composer-textarea`).value,
-                    "XDU for the win !",
-                    "chat window composer initial text input should contain 'XDU for the win !'"
-                );
-                assert.containsN(
-                    document.body,
-                    ".o_ComposerView .o_AttachmentCard",
-                    2,
-                    "composer should have 2 total attachments after adding 2 attachments"
-                );
-
-                await openDiscuss(null, { waitUntilMessagesLoaded: false });
-                assert.containsNone(
-                    document.body,
-                    ".o-mail-chat-window",
-                    "should not have any chat window after opening discuss"
-                );
-
-                await openView({
-                    res_id: mailChannelId,
-                    res_model: "mail.channel",
-                    views: [[false, "form"]],
-                });
-                assert.strictEqual(
-                    document.querySelector(`.o-mail-composer-textarea`).value,
-                    "XDU for the win !",
-                    "chat window composer should still have the same input after closing discuss"
-                );
-                assert.containsN(
-                    document.body,
-                    ".o_ComposerView .o_AttachmentCard",
-                    2,
-                    "Chat window composer should have 2 attachments after closing discuss"
-                );
-            }
-        );
 
         QUnit.skipRefactoring(
             "chat window: scroll conservation on toggle discuss",
