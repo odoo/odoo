@@ -34,7 +34,7 @@ patch(ThreadService.prototype, "im_livechat", {
         return this._super(thread);
     },
 
-    getUnreadCounter(thread) {
+    getCounter(thread) {
         if (thread.type === "livechat") {
             return this.localMessageUnreadCounter(thread);
         }

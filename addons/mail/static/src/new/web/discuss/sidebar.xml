@@ -82,7 +82,7 @@
 </t>
 
 <t t-name="mail.discuss_category_item" owl="1">
-    <t t-set="counter" t-value="threadService.getUnreadCounter(thread)"/>
+    <t t-set="counter" t-value="threadService.getCounter(thread)"/>
     <button class="o-mail-category-item btn d-flex align-items-center w-100 px-0 py-2 border-0 text-reset"
         t-att-class="{
             'bg-100': threadLocalId !== store.discuss.threadLocalId,

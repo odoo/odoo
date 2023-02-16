@@ -665,7 +665,10 @@ export class ThreadService {
     /**
      * @param {Thread} thread
      */
-    getUnreadCounter(thread) {
+    getCounter(thread) {
+        if (thread.type === "mailbox") {
+            return thread.counter;
+        }
         if (thread.type === "chat") {
             return this.localMessageUnreadCounter(thread);
         }

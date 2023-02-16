@@ -63,7 +63,7 @@
             <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
                 <NotificationItem
                     body="preview.body"
-                    count="preview.count"
+                    count="preview.count || threadService.getCounter(preview.thread)"
                     datetime="preview.datetime"
                     displayName="preview.displayName"
                     iconSrc="preview.imgUrl"
