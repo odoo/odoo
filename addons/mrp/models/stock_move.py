@@ -149,7 +149,8 @@ class StockMove(models.Model):
         for move in self:
             if move.state != 'draft':
                 continue
-            move.manual_consumption = not move.raw_material_production_id.use_auto_consume_components_lots and (move.bom_line_id.manual_consumption or move.has_tracking != 'none')
+            move.manual_consumption = (move.has_tracking != 'none' and not move.raw_material_production_id.use_auto_consume_components_lots) or \
+                (move.has_tracking == 'none' and move.bom_line_id.manual_consumption)
 
     @api.depends('bom_line_id')
     def _compute_description_bom_line(self):
@@ -230,12 +231,6 @@ class StockMove(models.Model):
         if self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
             self._update_quantity_done(mo)
-
-    @api.onchange('quantity_done')
-    def _onchange_quantity_done(self):
-        if self.raw_material_production_id and not self.manual_consumption and \
-           self.should_consume_qty != self.quantity_done:
-            self.manual_consumption = True
 
     @api.model
     def default_get(self, fields_list):

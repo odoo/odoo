@@ -3862,32 +3862,26 @@ QUnit.module("Views", (hooks) => {
                 noContentHelp: '<p class="hello">click to add a foo</p>',
             });
 
-            // as help is being provided in the action, table won't be rendered until a record exists
-            assert.containsNone(
-                target,
-                ".o_list_table",
-                " there should not be any records in the view."
-            );
             assert.containsOnce(target, ".o_view_nocontent", "should have no content help");
 
             // click on create button
             await click(target.querySelector(".o_list_button_add"));
-            const handleWidgetMinWidth = "33px";
+            const handleWidgetWidth = "33px";
             const handleWidgetHeader = target.querySelector("thead > tr > th.o_handle_cell");
 
             assert.strictEqual(
-                window.getComputedStyle(handleWidgetHeader).minWidth,
-                handleWidgetMinWidth,
-                "While creating first record, min-width should be applied to handle widget."
+                window.getComputedStyle(handleWidgetHeader).width,
+                handleWidgetWidth,
+                "While creating first record, width should be applied to handle widget."
             );
 
             // creating one record
             await editInput(target, ".o_selected_row [name='foo'] input", "test_foo");
             await clickSave(target);
             assert.strictEqual(
-                window.getComputedStyle(handleWidgetHeader).minWidth,
-                handleWidgetMinWidth,
-                "After creation of the first record, min-width of the handle widget should remain as it is"
+                window.getComputedStyle(handleWidgetHeader).width,
+                handleWidgetWidth,
+                "After creation of the first record, width of the handle widget should remain as it is"
             );
         }
     );
@@ -6084,7 +6078,7 @@ QUnit.module("Views", (hooks) => {
             noContentHelp: "click to add a partner",
         });
         assert.containsOnce(target, ".o_view_nocontent", "should display the no content helper");
-        assert.containsNone(target, ".o_list_view table", "should not have a table in the dom");
+        assert.containsOnce(target, ".o_list_view table", "should have a table in the dom");
         assert.deepEqual(
             [...target.querySelectorAll(".o_view_nocontent")].map((el) => el.textContent),
             ["click to add a partner"]
@@ -6098,7 +6092,6 @@ QUnit.module("Views", (hooks) => {
             ".o_view_nocontent",
             "should not display the no content helper"
         );
-        assert.containsOnce(target, ".o_list_view table", "should have a table in the dom");
     });
 
     QUnit.test("no nocontent helper when no data and no help", async function (assert) {
@@ -6181,7 +6174,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_list_view .o_content"),
             "o_view_sample_data"
         );
-        assert.containsNone(target, ".o_list_table");
+        assert.containsOnce(target, ".o_list_table");
         assert.containsOnce(target, ".o_nocontent_help");
 
         await toggleMenuItem(target, "False Domain");
@@ -6426,7 +6419,7 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_list_view .o_content"),
                 "o_view_sample_data"
             );
-            assert.containsNone(target, ".o_list_table");
+            assert.containsOnce(target, ".o_list_table");
             assert.containsOnce(target, ".o_nocontent_help");
         }
     );
@@ -6470,7 +6463,7 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_list_view .o_content"),
                 "o_view_sample_data"
             );
-            assert.containsNone(target, ".o_list_table");
+            assert.containsOnce(target, ".o_list_table");
             assert.containsOnce(target, ".o_nocontent_help");
         }
     );
@@ -6528,7 +6521,7 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector(".o_list_view .o_content"),
                 "o_view_sample_data"
             );
-            assert.containsNone(target, ".o_list_table");
+            assert.containsOnce(target, ".o_list_table");
             assert.containsOnce(target, ".o_nocontent_help");
         }
     );
@@ -6843,12 +6836,12 @@ QUnit.module("Views", (hooks) => {
             ".o_view_nocontent",
             "should have a no content helper displayed"
         );
-        assert.containsNone(
+        assert.containsOnce(
             target,
             "div.table-responsive",
-            "should not have a div.table-responsive"
+            "should have a div.table-responsive"
         );
-        assert.containsNone(target, "table", "should not have rendered a table");
+        assert.containsOnce(target, "table", "should have rendered a table");
 
         await click(target.querySelector(".o_list_button_add"));
         assert.containsNone(
@@ -6856,7 +6849,6 @@ QUnit.module("Views", (hooks) => {
             ".o_view_nocontent",
             "should not have a no content helper displayed"
         );
-        assert.containsOnce(target, "table", "should have rendered a table");
         assert.hasClass(
             target.querySelector("tbody tr"),
             "o_selected_row",

@@ -119,6 +119,7 @@
             'mass_mailing/static/src/js/snippets.editor.js',
             'mass_mailing/static/src/js/wysiwyg.js',
             'mass_mailing/static/src/xml/mass_mailing.editor.xml',
+            'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
         ],
         'web.assets_common': [
             'mass_mailing/static/src/js/tours/**/*',
