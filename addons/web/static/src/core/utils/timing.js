@@ -54,33 +54,6 @@ export function throttleForAnimation(func) {
 }
 
 /**
- * Returns a function, that, as long as it continues to be invoked, will be
- * triggered every N milliseconds.
- *
- * @deprecated this function has behaviour that is unexpected considering its
- *      name, prefer _.throttle until this function is rewritten
- * @param {Function} func
- * @param {number} delay
- * @returns {Function}
- */
-export function throttle(func, delay) {
-    let waiting = false;
-    const funcName = func.name ? func.name + " (throttle)" : "throttle";
-    return {
-        [funcName](...args) {
-            const context = this;
-            if (!waiting) {
-                waiting = true;
-                browser.setTimeout(function () {
-                    waiting = false;
-                    func.call(context, ...args);
-                }, delay);
-            }
-        },
-    }[funcName];
-}
-
-/**
  * Creates and returns a new debounced version of the passed function (func)
  * which will postpone its execution until after 'delay' milliseconds
  * have elapsed since the last time it was invoked. The debounced function
