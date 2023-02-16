@@ -40,13 +40,13 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    par ex; : 1*(this unit)=ratio*(reference unit)\n"
+"                                    par ex. : 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
 msgid "Active"
-msgstr "Active"
+msgstr "Actif"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -66,7 +66,7 @@ msgstr "Archivé"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr "Ratio supérieur"
+msgstr "Facteur supérieur"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
@@ -87,7 +87,7 @@ msgstr "Couleur"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
 msgid "Combined Ratio"
-msgstr "Ratio combiné"
+msgstr "Facteur combiné"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -96,7 +96,7 @@ msgid ""
 "same category. The conversion will be made based on the ratios."
 msgstr ""
 "Il est possible de convertir deux unités de mesures si elles appartiennent à"
-" la même catégorie. Cette conversion utilise les rapports définis pour ces "
+" la même catégorie. Cette conversion utilise les facteurs définis pour ces "
 "unités."
 
 #. module: uom
@@ -120,7 +120,7 @@ msgstr "Jours"
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
@@ -144,7 +144,7 @@ msgid ""
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
 "Combien de fois cette unité de mesure est plus grande que l'unité de mesure "
-"de référence de cette catégorie : 1 x (cette unité) = ratio x (unité de "
+"de référence de cette catégorie : 1 x (cette unité) = facteur x (unité de "
 "référence)"
 
 #. module: uom
@@ -154,8 +154,8 @@ msgid ""
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
 "Combien de fois cette unité est plus petite ou plus grande que l'unité de "
-"mesure de référence de cette catégorie : 1 x (unité de référence) = ratio x "
-"(cette unité)"
+"mesure de référence de cette catégorie : 1 x (unité de référence) = facteur "
+"x (cette unité)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -184,7 +184,7 @@ msgstr "Dernière mise à jour le"
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
 msgid "Length / Distance"
-msgstr "Longueur/distance"
+msgstr "Longueur / Distance"
 
 #. module: uom
 #: model:res.groups,name:uom.group_uom
@@ -199,13 +199,13 @@ msgstr "Unité de mesure du produit"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Catégorie d'UdM"
+msgstr "Catégorie d'UdM du produit"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 msgid "Ratio"
-msgstr "Ratio"
+msgstr "Facteur"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
@@ -225,7 +225,7 @@ msgstr "Précision d'arrondi"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr "Chercher UdM"
+msgstr "Rechercher UdM"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
@@ -235,7 +235,7 @@ msgstr "Rechercher une catégorie d'UdM"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Plus petit que l'unité de référence"
+msgstr "Plus petit que l'unité de mesure de référence"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -260,7 +260,7 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
 msgid "Surface"
-msgstr "Surface"
+msgstr "Superficie"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -274,7 +274,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "Le rapport de conversion d'une unité de mesure ne peut pas être 0 !"
+msgstr "Le facteur de conversion d'une unité de mesure ne peut pas être 0 !"
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -306,9 +306,9 @@ msgid ""
 " belong to the same category."
 msgstr ""
 "L'unité de mesure %s définie sur la ligne de commande n'appartient pas à la "
-"même catégorie que l'unité de mesure %s définie sur le produit. Merci de "
+"même catégorie que l'unité de mesure %s définie sur le produit. Veuillez "
 "corriger l'unité de mesure définie sur la ligne de commande ou sur le "
-"produit, ils doivent appartenir à la même catégorie."
+"produit, elles doivent appartenir à la même catégorie."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -320,7 +320,8 @@ msgstr "Type"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Décochez le champ actif de désactiver une unité de mesure sans la supprimer."
+"Décochez le champ actif pour désactiver une unité de mesure sans la "
+"supprimer."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -371,8 +372,8 @@ msgid ""
 msgstr ""
 "Les unités de mesure appartenant à la même catégorie peuvent être\n"
 " converties entre elles. Par exemple, dans la catégorie\n"
-" <i>« Temps »</i>, vous aurez les unités de mesure suivantes : \n"
-" heures, jours."
+" <i>'Temps'</i>, vous aurez les unités de mesure suivantes : \n"
+" Heures, Jours."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -427,7 +428,7 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"Vous devez définir un taux de conversion entre plusieurs unités de\n"
+"Vous devez définir un facteur de conversion entre plusieurs unités de\n"
 " mesure au sein de la même catégorie."
 
 #. module: uom
@@ -443,32 +444,32 @@ msgstr "fl oz (US)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "ft"
-msgstr "pied"
+msgstr "ft"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_foot
 msgid "ft²"
-msgstr "pied²"
+msgstr "ft²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
 msgid "ft³"
-msgstr "pied³"
+msgstr "ft³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
-msgstr "gallon (US)"
+msgstr "gal (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "in"
-msgstr "dans"
+msgstr "in"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr "pouces³"
+msgstr "in³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -483,7 +484,7 @@ msgstr "km"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb"
-msgstr "livre"
+msgstr "lb"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
@@ -508,14 +509,14 @@ msgstr "m³"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz"
-msgstr "once"
+msgstr "oz"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
-msgstr "quart (US)"
+msgstr "qt (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr "mètre"
+msgstr "yd"

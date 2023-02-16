@@ -21,21 +21,23 @@ export class CopyButton extends Component {
     }
 
     async onClick() {
-        try {
-            // any kind of content can be copied into the clipboard using
-            // the appropriate native methods
-            if (typeof this.props.content === "string" || this.props.content instanceof String) {
-                browser.navigator.clipboard.writeText(this.props.content).then(() => {
-                    this.showTooltip();
-                });
-            } else {
-                browser.navigator.clipboard.write(this.props.content).then(() => {
-                    this.showTooltip();
-                });
-            }
-        } catch {
+        if (!browser.navigator.clipboard) {
             return browser.console.warn("This browser doesn't allow to copy to clipboard");
         }
+        let write;
+        // any kind of content can be copied into the clipboard using
+        // the appropriate native methods
+        if (typeof this.props.content === "string" || this.props.content instanceof String) {
+            write = (value) => browser.navigator.clipboard.writeText(value);
+        } else {
+            write = (value) => browser.navigator.clipboard.write(value);
+        }
+        try {
+            await write(this.props.content);
+        } catch(error) {
+            return browser.console.warn(error);
+        }
+        this.showTooltip();
     }
 }
 CopyButton.template = "web.CopyButton";

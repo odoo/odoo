@@ -173,8 +173,6 @@
         }
 
         .oe_title {
-            max-width: 75%;
-
             .o_field_char {
                 width: 100%;
             }
@@ -368,9 +366,11 @@
     // Title
     .oe_title {
         color: $headings-color;
-        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
-            padding-right: $o-innergroup-rpadding;
+
+        @include media-breakpoint-up(sm) {
+            max-width: 75%;
         }
+
         > h1, > h2, > h3 {
             width: 100%; // Needed because inline-block when is a hx.o_row
             margin-top: 0;
@@ -390,9 +390,6 @@
         > h2 {
             min-height: 42px;
         }
-        .oe_avatar + & {
-            padding-right: $o-avatar-size + 10;
-        }
     }
 
     // Avatar
@@ -400,11 +397,17 @@
         float: right;
         margin-bottom: 10px;
 
-        > div > img {
+        .img {
             max-width: $o-avatar-size;
             max-height: $o-avatar-size;
             vertical-align: top;
             border: 1px solid $o-gray-300;
+        }
+
+        @include media-breakpoint-down(sm) {
+            + .oe_title {
+                max-width: calc(100% - #{$o-avatar-size} - #{map-get($spacers, 2)});
+            }
         }
     }
 
@@ -586,6 +589,10 @@
                         }
                     }
                 }
+                // Prevent table overflow when having long chars in x2many list
+                .o_field_widget:has(.o_field_x2many.o_field_x2many_list) {
+                    width: 100%;
+                }
             }
         }
 
@@ -666,19 +673,25 @@
     }
 
     .oe_no_translation_content {
-        :not(.btn) {
-            display: none;
-        }
+        // hide content but show the translate button
+        height: 0px;
 
-        .btn {
-            width: 100% !important;
-            margin-left: 0px;
-            visibility: hidden;
-        }
+        div{
+            :not(.btn) {
+                display: none;
+            }
 
-        .btn:after {
-            content: 'EN';
-            visibility: visible;
+            .btn {
+                width: 100% !important;
+                margin-left: 0px;
+                visibility: hidden;
+            }
+
+            .btn:after {
+                // force the the translate button to EN
+                content: 'EN';
+                visibility: visible;
+            }
         }
     }
 

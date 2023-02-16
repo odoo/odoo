@@ -209,6 +209,9 @@ class PosGlobalState extends PosModel {
         await this._loadFonts();
         await this._loadPictures();
     }
+    async _getTableOrdersFromServer(tableIds) {
+        return await super._getTableOrdersFromServer(tableIds);
+    }
     _loadPosSession() {
         // We need to do it here, since only then the local storage has the correct uuid
         this.db.save('pos_session_id', this.pos_session.id);
@@ -2016,7 +2019,6 @@ class Orderline extends PosModel {
         return {
             "priceWithTax": all_taxes.total_included,
             "priceWithoutTax": all_taxes.total_excluded,
-            "priceSumTaxVoid": all_taxes.total_void,
             "priceWithTaxBeforeDiscount": all_taxes_before_discount.total_included,
             "tax": taxtotal,
             "taxDetails": taxdetail,

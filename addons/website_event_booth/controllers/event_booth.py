@@ -5,7 +5,7 @@ import json
 import werkzeug
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import exceptions, http, _
+from odoo import exceptions, http, tools
 from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
@@ -102,8 +102,8 @@ class WebsiteEventBoothController(WebsiteEventController):
 
     def _prepare_booth_registration_partner_values(self, event, kwargs):
         if request.env.user._is_public():
-            contact_email = kwargs['contact_email']
-            partner = request.env['res.partner'].sudo().find_or_create(contact_email)
+            contact_name_email = tools.formataddr((kwargs['contact_name'], kwargs['contact_email']))
+            partner = request.env['res.partner'].sudo().find_or_create(contact_name_email)
             if not partner.name and kwargs.get('contact_name'):
                 partner.name = kwargs['contact_name']
             if not partner.phone and kwargs.get('contact_phone'):

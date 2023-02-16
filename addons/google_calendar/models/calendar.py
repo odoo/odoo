@@ -134,7 +134,7 @@ class Meeting(models.Model):
             user = google_event.owner(self.env)
             google_attendees += [{
                 'email': user.partner_id.email,
-                'responseStatus': 'needsAction',
+                'responseStatus': 'accepted',
             }]
         if google_attendees:
             google_attendees = sorted(google_attendees, key=lambda d: d['email'])

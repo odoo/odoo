@@ -864,6 +864,14 @@ describe('setTagName', () => {
                 contentAfter: `<ul><li>[abcd]</li></ul>`
             });
         });
+        it('should turn three table cells with heading 1 to table cells with paragraph', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td><h1>[a</h1></td><td><h1>b</h1></td><td><h1>c]</h1></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                // The custom table selection is removed in cleanForSave and the selection is collapsed.
+                contentAfter: '<table><tbody><tr><td><p>[]a</p></td><td><p>b</p></td><td><p>c</p></td></tr></tbody></table>',
+            });
+        });
     });
     describe('to heading 1', () => {
         it('should turn a paragraph into a heading 1', async () => {
@@ -908,6 +916,14 @@ describe('setTagName', () => {
                 contentAfter: '<div><h1><span style="">[ab]</span></h1></div>',
             });
         });
+        it('should turn three table cells with paragraph to table cells with heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                // The custom table selection is removed in cleanForSave and the selection is collapsed.
+                contentAfter: '<table><tbody><tr><td><h1>[]a</h1></td><td><h1>b</h1></td><td><h1>c</h1></td></tr></tbody></table>',
+            });
+        });
     });
     describe('to heading 2', () => {
         it('should turn a heading 1 into a heading 2', async () => {
@@ -943,6 +959,14 @@ describe('setTagName', () => {
                 contentBefore: '<div>[ab]</div>',
                 stepFunction: editor => editor.execCommand('setTag', 'h2'),
                 contentAfter: '<div><h2>[ab]</h2></div>',
+            });
+        });
+        it('should turn three table cells with paragraph to table cells with heading 2', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                // The custom table selection is removed in cleanForSave and the selection is collapsed.
+                contentAfter: '<table><tbody><tr><td><h2>[]a</h2></td><td><h2>b</h2></td><td><h2>c</h2></td></tr></tbody></table>',
             });
         });
     });
@@ -982,6 +1006,14 @@ describe('setTagName', () => {
                 contentAfter: '<div><h3>[ab]</h3></div>',
             });
         });
+        it('should turn three table cells with paragraph to table cells with heading 3', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'h3'),
+                // The custom table selection is removed in cleanForSave and the selection is collapsed.
+                contentAfter: '<table><tbody><tr><td><h3>[]a</h3></td><td><h3>b</h3></td><td><h3>c</h3></td></tr></tbody></table>',
+            });
+        });
     });
     describe('to pre', () => {
         it('should turn a heading 1 into a pre', async () => {
@@ -1003,6 +1035,14 @@ describe('setTagName', () => {
                 contentBefore: '<h1>a[b</h1><pre>cd</pre><p>e]f</p>',
                 stepFunction: editor => editor.execCommand('setTag', 'pre'),
                 contentAfter: '<pre>a[b</pre><pre>cd</pre><pre>e]f</pre>',
+            });
+        });
+        it('should turn three table cells with paragraph to table cells with pre', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'pre'),
+                // The custom table selection is removed in cleanForSave and the selection is collapsed.
+                contentAfter: '<table><tbody><tr><td><pre>[]a</pre></td><td><pre>b</pre></td><td><pre>c</pre></td></tr></tbody></table>',
             });
         });
     });
@@ -1041,6 +1081,14 @@ describe('setTagName', () => {
                 contentBefore: '<div>[ab]</div>',
                 stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
                 contentAfter: '<div><blockquote>[ab]</blockquote></div>',
+            });
+        });
+        it('should turn three table cells with paragraph to table cells with blockquote', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
+                stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
+                // The custom table selection is removed in cleanForSave and the selection is collapsed.
+                contentAfter: '<table><tbody><tr><td><blockquote>[]a</blockquote></td><td><blockquote>b</blockquote></td><td><blockquote>c</blockquote></td></tr></tbody></table>',
             });
         });
     });

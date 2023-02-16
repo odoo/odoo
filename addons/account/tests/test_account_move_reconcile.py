@@ -330,6 +330,31 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     {'reconciled': False},
                 ])
 
+    def test_invoice_draft_fully_paid_if_zero(self):
+        """ Tests that Invoices with zero balance are marked as paid and reconciled
+        """
+        zero_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_line_ids': [Command.create({'name': 'Nope', 'price_unit': 0})],
+        })
+        payment_term_line = zero_invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        self.assertRecordValues(zero_invoice, [{
+            'state': 'draft',
+            'payment_state': 'not_paid',
+            'amount_total': 0.0,
+        }])
+        self.assertTrue(payment_term_line.reconciled)
+
+        zero_invoice.action_post()
+        self.assertRecordValues(zero_invoice, [{
+            'state': 'posted',
+            'payment_state': 'paid',
+            'amount_total': 0.0,
+        }])
+        self.assertTrue(payment_term_line.reconciled)
+
     def test_reconcile_lines_corner_case_1_zero_balance_same_foreign_currency(self):
         """ Test the reconciliation of lines having a zero balance in different currencies. In that case, the reconciliation should not be full until
         an additional move is added with the right foreign currency amount. """
@@ -349,7 +374,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(line_2.full_reconcile_id, line_3.full_reconcile_id)
 
     def test_reconcile_lines_corner_case_1_zero_balance_different_foreign_currency(self):
-        """ Test the reconciliation of lines having a zero balance in different currencies. In that case, we enforce full reconciliation. """
+        """ Test the reconciliation of lines having a zero balance in different currencies.
+        In that case, we don't reconcile anything.
+        """
         currency_1 = self.currency_data['currency']
         currency_2 = self.setup_multi_currency_data({
             'name': 'Bretonnian Ecu',
@@ -363,67 +390,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         res = (line_1 + line_2).reconcile()
 
-        self.assertRecordValues(res['partials'], [{
-            'amount': 0.0,
-            'debit_amount_currency': 0.0,
-            'credit_amount_currency': 0.0,
-            'debit_move_id': line_2.id,
-            'credit_move_id': line_1.id,
-        }])
-        self.assertTrue(line_1.full_reconcile_id)
-        self.assertEqual(line_1.full_reconcile_id, line_2.full_reconcile_id)
-        self.assertTrue(res['partials'].exchange_move_id, "The partial reconciliation should have created an exchange move")
-        self.assertRecordValues(res['partials'].exchange_move_id, [{'date': fields.Date.from_string('2017-01-01')}])
-        self.assertRecordValues(res['partials'].exchange_move_id.line_ids, [
-            {
-                'debit': 0.0,
-                'credit': 0.0,
-                'amount_currency': -0.02,
-                'currency_id': currency_2.id,
-                'account_id': line_2.account_id.id,
-            },
-            {
-                'debit': 0.0,
-                'credit': 0.0,
-                'amount_currency': 0.02,
-                'currency_id': currency_2.id,
-                'account_id': self.exch_expense_account.id,
-            },
-            {
-                'debit': 0.0,
-                'credit': 0.0,
-                'amount_currency': 0.01,
-                'currency_id': currency_1.id,
-                'account_id': line_1.account_id.id,
-            },
-            {
-                'debit': 0.0,
-                'credit': 0.0,
-                'amount_currency': -0.01,
-                'currency_id': currency_1.id,
-                'account_id': self.exch_income_account.id,
-            },
-        ])
-        self.assertRecordValues(res['exchange_partials'], [
-            {
-                'amount': 0.0,
-                'debit_amount_currency': 0.02,
-                'credit_amount_currency': 0.02,
-                'debit_move_id': line_2.id,
-                'credit_move_id': res['partials'].exchange_move_id.line_ids[0].id,
-            },
-            {
-                'amount': 0.0,
-                'debit_amount_currency': 0.01,
-                'credit_amount_currency': 0.01,
-                'debit_move_id': res['partials'].exchange_move_id.line_ids[2].id,
-                'credit_move_id': line_1.id,
-            },
-        ])
-        self.assertRecordValues(line_1 + line_2, [
-            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
-            {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
-        ])
+        self.assertFalse(res['partials'])
 
     def test_reconcile_lines_corner_case_2_zero_amount_currency_same_foreign_currency(self):
         """ Test a corner case when both lines have something to reconcile in company currency but nothing

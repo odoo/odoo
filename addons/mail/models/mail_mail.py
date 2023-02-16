@@ -84,6 +84,7 @@ class MailMail(models.Model):
     auto_delete = fields.Boolean(
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
+    # Unused since v16, to remove in master.
     to_delete = fields.Boolean('To Delete', help='If set, the mail will be deleted during the next Email Queue CRON run.')
     scheduled_date = fields.Datetime('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
@@ -110,19 +111,6 @@ class MailMail(models.Model):
         for mail_sudo, mail in zip(self.sudo(), self):
             restricted_attaments = mail_sudo.attachment_ids - IrAttachment._filter_attachment_access(mail_sudo.attachment_ids.ids)
             mail_sudo.attachment_ids = restricted_attaments | mail.unrestricted_attachment_ids
-
-    def init(self):
-        """Create a partial index on "to_delete" to make the search on those records fast.
-
-        The benefit on this partial index is to not have a big impact on the
-        update / insert of other records in the database in comparison to a standard
-        index.
-        """
-        self._cr.execute("""
-            CREATE INDEX IF NOT EXISTS mail_mail_to_delete_idx
-                      ON mail_mail(id)
-                   WHERE to_delete = TRUE;
-        """)
 
     @api.model_create_multi
     def create(self, values_list):
@@ -239,8 +227,6 @@ class MailMail(models.Model):
         except Exception:
             _logger.exception("Failed processing mail queue")
 
-        # Remove all the <mail.mail> marked as "to delete"
-        self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
         return res
 
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
@@ -278,7 +264,7 @@ class MailMail(models.Model):
                     # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_message_notification_update()  # notify user that we have a failure
         if not failure_type or failure_type in ['mail_email_invalid', 'mail_email_missing']:  # if we have another error, we want to keep the mail.
-            self.filtered(lambda mail: mail.auto_delete).to_delete = True
+            self.filtered(lambda mail: mail.auto_delete).unlink()
 
         return True
 

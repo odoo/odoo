@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
-# Dylan Kiss, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
@@ -6202,6 +6201,16 @@ msgid ""
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "    "
 msgstr ""
+"\n"
+"Indiaas - E-vrachtbrief\n"
+"===================================\n"
+"E-vrachtbrief via API indienen bij de overheid.\n"
+"We gebruiken \"Tera Software Limited\" als GSP\n"
+"\n"
+"Stap 1: Eerst moet u een API-gebruikersnaam en -wachtwoord aanmaken in de E-vrachtbriefportal.\n"
+"Stap 2: Schakel over naar bedrijf gerelateerd aan dat GST-nummer\n"
+"Stap 3: Stel die gebruikersnaam en dat wachtwoord in in Odoo (Ga naar: Facturering/Boekhouding -> Configratie -> Instellingen -> Indiase elektronische vrachtbrief of zoek \"E-vrachtbrief\" in de zoekbalk)\n"
+"Stap 4: Herhaal stappen 1,2,3 voor alle GSTIN die u in odoo heeft. Heeft u meerdere bedrijven met hetzelfde GST-nummer, voer stap 1 dan alleen uit voor het eerste bedrijf."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -6292,6 +6301,13 @@ msgid ""
 "To print UPI Qr code add UPI id in company and tick \"QR Codes\" in configuration\n"
 "  "
 msgstr ""
+"\n"
+"Factuur met UPI QR-code\n"
+"========================\n"
+"Deze module voegt een QR-code toe aan het factuurrapport voor UPI-betalingen, zodat u via elke UPI-app kunt betalen.\n"
+"\n"
+"Om de UPI Qr-code af te drukken, voegt u de UPI-id toe aan het bedrijf en vinkt u \"QR-codes\" aan in de configuratie\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -8392,6 +8408,11 @@ msgid ""
 "This module adds TCS and TDS Tax Report and load related Taxes in Indian Company.\n"
 "    "
 msgstr ""
+"\n"
+"Belastingaangifte TCS/TDS voor India\n"
+"===================================\n"
+"\n"
+"Deze module voegt TCS- en TDS-belastingrapport toe en belastinggerelateerde belastingen in Indian Company."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -10600,6 +10621,10 @@ msgid ""
 "This module adds the price difference account. Used in standard perpetual valuation.\n"
 "    "
 msgstr ""
+"\n"
+"WMS Boekhoudmodule\n"
+"=====================\n"
+"Deze module voegt de prijsverschilrekening toe. Gebruikt in standaard eeuwigdurende waardering."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -10722,6 +10747,14 @@ msgid ""
 "    Please also update the Italian Accounting module (l10n_it) when you install this module.\n"
 "    "
 msgstr ""
+"\n"
+"Inhouding en Pensioenfondsafhandeling voor de E-factuur implementatie voor Italië.\n"
+"\n"
+"De bedrijfsvoorheffing en de pensioenfondsbelasting worden berekend zoals elke andere belasting\n"
+"met de bestelling op volgorde, dus wees voorzichtig met de volgorde van de belastingen\n"
+"in uw belastingconfiguratie.\n"
+"\n"
+"Werk ook de Italiaanse boekhoudmodule (l10n_it) bij wanneer u deze module installeert."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -11629,7 +11662,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2Many commands namespace"
-msgstr ""
+msgstr "<code>Commando</code>: x2Many commando namespace"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11662,6 +11695,8 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: logfunctie om foutopsporing vast te"
+" leggen informatie in <code>ir.logging</code> tabel"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -16269,7 +16304,7 @@ msgstr "Bedrijf favicon"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry
 msgid "Company ID"
-msgstr "Bedrijfsnummer"
+msgstr "KVK-Nummer"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo

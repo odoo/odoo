@@ -715,7 +715,7 @@ class AccountTax(models.Model):
             'taxes': taxes_vals,
             'total_excluded': sign * total_excluded,
             'total_included': sign * currency.round(total_included),
-            'total_void': sign * currency.round(total_void),
+            'total_void': sign * total_void,
         }
 
     @api.model
@@ -1061,7 +1061,12 @@ class AccountTax(models.Model):
         for grouping_key, tax_values in global_tax_details['tax_details'].items():
             if tax_values['currency_id']:
                 currency = self.env['res.currency'].browse(tax_values['currency_id'])
-                res['totals'][currency]['amount_tax'] += currency.round(tax_values['tax_amount'])
+                tax = self.env['account.tax'].browse(grouping_key['tax_id'])
+                company = tax.company_id or self.company_id
+                tax_amount = tax_values['tax_amount']
+                if company.tax_calculation_rounding_method == 'round_per_line':
+                    tax_amount = currency.round(tax_values['tax_amount'])
+                res['totals'][currency]['amount_tax'] += tax_amount
 
             if grouping_key in existing_tax_line_map:
                 # Update an existing tax line.

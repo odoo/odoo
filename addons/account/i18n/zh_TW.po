@@ -940,8 +940,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                        <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">金額</span>\n"
-"                                        <span groups=\"account.group_show_line_subtotals_tax_included\">總價</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">未連稅總額</span>\n"
+"                                        <span groups=\"account.group_show_line_subtotals_tax_included\">連稅總額</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1796,7 +1796,7 @@ msgstr "會計"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "會计概覽畫面"
+msgstr "會計概覽畫面"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -2073,7 +2073,7 @@ msgstr "增加折讓單"
 #: model:ir.actions.server,name:account.action_new_bank_setting
 #: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
 msgid "Add a Bank Account"
-msgstr "增加銀行帳戶"
+msgstr "加入銀行帳戶"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
@@ -2090,7 +2090,7 @@ msgstr "應收憑單上增加二維碼，使用者可以立即在手機銀行支
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Add a bank account"
-msgstr "增加銀行帳戶"
+msgstr "加入銀行賬戶"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -2558,12 +2558,12 @@ msgstr "分析科目"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "分析會計科目"
+msgstr "分析會計"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "分析科目"
+msgstr "分析賬戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__analytic
@@ -2902,7 +2902,7 @@ msgstr "可用的付款方式明細"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
 msgid "Average Price"
-msgstr "平均價格"
+msgstr "平均價"
 
 #. module: account
 #. odoo-python
@@ -2962,7 +2962,7 @@ msgstr "銀行 &amp; 現金"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
-msgstr "銀行帳戶"
+msgstr "銀行賬戶"
 
 #. module: account
 #. odoo-python
@@ -3253,7 +3253,7 @@ msgstr "帳單管理員"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Bills"
-msgstr "帳單"
+msgstr "賬單"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3759,7 +3759,7 @@ msgstr "表模板"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 #, python-format
 msgid "Chart of Accounts"
-msgstr "會計科目表"
+msgstr "賬目總表"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__coa
@@ -3774,7 +3774,7 @@ msgstr "會計科目表"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Chart of accounts set."
-msgstr "會計科目表集合."
+msgstr "已設置賬目總表。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -3841,7 +3841,7 @@ msgstr "子級稅"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr "為您的產品選擇一個預設的銷項稅."
+msgstr "為產品設立預設銷售稅。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__refund_method
@@ -4122,7 +4122,7 @@ msgstr "連接"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Connect your financial accounts in seconds."
-msgstr "在幾秒鐘內連接您的財務科目."
+msgstr "快速連結財務賬戶。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
@@ -4301,7 +4301,7 @@ msgstr "建立分錄"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create Invoice"
-msgstr "建立應收憑單"
+msgstr "建立發票"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4311,7 +4311,7 @@ msgstr "在電子郵件中建立應收憑單"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
-msgstr "建立日記帳分錄"
+msgstr "建立日記賬記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4333,12 +4333,12 @@ msgstr "建立銀行帳戶"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 msgid "Create a credit note"
-msgstr "建立折讓單"
+msgstr "建立退款單"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid "Create a customer invoice"
-msgstr "建立一個客戶應收憑單"
+msgstr "建立客戶發票"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -4378,7 +4378,7 @@ msgstr "建立新的核銷模型"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
 msgid "Create a new sales receipt"
-msgstr "建立一個新的銷售收據"
+msgstr "建立新的銷售收據"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
@@ -4427,14 +4427,14 @@ msgstr "建立應收憑單／帳單"
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr "建立應收憑單，登記付款並追蹤與客戶的溝通."
+msgstr "建立發票，登記付款，並追蹤與客戶的溝通歷程。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
-msgstr "建立應收憑單，登記收付款並追蹤與供應商的討論."
+msgstr "建立發票，登記付款，並追蹤與供應商的溝通歷程。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -4444,7 +4444,7 @@ msgstr "建立第一個現金捨入"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr "建立你的第一個應收憑單."
+msgstr "建立你的第一張發票。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_uid
@@ -4637,7 +4637,7 @@ msgstr "折讓單: 發送中"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "折讓單"
+msgstr "退款單"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -4674,7 +4674,7 @@ msgstr "累計餘額取決於域n和檢視中選取的順序."
 #: model:ir.ui.menu,name:account.menu_action_currency_form
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Currencies"
-msgstr "幣別"
+msgstr "貨幣"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
@@ -4829,7 +4829,7 @@ msgstr "客戶應收憑單"
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
 msgid "Customer Invoices"
-msgstr "客戶應收憑單"
+msgstr "客戶發票"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
@@ -4914,7 +4914,7 @@ msgstr "自訂"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Customize the look of your invoices."
-msgstr "自訂應收憑單外觀."
+msgstr "自訂發票外觀及排版格式。"
 
 #. module: account
 #. odoo-javascript
@@ -4951,7 +4951,7 @@ msgstr "下"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr "儀表板"
+msgstr "概覽畫面"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
@@ -5024,7 +5024,7 @@ msgstr "日期範例"
 msgid ""
 "Date from which the accounting is managed in Odoo. It is the date of the "
 "opening entry."
-msgstr "會計在系統中管理的日期. 這是期初分錄的日期."
+msgstr "開始使用 Odoo 會計系統管理賬目的日期，亦即會計賬目起始記項的日期。"
 
 #. module: account
 #. odoo-javascript
@@ -5222,7 +5222,7 @@ msgstr "定義用於通過現金支付的幣別的最小硬幣"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Define your fiscal years &amp; tax returns periodicity."
-msgstr "定義您的會計年度納稅申報表的週期性."
+msgstr "設定財政年度起迄及報稅周期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__bank_statements_source
@@ -5780,7 +5780,7 @@ msgstr "到期金額於"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Due Date"
-msgstr "到期日期"
+msgstr "到期日"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -6313,7 +6313,7 @@ msgstr "起始新序列"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "First invoice sent!"
-msgstr "已發送第一張應收憑單!"
+msgstr "已發送第一張發票！"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -6370,7 +6370,7 @@ msgstr "會計期間"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "財務狀況"
+msgstr "財務規則"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__name
@@ -6383,7 +6383,7 @@ msgstr "財務狀況模版"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "財務狀況"
+msgstr "財務規則"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -6701,7 +6701,7 @@ msgstr "間距"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
 msgid "Generate Entries"
-msgstr "建立分錄"
+msgstr "產生記項"
 
 #. module: account
 #. odoo-python
@@ -6768,7 +6768,7 @@ msgstr "組"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Group By"
-msgstr "分組依據"
+msgstr "分組方式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__group_payment
@@ -6778,12 +6778,12 @@ msgstr "分組付款"
 #. module: account
 #: model:account.report,name:account.generic_tax_report_account_tax
 msgid "Group by: Account > Tax "
-msgstr "分組依據: 科目 > 稅金 "
+msgstr "分組方式：賬戶 > 稅項"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report_tax_account
 msgid "Group by: Tax > Account "
-msgstr "分組依據: 稅金 > 科目 "
+msgstr "分組方式：稅項 > 賬戶"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -6803,7 +6803,7 @@ msgstr "把付款歸為一批以簡化核銷處理過程"
 msgid ""
 "Groupby feature isn't supported by aggregation engine. Please remove the "
 "groupby value on '%s'"
-msgstr "整合引擎不支援 分組依據 功能. 請刪除 '%s' 上的 分組依據 值"
+msgstr "加總引擎不支援「分組方式」功能。請刪除 \"%s\" 的分組方式值。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
@@ -6959,7 +6959,7 @@ msgstr "在訂單和應收憑單中如何計算總稅額"
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__id
 #: model:ir.model.fields,field_description:account.field_validate_account_move__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: account
 #. odoo-python
@@ -7238,7 +7238,7 @@ msgstr "匯入您的第一筆帳單"
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__in_payment
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In Payment"
-msgstr "於付款"
+msgstr "付款中"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -7576,7 +7576,7 @@ msgstr "應收憑單 #"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoice Analysis"
-msgstr "應收憑單分析"
+msgstr "發票分析"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__invoice_count
@@ -7604,7 +7604,7 @@ msgstr "應收憑單幣別"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Invoice Date"
-msgstr "應收憑單日期"
+msgstr "發票日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -7623,7 +7623,7 @@ msgstr "未付款應收憑單"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Invoice Layout"
-msgstr "應收憑單格式"
+msgstr "發票樣式"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7674,7 +7674,7 @@ msgstr "應收憑單預覽"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
 msgid "Invoice Status"
-msgstr "應收憑單狀態"
+msgstr "發票狀態"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__invoice_tax_id
@@ -7788,7 +7788,7 @@ msgstr "已開立應收憑單"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #, python-format
 msgid "Invoices"
-msgstr "應收憑單"
+msgstr "發票"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
@@ -7856,12 +7856,12 @@ msgstr "應收憑單/應付帳單 全額匹配"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "會計"
+msgstr "發票工具"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
 msgid "Invoicing App Legacy"
-msgstr "使用舊版會計程式"
+msgstr "使用舊版發票程式"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
@@ -8029,12 +8029,12 @@ msgstr "日記帳幣別"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "日記帳分錄"
+msgstr "日記賬記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
-msgstr "‎日記帳分錄 按日期"
+msgstr "日記賬記項（按日期）"
 
 #. module: account
 #. odoo-javascript
@@ -8118,7 +8118,7 @@ msgstr "日記帳組"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Journal Groups"
-msgstr "日記帳組"
+msgstr "流水賬組別"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -8159,7 +8159,7 @@ msgstr "日記帳項目標籤"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_pivot
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
-msgstr "日記帳項目"
+msgstr "流水賬項目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -8242,7 +8242,7 @@ msgstr "日記帳:"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_miscellaneous
 msgid "Journals"
-msgstr "日記帳"
+msgstr "流水賬"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
@@ -8253,7 +8253,7 @@ msgstr "日計帳可用性"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Journals Entries Lock Date"
-msgstr "日記帳分錄鎖定日期"
+msgstr "日記賬記項鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -8429,7 +8429,7 @@ msgstr "最後的散列"
 #: model:ir.model.fields,field_description:account.field_account_unreconcile____last_update
 #: model:ir.model.fields,field_description:account.field_validate_account_move____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後修改"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__last_month
@@ -9075,7 +9075,7 @@ msgstr "雜項"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr "雜項操作"
+msgstr "其他營運賬項"
 
 #. module: account
 #. odoo-python
@@ -9139,7 +9139,7 @@ msgstr "月"
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__move_ids
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__move_ids
 msgid "Move"
-msgstr "傳票"
+msgstr "分錄"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_data
@@ -9155,7 +9155,7 @@ msgstr "傳票明細"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_type
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__move_type
 msgid "Move Type"
-msgstr "傳票類型"
+msgstr "分錄類型"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__move_types
@@ -9469,7 +9469,7 @@ msgstr "未到期"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__not_paid
 msgid "Not Paid"
-msgstr "未付款"
+msgstr "未付"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__not_done
@@ -9506,9 +9506,7 @@ msgstr "註記參數"
 msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
-msgstr ""
-"請注意，建立折讓單的最簡單方法是直接從客戶應收憑單\n"
-"                執行此操作."
+msgstr "提示：要建立退款單，最容易的方法是直接在客戶發票上進行。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
@@ -9836,7 +9834,7 @@ msgstr "期初貸方"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
 msgid "Opening Date"
-msgstr "期初日期"
+msgstr "起始日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_debit
@@ -10138,7 +10136,7 @@ msgstr "包裹"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Paid"
-msgstr "已支付"
+msgstr "已付"
 
 #. module: account
 #. odoo-python
@@ -10223,7 +10221,7 @@ msgstr "部分折讓"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__partial
 msgid "Partially Paid"
-msgstr "部分支付"
+msgstr "部份已付"
 
 #. module: account
 #. odoo-python
@@ -10415,7 +10413,7 @@ msgstr "付款方式:"
 #: model:ir.model,name:account.model_account_payment_method_line
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Methods"
-msgstr "付款方式"
+msgstr "付款方法"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__qr_code_method
@@ -10475,7 +10473,7 @@ msgstr "支付條款詳情"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_tree
 msgid "Payment Terms"
-msgstr "支付條款"
+msgstr "付款條款"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -10767,7 +10765,7 @@ msgstr "過帳差異於"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "過帳日記帳分錄"
+msgstr "過賬日記賬記項"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -10786,7 +10784,7 @@ msgstr "過帳分錄"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "已過帳"
+msgstr "已過賬"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__posted_before
@@ -10798,12 +10796,12 @@ msgstr "曾過帳"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "已過帳的日記帳分錄"
+msgstr "已過賬的日記賬記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "已過帳的日記帳項目"
+msgstr "已過賬的日記賬項目"
 
 #. module: account
 #. odoo-python
@@ -11226,7 +11224,7 @@ msgstr "核銷對帳模型"
 #: model:ir.ui.menu,name:account.action_account_reconcile_model_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr "核銷對帳模型"
+msgstr "對賬模型"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
@@ -11298,7 +11296,7 @@ msgstr "折讓稅金"
 #: model:ir.actions.act_window,name:account.action_move_in_refund_type
 #: model:ir.ui.menu,name:account.menu_action_move_in_refund_type
 msgid "Refunds"
-msgstr "折讓"
+msgstr "退款"
 
 #. module: account
 #. odoo-python
@@ -11544,7 +11542,7 @@ msgstr "收入應計科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
 msgid "Revenue/Expense Account"
-msgstr "收入/費用科目"
+msgstr "收入/開支賬戶"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__reversal_date
@@ -11623,13 +11621,13 @@ msgstr "撤銷傳票"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "撤銷"
+msgstr "已撤銷"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Review"
-msgstr "審查"
+msgstr "審視"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__root_id
@@ -12244,12 +12242,12 @@ msgstr "設定為勾選"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Set default Taxes for sales and purchase transactions."
-msgstr "為銷售和採購交易設定預設稅."
+msgstr "為採購及銷售交易設立預設稅項。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Set taxes"
-msgstr "設定稅率"
+msgstr "設定稅項"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__visible
@@ -12283,7 +12281,7 @@ msgstr "設定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "設定會計科目表並記錄期初餘額."
+msgstr "設定賬目總表，開始記賬。"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -12508,7 +12506,7 @@ msgstr "指定使用哪一種方式用於應收憑單的四捨五入"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr "從檢查你公司的資料開始."
+msgstr "先設置好有關你公司的資料。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -12558,7 +12556,7 @@ msgstr "境內會計年度步驟的狀態"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_invoice_layout_state
 msgid "State of the onboarding invoice layout step"
-msgstr "境內應收憑單步驟的狀態"
+msgstr "新手導覽中「發票樣式」步驟的狀態"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sale_tax_state
@@ -12582,7 +12580,7 @@ msgstr "對帳單明細"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Statement Reports"
-msgstr "對帳單報表"
+msgstr "會計報表"
 
 #. module: account
 #. odoo-python
@@ -12659,7 +12657,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Step Completed!"
-msgstr "步驟已完成!"
+msgstr "步驟已完成！"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12862,7 +12860,7 @@ msgstr "應有稅金"
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_excluded
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Tax Excluded"
-msgstr "不含稅"
+msgstr "未連稅"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
@@ -12892,7 +12890,7 @@ msgstr "稅金組"
 #: model:ir.actions.act_window,name:account.action_tax_group
 #: model:ir.ui.menu,name:account.menu_action_tax_group
 msgid "Tax Groups"
-msgstr "稅金組"
+msgstr "稅項組別"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13145,7 +13143,7 @@ msgstr "稅務雲"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Taxes"
-msgstr "稅金"
+msgstr "稅項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13169,7 +13167,7 @@ msgstr "如果付款和應收憑單上的稅費共享某些標籤，則它們不
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Taxes set."
-msgstr "稅金設定."
+msgstr "已設置稅項。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13293,7 +13291,7 @@ msgstr "條款和條件"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr "這是期初分錄的日期."
+msgstr "起始記項日期"
 
 #. module: account
 #. odoo-python
@@ -14296,6 +14294,14 @@ msgid "There was an error processing this page."
 msgstr "此頁面出現錯誤."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "在任何新產品中設定這些稅."
@@ -14951,7 +14957,7 @@ msgstr "單價:"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
-msgstr "單位"
+msgstr "量度單位"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14972,17 +14978,23 @@ msgstr "未付款應收憑單"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "未過帳"
+msgstr "未過賬"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "未過帳的日記帳分錄"
+msgstr "未過賬的日記賬記項"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "未過帳日記帳項目"
+msgstr "未過賬的日記賬項目"
 
 #. module: account
 #. odoo-javascript
@@ -15036,7 +15048,7 @@ msgstr "未含稅金額簽署"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
 msgid "Untaxed Total"
-msgstr "不含稅總計"
+msgstr "未連稅總額"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15322,7 +15334,7 @@ msgstr "已建立供應商應付帳單"
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
 msgid "Vendor Bills"
-msgstr "供應商應付帳單"
+msgstr "供應商賬單"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_refund
@@ -15505,7 +15517,7 @@ msgstr "當採購收據被驗證，您也可以同時登記這張採購收據的
 msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
-msgstr "當銷售收據被驗證，您也可以同時登記這張銷售收據的客戶付款."
+msgstr "銷售收據獲確認時，相關客戶付款也可同時登記。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15641,14 +15653,14 @@ msgstr "您只能列印供應商賬單的原始單據."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr "您只能核對已過帳的分錄."
+msgstr "只有已過賬記項才可進行對賬。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr "您只能為已過帳的日記帳分錄登記付款."
+msgstr "只有已過賬的流水賬記項，才可登記付款。"
 
 #. module: account
 #. odoo-python

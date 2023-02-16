@@ -15,7 +15,7 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # Harcogourmet, 2022
-# Josep Anton Belchi, 2022
+# jabelchi, 2022
 # Martin Trigaux, 2022
 # Cristian Cruz, 2022
 # Ivan Espinola, 2022
@@ -24,9 +24,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
@@ -667,7 +667,7 @@ msgstr "Afegir diverses variants a la comanda de compre des d'una graella"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Add some products or services to your quotation."
-msgstr "Afegiu alguns productes o serveis al vostre pressupost."
+msgstr "Afegeix alguns productes o serveis al vostre pressupost."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1315,6 +1315,13 @@ msgstr "Icona Font Awesome p.e. fa-tasks"
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
 msgstr "Valors no permesos en una línia de compra no facturable"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#, python-format
+msgid "From %s document"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -2210,6 +2217,8 @@ msgstr ""
 " editable abans de confirmar"
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
@@ -2219,6 +2228,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, python-format
 msgid "Purchase Orders"
 msgstr "Comandes de compra"
 

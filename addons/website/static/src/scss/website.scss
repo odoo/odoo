@@ -18,6 +18,15 @@ $-seen-urls: ();
 }
 
 :root {
+    // The color behind the boxed layout is forced by Odoo. The box background
+    // color uses the `$body-bg` variable.
+    // grep: BOXED_BODY_BG_ODOO
+    @if o-website-value('layout') != 'full' {
+        $-boxed-layout-body-bg: o-color('body');
+        --#{$variable-prefix}body-bg-rgb: #{to-rgb($-boxed-layout-body-bg)};
+        --#{$variable-prefix}body-bg: #{$-boxed-layout-body-bg};
+    }
+
     // The theme customize modal JS will need to know the value of some scss
     // variables used to render the user website, and those may have been
     // customized by themes, the user or anything else (so there is no file to
@@ -52,8 +61,6 @@ $-seen-urls: ();
     }
 
     // 5) Use final value used by the theme
-    @include print-variable('body', $body-bg);
-
     @include print-variable('logo-height', $o-theme-navbar-logo-height);
     @include print-variable('fixed-logo-height', $o-theme-navbar-fixed-logo-height);
 
@@ -121,7 +128,10 @@ $-seen-urls: ();
 
     @if o-website-value('layout') != 'full' {
         > main {
-            background-color: o-color('o-cc1-bg');
+            // The color behind the boxed layout is forced by Odoo. The box
+            // background color uses the `$body-bg` variable.
+            // grep: BOXED_BODY_BG_ODOO
+            background-color: $body-bg;
         }
 
         @include media-breakpoint-up(sm) {
@@ -1523,6 +1533,11 @@ $ribbon-padding: 100px;
 }
 
 // Search results
+.o_searchbar_form {
+    .dropdown-item.o_focus {
+        @extend .dropdown-item:hover;
+    }
+}
 .o_search_result_item_detail {
     flex: 1;
 }

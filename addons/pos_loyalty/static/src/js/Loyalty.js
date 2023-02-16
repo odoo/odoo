@@ -86,6 +86,49 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
         this.rewards = loadedData['loyalty.reward'] || [];
         this._loadLoyaltyData();
     }
+
+    async _getTableOrdersFromServer(tableIds) {
+        const oldOrders = this.orders;
+        const orders = await super._getTableOrdersFromServer(tableIds);
+
+        const oldOrderlinesWithCoupons = [].concat(...oldOrders.map(oldOrder =>
+            oldOrder.orderlines.filter(orderline => orderline.is_reward_line && orderline.coupon_id < 1)
+        ));
+
+        // Remapping of coupon_id for both couponPointChanges and Orderline.coupon_id
+        if (oldOrderlinesWithCoupons.length) {
+            for (const oldOrderline of oldOrderlinesWithCoupons) {
+                const matchingOrderline = orders
+                    .flatMap((order) => order.lines.map((line) => line[2]))
+                    .find(line => line.reward_id === oldOrderline.reward_id);
+
+                if (matchingOrderline) {
+                    matchingOrderline.coupon_id = nextId;
+                }
+            }
+
+            for (const order of orders) {
+                const oldOrder = oldOrders.find(oldOrder => oldOrder.uid === order.uid);
+
+                if (oldOrder) {
+                    if (oldOrder.partner && oldOrder.partner.id === order.partner_id) {
+                        order.partner = oldOrder.partner;
+                    }
+
+                    order.couponPointChanges = oldOrder.couponPointChanges;
+
+                    Object.keys(order.couponPointChanges).forEach(index => {
+                        order.couponPointChanges[nextId] = {...order.couponPointChanges[index]};
+                        order.couponPointChanges[nextId].coupon_id = nextId;
+                        delete order.couponPointChanges[index];
+                    });
+                }
+            }
+        }
+
+        return orders;
+    }
+
     _loadLoyaltyData() {
         this.program_by_id = {};
         this.reward_by_id = {};
@@ -278,6 +321,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     }
     init_from_JSON(json) {
         this.couponPointChanges = json.couponPointChanges;
+        this.partner = json.partner;
         // Remapping of coupon_id for both couponPointChanges and Orderline.coupon_id
         this.oldCouponMapping = {};
         if (this.couponPointChanges) {
@@ -501,6 +545,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         const productRewards = []
         const otherRewards = [];
         const paymentRewards = []; // Gift card and ewallet rewards are considered payments and must stay at the end
+
         for (const line of rewardLines) {
             const claimedReward = {
                 reward: this.pos.reward_by_id[line.reward_id],

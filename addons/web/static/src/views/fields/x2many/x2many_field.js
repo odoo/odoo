@@ -233,8 +233,8 @@ export class X2ManyField extends Component {
 X2ManyField.components = { Pager, KanbanRenderer, ListRenderer };
 X2ManyField.props = {
     ...standardFieldProps,
-    addLabel: { type: "string", optional: true },
-    editable: { type: "string", optional: true },
+    addLabel: { type: String, optional: true },
+    editable: { type: String, optional: true },
 };
 X2ManyField.supportedTypes = ["one2many", "many2many"];
 X2ManyField.displayName = _lt("Relational table");

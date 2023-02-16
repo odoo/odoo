@@ -330,6 +330,7 @@ class HrEmployeePrivate(models.Model):
         employees = super().create(vals_list)
         if self.env.context.get('salary_simulation'):
             return employees
+        employees.message_subscribe(employees.address_home_id.ids)
         employee_departments = employees.department_id
         if employee_departments:
             self.env['mail.channel'].sudo().search([
@@ -357,6 +358,8 @@ class HrEmployeePrivate(models.Model):
             account_id = vals.get('bank_account_id') or self.bank_account_id.id
             if account_id:
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
+            self.message_unsubscribe(self.address_home_id.ids)
+            self.message_subscribe([vals['address_home_id']])
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),

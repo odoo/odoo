@@ -2477,24 +2477,34 @@ QUnit.module("Views", (hooks) => {
                 graph_mode: "bar",
                 graph_measure: "__count",
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "bar",
                 graph_measure: "foo",
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "line",
                 graph_measure: "foo",
+                graph_cumulated: false,
                 graph_groupbys: ["product_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: [],
             },
             {
                 graph_mode: "line",
                 graph_measure: "foo",
+                graph_cumulated: false,
                 graph_groupbys: ["product_id", "color_id"],
+                graph_order: null,
+                graph_stacked: true,
                 group_by: ["product_id", "color_id"],
             },
         ];
@@ -4083,4 +4093,30 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["/mybody/isacage"]);
         assert.containsOnce(target, ".setmybodyfree");
     });
+
+    QUnit.test(
+        "no class 'o_view_sample_data' when real data are presented",
+        async function (assert) {
+            serverData.models.foo.records = [];
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph sample="1">
+                        <field name="date"/>
+                    </graph>
+                `,
+            });
+            assert.containsOnce(target, ".o_graph_view .o_view_sample_data");
+            assert.ok(getChart(graph).data.datasets.length);
+            await selectMode(target, "line");
+            assert.containsOnce(target, ".o_graph_view .o_view_sample_data");
+            assert.ok(getChart(graph).data.datasets.length);
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Revenue");
+            assert.containsNone(target, ".o_graph_view .o_view_sample_data");
+            assert.notOk(getChart(graph).data.datasets.length);
+        }
+    );
 });

@@ -330,19 +330,21 @@ class HolidaysAllocation(models.Model):
             current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
             if not current_level:
                 continue
-            lastcall = current_level._get_previous_date(first_day_this_year)
-            nextcall = current_level._get_next_date(first_day_this_year)
+            # lastcall has two cases:
+            # 1. The period was fully ran until the last day of last year
+            # 2. The period was not fully ran until the last day of last year
+            # For case 2, we need to prorata the number of days so need to check if the lastcall within the current level period
+            lastcall = current_level._get_previous_date(last_day_last_year) if allocation.lastcall < current_level._get_previous_date(last_day_last_year) else allocation.lastcall
+            nextcall = current_level._get_next_date(last_day_last_year)
             if current_level.action_with_unused_accruals == 'lost':
-                if lastcall == first_day_this_year:
-                    lastcall = current_level._get_previous_date(first_day_this_year - relativedelta(days=1))
-                    nextcall = first_day_this_year
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
                 allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
             elif current_level.action_with_unused_accruals == 'postponed' and current_level.postpone_max_days:
                 # Make sure the period was ran until the last day of last year
                 if allocation.nextcall:
-                    allocation.nextcall = last_day_last_year
-                allocation._process_accrual_plans(last_day_last_year, True)
+                    allocation.nextcall = first_day_this_year
+                # date_to should be first day of this year so the prorata amount is computed correctly
+                allocation._process_accrual_plans(first_day_this_year, True)
                 number_of_days = min(allocation.number_of_days - allocation.leaves_taken, current_level.postpone_max_days) + allocation.leaves_taken
                 allocation.write({'number_of_days': number_of_days, 'lastcall': lastcall, 'nextcall': nextcall})
 
@@ -568,6 +570,9 @@ class HolidaysAllocation(models.Model):
         return holidays
 
     def write(self, values):
+        if not bool(values.get('active', True)):
+            if any(allocation.state not in ['draft', 'cancel', 'refuse'] for allocation in self):
+                raise UserError(_('You cannot archive an allocation which is in confirm or validate state.'))
         employee_id = values.get('employee_id', False)
         if values.get('state'):
             self._check_approval_update(values['state'])

@@ -12,6 +12,8 @@ import time
 import traceback
 import warnings
 
+import werkzeug.serving
+
 from . import release
 from . import sql_db
 from . import tools
@@ -24,6 +26,17 @@ def log(logger, level, prefix, msg, depth=None):
     for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
         logger.log(level, indent+line)
         indent=indent_after
+
+
+class WatchedFileHandler(logging.handlers.WatchedFileHandler):
+    def __init__(self, filename):
+        self.errors = None  # py38
+        super().__init__(filename)
+        # Unfix bpo-26789, in case the fix is present
+        self._builtin_open = None
+
+    def _open(self):
+        return open(self.baseFilename, self.mode, encoding=self.encoding, errors=self.errors)
 
 class PostgreSQLHandler(logging.Handler):
     """ PostgreSQL Logging Handler will store logs in the database, by default
@@ -129,8 +142,10 @@ def init_logger():
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
     warnings.filterwarnings('ignore', r'^invalid escape sequence \'?\\.', category=DeprecationWarning)
-    # recordsets are both sequence and set so trigger warning despite no issue
-    warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
+    if sys.version_info[:2] == (3, 9):
+        # recordsets are both sequence and set so trigger warning despite no issue
+        # Only applies to 3.9 as it was fixed in 3.10 see https://bugs.python.org/issue42470
+        warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
     # ignore a bunch of warnings we can't really fix ourselves
     for module in [
         'babel.util', # deprecated parser module, no release yet
@@ -176,7 +191,7 @@ def init_logger():
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
             if os.name == 'posix':
-                handler = logging.handlers.WatchedFileHandler(logf)
+                handler = WatchedFileHandler(logf)
             else:
                 handler = logging.FileHandler(logf)
         except Exception:
@@ -195,6 +210,7 @@ def init_logger():
     else:
         formatter = DBFormatter(format)
         perf_filter = PerfFilter()
+        werkzeug.serving._log_add_style = False
     handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
     logging.getLogger('werkzeug').addFilter(perf_filter)

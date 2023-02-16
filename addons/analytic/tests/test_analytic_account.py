@@ -165,3 +165,27 @@ class TestAnalyticAccount(TransactionCase):
         })
         self.assertEqual(distribution_json, distribution_4.analytic_distribution,
                          "Distribution 4 should be given, as the partner_category_id is better than the company_id")
+
+    def test_analytic_plan_account_child(self):
+        """
+        Check that when an analytic account is set to the third (or more) child,
+        the root plan is correctly retrieved.
+        """
+        self.analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'Parent Plan',
+            'company_id': False,
+        })
+        self.analytic_sub_plan = self.env['account.analytic.plan'].create({
+            'name': 'Sub Plan',
+            'parent_id': self.analytic_plan.id,
+            'company_id': False,
+        })
+        self.analytic_sub_sub_plan = self.env['account.analytic.plan'].create({
+            'name': 'Sub Sub Plan',
+            'parent_id': self.analytic_sub_plan.id,
+            'company_id': False,
+        })
+        self.analytic_account_1 = self.env['account.analytic.account'].create({'name': 'Child Account', 'plan_id': self.analytic_sub_sub_plan.id})
+        plans_json = self.env['account.analytic.plan'].get_relevant_plans()
+        self.assertEqual(2, len(plans_json),
+                         "The parent plan should be available even if the analytic account is set on child of third generation")

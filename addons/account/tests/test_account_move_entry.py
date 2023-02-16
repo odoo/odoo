@@ -441,20 +441,41 @@ class TestAccountMove(AccountTestInvoicingCommon):
             [
                 {
                     'currency_id': self.currency_data['currency'].id,
-                    'amount_currency': 1200.0,
+                    'amount_currency': -1200.0,
                     'debit': 0.0,
-                    'credit': 0.0,
+                    'credit': 400.0,
                 },
                 {
                     'currency_id': self.currency_data['currency'].id,
-                    'amount_currency': -1200.0,
-                    'debit': 0.0,
+                    'amount_currency': 1200.0,
+                    'debit': 400.0,
                     'credit': 0.0,
                 },
             ],
         )
 
-        # Balance and amount currency are totally independant in journal entries if the line has a foreign currency
+        # Change the date to change the currency conversion's rate
+        with Form(move) as move_form:
+            move_form.date = fields.Date.from_string('2017-01-01')
+
+        self.assertRecordValues(
+            move.line_ids.sorted('debit'),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1200.0,
+                    'debit': 0.0,
+                    'credit': 600.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': 1200.0,
+                    'debit': 600.0,
+                    'credit': 0.0,
+                },
+            ],
+        )
+        # You can change the balance manually without changing the currency amount
         with Form(move) as move_form:
             with move_form.line_ids.edit(0) as line_form:
                 line_form.debit = 200
@@ -836,3 +857,53 @@ class TestAccountMove(AccountTestInvoicingCommon):
                     }),
                 ]
             })
+
+    def test_reset_draft_exchange_move(self):
+        """ Ensure you can't reset to draft an exchange journal entry """
+        moves = self.env['account.move'].create([
+            {
+                'date': '2016-01-01',
+                'line_ids': [
+                    Command.create({
+                        'name': "line1",
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'currency_id': self.currency_data['currency'].id,
+                        'balance': 400.0,
+                        'amount_currency': 1200.0,
+                    }),
+                    Command.create({
+                        'name': "line2",
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'balance': -400.0,
+                    }),
+                ]
+            },
+            {
+                'date': '2017-01-01',
+                'line_ids': [
+                    Command.create({
+                        'name': "line1",
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'currency_id': self.currency_data['currency'].id,
+                        'balance': -600.0,
+                        'amount_currency': -1200.0,
+                    }),
+                    Command.create({
+                        'name': "line2",
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'balance': 600.0,
+                    }),
+                ]
+            },
+        ])
+        moves.action_post()
+
+        res = moves.line_ids\
+            .filtered(lambda x: x.account_id == self.company_data['default_account_receivable'])\
+            .reconcile()
+
+        self.assertTrue(res.get('partials'))
+        exchange_diff = res['partials'].exchange_move_id
+        self.assertTrue(exchange_diff)
+        with self.assertRaises(UserError), self.cr.savepoint():
+            exchange_diff.button_draft()
