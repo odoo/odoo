@@ -6,29 +6,20 @@
         <field name="model">sale.advance.payment.inv</field>
         <field name="arch" type="xml">
             <form string="Invoice Sales Order">
-                <p class="oe_grey">
-                    Invoices will be created in draft so that you can review
-                    them before validation.
-                </p>
                 <field name="display_draft_invoice_warning" invisible="1"/>
-                <p class="alert alert-warning" role="alert" attrs="{'invisible': [('display_draft_invoice_warning', '=', False)]}">
-                    The new invoice will deduct draft invoices linked to this sale order.
-                </p>
+                <field name="has_down_payments" invisible="1"/>
+                <div class="alert alert-warning pb-1" role="alert" attrs="{'invisible': [('display_draft_invoice_warning', '=', False)]}">
+                    <p>There are existing <a name="view_draft_invoices" type="object">Draft Invoices</a> for this Sale Order.</p>
+                    <p attrs="{'invisible': [('advance_payment_method', '!=', 'delivered')]}">
+                        The new invoice will deduct draft invoices linked to this sale order.
+                    </p>
+                </div>
                 <group>
                     <field name="sale_order_ids" invisible="1"/>
-                    <field name="has_down_payments" invisible="1"/>
                     <field name="count" attrs="{'invisible': [('count', '=', 1)]}"/>
                     <field name="advance_payment_method" class="oe_inline"
                         widget="radio"
                         attrs="{'invisible': [('count', '&gt;', 1)]}"/>
-                    <label for="deduct_down_payments"
-                        string=""
-                        attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
-                    <div attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"
-                        id="down_payment_details">
-                        <field name="deduct_down_payments" nolabel="1"/>
-                        <label for="deduct_down_payments"/>
-                    </div>
                 </group>
                 <group name="down_payment_specification"
                     attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed', 'percentage'))]}">
@@ -37,6 +28,7 @@
                     <label for="amount"/>
                     <div id="payment_method_details">
                         <field name="currency_id" invisible="1"/>
+                        <field name="display_invoice_amount_warning" invisible="1"/>
                         <field name="fixed_amount"
                             attrs="{'required': [('advance_payment_method', '=', 'fixed')],
                                 'invisible': [('advance_payment_method', '!=', 'fixed')]}"
@@ -46,7 +38,12 @@
                                 'invisible': [('advance_payment_method', '!=', 'percentage')]}"
                             class="oe_inline"/>
                         <span attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}"
-                            class="oe_inline">%</span>
+                            class="oe_inline">% </span>
+                        <span attrs="{'invisible': [('display_invoice_amount_warning', '=', False)]}"
+                              class="oe_inline text-danger"
+                              title="The Down Payment is greater than the amount remaining to be invoiced.">
+                            <i class="fa fa-warning"/>
+                        </span>
                     </div>
                     <field name="deposit_account_id"
                         options="{'no_create': True}"
@@ -56,16 +53,15 @@
                         widget="many2many_tags"
                         attrs="{'invisible': [('product_id', '!=', False)]}"/>
                 </group>
+                <group attrs="{'invisible': [('has_down_payments', '=', False)]}">
+                    <field name="amount_invoiced"/>
+                    <field name="amount_to_invoice"/>
+                </group>
                 <footer>
                     <button name="create_invoices" type="object"
                         id="create_invoice_open"
-                        string="Create and View Invoice"
-                        context="{'open_invoices': True}"
+                        string="Create Draft Invoice"
                         class="btn-primary" data-hotkey="q"/>
-                    <button name="create_invoices" type="object"
-                        id="create_invoice"
-                        string="Create Invoice"
-                        data-hotkey="w"/>
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                 </footer>
             </form>

@@ -332,7 +332,6 @@ class TestReInvoice(TestCommonSaleTimesheet):
             "active_model": 'sale.order',
             "active_ids": [sale_order.id],
             "active_id": sale_order.id,
-            'open_invoices': True,
         }
         # Invoice the 1
         wizard = self.env['sale.advance.payment.inv'].with_context(context).create({

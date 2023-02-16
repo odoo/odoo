@@ -403,3 +403,58 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.receivable_account.id, self.env['account.tax'],   down_pay_amt, 0,              False                         ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
+
+    def test_warning_on_invoice_with_credit_limit(self):
+        # Activate the Credit Limit feature and set a value for partner_a.
+        self.env.company.account_use_credit_limit = True
+        self.partner_a.credit_limit = 1000.0
+
+        # Create and confirm a SO to reach (but not exceed) partner_a's credit limit.
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'order_line': [Command.create({
+                'name': self.company_data['product_order_no'].name,
+                'product_id': self.company_data['product_order_no'].id,
+                'product_uom_qty': 1,
+                'product_uom': self.company_data['product_order_no'].uom_id.id,
+                'price_unit': 1000.0,
+                'tax_id': False,
+            })]
+        })
+
+        # Check that partner_a's credit is 0.0.
+        self.assertEqual(self.partner_a.credit, 0.0)
+
+        # Make sure partner_a's credit includes the newly confirmed SO.
+        sale_order.action_confirm()
+        self.partner_a.invalidate_recordset(['credit'])
+        self.assertEqual(self.partner_a.credit, 1000.0)
+
+        # Create a 50% down payment invoice.
+        self.env['sale.advance.payment.inv'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }).create({
+            'advance_payment_method': 'percentage',
+            'amount': 50,
+            'deposit_account_id': self.revenue_account.id,
+        }).create_invoices()
+
+        # Check that the warning does not appear even though we are creating an invoice
+        # that should bring partner_a's credit above its limit.
+        self.assertEqual(sale_order.invoice_ids.partner_credit_warning, '')
+
+        # Make the down payment invoice amount larger than the Amount to Invoice
+        # and check that the warning appears with the correct amounts,
+        # i.e. 1.500 instead of 2.500 (1.000 SO + 1.500 down payment invoice).
+        sale_order.invoice_ids.invoice_line_ids.quantity = 3
+        self.assertEqual(
+            sale_order.invoice_ids.partner_credit_warning,
+            "partner_a has reached its Credit Limit of : $\xa01,000.00\n"
+            "Total amount due (including this document) : $\xa01,500.00"
+        )
