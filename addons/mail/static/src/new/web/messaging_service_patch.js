@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { markup } from "@odoo/owl";
 import { Messaging, messagingService } from "@mail/new/core/messaging_service";
 import { session } from "@web/session";
 import { createLocalId } from "@mail/new/utils/misc";
@@ -58,50 +57,10 @@ patch(Messaging.prototype, "mail/web", {
         });
         this.isReady.resolve();
     },
-    handleNotification(notifications) {
-        for (const notif of notifications) {
-            if (notif.type === "mail.channel/new_message") {
-                const { id, message: messageData } = notif.payload;
-                const channel = this.store.threads[createLocalId("mail.channel", id)];
-                Promise.resolve(channel ?? this.threadService.joinChat(messageData.author.id)).then(
-                    (channel) => {
-                        if ("parentMessage" in messageData && messageData.parentMessage.body) {
-                            messageData.parentMessage.body = markup(messageData.parentMessage.body);
-                        }
-                        const data = Object.assign(messageData, {
-                            body: markup(messageData.body),
-                        });
-                        const message = this.messageService.insert({
-                            ...data,
-                            res_id: channel.id,
-                            model: channel.model,
-                        });
-                        if (channel.chatPartnerId !== this.store.partnerRoot.id) {
-                            if (!this.presence.isOdooFocused() && channel.isChatChannel) {
-                                this.notifyOutOfFocusMessage(message, channel);
-                            }
-
-                            if (channel.type !== "channel" && !this.store.guest) {
-                                // disabled on non-channel threads and
-                                // on `channel` channels for performance reasons
-                                this.threadService.markAsFetched(channel);
-                            }
-                        }
-                        this.chatWindowService.insert({ thread: channel });
-                        if (
-                            channel.composer.isFocused &&
-                            channel.mostRecentNonTransientMessage &&
-                            !this.store.guest &&
-                            channel.mostRecentNonTransientMessage === channel.mostRecentMsg
-                        ) {
-                            this.threadService.markAsRead(channel);
-                        }
-                    }
-                );
-                return;
-            }
-        }
-        this._super(notifications);
+    async _handleNotificationNewMessage(notif) {
+        await this._super(notif);
+        const channel = this.store.threads[createLocalId("mail.channel", notif.payload.id)];
+        this.chatWindowService.insert({ thread: channel });
     },
 });
 

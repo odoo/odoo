@@ -309,46 +309,7 @@ export class Messaging {
                     }
                     break;
                 case "mail.channel/new_message":
-                    {
-                        const { id, message: messageData } = notif.payload;
-                        const channel = this.store.threads[createLocalId("mail.channel", id)];
-                        Promise.resolve(
-                            channel ?? this.threadService.joinChat(messageData.author.id)
-                        ).then((channel) => {
-                            if ("parentMessage" in messageData && messageData.parentMessage.body) {
-                                messageData.parentMessage.body = markup(
-                                    messageData.parentMessage.body
-                                );
-                            }
-                            const data = Object.assign(messageData, {
-                                body: markup(messageData.body),
-                            });
-                            const message = this.messageService.insert({
-                                ...data,
-                                res_id: channel.id,
-                                model: channel.model,
-                            });
-                            if (channel.chatPartnerId !== this.store.partnerRoot?.id) {
-                                if (!this.presence.isOdooFocused() && channel.isChatChannel) {
-                                    this.notifyOutOfFocusMessage(message, channel);
-                                }
-
-                                if (channel.type !== "channel" && !this.store.guest) {
-                                    // disabled on non-channel threads and
-                                    // on `channel` channels for performance reasons
-                                    this.threadService.markAsFetched(channel);
-                                }
-                            }
-                            if (
-                                channel.composer.isFocused &&
-                                channel.mostRecentNonTransientMessage &&
-                                !this.store.guest &&
-                                channel.mostRecentNonTransientMessage === channel.mostRecentMsg
-                            ) {
-                                this.threadService.markAsRead(channel);
-                            }
-                        });
-                    }
+                    this._handleNotificationNewMessage(notif);
                     break;
                 case "mail.channel/leave":
                     {
@@ -505,8 +466,9 @@ export class Messaging {
                 }
                 case "mail.channel.member/typing_status": {
                     const isTyping = notif.payload.isTyping;
-                    const channel =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.channel.id)];
+                    const channel = this.store.threads[
+                        createLocalId("mail.channel", notif.payload.channel.id)
+                    ];
                     if (!channel) {
                         return;
                     }
@@ -530,8 +492,9 @@ export class Messaging {
                     break;
                 }
                 case "mail.channel/unpin": {
-                    const thread =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.id)];
+                    const thread = this.store.threads[
+                        createLocalId("mail.channel", notif.payload.id)
+                    ];
                     if (!thread) {
                         return;
                     }
@@ -557,6 +520,45 @@ export class Messaging {
                     }
                     break;
             }
+        }
+    }
+
+    async _handleNotificationNewMessage(notif) {
+        const { id, message: messageData } = notif.payload;
+        let channel = this.store.threads[createLocalId("mail.channel", id)];
+        if (!channel) {
+            channel = await this.threadService.joinChat(messageData.author.id);
+        }
+
+        if ("parentMessage" in messageData && messageData.parentMessage.body) {
+            messageData.parentMessage.body = markup(messageData.parentMessage.body);
+        }
+        const data = Object.assign(messageData, {
+            body: markup(messageData.body),
+        });
+        const message = this.messageService.insert({
+            ...data,
+            res_id: channel.id,
+            model: channel.model,
+        });
+        if (channel.chatPartnerId !== this.store.partnerRoot?.id) {
+            if (!this.presence.isOdooFocused() && channel.isChatChannel) {
+                this.notifyOutOfFocusMessage(message, channel);
+            }
+
+            if (channel.type !== "channel" && !this.store.guest) {
+                // disabled on non-channel threads and
+                // on `channel` channels for performance reasons
+                this.threadService.markAsFetched(channel);
+            }
+        }
+        if (
+            channel.composer.isFocused &&
+            channel.mostRecentNonTransientMessage &&
+            !this.store.guest &&
+            channel.mostRecentNonTransientMessage === channel.mostRecentMsg
+        ) {
+            this.threadService.markAsRead(channel);
         }
     }
 
