@@ -163,14 +163,13 @@ class SaleOrderLine(models.Model):
         # kits that are currently in delivery
         bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
         if bom:
-            if not self.product_uom_qty or (previous_product_uom_qty and not previous_product_uom_qty.get(self.id, 0.0)):
-                return (previous_product_uom_qty and previous_product_uom_qty.get(self.id, 0.0)) or self.qty_delivered
             moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped)
             filters = {
                 'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
                 'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
             }
-            order_qty = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id)
+            order_qty = previous_product_uom_qty.get(self.id, 0) if previous_product_uom_qty else self.product_uom_qty
+            order_qty = self.product_uom._compute_quantity(order_qty, bom.product_uom_id)
             qty = moves._compute_kit_quantities(self.product_id, order_qty, bom, filters)
             return bom.product_uom_id._compute_quantity(qty, self.product_uom)
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
