@@ -145,3 +145,18 @@ export function useDebounced(callback, delay, immediate = false) {
     onWillUnmount(() => debounced.cancel());
     return debounced;
 }
+
+/**
+ * Hook that returns a throttled for animation version of the given function,
+ * and cancels the potential pending execution on willUnmount.
+ * @see throttleForAnimation
+ * @template {Function} T
+ * @param {T} func the function to throttle
+ * @returns {T & { cancel: () => void }} the throttled function
+ */
+export function useThrottleForAnimation(func) {
+    const component = useComponent();
+    const throttledForAnimation = throttleForAnimation(func.bind(component));
+    onWillUnmount(() => throttledForAnimation.cancel());
+    return throttledForAnimation;
+}

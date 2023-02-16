@@ -9,7 +9,7 @@ import {
     useState,
 } from "@odoo/owl";
 import { shallowEqual } from "@web/core/utils/arrays";
-import { throttleForAnimation } from "@web/core/utils/timing";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 /**
  * @template T
@@ -89,7 +89,7 @@ export function useVirtual({ getItems, scrollableRef, initialScroll, getItemHeig
             computeVirtualItems();
         }
     });
-    const throttledCompute = throttleForAnimation(computeVirtualItems);
+    const throttledCompute = useThrottleForAnimation(computeVirtualItems);
     const scrollListener = (/** @type {Event & { target: Element }} */ ev) => {
         current.scroll.top = ev.target.scrollTop;
         throttledCompute();
