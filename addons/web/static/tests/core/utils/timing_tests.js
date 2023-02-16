@@ -1,12 +1,22 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import {
+    debounce,
+    throttleForAnimation,
+    useDebounced,
+    useThrottleForAnimation,
+} from "@web/core/utils/timing";
 import {
     makeDeferred,
     patchWithCleanup,
     mockTimeout,
     mockAnimationFrame,
+    mount,
+    getFixture,
+    click,
+    destroy,
 } from "../../helpers/utils";
 
 QUnit.module("utils", () => {
@@ -173,5 +183,69 @@ QUnit.module("utils", () => {
         assert.verifySteps(["4"], "last call is executed on the trailing edge");
         execRegisteredAnimationFrames();
         assert.verifySteps([], "has not been called");
+    });
+
+    QUnit.module("timing > hooks");
+
+    QUnit.test("useDebounced: cancels on comp destroy", async function (assert) {
+        const { advanceTime } = mockTimeout();
+        class C extends Component {
+            static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+            setup() {
+                this.debounced = useDebounced(() => assert.step("debounced"), 1000);
+            }
+        }
+        const fixture = getFixture();
+        const comp = await mount(C, fixture);
+        assert.verifySteps([]);
+        assert.containsOnce(fixture, "button.c");
+
+        await click(fixture, "button.c");
+        await advanceTime(999);
+        assert.verifySteps([]);
+        await advanceTime(1);
+        assert.verifySteps(["debounced"]);
+
+        await click(fixture, "button.c");
+        await advanceTime(999);
+        assert.verifySteps([]);
+        destroy(comp);
+        await advanceTime(1);
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("useThrottleForAnimation: cancels on comp destroy", async function (assert) {
+        const { advanceFrame, execRegisteredAnimationFrames } = mockAnimationFrame();
+        class C extends Component {
+            static template = xml`<button class="c" t-on-click="throttled">C</button>`;
+            setup() {
+                this.throttled = useThrottleForAnimation(() => assert.step("throttled"), 1000);
+            }
+        }
+        const fixture = getFixture();
+        const comp = await mount(C, fixture);
+        assert.verifySteps([]);
+        assert.containsOnce(fixture, "button.c");
+
+        // Without destroy
+        await click(fixture, "button.c");
+        assert.verifySteps(["throttled"]);
+        await click(fixture, "button.c");
+        assert.verifySteps([]);
+        await advanceFrame();
+        assert.verifySteps(["throttled"]);
+
+        // Clean restart
+        execRegisteredAnimationFrames();
+        assert.verifySteps([]);
+
+        // With destroy
+        await click(fixture, "button.c");
+        assert.verifySteps(["throttled"]);
+        await click(fixture, "button.c");
+        assert.verifySteps([]);
+        destroy(comp);
+        await advanceFrame();
+        assert.verifySteps([]);
     });
 });

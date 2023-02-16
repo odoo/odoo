@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
-import { throttleForAnimation } from "@web/core/utils/timing";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 const {
     useSubEnv,
@@ -17,12 +17,16 @@ export class MassMailingFullWidthViewController extends formView.Controller {
             onIframeUpdated: () => this._updateIframe(),
             mailingFilterTemplates: true,
         });
-        this._resizeObserver =  new ResizeObserver(throttleForAnimation(() => {
+        const throttledOnResizeObserved = useThrottleForAnimation(() => {
             this._resizeMailingEditorIframe();
             this._repositionMailingEditorSidebar();
-        }));
+        });
+        this._resizeObserver = new ResizeObserver(throttledOnResizeObserved);
+        const throttledRepositionSidebar = useThrottleForAnimation(
+            this._repositionMailingEditorSidebar.bind(this)
+        );
         onMounted(() => {
-            $('.o_content').on('scroll.repositionMailingEditorSidebar', throttleForAnimation(this._repositionMailingEditorSidebar.bind(this)));
+            $('.o_content').on('scroll.repositionMailingEditorSidebar', throttledRepositionSidebar);
         });
         onWillUnmount(() => {
             $('.o_content').off('.repositionMailingEditorSidebar');
