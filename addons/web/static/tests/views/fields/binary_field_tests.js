@@ -415,4 +415,19 @@ QUnit.module("Fields", (hooks) => {
             "93.43 Bytes"
         );
     });
+
+    QUnit.test("Binary field for new record has no download button", async function (assert) {
+        serverData.models.partner.fields.document.default = BINARY_FILE;
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="document" filename="foo"/>
+                </form>
+            `,
+        });
+        assert.containsNone(target, "button.fa-download");
+    });
 });
