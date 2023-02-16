@@ -30,12 +30,12 @@ patch(MockServer.prototype, 'note/controller/note', {
      * @private
      */
     _mockRouteNoteNew(values) {
-        const noteId = this.pyEnv['note.note'].create({ memo: values['note'] });
+        const noteId = this.pyEnv['project.task'].create({ description: values['note'] });
         if (values['date_deadline']) {
             this.pyEnv['mail.activity'].create({
                 date_deadline: date_to_str(new Date(values['date_deadline'])),
                 note_id: noteId,
-                res_model: 'note.note',
+                res_model: 'project.task',
             });
         }
     },

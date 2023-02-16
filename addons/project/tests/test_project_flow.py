@@ -368,7 +368,10 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
             'user_ids': [Command.link(self.env.user.id)],
         })
         stages = task._get_default_personal_stage_create_vals(self.env.user.id)
-        self.assertEqual(task.personal_stage_id.stage_id.name, stages[0].get('name'), "tasks assigned to the current user should be in the right default stage")
+        #Simulate a visit on the view My Tasks
+        task.read_group([['id', '=', task.id]], [], ['personal_stage_type_ids'])
+        task._compute_personal_stage_type_id()
+        self.assertEqual(task.personal_stage_type_id.name, stages[0].get('name'), "tasks assigned to the current user should be in the right default stage")
 
     def test_send_rating_review(self):
         project_settings = self.env["res.config.settings"].create({'group_project_rating': True})

@@ -14,17 +14,17 @@ patch(MockServer.prototype, 'note/models/res_users', {
      */
     _mockResUsersSystrayGetActivities() {
         const activities = this._super(...arguments);
-        const noteCount = this.pyEnv['note.note'].searchCount([['user_id', '=', this.currentUserId]]);
+        const noteCount = this.pyEnv['project.task'].searchCount([['user_id', '=', this.currentUserId]]);
         if (noteCount) {
-            const noteIndex = activities.findIndex(act => act['model'] === 'note.note');
+            const noteIndex = activities.findIndex(act => act['model'] === 'project.task');
             if (noteIndex) {
-                activities[noteIndex]['name'] = 'Notes';
+                activities[noteIndex]['name'] = 'Tasks';
             } else {
                 activities.push({
-                    id: 'note.note', // for simplicity
+                    id: 'project.task', // for simplicity
                     type: 'activity',
-                    name: 'Notes',
-                    model: 'note.note',
+                    name: 'Tasks',
+                    model: 'project.task',
                     planned_count: 0,
                     today_count: 0,
                     overdue_count: 0,

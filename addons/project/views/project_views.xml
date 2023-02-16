@@ -1174,7 +1174,9 @@
                                 options="{'no_open': True, 'no_quick_create': True}"
                                 widget="many2many_avatar_user"
                                 domain="[('share', '=', False), ('active', '=', True)]"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color', 'no_create_edit': True}"
+                                   context="{'project_id': project_id}"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -1808,7 +1810,7 @@
             <field name="model_id" ref="project.model_project_task"/>
             <field name="state">code</field>
             <field name="code">
-                model._ensure_personal_stages(); action = env["ir.actions.actions"]._for_xml_id("project.action_view_my_task")
+                action = env["ir.actions.actions"]._for_xml_id("project.action_view_my_task")
             </field>
         </record>
 

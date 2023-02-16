@@ -3,7 +3,7 @@
     <!-- note Stage Form View -->
     <record id="view_note_stage_form" model="ir.ui.view">
       <field name="name">note.stage.form</field>
-      <field name="model">note.stage</field>
+      <field name="model">project.task.type</field>
       <field name="arch" type="xml">
         <form string="Stage of Notes">
           <group>
@@ -17,7 +17,7 @@
     <!-- note Stage Tree View -->
     <record id="view_note_stage_tree" model="ir.ui.view">
       <field name="name">note.stage.tree</field>
-      <field name="model">note.stage</field>
+      <field name="model">project.task.type</field>
       <field name="arch" type="xml">
         <tree string="Stages of Notes" editable="bottom">
             <field name="sequence" widget="handle"/>
@@ -30,15 +30,16 @@
     <!-- note Stage Action -->
     <record id="action_note_stage" model="ir.actions.act_window">
         <field name="name">Stages</field>
-        <field name="res_model">note.stage</field>
+        <field name="res_model">project.task.type</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('user_id','=',uid)]</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="context">{'default_user_id': uid}</field>
     </record>
 
     <!-- note Tag Form View -->
     <record id="note_tag_view_form" model="ir.ui.view">
       <field name="name">note.tag.form</field>
-      <field name="model">note.tag</field>
+      <field name="model">project.tags</field>
       <field name="arch" type="xml">
         <form string="Tags">
           <group>
@@ -51,7 +52,7 @@
     <!-- note Tag Tree View -->
     <record id="note_tag_view_tree" model="ir.ui.view">
       <field name="name">note.tag.tree</field>
-      <field name="model">note.tag</field>
+      <field name="model">project.tags</field>
       <field name="arch" type="xml">
         <tree string="Tags" editable="bottom">
             <field name="name"/>
@@ -62,7 +63,7 @@
     <!-- note Tag Action -->
     <record id="note_tag_action" model="ir.actions.act_window">
       <field name="name">Tags</field>
-      <field name="res_model">note.tag</field>
+      <field name="res_model">project.tags</field>
       <field name="view_mode">tree,form</field>
       <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
@@ -74,16 +75,18 @@
     <!-- New note Kanban View -->
     <record id="view_note_note_kanban" model="ir.ui.view">
       <field name="name">note.note.kanban</field>
-      <field name="model">note.note</field>
+      <field name="model">project.task</field>
+      <field name="priority">999</field>
       <field name="arch" type="xml">
-        <kanban default_group_by="stage_id" class="o_kanban_small_column">
+          <kanban
+              default_group_by="personal_stage_type_ids"
+              class="oe_notes oe_kanban_quickcreate_textarea o_kanban_small_column"
+              js_class="project_task_to_do_kanban">
           <field name="color"/>
           <field name="sequence"/>
           <field name="name"/>
-          <field name="stage_id"/>
-          <field name="open"/>
-          <field name="memo"/>
-          <field name="date_done"/>
+          <field name="active"/>
+          <field name="description"/>
           <field name="message_partner_ids"/>
           <field name="activity_ids" />
           <field name="activity_state" />
@@ -99,19 +102,18 @@
               <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
 
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-
                 <div t-attf-class="d-flex #{noteHasFollowers ? 'flex-wrap' : 'flex-nowrap'}">
                   <div class="d-flex flex-grow-1">
                     <span class="me-2">
-                      <a name="action_close" type="object" t-if="record.open.raw_value">
+                      <a name="action_close" type="object" t-if="record.active.raw_value">
                         <i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/>
                       </a>
-                      <a name="action_open" type="object" t-if="!record.open.raw_value">
+                      <a name="action_open" type="object" t-if="!record.active.raw_value">
                         <i class="fa fa-undo" role="img" aria-label="Closed" title="Closed"/>
                       </a>
                     </span>
 
-                    <span t-attf-class="oe_kanban_content flex-grow-1 text-break #{record.open.raw_value ? '' : 'note_text_line_through'}">
+                    <span t-attf-class="oe_kanban_content flex-grow-1 text-break #{record.active.raw_value ? '' : 'note_text_line_through'}">
                       <!-- title -->
                       <field name="name"/>
                     </span>
@@ -144,12 +146,12 @@
     <!-- New note Tree View -->
     <record id="view_note_note_tree" model="ir.ui.view">
       <field name="name">note.note.tree</field>
-      <field name="model">note.note</field>
+      <field name="model">project.task</field>
       <field name="arch" type="xml">
         <tree string="Stages">
           <field name="name"/>
-          <field name="open"/>
-          <field name="stage_id"/>
+          <field name="active"/>
+          <field name="personal_stage_type_id"/>
           <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
           <field name="activity_ids" widget="list_activity" optional="show"/>
         </tree>
@@ -159,16 +161,20 @@
     <!-- New note Form View -->
     <record id="view_note_note_form" model="ir.ui.view">
         <field name="name">note.note.form</field>
-        <field name="model">note.note</field>
+        <field name="model">project.task</field>
         <field name="arch" type="xml">
             <form string="Note" class="o_note_form_view">
                 <header>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
+                    <field name="name" placeholder="Name"/>
+                    <field name="tag_ids"
+                           widget="many2many_tags"
+                           options="{'color_field': 'color'}"
+                           placeholder="Tags"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
+                    <field name="personal_stage_type_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                    <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
+                    <field name="description" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -182,13 +188,13 @@
     <!-- Search note  -->
     <record id="view_note_note_filter" model="ir.ui.view">
       <field name="name">note.note.search</field>
-      <field name="model">note.note</field>
+      <field name="model">project.task</field>
       <field name="arch" type="xml">
         <search string="Notes">
-          <field name="memo" string="Note"/>
+          <field name="description" string="Note"/>
           <field name="tag_ids"/>
-          <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
-          <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
+          <filter name="active_true" string="Active" domain="[('active', '=', True)]"/>
+          <filter name="active_false" string="Archive" domain="[('active', '=', False)]"/>
           <filter invisible="1" string="Late Activities" name="activities_overdue"
                   domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                   help="Show all records which has next action date is before today"/>
@@ -198,19 +204,23 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
           <group expand="0" string="Group By">
-            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
+            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'personal_stage_type_id'}"/>
           </group>
         </search>
       </field>
     </record>
 
-    <!-- Action -->
     <record id="action_note_note" model="ir.actions.act_window">
       <field name="name">Notes</field>
-      <field name="res_model">note.note</field>
+      <field name="res_model">project.task</field>
+      <field name="domain">[('user_ids', 'in', [uid])]</field>
       <field name="view_mode">kanban,tree,form,activity</field>
+      <field name="view_ids"
+             eval="[(5, 0, 0),
+                   (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_note_note_kanban')}),
+                   (0, 0, {'view_mode': 'tree', 'view_id': ref('view_note_note_tree')}),
+                   (0, 0, {'view_mode': 'form', 'view_id': ref('view_note_note_form')})]"/>
       <field name="search_view_id" ref="view_note_note_filter"/>
-      <field name="context">{}</field>
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new personal note

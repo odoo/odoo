@@ -420,13 +420,13 @@
         </function>
 
         <!-- Personal stages for SOL tasks -->
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id.sale_line_id', '=', ref('sale_line_13')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_admin_2')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_admin_02')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id.sale_line_id', '=', ref('sale_line_22')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_demo_1')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_line_22'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_demo_01')}"/>
         </function>
 
         <!-- Activities for SOL tasks -->
@@ -1254,51 +1254,51 @@
         </record>
 
         <!-- Admin personal stages -->
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_agr_task_3')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_admin_1')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_agr_task_3'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_admin_01')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_agr_task_4')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_admin_2')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_agr_task_4'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_admin_02')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_dpc_task_1')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_admin_3')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_dpc_task_1'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_admin_03')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_dpc_task_4')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_admin_3')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_dpc_task_4'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_admin_03')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_agr_task_1')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_admin_5')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_agr_task_1'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_admin_05')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_agr_task_2')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_admin_5')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_agr_task_2'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_admin_05')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_dpc_task_2')), ('user_id', '=', ref('base.user_admin'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_admin_5')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_dpc_task_2'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_admin_05')}"/>
         </function>
 
         <!-- Demo personal stages -->
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_dpc_task_6')), ('user_id', '=', ref('base.user_demo'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_demo_2')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_dpc_task_6'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_demo_02')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_dpc_task_3')), ('user_id', '=', ref('base.user_demo'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_demo_3')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_dpc_task_3'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_demo_03')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_dpc_task_2')), ('user_id', '=', ref('base.user_demo'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_demo_5')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_dpc_task_2'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_demo_05')}"/>
         </function>
-        <function model="project.task.stage.personal" name="write">
-            <value model="project.task.stage.personal" search="[('task_id', '=', ref('project_dpc_task_5')), ('user_id', '=', ref('base.user_demo'))]"/>
-            <value eval="{'stage_id': ref('project.project_personal_stage_demo_5')}"/>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('id', '=', ref('project_dpc_task_5'))]"/>
+            <value eval="{'personal_stage_type_id': ref('note.personal_stage_demo_05')}"/>
         </function>
 
 

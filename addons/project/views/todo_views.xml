@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Override to take project_id field into account-->
+    <record id="note.action_note_note" model="ir.actions.act_window">
+        <field name="domain">[('user_ids', 'in', [uid]), ('project_id', '=', False)]</field>
+    </record>
+</odoo>

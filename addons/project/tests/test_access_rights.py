@@ -94,7 +94,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         with self.assertRaises(AccessError, msg="%s should not be able to write on the task" % self.env.user.name):
             self.task.with_user(self.env.user).name = "Paint the world in black & white"
 
-    @users('Internal user', 'Portal user')
+    @users('Portal user')
     def test_task_no_create(self):
         with self.assertRaises(AccessError, msg="%s should not be able to create a task" % self.env.user.name):
             self.create_task("Archive the world, it's not needed anymore")
@@ -342,11 +342,22 @@ class TestAccessRightsPrivateTask(TestAccessRights):
         values = {'name': name, 'user_ids': [Command.set(user.ids)], **kwargs}
         return self.env['project.task'].with_user(user).create(values)
 
-    @users('Internal user', 'Portal user')
-    def test_internal_cannot_crud_private_task(self):
+    @users('Portal user')
+    def test_portal_user_cannot_crud_private_task(self):
         with self.assertRaises(AccessError):
             self.create_private_task('Private task')
 
+        with self.assertRaises(AccessError):
+            self.private_task.with_user(self.env.user).write({'name': 'Test write'})
+
+        with self.assertRaises(AccessError):
+            self.private_task.with_user(self.env.user).unlink()
+
+        with self.assertRaises(AccessError):
+            self.private_task.with_user(self.env.user).read(['name'])
+
+    @users('Internal user')
+    def test_internal_cannot_rud_private_task(self):
         with self.assertRaises(AccessError):
             self.private_task.with_user(self.env.user).write({'name': 'Test write'})
 

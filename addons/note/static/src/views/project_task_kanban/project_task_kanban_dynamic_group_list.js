@@ -10,7 +10,7 @@ export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
         if (context.createPersonalStageGroup) {
             context.default_user_id = context.uid;
             delete context.createPersonalStageGroup;
-            delete context.default_project_id;
+            delete context.default_project_id; //Only appears in project but the cost of overriding the custom Kanban view just to add this line in project doesn't worth it 
         }
         return context;
     }
