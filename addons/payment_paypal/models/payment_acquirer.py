@@ -50,22 +50,6 @@ class PaymentAcquirer(models.Model):
         else:
             return 'https://www.sandbox.paypal.com/cgi-bin/webscr'
 
-    def _paypal_send_configuration_reminder(self):
-        template = self.env.ref(
-            'payment_paypal.mail_template_paypal_invite_user_to_configure', raise_if_not_found=False
-        )
-        if template:
-            render_template = template._render({'acquirer': self}, engine='ir.qweb')
-            mail_body = self.env['mail.render.mixin']._replace_local_links(render_template)
-            mail_values = {
-                'body_html': mail_body,
-                'subject': _("Add your PayPal account to Odoo"),
-                'email_to': self.paypal_email_account,
-                'email_from': self.create_uid.email_formatted,
-                'author_id': self.create_uid.partner_id.id,
-            }
-            self.env['mail.mail'].sudo().create(mail_values).send()
-
     def _get_default_payment_method_id(self):
         self.ensure_one()
         if self.provider != 'paypal':
