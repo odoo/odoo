@@ -401,7 +401,7 @@ class SaleOrder(models.Model):
     @api.depends('partner_id')
     def _compute_user_id(self):
         for order in self:
-            if not order.user_id:
+            if order.partner_id and not order.user_id:
                 order.user_id = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id or \
                     (self.user_has_groups('sales_team.group_sale_salesman') and self.env.user)
 
