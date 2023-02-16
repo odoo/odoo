@@ -3,6 +3,7 @@
 
 from datetime import datetime
 
+from odoo import Command
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
@@ -96,6 +97,55 @@ class TestAccessRights(TransactionCase):
         [private_location, public_location] = self.read_event(self.raoul, private + public, 'location')
         self.assertEqual(private_location, False, "Private value should be obfuscated")
         self.assertEqual(public_location, 'In Hell', "Public value should not be obfuscated")
+
+    def test_privacy_and_show_as(self):
+        """
+        Simulate the "Everyone's calendar" option on the calendar dashboard.
+        Check the privacy and show as combinations.
+        """
+        event = self.env['calendar.event'].create([
+            {
+                'user_id': self.john.id,
+                'partner_ids': [Command.link(self.john.partner_id.id)],
+                'name': 'public/busy',
+                'privacy': 'public',
+                'show_as': 'busy',
+            },
+            {
+                'user_id': self.john.id,
+                'partner_ids': [Command.link(self.john.partner_id.id)],
+                'name': 'public/free',
+                'privacy': 'public',
+                'show_as': 'free',
+            },
+            {
+                'user_id': self.john.id,
+                'partner_ids': [Command.link(self.john.partner_id.id)],
+                'name': 'private/busy',
+                'privacy': 'private',
+                'show_as': 'busy',
+            },
+            {
+                'user_id': self.john.id,
+                'partner_ids': [Command.link(self.john.partner_id.id)],
+                'name': 'private/free',
+                'privacy': 'private',
+                'show_as': 'free',
+            },
+        ])
+
+        data_john = self.env['calendar.event'].with_user(self.john).search_read([('id', 'in', event.ids)])
+        john_event_name = [ev.display_name for ev in self.env['calendar.event'].browse([d['id'] for d in data_john])]
+        self.assertEqual(len(data_john), 4)
+        self.assertEqual(['public/busy', 'public/free (free)', 'private/busy', 'private/free (free)'], john_event_name)
+
+        # Clear the cache otherwise some information will not be updated for the other user
+        self.env.cache.clear()
+
+        data_raoul = self.env['calendar.event'].with_user(self.raoul).search_read([('id', 'in', event.ids)])
+        raoul_event_name = [ev.display_name for ev in self.env['calendar.event'].browse([d['id'] for d in data_raoul])]
+        self.assertEqual(len(data_raoul), 3)
+        self.assertEqual(['public/busy', 'public/free (free)', 'Busy'], raoul_event_name)
 
     def test_read_group_public(self):
         event = self.create_event(self.john)

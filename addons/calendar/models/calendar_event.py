@@ -481,6 +481,29 @@ class Meeting(models.Model):
             return super(Meeting, self.with_context(prefetch_fields=False))._compute_field_value(field)
         return super()._compute_field_value(field)
 
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        """
+        Complete the domain to respect privacy
+            - public + busy --> ok
+            - public + free --> ok
+            - private + busy --> ok (will be obfuscated)
+            - private + free --> ok if we are the user of the event
+        """
+        privacy_domain = [
+            '|',
+                ['privacy', '=', 'public'],
+                '&',
+                    ['privacy', '=', 'private'],
+                    '|',
+                        ['show_as', '=', 'busy'],
+                        '&',
+                            ['show_as', '=', 'free'],
+                            ['user_id', '=', self.env.user.id],
+        ]
+        domain = AND([domain, privacy_domain])
+        return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
+
     def _read(self, fields):
         if self.env.is_system():
             super()._read(fields)
@@ -609,9 +632,13 @@ class Meeting(models.Model):
         )
 
         shown = self - hidden
-        shown_names = super(Meeting, shown).name_get()
+        shown_free = shown.filtered(lambda e: e.show_as == 'free')
+        shown_busy = shown - shown_free
+        shown_free_names = super(Meeting, shown_free).name_get()
+        shown_busy_names = super(Meeting, shown_busy).name_get()
+        shown_free_names = [(eid, name + _(' (free)')) for eid, name in shown_free_names]
         obfuscated_names = [(eid, _('Busy')) for eid in hidden.ids]
-        return shown_names + obfuscated_names
+        return shown_busy_names + shown_free_names + obfuscated_names
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
