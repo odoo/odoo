@@ -2731,11 +2731,13 @@ export class OdooEditor extends EventTarget {
             }
         }
         if (this.options.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
-            if (show !== undefined && !this.isMobile) {
-                this.toolbar.style.visibility = show ? 'visible' : 'hidden';
-            }
-            if (show === false) {
-                return;
+            if (!this.isMobile) {
+                if (show !== undefined) {
+                    this.toolbar.style.visibility = show ? 'visible' : 'hidden';
+                }
+                if (show === false) {
+                    return;
+                }
             }
         }
         if (!this.isSelectionInEditable(sel)) {
@@ -2766,7 +2768,9 @@ export class OdooEditor extends EventTarget {
                 } else {
                     isStateTrue = this.document.queryCommandState(commandState)
                 }
-                button.classList.toggle('active', isStateTrue);
+                if (button) {
+                    button.classList.toggle('active', isStateTrue);
+                }
                 const newClass = `fa-align-${direction}`;
                 paragraphDropdownButton.classList.toggle(newClass, isStateTrue);
             }
