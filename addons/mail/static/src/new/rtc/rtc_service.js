@@ -121,7 +121,7 @@ export class Rtc {
         });
         void proxyBlur.useBlur;
         this.ringingThreads = reactive([], () => this.onRingingThreadsChange());
-        this.ringingThreads.length;
+        void this.ringingThreads.length;
         this.store.ringingThreads = this.ringingThreads;
         const proxyVoiceActivation = reactive(this.userSettingsService, async () => {
             await this.linkVoiceActivation();
@@ -140,28 +140,31 @@ export class Rtc {
             void proxyAudioInputDevice.audioInputDeviceId;
         });
         void proxyAudioInputDevice.audioInputDeviceId;
-        this.env.bus.addEventListener("THREAD-SERVICE:UPDATE_RTC_SESSIONS", ({ detail: { commands = [], record, thread } }) => {
-            if (record) {
-                const singleSession = this.insertSession(record);
-                thread.rtcSessions[singleSession.id] = singleSession;
-            }
-            for (const command of commands) {
-                const sessionsData = command[1];
-                switch (command[0]) {
-                    case "insert-and-unlink":
-                        for (const rtcSessionData of sessionsData) {
-                            this.deleteSession(rtcSessionData.id);
-                        }
-                        break;
-                    case "insert":
-                        for (const rtcSessionData of sessionsData) {
-                            const session = this.insertSession(rtcSessionData);
-                            thread.rtcSessions[session.id] = session;
-                        }
-                        break;
+        this.env.bus.addEventListener(
+            "THREAD-SERVICE:UPDATE_RTC_SESSIONS",
+            ({ detail: { commands = [], record, thread } }) => {
+                if (record) {
+                    const session = this.insertSession(record);
+                    thread.rtcSessions[session.id] = session;
+                }
+                for (const command of commands) {
+                    const sessionsData = command[1];
+                    switch (command[0]) {
+                        case "insert-and-unlink":
+                            for (const rtcSessionData of sessionsData) {
+                                this.deleteSession(rtcSessionData.id);
+                            }
+                            break;
+                        case "insert":
+                            for (const rtcSessionData of sessionsData) {
+                                const session = this.insertSession(rtcSessionData);
+                                thread.rtcSessions[session.id] = session;
+                            }
+                            break;
+                    }
                 }
             }
-        });
+        );
 
         browser.addEventListener("keydown", (ev) => {
             if (

@@ -130,10 +130,6 @@ export class Call extends Component {
         browser.clearTimeout(this.overlayTimeout);
     }
 
-    onClickMain() {
-        this.showOverlay();
-    }
-
     showOverlay() {
         this.state.overlay = true;
         browser.clearTimeout(this.overlayTimeout);
