@@ -1158,6 +1158,82 @@ QUnit.module("MockServer", (hooks) => {
         ]);
     });
 
+    QUnit.test("performRPC: read_group with array_agg on id", async function (assert) {
+        const server = new MockServer(data, {});
+        const result1 = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["aggregateLabel:array_agg(id)"],
+                domain: [],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result1, [
+            {
+                __count: 6,
+                aggregateLabel: [1, 2, 3, 4, 5, 6],
+            },
+        ]);
+        const result2 = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["id:array_agg"],
+                domain: [["id", "in", [2, 3, 5]]],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result2, [
+            {
+                __count: 3,
+                id: [2, 3, 5],
+            },
+        ]);
+    });
+
+    QUnit.test(
+        "performRPC: read_group with array_agg on an integer field",
+        async function (assert) {
+            const server = new MockServer(data, {});
+            const aggregateValue = [12, 1, 17, 2, 0, 42];
+            const result1 = await server.performRPC("", {
+                model: "bar",
+                method: "read_group",
+                args: [[]],
+                kwargs: {
+                    fields: ["aggregateLabel:array_agg(foo)"],
+                    domain: [],
+                    groupby: [],
+                },
+            });
+            assert.deepEqual(result1, [
+                {
+                    __count: 6,
+                    aggregateLabel: aggregateValue,
+                },
+            ]);
+            const result2 = await server.performRPC("", {
+                model: "bar",
+                method: "read_group",
+                args: [[]],
+                kwargs: {
+                    fields: ["foo:array_agg"],
+                    domain: [],
+                    groupby: [],
+                },
+            });
+            assert.deepEqual(result2, [
+                {
+                    __count: 6,
+                    foo: aggregateValue,
+                },
+            ]);
+        }
+    );
+
     QUnit.test("performRPC: read_group with count_distinct", async function (assert) {
         const server = new MockServer(data, {});
         const result1 = await server.performRPC("", {
