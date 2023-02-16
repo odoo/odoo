@@ -541,6 +541,38 @@ QUnit.module('Bus', {
             "reconnect",
         ]);
     });
+
+    QUnit.test(
+        "Fallback on simple worker when shared worker failed to initialize",
+        async function (assert) {
+            const originalSharedWorker = browser.SharedWorker;
+            const originalWorker = browser.Worker;
+            patchWithCleanup(browser, {
+                SharedWorker: function (url, options) {
+                    assert.step("shared-worker creation");
+                    const sw = new originalSharedWorker(url, options);
+                    // Simulate error during shared worker creation.
+                    setTimeout(() => sw.dispatchEvent(new Event("error")));
+                    return sw;
+                },
+                Worker: function (url, options) {
+                    assert.step("worker creation");
+                    return new originalWorker(url, options);
+                },
+            }, { pure: true });
+            patchWithCleanup(window.console, {
+                warn(message) {
+                    assert.step(message);
+                },
+            })
+            await makeTestEnv();
+            assert.verifySteps([
+                "shared-worker creation",
+                "Error while loading \"bus_service\" SharedWorker, fallback on Worker.",
+                "worker creation",
+            ]);
+        }
+    );
 });
 });
 
