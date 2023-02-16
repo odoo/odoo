@@ -18,7 +18,7 @@ class PaymentWizard(models.TransientModel):
         ('new_user', "I don't have a Paypal account"),
         ('existing_user', 'I have a Paypal account')], string="Paypal User Type", default='new_user')
     paypal_email_account = fields.Char("Email", default=lambda self: self._get_default_payment_provider_onboarding_value('paypal_email_account'))
-    paypal_seller_account = fields.Char("Merchant Account ID", default=lambda self: self._get_default_payment_provider_onboarding_value('paypal_seller_account'))
+    paypal_seller_account = fields.Char("Merchant Account ID")
     paypal_pdt_token = fields.Char("PDT Identity Token", default=lambda self: self._get_default_payment_provider_onboarding_value('paypal_pdt_token'))
 
     # Account-specific logic. It's kept here rather than moved in `account_payment` as it's not used by `account` module.
@@ -66,7 +66,6 @@ class PaymentWizard(models.TransientModel):
         if 'payment_paypal' in installed_modules:
             provider = self.env.ref('payment.payment_provider_paypal')
             self._payment_provider_onboarding_cache['paypal_email_account'] = provider['paypal_email_account'] or self.env.user.email or ''
-            self._payment_provider_onboarding_cache['paypal_seller_account'] = provider['paypal_seller_account']
             self._payment_provider_onboarding_cache['paypal_pdt_token'] = provider['paypal_pdt_token']
 
         manual_payment = self._get_manual_payment_provider()
@@ -94,11 +93,16 @@ class PaymentWizard(models.TransientModel):
             new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
             if self.payment_method == 'paypal':
+                provider = new_env.ref('payment.payment_provider_paypal', raise_if_not_found=False)
+                default_journal = new_env['account.journal'].search(
+                    [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
+                )
                 new_env.ref('payment.payment_provider_paypal').write({
                     'paypal_email_account': self.paypal_email_account,
-                    'paypal_seller_account': self.paypal_seller_account,
                     'paypal_pdt_token': self.paypal_pdt_token,
                     'state': 'enabled',
+                    'is_published': 'True',
+                    'journal_id': provider.journal_id or default_journal
                 })
             elif self.payment_method == 'manual':
                 manual_provider = self._get_manual_payment_provider(new_env)
