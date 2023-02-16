@@ -477,6 +477,8 @@ class AccountReconcileModel(models.Model):
 
         # First associate with each rec models all the statement lines for which it is applicable
         lines_with_partner_per_model = defaultdict(lambda: [])
+        # Exclude already in the statement line associated account move lines
+        excluded_ids = excluded_ids or [] + st_lines.move_id.line_ids.ids
         for st_line in st_lines:
 
             # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
@@ -686,12 +688,12 @@ class AccountReconcileModel(models.Model):
         # to the query to only search on move lines that are younger than this limit.
         if self.past_months_limit:
             date_limit = fields.Date.context_today(self) - relativedelta(months=self.past_months_limit)
-            query += "AND aml.date >= %(aml_date_limit)s"
+            query += " AND aml.date >= %(aml_date_limit)s"
             params['aml_date_limit'] = date_limit
 
         # Filter out excluded account.move.line.
         if excluded_ids:
-            query += 'AND aml.id NOT IN %(excluded_aml_ids)s'
+            query += ' AND aml.id NOT IN %(excluded_aml_ids)s'
             params['excluded_aml_ids'] = tuple(excluded_ids)
 
         if self.matching_order == 'new_first':
