@@ -2110,3 +2110,52 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             {'product_id': self.component_f.id, 'product_uom_qty': 0},
             {'product_id': self.component_g.id, 'product_uom_qty': 0},
         ])
+
+    def test_kit_return_and_decrease_sol_qty_to_zero(self):
+        """
+        Create and confirm a SO with a kit product.
+        Deliver & Return the components
+        Set the SOL qty to 0
+        """
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+
+        grp_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'groups_id': [(4, grp_uom.id)]})
+
+        # 10 kit_3 = 10 x compo_f + 20 x compo_g
+        self.env['stock.quant']._update_available_quantity(self.component_f, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_g, stock_location, 20)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = self.kit_3
+            line.product_uom_qty = 2
+            line.product_uom = self.uom_ten
+        so = so_form.save()
+        so.action_confirm()
+
+        delivery = so.picking_ids
+        for m in delivery.move_ids:
+            m.quantity_done = m.product_uom_qty
+        delivery.button_validate()
+
+        self.assertEqual(delivery.state, 'done')
+        self.assertEqual(so.order_line.qty_delivered, 2)
+
+        ctx = {'active_id': delivery.id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_picking_id, dummy = return_wizard._create_returns()
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        for m in return_picking.move_ids:
+            m.quantity_done = m.product_uom_qty
+        return_picking.button_validate()
+
+        self.assertEqual(return_picking.state, 'done')
+        self.assertEqual(so.order_line.qty_delivered, 0)
+
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 0
+
+        self.assertEqual(so.picking_ids, delivery | return_picking)
