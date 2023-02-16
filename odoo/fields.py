@@ -3210,7 +3210,7 @@ class Properties(Field):
 
     ALLOWED_TYPES = (
         'boolean', 'integer', 'float', 'char', 'date',
-        'datetime', 'many2one', 'many2many', 'selection', 'tags',
+        'datetime', 'many2one', 'many2many', 'selection', 'separator', 'tags',
     )
 
     def _setup_attrs(self, model_class, name):
@@ -3683,6 +3683,10 @@ class Properties(Field):
             property_value = property_definition.get('value') or False
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
+
+            if property_type == 'separator':
+                # never store the separator value on the children
+                continue
 
             if property_type in ('many2one', 'many2many') and property_model and property_value:
                 # check that value are correct before storing them in database
