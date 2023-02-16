@@ -1158,6 +1158,59 @@ QUnit.module("MockServer", (hooks) => {
         ]);
     });
 
+    QUnit.test("performRPC: read_group with count_distinct", async function (assert) {
+        const server = new MockServer(data, {});
+        const result1 = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["aggregateLabel:count_distinct(partner_id)"],
+                domain: [],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result1, [
+            {
+                __count: 6,
+                aggregateLabel: 2,
+            },
+        ]);
+        const result2 = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["partner_id:count_distinct"],
+                domain: [],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result2, [
+            {
+                __count: 6,
+                partner_id: 2,
+            },
+        ]);
+
+        const result3 = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["partner_id:count_distinct"],
+                domain: [[0, "=", 1]],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result3, [
+            {
+                __count: 0,
+                partner_id: 0,
+            },
+        ]);
+    });
+
     QUnit.test("performRPC: read_progress_bar grouped by boolean", async (assert) => {
         const server = new MockServer(data, {});
         const result = await server.performRPC("", {
