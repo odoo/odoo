@@ -160,15 +160,15 @@ class Users(models.Model):
             )
 
         if post.get('request_blacklist'):
-            users_to_blacklist = self.filtered(
-                lambda user: tools.email_normalize(user.email))
+            users_to_blacklist = [(user, user.email) for user in self.filtered(
+                lambda user: tools.email_normalize(user.email))]
         else:
             users_to_blacklist = []
 
         super(Users, self)._deactivate_portal_user(**post)
 
-        for user in users_to_blacklist:
-            blacklist = self.env['mail.blacklist']._add(user.email)
+        for user, user_email in users_to_blacklist:
+            blacklist = self.env['mail.blacklist']._add(user_email)
             blacklist._message_log(
                 body=_('Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)',
                        user_name=current_user.name, user_id=current_user.id,
