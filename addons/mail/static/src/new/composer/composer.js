@@ -220,71 +220,68 @@ export class Composer extends Component {
             anchorRef: this.ref.el,
             position: "top",
             onSelect: (ev, option) => {
-                this.suggestion?.insert(option);
+                this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
             },
-            sources: this.suggestion
-                ? this.suggestion.state.items.map((mainOrExtraSuggestions) => {
-                      switch (mainOrExtraSuggestions.type) {
-                          case "Partner":
-                              return {
-                                  placeholder: "Loading",
-                                  optionTemplate: "mail.Composer.suggestionPartner",
-                                  options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
-                                      return {
-                                          label: suggestion.name,
-                                          partner: suggestion,
-                                          classList:
-                                              "o-composer-suggestion o-composer-suggestion-partner",
-                                      };
-                                  }),
-                              };
-                          case "Thread":
-                              return {
-                                  placeholder: "Loading",
-                                  optionTemplate: "mail.Composer.suggestionThread",
-                                  options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
-                                      return {
-                                          label: suggestion.displayName,
-                                          thread: suggestion,
-                                          classList:
-                                              "o-composer-suggestion o-composer-suggestion-thread",
-                                      };
-                                  }),
-                              };
-                          case "ChannelCommand":
-                              return {
-                                  placeholder: "Loading",
-                                  optionTemplate: "mail.Composer.suggestionChannelCommand",
-                                  options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
-                                      return {
-                                          label: suggestion.name,
-                                          help: suggestion.help,
-                                          classList:
-                                              "o-composer-suggestion o-composer-suggestion-channel-command",
-                                      };
-                                  }),
-                              };
-                          case "CannedResponse":
-                              return {
-                                  placeholder: "Loading",
-                                  optionTemplate: "mail.Composer.suggestionCannedResponse",
-                                  options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
-                                      return {
-                                          name: suggestion.name,
-                                          label: suggestion.substitution,
-                                          classList:
-                                              "o-composer-suggestion o-composer-suggestion-canned-response",
-                                      };
-                                  }),
-                              };
-                          default:
-                              return {
-                                  options: [],
-                              };
-                      }
-                  })
-                : [],
+            sources: this.suggestion.state.items.map((mainOrExtraSuggestions) => {
+                switch (mainOrExtraSuggestions.type) {
+                    case "Partner":
+                        return {
+                            placeholder: "Loading",
+                            optionTemplate: "mail.Composer.suggestionPartner",
+                            options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
+                                return {
+                                    label: suggestion.name,
+                                    partner: suggestion,
+                                    classList:
+                                        "o-composer-suggestion o-composer-suggestion-partner",
+                                };
+                            }),
+                        };
+                    case "Thread":
+                        return {
+                            placeholder: "Loading",
+                            optionTemplate: "mail.Composer.suggestionThread",
+                            options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
+                                return {
+                                    label: suggestion.displayName,
+                                    thread: suggestion,
+                                    classList: "o-composer-suggestion o-composer-suggestion-thread",
+                                };
+                            }),
+                        };
+                    case "ChannelCommand":
+                        return {
+                            placeholder: "Loading",
+                            optionTemplate: "mail.Composer.suggestionChannelCommand",
+                            options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
+                                return {
+                                    label: suggestion.name,
+                                    help: suggestion.help,
+                                    classList:
+                                        "o-composer-suggestion o-composer-suggestion-channel-command",
+                                };
+                            }),
+                        };
+                    case "CannedResponse":
+                        return {
+                            placeholder: "Loading",
+                            optionTemplate: "mail.Composer.suggestionCannedResponse",
+                            options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
+                                return {
+                                    name: suggestion.name,
+                                    label: suggestion.substitution,
+                                    classList:
+                                        "o-composer-suggestion o-composer-suggestion-canned-response",
+                                };
+                            }),
+                        };
+                    default:
+                        return {
+                            options: [],
+                        };
+                }
+            }),
         };
     }
 

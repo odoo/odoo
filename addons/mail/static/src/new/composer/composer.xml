@@ -79,7 +79,7 @@
         </div>
         <span t-if="props.composer.message" class="text-muted">escape to <a href="#" t-on-click="props.onDiscardCallback">cancel</a>, enter to <a href="#" t-on-click="editMessage">save</a></span>
     </div>
-    <NavigableList class="'o-composer-suggestion-list'" t-props="navigableListProps" />
+    <NavigableList t-if="this.suggestion" class="'o-composer-suggestion-list'" t-props="navigableListProps" />
 </t>
 
     <t t-name="mail.Composer.suggestionPartner" owl="1">

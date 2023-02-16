@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { Messaging, messagingService } from "@mail/new/core/messaging_service";
-import { session } from "@web/session";
 import { createLocalId } from "@mail/new/utils/misc";
 import { patch } from "@web/core/utils/patch";
 
@@ -12,26 +11,11 @@ patch(Messaging.prototype, "mail/web", {
         this.chatWindowService = services["mail.chat_window"];
     },
     initMessagingCallback(data) {
-        if (data.current_partner) {
-            this.store.user = this.personaService.insert({
-                ...data.current_partner,
-                type: "partner",
-            });
-        }
-        if (data.currentGuest) {
-            this.store.guest = this.personaService.insert({
-                ...data.currentGuest,
-                type: "guest",
-                channelId: data.channels[0]?.id,
-            });
-        }
-        if (session.user_context.uid) {
-            this.loadFailures();
-        }
-        this.store.partnerRoot = this.personaService.insert({
-            ...data.partner_root,
+        this.store.user = this.personaService.insert({
+            ...data.current_partner,
             type: "partner",
         });
+        this.loadFailures();
         for (const channelData of data.channels) {
             const thread = this.threadService.createChannelThread(channelData);
             if (channelData.is_minimized && channelData.state !== "closed") {
@@ -42,20 +26,7 @@ patch(Messaging.prototype, "mail/web", {
                 });
             }
         }
-        this.threadService.sortChannels();
-        const settings = data.current_user_settings;
-        this.userSettingsService.updateFromCommands(settings);
-        this.userSettingsService.id = settings.id;
-        this.store.companyName = data.companyName;
-        this.store.discuss.channels.isOpen = settings.is_discuss_sidebar_category_channel_open;
-        this.store.discuss.chats.isOpen = settings.is_discuss_sidebar_category_chat_open;
-        this.store.discuss.inbox.counter = data.needaction_inbox_counter;
-        this.store.internalUserGroupId = data.internalUserGroupId;
-        this.store.discuss.starred.counter = data.starred_counter;
-        (data.shortcodes ?? []).forEach((code) => {
-            this.insertCannedResponse(code);
-        });
-        this.isReady.resolve();
+        this._super(data);
     },
     async _handleNotificationNewMessage(notif) {
         await this._super(notif);

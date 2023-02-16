@@ -12,7 +12,6 @@ import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { url } from "@web/core/utils/urls";
 import { createLocalId } from "../utils/misc";
-import { session } from "@web/session";
 import { registry } from "@web/core/registry";
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
@@ -116,21 +115,12 @@ export class Messaging {
     }
 
     initMessagingCallback(data) {
-        if (data.current_partner) {
-            this.store.user = this.personaService.insert({
-                ...data.current_partner,
-                type: "partner",
-            });
-        }
         if (data.currentGuest) {
             this.store.guest = this.personaService.insert({
                 ...data.currentGuest,
                 type: "guest",
                 channelId: data.channels[0]?.id,
             });
-        }
-        if (session.user_context.uid) {
-            this.loadFailures();
         }
         this.store.partnerRoot = this.personaService.insert({
             ...data.partner_root,
@@ -466,9 +456,8 @@ export class Messaging {
                 }
                 case "mail.channel.member/typing_status": {
                     const isTyping = notif.payload.isTyping;
-                    const channel = this.store.threads[
-                        createLocalId("mail.channel", notif.payload.channel.id)
-                    ];
+                    const channel =
+                        this.store.threads[createLocalId("mail.channel", notif.payload.channel.id)];
                     if (!channel) {
                         return;
                     }
@@ -492,9 +481,8 @@ export class Messaging {
                     break;
                 }
                 case "mail.channel/unpin": {
-                    const thread = this.store.threads[
-                        createLocalId("mail.channel", notif.payload.id)
-                    ];
+                    const thread =
+                        this.store.threads[createLocalId("mail.channel", notif.payload.id)];
                     if (!thread) {
                         return;
                     }
