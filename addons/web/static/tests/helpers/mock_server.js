@@ -1051,8 +1051,8 @@ export class MockServer {
                         if (func === "array_agg") {
                             group[name] = ids.map((id) => (id ? id : null));
                         } else {
-                            const uniqueIds = [...new Set(ids)];
-                            group[name] = uniqueIds.length || null;
+                            const uniqueIds = [...new Set(ids)].filter((id) => id);
+                            group[name] = uniqueIds.length;
                         }
                         break;
                     }
