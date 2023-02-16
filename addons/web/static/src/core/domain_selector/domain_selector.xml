@@ -2,20 +2,177 @@
 <templates xml:space="preserve">
 
     <t t-name="web._DomainSelector" owl="1">
-        <t t-set="tree" t-value="buildTree()"/>
-        <t t-if="tree">
-            <DomainSelectorRootNode
-                value="props.value"
-                node="tree"
-                readonly="props.readonly"
-                resModel="props.resModel"
-                isDebugMode="props.isDebugMode"
-                debugValue="props.debugValue"
-                className="props.className"
-            />
+        <t t-if="tree.isSupported">
+            <t t-call="web._DomainSelector.root">
+                <t t-set="node" t-value="tree.root" />
+            </t>
         </t>
         <t t-else="">
             <div t-att-class="props.className">This domain is not supported.</div>
+        </t>
+    </t>
+
+    <t t-name="web._DomainSelector.root" owl="1">
+        <div class="o_domain_node o_domain_tree o_domain_selector" aria-atomic="true" t-attf-class="{{ props.className }} {{ props.readonly ? 'o_read_mode' : 'o_edit_mode'}}" t-ref="root">
+            <t t-if="node.children.length === 0">
+                <span>Match <strong>all records</strong></span>
+                <t t-if="!props.readonly">
+                    <button class="btn btn-sm btn-primary o_domain_add_first_node_button ms-1" t-on-click="() => this.insertRootLeaf(node)">
+                        <i class="fa fa-plus"/> Add filter
+                    </button>
+                </t>
+            </t>
+            <t t-elif="node.children.length === 1">
+                Match records with the following rule:
+                <t t-call="web._DomainSelector.branch.children" />
+            </t>
+            <t t-else="">
+                <span>Match records with </span>
+                <t t-call="web._DomainSelector.branch.operator" />
+                <span> of the following rules:</span>
+                <t t-call="web._DomainSelector.branch.children" />
+            </t>
+            <t t-if="props.isDebugMode and !props.readonly">
+                <label class="o_domain_debug_container">
+                    <span class="small"># Code editor</span>
+                    <textarea type="text" class="o_domain_debug_input" spellcheck="false" t-att-value="props.debugValue or props.value" t-on-change="(ev) => this.onDebugValueChange(ev.target.value)" />
+                </label>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web._DomainSelector.controls" owl="1">
+        <div class="o_domain_node_control_panel" role="toolbar" aria-label="Domain node">
+            <button
+                class="btn btn-link text-danger o_domain_delete_node_button"
+                title="Delete node"
+                aria-label="Delete node"
+                t-on-click="() => this.delete(parent, node)"
+                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true, 'o_hover_btns')"
+                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false, 'o_hover_btns')"
+            >
+                <i class="fa fa-times"/>
+            </button>
+            <button
+                class="btn o_domain_add_node_button"
+                title="Add node"
+                aria-label="Add node"
+                t-on-click="() => this.insertLeaf(parent, node)"
+                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true, 'o_hover_add_node')"
+                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false, 'o_hover_add_node')"
+            >
+                <i class="fa fa-plus-circle"/>
+            </button>
+            <button
+                class="btn o_domain_add_node_button"
+                title="Add branch"
+                aria-label="Add branch"
+                t-on-click="() => this.insertBranch(parent, node)"
+                t-on-mouseenter="(ev) => this.highlightNode(ev.target, true, 'o_hover_add_node o_hover_add_inset_node')"
+                t-on-mouseleave="(ev) => this.highlightNode(ev.target, false, 'o_hover_add_node o_hover_add_inset_node')"
+            >
+                <i class="fa fa-ellipsis-h"/>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="web._DomainSelector.branch" owl="1">
+        <div class="o_domain_node o_domain_tree">
+            <div class="o_domain_tree_header o_domain_selector_row">
+                <t t-if="!props.readonly">
+                    <t t-call="web._DomainSelector.controls" />
+                </t>
+                <t t-call="web._DomainSelector.branch.operator" />
+                <span class="ml4">of:</span>
+            </div>
+            <t t-call="web._DomainSelector.branch.children" />
+        </div>
+    </t>
+
+    <t t-name="web._DomainSelector.branch.operator" owl="1">
+        <t t-if="props.readonly">
+            <strong>
+                <t t-if="node.operator === 'AND'">all</t>
+                <t t-elif="node.operator === 'OR'">any</t>
+                <t t-elif="node.operator === 'NOT'">none</t>
+            </strong>
+        </t>
+        <t t-else="">
+            <div class="d-inline-flex o_domain_tree_operator_selector" aria-atomic="true">
+                <Dropdown togglerClass="'btn btn-link btn-sm btn-primary py-0 px-1 o_domain_tree_operator_caret'">
+                    <t t-set-slot="toggler">
+                        <t t-if="node.operator === 'AND'">all</t>
+                        <t t-elif="node.operator === 'OR'">any</t>
+                        <t t-elif="node.operator === 'NOT'">none</t>
+                    </t>
+                    <DropdownItem onSelected="() => this.updateBranchOperator(node, 'AND')">all</DropdownItem>
+                    <DropdownItem onSelected="() => this.updateBranchOperator(node, 'OR')">any</DropdownItem>
+                </Dropdown>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web._DomainSelector.branch.children" owl="1">
+        <div class="o_domain_node_children_container">
+            <t t-foreach="node.children" t-as="child" t-key="child.id">
+                <t t-call="web._DomainSelector.{{ child.type }}">
+                    <t t-set="parent" t-value="node" />
+                    <t t-set="node" t-value="child" />
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web._DomainSelector.leaf" owl="1">
+        <div class="o_domain_node o_domain_leaf o_domain_selector_row">
+            <t t-if="props.readonly">
+                <div class="o_domain_leaf_info">
+                    <t t-call="web._DomainSelector.leaf:readonly" />
+                </div>
+            </t>
+            <t t-else="">
+                <t t-call="web._DomainSelector.controls" />
+                <div class="o_domain_leaf_edition">
+                    <t t-call="web._DomainSelector.leaf:editable" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web._DomainSelector.leaf:readonly" owl="1">
+        <ModelFieldSelector fieldName="node.field.name" resModel="props.resModel" readonly="true" />
+        <t t-if="typeof node.value === 'boolean'">
+            is <t t-if="node.value ? ['is_not', 'not_equal'].includes(node.operator.key) : ['is', 'equal'].includes(node.operator.key)"> not </t> set
+        </t>
+        <t t-else="">
+            <span class="o_domain_leaf_operator"> <t t-esc="node.operator.label" /></span>
+            <t t-set="values" t-value="Array.isArray(node.value) ? node.value : [node.value]" />
+            <t t-foreach="values" t-as="value" t-key="value_index">
+                <span class="o_domain_leaf_value text-primary">
+                    <t t-if="typeof value === 'string'"> "<t t-esc="value"/>"</t>
+                    <t t-else=""> <t t-esc="value"/></t>
+                </span>
+                <t t-if="!value_last"> or </t>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web._DomainSelector.leaf:editable" owl="1">
+        <ModelFieldSelector fieldName="node.field.name" resModel="props.resModel" readonly="false" update="(field) => this.updateField(node, field)" isDebugMode="props.isDebugMode" />
+
+        <div>
+            <select class="o_domain_leaf_operator_select o_input text-truncate pe-1" t-on-change="(ev) => this.updateLeafOperator(node, ev.target.value)">
+                <t t-foreach="getOperatorsInfo(node)" t-as="operator" t-key="operator.key">
+                    <option t-att-value="operator.key" t-att-selected="node.operator.key === operator.key" t-esc="operator_value.label" />
+                </t>
+            </select>
+        </div>
+
+        <t t-if="node.operator.valueMode !== 'none'">
+            <div class="o_ds_value_cell">
+                <t t-set="editor" t-value="getEditorInfo(node)" />
+                <t t-component="editor.component" t-props="editor.props({ value: node.value, update: (value) => this.updateLeafValue(node, value), field: node.field })" />
+            </div>
         </t>
     </t>
 
