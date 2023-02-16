@@ -731,3 +731,35 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test("basic rendering of canceled notification", async function (assert) {
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv["mail.channel"].create({ name: "test" });
+    const resPartnerId1 = pyEnv["res.partner"].create({ name: "Someone" });
+    const mailMessageId1 = pyEnv["mail.message"].create({
+        body: "not empty",
+        message_type: "email",
+        model: "mail.channel",
+        res_id: mailChannelId1,
+    });
+    pyEnv["mail.notification"].create({
+        failure_type: "SMTP",
+        mail_message_id: mailMessageId1,
+        notification_status: "canceled",
+        notification_type: "email",
+        res_partner_id: resPartnerId1,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(mailChannelId1);
+
+    assert.containsOnce(target, ".o-mail-message-notification .fa-envelope-o");
+
+    await click(".o-mail-message-notification");
+    assert.containsOnce(target, ".o-mail-message-notification-popover");
+    assert.containsOnce(target, ".o-mail-message-notification-popover .fa-trash-o");
+    assert.containsOnce(target, ".o-mail-message-notification-popover-partner-name");
+    assert.containsOnce(
+        target,
+        ".o-mail-message-notification-popover-partner-name:contains(Someone)"
+    );
+});
