@@ -66,7 +66,7 @@ export class Message {
      * @returns {string}
      */
     get authorAvatarUrl() {
-        if (!this.originThread || this.originThread.model !== "mail.channel") {
+        if (this.author && (!this.originThread || this.originThread.model !== "mail.channel")) {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message
