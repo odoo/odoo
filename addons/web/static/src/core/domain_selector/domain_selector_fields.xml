@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelector.Input" owl="1">
+        <input type="text" class="o_input o_domain_leaf_value_input" t-att-value="props.value" t-on-change="(ev) => props.update(ev.target.value)" />
+    </t>
+
+    <t t-name="web.DomainSelector.Select" owl="1">
+        <select class="o_input o_domain_leaf_value_input" t-on-change="(ev) => props.update(deserialize(ev.target.value))">
+            <t t-foreach="props.options" t-as="option" t-key="option[0]">
+                <option t-att-value="serialize(option[0])" t-att-selected="option[0] === props.value" t-esc="option[1]" />
+            </t>
+        </select>
+    </t>
+
+    <t t-name="web.DomainSelector.TagInput" owl="1">
+        <div class="o_domain_leaf_value_input">
+            <t t-foreach="props.value" t-as="tag" t-key="tag_index">
+                <span class="badge rounded-pill">
+                    <t t-esc="tag" />
+                    <i class="o_domain_leaf_value_remove_tag_button fa fa-times" role="img" aria-label="Remove tag" title="Remove tag" t-on-click="() => this.removeTag(tag_index)" />
+                </span>
+            </t>
+        </div>
+        <div class="o_domain_leaf_value_tags">
+            <input type="text" class="o_input" placeholder="Add new value" t-ref="input" />
+            <button class="btn btn-sm btn-primary fa fa-plus o_domain_leaf_value_add_tag_button" aria-label="Add tag" title="Add tag" t-on-click="onBtnClick" />
+        </div>
+    </t>
+
+</templates>

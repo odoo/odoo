@@ -1,18 +1,19 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
+import { OPERATOR_DESCRIPTIONS } from "@web/core/domain_selector/domain_selector_operators";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ormService } from "@web/core/orm_service";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { viewService } from "@web/views/view_service";
+import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, editInput, editSelect, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-
-import { Component, xml } from "@odoo/owl";
+import { click, editInput, editSelect, getFixture, mount, triggerEvent } from "../helpers/utils";
 
 let serverData;
 let target;
@@ -433,7 +434,10 @@ QUnit.module("Components", (hooks) => {
             );
 
             assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "1");
-            assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "0"); // option "="
+            assert.strictEqual(
+                target.querySelector(".o_domain_leaf_operator_select").value,
+                "equal"
+            ); // option "="
             assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
 
             newValue = `[(0, "=", 1)]`;
@@ -452,7 +456,10 @@ QUnit.module("Components", (hooks) => {
             );
 
             assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "0");
-            assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "0"); // option "="
+            assert.strictEqual(
+                target.querySelector(".o_domain_leaf_operator_select").value,
+                "equal"
+            ); // option "="
             assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
         }
     );
@@ -469,13 +476,14 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("operator fallback in edit mode", async (assert) => {
-        registry.category("domain_selector/operator").add("test", {
-            category: "test",
+        OPERATOR_DESCRIPTIONS.push({
+            key: "test",
             label: "test",
-            value: "test",
-            onDidChange: () => null,
-            matches: ({ operator }) => operator === "test",
-            hideValue: true,
+            symbol: "test",
+            valueMode: "none",
+        });
+        registerCleanup(() => {
+            OPERATOR_DESCRIPTIONS.pop();
         });
 
         await mountComponent(DomainSelector, {
@@ -542,13 +550,16 @@ QUnit.module("Components", (hooks) => {
         await mountComponent(Parent);
 
         assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "State");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "2"); // option "!="
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf_operator_select").value,
+            "not_equal"
+        ); // option "!="
 
-        await editSelect(target, ".o_domain_leaf_operator_select", 0);
+        await editSelect(target, ".o_domain_leaf_operator_select", "equal");
 
         assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "State");
-        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "0"); // option "="
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "abc");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal"); // option "="
+        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, `"abc"`);
     });
 
     QUnit.test("show correct operator", async (assert) => {

@@ -4,24 +4,30 @@ import { useModelField } from "./model_field_hook";
 import { useUniquePopover } from "./unique_popover_hook";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class ModelFieldSelector extends Component {
     setup() {
         this.popover = useUniquePopover();
         this.modelField = useModelField();
-        this.chain = [];
+        this.state = useState({
+            chain: [],
+            fieldName: this.props.fieldName,
+            isDirty: false,
+        });
 
         onWillStart(async () => {
-            this.chain = await this.loadChain(this.props.resModel, this.props.fieldName);
+            this.state.chain = await this.loadChain(this.props.resModel, this.props.fieldName);
         });
         onWillUpdateProps(async (nextProps) => {
-            this.chain = await this.loadChain(nextProps.resModel, nextProps.fieldName);
+            this.state.chain = await this.loadChain(nextProps.resModel, nextProps.fieldName);
+            this.state.fieldName = nextProps.fieldName;
+            this.state.isDirty = false;
         });
     }
 
     get fieldNameChain() {
-        return this.getFieldNameChain(this.props.fieldName);
+        return this.getFieldNameChain(this.state.fieldName ?? this.props.fieldName);
     }
 
     getFieldNameChain(fieldName) {
@@ -32,29 +38,16 @@ export class ModelFieldSelector extends Component {
         if ("01".includes(fieldName)) {
             return [{ resModel, field: { string: fieldName } }];
         }
-        const fieldNameChain = this.getFieldNameChain(fieldName);
-        let currentNode = {
-            resModel,
-            field: null,
-        };
-        const chain = [currentNode];
-        for (const fieldName of fieldNameChain) {
-            const fieldsInfo = await this.modelField.loadModelFields(currentNode.resModel);
-            Object.assign(currentNode, {
-                field: { ...fieldsInfo[fieldName], name: fieldName },
-            });
-            if (fieldsInfo[fieldName].relation) {
-                currentNode = {
-                    resModel: fieldsInfo[fieldName].relation,
-                    field: null,
-                };
-                chain.push(currentNode);
-            }
-        }
-        return chain;
+        return this.modelField.loadChain(resModel, fieldName);
     }
-    update(chain) {
-        this.props.update(chain.join("."));
+    async update(fieldName, isFieldSelected) {
+        this.state.fieldName = fieldName;
+        this.state.isDirty = !isFieldSelected;
+        if (isFieldSelected) {
+            await this.props.update(fieldName);
+        } else {
+            this.state.chain = await this.loadChain(this.props.resModel, fieldName);
+        }
     }
 
     onFieldSelectorClick(ev) {
@@ -65,7 +58,7 @@ export class ModelFieldSelector extends Component {
             ev.currentTarget,
             this.constructor.components.Popover,
             {
-                chain: this.chain,
+                chain: this.state.chain,
                 update: this.update.bind(this),
                 showSearchInput: this.props.showSearchInput,
                 isDebugMode: this.props.isDebugMode,
@@ -76,6 +69,11 @@ export class ModelFieldSelector extends Component {
             {
                 closeOnClickAway: true,
                 popoverClass: "o_popover_field_selector",
+                onClose: () => {
+                    if (this.state.isDirty) {
+                        this.props.update(this.state.fieldName);
+                    }
+                },
             }
         );
     }
