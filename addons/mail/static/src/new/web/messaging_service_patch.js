@@ -11,10 +11,6 @@ patch(Messaging.prototype, "mail/web", {
         this.chatWindowService = services["mail.chat_window"];
     },
     initMessagingCallback(data) {
-        this.store.user = this.personaService.insert({
-            ...data.current_partner,
-            type: "partner",
-        });
         this.loadFailures();
         for (const channelData of data.channels) {
             const thread = this.threadService.createChannelThread(channelData);

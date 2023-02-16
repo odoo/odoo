@@ -115,6 +115,12 @@ export class Messaging {
     }
 
     initMessagingCallback(data) {
+        if (data.current_partner) {
+            this.store.user = this.personaService.insert({
+                ...data.current_partner,
+                type: "partner",
+            });
+        }
         if (data.currentGuest) {
             this.store.guest = this.personaService.insert({
                 ...data.currentGuest,
