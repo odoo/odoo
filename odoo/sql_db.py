@@ -548,6 +548,16 @@ class PsycoConnection(psycopg2.extensions.connection):
     def lobject(*args, **kwargs):
         pass
 
+    if hasattr(psycopg2.extensions, 'ConnectionInfo'):
+        @property
+        def info(self):
+            class PsycoConnectionInfo(psycopg2.extensions.ConnectionInfo):
+                @property
+                def password(self):
+                    pass
+            return PsycoConnectionInfo(self)
+
+
 class ConnectionPool(object):
     """ The pool of connections to database(s)
 
@@ -600,7 +610,7 @@ class ConnectionPool(object):
                 _logger.info('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
-            if not used and cnx._original_dsn == connection_info:
+            if not used and self._dsn_equals(cnx.dsn, connection_info):
                 try:
                     cnx.reset()
                 except psycopg2.OperationalError:
@@ -635,7 +645,6 @@ class ConnectionPool(object):
         except psycopg2.Error:
             _logger.info('Connection to the database failed')
             raise
-        result._original_dsn = connection_info
         self._connections.append((result, True))
         self._debug('Create new connection')
         return result
@@ -661,26 +670,49 @@ class ConnectionPool(object):
         count = 0
         last = None
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
-            if dsn is None or cnx._original_dsn == dsn:
+            if dsn is None or self._dsn_equals(cnx.dsn, dsn):
                 cnx.close()
                 last = self._connections.pop(i)[0]
                 count += 1
         _logger.info('%r: Closed %d connections %s', self, count,
                     (dsn and last and 'to %r' % last.dsn) or '')
 
+    def _dsn_equals(self, dsn1, dsn2):
+        alias_keys = {'dbname': 'database'}
+        ignore_keys = ['password']
+        dsn1, dsn2 = ({
+            alias_keys.get(key, key): str(value)
+            for key, value in (isinstance(dsn, str) and self._dsn_to_dict(dsn) or dsn).items()
+            if key not in ignore_keys
+        } for dsn in (dsn1, dsn2))
+        return dsn1 == dsn2
+
+    def _dsn_to_dict(self, dsn):
+        return dict(value.split('=', 1) for value in dsn.strip().split())
+
 
 class Connection(object):
     """ A lightweight instance of a connection to postgres
     """
     def __init__(self, pool, dbname, dsn):
-        self.dbname = dbname
-        self.dsn = dsn
+        self.__dbname = dbname
+        self.__dsn = dsn
         self.__pool = pool
+
+    @property
+    def dsn(self):
+        dsn = dict(self.__dsn)
+        dsn.pop('password', None)
+        return dsn
+
+    @property
+    def dbname(self):
+        return self.__dbname
 
     def cursor(self, serialized=True):
         cursor_type = serialized and 'serialized ' or ''
         _logger.debug('create %scursor to %r', cursor_type, self.dsn)
-        return Cursor(self.__pool, self.dbname, self.dsn, serialized=serialized)
+        return Cursor(self.__pool, self.__dbname, self.__dsn, serialized=serialized)
 
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor
