@@ -1975,6 +1975,7 @@ class Task(models.Model):
         if is_portal_user:
             self.check_access_rights('create')
         default_stage = dict()
+        is_superuser = self._uid == SUPERUSER_ID
         for vals in vals_list:
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
@@ -2004,8 +2005,8 @@ class Task(models.Model):
                 vals['date_assign'] = fields.Datetime.now()
                 if not project_id:
                     user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self)
-                    if self.env.user.id not in user_ids:
-                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
+                    if self.env.user.id not in user_ids and not is_superuser:
+                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.uid])]
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
                 vals.update(self.update_date_end(vals['stage_id']))
