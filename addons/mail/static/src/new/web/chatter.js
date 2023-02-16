@@ -117,11 +117,9 @@ export class Chatter extends Component {
             this.load(this.props.threadId, ["followers", "attachments", "suggestedRecipients"])
         );
         onWillUpdateProps((nextProps) => {
-            if (nextProps.threadId !== this.props.threadId) {
-                this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
-                if (nextProps.threadId === false) {
-                    this.state.thread.composer.type = false;
-                }
+            this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
+            if (nextProps.threadId === false) {
+                this.state.thread.composer.type = false;
             }
             if (this.onNextUpdate) {
                 this.onNextUpdate(nextProps);
