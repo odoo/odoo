@@ -79,6 +79,7 @@ QUnit.module("Components", (hooks) => {
                 this.fieldName = "";
             }
             onUpdate(value) {
+                assert.step(`update: ${value}`);
                 this.fieldName = value;
                 this.render();
             }
@@ -136,6 +137,7 @@ QUnit.module("Components", (hooks) => {
             "bar",
             "the selected field should be correctly set"
         );
+        assert.verifySteps(["update: bar"]);
 
         // Focusing the input again should open the same popover
         await click(target, ".o_field_selector");
@@ -182,12 +184,14 @@ QUnit.module("Components", (hooks) => {
             "Product -> Product Name",
             "field selector value should be displayed with two tags: 'Product' and 'Product Name'"
         );
+        assert.verifySteps(["update: product_id.name"]);
 
         // Remove the current selection and recreate it again
         await click(target, ".o_field_selector");
         await click(target, ".o_field_selector_prev_page");
         await click(target, ".o_field_selector_prev_page");
         await click(target, ".o_field_selector_close");
+        assert.verifySteps(["update: "]);
 
         await click(target, ".o_field_selector");
         assert.containsOnce(
@@ -210,6 +214,7 @@ QUnit.module("Components", (hooks) => {
             "Product -> Product Name",
             "field selector value should be displayed with two tags: 'Product' and 'Product Name'"
         );
+        assert.verifySteps(["update: product_id.name"]);
     });
 
     QUnit.test("default field chain should set the page data correctly", async (assert) => {
