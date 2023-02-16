@@ -233,6 +233,14 @@ export class ThreadService {
         this.open(channel);
     }
 
+    unpin(thread) {
+        if (thread.model !== "mail.channel") {
+            return;
+        }
+        this.remove(this.store.threads[createLocalId("mail.channel", thread.id)]);
+        return this.orm.silent.call("mail.channel", "channel_pin", [thread.id], { pinned: false });
+    }
+
     sortChannels() {
         this.store.discuss.channels.threads.sort((id1, id2) => {
             const thread1 = this.store.threads[id1];

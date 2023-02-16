@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { onExternalClick } from "@mail/new/utils/hooks";
 import { Component, useState } from "@odoo/owl";
-import { createLocalId, markEventHandled } from "@mail/new/utils/misc";
+import { markEventHandled } from "@mail/new/utils/misc";
 import { ChatWindowIcon } from "@mail/new/web/chat_window/chat_window_icon";
 
 import { _t } from "@web/core/l10n/translation";
@@ -88,14 +88,6 @@ export class Sidebar extends Component {
 
     addToCategory(category) {
         this.state.editing = category.id;
-    }
-
-    /**
-     * @param {number} channelId
-     */
-    unpinChannel(channelId) {
-        this.orm.silent.call("mail.channel", "channel_pin", [channelId], { pinned: false });
-        this.threadService.remove(this.store.threads[createLocalId("mail.channel", channelId)]);
     }
 
     stopEditing() {
