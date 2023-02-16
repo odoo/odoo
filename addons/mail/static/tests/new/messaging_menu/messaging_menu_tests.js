@@ -747,3 +747,99 @@ QUnit.test(
         assert.containsOnce(target, ".o-mail-notification-item");
     }
 );
+
+QUnit.test("click on preview should mark as read and open the thread", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
+    const messageId = pyEnv["mail.message"].create({
+        model: "res.partner",
+        body: "not empty",
+        author_id: pyEnv.partnerRootId,
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsOnce(document.body, ".o-mail-notification-item:contains(Frodo Baggins)");
+    assert.containsNone(document.body, ".o-mail-chat-window");
+    await click(".o-mail-notification-item:contains(Frodo Baggins)");
+    assert.containsOnce(document.body, ".o-mail-chat-window");
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone(document.body, ".o-mail-notification-item:contains(Frodo Baggins)");
+});
+
+QUnit.test(
+    "click on expand from chat window should close the chat window and open the form view",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
+        const messageId = pyEnv["mail.message"].create({
+            model: "res.partner",
+            body: "not empty",
+            author_id: pyEnv.partnerRootId,
+            needaction: true,
+            needaction_partner_ids: [pyEnv.currentPartnerId],
+            res_id: partnerId,
+        });
+        pyEnv["mail.notification"].create({
+            mail_message_id: messageId,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        });
+        const { env } = await start();
+        patchWithCleanup(env.services.action, {
+            doAction(action) {
+                assert.step("do_action");
+                assert.strictEqual(action.res_id, partnerId);
+                assert.strictEqual(action.res_model, "res.partner");
+            },
+        });
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-notification-item:contains(Frodo Baggins)");
+        await click(".o-mail-command i.fa-expand");
+        assert.containsNone(document.body, ".o-mail-chat-window");
+        assert.verifySteps(["do_action"], "should have done an action to open the form view");
+    }
+);
+
+QUnit.test(
+    "preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Stranger" });
+        const mailMessageId1 = pyEnv["mail.message"].create({
+            author_id: partnerId,
+            body: "I am the oldest but needaction",
+            model: "res.partner",
+            needaction: true,
+            needaction_partner_ids: [pyEnv.currentPartnerId],
+            res_id: partnerId,
+        });
+        pyEnv["mail.message"].create({
+            author_id: pyEnv.currentPartnerId,
+            body: "I am more recent",
+            model: "res.partner",
+            res_id: partnerId,
+        });
+        pyEnv["mail.notification"].create({
+            mail_message_id: mailMessageId1,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        });
+        await start();
+        await click(".o_menu_systray i[aria-label='Messages']");
+        assert.containsOnce(
+            document.body,
+            ".o-mail-notification-item:contains(I am the oldest but needaction)"
+        );
+    }
+);

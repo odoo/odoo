@@ -1,110 +1,10 @@
 /** @odoo-module **/
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_needaction_preview_tests.js");
-
-        QUnit.test(
-            "click on preview should mark as read and open the thread",
-            async function (assert) {
-                assert.expect(4);
-
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
-                const mailMessageId1 = pyEnv["mail.message"].create({
-                    model: "res.partner",
-                    body: "not empty",
-                    author_id: pyEnv.partnerRootId,
-                    needaction: true,
-                    needaction_partner_ids: [pyEnv.currentPartnerId],
-                    res_id: resPartnerId1,
-                });
-                pyEnv["mail.notification"].create({
-                    mail_message_id: mailMessageId1,
-                    notification_status: "sent",
-                    notification_type: "inbox",
-                    res_partner_id: pyEnv.currentPartnerId,
-                });
-                await start();
-                await click(".o_menu_systray i[aria-label='Messages']");
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-notification-item:contains(Frodo Baggins)",
-                    "should have a preview initially"
-                );
-                assert.containsNone(
-                    document.body,
-                    ".o-mail-chat-window",
-                    "should have no chat window initially"
-                );
-                await click(".o-mail-notification-item:contains(Frodo Baggins)");
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-chat-window",
-                    "should have opened the thread on clicking on the preview"
-                );
-                await click(".o_menu_systray i[aria-label='Messages']");
-                assert.containsNone(
-                    document.body,
-                    ".o-mail-notification-item:contains(Frodo Baggins)",
-                    "should have no preview because the message should be marked as read after opening its thread"
-                );
-            }
-        );
-
-        QUnit.test(
-            "click on expand from chat window should close the chat window and open the form view",
-            async function (assert) {
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
-                const mailMessageId1 = pyEnv["mail.message"].create({
-                    model: "res.partner",
-                    body: "not empty",
-                    author_id: pyEnv.partnerRootId,
-                    needaction: true,
-                    needaction_partner_ids: [pyEnv.currentPartnerId],
-                    res_id: resPartnerId1,
-                });
-                pyEnv["mail.notification"].create({
-                    mail_message_id: mailMessageId1,
-                    notification_status: "sent",
-                    notification_type: "inbox",
-                    res_partner_id: pyEnv.currentPartnerId,
-                });
-                const { env } = await start();
-                patchWithCleanup(env.services.action, {
-                    doAction(action) {
-                        assert.step("do_action");
-                        assert.strictEqual(
-                            action.res_id,
-                            resPartnerId1,
-                            "should redirect to the id of the thread"
-                        );
-                        assert.strictEqual(
-                            action.res_model,
-                            "res.partner",
-                            "should redirect to the model of the thread"
-                        );
-                    },
-                });
-                await click(".o_menu_systray i[aria-label='Messages']");
-                await click(".o-mail-notification-item:contains(Frodo Baggins)");
-                await click(".o-mail-command i.fa-expand");
-                assert.containsNone(
-                    document.body,
-                    ".o-mail-chat-window",
-                    "should have closed the chat window on clicking expand"
-                );
-                assert.verifySteps(
-                    ["do_action"],
-                    "should have done an action to open the form view"
-                );
-            }
-        );
 
         QUnit.skipRefactoring(
             "[technical] opening a non-channel chat window should not call channel_fold",
@@ -169,44 +69,6 @@ QUnit.module("mail", {}, function () {
                     document.body,
                     ".o-mail-chat-window",
                     "should have opened the chat window on clicking on the preview"
-                );
-            }
-        );
-
-        QUnit.test(
-            "preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread",
-            async function (assert) {
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({
-                    name: "Stranger",
-                });
-                const mailMessageId1 = pyEnv["mail.message"].create({
-                    author_id: resPartnerId1,
-                    body: "I am the oldest but needaction",
-                    model: "res.partner",
-                    needaction: true,
-                    needaction_partner_ids: [pyEnv.currentPartnerId],
-                    res_id: resPartnerId1,
-                });
-                pyEnv["mail.message"].create({
-                    author_id: pyEnv.currentPartnerId,
-                    body: "I am more recent",
-                    model: "res.partner",
-                    res_id: resPartnerId1,
-                });
-                pyEnv["mail.notification"].create({
-                    mail_message_id: mailMessageId1,
-                    notification_status: "sent",
-                    notification_type: "inbox",
-                    res_partner_id: pyEnv.currentPartnerId,
-                });
-                await start();
-                await click(".o_menu_systray i[aria-label='Messages']");
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-notification-item:contains(I am the oldest but needaction)",
-                    "I am the oldest but needaction",
-                    "the displayed message should be the one that needs action even if there is a more recent message that is not needaction on the thread"
                 );
             }
         );

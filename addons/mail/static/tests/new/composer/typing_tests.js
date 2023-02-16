@@ -344,3 +344,46 @@ QUnit.test(
         assert.strictEqual($(target).find(".o-mail-composer-is-typing-space-holder").text(), "");
     }
 );
+
+QUnit.test("chat: correspondent is typing", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        im_status: "online",
+        name: "Demo",
+    });
+    const channelId = pyEnv["mail.channel"].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: partnerId }],
+        ],
+        channel_type: "chat",
+    });
+    const { env, openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(
+        document.body.querySelector(".o-mail-category-item"),
+        ".o-mail-discuss-sidebar-threadIcon"
+    );
+    assert.containsOnce(document.body, ".o-mail-chatwindow-icon-online");
+
+    // simulate receive typing notification from demo "is typing"
+    await afterNextRender(() =>
+        env.services.rpc("/mail/channel/notify_typing", {
+            channel_id: channelId,
+            context: { mockedPartnerId: partnerId },
+            is_typing: true,
+        })
+    );
+    assert.containsOnce(document.body, ".o-mail-typing-icon");
+    assert.strictEqual(document.querySelector(".o-mail-typing-icon").title, "Demo is typing...");
+
+    // simulate receive typing notification from demo "no longer is typing"
+    await afterNextRender(() =>
+        env.services.rpc("/mail/channel/notify_typing", {
+            channel_id: channelId,
+            context: { mockedPartnerId: partnerId },
+            is_typing: false,
+        })
+    );
+    assert.containsOnce(document.body, ".o-mail-chatwindow-icon-online");
+});

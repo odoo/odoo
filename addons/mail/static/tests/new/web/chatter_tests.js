@@ -618,3 +618,67 @@ QUnit.test(
         assert.containsNone(target, ".o-mail-message:contains(Custom Default Subject)");
     }
 );
+
+QUnit.test("basic chatter rendering without followers", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
+    const views = {
+        "res.partner,false,form": `<form string="Partners">
+        <sheet>
+            <field name="name"/>
+        </sheet>
+        <div class="oe_chatter">
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+        </div>
+    </form>`,
+    };
+    const { openView } = await start({ serverData: { views } });
+    await openView({
+        res_model: "res.partner",
+        res_id: partnerId,
+        views: [[false, "form"]],
+    });
+    assert.containsOnce(document.body, ".o-mail-chatter");
+    assert.containsOnce(document.body, ".o-mail-chatter-topbar");
+    assert.containsOnce(document.body, "button[aria-label='Attach files']");
+    assert.containsOnce(document.body, "button:contains(Activities)");
+    assert.containsNone(
+        document.body,
+        ".o-mail-chatter-topbar-follower-list",
+        "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
+    );
+    assert.containsOnce(document.body, ".o-mail-chatter .o-mail-thread");
+});
+
+QUnit.test("basic chatter rendering without messages", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
+    const views = {
+        "res.partner,false,form": `<form string="Partners">
+        <sheet>
+            <field name="name"/>
+        </sheet>
+        <div class="oe_chatter">
+            <field name="message_follower_ids"/>
+            <field name="activity_ids"/>
+        </div>
+    </form>`,
+    };
+    const { openView } = await start({ serverData: { views } });
+    await openView({
+        res_model: "res.partner",
+        res_id: partnerId,
+        views: [[false, "form"]],
+    });
+    assert.containsOnce(document.body, ".o-mail-chatter");
+    assert.containsOnce(document.body, ".o-mail-chatter-topbar");
+    assert.containsOnce(document.body, "button[aria-label='Attach files']");
+    assert.containsOnce(document.body, "button:contains(Activities)");
+    assert.containsOnce(document.body, ".o-mail-chatter-topbar-follower-list");
+    assert.containsNone(
+        document.body,
+        ".o-mail-chatter .o-mail-thread",
+        "there should be no thread because the 'message_ids' field is not present in 'oe_chatter'"
+    );
+});
