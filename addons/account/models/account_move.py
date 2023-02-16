@@ -568,6 +568,7 @@ class AccountMove(models.Model):
         compute='_compute_partner_credit_warning',
         groups="account.group_account_invoice,account.group_account_readonly",
     )
+    partner_credit = fields.Monetary(compute='_compute_partner_credit')
     duplicated_ref_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicated_ref_ids')
 
     # used to display the various dates and amount dues on the invoice's PDF
@@ -1378,24 +1379,29 @@ class AccountMove(models.Model):
                            move.move_type == 'out_invoice' and \
                            move.company_id.account_use_credit_limit
             if show_warning:
-                amount_total_currency = move.currency_id._convert(move.tax_totals['amount_total'], move.company_currency_id, move.company_id, move.date)
-                updated_credit = move.partner_id.commercial_partner_id.credit + amount_total_currency
-                move.partner_credit_warning = self._build_credit_warning_message(move, updated_credit)
+                move.partner_credit_warning = self._build_credit_warning_message(
+                    move, move.partner_credit, move.tax_totals['amount_total'] > 0.0)
 
-    def _build_credit_warning_message(self, record, updated_credit):
-        ''' Build the warning message that will be displayed in a yellow banner on top of the current record
+    @api.depends('partner_id')
+    def _compute_partner_credit(self):
+        for move in self:
+            move.partner_credit = move.partner_id.commercial_partner_id.credit
+
+    def _build_credit_warning_message(self, record, updated_credit, include):
+        """ Build the warning message that will be displayed in a yellow banner on top of the current record
             if the partner exceeds a credit limit (set on the company or the partner itself).
             :param record:                  The record where the warning will appear (Invoice, Sales Order...).
             :param updated_credit (float):  The partner's updated credit limit including the current record.
+            :param include (bool):          Whether the current record's amount is included in the warning message.
             :return (str):                  The warning message to be showed.
-        '''
+        """
         partner_id = record.partner_id.commercial_partner_id
         if not partner_id.credit_limit or updated_credit <= partner_id.credit_limit:
             return ''
         msg = _('%s has reached its Credit Limit of : %s\nTotal amount due ',
                 partner_id.name,
                 formatLang(self.env, partner_id.credit_limit, currency_obj=record.company_id.currency_id))
-        if updated_credit > partner_id.credit:
+        if include:
             msg += _('(including this document) ')
         msg += ': %s' % formatLang(self.env, updated_credit, currency_obj=record.company_id.currency_id)
         return msg

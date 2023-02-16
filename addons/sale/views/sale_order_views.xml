@@ -132,6 +132,7 @@
                     decoration-warning="invoice_status == 'upselling'"
                     widget="badge" optional="show"/>
                 <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="amount_to_invoice" optional="hide"/>
                 <field name="state" invisible="1"/>
             </tree>
         </field>

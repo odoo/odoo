@@ -218,6 +218,8 @@ class SaleOrder(models.Model):
     amount_untaxed = fields.Monetary(string="Untaxed Amount", store=True, compute='_compute_amounts', tracking=5)
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
     amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
+    amount_to_invoice = fields.Monetary(string="Amount to invoice", store=True, compute='_compute_amount_to_invoice')
+    amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
     invoice_ids = fields.Many2many(
@@ -578,6 +580,24 @@ class SaleOrder(models.Model):
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
 
+    @api.depends('invoice_ids.state', 'currency_id', 'amount_total')
+    def _compute_amount_to_invoice(self):
+        for order in self:
+            order.amount_to_invoice = order.amount_total
+            for invoice in order.invoice_ids.filtered(lambda x: x.state == 'posted'):
+                invoice_amount_currency = invoice.currency_id._convert(
+                    invoice.tax_totals['amount_total'],
+                    order.currency_id,
+                    invoice.company_id,
+                    invoice.date,
+                )
+                order.amount_to_invoice -= invoice_amount_currency
+
+    @api.depends('amount_total', 'amount_to_invoice')
+    def _compute_amount_invoiced(self):
+        for order in self:
+            order.amount_invoiced = order.amount_total - order.amount_to_invoice
+
     @api.depends('company_id', 'partner_id', 'amount_total')
     def _compute_partner_credit_warning(self):
         for order in self:
@@ -588,7 +608,7 @@ class SaleOrder(models.Model):
             if show_warning:
                 updated_credit = order.partner_id.commercial_partner_id.credit + (order.amount_total * order.currency_rate)
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order, updated_credit)
+                    order, updated_credit, order.amount_total > 0.0)
 
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):

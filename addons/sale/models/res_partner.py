@@ -54,3 +54,11 @@ class ResPartner(models.Model):
         all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         action["domain"] = [("partner_id", "in", all_child.ids)]
         return action
+
+    def _credit_debit_get(self):
+        super()._credit_debit_get()
+        domain = [('partner_id', 'in', self.ids), ('state', 'in', ['sale', 'done'])]
+        group = self.env['sale.order'].read_group(domain, ['amount_to_invoice'], ['partner_id'])
+        for res in group:
+            partner = self.browse(res['partner_id'][0])
+            partner.credit += res['amount_to_invoice']
