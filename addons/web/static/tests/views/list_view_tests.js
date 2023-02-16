@@ -61,7 +61,7 @@ import {
     validateSearch,
 } from "../search/helpers";
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
-import { makeView, setupViewRegistries } from "./helpers";
+import { makeView, makeViewInDialog, setupViewRegistries } from "./helpers";
 
 import { Component, onWillStart, xml } from "@odoo/owl";
 
@@ -11766,16 +11766,13 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("editable list: edit many2one from external link", async function (assert) {
         serverData.views = {
-            "bar,false,form": `
-                <form string="Bar">
-                    <field name="display_name"/>
-                </form>`,
+            "bar,false,form": `<form><field name="display_name"/></form>`,
         };
 
-        await makeView({
+        await makeViewInDialog({
             arch: `
                 <tree editable="top" multi_edit="1">
-                    <field name="m2o" open_target="new"/>
+                    <field name="m2o"/>
                 </tree>`,
             serverData,
             mockRPC: async function (route, args) {
@@ -11787,7 +11784,8 @@ QUnit.module("Views", (hooks) => {
             type: "list",
         });
 
-        assert.containsNone(target, ".o_selected_row", "not in edit mode");
+        assert.containsOnce(target, ".o_dialog .o_list_view");
+        assert.containsNone(target, ".o_selected_row");
         await click(target.querySelector("thead .o_list_record_selector input"));
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_selected_row", "in edit mode");
@@ -11795,23 +11793,24 @@ QUnit.module("Views", (hooks) => {
 
         // Clicking somewhere on the form dialog should not close it
         // and should not leave edit mode
-        assert.containsOnce(target, ".modal[role='dialog']");
+        assert.containsN(target, ".modal[role='dialog']", 2);
         await click(target.querySelector(".modal[role='dialog']"));
-        assert.containsOnce(target, ".modal[role='dialog']");
+        assert.containsN(target, ".modal[role='dialog']", 2);
         assert.containsOnce(target, ".o_selected_row", "in edit mode");
 
-        // Change the M2O value in the Form dialog
-        await editInput(target, ".modal input", "OOF");
-        await click(target.querySelector(".modal .o_form_button_save"));
-
+        // Change the M2O value in the Form dialog (will open a confirmation dialog)
+        await editInput(target.querySelectorAll(".modal")[1], "input", "OOF");
+        await click(target.querySelectorAll(".modal")[1], ".o_form_button_save");
+        assert.containsN(target, ".modal[role='dialog']", 3);
+        const confirmationDialog = target.querySelectorAll(".modal")[2];
         assert.strictEqual(
-            target.querySelector(".modal .o_field_widget[name=m2o]").innerText,
+            confirmationDialog.querySelector(".modal .o_field_widget[name=m2o]").innerText,
             "OOF",
             "Value of the m2o should be updated in the confirmation dialog"
         );
 
         // Close the confirmation dialog
-        await click(target.querySelectorAll(".modal")[1], ".btn-primary");
+        await click(confirmationDialog, ".btn-primary");
 
         assert.strictEqual(
             target.querySelector(".o_data_cell").innerText,
@@ -15332,8 +15331,16 @@ QUnit.module("Views", (hooks) => {
         const widthsAfterSelectRow = [...target.querySelectorAll(".o_list_table th")].map(
             (th) => th.offsetWidth
         );
-        assert.strictEqual(widthsAfterResize[0], widthsAfterSelectRow[0], "Width must not have been changed after selecting a row");
-        assert.strictEqual(widthsAfterResize[1], widthsAfterSelectRow[1], "Width must not have been changed after selecting a row");
+        assert.strictEqual(
+            widthsAfterResize[0],
+            widthsAfterSelectRow[0],
+            "Width must not have been changed after selecting a row"
+        );
+        assert.strictEqual(
+            widthsAfterResize[1],
+            widthsAfterSelectRow[1],
+            "Width must not have been changed after selecting a row"
+        );
     });
 
     QUnit.test("list: resize column and toggle check all", async function (assert) {
@@ -15364,8 +15371,16 @@ QUnit.module("Views", (hooks) => {
         const widthsAfterSelectAll = [...target.querySelectorAll(".o_list_table th")].map(
             (th) => th.offsetWidth
         );
-        assert.strictEqual(widthsAfterResize[0], widthsAfterSelectAll[0], "Width must not have been changed after selecting all");
-        assert.strictEqual(widthsAfterResize[1], widthsAfterSelectAll[1], "Width must not have been changed after selecting all");
+        assert.strictEqual(
+            widthsAfterResize[0],
+            widthsAfterSelectAll[0],
+            "Width must not have been changed after selecting all"
+        );
+        assert.strictEqual(
+            widthsAfterResize[1],
+            widthsAfterSelectAll[1],
+            "Width must not have been changed after selecting all"
+        );
     });
 
     QUnit.test("editable list: resize column headers", async function (assert) {

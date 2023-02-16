@@ -13,7 +13,7 @@ import {
     triggerHotkey,
     nextTick,
 } from "@web/../tests/helpers/utils";
-import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let target;
 let serverData;
@@ -399,7 +399,7 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await makeView({
+        await makeViewInDialog({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -408,7 +408,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="reference" string="custom label" open_target="new" />
+                            <field name="reference" string="custom label"/>
                         </group>
                     </sheet>
                 </form>`,
@@ -479,11 +479,13 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_external_button");
 
         assert.strictEqual(
-            target.querySelector(".modal .modal-title").textContent.trim(),
+            target
+                .querySelector(".o_dialog:not(.o_inactive_modal) .modal-title")
+                .textContent.trim(),
             "Open: custom label",
             "dialog title should display the custom string label"
         );
-        await click(target, ".modal .o_form_button_cancel");
+        await click(target, ".o_dialog:not(.o_inactive_modal) .o_form_button_cancel");
 
         await editSelect(target, ".o_field_widget select", "partner_type");
         assert.strictEqual(
@@ -503,41 +505,44 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("computed reference field changed by onchange to 'False,0' value", async function (assert) {
-        assert.expect(1);
+    QUnit.test(
+        "computed reference field changed by onchange to 'False,0' value",
+        async function (assert) {
+            assert.expect(1);
 
-        serverData.models.partner.onchanges = {
-            bar(obj) {
-                if (!obj.bar) {
-                    obj.reference_char = "False,0";
-                }
-            },
-        };
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            serverData.models.partner.onchanges = {
+                bar(obj) {
+                    if (!obj.bar) {
+                        obj.reference_char = "False,0";
+                    }
+                },
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <field name="bar"/>
                     <field name="reference_char" widget="reference"/>
                 </form>`,
-            mockRPC(route, { args, method }) {
-                if (method === "create") {
-                    assert.deepEqual(args[0], {
-                        bar: false,
-                        reference_char: "False,0",
-                    });
-                }
-            },
-        });
+                mockRPC(route, { args, method }) {
+                    if (method === "create") {
+                        assert.deepEqual(args[0], {
+                            bar: false,
+                            reference_char: "False,0",
+                        });
+                    }
+                },
+            });
 
-        // trigger the onchange to set a value for the reference field
-        await click(target, ".o_field_boolean input");
+            // trigger the onchange to set a value for the reference field
+            await click(target, ".o_field_boolean input");
 
-        // save
-        await clickSave(target);
-    });
+            // save
+            await clickSave(target);
+        }
+    );
 
     QUnit.test("interact with reference field changed by onchange", async function (assert) {
         assert.expect(2);
