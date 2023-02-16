@@ -2389,6 +2389,25 @@ class Task(models.Model):
     def action_unlink_task_from_recurrence(self):
         self.recurrence_template_id.unlink_task_and_subtasks_recursively()
 
+    def action_convert_to_task(self):
+        self.ensure_one()
+        self.write({
+            'company_id': self.project_id.company_id
+        })
+        return {
+            'view_mode': 'form',
+            'res_model': 'project.task',
+            'res_id': self.id,
+            'type': 'ir.actions.act_window',
+            'target': 'main'
+        }
+
+    def get_conversion_view_id(self):
+        return self.env.ref('project.project_task_todo_conversion_form').id
+
+    def current_user_has_project_access(self):
+        return self.env.user.has_group('project.group_project_user')
+
     # ---------------------------------------------------
     # Rating business
     # ---------------------------------------------------
