@@ -578,6 +578,50 @@ class AccountReconcileModel(models.Model):
         '''
         available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button').sorted()
 
+<<<<<<< HEAD
+||||||| parent of 189e4d0944e (temp)
+        # First associate with each rec models all the statement lines for which it is applicable
+        lines_with_partner_per_model = defaultdict(lambda: [])
+        for st_line in st_lines:
+
+            # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
+            # match anything.
+            if not st_line.amount_residual:
+                continue
+
+            mapped_partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
+
+            for rec_model in available_models:
+                partner = mapped_partner or rec_model._get_partner_from_mapping(st_line)
+
+                if rec_model._is_applicable_for(st_line, partner):
+                    lines_with_partner_per_model[rec_model].append((st_line, partner))
+
+        # Execute only one SQL query for each model (for performance)
+        matched_lines = self.env['account.bank.statement.line']
+=======
+        # First associate with each rec models all the statement lines for which it is applicable
+        lines_with_partner_per_model = defaultdict(lambda: [])
+        # Exclude already in the statement line associated account move lines
+        excluded_ids = excluded_ids or [] + st_lines.move_id.line_ids.ids
+        for st_line in st_lines:
+
+            # Statement lines created in old versions could have a residual amount of zero. In that case, don't try to
+            # match anything.
+            if not st_line.amount_residual:
+                continue
+
+            mapped_partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
+
+            for rec_model in available_models:
+                partner = mapped_partner or rec_model._get_partner_from_mapping(st_line)
+
+                if rec_model._is_applicable_for(st_line, partner):
+                    lines_with_partner_per_model[rec_model].append((st_line, partner))
+
+        # Execute only one SQL query for each model (for performance)
+        matched_lines = self.env['account.bank.statement.line']
+>>>>>>> 189e4d0944e (temp)
         for rec_model in available_models:
 
             if not rec_model._is_applicable_for(st_line, partner):
@@ -663,8 +707,17 @@ class AccountReconcileModel(models.Model):
 
         if self.past_months_limit:
             date_limit = fields.Date.context_today(self) - relativedelta(months=self.past_months_limit)
+<<<<<<< HEAD
             aml_domain.append(('date', '>=', fields.Date.to_string(date_limit)))
+||||||| parent of 189e4d0944e (temp)
+            query += "AND aml.date >= %(aml_date_limit)s"
+            params['aml_date_limit'] = date_limit
+=======
+            query += " AND aml.date >= %(aml_date_limit)s"
+            params['aml_date_limit'] = date_limit
+>>>>>>> 189e4d0944e (temp)
 
+<<<<<<< HEAD
         return aml_domain
 
     def _get_invoice_matching_st_line_tokens(self, st_line):
@@ -705,6 +758,17 @@ class AccountReconcileModel(models.Model):
         assert self.rule_type == 'invoice_matching'
         self.env['account.move'].flush_model()
         self.env['account.move.line'].flush_model()
+||||||| parent of 189e4d0944e (temp)
+        # Filter out excluded account.move.line.
+        if excluded_ids:
+            query += 'AND aml.id NOT IN %(excluded_aml_ids)s'
+            params['excluded_aml_ids'] = tuple(excluded_ids)
+=======
+        # Filter out excluded account.move.line.
+        if excluded_ids:
+            query += ' AND aml.id NOT IN %(excluded_aml_ids)s'
+            params['excluded_aml_ids'] = tuple(excluded_ids)
+>>>>>>> 189e4d0944e (temp)
 
         if self.matching_order == 'new_first':
             order_by = 'sub.date_maturity DESC, sub.date DESC, sub.id DESC'
