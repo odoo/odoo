@@ -21,6 +21,8 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         useErrorHandlers();
         this.rpc = useService("rpc");
         this.orderReceipt = useRef("order-receipt");
+        this.buttonMailReceipt = useRef("order-mail-receipt-button");
+        this.buttonPrintReceipt = useRef("order-print-receipt-button");
         this.currentOrder = this.env.pos.get_order();
         const partner = this.currentOrder.get_partner();
         this.orderUiState = this.currentOrder.uiState.ReceiptScreen;
@@ -48,20 +50,36 @@ export class ReceiptScreen extends AbstractReceiptScreen {
     _addNewOrder() {
         this.env.pos.add_new_order();
     }
-    async onSendEmail() {
+    onSendEmail() {
+        if (this.buttonMailReceipt.el.classList.contains("fa-spin")) {
+            this.orderUiState.emailSuccessful = false;
+            this.orderUiState.emailNotice = this.env._t("Sending in progress.");
+            return;
+        }
+        this.buttonMailReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
+        this.orderUiState.emailNotice = "";
+
         if (!is_email(this.orderUiState.inputEmail)) {
             this.orderUiState.emailSuccessful = false;
+            this.buttonMailReceipt.el.className = "fa fa-paper-plane";
             this.orderUiState.emailNotice = this.env._t("Invalid email.");
             return;
         }
-        try {
-            await this._sendReceiptToCustomer();
-            this.orderUiState.emailSuccessful = true;
-            this.orderUiState.emailNotice = this.env._t("Email sent.");
-        } catch {
-            this.orderUiState.emailSuccessful = false;
-            this.orderUiState.emailNotice = this.env._t("Sending email failed. Please try again.");
-        }
+
+        // Delay to allow the user to see the wheel that informs that the mail will be sent
+        setTimeout(async () => {
+            try {
+                await this._sendReceiptToCustomer();
+                this.orderUiState.emailSuccessful = true;
+                this.orderUiState.emailNotice = this.env._t("Email sent.");
+            } catch {
+                this.orderUiState.emailSuccessful = false;
+                this.orderUiState.emailNotice = this.env._t(
+                    "Sending email failed. Please try again."
+                );
+            }
+            this.buttonMailReceipt.el.className = "fa fa-paper-plane";
+        }, 1000);
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;
@@ -109,11 +127,15 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         }
     }
     async printReceipt() {
+        this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
         const currentOrder = this.currentOrder;
         const isPrinted = await this._printReceipt();
+
         if (isPrinted) {
             currentOrder._printed = true;
         }
+
+        this.buttonPrintReceipt.el.className = "fa fa-print";
     }
     _shouldAutoPrint() {
         return this.env.pos.config.iface_print_auto && !this.currentOrder._printed;
