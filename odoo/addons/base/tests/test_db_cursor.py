@@ -7,9 +7,10 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
 import odoo
-from odoo.sql_db import TestCursor
+from odoo.sql_db import db_connect, TestCursor
 from odoo.tests import common
 from odoo.tests.common import BaseCase
+from odoo.tools.misc import config
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
@@ -150,6 +151,54 @@ class TestTestCursor(common.TransactionCase):
         # avoid a warning on teardown (when self.cr finds a still on the stack)
         # as well as ensure the stack matches our expectations
         self.assertEqual(a._cursors_stack.pop(), a)
+
+    def test_borrow_connection(self):
+        """Tests the behavior of the postgresql connection pool recycling/borrowing"""
+        origin_db_port = config['db_port']
+        if not origin_db_port and hasattr(self.env.cr._cnx, 'info'):
+            # Check the edge case of the db port set,
+            # which is set as an integer in our DSN/connection_info
+            # but as string in the DSN of psycopg2
+            # The connections must be recycled/borrowed when the db_port is set
+            # e.g
+            # `connection.dsn`
+            # {'database': '14.0', 'port': 5432, 'sslmode': 'prefer'}
+            # must match
+            # `cr._cnx.dsn`
+            # 'port=5432 sslmode=prefer dbname=14.0'
+            config['db_port'] = self.env.cr._cnx.info.port
+
+        cursors = []
+        try:
+            connection = db_connect(self.cr.dbname)
+
+            # Case #1: 2 cursors, both opened/used, do not recycle/borrow.
+            # The 2nd cursor must not use the connection of the 1st cursor as it's used (not closed).
+            cursors.append(connection.cursor())
+            cursors.append(connection.cursor())
+            # Ensure the port is within psycopg's dsn, as explained in an above comment,
+            # we want to test the behavior of the connections borrowing including the port provided in the dsn.
+            if config['db_port']:
+                self.assertTrue('port=' in cursors[0]._cnx.dsn)
+            # Check the connection of the 1st cursor is different than the connection of the 2nd cursor.
+            self.assertNotEqual(id(cursors[0]._cnx), id(cursors[1]._cnx))
+
+            # Case #2: Close 1st cursor, open 3rd cursor, must recycle/borrow.
+            # The 3rd must recycle/borrow the connection of the 1st one.
+            cursors[0].close()
+            cursors.append(connection.cursor())
+            # Check the connection of this 3rd cursor uses the connection of the 1st cursor that has been closed.
+            self.assertEqual(id(cursors[0]._cnx), id(cursors[2]._cnx))
+
+        finally:
+            # Cleanups:
+            # - Close the cursors which have been left opened
+            # - Reset the config `db_port`
+            for cursor in cursors:
+                if not cursor.closed:
+                    cursor.close()
+            config['db_port'] = origin_db_port
+
 
 class TestCursorHooks(common.TransactionCase):
     def setUp(self):
