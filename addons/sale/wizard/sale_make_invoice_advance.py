@@ -55,6 +55,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
         comodel_name='res.company',
         compute='_compute_company_id',
         store=True)
+    amount_invoiced = fields.Monetary(
+        string="Already invoiced",
+        compute="_compute_invoice_amounts",
+        help="Only confirmed down payments are considered.")
+    amount_to_invoice = fields.Monetary(
+        string="Amount to invoice",
+        compute="_compute_invoice_amounts",
+        help="The amount to invoice = Sale Order Total - Confirmed Down Payments.")
 
     # Only used when there is no down payment product available
     #  to setup the down payment product
@@ -71,6 +79,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     # UI
     display_draft_invoice_warning = fields.Boolean(compute="_compute_display_draft_invoice_warning")
+    display_invoice_amount_warning = fields.Boolean(compute="_compute_display_invoice_amount_warning")
 
     #=== COMPUTE METHODS ===#
 
@@ -109,13 +118,24 @@ class SaleAdvancePaymentInv(models.TransientModel):
             if wizard.count == 1:
                 wizard.product_id = wizard.company_id.sale_down_payment_product_id
 
-    @api.depends('sale_order_ids', 'advance_payment_method', 'deduct_down_payments')
+    @api.depends('amount', 'fixed_amount', 'advance_payment_method', 'amount_to_invoice')
+    def _compute_display_invoice_amount_warning(self):
+        for wizard in self:
+            invoice_amount = wizard.fixed_amount
+            if wizard.advance_payment_method == 'percentage':
+                invoice_amount = wizard.amount / 100 * sum(wizard.sale_order_ids.mapped('amount_total'))
+            wizard.display_invoice_amount_warning = invoice_amount > wizard.amount_to_invoice
+
+    @api.depends('sale_order_ids')
     def _compute_display_draft_invoice_warning(self):
         for wizard in self:
-            wizard.display_draft_invoice_warning = (
-                wizard.advance_payment_method == 'delivered' and
-                any(aml.parent_state == 'draft' for aml in wizard.sale_order_ids.order_line.invoice_lines)
-            )
+            wizard.display_draft_invoice_warning = wizard.sale_order_ids.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
+
+    @api.depends('sale_order_ids')
+    def _compute_invoice_amounts(self):
+        for wizard in self:
+            wizard.amount_invoiced = sum(wizard.sale_order_ids.mapped('amount_invoiced'))
+            wizard.amount_to_invoice = sum(wizard.sale_order_ids.mapped('amount_to_invoice'))
 
     #=== ONCHANGE METHODS ===#
 
@@ -127,7 +147,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     #=== CONSTRAINT METHODS ===#
 
-    @api.constrains('advance_payment_method', 'amount', 'fixed_amount')
     def _check_amount_is_positive(self):
         for wizard in self:
             if wizard.advance_payment_method == 'percentage' and wizard.amount <= 0.00:
@@ -153,11 +172,19 @@ class SaleAdvancePaymentInv(models.TransientModel):
     #=== ACTION METHODS ===#
 
     def create_invoices(self):
+        self._check_amount_is_positive()
         invoices = self._create_invoices(self.sale_order_ids)
-        if self.env.context.get('open_invoices'):
-            return self.sale_order_ids.action_view_invoice(invoices=invoices)
+        return self.sale_order_ids.action_view_invoice(invoices=invoices)
 
-        return {'type': 'ir.actions.act_window_close'}
+    def view_draft_invoices(self):
+        return {
+            'name': _('Draft Invoices'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree',
+            'views': [(False, 'list'), (False, 'form')],
+            'res_model': 'account.move',
+            'domain': [('line_ids.sale_line_ids.order_id', 'in', self.sale_order_ids.ids), ('state', '=', 'draft')],
+        }
 
     #=== BUSINESS METHODS ===#
 

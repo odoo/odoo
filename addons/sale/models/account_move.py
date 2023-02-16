@@ -145,3 +145,22 @@ class AccountMove(models.Model):
         # OVERRIDE
         self.ensure_one()
         return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False
+
+    @api.depends('line_ids.sale_line_ids.order_id', 'currency_id', 'tax_totals', 'date')
+    def _compute_partner_credit(self):
+        super()._compute_partner_credit()
+        for move in self:
+            sale_order = move.line_ids.sale_line_ids.order_id
+            amount_total_currency = move.currency_id._convert(
+                move.tax_totals['amount_total'],
+                move.company_currency_id,
+                move.company_id,
+                move.date
+            )
+            amount_to_invoice_currency = sale_order.currency_id._convert(
+                sale_order.amount_to_invoice,
+                move.company_currency_id,
+                move.company_id,
+                move.date
+            )
+            move.partner_credit += max(amount_total_currency - amount_to_invoice_currency, 0.0)
