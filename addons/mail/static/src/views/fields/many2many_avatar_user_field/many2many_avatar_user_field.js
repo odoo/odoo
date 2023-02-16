@@ -73,7 +73,7 @@ KanbanMany2ManyTagsAvatarUserField.components = {
 
 export const kanbanMany2ManyTagsAvatarUserField = {
     ...listKanbanMany2ManyTagsAvatarField,
-    component: ListKanbanMany2ManyTagsAvatarField,
+    component: KanbanMany2ManyTagsAvatarUserField,
     additionalClasses: ["o_field_many2many_tags_avatar"],
 };
 
