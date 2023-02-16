@@ -65,11 +65,8 @@ export class Message {
     /**
      * @returns {string}
      */
-    get avatarUrl() {
-        if (
-            this.author?.type === "partner" &&
-            (!this.originThread || this.originThread.model !== "mail.channel")
-        ) {
+    get authorAvatarUrl() {
+        if (!this.originThread || this.originThread.model !== "mail.channel") {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message
@@ -80,11 +77,6 @@ export class Message {
             this.originThread.model === "mail.channel"
         ) {
             return `/mail/channel/${this.originThread.id}/partner/${this.author.id}/avatar_128`;
-        } else if (
-            this.author?.type === "guest" &&
-            (!this.originThread || this.originThread.model !== "mail.channel")
-        ) {
-            return this.author.avatarUrl;
         } else if (
             this.author?.type === "guest" &&
             this.originThread &&
@@ -201,10 +193,6 @@ export class Message {
 
     get url() {
         return `${url("/web")}#model=${this.resModel}&id=${this.id}`;
-    }
-
-    get authorAvatarUrl() {
-        return this.author?.avatarUrl || "/mail/static/src/img/smiley/avatar.jpg";
     }
 
     get isBodyEmpty() {
