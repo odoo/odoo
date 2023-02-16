@@ -1040,9 +1040,13 @@ export class MockServer {
                 switch (fields[fieldName].type) {
                     case "integer":
                     case "float": {
-                        group[name] = 0;
-                        for (const r of records) {
-                            group[name] += r[fieldName];
+                        if (func === "array_agg") {
+                            group[name] = records.map((r) => r[fieldName]);
+                        } else {
+                            group[name] = 0;
+                            for (const r of records) {
+                                group[name] += r[fieldName];
+                            }
                         }
                         break;
                     }
