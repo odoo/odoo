@@ -272,6 +272,12 @@ class AccountTax(models.Model):
     @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
+            # if the tax is an aggregation of its sub-taxes (group) it can have no repartition lines
+            if record.amount_type == 'group' and \
+                    not record.invoice_repartition_line_ids and \
+                    not record.refund_repartition_line_ids:
+                continue
+
             invoice_repartition_line_ids = record.invoice_repartition_line_ids.sorted(lambda l: (l.sequence, l.id))
             refund_repartition_line_ids = record.refund_repartition_line_ids.sorted(lambda l: (l.sequence, l.id))
             record._check_repartition_lines(invoice_repartition_line_ids)
