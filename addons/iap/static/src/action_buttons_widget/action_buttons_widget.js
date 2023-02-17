@@ -34,11 +34,14 @@ IAPActionButtonsWidget.props = {
     serviceName: String,
     showServiceButtons: Boolean,
 };
-IAPActionButtonsWidget.extractProps = ({ attrs }) => {
-    return {
-        serviceName: attrs.service_name,
-        showServiceButtons: !Boolean(attrs.hide_service),
-    };
-};
 
-registry.category("view_widgets").add("iap_buy_more_credits", IAPActionButtonsWidget);
+export const iapActionButtonsWidget = {
+    component: IAPActionButtonsWidget,
+    extractProps: ({ attrs }) => {
+        return {
+            serviceName: attrs.service_name,
+            showServiceButtons: !Boolean(attrs.hide_service),
+        };
+    },
+};
+registry.category("view_widgets").add("iap_buy_more_credits", iapActionButtonsWidget);

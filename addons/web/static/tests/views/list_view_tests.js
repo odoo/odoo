@@ -16914,9 +16914,13 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("view widgets are rendered in list view", async function (assert) {
-        class TestWidget extends Component {}
-        TestWidget.template = xml`<div class="test_widget" t-esc="props.record.data.bar"/>`;
-        registry.category("view_widgets").add("test_widget", TestWidget);
+        class TestWidget extends Component {
+            static template = xml`<div class="test_widget" t-esc="props.record.data.bar"/>`;
+        }
+        const testWidget = {
+            component: TestWidget,
+        };
+        registry.category("view_widgets").add("test_widget", testWidget);
         await makeView({
             type: "list",
             resModel: "foo",

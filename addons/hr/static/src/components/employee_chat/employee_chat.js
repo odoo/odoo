@@ -18,4 +18,7 @@ HrEmployeeChat.props = {
 };
 HrEmployeeChat.template = 'hr.OpenChat';
 
-registry.category("view_widgets").add("hr_employee_chat", HrEmployeeChat);
+export const hrEmployeeChat = {
+    component: HrEmployeeChat,
+};
+registry.category("view_widgets").add("hr_employee_chat", hrEmployeeChat);

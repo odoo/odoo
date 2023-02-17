@@ -14,4 +14,7 @@ export class ContractWarningTooltip extends Component {
 }
 ContractWarningTooltip.template = "hr_contract.ContractWarningTooltip";
 
-registry.category("view_widgets").add("contract_warning_tooltip", ContractWarningTooltip);
+export const contractWarningTooltip = {
+    component: ContractWarningTooltip,
+};
+registry.category("view_widgets").add("contract_warning_tooltip", contractWarningTooltip);

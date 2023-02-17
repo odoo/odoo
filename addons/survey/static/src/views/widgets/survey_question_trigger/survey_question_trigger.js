@@ -92,7 +92,8 @@ SurveyQuestionTriggerWidget.props = {
     ...standardWidgetProps,
 };
 
-SurveyQuestionTriggerWidget.displayName = 'Trigger';
-SurveyQuestionTriggerWidget.supportedTypes = ['many2one'];
-
-registry.category("view_widgets").add("survey_question_trigger", SurveyQuestionTriggerWidget);
+export const surveyQuestionTriggerWidget = {
+    component: SurveyQuestionTriggerWidget,
+    displayName: "Trigger",
+};
+registry.category("view_widgets").add("survey_question_trigger", surveyQuestionTriggerWidget);

@@ -10243,12 +10243,15 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("basic support for widgets", async function (assert) {
         class MyComponent extends owl.Component {
+            static template = owl.xml`<div t-esc="value"/>`;
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
         }
-        MyComponent.template = owl.xml`<div t-esc="value"/>`;
-        widgetRegistry.add("test_widget", MyComponent);
+        const myComponent = {
+            component: MyComponent,
+        };
+        widgetRegistry.add("test_widget", myComponent);
 
         await makeView({
             type: "form",
@@ -10291,6 +10294,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("basic support for widgets: onchange update", async function (assert) {
         class MyWidget extends owl.Component {
+            static template = owl.xml`<t t-esc="state.dataToDisplay" />`;
             setup() {
                 this.state = owl.useState({
                     dataToDisplay: this.props.record.data.foo,
@@ -10300,9 +10304,10 @@ QUnit.module("Views", (hooks) => {
                 });
             }
         }
-        MyWidget.template = owl.xml`<t t-esc="state.dataToDisplay" />`;
-
-        widgetRegistry.add("test_widget", MyWidget);
+        const myWidget = {
+            component: MyWidget,
+        };
+        widgetRegistry.add("test_widget", myWidget);
 
         await makeView({
             type: "form",

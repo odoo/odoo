@@ -89,4 +89,7 @@ export class QtyAtDateWidget extends Component {
 QtyAtDateWidget.components = { Popover: QtyAtDatePopover };
 QtyAtDateWidget.template = "sale_stock.qtyAtDate";
 
-registry.category("view_widgets").add("qty_at_date_widget", QtyAtDateWidget);
+export const qtyAtDateWidget = {
+    component: QtyAtDateWidget,
+};
+registry.category("view_widgets").add("qty_at_date_widget", qtyAtDateWidget);

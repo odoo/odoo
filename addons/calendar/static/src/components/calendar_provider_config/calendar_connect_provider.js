@@ -76,4 +76,7 @@ CalendarConnectProvider.props = {
 };
 CalendarConnectProvider.template = 'calendar.CalendarConnectProvider';
 
-registry.category("view_widgets").add("calendar_connect_provider", CalendarConnectProvider);
+const calendarConnectProvider = {
+    component: CalendarConnectProvider,
+};
+registry.category("view_widgets").add("calendar_connect_provider", calendarConnectProvider);
