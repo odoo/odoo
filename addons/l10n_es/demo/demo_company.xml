@@ -7,7 +7,7 @@
         <field name="city">Candasnos</field>
         <field name="country_id" ref="base.es"/>
         <field name="state_id" ref="base.state_es_z"/>
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+34 612 34 56 78</field>
         <field name="email">info@company.esexample.com</field>
         <field name="website">www.esexample.com</field>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_es.account_chart_template_assoc')]"/>
+        <value eval="[]"/>
+        <value>es_assec</value>
         <value model="res.company" eval="obj().env.ref('l10n_es.demo_company_es')"/>
     </function>
 </odoo>

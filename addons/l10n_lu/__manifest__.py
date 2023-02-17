@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (C) 2011 Thamini S.à.R.L (<http://www.thamini.com>)
-# Copyright (C) 2011 ADN Consultants S.à.R.L (<http://www.adn-luxembourg.com>)
-#    Copyright (C) 2014 ACSONE SA/NV (<http://acsone.eu>)
-
 {
     'name': 'Luxembourg - Accounting',
     'version': '2.1',
@@ -28,23 +22,10 @@ Notes:
         'account',
         'base_iban',
         'base_vat',
-        'l10n_multilang',
     ],
     'data': [
-        # basic accounting data
         'data/l10n_lu_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/account.group.template.csv',
         'data/account_tax_report_line.xml',
-        'data/account.tax.group.csv',
-        'data/account_tax_template_2015.xml',
-        'data/account.fiscal.position.template-2011.csv',
-        'data/account.fiscal.position.tax.template-2015.csv',
-        'data/account_reconcile_model_template_data.xml',
-        # configuration wizard, views, reports...
-        'data/account.chart.template.csv',
-        'data/account_chart_template_data.xml',
-        'data/l10n_lu_chart_template_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

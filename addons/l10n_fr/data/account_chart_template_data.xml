@@ -12,19 +12,4 @@
 
     <menuitem id="account_reports_fr_statements_menu" name="France" parent="account.menu_finance_reports" sequence="5" groups="account.group_account_readonly"/>
 
-    <record id="l10n_fr_pcg_chart_template" model="account.chart.template">
-        <field name="property_account_receivable_id" ref="fr_pcg_recv"/>
-        <field name="property_account_payable_id" ref="fr_pcg_pay"/>
-        <field name="property_account_expense_categ_id" ref="pcg_6071"/>
-        <field name="property_account_income_categ_id" ref="pcg_7071"/>
-        <field name="income_currency_exchange_account_id" ref="pcg_766"/>
-        <field name="expense_currency_exchange_account_id" ref="pcg_666"/>
-        <field name="property_tax_payable_account_id" ref="pcg_44551"/>
-        <field name="property_tax_receivable_account_id" ref="pcg_44567"/>
-        <field name="default_pos_receivable_account_id" ref="fr_pcg_recv_pos"/>
-        <field name="account_journal_early_pay_discount_loss_account_id" ref="pcg_665"/>
-        <field name="account_journal_early_pay_discount_gain_account_id" ref="pcg_765"/>
-        <field name="currency_id" ref="base.EUR"/>
-        <field name="spoken_languages" eval="'fr_FR;'"/>
-    </record>
-</odoo>
+    </odoo>

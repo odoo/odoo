@@ -1,16 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Author: Goran Kliska
-# mail:   goran.kliska(AT)slobodni-programi.hr
-# Copyright (C) 2011- Slobodni programi d.o.o., Zagreb
-# Contributions:
-#           Tomislav Bošnjaković, Storm Computers d.o.o. :
-#              - account types
-
 {
-    "name": "Croatia - Accounting (Kuna)",
-    "description": """
+    'name': 'Croatia - Accounting (Kuna)',
+    'description': """
 Croatian localisation.
 ======================
 
@@ -38,22 +29,14 @@ Izvori podataka:
  https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar
 
 """,
-    "version": "13.0",
-    "author": "OpenERP Croatian Community",
+    'version': '13.0',
+    'author': 'OpenERP Croatian Community',
     'category': 'Accounting/Localizations/Account Charts',
-
     'depends': [
         'account',
     ],
     'data': [
-        'data/l10n_hr_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/account_chart_tag_data.xml',
-        'data/account.tax.group.csv',
         'data/account_tax_report_data.xml',
-        'data/account_tax_template_data.xml',
-        'data/account_tax_fiscal_position_data.xml',
-        'data/account_chart_template_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

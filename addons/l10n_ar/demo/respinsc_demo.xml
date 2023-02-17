@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="partner_ri" model="res.partner">
-        <field name='name'>(AR) Responsable Inscripto</field>
-        <field name='l10n_ar_afip_responsibility_type_id' ref="res_IVARI"/>
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
-        <field name='vat'>30111111118</field>
+        <field name="name">(AR) Responsable Inscripto</field>
+        <field name="l10n_ar_afip_responsibility_type_id" ref="res_IVARI"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_ar.it_cuit"/>
+        <field name="vat">30111111118</field>
         <field name="street">Calle Falsa 123</field>
         <field name="city">Rosario</field>
         <field name="country_id" ref="base.ar"/>
@@ -17,13 +17,13 @@
     </record>
 
     <record id="company_ri" model="res.company">
-        <field name='parent_id' ref='base.main_company'/>
-        <field name='currency_id' ref='base.ARS'/>
-        <field name='partner_id' ref='partner_ri'/>
-        <field name='name'>(AR) Responsable Inscripto</field>
+        <field name="parent_id" ref="base.main_company"/>
+        <field name="currency_id" ref="base.ARS"/>
+        <field name="partner_id" ref="partner_ri"/>
+        <field name="name">(AR) Responsable Inscripto</field>
         <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-01-01')"/>
-        <field name='l10n_ar_gross_income_type'>local</field>
-        <field name='l10n_ar_gross_income_number'>901-21885123</field>
+        <field name="l10n_ar_gross_income_type">local</field>
+        <field name="l10n_ar_gross_income_number">901-21885123</field>
     </record>
 
     <function model="res.users" name="write">
@@ -32,7 +32,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_ar.l10nar_ri_chart_template')]"/>
+        <value eval="[]"/>
+        <value>ar_ri</value>
         <value model="res.company" eval="obj().env.ref('l10n_ar.company_ri')"/>
     </function>
 
@@ -45,15 +46,15 @@
     <data noupdate="1">
 
         <record id="sale_expo_journal_ri" model="account.journal">
-            <field name='name'>Expo Sales Journal</field>
-            <field name='company_id' ref="l10n_ar.company_ri"/>
-            <field name='type'>sale</field>
-            <field name='code'>S0002</field>
-            <field name='l10n_latam_use_documents' eval="True"/>
-            <field name='l10n_ar_afip_pos_number'>2</field>
-            <field name='l10n_ar_afip_pos_partner_id' ref="l10n_ar.partner_ri"/>
-            <field name='l10n_ar_afip_pos_system'>FEERCEL</field>
-            <field name='refund_sequence' eval="False"/>
+            <field name="name">Expo Sales Journal</field>
+            <field name="company_id" ref="l10n_ar.company_ri"/>
+            <field name="type">sale</field>
+            <field name="code">S0002</field>
+            <field name="l10n_latam_use_documents" eval="True"/>
+            <field name="l10n_ar_afip_pos_number">2</field>
+            <field name="l10n_ar_afip_pos_partner_id" ref="l10n_ar.partner_ri"/>
+            <field name="l10n_ar_afip_pos_system">FEERCEL</field>
+            <field name="refund_sequence" eval="False"/>
         </record>
 
     </data>

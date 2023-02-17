@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Czech - Accounting',
     'version': '1.0',
@@ -22,16 +21,8 @@ Tento modul definuje:
         'base_iban',
         'base_vat',
     ],
-    'data': [
-          'data/l10n_cz_coa_data.xml',
-          'data/account.account.template.csv',
-          'data/account.group.template.csv',
-          'data/l10n_cz_coa_post_data.xml',
-          'data/account_tax_group_data.xml',
-          'data/account_tax_data.xml',
-          'data/account_fiscal_position_data.xml',
-          'data/account_chart_template_data.xml'
+    'demo': [
+        'data/demo_company.xml',
     ],
-    'demo': ['data/demo_company.xml'],
     'license': 'LGPL-3',
 }
