@@ -1,14 +1,16 @@
 /** @odoo-module **/
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
-import {getCookie, deleteCookie} from 'web.utils.cookies';
+import { getCookie, deleteCookie } from "web.utils.cookies";
 
 Model({
-    name: 'LivechatButtonView',
+    name: "LivechatButtonView",
     lifecycleHooks: {
         _created() {
-            this.update({ widget: this.env.services.public_livechat_service.mountLivechatButton() });
+            this.update({
+                widget: this.env.services.public_livechat_service.mountLivechatButton(),
+            });
         },
         _willDelete() {
             this.widget.destroy();
@@ -20,19 +22,27 @@ Model({
          * @param {Object} [options={}]
          */
         addMessage(data, options) {
-            const hasAlreadyMessage = _.some(this.messaging.publicLivechatGlobal.messages, function (msg) {
-                return data.id === msg.id;
-            });
+            const hasAlreadyMessage = _.some(
+                this.messaging.publicLivechatGlobal.messages,
+                function (msg) {
+                    return data.id === msg.id;
+                }
+            );
             if (hasAlreadyMessage) {
                 return;
             }
-            const message = this.messaging.models['PublicLivechatMessage'].insert({
+            const message = this.messaging.models["PublicLivechatMessage"].insert({
                 data,
                 id: data.id,
             });
 
-            if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.widget) {
-                this.messaging.publicLivechatGlobal.publicLivechat.widget.addMessage(message.widget);
+            if (
+                this.messaging.publicLivechatGlobal.publicLivechat &&
+                this.messaging.publicLivechatGlobal.publicLivechat.widget
+            ) {
+                this.messaging.publicLivechatGlobal.publicLivechat.widget.addMessage(
+                    message.widget
+                );
             }
 
             if (options && options.prepend) {
@@ -46,7 +56,9 @@ Model({
             }
         },
         askFeedback() {
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_composer input').prop('disabled', true);
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_thread_composer input")
+                .prop("disabled", true);
             this.messaging.publicLivechatGlobal.update({ feedbackView: {} });
             /**
              * When we enter the "ask feedback" process of the chat, we hide some elements that become
@@ -59,19 +71,28 @@ Model({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
                 this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').hide();
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field')
-                .removeClass('d-none')
-                .val('');
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_livechat_chatbot_main_restart")
+                .addClass("d-none");
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_livechat_chatbot_end")
+                .hide();
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_composer_text_field")
+                .removeClass("d-none")
+                .val("");
         },
         /**
          * Restart the script and then trigger the "next step" (which will be the first of the script
          * in this case).
          */
         async onChatbotRestartScript(ev) {
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field').removeClass('d-none');
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').hide();
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_composer_text_field")
+                .removeClass("d-none");
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_livechat_chatbot_end")
+                .hide();
 
             if (this.messaging.publicLivechatGlobal.chatbot.nextStepTimeout) {
                 clearTimeout(this.messaging.publicLivechatGlobal.chatbot.nextStepTimeout);
@@ -82,7 +103,7 @@ Model({
             }
 
             const postedMessage = await this.messaging.rpc({
-                route: '/chatbot/restart',
+                route: "/chatbot/restart",
                 params: {
                     channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
                     chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
@@ -98,24 +119,27 @@ Model({
             this.messaging.publicLivechatGlobal.chatbot.update({
                 nextStepTimeout: setTimeout(
                     this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
-                    this.messaging.publicLivechatGlobal.chatbot.messageDelay,
+                    this.messaging.publicLivechatGlobal.chatbot.messageDelay
                 ),
             });
         },
         closeChat() {
             this.messaging.publicLivechatGlobal.update({ chatWindow: clear() });
-            deleteCookie('im_livechat_session');
+            deleteCookie("im_livechat_session");
         },
         /**
          * Called when the visitor leaves the livechat chatter the first time (first click on X button)
          * this will deactivate the mail_channel, notify operator that visitor has left the channel.
          */
         leaveSession() {
-            const cookie = getCookie('im_livechat_session');
+            const cookie = getCookie("im_livechat_session");
             if (cookie) {
                 const channel = JSON.parse(cookie);
-                this.messaging.rpc({ route: '/im_livechat/visitor_leave_session', params: { uuid: channel.uuid } });
-                deleteCookie('im_livechat_session');
+                this.messaging.rpc({
+                    route: "/im_livechat/visitor_leave_session",
+                    params: { uuid: channel.uuid },
+                });
+                deleteCookie("im_livechat_session");
             }
         },
         openChat() {
@@ -127,7 +151,7 @@ Model({
         },
         async openChatWindow() {
             this.messaging.publicLivechatGlobal.update({ chatWindow: {} });
-            await this.messaging.publicLivechatGlobal.chatWindow.widget.appendTo($('body'));
+            await this.messaging.publicLivechatGlobal.chatWindow.widget.appendTo($("body"));
             this.messaging.publicLivechatGlobal.chatWindow.widget.adjustPosition();
             this.widget.$el.hide();
             this._openChatWindowChatbot();
@@ -156,27 +180,30 @@ Model({
                     this.addMessage(m);
                 }
                 this.openChat();
-            } else if (!this.messaging.device.isSmall && this.messaging.publicLivechatGlobal.rule.action === 'auto_popup') {
-                const autoPopupCookie = getCookie('im_livechat_auto_popup');
+            } else if (
+                !this.messaging.device.isSmall &&
+                this.messaging.publicLivechatGlobal.rule.action === "auto_popup"
+            ) {
+                const autoPopupCookie = getCookie("im_livechat_auto_popup");
                 if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
                     this.update({
                         autoOpenChatTimeout: setTimeout(
                             this.openChat,
-                            this.messaging.publicLivechatGlobal.rule.auto_popup_timer * 1000,
+                            this.messaging.publicLivechatGlobal.rule.auto_popup_timer * 1000
                         ),
                     });
                 }
             }
             if (this.buttonBackgroundColor) {
-                this.widget.$el.css('background-color', this.buttonBackgroundColor);
+                this.widget.$el.css("background-color", this.buttonBackgroundColor);
             }
             if (this.buttonTextColor) {
-                this.widget.$el.css('color', this.buttonTextColor);
+                this.widget.$el.css("color", this.buttonTextColor);
             }
             // If website_event_track installed, put the livechat banner above the PWA banner.
-            const pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
+            const pwaBannerHeight = $(".o_pwa_install_banner").outerHeight(true);
             if (pwaBannerHeight) {
-                this.widget.$el.css('bottom', pwaBannerHeight + 'px');
+                this.widget.$el.css("bottom", pwaBannerHeight + "px");
             }
         },
         /**
@@ -186,7 +213,7 @@ Model({
             if (this.isOpeningChat) {
                 return;
             }
-            const cookie = getCookie('im_livechat_session');
+            const cookie = getCookie("im_livechat_session");
             let def;
             this.update({ isOpeningChat: true });
             clearTimeout(this.autoOpenChatTimeout);
@@ -195,19 +222,24 @@ Model({
             } else {
                 // re-initialize messages cache
                 this.messaging.publicLivechatGlobal.update({ messages: clear() });
-                def = this.messaging.rpc({
-                    route: '/im_livechat/get_session',
-                    params: {
-                        ...this.widget._prepareGetSessionParameters(),
-                        persisted: false,
+                def = this.messaging.rpc(
+                    {
+                        route: "/im_livechat/get_session",
+                        params: {
+                            ...this.widget._prepareGetSessionParameters(),
+                            persisted: false,
+                        },
                     },
-                }, { silent: true });
+                    { silent: true }
+                );
             }
             def.then((livechatData) => {
                 if (!livechatData || !livechatData.operator_pid) {
                     try {
                         this.widget.displayNotification({
-                            message: this.env._t("No available collaborator, please try again later."),
+                            message: this.env._t(
+                                "No available collaborator, please try again later."
+                            ),
                             sticky: true,
                         });
                     } catch {
@@ -218,7 +250,9 @@ Model({
                          * lib at the moment because they use bootstrap toast and
                          * we don't want to include boostrap in external lib.
                          */
-                        console.warn(this.env._t("No available collaborator, please try again later."));
+                        console.warn(
+                            this.env._t("No available collaborator, please try again later.")
+                        );
                     }
                 } else {
                     this.messaging.publicLivechatGlobal.update({
@@ -232,11 +266,13 @@ Model({
                         this.messaging.publicLivechatGlobal.publicLivechat.updateSessionCookie();
                     });
                 }
-            }).then(() => {
-                this.update({ isOpeningChat: false });
-            }).guardedCatch(() => {
-                this.update({ isOpeningChat: false });
-            });
+            })
+                .then(() => {
+                    this.update({ isOpeningChat: false });
+                })
+                .guardedCatch(() => {
+                    this.update({ isOpeningChat: false });
+                });
         },
         /**
          * Resuming the chatbot script if we are currently running one.
@@ -250,7 +286,7 @@ Model({
          * @override
          */
         _openChatWindowChatbot() {
-            window.addEventListener('resize', () => {
+            window.addEventListener("resize", () => {
                 if (this.messaging.publicLivechatGlobal.chatWindow) {
                     this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
                 }
@@ -270,10 +306,15 @@ Model({
          * @param {Object} message
          */
         async _sendMessage(message) {
-            this.messaging.publicLivechatGlobal.publicLivechat.widget._notifyMyselfTyping({ typing: false });
+            this.messaging.publicLivechatGlobal.publicLivechat.widget._notifyMyselfTyping({
+                typing: false,
+            });
             const messageId = await this.messaging.rpc({
-                route: '/mail/chat_post',
-                params: { uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid, message_content: message.content },
+                route: "/mail/chat_post",
+                params: {
+                    uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                    message_content: message.content,
+                },
             });
             if (!messageId) {
                 try {
@@ -309,18 +350,23 @@ Model({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
                 if (
-                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
-                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_operator_found
+                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data
+                        .chatbot_step_type === "forward_operator" &&
+                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data
+                        .chatbot_operator_found
                 ) {
                     return; // operator has taken over the conversation, let them speak
-                } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
+                } else if (
+                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data
+                        .chatbot_step_type === "free_input_multi"
+                ) {
                     this.messaging.publicLivechatGlobal.chatbot.debouncedAwaitUserInput();
                 } else if (!this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
                     this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
                     this.messaging.publicLivechatGlobal.chatbot.update({
                         nextStepTimeout: setTimeout(
                             this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
-                            this.messaging.publicLivechatGlobal.chatbot.messageDelay,
+                            this.messaging.publicLivechatGlobal.chatbot.messageDelay
                         ),
                     });
                 } else {
@@ -420,7 +466,7 @@ Model({
                 }
                 return this.env._t("Ask something ...");
             },
-            default: '',
+            default: "",
         }),
         isOpenChatDebounced: attr({
             compute() {
@@ -440,9 +486,9 @@ Model({
                 return _.debounce(this._openChat, 200, true);
             },
         }),
-        publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+        publicLivechatGlobalOwner: one("PublicLivechatGlobal", {
             identifying: true,
-            inverse: 'livechatButtonView',
+            inverse: "livechatButtonView",
         }),
         serverUrl: attr({
             compute() {

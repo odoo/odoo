@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import CCThrottleFunctionObject from '@im_livechat/legacy/models/cc_throttle_function_object';
+import CCThrottleFunctionObject from "@im_livechat/legacy/models/cc_throttle_function_object";
 
 /**
  * A function that creates a cancellable and clearable (CC) throttle version

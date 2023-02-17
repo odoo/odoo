@@ -21,7 +21,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
     @include media-breakpoint-down(md) {
         width: 100%;
-        height: 100%!important;
+        height: 100% !important;
         box-shadow: none;
         &.o_folded {
             display: none;
@@ -37,9 +37,9 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         display: flex;
         flex: 0 0 auto;
         color: white;
-        padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
+        padding: $o-mail-chatter-gap * 0.5 $o-mail-chatter-gap;
         border-radius: 3px 3px 0 0;
-        border-bottom: 1px solid map-get($grays, '300');
+        border-bottom: 1px solid map-get($grays, "300");
         background-color: $o-brand-odoo;
         padding: 8px;
         cursor: pointer;
@@ -89,7 +89,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 padding-left: 2px;
 
                 .o_mail_thread_typing_icon_dot {
-                    background: map-get($grays, '300');
+                    background: map-get($grays, "300");
                 }
             }
         }
@@ -103,7 +103,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 @include o-hover-opacity(0.7, 1);
             }
         }
-
     }
 
     .o_mail_thread {
@@ -139,7 +138,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     width: auto;
     height: 28px;
     color: white;
-    background-color: map-get($grays, '900');
+    background-color: map-get($grays, "900");
     cursor: pointer;
     box-shadow: none;
 
@@ -172,7 +171,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         > li.o_thread_window_header {
             font-size: 12px;
             padding: 3px 5px;
-            &~li.o_thread_window_header {
+            & ~ li.o_thread_window_header {
                 border-top: 1px solid white;
             }
             &:hover {
@@ -197,7 +196,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 // legacy: mail/thread.scss
 //-------------------------------------
 
-
 .o_mail_thread_loading {
     display: flex;
     align-items: center;
@@ -208,7 +206,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     margin-right: 5px;
 }
 
-.o_mail_thread, .o_mail_activity {
+.o_mail_thread,
+.o_mail_activity {
     .o_thread_show_more {
         text-align: center;
     }
@@ -230,7 +229,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             margin-top: 0px;
             margin-bottom: 15px;
         }
-        border-bottom: 1px solid map-get($grays, '400');
+        border-bottom: 1px solid map-get($grays, "400");
         text-align: center;
 
         .o_thread_date {
@@ -263,8 +262,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         margin-bottom: 0px;
 
         &.o_mail_not_discussion {
-            background-color: rgba(map-get($grays, '300'), 0.5);
-            border-bottom: 1px solid map-get($grays, '400');
+            background-color: rgba(map-get($grays, "300"), 0.5);
+            border-bottom: 1px solid map-get($grays, "400");
         }
 
         .o_thread_message_sidebar {
@@ -323,7 +322,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             }
         }
 
-        &:hover, &.o_thread_selected_message {
+        &:hover,
+        &.o_thread_selected_message {
             .o_thread_message_side_date {
                 display: inline-block;
                 opacity: $o-mail-thread-side-date-opacity;
@@ -365,7 +365,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 color: gray;
             }
 
-            [summary~=o_mail_notification] { // name conflicts with channel notifications, but is odoo notification buttons to hide in chatter if present
+            [summary~="o_mail_notification"] {
+                // name conflicts with channel notifications, but is odoo notification buttons to hide in chatter if present
                 display: none;
             }
 
@@ -396,7 +397,10 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 }
             }
 
-            .o_thread_message_star, .o_thread_message_needaction, .o_thread_message_reply, .o_thread_message_notification {
+            .o_thread_message_star,
+            .o_thread_message_needaction,
+            .o_thread_message_reply,
+            .o_thread_message_notification {
                 padding: 4px;
             }
 
@@ -409,7 +413,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 }
             }
 
-            .o_attachments_list, .o_attachments_previews {
+            .o_attachments_list,
+            .o_attachments_previews {
                 &:last-child {
                     margin-bottom: $grid-gutter-width;
                 }
@@ -443,7 +448,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         width: 3px;
         height: 3px;
         border-radius: 50%;
-        background: map-get($grays, '800');
+        background: map-get($grays, "800");
         animation: o_mail_thread_typing_icon_dot 1.5s linear infinite;
 
         &:nth-child(2) {
@@ -457,7 +462,9 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 }
 
 @keyframes o_mail_thread_typing_icon_dot {
-    0%, 40%, 100% {
+    0%,
+    40%,
+    100% {
         transform: initial;
     }
     20% {
@@ -478,7 +485,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     cursor: pointer;
     white-space: nowrap;
     background-color: rgba(60, 60, 60, 0.6);
-    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Verdana, sans-serif;
     font-size: 14px;
     font-weight: bold;
     padding: 10px;
@@ -498,7 +505,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
 
     .btn {
-        color: #FFFFFF;
+        color: #ffffff;
         background-color: #30908e;
         border-color: #2d8685;
         border: 1px solid transparent;
@@ -532,9 +539,9 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                     font-weight: 400;
                     line-height: 1.5;
                     color: #495057;
-                    background-color: #FFFFFF;
+                    background-color: #ffffff;
                     background-clip: padding-box;
-                    border: 1px solid #CED4DA;
+                    border: 1px solid #ced4da;
                 }
                 button {
                     display: inline-block;
@@ -564,10 +571,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
             > img {
                 width: 65px;
-                opacity: 0.60;
+                opacity: 0.6;
                 cursor: pointer;
                 margin: 10px;
-                &:hover, &.selected {
+                &:hover,
+                &.selected {
                     opacity: 1;
                 }
             }
@@ -606,7 +614,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 .o_PublicLivechatMessage {
     display: flex;
     position: relative;
-    
+
     &.o-isVisitorTheAuthor {
         flex-direction: row-reverse !important;
     }
@@ -648,7 +656,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         justify-content: flex-end;
         margin-left: map-get($spacers, 4);
     }
-    
+
     &.o-isOperatorTheAuthor {
         margin-right: map-get($spacers, 4);
     }
@@ -664,11 +672,10 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     &.o-isVisitorTheAuthor {
         margin-left: map-get($spacers, 2);
     }
-    
+
     &.o-isOperatorTheAuthor {
         margin-right: map-get($spacers, 2);
     }
-
 }
 
 .o_PublicLivechatMessage_background {
@@ -678,11 +685,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     top: 0;
     width: 100%;
     height: 100%;
-    transition: opacity .5s ease-out;
+    transition: opacity 0.5s ease-out;
     margin-right: map-get($spacers, 5);
     border-bottom-right-radius: 0.6rem !important;
     border-bottom-left-radius: 0.6rem !important;
-    border: 1px solid #C9CCD2 !important;
+    border: 1px solid #c9ccd2 !important;
 
     &.o-isVisitorTheAuthor {
         border-bottom-left-radius: 0.6rem !important;
@@ -700,7 +707,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         border-color: #17a2b8 !important;
         background-color: rgba(23, 162, 184, 0.5) !important;
         color: #000;
-        opacity: 15%
+        opacity: 15%;
     }
 }
 

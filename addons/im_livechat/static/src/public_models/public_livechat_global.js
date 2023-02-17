@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
-import { attr, clear, many, one, Model } from '@mail/model';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-import { qweb } from 'web.core';
-import { Markup } from 'web.utils';
-import {getCookie, setCookie, deleteCookie} from 'web.utils.cookies';
+import { qweb } from "web.core";
+import { Markup } from "web.utils";
+import { getCookie, setCookie, deleteCookie } from "web.utils.cookies";
 
 Model({
-    name: 'PublicLivechatGlobal',
+    name: "PublicLivechatGlobal",
     lifecycleHooks: {
         _created() {
             // History tracking
-            const page = window.location.href.replace(/^.*\/\/[^/]+/, '');
+            const page = window.location.href.replace(/^.*\/\/[^/]+/, "");
             const pageHistory = getCookie(this.LIVECHAT_COOKIE_HISTORY);
             let urlHistory = [];
             if (pageHistory) {
@@ -22,7 +22,12 @@ Model({
                 while (urlHistory.length > this.HISTORY_LIMIT) {
                     urlHistory.shift();
                 }
-                setCookie(this.LIVECHAT_COOKIE_HISTORY, JSON.stringify(urlHistory), 60 * 60 * 24, 'optional'); // 1 day cookie
+                setCookie(
+                    this.LIVECHAT_COOKIE_HISTORY,
+                    JSON.stringify(urlHistory),
+                    60 * 60 * 24,
+                    "optional"
+                ); // 1 day cookie
             }
             if (this.isAvailable) {
                 this.willStart();
@@ -31,7 +36,7 @@ Model({
     },
     recordMethods: {
         async loadQWebTemplate() {
-            const templates = await this.messaging.rpc({ route: '/im_livechat/load_templates' });
+            const templates = await this.messaging.rpc({ route: "/im_livechat/load_templates" });
             for (const template of templates) {
                 qweb.add_template(template);
             }
@@ -42,12 +47,12 @@ Model({
             await this._willStartChatbot();
         },
         async _willStart() {
-            const strCookie = getCookie('im_livechat_session');
+            const strCookie = getCookie("im_livechat_session");
             const isSessionCookieAvailable = Boolean(strCookie);
-            const cookie = JSON.parse(strCookie || '{}');
+            const cookie = JSON.parse(strCookie || "{}");
             if (cookie.id) {
                 const history = await this.messaging.rpc({
-                    route: '/mail/chat_history',
+                    route: "/mail/chat_history",
                     params: { uuid: cookie.uuid, limit: 100 },
                 });
                 history.reverse();
@@ -60,7 +65,7 @@ Model({
                 this.update({ history: [], isAvailableForMe: true });
             } else {
                 const result = await this.messaging.rpc({
-                    route: '/im_livechat/init',
+                    route: "/im_livechat/init",
                     params: { channel_id: this.channelId },
                 });
                 if (result.available_for_me) {
@@ -94,37 +99,40 @@ Model({
             } else if (this.history !== null && this.history.length === 0) {
                 this.update({
                     livechatInit: await this.messaging.rpc({
-                        route: '/im_livechat/init',
+                        route: "/im_livechat/init",
                         params: { channel_id: this.channelId },
                     }),
                 });
             } else if (this.history !== null && this.history.length !== 0) {
-                const sessionCookie = getCookie('im_livechat_session');
+                const sessionCookie = getCookie("im_livechat_session");
                 if (sessionCookie) {
                     this.update({ sessionCookie });
                 }
             }
 
-            if (this.chatbot.state === 'init') {
+            if (this.chatbot.state === "init") {
                 // we landed on a website page where a channel rule is configured to run a chatbot.script
                 // -> initialize necessary state
-                if (this.rule.chatbot_welcome_steps && this.rule.chatbot_welcome_steps.length !== 0) {
+                if (
+                    this.rule.chatbot_welcome_steps &&
+                    this.rule.chatbot_welcome_steps.length !== 0
+                ) {
                     this.chatbot.update({
                         currentStep: {
                             data: this.chatbot.lastWelcomeStep,
                         },
                     });
                 }
-            } else if (this.chatbot.state === 'welcome') {
+            } else if (this.chatbot.state === "welcome") {
                 // we landed on a website page and a chatbot script was initialized on a previous one
                 // however the end-user did not interact with the bot ( :( )
                 // -> remove cookie to force opening the popup again
                 // -> initialize necessary state
                 // -> batch welcome message (see '_sendWelcomeChatbotMessage')
-                deleteCookie('im_livechat_auto_popup');
+                deleteCookie("im_livechat_auto_popup");
                 this.update({ history: clear() });
                 this.update({ rule: this.livechatInit.rule });
-            } else if (this.chatbot.state === 'restore_session') {
+            } else if (this.chatbot.state === "restore_session") {
                 // we landed on a website page and a chatbot script is currently running
                 // -> restore the user's session (see 'Chatbot/restoreSession')
                 this.chatbot.restoreSession();
@@ -136,7 +144,7 @@ Model({
             default: 15,
         }),
         LIVECHAT_COOKIE_HISTORY: attr({
-            default: 'im_livechat_history',
+            default: "im_livechat_history",
         }),
         RATING_TO_EMOJI: attr({
             default: {
@@ -150,15 +158,15 @@ Model({
                 return this.options.channel_id;
             },
         }),
-        chatbot: one('Chatbot', {
+        chatbot: one("Chatbot", {
             default: {},
-            inverse: 'publicLivechatGlobalOwner',
+            inverse: "publicLivechatGlobalOwner",
         }),
-        chatWindow: one('PublicLivechatWindow', {
-            inverse: 'publicLivechatGlobalOwner',
+        chatWindow: one("PublicLivechatWindow", {
+            inverse: "publicLivechatGlobalOwner",
         }),
-        feedbackView: one('PublicLivechatFeedbackView', {
-            inverse: 'publicLivechatGlobalOwner',
+        feedbackView: one("PublicLivechatFeedbackView", {
+            inverse: "publicLivechatGlobalOwner",
         }),
         hasLoadedQWebTemplate: attr({
             default: false,
@@ -204,7 +212,7 @@ Model({
             },
             default: false,
         }),
-        lastMessage: one('PublicLivechatMessage', {
+        lastMessage: one("PublicLivechatMessage", {
             compute() {
                 if (this.messages.length === 0) {
                     return clear();
@@ -212,35 +220,40 @@ Model({
                 return this.messages[this.messages.length - 1];
             },
         }),
-        livechatButtonView: one('LivechatButtonView', {
+        livechatButtonView: one("LivechatButtonView", {
             compute() {
-                if (this.isAvailable && (this.isAvailableForMe || this.isTestChatbot) && this.hasLoadedQWebTemplate && this.env.services.public_livechat_service) {
+                if (
+                    this.isAvailable &&
+                    (this.isAvailableForMe || this.isTestChatbot) &&
+                    this.hasLoadedQWebTemplate &&
+                    this.env.services.public_livechat_service
+                ) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'publicLivechatGlobalOwner',
+            inverse: "publicLivechatGlobalOwner",
         }),
         livechatInit: attr(),
-        messages: many('PublicLivechatMessage'),
-        notificationHandler: one('PublicLivechatGlobalNotificationHandler', {
-            inverse: 'publicLivechatGlobalOwner',
+        messages: many("PublicLivechatMessage"),
+        notificationHandler: one("PublicLivechatGlobalNotificationHandler", {
+            inverse: "publicLivechatGlobalOwner",
             compute() {
                 if (this.publicLivechat && !this.publicLivechat.isTemporary) {
                     return {};
                 }
                 return clear();
-            }
+            },
         }),
         options: attr({
             default: {},
         }),
-        publicLivechat: one('PublicLivechat', {
-            inverse: 'publicLivechatGlobalOwner',
+        publicLivechat: one("PublicLivechat", {
+            inverse: "publicLivechatGlobalOwner",
         }),
         rule: attr(),
         serverUrl: attr({
-            default: '',
+            default: "",
         }),
         sessionCookie: attr(),
         testChatbotData: attr({
@@ -251,10 +264,14 @@ Model({
                 return this.options.testChatbotData;
             },
         }),
-        welcomeMessages: many('PublicLivechatMessage', {
+        welcomeMessages: many("PublicLivechatMessage", {
             compute() {
                 return this.messages.filter((message) => {
-                    return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
+                    return (
+                        message.id &&
+                        typeof message.id === "string" &&
+                        message.id.startsWith("_welcome_")
+                    );
                 });
             },
         }),
