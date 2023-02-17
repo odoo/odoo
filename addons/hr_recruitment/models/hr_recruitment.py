@@ -556,9 +556,6 @@ class Applicant(models.Model):
         applicant_active = self.filtered(lambda applicant: applicant.active)
         if applicant_active:
             applicant_active.reset_applicant()
-        applicant_inactive = self.filtered(lambda applicant: not applicant.active)
-        if applicant_inactive:
-            return applicant_inactive.archive_applicant()
         return res
 
 
