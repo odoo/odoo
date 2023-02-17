@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { attr, one, clear, increment, Model } from '@mail/model';
+import { attr, one, clear, increment, Model } from "@mail/model";
 
-import { qweb } from 'web.core';
-import { Markup } from 'web.utils';
+import { qweb } from "web.core";
+import { Markup } from "web.utils";
 
 Model({
-    name: 'Chatbot',
+    name: "Chatbot",
     recordMethods: {
         /**
          * Add message posted by the bot into the conversation.
@@ -18,8 +18,13 @@ Model({
         addMessage(message, options) {
             message.body = Markup(message.body);
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(message, options);
-            if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()) {
-                this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
+            if (
+                this.messaging.publicLivechatGlobal.publicLivechat.isFolded ||
+                !this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()
+            ) {
+                this.messaging.publicLivechatGlobal.publicLivechat.update({
+                    unreadCounter: increment(),
+                });
             }
 
             if (!options || !options.skipRenderMessages) {
@@ -40,15 +45,24 @@ Model({
                 // handle the display
                 return;
             }
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field').addClass('d-none');
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').show();
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_composer_text_field")
+                .addClass("d-none");
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_livechat_chatbot_end")
+                .show();
+            this.messaging.publicLivechatGlobal.chatWindow.widget
+                .$(".o_livechat_chatbot_restart")
+                .one(
+                    "click",
+                    this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript
+                );
         },
         onKeydownInput() {
             if (
                 this.currentStep &&
                 this.currentStep.data &&
-                this.currentStep.data.chatbot_step_type === 'free_input_multi'
+                this.currentStep.data.chatbot_step_type === "free_input_multi"
             ) {
                 this.debouncedAwaitUserInput();
             }
@@ -75,14 +89,14 @@ Model({
             }
 
             const postedWelcomeMessages = await this.messaging.rpc({
-                route: '/chatbot/post_welcome_steps',
+                route: "/chatbot/post_welcome_steps",
                 params: {
                     channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
                     chatbot_script_id: this.scriptId,
                 },
             });
 
-            const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage.id);
+            const welcomeMessagesIds = welcomeMessages.map((welcomeMessage) => welcomeMessage.id);
             this.messaging.publicLivechatGlobal.update({
                 messages: this.messaging.publicLivechatGlobal.messages.filter((message) => {
                     !welcomeMessagesIds.includes(message.id);
@@ -128,7 +142,7 @@ Model({
             if (this.shouldEndScript) {
                 this.endScript();
             } else if (
-                this.currentStep.data.chatbot_step_type === 'forward_operator' &&
+                this.currentStep.data.chatbot_step_type === "forward_operator" &&
                 this.currentStep.data.chatbot_operator_found
             ) {
                 this.messaging.publicLivechatGlobal.chatWindow.enableInput();
@@ -137,17 +151,14 @@ Model({
                     // user has already typed a message in -> trigger next step
                     this.setIsTyping();
                     this.update({
-                        nextStepTimeout: setTimeout(
-                            this.triggerNextStep,
-                            this.messageDelay,
-                        ),
+                        nextStepTimeout: setTimeout(this.triggerNextStep, this.messageDelay),
                     });
                 } else {
                     this.messaging.publicLivechatGlobal.chatWindow.enableInput();
                 }
             } else {
                 let triggerNextStep = true;
-                if (this.currentStep.data.chatbot_step_type === 'question_selection') {
+                if (this.currentStep.data.chatbot_step_type === "question_selection") {
                     if (!this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
                         // if there is no last message or if the last message is from the bot
                         // -> don't trigger the next step, we are waiting for the user to pick an option
@@ -157,7 +168,11 @@ Model({
 
                 if (triggerNextStep) {
                     let nextStepDelay = this.messageDelay;
-                    if (this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_typing').length !== 0) {
+                    if (
+                        this.messaging.publicLivechatGlobal.chatWindow.widget.$(
+                            ".o_livechat_chatbot_typing"
+                        ).length !== 0
+                    ) {
                         // special case where we already have a "is typing" message displayed
                         // can happen when the previous step did not trigger any message posted from the bot
                         // e.g: previous step was "forward_operator" and no-one is available
@@ -168,16 +183,15 @@ Model({
                     }
 
                     this.update({
-                        nextStepTimeout: setTimeout(
-                            this.triggerNextStep,
-                            nextStepDelay,
-                        ),
+                        nextStepTimeout: setTimeout(this.triggerNextStep, nextStepDelay),
                     });
                 }
             }
 
             if (!this.hasRestartButton) {
-                this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+                this.messaging.publicLivechatGlobal.chatWindow.widget
+                    .$(".o_livechat_chatbot_main_restart")
+                    .addClass("d-none");
             }
         },
         /**
@@ -195,7 +209,10 @@ Model({
             if (browserLocalStorage && browserLocalStorage.length) {
                 for (let i = 0; i < browserLocalStorage.length; i++) {
                     const key = browserLocalStorage.key(i);
-                    if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.sessionCookieKey) {
+                    if (
+                        key.startsWith("im_livechat.chatbot.state.uuid_") &&
+                        key !== this.sessionCookieKey
+                    ) {
                         browserLocalStorage.removeItem(key);
                     }
                 }
@@ -213,10 +230,14 @@ Model({
          *  anyway in that case, since it's stored into a cookie).
          */
         saveSession() {
-            localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
-                '_chatbot': this.data,
-                '_chatbotCurrentStep': this.currentStep.data,
-            }));
+            localStorage.setItem(
+                "im_livechat.chatbot.state.uuid_" +
+                    this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                JSON.stringify({
+                    _chatbot: this.data,
+                    _chatbotCurrentStep: this.currentStep.data,
+                })
+            );
         },
         /**
          * Adds a small "is typing" animation into the chat window.
@@ -225,28 +246,32 @@ Model({
          */
         setIsTyping(isWelcomeMessage = false) {
             if (this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout) {
-                clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout);
+                clearTimeout(
+                    this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout
+                );
             }
-            this.messaging.publicLivechatGlobal.chatWindow.disableInput('');
+            this.messaging.publicLivechatGlobal.chatWindow.disableInput("");
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                isTypingTimeout: setTimeout(
-                    () => {
-                        if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
-                            return;
-                        }
-                        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_mail_thread_content').append(
-                            $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                                'chatbotImageSrc': `/im_livechat/operator/${
-                                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id
-                                }/avatar`,
-                                'chatbotName': this.name,
-                                'isWelcomeMessage': isWelcomeMessage,
-                            }))
+                isTypingTimeout: setTimeout(() => {
+                    if (
+                        !this.messaging.publicLivechatGlobal.chatWindow ||
+                        !this.messaging.publicLivechatGlobal.chatWindow.exists()
+                    ) {
+                        return;
+                    }
+                    this.messaging.publicLivechatGlobal.chatWindow.widget
+                        .$(".o_mail_thread_content")
+                        .append(
+                            $(
+                                qweb.render("im_livechat.legacy.chatbot.is_typing_message", {
+                                    chatbotImageSrc: `/im_livechat/operator/${this.messaging.publicLivechatGlobal.publicLivechat.operator.id}/avatar`,
+                                    chatbotName: this.name,
+                                    isWelcomeMessage: isWelcomeMessage,
+                                })
+                            )
                         );
-                        this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
-                    },
-                    this.messageDelay / 3,
-                ),
+                    this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
+                }, this.messageDelay / 3),
             });
         },
         /**
@@ -254,14 +279,17 @@ Model({
          * This will receive the next step and call step processing.
          */
         async triggerNextStep() {
-            if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+            if (
+                !this.messaging.publicLivechatGlobal.chatWindow ||
+                !this.messaging.publicLivechatGlobal.chatWindow.exists()
+            ) {
                 return;
             }
             let triggerNextStep = true;
             if (
                 this.currentStep &&
                 this.currentStep.data &&
-                this.currentStep.data.chatbot_step_type === 'question_email'
+                this.currentStep.data.chatbot_step_type === "question_email"
             ) {
                 triggerNextStep = await this.validateEmail();
             }
@@ -271,7 +299,7 @@ Model({
             }
 
             const nextStep = await this.messaging.rpc({
-                route: '/chatbot/step/trigger',
+                route: "/chatbot/step/trigger",
                 params: {
                     channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
                     chatbot_script_id: this.scriptId,
@@ -307,8 +335,8 @@ Model({
          * Returns a boolean stating whether the email was valid or not.
          */
         async validateEmail() {
-            let emailValidResult = await this.messaging.rpc({
-                route: '/chatbot/step/validate_email',
+            const emailValidResult = await this.messaging.rpc({
+                route: "/chatbot/step/validate_email",
                 params: { channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid },
             });
 
@@ -347,10 +375,7 @@ Model({
                 } else {
                     this.setIsTyping();
                     this.update({
-                        nextStepTimeout: setTimeout(
-                            this.triggerNextStep,
-                            this.messageDelay,
-                        )
+                        nextStepTimeout: setTimeout(this.triggerNextStep, this.messageDelay),
                     });
                 }
             }
@@ -367,31 +392,25 @@ Model({
                 if (this.messaging.publicLivechatGlobal.isTestChatbot) {
                     return this.messaging.publicLivechatGlobal.testChatbotData;
                 }
-                if (this.state === 'init') {
+                if (this.state === "init") {
                     return this.messaging.publicLivechatGlobal.rule.chatbot;
                 }
-                if (this.state === 'welcome') {
+                if (this.state === "welcome") {
                     return this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot;
                 }
-                if (
-                    this.state === 'restore_session' &&
-                    this.localStorageState
-                ) {
+                if (this.state === "restore_session" && this.localStorageState) {
                     return this.localStorageState._chatbot;
                 }
                 return clear();
             },
         }),
-        currentStep: one('ChatbotStep', {
-            inverse: 'chabotOwner',
+        currentStep: one("ChatbotStep", {
+            inverse: "chabotOwner",
         }),
         debouncedAwaitUserInput: attr({
             compute() {
                 // debounced to let the user type several sentences, see 'Chatbot/awaitUserInput' for details
-                return _.debounce(
-                    this.awaitUserInput,
-                    this.awaitUserInputDebounceTime,
-                );
+                return _.debounce(this.awaitUserInput, this.awaitUserInputDebounceTime);
             },
         }),
         hasRestartButton: attr({
@@ -411,10 +430,8 @@ Model({
                 }
                 return Boolean(
                     !this.currentStep ||
-                    (
-                        this.currentStep.data.chatbot_step_type !== 'forward_operator' ||
+                        this.currentStep.data.chatbot_step_type !== "forward_operator" ||
                         !this.currentStep.data.chatbot_operator_found
-                    )
                 );
             },
             default: false,
@@ -424,13 +441,19 @@ Model({
                 if (this.messaging.publicLivechatGlobal.isTestChatbot) {
                     return true;
                 }
-                if (this.messaging.publicLivechatGlobal.rule && this.messaging.publicLivechatGlobal.rule.chatbot) {
+                if (
+                    this.messaging.publicLivechatGlobal.rule &&
+                    this.messaging.publicLivechatGlobal.rule.chatbot
+                ) {
                     return true;
                 }
-                if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
+                if (
+                    this.messaging.publicLivechatGlobal.livechatInit &&
+                    this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot
+                ) {
                     return true;
                 }
-                if (this.state === 'welcome') {
+                if (this.state === "welcome") {
                     return true;
                 }
                 if (this.localStorageState) {
@@ -446,10 +469,10 @@ Model({
                     return clear();
                 }
                 return [
-                    'question_phone',
-                    'question_email',
-                    'free_input_single',
-                    'free_input_multi',
+                    "question_phone",
+                    "question_email",
+                    "free_input_single",
+                    "free_input_multi",
                 ].includes(this.currentStep.data.chatbot_step_type);
             },
             default: false,
@@ -492,9 +515,9 @@ Model({
             },
             default: 3500, // in milliseconds
         }),
-        publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+        publicLivechatGlobalOwner: one("PublicLivechatGlobal", {
             identifying: true,
-            inverse: 'chatbot',
+            inverse: "chatbot",
         }),
         scriptId: attr({
             compute() {
@@ -510,7 +533,10 @@ Model({
                 if (!this.messaging.publicLivechatGlobal.sessionCookie) {
                     return clear();
                 }
-                return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.messaging.publicLivechatGlobal.sessionCookie).uuid;
+                return (
+                    "im_livechat.chatbot.state.uuid_" +
+                    JSON.parse(this.messaging.publicLivechatGlobal.sessionCookie).uuid
+                );
             },
         }),
         shouldEndScript: attr({
@@ -532,21 +558,26 @@ Model({
                 if (this.currentStep.data.conversation_closed) {
                     return true;
                 }
-                if (this.currentStep.data.chatbot_step_is_last &&
-                    (this.currentStep.data.chatbot_step_type !== 'forward_operator' ||
-                    !this.currentStep.data.chatbot_operator_found)
+                if (
+                    this.currentStep.data.chatbot_step_is_last &&
+                    (this.currentStep.data.chatbot_step_type !== "forward_operator" ||
+                        !this.currentStep.data.chatbot_operator_found)
                 ) {
-                    if (this.currentStep.data.chatbot_step_type === 'question_email'
-                        && !this.currentStep.data.is_email_valid
+                    if (
+                        this.currentStep.data.chatbot_step_type === "question_email" &&
+                        !this.currentStep.data.is_email_valid
                     ) {
                         // email is not (yet) valid, let the user answer / try again
                         return false;
                     } else if (
                         (this.isExpectingUserInput ||
-                        this.currentStep.data.chatbot_step_type === 'question_selection') &&
+                            this.currentStep.data.chatbot_step_type === "question_selection") &&
                         this.messaging.publicLivechatGlobal.messages.length !== 0
                     ) {
-                        if (this.messaging.publicLivechatGlobal.lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
+                        if (
+                            this.messaging.publicLivechatGlobal.lastMessage.authorId !==
+                            this.messaging.publicLivechatGlobal.publicLivechat.operator.id
+                        ) {
                             // we are on the last step of the script, expect a user input and the user has
                             // already answered
                             // -> end the script
@@ -564,11 +595,17 @@ Model({
         }),
         state: attr({
             compute() {
-                if (this.messaging.publicLivechatGlobal.rule && !!this.messaging.publicLivechatGlobal.rule.chatbot) {
-                    return 'init';
+                if (
+                    this.messaging.publicLivechatGlobal.rule &&
+                    !!this.messaging.publicLivechatGlobal.rule.chatbot
+                ) {
+                    return "init";
                 }
-                if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
-                    return 'welcome';
+                if (
+                    this.messaging.publicLivechatGlobal.livechatInit &&
+                    this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot
+                ) {
+                    return "welcome";
                 }
                 if (
                     !this.messaging.publicLivechatGlobal.rule &&
@@ -577,7 +614,7 @@ Model({
                     this.sessionCookieKey &&
                     localStorage.getItem(this.sessionCookieKey)
                 ) {
-                    return 'restore_session';
+                    return "restore_session";
                 }
                 return clear();
             },

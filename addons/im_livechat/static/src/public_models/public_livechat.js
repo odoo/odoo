@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
+import PublicLivechat from "@im_livechat/legacy/models/public_livechat";
 
-import { attr, clear, one, Model } from '@mail/model';
+import { attr, clear, one, Model } from "@mail/model";
 
-import { unaccent } from 'web.utils';
-import { deleteCookie, setCookie } from 'web.utils.cookies';
+import { unaccent } from "web.utils";
+import { deleteCookie, setCookie } from "web.utils.cookies";
 
 Model({
-    name: 'PublicLivechat',
+    name: "PublicLivechat",
     lifecycleHooks: {
         _created() {
             this.update({
@@ -75,9 +75,9 @@ Model({
                 return false;
             },
         }),
-        publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+        publicLivechatGlobalOwner: one("PublicLivechatGlobal", {
             identifying: true,
-            inverse: 'publicLivechat',
+            inverse: "publicLivechat",
         }),
         name: attr({
             compute() {
@@ -87,7 +87,7 @@ Model({
                 return this.data.name;
             },
         }),
-        operator: one('LivechatOperator', {
+        operator: one("LivechatOperator", {
             compute() {
                 if (!this.data) {
                     return clear();
@@ -109,7 +109,7 @@ Model({
                 if (!this.data) {
                     return clear();
                 }
-                return this.data.status || '';
+                return this.data.status || "";
             },
         }),
         // amount of messages that have not yet been read on this chat

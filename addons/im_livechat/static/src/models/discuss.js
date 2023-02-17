@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { one, Patch } from '@mail/model';
+import { one, Patch } from "@mail/model";
 
 Patch({
-    name: 'Discuss',
+    name: "Discuss",
     recordMethods: {
         /**
          * @override
@@ -19,9 +19,9 @@ Patch({
         /**
          * Discuss sidebar category for `livechat` channel threads.
          */
-        categoryLivechat: one('DiscussSidebarCategory', {
+        categoryLivechat: one("DiscussSidebarCategory", {
             default: {},
-            inverse: 'discussAsLivechat',
+            inverse: "discussAsLivechat",
         }),
     },
 });

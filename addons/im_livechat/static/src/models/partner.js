@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { attr, Patch } from '@mail/model';
+import { attr, Patch } from "@mail/model";
 
 Patch({
-    name: 'Partner',
+    name: "Partner",
     fields: {
         /**
          * States the specific name of this partner in the context of livechat.

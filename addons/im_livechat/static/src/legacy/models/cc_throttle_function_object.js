@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import Class from 'web.Class';
+import Class from "web.Class";
 
 /**
  * This object models the behaviour of the clearable and cancellable (CC)
  * throttle version of a provided function.
  */
 const CCThrottleFunctionObject = Class.extend({
-
     /**
      * @param {Object} params
      * @param {integer} params.duration duration of the 'cooldown' phase, i.e.
@@ -90,10 +89,7 @@ const CCThrottleFunctionObject = Class.extend({
      */
     _cooldown() {
         this.cancel();
-        this._cooldownTimeout = setTimeout(
-            this._onCooldownTimeout.bind(this),
-            this._duration
-        );
+        this._cooldownTimeout = setTimeout(this._onCooldownTimeout.bind(this), this._duration);
     },
 
     //--------------------------------------------------------------------------

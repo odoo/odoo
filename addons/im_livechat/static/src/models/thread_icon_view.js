@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-import { Patch } from '@mail/model';
+import { Patch } from "@mail/model";
 
 Patch({
-    name: 'ThreadIconView',
+    name: "ThreadIconView",
     fields: {
         threadTypingIconView: {
             compute() {
                 if (
                     this.thread.channel &&
-                    this.thread.channel.channel_type === 'livechat' &&
+                    this.thread.channel.channel_type === "livechat" &&
                     this.thread.orderedOtherTypingMembers.length > 0
                 ) {
                     return {};

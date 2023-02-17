@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { clear, Patch } from '@mail/model';
+import { clear, Patch } from "@mail/model";
 
 Patch({
-    name: 'MessageActionList',
+    name: "MessageActionList",
     fields: {
         actionReplyTo: {
             compute() {
@@ -11,12 +11,12 @@ Patch({
                     this.message &&
                     this.message.originThread &&
                     this.message.originThread.channel &&
-                    this.message.originThread.channel.channel_type === 'livechat'
+                    this.message.originThread.channel.channel_type === "livechat"
                 ) {
                     return clear();
                 }
                 return this._super();
-            }
+            },
         },
     },
 });

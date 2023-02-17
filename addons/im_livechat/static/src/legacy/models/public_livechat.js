@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import CCThrottleFunction from '@im_livechat/legacy/models/cc_throttle_function';
-import Timer from '@im_livechat/legacy/models/timer';
-import Timers from '@im_livechat/legacy/models/timers';
+import CCThrottleFunction from "@im_livechat/legacy/models/cc_throttle_function";
+import Timer from "@im_livechat/legacy/models/timer";
+import Timers from "@im_livechat/legacy/models/timers";
 
-import Class from 'web.Class';
-import { _t } from 'web.core';
-import session from 'web.session';
-import Mixins from 'web.mixins';
-import { sprintf } from 'web.utils';
+import Class from "web.Class";
+import { _t } from "web.core";
+import session from "web.session";
+import Mixins from "web.mixins";
+import { sprintf } from "web.utils";
 
 /**
  * Thread model that represents a livechat on the website-side. This livechat
@@ -98,14 +98,18 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
 
         if (params.data.message_unread_counter !== undefined) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({
-                unreadCounter: params.data.message_unread_counter
+                unreadCounter: params.data.message_unread_counter,
             });
         }
 
         if (_.isBoolean(params.data.folded)) {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: params.data.folded });
+            this.messaging.publicLivechatGlobal.publicLivechat.update({
+                isFolded: params.data.folded,
+            });
         } else {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: params.data.state === 'folded' });
+            this.messaging.publicLivechatGlobal.publicLivechat.update({
+                isFolded: params.data.state === "folded",
+            });
         }
     },
 
@@ -136,9 +140,11 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @override
      * @returns {@im_livechat/legacy/models/public_livechat_message[]}
      */
-     getMessages() {
+    getMessages() {
         // ignore removed messages
-        return this.messaging.publicLivechatGlobal.messages.filter(message => !message.widget.isEmpty()).map(message => message.widget);
+        return this.messaging.publicLivechatGlobal.messages
+            .filter((message) => !message.widget.isEmpty())
+            .map((message) => message.widget);
     },
     /**
      * Get the text to display when some partners are typing something on the
@@ -167,28 +173,34 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     getTypingMembersToText() {
         const typingPartnerIDs = this._typingPartnerIDs;
-        const typingMembers = (
-            this.messaging.publicLivechatGlobal.publicLivechat.operator && this._typingPartnerIDs.includes(this.messaging.publicLivechatGlobal.publicLivechat.operator.id)
-            ? [this.messaging.publicLivechatGlobal.publicLivechat.operator]
-            : []
-        );
+        const typingMembers =
+            this.messaging.publicLivechatGlobal.publicLivechat.operator &&
+            this._typingPartnerIDs.includes(
+                this.messaging.publicLivechatGlobal.publicLivechat.operator.id
+            )
+                ? [this.messaging.publicLivechatGlobal.publicLivechat.operator]
+                : [];
         const sortedTypingMembers = _.sortBy(typingMembers, function (member) {
             return _.indexOf(typingPartnerIDs, member.id);
         });
         const displayableTypingMembers = sortedTypingMembers.slice(0, 3);
 
         if (displayableTypingMembers.length === 0) {
-            return '';
+            return "";
         } else if (displayableTypingMembers.length === 1) {
             return sprintf(_t("%s is typing..."), displayableTypingMembers[0].name);
         } else if (displayableTypingMembers.length === 2) {
-            return sprintf(_t("%s and %s are typing..."),
-                                    displayableTypingMembers[0].name,
-                                    displayableTypingMembers[1].name);
+            return sprintf(
+                _t("%s and %s are typing..."),
+                displayableTypingMembers[0].name,
+                displayableTypingMembers[1].name
+            );
         } else {
-            return sprintf(_t("%s, %s and more are typing..."),
-                                    displayableTypingMembers[0].name,
-                                    displayableTypingMembers[1].name);
+            return sprintf(
+                _t("%s, %s and more are typing..."),
+                displayableTypingMembers[0].name,
+                displayableTypingMembers[1].name
+            );
         }
     },
     /**
@@ -204,7 +216,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {boolean}
      */
     isSomeoneTyping() {
-        return !(_.isEmpty(this._typingPartnerIDs));
+        return !_.isEmpty(this._typingPartnerIDs);
     },
     /**
      * Mark the thread as read, which resets the unread counter to 0. This is
@@ -289,18 +301,18 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     toData() {
         return {
-            chatbot_script_id: this.messaging.publicLivechatGlobal.publicLivechat.data.chatbot_script_id,
+            chatbot_script_id:
+                this.messaging.publicLivechatGlobal.publicLivechat.data.chatbot_script_id,
             folded: this.messaging.publicLivechatGlobal.publicLivechat.isFolded,
             id: this.messaging.publicLivechatGlobal.publicLivechat.id,
-            message_unread_counter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
-            operator_pid: (
-                this.messaging.publicLivechatGlobal.publicLivechat.operator
+            message_unread_counter:
+                this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
+            operator_pid: this.messaging.publicLivechatGlobal.publicLivechat.operator
                 ? [
-                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                    this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
-                ]
-                : []
-            ),
+                      this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
+                      this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                  ]
+                : [],
             name: this.messaging.publicLivechatGlobal.publicLivechat.name,
             uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
         };
@@ -344,10 +356,14 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             // sent. Until then, do not notify visitor is typing.
             return;
         }
-        return session.rpc('/im_livechat/notify_typing', {
-            uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-            is_typing: params.typing,
-        }, { shadow: true });
+        return session.rpc(
+            "/im_livechat/notify_typing",
+            {
+                uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                is_typing: params.typing,
+            },
+            { shadow: true }
+        );
     },
     /**
      * Warn views that the list of users that are currently typing on this

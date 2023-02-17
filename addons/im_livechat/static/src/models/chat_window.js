@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { Patch } from '@mail/model';
+import { Patch } from "@mail/model";
 
 Patch({
-    name: 'ChatWindow',
+    name: "ChatWindow",
     recordMethods: {
         /**
          * @override
@@ -12,7 +12,7 @@ Patch({
             if (
                 this.thread &&
                 this.thread.channel &&
-                this.thread.channel.channel_type === 'livechat' &&
+                this.thread.channel.channel_type === "livechat" &&
                 this.thread.cache.isLoaded &&
                 this.thread.messages.length === 0
             ) {

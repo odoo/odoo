@@ -1,14 +1,20 @@
 /** @odoo-module **/
 
-import { attr, clear, Model } from '@mail/model';
+import { attr, clear, Model } from "@mail/model";
 
-import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
+import PublicLivechatMessage from "@im_livechat/legacy/models/public_livechat_message";
 
 Model({
-    name: 'PublicLivechatMessage',
+    name: "PublicLivechatMessage",
     lifecycleHooks: {
         _created() {
-            this.update({ widget: new PublicLivechatMessage(this.messaging.publicLivechatGlobal.livechatButtonView.widget, this.messaging, this.data) });
+            this.update({
+                widget: new PublicLivechatMessage(
+                    this.messaging.publicLivechatGlobal.livechatButtonView.widget,
+                    this.messaging,
+                    this.data
+                ),
+            });
         },
         _willDelete() {
             this.widget.destroy();

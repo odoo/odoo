@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import time from 'web.time';
-import {getCookie} from 'web.utils.cookies';
-import Widget from 'web.Widget';
+import time from "web.time";
+import { getCookie } from "web.utils.cookies";
+import Widget from "web.Widget";
 
 const LivechatButton = Widget.extend({
-    className: 'openerp o_livechat_button d-print-none',
+    className: "openerp o_livechat_button d-print-none",
     events: {
-        'click': '_onClick'
+        click: "_onClick",
     },
     init(parent, messaging) {
         this._super(parent);
@@ -32,8 +32,8 @@ const LivechatButton = Widget.extend({
      * @private
      * @return {integer} operator_id.partner_id.id if the cookie is set
      */
-     _get_previous_operator_id() {
-        const cookie = getCookie('im_livechat_previous_operator_pid');
+    _get_previous_operator_id() {
+        const cookie = getCookie("im_livechat_previous_operator_pid");
         if (cookie) {
             return cookie;
         }
@@ -55,17 +55,20 @@ const LivechatButton = Widget.extend({
      */
     _sendWelcomeMessage() {
         if (this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
-                id: '_welcome',
-                author: {
-                    id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                    name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+            this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(
+                {
+                    id: "_welcome",
+                    author: {
+                        id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
+                        name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                    },
+                    body: this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage,
+                    date: time.datetime_to_str(new Date()),
+                    model: "mail.channel",
+                    res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
                 },
-                body: this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage,
-                date: time.datetime_to_str(new Date()),
-                model: "mail.channel",
-                res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
-            }, { prepend: true });
+                { prepend: true }
+            );
         }
     },
 

@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { one, Patch } from '@mail/model';
+import { one, Patch } from "@mail/model";
 
 Patch({
-    name: 'Messaging',
+    name: "Messaging",
     fields: {
-        publicLivechatGlobal: one('PublicLivechatGlobal', {
+        publicLivechatGlobal: one("PublicLivechatGlobal", {
             isCausal: true,
         }),
     },
