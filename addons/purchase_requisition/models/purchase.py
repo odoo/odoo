@@ -262,6 +262,15 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+    price_total_cc = fields.Monetary(compute='_compute_amount', string="Company Total", currency_field="company_currency_id", store=True)
+    company_currency_id = fields.Many2one(related="company_id.currency_id", string="Company Currency")
+
+    @api.depends('price_subtotal', 'currency_id')
+    def _compute_amount(self):
+        super()._compute_amount()
+        for line in self:
+            line.price_total_cc = line.price_subtotal / line.order_id.currency_rate
+
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
         for pol in self:

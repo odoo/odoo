@@ -38,7 +38,9 @@
                             <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']"/>
                             <field name="name" string="Reference"/>
                             <field name="date_planned"/>
-                            <field name="amount_total"/>
+                            <field name="amount_total" widget="monetary"/>
+                            <field name="company_currency_id" column_invisible="1"/>
+                            <field name="amount_total_cc" widget="monetary" optional="hide"/>
                             <field name="state"/>
                         </tree>
                     </field>
@@ -108,9 +110,11 @@
                 <field name="date_planned" readonly="1"/>
                 <field name="product_qty"/>
                 <field name="product_uom" groups="uom.group_uom"/>
-                <field name="price_unit"/>
+                <field name="price_unit" widget="monetary"/>
                 <field name="price_subtotal" string="Total"/>
-                <field name="currency_id"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="price_total_cc"  widget="monetary"/>
+                <field name="company_currency_id" column_invisible="True"/>
                 <button name="action_choose" string="Choose" type="object" class="o_clear_qty_buttons" icon="fa-bullseye"
                     invisible="product_qty &lt;= 0.0"/>
                 <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="fa-times"
