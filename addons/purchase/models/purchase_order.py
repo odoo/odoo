@@ -22,7 +22,7 @@ class PurchaseOrder(models.Model):
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
 
-    @api.depends('order_line.price_total')
+    @api.depends('order_line.price_total', 'currency_id')
     def _amount_all(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
@@ -45,6 +45,7 @@ class PurchaseOrder(models.Model):
             order.amount_untaxed = amount_untaxed
             order.amount_tax = amount_tax
             order.amount_total = order.amount_untaxed + order.amount_tax
+            order.amount_total_cc = order.amount_total / order.currency_rate
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
@@ -124,6 +125,7 @@ class PurchaseOrder(models.Model):
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
+    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_country_id = fields.Many2one(
@@ -143,6 +145,7 @@ class PurchaseOrder(models.Model):
         'res.users', string='Buyer', index=True, tracking=True,
         default=lambda self: self.env.user, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company.id)
+    company_currency_id = fields.Many2one(related="company_id.currency_id", string="Company Currency")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, readonly=True, help='Ratio between the purchase order currency and the company currency')
 
@@ -221,6 +224,8 @@ class PurchaseOrder(models.Model):
                 order.currency_id or order.company_id.currency_id,
                 order.company_id,
             )
+            if order.currency_id != order.company_currency_id:
+                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, self.amount_total_cc, currency_obj=self.company_currency_id)})"
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -536,15 +541,13 @@ class PurchaseOrder(models.Model):
             partner = self.partner_id if not self.partner_id.parent_id else self.partner_id.parent_id
             already_seller = (partner | self.partner_id) & line.product_id.seller_ids.mapped('partner_id')
             if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
-                # Convert the price in the right currency.
-                currency = partner.property_purchase_currency_id or self.env.company.currency_id
-                price = self.currency_id._convert(line.price_unit, currency, line.company_id, line.date_order or fields.Date.today(), round=False)
+                price = line.price_unit
                 # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
                 if line.product_id.product_tmpl_id.uom_po_id != line.product_uom:
                     default_uom = line.product_id.product_tmpl_id.uom_po_id
                     price = line.product_uom._compute_price(price, default_uom)
 
-                supplierinfo = self._prepare_supplier_info(partner, line, price, currency)
+                supplierinfo = self._prepare_supplier_info(partner, line, price, line.currency_id)
                 # In case the order partner is a contact address, a new supplierinfo is created on
                 # the parent company. In this case, we keep the product name and code.
                 seller = line.product_id._select_seller(

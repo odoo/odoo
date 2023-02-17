@@ -400,6 +400,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = product
         purchase_order_usd = po_form.save()
         self.assertEqual(purchase_order_usd.order_line.price_unit, product.standard_price, "Value shouldn't be rounded $")
+        self.assertEqual(purchase_order_usd.amount_total_cc, purchase_order_usd.amount_total, "Company Total should be 0.14$")
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
@@ -408,6 +409,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = product
         purchase_order_coco = po_form.save()
         self.assertEqual(purchase_order_coco.order_line.price_unit, currency_rate.rate * product.standard_price, "Value shouldn't be rounded 🍫")
+        self.assertEqual(purchase_order_coco.amount_total_cc, round(purchase_order_coco.amount_total / currency_rate.rate, 2), "Company Total should be 0.14$, since 1$ = 0.5🍫")
 
         #check if the correct currency is set on the purchase order by comparing the expected price and actual price
 
@@ -451,6 +453,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(order_b.order_line.price_unit, 10.0, 'The price unit should be 10.0')
+        self.assertEqual(order_b.amount_total_cc, order_b.amount_total, 'Company Total should be 10.0$')
 
     def test_purchase_not_creating_useless_product_vendor(self):
         """ This test ensures that the product vendor is not created when the
