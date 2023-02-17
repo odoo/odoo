@@ -27,7 +27,7 @@
                 </t>
                 <div t-if="state.overlay or !isControllerFloating" class="o-mail-call-main-controls d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': isControllerFloating }">
                     <div class="o-mail-call-main-controlsOverlayContainer" t-on-mousemove="onMousemoveOverlay">
-                        <CallActionList thread="props.thread" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
+                        <CallActionList thread="props.thread" compact="props.compact" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
                     </div>
                 </div>
             </div>

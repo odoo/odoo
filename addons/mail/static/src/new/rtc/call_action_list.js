@@ -5,7 +5,7 @@ import { useRtc } from "@mail/new/rtc/rtc_hook";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class CallActionList extends Component {
-    static props = ["thread", "fullscreen"];
+    static props = ["thread", "fullscreen", "compact?"];
     static template = "mail.call_action_list";
 
     setup() {
@@ -17,12 +17,7 @@ export class CallActionList extends Component {
     }
 
     get isSmall() {
-        /*
-        return Boolean(
-            this.threadView.compact && !this.props.fullscreen.isActive
-        );
-        */
-        return false;
+        return Boolean(this.props.compact && !this.props.fullscreen.isActive);
     }
 
     get isMobileOS() {
