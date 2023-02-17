@@ -10,6 +10,7 @@ const {
     afterNextRender,
     beforeEach,
     createRootComponent,
+    nextTick,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -148,6 +149,45 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
     assert.notOk(
         checkboxUnchecked.checked,
         "suggested recipient without partner must be unchecked by default",
+    );
+});
+
+QUnit.test("suggested recipient without partner are unchecked when closing the dialog without creating partner", async function (assert) {
+    assert.expect(1);
+
+    this.data['res.fake'].records.push({
+        id: 10,
+        email_cc: "john@test.be",
+    });
+
+    const params = {
+        archs: {},
+
+    };
+    params.archs["res.partner,false,form"] = `
+        <form>
+            <field name="name"/>
+        </form>
+    `;
+
+    await this.start(params);
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 10,
+        threadModel: 'res.fake',
+    });
+    await this.createChatterComponent({ chatter });
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+    // click on checkbox to open dialog
+    document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id]) input[type=checkbox]').click();
+    await nextTick();
+    // close dialog without changing anything
+    document.querySelector('.modal-dialog .close').click();
+
+    assert.notOk(
+        document.querySelector('.o_ComposerSuggestedRecipient:not([data-partner-id]) input[type=checkbox]').checked,
+        "suggested recipient without partner must be unchecked",
     );
 });
 

@@ -23,6 +23,14 @@ options.registry.TableOfContent = options.Class.extend({
     /**
      * @override
      */
+    destroy: function () {
+        // The observer needs to be disconnected first.
+        this.observer.disconnect();
+        this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     onClone: function () {
         this._generateNav();
     },
