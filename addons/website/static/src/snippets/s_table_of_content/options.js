@@ -9,6 +9,7 @@ options.registry.TableOfContent = options.Class.extend({
      */
     start: function () {
         this.targetedElements = 'h1, h2';
+        this.oldHeadingsEls = [];
         const $headings = this.$target.find(this.targetedElements);
         if ($headings.length > 0) {
             this._generateNav();
@@ -19,6 +20,14 @@ options.registry.TableOfContent = options.Class.extend({
         this.observer = new MutationObserver(() => this._generateNav());
         this.observer.observe(targetNode, config);
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        // The observer needs to be disconnected first.
+        this.observer.disconnect();
+        this._super(...arguments);
     },
     /**
      * @override
@@ -69,10 +78,23 @@ options.registry.TableOfContent = options.Class.extend({
      */
     _generateNav: function (ev) {
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        const $headings = this.$target.find(this.targetedElements);
+        const areHeadingsEqual = this.oldHeadingsEls.length === $headings.length
+            && this.oldHeadingsEls.every((el, i) => el.isEqualNode($headings[i]));
+        if (areHeadingsEqual) {
+            // If the content of the navbar before the change of the DOM is
+            // equal to the content of the navbar after the change of the DOM,
+            // then there is no need to regenerate the navbar.
+            // This is especially important as to regenerate it, we also have
+            // to restart scrollSpy, which is done by restarting widgets. But
+            // restarting all widgets inside the ToC would certainly lead to
+            // DOM changes... which would then regenerate the navbar and lead to
+            // an infinite loop.
+            return;
+        }
         // We dispose the scrollSpy because the navbar will be updated.
         this._disposeScrollSpy();
         const $nav = this.$target.find('.s_table_of_content_navbar');
-        const $headings = this.$target.find(this.targetedElements);
         $nav.empty();
         _.each($headings, el => {
             const $el = $(el);
@@ -86,6 +108,7 @@ options.registry.TableOfContent = options.Class.extend({
         });
         const exception = (tocEl) => !tocEl.querySelector('.s_table_of_content_navbar a');
         this._activateScrollSpy(exception);
+        this.oldHeadingsEls = [...($headings.clone())];
     },
 });
 

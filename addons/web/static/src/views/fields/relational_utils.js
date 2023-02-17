@@ -444,7 +444,13 @@ export class X2ManyFieldDialog extends Component {
         this.modalRef = useChildRef();
 
         const reload = () => this.record.load();
-        useViewButtons(this.props.record.model, this.modalRef, { reload }); // maybe pass the model directly in props
+
+        useViewButtons(this.props.record.model, this.modalRef, {
+            reload,
+            beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
+        }); // maybe pass the model directly in props
+
+        this.canCreate = !this.record.resId;
 
         if (this.archInfo.xmlDoc.querySelector("footer")) {
             this.footerArchInfo = Object.assign({}, this.archInfo);
@@ -479,6 +485,12 @@ export class X2ManyFieldDialog extends Component {
                 },
                 () => [this.record.isInEdition]
             );
+        }
+    }
+
+    async beforeExecuteActionButton(clickParams) {
+        if (clickParams.special !== "cancel") {
+            return this.record.save();
         }
     }
 

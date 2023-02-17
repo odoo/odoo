@@ -2437,7 +2437,8 @@ export class DynamicGroupList extends DynamicList {
                     }
                     case "__fold": {
                         // optional
-                        groupParams.isFolded = value;
+                        groupParams.isFolded =
+                            openGroups >= this.constructor.DEFAULT_LOAD_LIMIT || value;
                         if (!value) {
                             openGroups++;
                         }

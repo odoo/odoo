@@ -122,6 +122,13 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 const orderName = order.get_name();
                 const orderPartner = { email: this.orderUiState.inputEmail, name: partner ? partner.name : this.orderUiState.inputEmail };
                 const order_server_id = this.env.pos.validated_orders_name_server_id_map[orderName];
+                if (!order_server_id) {
+                    this.showPopup('ErrorPopup', {
+                        title: this.env._t('Unsynced order'),
+                        body: this.env._t('This order is not yet synced to server. Make sure it is synced then try again.'),
+                    });
+                    return Promise.reject();
+                }
                 await this.rpc({
                     model: 'pos.order',
                     method: 'action_receipt_to_customer',
