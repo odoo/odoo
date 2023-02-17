@@ -2,11 +2,11 @@
 <odoo>
     <record id="partner_demo_company_ke" model="res.partner">
         <field name="name">KE Company</field>
-        <field name="vat"></field>
+        <field name="vat"/>
         <field name="street">Cannon Hse, 3rd Flr Haile Selassie Ave, 48505-00100 GPO</field>
         <field name="city">Nairobi</field>
         <field name="country_id" ref="base.ke"/>
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+254 775 550 919</field>
         <field name="email">kenyancompany@example.com</field>
         <field name="website">www.keexample.com</field>
@@ -27,7 +27,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_ke.l10nke_chart_template')]"/>
+        <value eval="[]"/>
+        <value>ke</value>
         <value model="res.company" eval="obj().env.ref('l10n_ke.demo_company_ke')"/>
     </function>
 </odoo>

@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (C) 2014 Tech Receptives (<http://techreceptives.com>)
-
 {
     'name': 'Singapore - Accounting',
     'author': 'Tech Receptives',
@@ -18,13 +14,13 @@ This module add, for accounting:
  - Field PermitNo and PermitNoDate on invoice
 
     """,
-    'depends': ['base', 'account'],
+    'depends': [
+        'base',
+        'account',
+    ],
     'data': [
         'data/l10n_sg_chart_data.xml',
-        'data/account_tax_group_data.xml',
         'data/account_tax_report_data.xml',
-        'data/account_tax_data.xml',
-        'data/account_chart_template_data.xml',
         'views/account_invoice_view.xml',
         'views/res_company_view.xml',
         'views/res_partner_view.xml',

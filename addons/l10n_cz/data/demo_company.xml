@@ -7,7 +7,7 @@
         <field name="city">Praha</field>
         <field name="country_id" ref="base.cz"/>
         <field name="state_id" ref="base.state_L"/>
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+420 5 12 34 56 78</field>
         <field name="email">info@company.czexample.com</field>
         <field name="website">www.czexample.com</field>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_cz.cz_chart_template')]"/>
+        <value eval="[]"/>
+        <value>cz</value>
         <value model="res.company" eval="obj().env.ref('l10n_cz.demo_company_cz')"/>
     </function>
 </odoo>

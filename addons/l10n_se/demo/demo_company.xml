@@ -3,7 +3,7 @@
     <record id="partner_demo_company_se" model="res.partner">
         <field name="name">SE Company</field>
         <field name="vat">SE810354746201</field>
-        <field name="street"></field>
+        <field name="street"/>
         <field name="city">Ängelholms kommun</field>
         <field name="country_id" ref="base.se"/>
         
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_se.l10nse_chart_template')]"/>
+        <value eval="[]"/>
+        <value>se</value>
         <value model="res.company" eval="obj().env.ref('l10n_se.demo_company_se')"/>
     </function>
 </odoo>

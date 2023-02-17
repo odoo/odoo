@@ -2,7 +2,7 @@
 <odoo>
     <record id="partner_demo_company_ua" model="res.partner">
         <field name="name">UA Company</field>
-        <field name="vat"></field>
+        <field name="vat"/>
         <field name="street">10/2 Мечникова вулиця</field>
         <field name="city">Київ</field>
         <field name="country_id" ref="base.ua"/>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_ua.l10n_ua_psbo_chart_template')]"/>
+        <value eval="[]"/>
+        <value>ua_psbo</value>
         <value model="res.company" eval="obj().env.ref('l10n_ua.demo_company_ua')"/>
     </function>
 </odoo>

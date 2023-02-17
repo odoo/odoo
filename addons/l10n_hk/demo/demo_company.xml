@@ -2,13 +2,13 @@
 <odoo>
     <record id="partner_demo_company_hk" model="res.partner">
         <field name="name">HK Company</field>
-        <field name="vat"></field>
+        <field name="vat"/>
         <field name="street">118 Connaught Road West</field>
         <field name="street2">Unit 07 - 10, 38/F Yat Chau International Plaza</field>
         <field name="city">Sai Ying Pun</field>
         <field name="country_id" ref="base.hk"/>
 
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+852 5123 4567</field>
         <field name="email">info@company.hkexample.com</field>
         <field name="website">www.hkexample.com</field>
@@ -29,7 +29,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_hk.l10n_hk_chart_template')]"/>
+        <value eval="[]"/>
+        <value>hk</value>
         <value model="res.company" eval="obj().env.ref('l10n_hk.demo_company_hk')"/>
     </function>
 </odoo>

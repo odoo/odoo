@@ -2,12 +2,12 @@
 <odoo>
     <record id="partner_demo_company_hn" model="res.partner">
         <field name="name">HN Company</field>
-        <field name="vat"></field>
+        <field name="vat"/>
         <field name="street">CA-1</field>
         <field name="city">Nacaome</field>
         <field name="country_id" ref="base.hn"/>
         
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+504 9123-4567</field>
         <field name="email">info@company.hnexample.com</field>
         <field name="website">www.hnexample.com</field>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_hn.cuentas_plantilla')]"/>
+        <value eval="[]"/>
+        <value>hn</value>
         <value model="res.company" eval="obj().env.ref('l10n_hn.demo_company_hn')"/>
     </function>
 </odoo>

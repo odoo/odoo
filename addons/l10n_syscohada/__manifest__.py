@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
 {
     'name': 'OHADA - Accounting',
     'category': 'Accounting/Localizations/Account Charts',
@@ -22,16 +19,10 @@ Countries that use OHADA are the following:
     """,
     'website': 'http://biblio.ohada.org/pmb/opac_css/doc_num.php?explnum_id=2063',
     'depends': [
-        'l10n_multilang',
+        'account',
     ],
     'data': [
         'data/menuitem_data.xml',
-        'data/account_tax_group_data.xml',
-        'data/l10n_syscohada_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/l10n_syscohada_chart_post_data.xml',
-        'data/account_tax_template_data.xml',
-        'data/account_chart_template_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

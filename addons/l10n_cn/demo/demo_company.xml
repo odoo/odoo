@@ -2,7 +2,7 @@
 <odoo>
     <record id="partner_demo_company_cn" model="res.partner">
         <field name="name">CN Company</field>
-        <field name="vat"></field>
+        <field name="vat"/>
         <field name="street">德政中路</field>
         <field name="city">大塘街道</field>
         <field name="country_id" ref="base.cn"/>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_cn.l10n_chart_china_small_business')]"/>
+        <value eval="[]"/>
+        <value>cn</value>
         <value model="res.company" eval="obj().env.ref('l10n_cn.demo_company_cn')"/>
     </function>
 </odoo>

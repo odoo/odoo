@@ -785,11 +785,6 @@ msgid "Import Clearance"
 msgstr "Despacho de importación"
 
 #. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_impuestos_internos
-msgid "Internal Taxes"
-msgstr "Impuestos Internos"
-
-#. module: l10n_ar
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "Invalid length for \"%s\""
@@ -907,11 +902,6 @@ msgid "Multilateral"
 msgstr ""
 
 #. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_municipal
-msgid "Municipal Taxes Perceptions"
-msgstr "Percepciones por Impuestos Municipales"
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__name
 msgid "Name"
 msgstr "Nombre"
@@ -988,11 +978,6 @@ msgid "Only numbers allowed for \"%s\""
 msgstr "Sólo números son permitidos para \"%s\""
 
 #. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_otras_percepciones
-msgid "Other Perceptions"
-msgstr "Otras Percepciones"
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_special_purchase_document_type_ids
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_special_purchase_document_type_ids
 msgid "Other Purchase Documents"
@@ -1048,11 +1033,6 @@ msgstr "Codificación de Productos - Factura en Línea"
 #: model:ir.model,name:l10n_ar.model_uom_uom
 msgid "Product Unit of Measure"
 msgstr "Unidad de medida del producto"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_ganancias
-msgid "Profit Perceptions"
-msgstr "Percepción de Ganancias"
 
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
@@ -1148,8 +1128,9 @@ msgid ""
 "The document number can not be changed for this journal, you can only modify"
 " the POS number if there is not posted (or posted before) invoices"
 msgstr ""
-"El número de documento no puede ser modificado para este diario, sólo puedes modificar"
-" el número de AFIP POS si no tiene facturas validadas o que hayan sido validadas previamente"
+"El número de documento no puede ser modificado para este diario, sólo puedes"
+" modificar el número de AFIP POS si no tiene facturas validadas o que hayan "
+"sido validadas previamente"
 
 #. module: l10n_ar
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
@@ -1190,9 +1171,15 @@ msgstr "El dígito de validación no es válido para \"%s\""
 #. module: l10n_ar
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid "There should be a single tax from the \"VAT\" tax group per line, add it to \"%s\". If you already have it, please check the tax configuration, in advanced options, in the corresponding field \"Tax Group\"."
+msgid ""
+"There should be a single tax from the \"VAT\" tax group per line, add it to "
+"\"%s\". If you already have it, please check the tax configuration, in "
+"advanced options, in the corresponding field \"Tax Group\"."
 msgstr ""
-"Debe haber un único impuesto del grupo de impuestos \"IVA\" por línea, agréguelo a \"%s\". En caso de tenerlo, revise la configuración del impuesto, en opciones avanzadas, en el campo correspondiente \"Grupo de Impuestos\"."
+"Debe haber un único impuesto del grupo de impuestos \"IVA\" por línea, "
+"agréguelo a \"%s\". En caso de tenerlo, revise la configuración del "
+"impuesto, en opciones avanzadas, en el campo correspondiente \"Grupo de "
+"Impuestos\"."
 
 #. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_res_country__l10n_ar_afip_code
@@ -1278,59 +1265,9 @@ msgid "VAT"
 msgstr "IVA"
 
 #. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_0
-msgid "VAT 0%"
-msgstr "IVA 0%"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_105
-msgid "VAT 10.5%"
-msgstr "IVA 10.5%"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_025
-msgid "VAT 2,5%"
-msgstr "IVA 2,5%"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_21
-msgid "VAT 21%"
-msgstr "IVA 21%"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_27
-msgid "VAT 27%"
-msgstr "IVA 27%"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_5
-msgid "VAT 5%"
-msgstr "IVA 5%"
-
-#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__l10n_ar_vat_afip_code
 msgid "VAT AFIP Code"
 msgstr "Código AFIP de IVA"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_exento
-msgid "VAT Exempt"
-msgstr "IVA Exento"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_no_corresponde
-msgid "VAT Not Applicable"
-msgstr "IVA No Corresponde"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iva
-msgid "VAT Perception"
-msgstr "Percepción de IVA"
-
-#. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_iva_no_gravado
-msgid "VAT Untaxed"
-msgstr "IVA No Gravado"
 
 #. module: l10n_ar
 #: code:addons/l10n_ar/models/account_fiscal_position.py:0
@@ -1356,8 +1293,8 @@ msgid ""
 "You are trying to create an invoice for domestic partner but you don't have "
 "a domestic market journal"
 msgstr ""
-"Estas intentando crear una factura para un cliente local pero no tienes "
-"un diario de tipo mercado interno"
+"Estas intentando crear una factura para un cliente local pero no tienes un "
+"diario de tipo mercado interno"
 
 #. module: l10n_ar
 #: code:addons/l10n_ar/models/account_move.py:0
@@ -1366,8 +1303,8 @@ msgid ""
 "You are trying to create an invoice for foreign partner but you don't have "
 "an exportation journal"
 msgstr ""
-"Estas intentando crear una factura para un cliente del exterior pero no tienes "
-"un diario de tipo exportación"
+"Estas intentando crear una factura para un cliente del exterior pero no "
+"tienes un diario de tipo exportación"
 
 #. module: l10n_ar
 #: code:addons/l10n_ar/models/account_chart_template.py:0
