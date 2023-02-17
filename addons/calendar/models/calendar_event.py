@@ -221,6 +221,7 @@ class Meeting(models.Model):
     declined_count = fields.Integer(compute='_compute_attendees_count')
     tentative_count = fields.Integer(compute='_compute_attendees_count')
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
+    user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
 
     @api.depends('attendee_ids', 'attendee_ids.state', 'partner_ids')
     def _compute_attendees_count(self):
@@ -240,6 +241,12 @@ class Meeting(models.Model):
                 'attendees_count': attendees_count,
                 'awaiting_count': attendees_count - accepted_count - declined_count - tentative_count
             })
+
+    @api.depends('partner_ids')
+    @api.depends_context('uid')
+    def _compute_user_can_edit(self):
+        for event in self:
+            event.user_can_edit = self.env.user in event.partner_ids.user_ids + event.user_id
 
     @api.depends('attendee_ids')
     def _compute_invalid_email_partner_ids(self):

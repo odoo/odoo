@@ -26,7 +26,7 @@
         </div>
         <div class="o_cw_body">
             <t t-call="{{ constructor.subTemplates.body }}" />
-            <div class="card-footer border-top" t-att-class="{ 'o_footer_shrink': !isEventEditable and !isEventDeletable }">
+            <div class="card-footer border-top" t-att-class="{ 'o_footer_shrink': !hasFooter }">
                 <t t-call="{{ constructor.subTemplates.footer }}" />
             </div>
         </div>

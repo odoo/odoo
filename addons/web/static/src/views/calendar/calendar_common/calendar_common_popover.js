@@ -24,6 +24,9 @@ export class CalendarCommonPopover extends Component {
     get isEventDeletable() {
         return this.props.model.canDelete;
     }
+    get hasFooter() {
+        return this.isEventEditable || this.isEventDeletable;
+    }
 
     isInvisible(fieldName, record) {
         const { invisible } = this.props.model.popoverFields[fieldName].modifiers;

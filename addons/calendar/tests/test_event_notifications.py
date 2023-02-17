@@ -161,13 +161,13 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
     def test_email_alarm(self):
         now = fields.Datetime.now()
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
-            alarm = self.env['calendar.alarm'].create({
+            alarm = self.env['calendar.alarm'].with_user(self.user).create({
                 'name': 'Alarm',
                 'alarm_type': 'email',
                 'interval': 'minutes',
                 'duration': 20,
             })
-            self.event.write({
+            self.event.with_user(self.user).write({
                 'name': 'test event',
                 'start': now + relativedelta(minutes=15),
                 'stop': now + relativedelta(minutes=18),

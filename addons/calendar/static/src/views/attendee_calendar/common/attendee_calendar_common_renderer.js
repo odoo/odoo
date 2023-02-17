@@ -1,18 +1,29 @@
 /** @odoo-module **/
 
+import { useService } from "@web/core/utils/hooks";
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { AttendeeCalendarCommonPopover } from "@calendar/views/attendee_calendar/common/attendee_calendar_common_popover";
 
 export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
+
+    setup() {
+        super.setup();
+        this.user = useService("user");
+    }
     /**
      * @override
      *
      * Give a new key to our fc records to be able to iterate through in templates
      */
     convertRecordToEvent(record) {
+        let editable = false;
+        if (record && record.rawRecord) {
+            editable = record.rawRecord.partner_ids.includes(this.user.partnerId)
+        }
         return {
             ...super.convertRecordToEvent(record),
             id: record._recordId || record.id,
+            editable: editable,
         };
     }
 
