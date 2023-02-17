@@ -8,43 +8,6 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("discuss_sidebar_category_item_tests.js");
 
-        QUnit.skipRefactoring(
-            "channel - avatar: should update avatar url from bus",
-            async function (assert) {
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({ avatarCacheKey: "101010" });
-
-                const { messaging, openDiscuss } = await start();
-                await openDiscuss();
-
-                assert.strictEqual(
-                    document.querySelector(`
-        .o-mail-category-item[data-channel-id="${mailChannelId1}"]
-        .o_DiscussSidebarCategoryItem_image`).dataset.src,
-                    `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=101010`
-                );
-
-                await afterNextRender(() => {
-                    messaging.rpc({
-                        model: "mail.channel",
-                        method: "write",
-                        args: [[mailChannelId1], { image_128: "This field does not matter" }],
-                    });
-                });
-                const result = pyEnv["mail.channel"].searchRead([["id", "=", mailChannelId1]]);
-                const newCacheKey = result[0]["avatarCacheKey"];
-
-                assert.strictEqual(
-                    document.querySelector(`
-        .o-mail-category-item[data-channel-id="${mailChannelId1}"]
-        .o_DiscussSidebarCategoryItem_image`).dataset.src,
-                    `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=${newCacheKey}`
-                );
-            }
-        );
-
         QUnit.skipRefactoring("chat - avatar: should have correct avatar", async function (assert) {
             assert.expect(2);
 

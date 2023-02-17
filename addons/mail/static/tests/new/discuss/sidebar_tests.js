@@ -731,3 +731,26 @@ QUnit.test("channel - avatar: should have correct avatar", async function (asser
         `img[data-src='/web/image/mail.channel/${channelId}/avatar_128?unique=100111']`
     );
 });
+
+QUnit.test("channel - avatar: should update avatar url from bus", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ avatarCacheKey: "101010" });
+    const { env, openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(
+        target,
+        `img[data-src='/web/image/mail.channel/${channelId}/avatar_128?unique=101010']`
+    );
+    await afterNextRender(() => {
+        env.services.orm.call("mail.channel", "write", [
+            [channelId],
+            { image_128: "This field does not matter" },
+        ]);
+    });
+    const result = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
+    const newCacheKey = result[0]["avatarCacheKey"];
+    assert.containsOnce(
+        target,
+        `img[data-src='/web/image/mail.channel/${channelId}/avatar_128?unique=${newCacheKey}']`
+    );
+});

@@ -456,6 +456,14 @@ export class Messaging {
                 serverData: notif.payload.Thread,
             });
         }
+
+        if (notif.payload.Channel) {
+            this.threadService.insert({
+                id: notif.payload.Channel.id,
+                model: "mail.channel",
+                serverData: { channel: { avatarCacheKey: notif.payload.Channel.avatarCacheKey } },
+            });
+        }
         if (notif.payload.RtcSession) {
             this.rtc.insertSession(notif.payload.RtcSession);
         }
