@@ -125,7 +125,7 @@ export class FieldMany2OneMailingFilter extends Many2OneField {
             ev.stopPropagation();
             filterInput.focus();
         } else {
-            const newFilterId = await this.env.model.orm.create("mailing.filter", [{
+            const [newFilterId] = await this.env.model.orm.create("mailing.filter", [{
                 name: filterName,
                 mailing_domain: this.props.record.data[this.props.domain_field],
                 mailing_model_id: this.props.record.data[this.props.model_field][0],

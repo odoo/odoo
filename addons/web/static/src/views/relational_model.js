@@ -1348,7 +1348,8 @@ export class Record extends DataPoint {
                 );
                 this.resId = resId;
             } else {
-                this.resId = await this.model.orm.create(this.resModel, [changes], { context });
+                const [resId] = await this.model.orm.create(this.resModel, [changes], { context });
+                this.resId = resId;
             }
             delete this.virtualId;
             this.data.id = this.resId;

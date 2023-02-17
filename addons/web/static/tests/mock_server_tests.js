@@ -1467,4 +1467,38 @@ QUnit.module("MockServer", (hooks) => {
         const { views } = mockServer.mockGetViews("bar", { views: [[10001, "list"]], options: {} });
         assert.deepEqual(views.list.arch, expectedList);
     });
+
+    QUnit.test("performRPC: create one record (old API)", async function (assert) {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "create",
+            args: [{ foo: "A" }],
+        });
+        assert.strictEqual(result, 7);
+        assert.strictEqual(data.models.bar.records.find((r) => r.id === 7).foo, "A");
+    });
+
+    QUnit.test("performRPC: create one record (new API)", async function (assert) {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "create",
+            args: [[{ foo: "A" }]],
+        });
+        assert.deepEqual(result, [7]);
+        assert.strictEqual(data.models.bar.records.find((r) => r.id === 7).foo, "A");
+    });
+
+    QUnit.test("performRPC: create several records (new API)", async function (assert) {
+        const server = new MockServer(data, {});
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "create",
+            args: [[{ foo: "A" }, { foo: "B" }]],
+        });
+        assert.deepEqual(result, [7, 8]);
+        assert.strictEqual(data.models.bar.records.find((r) => r.id === 7).foo, "A");
+        assert.strictEqual(data.models.bar.records.find((r) => r.id === 8).foo, "B");
+    });
 });
