@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
 import pytz
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, Form
 
 
 class TestRecurrentEvents(TransactionCase):
@@ -579,6 +578,26 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         event.action_mass_deletion('future_events')
         self.assertTrue(self.recurrence)
         self.assertEqual(self.events.exists(), self.events[0])
+
+    def test_unlink_recurrence_wizard_next(self):
+        event = self.events[1]
+        wizard = self.env['calendar.popover.delete.wizard'].create({'record': event.id})
+        form = Form(wizard)
+        form.delete = 'next'
+        form.save()
+        wizard.close()
+        self.assertTrue(self.recurrence)
+        self.assertEqual(self.events.exists(), self.events[0])
+
+    def test_unlink_recurrence_wizard_all(self):
+        event = self.events[1]
+        wizard = self.env['calendar.popover.delete.wizard'].create({'record': event.id})
+        form = Form(wizard)
+        form.delete = 'all'
+        form.save()
+        wizard.close()
+        self.assertFalse(self.recurrence.exists())
+        self.assertFalse(self.events.exists())
 
 
 class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
