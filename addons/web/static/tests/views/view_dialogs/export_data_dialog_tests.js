@@ -243,12 +243,13 @@ QUnit.module("ViewDialogs", (hooks) => {
             mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.strictEqual(args.model, "ir.exports");
+                    const [values] = args.args[0];
                     assert.strictEqual(
-                        args.args[0].name,
+                        values.name,
                         "Export template",
                         "the template name is correctly sent"
                     );
-                    return 2;
+                    return [2];
                 }
                 if (args.method === "search_read") {
                     assert.deepEqual(

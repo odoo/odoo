@@ -263,7 +263,7 @@ export class ExportDataDialog extends Component {
                 type: "danger",
             });
         }
-        const id = await this.orm.create(
+        const [id] = await this.orm.create(
             "ir.exports",
             [
                 {

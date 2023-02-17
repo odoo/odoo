@@ -104,7 +104,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                         start: { string: "start datetime", type: "datetime" },
                         stop: { string: "stop datetime", type: "datetime" },
                         delay: { string: "delay", type: "float" },
-                        duration: { string: "Duration",  type:"float", default: 1},
+                        duration: { string: "Duration", type: "float", default: 1 },
                         allday: { string: "allday", type: "boolean" },
                         partner_ids: {
                             string: "attendees",
@@ -309,28 +309,31 @@ QUnit.module("Views", ({ beforeEach }) => {
     QUnit.test(`simple calendar rendering`, async (assert) => {
         assert.expect(25);
 
-        serverData.models.event.records.push({
-            id: 8,
-            user_id: uid,
-            partner_id: false,
-            name: "event 7",
-            start: "2016-12-18 09:00:00",
-            stop: "2016-12-18 10:00:00",
-            allday: false,
-            partner_ids: [2],
-            type: 1,
-        }, {
-            id: 9,
-            user_id: uid,
-            partner_id: false,
-            name: "event 8",
-            start: "2016-12-11 05:15:00",
-            stop: "2016-12-11 05:30:00",
-            allday: false,
-            partner_ids: [1, 2, 3],
-            duration: 0.25,
-            type: 1,
-        });
+        serverData.models.event.records.push(
+            {
+                id: 8,
+                user_id: uid,
+                partner_id: false,
+                name: "event 7",
+                start: "2016-12-18 09:00:00",
+                stop: "2016-12-18 10:00:00",
+                allday: false,
+                partner_ids: [2],
+                type: 1,
+            },
+            {
+                id: 9,
+                user_id: uid,
+                partner_id: false,
+                name: "event 8",
+                start: "2016-12-11 05:15:00",
+                stop: "2016-12-11 05:30:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                duration: 0.25,
+                type: 1,
+            }
+        );
 
         await makeView({
             type: "calendar",
@@ -1030,10 +1033,12 @@ QUnit.module("Views", ({ beforeEach }) => {
                 if (method === "create") {
                     assert.deepEqual(
                         args[0],
-                        {
-                            x_name: "custom event in quick create",
-                            x_start_date: "2016-12-13",
-                        },
+                        [
+                            {
+                                x_name: "custom event in quick create",
+                                x_start_date: "2016-12-13",
+                            },
+                        ],
                         "the custom create_name_field should be used instead of `name`"
                     );
                 }
@@ -1161,7 +1166,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             mockRPC(route, { method, args }) {
                 if (method === "create") {
                     assert.deepEqual(
-                        args,
+                        args[0],
                         [
                             {
                                 allday: false,
@@ -1879,12 +1884,14 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
             mockRPC(route, { args, method }) {
                 if (method === "create") {
-                    assert.deepEqual(args[0], {
-                        name: "new event",
-                        start: "2016-12-14",
-                        stop: "2016-12-15",
-                        allday: true,
-                    });
+                    assert.deepEqual(args[0], [
+                        {
+                            name: "new event",
+                            start: "2016-12-14",
+                            stop: "2016-12-15",
+                            allday: true,
+                        },
+                    ]);
                 }
             },
         });
@@ -1918,12 +1925,14 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
             mockRPC(route, { args, method }) {
                 if (method === "create") {
-                    assert.deepEqual(args[0], {
-                        name: "new event",
-                        start: "2016-12-14",
-                        stop: "2016-12-14",
-                        allday: true,
-                    });
+                    assert.deepEqual(args[0], [
+                        {
+                            name: "new event",
+                            start: "2016-12-14",
+                            stop: "2016-12-14",
+                            allday: true,
+                        },
+                    ]);
                 }
             },
         });
@@ -1967,12 +1976,14 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
             mockRPC(route, { args, method }) {
                 if (method === "create") {
-                    assert.deepEqual(args[0], {
-                        name: "new event",
-                        start: "2016-12-14",
-                        stop: "2016-12-14",
-                        allday: true,
-                    });
+                    assert.deepEqual(args[0], [
+                        {
+                            name: "new event",
+                            start: "2016-12-14",
+                            stop: "2016-12-14",
+                            allday: true,
+                        },
+                    ]);
                 }
             },
         });
@@ -2111,11 +2122,13 @@ QUnit.module("Views", ({ beforeEach }) => {
                 if (method === "create") {
                     assert.deepEqual(
                         args[0],
-                        {
-                            name: "new event",
-                            start: "2016-12-14 05:00:00",
-                            stop: "2016-12-15 17:00:00",
-                        },
+                        [
+                            {
+                                name: "new event",
+                                start: "2016-12-14 05:00:00",
+                                stop: "2016-12-15 17:00:00",
+                            },
+                        ],
                         "should send the correct data to create events"
                     );
                 }
@@ -3568,7 +3581,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
             mockRPC(route, { method, args }) {
                 if (method === "create") {
-                    assert.strictEqual(args[0].start_date, "2016-12-20");
+                    const [values] = args[0];
+                    assert.strictEqual(values.start_date, "2016-12-20");
                 }
                 if (method === "write") {
                     assert.step(args[1].start_date);
@@ -4553,7 +4567,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
             mockRPC(route, { method, args }) {
                 if (method === "create") {
-                    assert.deepEqual(args[0], expectedEvent);
+                    const [values] = args[0];
+                    assert.deepEqual(values, expectedEvent);
                 }
             },
         });

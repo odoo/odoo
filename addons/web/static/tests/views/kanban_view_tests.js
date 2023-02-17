@@ -1726,11 +1726,13 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "create") {
                     assert.deepEqual(
                         args.args[0],
-                        {
-                            foo: "new partner",
-                            int_field: 4,
-                            state: "def",
-                        },
+                        [
+                            {
+                                foo: "new partner",
+                                int_field: 4,
+                                state: "def",
+                            },
+                        ],
                         "should send the correct values"
                     );
                 }
@@ -1801,11 +1803,13 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "create") {
                     assert.deepEqual(
                         args.args[0],
-                        {
-                            foo: "new partner",
-                            int_field: 4,
-                            state: "def",
-                        },
+                        [
+                            {
+                                foo: "new partner",
+                                int_field: 4,
+                                state: "def",
+                            },
+                        ],
                         "should send the correct values"
                     );
                 }
@@ -2026,11 +2030,13 @@ QUnit.module("Views", (hooks) => {
                 if (method === "create") {
                     assert.deepEqual(
                         args[0],
-                        {
-                            foo: "new partner",
-                            int_field: 4,
-                            state: "def",
-                        },
+                        [
+                            {
+                                foo: "new partner",
+                                int_field: 4,
+                                state: "def",
+                            },
+                        ],
                         "should send the correct values"
                     );
                     const { default_product_id, default_qux } = kwargs.context;
@@ -2206,9 +2212,11 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route, { method, args, kwargs }) {
                 assert.step(method || route);
                 if (method === "create") {
-                    assert.deepEqual(args[0], {
-                        foo: "new partner",
-                    });
+                    assert.deepEqual(args[0], [
+                        {
+                            foo: "new partner",
+                        },
+                    ]);
                     const { default_category_ids } = kwargs.context;
                     assert.deepEqual(default_category_ids, [6]);
                 }
@@ -2269,10 +2277,12 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route, { method, args, kwargs }) {
                 assert.step(method || route);
                 if (method === "create") {
-                    assert.deepEqual(args[0], {
-                        category_ids: [[6, false, [6]]],
-                        foo: "new partner",
-                    });
+                    assert.deepEqual(args[0], [
+                        {
+                            category_ids: [[6, false, [6]]],
+                            foo: "new partner",
+                        },
+                    ]);
                     const { default_category_ids } = kwargs.context;
                     assert.deepEqual(default_category_ids, [6]);
                 }
@@ -2960,8 +2970,9 @@ QUnit.module("Views", (hooks) => {
                         }
                         case "create": {
                             assert.step(method);
-                            assert.strictEqual(args[0].foo, "new partner");
-                            assert.strictEqual(args[0].int_field, 3);
+                            const [values] = args[0];
+                            assert.strictEqual(values.foo, "new partner");
+                            assert.strictEqual(values.int_field, 3);
                             break;
                         }
                     }
@@ -3066,7 +3077,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     if (args.method === "create") {
                         assert.step("create");
-                        assert.deepEqual(_.pick(args.args[0], "foo", "int_field"), {
+                        assert.deepEqual(_.pick(args.args[0][0], "foo", "int_field"), {
                             foo: "new partner",
                             int_field: 3,
                         });
@@ -4143,7 +4154,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["foo"],
                 async mockRPC(route, { method, args, kwargs }) {
                     if (method === "create") {
-                        assert.deepEqual(args[0], { foo: "blip" });
+                        assert.deepEqual(args[0], [{ foo: "blip" }]);
                         assert.strictEqual(kwargs.context.default_foo, "blip");
                     }
                 },
@@ -4185,7 +4196,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
                 async mockRPC(route, { method, args, kwargs }) {
                     if (method === "create") {
-                        assert.deepEqual(args[0], { bar: true });
+                        assert.deepEqual(args[0], [{ bar: true }]);
                         assert.strictEqual(kwargs.context.default_bar, true);
                     }
                 },
@@ -4231,7 +4242,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["state"],
                 async mockRPC(route, { method, args, kwargs }) {
                     if (method === "create") {
-                        assert.deepEqual(args[0], { state: "abc" });
+                        assert.deepEqual(args[0], [{ state: "abc" }]);
                         assert.strictEqual(kwargs.context.default_state, "abc");
                     }
                 },

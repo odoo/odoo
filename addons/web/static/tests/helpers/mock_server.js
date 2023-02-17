@@ -694,18 +694,27 @@ export class MockServer {
         return newID;
     }
 
-    mockCreate(modelName, values, kwargs = {}) {
-        if ("id" in values) {
-            throw new Error("Cannot create a record with a predefinite id");
+    mockCreate(modelName, valsList, kwargs = {}) {
+        let returnArrayOfIds = true;
+        if (!Array.isArray(valsList)) {
+            valsList = [valsList];
+            returnArrayOfIds = false;
         }
         const model = this.models[modelName];
-        const id = this.getUnusedID(modelName);
-        const record = { id };
-        model.records.push(record);
-        this.applyDefaults(model, values, kwargs.context);
-        this.writeRecord(modelName, values, id);
-        this.updateComodelRelationalFields(modelName, record);
-        return id;
+        const ids = [];
+        for (const values of valsList) {
+            if ("id" in values) {
+                throw new Error("Cannot create a record with a predefinite id");
+            }
+            const id = this.getUnusedID(modelName);
+            ids.push(id);
+            const record = { id };
+            model.records.push(record);
+            this.applyDefaults(model, values, kwargs.context);
+            this.writeRecord(modelName, values, id);
+            this.updateComodelRelationalFields(modelName, record);
+        }
+        return returnArrayOfIds ? ids : ids[0];
     }
 
     /**
@@ -818,7 +827,7 @@ export class MockServer {
             name: name,
             display_name: name,
         };
-        const id = this.mockCreate(modelName, values, kwargs);
+        const [id] = this.mockCreate(modelName, [values], kwargs);
         return [id, name];
     }
 
@@ -2306,7 +2315,7 @@ export class MockServer {
                         if (inverseFieldName) {
                             inverseData[inverseFieldName] = id;
                         }
-                        const newId = this.mockCreate(field.relation, inverseData);
+                        const [newId] = this.mockCreate(field.relation, [inverseData]);
                         ids.push(newId);
                     } else if (command[0] === 1) {
                         // UPDATE
