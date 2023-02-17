@@ -1809,3 +1809,19 @@ QUnit.test("composer state: attachments save and restore", async function (asser
     assert.containsOnce(target, ".o-mail-attachment-card:contains(text3.txt)");
     assert.containsOnce(target, ".o-mail-attachment-card:contains(text4.txt)");
 });
+
+QUnit.test(
+    "sidebar: cannot unpin channel group_based_subscription: mandatorily pinned",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create({
+            name: "General",
+            channel_member_ids: [[0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }]],
+            group_based_subscription: true,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.containsOnce(target, "button:contains(General)");
+        assert.containsNone(target, "div[title='Leave this channel']");
+    }
+);
