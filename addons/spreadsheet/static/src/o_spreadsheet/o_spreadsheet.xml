@@ -116,6 +116,7 @@
 
       <BottomBarStatistic
         openContextMenu="(x, y, registry) => this.openContextMenu(x, y, 'listSelectionStatistics', registry)"
+        closeContextMenu="() => this.closeContextMenuWithId('listSelectionStatistics')"
       />
 
       <Menu
@@ -180,7 +181,11 @@
   </t>
 
   <t t-name="o-spreadsheet-ColorPicker" owl="1">
-    <div class="o-color-picker" t-att-class="props.dropdownDirection || 'right'" t-on-click.stop="">
+    <div
+      class="o-color-picker"
+      t-att-class="props.dropdownDirection || 'right'"
+      t-on-click.stop=""
+      t-att-style="colorPickerStyle">
       <div class="o-color-picker-section-name">Standard</div>
       <div class="colors-grid">
         <div
@@ -448,7 +453,7 @@
   </t>
 
   <t t-name="o-spreadsheet-ChartJsComponent" owl="1">
-    <canvas class="o-figure-canvas" t-att-style="canvasStyle" t-ref="graphContainer"/>
+    <canvas class="o-figure-canvas w-100 h-100" t-att-style="canvasStyle" t-ref="graphContainer"/>
   </t>
 
   <t t-name="o-spreadsheet-ScorecardChart" owl="1">
@@ -489,7 +494,7 @@
         class="o-figure w-100 h-100"
         t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
         t-ref="figure"
-        t-att-style="figureStyle"
+        t-att-style="props.style"
         tabindex="0"
         t-on-keydown="(ev) => this.onKeyDown(ev)"
         t-on-keyup.stop="">
@@ -500,8 +505,8 @@
           figure="props.figure"
         />
       </div>
+      <div class="o-figure-border w-100 h-100 position-absolute pe-none" t-att-style="borderStyle"/>
       <t t-if="isSelected">
-        <div class="w-100 h-100 o-active-figure-border position-absolute pe-none"/>
         <div
           class="o-fig-anchor o-top"
           t-att-style="this.getResizerPosition('top')"
@@ -720,6 +725,39 @@
       <div class="o-filter-menu-value-text text-truncate">
         <t t-if="this.props.value === ''">(Blanks)</t>
         <t t-else="" t-esc="this.props.value"/>
+      </div>
+    </div>
+  </t>
+
+  <t t-name="o-spreadsheet-FontSizeEditor" owl="1">
+    <div class="o-dropdown o-font-size-editor" t-ref="FontSizeEditor">
+      <input
+        type="number"
+        min="1"
+        max="400"
+        class="o-font-size bg-transparent border-0"
+        t-on-keydown="onInputKeydown"
+        t-on-click.stop=""
+        t-on-focus.stop="onInputFocused"
+        t-att-value="currentFontSize"
+        t-on-change="setSizeFromInput"
+        t-ref="inputFontSize"
+      />
+      <span title="Font Size" t-on-click="() => this.toggleFontList()">
+        <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+      </span>
+      <div
+        class="o-dropdown-content o-text-options"
+        t-if="dropdown.isOpen"
+        t-att-style="props.dropdownStyle">
+        <t t-foreach="fontSizes" t-as="fontSize" t-key="fontSize">
+          <div
+            t-esc="fontSize"
+            t-att-data-size="fontSize"
+            class="o-dropdown-item"
+            t-on-click="() => this.setSizeFromList(fontSize)"
+          />
+        </t>
       </div>
     </div>
   </t>
@@ -1608,16 +1646,21 @@
       <div class="o-section">
         <div class="o-section-title">Text</div>
         <div class="d-flex">
-          <input type="text" class="o-input flex-grow-1" t-model="link.label"/>
+          <input type="text" title="Link label" class="o-input flex-grow-1" t-model="link.label"/>
         </div>
 
         <div class="o-section-title mt-3">Link</div>
         <div class="o-link-url">
           <t t-if="link.isUrlEditable">
-            <input type="text" t-ref="urlInput" t-model="link.url"/>
+            <input type="text" title="Link URL" t-ref="urlInput" t-model="link.url"/>
           </t>
           <t t-else="">
-            <input type="text" t-att-value="getUrlRepresentation(link)" disabled="1"/>
+            <input
+              type="text"
+              title="Link URL"
+              t-att-value="getUrlRepresentation(link)"
+              disabled="1"
+            />
           </t>
           <button t-if="link.url" t-on-click="removeLink" class="o-remove-url">✖</button>
           <button t-if="!link.url" t-on-click.stop="openMenu" class="o-special-link">
@@ -3132,6 +3175,7 @@
           onClick="() => this.focusGrid()"
           onComposerContentFocused="(selection) => this.onTopBarComposerFocused(selection)"
           focusComposer="focusTopBarComposer"
+          dropdownMaxHeight="gridHeight"
         />
         <Grid
           sidePanelIsOpen="sidePanel.isOpen"
@@ -3245,6 +3289,7 @@
               <div
                 class="o-dropdown-content o-text-options  o-format-tool "
                 t-if="state.activeTool === 'formatTool'"
+                t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <t t-foreach="commonFormats" t-as="commonFormat" t-key="commonFormat.name">
                   <div
@@ -3267,28 +3312,7 @@
               </div>
             </div>
             <div class="o-divider"/>
-            <div class="o-dropdown">
-              <div
-                class="o-tool o-dropdown-button o-text-icon"
-                title="Font Size"
-                t-on-click="(ev) => this.toggleDropdownTool('fontSizeTool', ev)">
-                <t t-esc="style.fontSize || DEFAULT_FONT_SIZE"/>
-                <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
-              </div>
-              <div
-                class="o-dropdown-content o-text-options "
-                t-if="state.activeTool === 'fontSizeTool'"
-                t-on-click.stop="">
-                <t t-foreach="fontSizes" t-as="font" t-key="font_index">
-                  <div
-                    t-esc="font.pt"
-                    t-att-data-size="font.pt"
-                    class="o-dropdown-item"
-                    t-on-click="() => this.setSize(font.pt)"
-                  />
-                </t>
-              </div>
-            </div>
+            <FontSizeEditor onToggle="() => this.onClick()" dropdownStyle="this.dropdownStyle"/>
             <div class="o-divider"/>
             <div
               class="o-tool"
@@ -3325,6 +3349,7 @@
                 onColorPicked="(color) => this.setColor('textColor', color)"
                 currentColor="textColor"
                 t-key="textColor"
+                maxHeight="this.props.dropdownMaxHeight"
               />
             </div>
             <div class="o-divider"/>
@@ -3342,6 +3367,7 @@
                 onColorPicked="(color) => this.setColor('fillColor', color)"
                 currentColor="fillColor"
                 t-key="fillColor"
+                maxHeight="this.props.dropdownMaxHeight"
               />
             </div>
             <div class="o-dropdown">
@@ -3356,6 +3382,7 @@
               <div
                 class="o-dropdown-content o-border-dropdown"
                 t-if="state.activeTool === 'borderTool'"
+                t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div class="o-dropdown-line">
                   <span class="o-line-item" t-on-click="(ev) => this.setBorder('all')">
@@ -3422,6 +3449,7 @@
               <div
                 t-if="state.activeTool === 'horizontalAlignTool'"
                 class="o-dropdown-content"
+                t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div
                   class="o-dropdown-item o-dropdown-align-item"
@@ -3461,6 +3489,7 @@
               <div
                 t-if="state.activeTool === 'verticalAlignTool'"
                 class="o-dropdown-content"
+                t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div
                   class="o-dropdown-item o-dropdown-align-item"
@@ -3500,6 +3529,7 @@
               <div
                 t-if="state.activeTool === 'textWrappingTool'"
                 class="o-dropdown-content"
+                t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div
                   class="o-dropdown-item o-dropdown-align-item"
