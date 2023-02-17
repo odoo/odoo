@@ -87,17 +87,6 @@
                             <i class="fa fa-compress fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                         </div>
                     </button>
-                    <button t-if="isDebug" class="o-mail-call-action-list-button btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-                            aria-label="More"
-                            title="More"
-                            t-att-class="{ 'o-isSmall p-2': isSmall, 'p-3': !isSmall }"
-                            t-on-click="onClickMore"
-                            t-ref="moreButton"
-                    >
-                        <div class="o-mail-call-action-list-buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': isSmall }">
-                            <i class="fa fa-ellipsis-h fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
-                        </div>
-                    </button>
                 </t>
                 <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="o-mail-call-action-list-button o-mail-call-action-list-callToggle o-isActive btn btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
                     t-att-class="{ 'o-isSmall p-2': isSmall, 'p-3': !isSmall }"

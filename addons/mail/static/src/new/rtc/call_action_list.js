@@ -24,10 +24,6 @@ export class CallActionList extends Component {
         return isMobileOS();
     }
 
-    get isDebug() {
-        return false; // TODO
-    }
-
     /**
      * @param {MouseEvent} ev
      */
@@ -53,13 +49,6 @@ export class CallActionList extends Component {
         } else {
             this.rtc.mute();
         }
-    }
-
-    /**
-     * @param {MouseEvent} ev
-     */
-    onClickMore(ev) {
-        this.showMore = !this.showMore; // TODO (was only holding the show logs feature anyways)
     }
 
     /**
