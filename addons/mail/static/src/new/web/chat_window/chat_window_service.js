@@ -125,7 +125,16 @@ export class ChatWindowService {
         chatWindow.thread.state = "folded";
     }
 
-    close(chatWindow, { escape = false } = {}) {
+    async close(chatWindow, { escape = false } = {}) {
+        if (this.store.isSmall && !this.store.discuss.isActive) {
+            // If we are in mobile and discuss is not open, it means the
+            // chat window was opened from the messaging menu. In that
+            // case it should be re-opened to simulate it was always
+            // there in the background.
+            document.querySelector(".o_menu_systray i[aria-label='Messages']").click();
+            // ensure messaging menu is opened before chat window is closed
+            await Promise.resolve();
+        }
         const index = this.store.chatWindows.findIndex((c) => c === chatWindow);
         if (index > -1) {
             this.store.chatWindows.splice(index, 1);

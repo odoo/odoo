@@ -207,6 +207,7 @@ export class Dropdown extends Component {
             newState: { ...this.state },
         };
         Dropdown.bus.trigger("state-changed", stateChangedPayload);
+        this.props.onStateChanged({ ...this.state });
     }
 
     /**
@@ -329,6 +330,7 @@ Dropdown.bus = new EventBus();
 Dropdown.defaultProps = {
     menuDisplay: "d-block",
     onOpened: () => {},
+    onStateChanged: () => {},
     onScroll: () => {},
 };
 Dropdown.props = {
@@ -374,6 +376,10 @@ Dropdown.props = {
         optional: true,
     },
     onScroll: {
+        type: Function,
+        optional: true,
+    },
+    onStateChanged: {
         type: Function,
         optional: true,
     },

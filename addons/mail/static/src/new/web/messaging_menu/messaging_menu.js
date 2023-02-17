@@ -30,6 +30,7 @@ export class MessagingMenu extends Component {
         this.state = useState({
             addingChat: false,
             addingChannel: false,
+            isOpen: false,
         });
         onExternalClick("selector", () => {
             Object.assign(this.state, { addingChat: false, addingChannel: false });
