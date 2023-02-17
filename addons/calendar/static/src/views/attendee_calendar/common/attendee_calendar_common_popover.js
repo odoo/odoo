@@ -32,7 +32,7 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
     }
 
     get isCurrentUserAttendee() {
-        return this.props.record.rawRecord.partner_ids.includes(this.user.partnerId);
+        return this.props.record.rawRecord.partner_ids.includes(this.user.partnerId) || this.props.record.rawRecord.partner_id[0] === this.user.partnerId;
     }
 
     get isCurrentUserOrganizer() {
@@ -69,8 +69,19 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
      * @override
      */
     get isEventEditable() {
+        return this.isCurrentUserAttendee;
+    }
+
+    get isEventViewable() {
         return this.isEventPrivate ? this.isCurrentUserAttendee : super.isEventEditable;
     }
+
+    /**
+     * @override
+     */
+     get hasFooter() {
+        return this.isEventViewable || super.hasFooter;
+     }
 
     async changeAttendeeStatus(selectedStatus) {
         const record = this.props.record;
