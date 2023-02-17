@@ -79,6 +79,13 @@ class HolidaysRequest(models.Model):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
         defaults = self._default_get_request_parameters(defaults)
 
+        employee = self.env['hr.employee'].browse(defaults['employee_id']) if defaults.get('employee_id') else self.env.user.employee_id
+        # In some cases, the context does not contain the employee's working time for the day requested
+        if defaults.get('request_date_from') and defaults.get('request_date_to'):
+            default_attendance_from, default_attendance_to = self._get_attendances(employee, defaults['request_date_from'], defaults['request_date_to'])
+            defaults['date_from'] = self._get_start_or_end_from_attendance(default_attendance_from.hour_from, defaults['request_date_from'], employee)
+            defaults['date_to'] = self._get_start_or_end_from_attendance(default_attendance_to.hour_to, defaults['request_date_to'], employee)
+
         if 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
             lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1)
 
