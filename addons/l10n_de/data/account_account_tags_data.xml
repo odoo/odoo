@@ -273,11 +273,11 @@
     <!-- TAX -->
 
     <record id="tax_report_de_tax_tag_17" model="account.tax.report.line">
-        <field name="name">83. Verbleibende Umsatzsteuer-Vorauszahlung</field>
+        <field name="name">Anmeldung der Umsatzsteuer-Vorauszahlung</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence">10</field>
         <field name="parent_id" ref="tax_report_de_tag_02"/>
-        <field name="code">83</field>
+        <field name="code"></field>
     </record>
 
     <record id="tax_report_de_tax_tag_18" model="account.tax.report.line">
@@ -493,6 +493,14 @@
         <field name="sequence">60</field>
         <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
         <field name="code">39</field>
+    </record>
+    <record id="tax_report_de_tag_83" model="account.tax.report.line">
+        <field name="name">83. Verbleibende Umsatzsteuer-Vorauszahlung (zeile 49)</field>
+        <field name="tag_name">83</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">70</field>
+        <field name="parent_id" ref="tax_report_de_tax_tag_17"/>
+        <field name="code">83</field>
     </record>
 
     <record id="tax_report_de_tag_71" model="account.tax.report.line">
