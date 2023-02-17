@@ -839,3 +839,57 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async f
         2
     );
 });
+
+QUnit.test(
+    "focusing a chat window of a chat should make new message separator disappear [REQUIRE FOCUS]",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+        const userId = pyEnv["res.users"].create({
+            name: "Foreigner user",
+            partner_id: partnerId,
+        });
+        const channelId = pyEnv["mail.channel"].create({
+            name: "test",
+            channel_member_ids: [
+                [
+                    0,
+                    0,
+                    {
+                        fold_state: "open",
+                        is_minimized: true,
+                        partner_id: pyEnv.currentPartnerId,
+                    },
+                ],
+                [0, 0, { partner_id: partnerId }],
+            ],
+            channel_type: "chat",
+            uuid: "channel-10-uuid",
+        });
+        const messageId = pyEnv["mail.message"].create([
+            {
+                body: "not empty",
+                model: "mail.channel",
+                res_id: channelId,
+            },
+        ]);
+        const [memberId] = pyEnv["mail.channel.member"].search([
+            ["channel_id", "=", channelId],
+            ["partner_id", "=", pyEnv.currentPartnerId],
+        ]);
+        pyEnv["mail.channel.member"].write([memberId], { seen_message_id: messageId });
+        const { env } = await start();
+        target.querySelector(".o-mail-composer-textarea").blur();
+        // simulate receiving a message
+        await afterNextRender(() =>
+            env.services.rpc("/mail/chat_post", {
+                context: { mockedUserId: userId },
+                message_content: "hu",
+                uuid: "channel-10-uuid",
+            })
+        );
+        assert.containsOnce(target, "hr + span:contains(New messages)");
+        await afterNextRender(() => target.querySelector(".o-mail-composer-textarea").focus());
+        assert.containsNone(target, "hr + span:contains(New messages)");
+    }
+);
