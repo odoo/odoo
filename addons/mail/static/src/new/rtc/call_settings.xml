@@ -89,6 +89,18 @@
                     </div>
                 </t>
             </div>
+            <div t-if="env.debug" class="o-mail-call-settings_category d-flex flex-column px-3 overflow-auto">
+                <div class="o-mail-call-settings_categoryTitle py-2 fw-bolder text-700 text-truncate text-uppercase">Technical Settings</div>
+                <div class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o-mail-call-settings_optionLabel o-mail-call-settings_showOnlyVideoOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Log RTC events" aria-label="Log RTC events">
+                        <input type="checkbox" aria-label="Log RTC events" title="Log RTC events" t-on-change="onChangeLogRtcCheckbox" t-att-checked="userSettings.logRtc ? 'checked' : ''" class="form-check-input"/>
+                        <span class="o-mail-call-settings_optionName ms-2 text-truncate">Log RTC events</span>
+                    </label>
+                </div>
+                <div t-if="userSettings.logRtc" class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                    <button class="btn btn-primary" t-on-click="onClickDownloadLogs">Download logs</button>
+                </div>
+            </div>
         </div>
     </t>
 

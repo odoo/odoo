@@ -42,6 +42,7 @@ export class UserSettings {
      * true if listening to keyboard input to register the push to talk key.
      */
     isRegisteringKey = false;
+    logRtc = false;
     pushToTalkKey;
     usePushToTalk = false;
     voiceActiveDuration = 0;

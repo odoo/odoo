@@ -46,6 +46,10 @@ export class CallSettings extends Component {
         this.userSettings.isRegisteringKey = false;
     }
 
+    onChangeLogRtcCheckbox(ev) {
+        this.userSettings.logRtc = ev.target.checked;
+    }
+
     onChangeSelectAudioInput(ev) {
         this.userSettings.setAudioInputDevice(ev.target.value);
     }
@@ -55,6 +59,19 @@ export class CallSettings extends Component {
             this.userSettings.isRegisteringKey = false;
         }
         this.userSettings.togglePushToTalk();
+    }
+
+    onClickDownloadLogs() {
+        const data = window.JSON.stringify(Object.fromEntries(this.rtc.state.logs));
+        const blob = new window.Blob([data], { type: "application/json" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `RtcLogs_Channel_${this.rtc.state.logs.channelId}_Session_${
+            this.rtc.state.logs.selfSessionId
+        }_${window.moment().format("YYYY-MM-DD_HH-mm")}.json`;
+        a.click();
+        window.URL.revokeObjectURL(url);
     }
 
     onClickRegisterKeyButton() {

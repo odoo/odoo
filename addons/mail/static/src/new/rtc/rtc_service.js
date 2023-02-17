@@ -453,6 +453,9 @@ export class Rtc {
      * @param {String} [param2.state] current state of the connection
      */
     log(session, entry, { error, step, state } = {}) {
+        if (!this.userSettingsService.logRtc) {
+            return;
+        }
         if (!(session.id in this.state.logs)) {
             this.state.logs.set(session.id, { step: "", state: "", logs: [] });
         }
@@ -641,6 +644,7 @@ export class Rtc {
         );
         // Initializing a new session implies closing the current session.
         this.clear();
+        this.state.logs.clear();
         this.state.channel = channel;
         this.threadService.update(this.state.channel, {
             serverData: {
@@ -650,6 +654,8 @@ export class Rtc {
         });
         this.state.selfSession = this.store.rtcSessions[sessionId];
         this.state.iceServers = iceServers || DEFAULT_ICE_SERVERS;
+        this.state.logs.set("channelId", this.state.channel?.id);
+        this.state.logs.set("selfSessionId", this.state.selfSession?.id);
         const channelProxy = reactive(this.state.channel, () => {
             if (channel !== this.state.channel) {
                 throw new Error("channel has changed");
@@ -824,7 +830,6 @@ export class Rtc {
         this.state.audioTrack?.stop();
         this.state.videoTrack?.stop();
         this.state.notificationsToSend.clear();
-        this.state.logs.clear();
         Object.assign(this.state, {
             updateAndBroadcastDebounce: undefined,
             disconnectAudioMonitor: undefined,
