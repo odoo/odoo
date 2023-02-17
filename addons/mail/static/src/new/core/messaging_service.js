@@ -464,8 +464,9 @@ export class Messaging {
                 }
                 case "mail.channel.member/typing_status": {
                     const isTyping = notif.payload.isTyping;
-                    const channel =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.channel.id)];
+                    const channel = this.store.threads[
+                        createLocalId("mail.channel", notif.payload.channel.id)
+                    ];
                     if (!channel) {
                         return;
                     }
@@ -489,8 +490,9 @@ export class Messaging {
                     break;
                 }
                 case "mail.channel/unpin": {
-                    const thread =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.id)];
+                    const thread = this.store.threads[
+                        createLocalId("mail.channel", notif.payload.id)
+                    ];
                     if (!thread) {
                         return;
                     }
@@ -523,7 +525,16 @@ export class Messaging {
         const { id, message: messageData } = notif.payload;
         let channel = this.store.threads[createLocalId("mail.channel", id)];
         if (!channel) {
-            channel = await this.threadService.joinChat(messageData.author.id);
+            const [channelData] = await this.orm.call("mail.channel", "channel_info", [id]);
+            channel = this.threadService.insert({
+                id: channelData.id,
+                model: "mail.channel",
+                type: channelData.channel_type,
+                serverData: channelData,
+            });
+        }
+        if (!channel.is_pinned) {
+            this.threadService.pin(channel);
         }
 
         if ("parentMessage" in messageData && messageData.parentMessage.body) {

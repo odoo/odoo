@@ -241,6 +241,13 @@ export class ThreadService {
         return this.orm.silent.call("mail.channel", "channel_pin", [thread.id], { pinned: false });
     }
 
+    pin(thread) {
+        if (thread.model !== "mail.channel") {
+            return;
+        }
+        return this.orm.silent.call("mail.channel", "channel_pin", [thread.id], { pinned: true });
+    }
+
     sortChannels() {
         this.store.discuss.channels.threads.sort((id1, id2) => {
             const thread1 = this.store.threads[id1];
