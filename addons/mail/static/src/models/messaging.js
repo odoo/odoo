@@ -277,16 +277,6 @@ Patch({
                 this.updateImStatusRegisterThrottle.do();
             }
         },
-        /**
-         * @private
-         */
-        _onChangeRingingThreads() {
-            if (this.ringingThreads && this.ringingThreads.length > 0) {
-                this.soundEffects.incomingCall.play({ loop: true });
-            } else {
-                this.soundEffects.incomingCall.stop();
-            }
-        },
     },
     fields: {
         /**
@@ -380,10 +370,6 @@ Patch({
         userSetting: one("UserSetting", { default: {}, isCausal: true }),
     },
     onChanges: [
-        {
-            dependencies: ["ringingThreads"],
-            methodName: "_onChangeRingingThreads",
-        },
         {
             dependencies: ["allCurrentClientThreads"],
             methodName: "_onChangeAllCurrentClientThreads",
