@@ -639,7 +639,7 @@ QUnit.test("sidebar find shows channels matching search term", async function (a
     });
     await openDiscuss();
     await click(".o-mail-category-add-button");
-    await insertText(".o-mail-channel-selector-input", "test");
+    await insertText(".o-mail-channel-selector input", "test");
     await def;
     await nextAnimationFrame(); // ensures search_read rpc is rendered.
     // When searching for a single existing channel, the results list will have at least 2 lines:
@@ -669,7 +669,7 @@ QUnit.test(
         });
         await openDiscuss();
         await click(".o-mail-category-add-button");
-        await insertText(".o-mail-channel-selector-input", "test");
+        await insertText(".o-mail-channel-selector input", "test");
         await def;
         await nextAnimationFrame(); // ensures search_read rpc is rendered.
         // When searching for a single existing channel, the results list will have at least 2 lines:

@@ -39,7 +39,7 @@ QUnit.test("list activity widget with no activity", async function (assert) {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce(target, ".o-activity-button-icon.text-muted");
+    assert.containsOnce(target, ".o-activity-button i.text-muted");
     assert.strictEqual(document.querySelector(".o-list-activity-summary").innerText, "");
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
@@ -89,10 +89,10 @@ QUnit.test("list activity widget with activities", async function (assert) {
         views: [[false, "list"]],
     });
     const row_1 = document.querySelector(".o_data_row");
-    assert.containsOnce(row_1, ".o-activity-button-icon.text-warning.fa-phone");
+    assert.containsOnce(row_1, ".o-activity-button i.text-warning.fa-phone");
     assert.strictEqual(row_1.querySelector(".o-list-activity-summary").innerText, "Call with Al");
     const row_2 = document.querySelectorAll(".o_data_row")[1];
-    assert.containsOnce(row_2, ".o-activity-button-icon.text-success.fa-clock-o");
+    assert.containsOnce(row_2, ".o-activity-button i.text-success.fa-clock-o");
     assert.strictEqual(row_2.querySelector(".o-list-activity-summary").innerText, "Type 2");
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
@@ -132,7 +132,7 @@ QUnit.test("list activity widget with exception", async function (assert) {
         res_model: "res.users",
         views: [[false, "list"]],
     });
-    assert.containsOnce(target, ".o-activity-button-icon.text-warning.fa-warning");
+    assert.containsOnce(target, ".o-activity-button i.text-warning.fa-warning");
     assert.strictEqual(document.querySelector(".o-list-activity-summary").innerText, "Warning");
     assert.verifySteps(["/web/dataset/call_kw/res.users/web_search_read"]);
 });
@@ -216,7 +216,7 @@ QUnit.test("list activity widget: open dropdown", async function (assert) {
 
     await click(".o-activity-button"); // open the popover
     await click(".o-activity-list-popover-item-mark-as-done"); // mark the first activity as done
-    await click(".o-mail-activity-mark-as-done-button-done"); // confirm
+    await click(".o-mail-activity-mark-as-done button[aria-label='Done']"); // confirm
     assert.strictEqual(document.querySelector(".o-list-activity-summary").innerText, "Meet FP");
     assert.verifySteps([
         "web_search_read",

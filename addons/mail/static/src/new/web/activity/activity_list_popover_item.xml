@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.ActivityListPopoverItem" owl="1">
         <div class="o-activity-list-popover-item d-flex flex-column border-bottom py-2">
-            <div class="o-activity-list-popover-item-container d-flex align-items-baseline ms-3 me-1">
+            <div class="o-activity-list-popover-item-container overflow-auto d-flex align-items-baseline ms-3 me-1">
                 <i t-if="props.activity.icon" class="fa small me-2" t-attf-class="{{ props.activity.icon }}" role="img"/>
                 <t t-if="props.activity.summary">
                     <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="props.activity.summary"/>

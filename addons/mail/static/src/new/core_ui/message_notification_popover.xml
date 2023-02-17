@@ -5,7 +5,7 @@
         <div class="o-mail-message-notification-popover m-2">
             <div t-foreach="props.message.notifications" t-as="notification" t-key="notification.id">
                 <i class="me-2" t-att-class="notification.statusIcon" t-att-title="notification.statusTitle" role="img"/>
-                <span t-if="notification.partner" class="o-mail-message-notification-popover-partner-name" t-esc="notification.partner.name"/>
+                <span t-if="notification.partner" t-esc="notification.partner.name"/>
             </div>
         </div>
     </t>

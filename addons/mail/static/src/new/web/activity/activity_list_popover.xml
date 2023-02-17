@@ -29,7 +29,7 @@
                     <ActivityListPopoverItem t-foreach="plannedActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="props.onActivityChanged" onClickEditActivityButton="props.close" onClickDoneAndScheduleNext="props.close"/>
                 </t>
             </div>
-            <button class="o-activity-list-popover-add-activity-button btn btn-secondary p-3 text-center" t-on-click="onClickAddActivityButton">
+            <button class="btn btn-secondary p-3 text-center" t-on-click="onClickAddActivityButton">
                 <i class="fa fa-plus fa-fw"/><strong>Schedule an activity</strong>
             </button>
         </div>

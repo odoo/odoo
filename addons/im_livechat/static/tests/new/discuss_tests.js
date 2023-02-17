@@ -29,8 +29,8 @@ QUnit.test("No call buttons", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsNone(target, ".o-mail-discuss-actions button i.fa-phone");
-    assert.containsNone(target, ".o-mail-discuss-actions button i.fa-gear");
+    assert.containsNone(target, ".o-mail-discuss-header button[title='Start a Call']");
+    assert.containsNone(target, ".o-mail-discuss-header button[title='Show Call Settings']");
 });
 
 QUnit.test("No reaction button", async function (assert) {
@@ -138,7 +138,7 @@ QUnit.test("invite button should be present on livechat", async function (assert
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-discuss-actions [title='Add Users']");
+    assert.containsOnce(target, ".o-mail-discuss button[title='Add Users']");
 });
 
 QUnit.test(

@@ -506,7 +506,7 @@ QUnit.test("leave command on channel", async function (assert) {
     await insertText(".o-mail-composer-textarea", "/leave");
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.containsNone(target, ".o-mail-category-item:contains(general)");
-    assert.containsOnce(target, ".o-mail-discuss-no-thread");
+    assert.containsOnce(target, ".o-mail-discuss:contains(No conversation selected.)");
     assert.verifySteps(["You unsubscribed from general."]);
 });
 
@@ -532,7 +532,7 @@ QUnit.test("leave command on chat", async function (assert) {
     await insertText(".o-mail-composer-textarea", "/leave");
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.containsNone(target, ".o-mail-category-item:contains(Chuck Norris)");
-    assert.containsOnce(target, ".o-mail-discuss-no-thread");
+    assert.containsOnce(target, ".o-mail-discuss:contains(No conversation selected.)");
     assert.verifySteps(["You unpinned your conversation with Chuck Norris"]);
 });
 

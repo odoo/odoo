@@ -11,14 +11,14 @@
                 <span class="w-100 fw-bolder text-truncate text-center overflow-hidden" t-esc="props.thread.rtcInvitingSession.channelMember.persona.name"/>
                 <span class="fst-italic opacity-75">Incoming Call...</span>
             </div>
-            <div class="o-mail-call-invitation-buttonList d-flex justify-content-around align-items-center w-100 mt-4">
-                <button class="o-mail-call-invitation-buttonListButton p-2 rounded-circle border-0 bg-danger"
+            <div class="d-flex justify-content-around align-items-center w-100 mt-4">
+                <button class="user-select-none p-2 rounded-circle border-0 bg-danger"
                     aria-label="Refuse"
                     title="Refuse"
                     t-on-click="onClickRefuse">
                     <i class="fa fa-lg fa-times m-3"/>
                 </button>
-                <button class="o-mail-call-invitation-buttonListButton p-2 rounded-circle border-0 bg-success"
+                <button class="user-select-none p-2 rounded-circle border-0 bg-success"
                     aria-label="Accept"
                     title="Accept"
                     t-on-click="onClickAccept">

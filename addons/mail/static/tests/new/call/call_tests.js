@@ -17,7 +17,7 @@ QUnit.test("basic rendering", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-discuss-actions button[title='Start a Call']");
+    await click(".o-mail-discuss-header button[title='Start a Call']");
     assert.containsOnce(target, ".o-mail-call");
     assert.containsOnce(target, ".o-mail-call-participant-card[aria-label='Mitchell Admin']");
     assert.containsOnce(target, ".o-mail-call-action-list");
@@ -39,7 +39,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await click(".o-mail-discuss-actions button[title='Start a Call']");
+        await click(".o-mail-discuss-header button[title='Start a Call']");
         assert.containsOnce(target, ".o-mail-call");
 
         await click(".o-mail-call-action-list button[aria-label='Disconnect']");
@@ -71,7 +71,7 @@ QUnit.test("should disconnect when closing page while in call", async function (
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-discuss-actions button[title='Start a Call']");
+    await click(".o-mail-discuss-header button[title='Start a Call']");
     assert.containsOnce(target, ".o-mail-call");
 
     // simulate page close
@@ -88,9 +88,9 @@ QUnit.test("no default rtc after joining a chat conversation", async (assert) =>
     assert.containsNone(target, ".o-mail-category-item");
 
     await click(".o-mail-discuss-sidebar i[title='Start a conversation']");
-    await afterNextRender(() => editInput(target, ".o-mail-channel-selector-input", "mario"));
+    await afterNextRender(() => editInput(target, ".o-mail-channel-selector input", "mario"));
     await click(".o-mail-channel-selector-suggestion");
-    await triggerEvent(target, ".o-mail-channel-selector-input", "keydown", {
+    await triggerEvent(target, ".o-mail-channel-selector input", "keydown", {
         key: "Enter",
     });
     assert.containsOnce(target, ".o-mail-category-item");
@@ -109,11 +109,11 @@ QUnit.test("no default rtc after joining a group conversation", async (assert) =
     await openDiscuss();
     assert.containsNone(target, ".o-mail-category-item");
     await click(".o-mail-discuss-sidebar i[title='Start a conversation']");
-    await afterNextRender(() => editInput(target, ".o-mail-channel-selector-input", "mario"));
+    await afterNextRender(() => editInput(target, ".o-mail-channel-selector input", "mario"));
     await click(".o-mail-channel-selector-suggestion");
-    await afterNextRender(() => editInput(target, ".o-mail-channel-selector-input", "luigi"));
+    await afterNextRender(() => editInput(target, ".o-mail-channel-selector input", "luigi"));
     await click(".o-mail-channel-selector-suggestion");
-    await triggerEvent(target, ".o-mail-channel-selector-input", "keydown", {
+    await triggerEvent(target, ".o-mail-channel-selector input", "keydown", {
         key: "Enter",
     });
     assert.containsOnce(target, ".o-mail-category-item");

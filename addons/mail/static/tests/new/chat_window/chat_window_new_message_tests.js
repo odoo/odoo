@@ -49,7 +49,7 @@ QUnit.test("focused on open [REQUIRE FOCUS]", async function (assert) {
     await click(".o-mail-messaging-menu-new-message");
     assert.strictEqual(
         document.activeElement,
-        target.querySelector(".o-mail-chat-window .o-mail-channel-selector-input")
+        target.querySelector(".o-mail-chat-window .o-mail-channel-selector input")
     );
 });
 
@@ -139,7 +139,7 @@ QUnit.test(
 
         // search for a user in "new message" autocomplete
         await afterNextRender(async () => {
-            await insertText(".o-mail-channel-selector-input", "131");
+            await insertText(".o-mail-channel-selector input", "131");
             await imSearchDef;
         });
         assert.containsOnce(target, ".o-mail-channel-selector-suggestion a");

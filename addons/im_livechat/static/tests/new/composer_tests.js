@@ -81,7 +81,7 @@ QUnit.test('Receives visitor typing status "is typing"', async function (assert)
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.strictEqual(
-        document.querySelector(".o-mail-composer-is-typing-space-holder").textContent,
+        document.querySelector(".o-mail-typing").textContent,
         "",
         "Should display no one is currently typing"
     );
@@ -94,8 +94,5 @@ QUnit.test('Receives visitor typing status "is typing"', async function (assert)
             uuid: channel.uuid,
         })
     );
-    assert.containsOnce(
-        target,
-        ".o-mail-composer-is-typing-space-holder:contains(Visitor 20 is typing...)",
-    );
+    assert.containsOnce(target, ".o-mail-typing:contains(Visitor 20 is typing...)");
 });

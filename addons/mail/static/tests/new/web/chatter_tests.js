@@ -260,11 +260,7 @@ QUnit.test(
             res_model: "res.partner",
             views: [[false, "form"]],
         });
-        assert.containsOnce(target, ".o-mail-message-subject");
-        assert.strictEqual(
-            target.querySelector(".o-mail-message-subject").textContent,
-            "Subject: Salutations, voyageur"
-        );
+        assert.containsOnce(target, ".o-mail-message:contains(Subject: Salutations, voyageur)");
     }
 );
 
@@ -470,7 +466,7 @@ QUnit.test(
             res_model: "res.partner",
             views: [[false, "form"]],
         });
-        assert.containsNone(target, ".o-mail-message-subject");
+        assert.containsNone(target, ".o-mail-message:contains(Salutations, voyageur)");
     }
 );
 

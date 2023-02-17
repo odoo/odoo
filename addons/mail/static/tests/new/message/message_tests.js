@@ -764,13 +764,7 @@ QUnit.test("Notification Sent", async function (assert) {
     assert.containsOnce(target, ".o-mail-message-notification-popover");
     assert.containsOnce(target, ".o-mail-message-notification-popover i");
     assert.hasClass(target.querySelector(".o-mail-message-notification-popover i"), "fa-check");
-    assert.containsOnce(target, ".o-mail-message-notification-popover-partner-name");
-    assert.strictEqual(
-        target
-            .querySelector(".o-mail-message-notification-popover-partner-name")
-            .textContent.trim(),
-        "Someone"
-    );
+    assert.containsOnce(target, ".o-mail-message-notification-popover:contains(Someone)");
 });
 
 QUnit.test("Notification Error", async function (assert) {
@@ -1014,9 +1008,9 @@ QUnit.test("allow attachment delete on authored message", async function (assert
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsOnce(target, ".o-mail-attachment-image");
-    assert.containsOnce(target, ".o-mail-attachment-unlink");
+    assert.containsOnce(target, ".o-mail-attachment-image div[title='Remove']");
 
-    await click(".o-mail-attachment-unlink");
+    await click(".o-mail-attachment-image div[title='Remove']");
     assert.containsOnce(target, ".modal-dialog");
     assert.strictEqual(
         target.querySelector(".modal-body").textContent,
@@ -1054,7 +1048,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsOnce(target, ".o-mail-attachment-image");
-        assert.containsNone(target, ".o-mail-attachment-unlink");
+        assert.containsNone(target, ".o-mail-attachment-image div[title='Remove']");
     }
 );
 

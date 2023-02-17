@@ -65,11 +65,8 @@ QUnit.test("should have correct members in member list", async function (assert)
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
     assert.containsN(target, ".o-mail-channel-member", 2);
-    assert.containsOnce(
-        target,
-        `.o-mail-channel-member-name:contains("${pyEnv.currentPartner.name}")`
-    );
-    assert.containsOnce(target, ".o-mail-channel-member-name:contains('Demo')");
+    assert.containsOnce(target, `.o-mail-channel-member:contains("${pyEnv.currentPartner.name}")`);
+    assert.containsOnce(target, ".o-mail-channel-member:contains('Demo')");
 });
 
 QUnit.test(

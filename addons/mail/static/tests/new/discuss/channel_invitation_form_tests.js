@@ -30,7 +30,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
-        await click(".o-mail-discuss-actions button[title='Add Users']");
+        await click(".o-mail-discuss-header button[title='Add Users']");
         assert.containsOnce(target, ".o-mail-channel-invitation-form");
     }
 );
@@ -59,7 +59,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await click(".o-mail-discuss-actions button[title='Add Users']");
+        await click(".o-mail-discuss-header button[title='Add Users']");
         await insertText(".o-mail-channel-invitation-form-search-input", "TestPartner2");
         assert.strictEqual(
             target.querySelector(".o-mail-channel-invitation-form-selectable-partner").textContent,
@@ -86,8 +86,11 @@ QUnit.test("Invitation form should display channel group restriction", async fun
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-discuss-actions button[title='Add Users']");
-    assert.containsOnce(target, ".o-mail-channel-invitation-form-access-restricted");
+    await click(".o-mail-discuss-header button[title='Add Users']");
+    assert.containsOnce(
+        target,
+        '.o-mail-channel-invitation-form:contains(Access restricted to group "testGroup")'
+    );
 });
 
 QUnit.test(
@@ -114,7 +117,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await click(".o-mail-discuss-actions button[title='Add Users']");
+        await click(".o-mail-discuss-header button[title='Add Users']");
         await insertText(".o-mail-channel-invitation-form-search-input", "TestPartner2");
         await click(".form-check-input");
         await click("button[title='Create Group Chat']");

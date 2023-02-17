@@ -616,7 +616,7 @@ QUnit.test("new message [REQUIRE FOCUS]", async function (assert) {
     await click(`.o-mail-messaging-menu button:contains("New Message")`);
     assert.containsOnce(target, ".o-mail-chat-window");
     assert.containsOnce(target, ".o-mail-chat-window .o-mail-channel-selector");
-    assert.containsOnce(target, ".o-mail-channel-selector-input:focus");
+    assert.containsOnce(target, ".o-mail-channel-selector input:focus");
 });
 
 QUnit.test("channel preview: basic rendering", async function (assert) {

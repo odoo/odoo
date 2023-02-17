@@ -27,7 +27,7 @@
                     </div>
                     <div class="position-absolute top-0 bottom-0 start-0 end-0 p-2 text-white opacity-0 opacity-100-hover d-flex align-items-end flax-wrap flex-column">
                         <div t-if="canDelete(attachment)"
-                            class="o-mail-attachment-unlink btn btn-sm btn-dark rounded opacity-75 opacity-100-hover"
+                            class="btn btn-sm btn-dark rounded opacity-75 opacity-100-hover"
                             tabindex="0" aria-label="Remove" role="menuitem" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove">
                             <i class="fa fa-trash" />
                         </div>

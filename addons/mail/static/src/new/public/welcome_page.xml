@@ -11,11 +11,11 @@
         <div class="d-flex justify-content-center">
             <div class="d-flex flex-column justify-content-center">
                 <t t-if="store.guest">
-                    <label class="o-mail-welcome-page-guest-name-input-label text-center fs-4" >What's your name?</label>
+                    <label class="text-center fs-4" >What's your name?</label>
                     <input class="form-control mb-3" type="text" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
                 </t>
-                <p t-if="store.user" class="o-mail-welcome-page-user-name fs-4">Logged as <span t-esc="store.user.name"/></p>
-                <button class="o-mail-welcome-page-join-button btn btn-success fa-stack align-self-end p-0 rounded-circle fs-1 shadow" title="Join Channel" t-att-disabled="store.guest and state.userName.trim() === ''" t-on-click="joinChannel">
+                <p t-if="store.user" class="fs-4">Logged as <span t-esc="store.user.name"/></p>
+                <button class="btn btn-success fa-stack align-self-end p-0 rounded-circle fs-1 shadow" title="Join Channel" t-att-disabled="store.guest and state.userName.trim() === ''" t-on-click="joinChannel">
                     <i class="fa fa-arrow-right fa-stack"/>
                 </button>
             </div>

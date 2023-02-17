@@ -122,7 +122,7 @@ QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
     assert.containsNone(target, ".o-mail-category-item");
 
     await click(".o-mail-discuss-sidebar i[title='Add or join a channel']");
-    await afterNextRender(() => editInput(target, ".o-mail-channel-selector-input", "abc"));
+    await afterNextRender(() => editInput(target, ".o-mail-channel-selector input", "abc"));
     await click(".o-mail-channel-selector-suggestion");
     assert.containsOnce(target, ".o-mail-category-item");
     assert.containsNone(target, ".o-mail-discuss-content .o-mail-message");
@@ -149,18 +149,18 @@ QUnit.test(
         assert.containsNone(target, ".o-mail-category-item");
 
         await click("i[title='Start a conversation']");
-        await afterNextRender(() => editInput(target, ".o-mail-channel-selector-input", "mario"));
+        await afterNextRender(() => editInput(target, ".o-mail-channel-selector input", "mario"));
         await click(".o-mail-channel-selector-suggestion");
         assert.containsOnce(target, ".o-mail-channel-selector span[title='Mario']");
         assert.containsNone(target, ".o-mail-category-item");
 
-        await triggerEvent(target, ".o-mail-channel-selector-input", "keydown", {
+        await triggerEvent(target, ".o-mail-channel-selector input", "keydown", {
             key: "Backspace",
         });
         assert.containsNone(target, ".o-mail-channel-selector span[title='Mario']");
 
-        await afterNextRender(() => editInput(target, ".o-mail-channel-selector-input", "mario"));
-        await triggerEvent(target, ".o-mail-channel-selector-input", "keydown", {
+        await afterNextRender(() => editInput(target, ".o-mail-channel-selector input", "mario"));
+        await triggerEvent(target, ".o-mail-channel-selector input", "keydown", {
             key: "Enter",
         });
         assert.containsOnce(target, ".o-mail-channel-selector span[title='Mario']");
@@ -189,9 +189,9 @@ QUnit.test("can join a chat conversation", async (assert) => {
     assert.containsNone(target, ".o-mail-category-item");
 
     await click(".o-mail-discuss-sidebar i[title='Start a conversation']");
-    await afterNextRender(() => editInput(target, ".o-mail-channel-selector-input", "mario"));
+    await afterNextRender(() => editInput(target, ".o-mail-channel-selector input", "mario"));
     await click(".o-mail-channel-selector-suggestion");
-    await triggerEvent(target, ".o-mail-channel-selector-input", "keydown", {
+    await triggerEvent(target, ".o-mail-channel-selector input", "keydown", {
         key: "Enter",
     });
     assert.containsOnce(target, ".o-mail-category-item");
@@ -216,11 +216,11 @@ QUnit.test("can create a group chat conversation", async (assert) => {
     await openDiscuss();
     assert.containsNone(target, ".o-mail-category-item");
     await click(".o-mail-discuss-sidebar i[title='Start a conversation']");
-    await insertText(".o-mail-channel-selector-input", "Mario");
+    await insertText(".o-mail-channel-selector input", "Mario");
     await click(".o-mail-channel-selector-suggestion");
-    await insertText(".o-mail-channel-selector-input", "Luigi");
+    await insertText(".o-mail-channel-selector input", "Luigi");
     await click(".o-mail-channel-selector-suggestion");
-    await triggerEvent(target, ".o-mail-channel-selector-input", "keydown", {
+    await triggerEvent(target, ".o-mail-channel-selector input", "keydown", {
         key: "Enter",
     });
     assert.containsN(target, ".o-mail-category-item", 1);
@@ -379,9 +379,9 @@ QUnit.test("sidebar: chat im_status rendering", async function (assert) {
     assert.strictEqual(chat1.textContent, "Partner1");
     assert.strictEqual(chat2.textContent, "Partner2");
     assert.strictEqual(chat3.textContent, "Partner3");
-    assert.containsOnce(chat1, ".o-mail-chatwindow-icon-offline");
+    assert.containsOnce(chat1, ".o-mail-chatwindow-icon div[title='Offline']");
     assert.containsOnce(chat2, ".o-mail-chatwindow-icon-online");
-    assert.containsOnce(chat3, ".o-mail-chatwindow-icon-away");
+    assert.containsOnce(chat3, ".o-mail-chatwindow-icon div[title='Away']");
 });
 
 QUnit.test("No load more when fetch below fetch limit of 30", async function (assert) {
@@ -489,10 +489,7 @@ QUnit.test("reply to message from inbox (message linked to document)", async fun
     await click("i[aria-label='Reply']");
     assert.hasClass(target.querySelector(".o-mail-message"), "o-selected");
     assert.ok(target.querySelector(".o-mail-composer"));
-    assert.strictEqual(
-        target.querySelector(".o-mail-composer-origin-thread").textContent,
-        " on: Refactoring"
-    );
+    assert.containsOnce(target, ".o-mail-composer-core-header:contains(on: Refactoring)");
     assert.strictEqual(document.activeElement, target.querySelector(".o-mail-composer-textarea"));
 
     await insertText(".o-mail-composer-textarea", "Test");
@@ -520,7 +517,7 @@ QUnit.test("Can reply to starred message", async function (assert) {
     });
     await openDiscuss("mail.box_starred");
     await click("i[aria-label='Reply']");
-    assert.containsOnce(target, ".o-mail-composer-origin-thread:contains('RandomName')");
+    assert.containsOnce(target, ".o-mail-composer-core-header:contains('RandomName')");
     await insertText(".o-mail-composer-textarea", "abc");
     await click(".o-mail-composer-send-button");
     assert.verifySteps(['Message posted on "RandomName"']);
@@ -549,7 +546,7 @@ QUnit.test("Can reply to history message", async function (assert) {
     });
     await openDiscuss("mail.box_history");
     await click("i[aria-label='Reply']");
-    assert.containsOnce(target, ".o-mail-composer-origin-thread:contains('RandomName')");
+    assert.containsOnce(target, ".o-mail-composer-core-header:contains('RandomName')");
     await insertText(".o-mail-composer-textarea", "abc");
     await click(".o-mail-composer-send-button");
     assert.verifySteps(['Message posted on "RandomName"']);
@@ -773,7 +770,7 @@ QUnit.test("basic top bar rendering", async function (assert) {
 
     await click(".o-mail-category-item:contains(General)");
     assert.strictEqual($(target).find(".o-mail-discuss-thread-name")[0].value, "General");
-    assert.isVisible($(target).find(".o-mail-discuss-actions button[title='Add Users']"));
+    assert.isVisible($(target).find(".o-mail-discuss-header button[title='Add Users']"));
 });
 
 QUnit.test("rendering of inbox message", async function (assert) {
@@ -1339,7 +1336,7 @@ QUnit.test(
         const channelId = pyEnv["mail.channel"].create({ channel_type: "group" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, ".o-mail-discuss-thread-icon .fa-users");
+        assert.containsOnce(target, ".o-mail-discuss-header .fa-users[title='Grouped Chat']");
     }
 );
 
@@ -1419,7 +1416,7 @@ QUnit.test(
         await tab1.openDiscuss();
         await tab2.openDiscuss();
         await tab1.click(".o-mail-category-chat .o-mail-category-add-button");
-        await tab1.insertText(".o-mail-channel-selector-input", "Jer");
+        await tab1.insertText(".o-mail-channel-selector input", "Jer");
         await tab1.click(".o-mail-channel-selector-suggestion");
         await afterNextRender(() => triggerHotkey("Enter"));
         assert.containsOnce(tab1.target, ".o-mail-category-item:contains(Jerry Golay)");

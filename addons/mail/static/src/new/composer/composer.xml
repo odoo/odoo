@@ -5,7 +5,7 @@
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
-    <div class="o-mail-composer-container" t-ref="composer">
+    <div t-ref="composer">
         <div class="o-mail-composer d-grid flex-shrink-0"
                 t-att-class="{
                     'px-3 py-4 o-mail-extended-composer': extended,
@@ -19,7 +19,7 @@
                 <span class="cursor-pointer" t-on-click="() => props.highlightReplyTo and props.highlightReplyTo(props.messageToReplyTo.message.id)">
                     Replying to <b t-esc="props.messageToReplyTo.message.author.name"/>
                 </span>
-                <span t-if="props.messageToReplyTo.message.originThread !== thread" class="o-mail-composer-origin-thread">
+                <span t-if="props.messageToReplyTo.message.originThread !== thread">
                     on: <b><t t-esc="props.messageToReplyTo.message.originThread.displayName"/></b>
                 </span>
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
@@ -72,7 +72,7 @@
                     unlinkAttachment="attachmentUploader.unlink"
                     editable="true"
                     imagesHeight="50" />
-                <div t-if="thread and thread.type !== 'chatter' and !compact" class="o-mail-composer-is-typing">
+                <div t-if="thread and thread.type !== 'chatter' and !compact">
                     <Typing channel="thread" size="'medium'" />
                 </div>
             </div>

@@ -30,7 +30,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "");
+    assert.strictEqual($(target).find(".o-mail-typing").text(), "");
 
     // simulate receive typing notification from demo
     await afterNextRender(() =>
@@ -40,7 +40,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             is_typing: true,
         })
     );
-    assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "Demo is typing...");
+    assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
 });
 
 QUnit.test(
@@ -57,7 +57,7 @@ QUnit.test(
         });
         const { env, openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "");
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -67,10 +67,7 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual(
-            $(target).find(".o-mail-composer-is-typing").text(),
-            "Demo is typing..."
-        );
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
 
         // simulate receive typing notification from demo "is no longer typing"
         await afterNextRender(() =>
@@ -80,7 +77,7 @@ QUnit.test(
                 is_typing: false,
             })
         );
-        assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "");
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
     }
 );
 
@@ -99,7 +96,7 @@ QUnit.test(
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
 
-        assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "");
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -109,13 +106,10 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual(
-            $(target).find(".o-mail-composer-is-typing").text(),
-            "Demo is typing..."
-        );
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
 
         await afterNextRender(() => advanceTime(OTHER_LONG_TYPING));
-        assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "");
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
     }
 );
 
@@ -133,7 +127,7 @@ QUnit.test(
         });
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
-        assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "");
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
 
         // simulate receive typing notification from demo "is typing"
         await afterNextRender(() =>
@@ -145,10 +139,7 @@ QUnit.test(
                 is_typing: true,
             })
         );
-        assert.strictEqual(
-            $(target).find(".o-mail-composer-is-typing").text(),
-            "Demo is typing..."
-        );
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
 
         // simulate receive typing notification from demo "is typing" again after long time.
         await advanceTime(LONG_TYPING);
@@ -160,12 +151,9 @@ QUnit.test(
         await nextTick();
         await advanceTime(LONG_TYPING);
         await nextAnimationFrame();
-        assert.strictEqual(
-            $(target).find(".o-mail-composer-is-typing").text(),
-            "Demo is typing..."
-        );
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "Demo is typing...");
         await afterNextRender(() => advanceTime(OTHER_LONG_TYPING - LONG_TYPING));
-        assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "");
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
     }
 );
 
@@ -187,7 +175,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(target).find(".o-mail-composer-is-typing").text(), "");
+    assert.strictEqual($(target).find(".o-mail-typing").text(), "");
 
     // simulate receive typing notification from other 10 (is typing)
     await afterNextRender(() =>
@@ -197,10 +185,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             is_typing: true,
         })
     );
-    assert.strictEqual(
-        $(target).find(".o-mail-composer-is-typing").text(),
-        "Other 10 is typing..."
-    );
+    assert.strictEqual($(target).find(".o-mail-typing").text(), "Other 10 is typing...");
 
     // simulate receive typing notification from other 11 (is typing)
     await afterNextRender(() =>
@@ -211,7 +196,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         })
     );
     assert.strictEqual(
-        $(target).find(".o-mail-composer-is-typing").text(),
+        $(target).find(".o-mail-typing").text(),
         "Other 10 and Other 11 are typing...",
         "Should display longer typer named first"
     );
@@ -225,7 +210,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         })
     );
     assert.strictEqual(
-        $(target).find(".o-mail-composer-is-typing").text(),
+        $(target).find(".o-mail-typing").text(),
         "Other 10, Other 11 and more are typing..."
     );
 
@@ -238,7 +223,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         })
     );
     assert.strictEqual(
-        $(target).find(".o-mail-composer-is-typing").text(),
+        $(target).find(".o-mail-typing").text(),
         "Other 11 and Other 12 are typing..."
     );
 
@@ -251,7 +236,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
         })
     );
     assert.strictEqual(
-        $(target).find(".o-mail-composer-is-typing").text(),
+        $(target).find(".o-mail-typing").text(),
         "Other 11, Other 12 and more are typing...",
         "Should order by longer typer ('Other 10' just recently restarted typing)"
     );
@@ -341,7 +326,7 @@ QUnit.test(
         assert.verifySteps(["notify_typing:true"]);
 
         await nextAnimationFrame();
-        assert.strictEqual($(target).find(".o-mail-composer-is-typing-space-holder").text(), "");
+        assert.strictEqual($(target).find(".o-mail-typing").text(), "");
     }
 );
 

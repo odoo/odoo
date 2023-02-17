@@ -29,7 +29,7 @@
                         <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
                             <span class="me-2 text-truncate">Push-to-talk key</span>
                             <span class="d-flex">
-                                <span t-if="userSettings.pushToTalkKey" class="ms-1 px-3 border border-2 rounded fs-3" t-attf-class="{{ userSettings.isRegisteringKey ? 'o-isRegistering border-danger' : 'border-primary' }}" t-esc="pushToTalkKeyText"/>
+                                <span t-if="userSettings.pushToTalkKey" class="ms-1 px-3 border border-2 rounded fs-3" t-attf-class="{{ userSettings.isRegisteringKey ? 'border-danger' : 'border-primary' }}" t-esc="pushToTalkKeyText"/>
                                 <button class="btn btn-link px-2 py-0 text-black" t-on-click="onClickRegisterKeyButton">
                                     <i t-if="userSettings.isRegisteringKey" title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
                                     <i t-else="" title="Register new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>

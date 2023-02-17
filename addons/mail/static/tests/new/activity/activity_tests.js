@@ -36,7 +36,7 @@ QUnit.test("activity upload document is available", async function (assert) {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity-name:contains('Upload Document')");
+    assert.containsOnce(target, ".o-mail-activity-info:contains('Upload Document')");
     assert.containsOnce(target, ".fa-upload");
     assert.containsOnce(target, ".o-mail-activity .o_input_file");
 });
@@ -62,9 +62,9 @@ QUnit.test("activity simplest layout", async function (assert) {
     assert.containsNone(target, ".o-mail-activity-details");
     assert.containsNone(target, ".o-mail-activity-mail-templates");
     assert.containsNone(target, ".btn:contains('Edit')");
-    assert.containsNone(target, ".o-mail-activity-unlink-button");
+    assert.containsNone(target, ".o-mail-activity span:contains(Cancel)");
     assert.containsNone(target, ".btn:contains('Mark Done')");
-    assert.containsNone(target, ".o-mail-activity-name:contains('Upload Document')");
+    assert.containsNone(target, ".o-mail-activity-info:contains('Upload Document')");
 });
 
 QUnit.test("activity with note layout", async function (assert) {
@@ -106,9 +106,8 @@ QUnit.test("activity info layout when planned after tomorrow", async function (a
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-due-date");
-    assert.hasClass($(target).find(".o-mail-activity-due-date"), "text-success");
-    assert.strictEqual($(target).find(".o-mail-activity-due-date").text(), "Due in 5 days:");
+    assert.containsOnce(target, ".o-mail-activity .text-success");
+    assert.containsOnce(target, ".o-mail-activity:contains('Due in 5 days:')");
 });
 
 QUnit.test("activity info layout when planned tomorrow", async function (assert) {
@@ -131,9 +130,8 @@ QUnit.test("activity info layout when planned tomorrow", async function (assert)
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-due-date");
-    assert.hasClass($(target).find(".o-mail-activity-due-date"), "text-success");
-    assert.strictEqual($(target).find(".o-mail-activity-due-date").text(), "Tomorrow:");
+    assert.containsOnce(target, ".o-mail-activity .text-success");
+    assert.containsOnce(target, ".o-mail-activity:contains('Tomorrow:')");
 });
 
 QUnit.test("activity info layout when planned today", async function (assert) {
@@ -153,9 +151,8 @@ QUnit.test("activity info layout when planned today", async function (assert) {
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-due-date");
-    assert.hasClass($(target).find(".o-mail-activity-due-date"), "text-warning");
-    assert.strictEqual($(target).find(".o-mail-activity-due-date").text(), "Today:");
+    assert.containsOnce(target, ".o-mail-activity .text-warning");
+    assert.containsOnce(target, ".o-mail-activity:contains('Today:')");
 });
 
 QUnit.test("activity info layout when planned yesterday", async function (assert) {
@@ -178,9 +175,8 @@ QUnit.test("activity info layout when planned yesterday", async function (assert
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-due-date");
-    assert.hasClass($(target).find(".o-mail-activity-due-date"), "text-danger");
-    assert.strictEqual($(target).find(".o-mail-activity-due-date").text(), "Yesterday:");
+    assert.containsOnce(target, ".o-mail-activity .text-danger");
+    assert.containsOnce(target, ".o-mail-activity:contains('Yesterday:')");
 });
 
 QUnit.test("activity info layout when planned before yesterday", async function (assert) {
@@ -203,9 +199,8 @@ QUnit.test("activity info layout when planned before yesterday", async function 
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-due-date");
-    assert.hasClass($(target).find(".o-mail-activity-due-date"), "text-danger");
-    assert.strictEqual($(target).find(".o-mail-activity-due-date").text(), "5 days overdue:");
+    assert.containsOnce(target, ".o-mail-activity .text-danger");
+    assert.containsOnce(target, ".o-mail-activity:contains('5 days overdue:')");
 });
 
 QUnit.test("activity with a summary layout", async function (assert) {
@@ -222,8 +217,7 @@ QUnit.test("activity with a summary layout", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity-name");
-    assert.strictEqual($(target).find(".o-mail-activity-name").text().trim(), "“test summary”");
+    assert.containsOnce(target, ".o-mail-activity-info:contains('test summary')");
 });
 
 QUnit.test("activity without summary layout", async function (assert) {
@@ -240,8 +234,7 @@ QUnit.test("activity without summary layout", async function (assert) {
         res_id: partnerId,
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-activity-name");
-    assert.strictEqual($(target).find(".o-mail-activity-name").text().trim(), "Email");
+    assert.containsOnce(target, ".o-mail-activity-info:contains('Email')");
 });
 
 QUnit.test("activity details toggle", async function (assert) {
@@ -492,9 +485,9 @@ QUnit.test("activity click on cancel", async function (assert) {
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity");
-    assert.containsOnce(target, ".o-mail-activity-unlink-button");
+    assert.containsOnce(target, ".o-mail-activity span:contains(Cancel)");
 
-    await click(".o-mail-activity-unlink-button");
+    await click(".o-mail-activity span:contains(Cancel)");
     assert.verifySteps(["unlink"]);
     assert.containsNone(target, ".o-mail-activity");
 });
@@ -544,7 +537,7 @@ QUnit.test("activity mark done popover click on discard", async function (assert
 
     await click(".btn:contains('Mark Done')");
     assert.containsOnce(target, ".o-mail-activity-mark-as-done");
-    assert.containsOnce(target, ".o-mail-activity-mark-as-done-button-discard");
-    await click(".o-mail-activity-mark-as-done-button-discard");
+    assert.containsOnce(target, ".o-mail-activity-mark-as-done button:contains(Discard)");
+    await click(".o-mail-activity-mark-as-done button:contains(Discard)");
     assert.containsNone(target, ".o-mail-activity-mark-as-done");
 });

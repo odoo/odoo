@@ -38,13 +38,7 @@ QUnit.test("Notification Sent", async function (assert) {
     assert.containsOnce(target, ".o-mail-message-notification-popover");
     assert.containsOnce(target, ".o-mail-message-notification-popover i");
     assert.hasClass(target.querySelector(".o-mail-message-notification-popover i"), "fa-check");
-    assert.containsOnce(target, ".o-mail-message-notification-popover-partner-name");
-    assert.strictEqual(
-        target
-            .querySelector(".o-mail-message-notification-popover-partner-name")
-            .textContent.trim(),
-        "Someone"
-    );
+    assert.containsOnce(target, ".o-mail-message-notification-popover:contains(Someone)");
 });
 
 QUnit.test("Notification Error", async function (assert) {

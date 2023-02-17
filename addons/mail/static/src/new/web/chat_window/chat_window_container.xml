@@ -20,7 +20,7 @@
             <div t-if="unread > 0" class="o-mail-chat-window-hidden-menu-unreadCounter position-absolute end-0 top-0 badge rounded-pill text-bg-primary" t-esc="unread"/>
         </t>
         <t t-set-slot="default">
-            <ul class="o-mail-chat-window-hidden-menu-list m-0 p-0 overflow-auto" role="menu" t-ref="list">
+            <ul class="m-0 p-0 overflow-auto" role="menu" t-ref="list">
                 <li t-foreach="chatWindowService.hidden" t-as="chatWindow" t-key="chatWindow.threadLocalId" class="o-mail-chat-window-hidden-menu-item dropdown-item p-0" t-att-class="{ 'border-bottom' : !chatWindow_last }" role="menuitem">
                     <ChatWindow chatWindow="chatWindow"/>
                 </li>

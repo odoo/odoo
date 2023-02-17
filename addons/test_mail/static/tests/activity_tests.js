@@ -356,7 +356,7 @@ QUnit.module("test_mail", {}, function () {
                         {
                             default_model: "mail.test.activity",
                             default_res_ids: [mailTestActivityId2],
-                            default_subtype_xmlid: 'mail.mt_comment',
+                            default_subtype_xmlid: "mail.mt_comment",
                             default_template_id: mailTemplateId1,
                             force_email: true,
                         },
@@ -415,13 +415,15 @@ QUnit.module("test_mail", {}, function () {
             "No template should be available"
         );
 
-        await click(document.querySelector(".o-activity-list-popover-add-activity-button"));
+        await click($(".o-activity-list-popover button:contains(Schedule an activity)")[0]);
         await click(document.querySelector(".overdue .o-activity-cell-closest-deadline"));
         await click(document.querySelector(".o-activity-list-popover-item-mark-as-done"));
         await editInput(document.body, ".o-mail-activity-mark-as-done-feedback", "feedback2");
 
         await click(
-            document.querySelector(".o-mail-activity-mark-as-done-button-done-and-schedule")
+            document.querySelector(
+                ".o-mail-activity-mark-as-done button[aria-label='Done and Schedule Next']"
+            )
         );
         assert.verifySteps([
             "do_action_compose",

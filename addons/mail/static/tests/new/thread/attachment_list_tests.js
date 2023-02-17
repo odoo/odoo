@@ -148,7 +148,7 @@ QUnit.test("close attachment viewer", async function (assert) {
     await click(".o-mail-attachment-image");
     assert.containsOnce(target, ".o-mail-attachment-viewer");
 
-    await click(".o-mail-attachment-viewer-headerItemButtonClose");
+    await click(".o-mail-attachment-viewer div[aria-label='Close']");
     assert.containsNone(target, ".o-mail-attachment-viewer");
 });
 
@@ -184,7 +184,7 @@ QUnit.test(
         await openDiscuss(channelId);
         await click(".o-mail-attachment-image");
         const imageEl = document.querySelector(".o-mail-attachment-viewer-viewImage");
-        await click(".o-mail-attachment-viewer-headerItemButtonClose");
+        await click(".o-mail-attachment-viewer div[aria-label='Close']");
         // Simulate image becoming loaded.
         let successfulLoad;
         try {

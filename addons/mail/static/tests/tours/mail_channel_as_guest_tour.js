@@ -12,7 +12,7 @@ tour.register(
     [
         {
             content: "Click join",
-            trigger: ".o-mail-welcome-page-join-button",
+            trigger: "button[title='Join Channel']",
             extraTrigger: ".o-mail-thread",
         },
         {

@@ -31,30 +31,30 @@
                 <!-- overlay -->
                 <span class="o-mail-call-participant-card-overlay o-mail-call-participant-card-overlayBottom position-absolute bottom-0 start-0 d-flex overflow-hidden">
                     <span t-if="!props.minimized" class="o-mail-call-participant-card-name p-1 rounded-1 bg-black-75 text-truncate" t-esc="name"/>
-                    <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="o-mail-call-participant-card-liveIndicator o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
+                    <small t-if="rtcSession.isScreenSharingOn and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>
                 <div class="o-mail-call-participant-card-overlay o-mail-call-participant-card-overlayTop position-absolute top-0 end-0 d-flex flex-row-reverse">
-                    <span t-if="rtcSession.isSelfMuted and !rtcSession.isDeaf" class="o-mail-call-participant-card-overlayTopElement d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="muted" aria-label="muted">
+                    <span t-if="rtcSession.isSelfMuted and !rtcSession.isDeaf" class="d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="muted" aria-label="muted">
                         <i class="fa fa-microphone-slash"/>
                     </span>
-                    <span t-if="rtcSession.isDeaf" class="o-mail-call-participant-card-overlayTopElement d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="deaf" aria-label="deaf">
+                    <span t-if="rtcSession.isDeaf" class="d-flex flex-column justify-content-center me-1 rounded-circle bg-900" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="deaf" aria-label="deaf">
                         <i class="fa fa-deaf"/>
                     </span>
-                    <span t-if="isOfActiveCall and rtcSession.isAudioInError" class="o-mail-call-participant-card-overlayTopElement d-flex flex-column justify-content-center me-1 p-2 rounded-circle bg-900 text-danger" title="Issue with audio">
+                    <span t-if="isOfActiveCall and rtcSession.isAudioInError" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle bg-900 text-danger" title="Issue with audio">
                         <i class="fa fa-exclamation-triangle"/>
                     </span>
-                    <span t-if="showConnectionState" class="o-mail-call-participant-card-overlayTopElement d-flex flex-column justify-content-center me-1 p-2 rounded-circle bg-900" t-att-title="rtcSession.connectionState">
-                        <i class="fa fa-exclamation-triangle o-mail-call-participant-card-connectionState text-warning"/>
+                    <span t-if="showConnectionState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle bg-900" t-att-title="rtcSession.connectionState">
+                        <i class="fa fa-exclamation-triangle text-warning"/>
                     </span>
-                    <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="o-mail-call-participant-card-liveIndicator rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
+                    <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="user-select-none rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
                         LIVE
                     </span>
                 </div>
 
                 <!-- volume popover -->
-                <i t-if="!rtcSession === rtc.state.selfSession" class="o-mail-call-participant-card-volumeMenuAnchor position-absolute bottom-0 start-50" t-on-click="onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
+                <i t-if="!rtcSession === rtc.state.selfSession" class="position-absolute bottom-0 start-50" t-on-click="onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
             </t>
         </div>
     </t>

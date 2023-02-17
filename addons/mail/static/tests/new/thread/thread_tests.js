@@ -77,11 +77,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsOnce(target, ".o-mail-message");
-        assert.containsOnce(target, ".o-mail-message-subject");
-        assert.strictEqual(
-            target.querySelector(".o-mail-message-subject").textContent,
-            "Subject: Salutations, voyageur"
-        );
+        assert.containsOnce(target, ".o-mail-message:contains(Subject: Salutations, voyageur)");
     }
 );
 
@@ -102,7 +98,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsNone(target, ".o-mail-message-subject");
+        assert.containsNone(target, ".o-mail-message:contains(Salutations, voyageur)");
     }
 );
 
@@ -751,11 +747,7 @@ QUnit.test("basic rendering of canceled notification", async function (assert) {
     await click(".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification-popover");
     assert.containsOnce(target, ".o-mail-message-notification-popover .fa-trash-o");
-    assert.containsOnce(target, ".o-mail-message-notification-popover-partner-name");
-    assert.containsOnce(
-        target,
-        ".o-mail-message-notification-popover-partner-name:contains(Someone)"
-    );
+    assert.containsOnce(target, ".o-mail-message-notification-popover:contains(Someone)");
 });
 
 QUnit.test(

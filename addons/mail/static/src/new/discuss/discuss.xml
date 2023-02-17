@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.discuss" owl="1">
-    <div class="o-mail-discuss d-flex h-100 flex-grow-1" t-att-class="{ 'o-mail-device-is-small flex-column align-items-center bg-view': store.isSmall }" t-ref="root">
+    <div class="o-mail-discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': store.isSmall }" t-ref="root">
         <div t-if="store.isSmall and store.discuss.activeTab === 'mailbox'" class="o-mail-discuss-mobile-top-bar w-100 border-bottom" t-call="mail.discuss_mobile_top_bar" t-ref="mobileTopbar"/>
         <div t-if="thread and !(store.isSmall and store.discuss.activeTab === 'mailbox' and thread.type !== 'mailbox')" class="o-mail-discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-att-class="{'o-mail-with-composer': thread.type !== 'mailbox'}" t-ref="content">
-            <div class="px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
-                <ThreadIcon className="'o-mail-discuss-thread-icon me-2 align-self-center'" thread="thread"/>
+            <div class="o-mail-discuss-header px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
+                <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                     <AutoresizeInput
                         className="'o-mail-discuss-thread-name lead fw-bold flex-shrink-1 text-dark'"
@@ -25,7 +25,7 @@
                         />
                     </t>
                 </div>
-                <div class="o-mail-discuss-actions flex-shrink-0 d-flex align-items-center ms-1">
+                <div class="flex-shrink-0 d-flex align-items-center ms-1">
                     <button t-if="thread.id === 'inbox'" class="btn btn-secondary" t-att-disabled="thread.isEmpty" t-on-click="markAllAsRead">Mark all read</button>
                     <button t-if="thread.id === 'starred'" class="btn btn-secondary" t-att-disabled="thread.isEmpty" t-on-click="unstarAll">Unstar all</button>
                     <button t-if="thread.allowCalls and thread.type !== 'mailbox' and thread !== rtc.state.channel" class="btn" title="Start a Call" t-on-click="() => this.rtc.toggleCall(this.thread)">
@@ -64,7 +64,7 @@
                 <CallSettings t-if="state.showSettings and thread" thread="thread" className="'o-mail-discuss-settings-sidebar border-start'"/>
             </div>
         </div>
-        <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="o-mail-discuss-no-thread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+        <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
             <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
         </div>
     </div>

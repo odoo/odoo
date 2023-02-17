@@ -8,14 +8,6 @@
     height: 40px;
 }
 
-.o-mail-attachment-viewer-buttonNavigationNextIcon {
-    margin: 1px 0 0 1px; // not correctly centered for some reasons
-}
-
-.o-mail-attachment-viewer-buttonNavigationPreviousIcon {
-    margin: 1px 1px 0 0; // not correctly centered for some reasons
-}
-
 .o-mail-attachment-viewer-header {
     height: $o-navbar-height;
 }
@@ -23,10 +15,6 @@
 .o-mail-attachment-viewer-main {
     z-index: -1;
     padding: ($o-navbar-height * 1.125) 0;
-}
-
-.o-mail-attachment-viewer-name {
-    min-width: 0;
 }
 
 .o-mail-attachment-viewer-zoomer {
@@ -52,7 +40,7 @@
     box-shadow: 0 0 40px #000000;
     outline: none;
 
-    &.o-mail-attachment-viewer-isText {
+    &.o-isText {
         background: #FFFFFF;
     }
 }

@@ -5,7 +5,7 @@
     <div class="o-mail-channel-selector d-flex flex-wrap form-control rounded bg-white p-1" t-att-class="props.class" t-ref="root">
         <TagsList t-if="props.multiple" tags="tagsList"/>
         <input
-            class="o-mail-channel-selector-input text-truncate form-control flex-grow-1 border-0 px-2 py-0"
+            class="text-truncate form-control flex-grow-1 border-0 px-2 py-0"
             t-att-placeholder="inputPlaceholder"
             t-model="state.value"
             t-ref="input"
