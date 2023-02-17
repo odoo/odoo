@@ -32,7 +32,7 @@ ProductScreen.addControlButton({
     component: PromoCodeButton,
     condition: function () {
         return this.env.pos.programs.some((p) =>
-            ["coupons", "promotion", "gift_card"].includes(p.program_type)
+            ["coupons", "promotion", "gift_card", "promo_code"].includes(p.program_type)
         );
     },
 });
