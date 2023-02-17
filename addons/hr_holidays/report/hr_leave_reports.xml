@@ -43,6 +43,7 @@
                 <button name="action_open_record" type="object" icon="fa-external-link" title="Open" />
                 <field name="employee_id" decoration-muted="not active_employee"/>
                 <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
+                <field name="number_of_hours_display" string="Number of Hours" sum="Remaining Hours"/>
                 <field name="leave_type"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
@@ -60,6 +61,7 @@
             <pivot>
                 <field name="employee_id" decoration-muted="not active_employee"/>
                 <field name="number_of_days" type="measure"/>
+                <field name="number_of_hours_display" type="measure"/>
                 <field name="leave_type"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
@@ -92,6 +94,7 @@
                         <group>
                             <field name="active_employee"/>
                             <field name="number_of_days"/>
+                            <field name="number_of_hours_display"/>
                             <field name="department_id"/>
                             <field name="holiday_status_id"/>
                             <field name="holiday_type"/>
