@@ -9,7 +9,7 @@ export class ForecastedDetails extends Component {
         this.orm = useService("orm");
 
         this.onHandCondition =
-            this.props.docs.lines &&
+            this.props.docs.lines.length &&
             !this.props.docs.lines.some((line) => line.document_in || line.replenishment_filled);
 
         this._formatFloat = (num) => {
@@ -22,7 +22,6 @@ export class ForecastedDetails extends Component {
             'stock.forecasted_product_product',
             'action_reserve_linked_picks',
             [move_id],
-            // {modelId}
         );
         this.props.reloadReport();
     }
@@ -44,7 +43,11 @@ export class ForecastedDetails extends Component {
     }
 
     displayReserve(line){
-        return line.move_out && line.move_out.picking_id && !line.in_transit;
+        return !line.in_transit && this.canReserveOperation(line);
+    }
+
+    canReserveOperation(line){
+        return line.move_out?.picking_id;
     }
 
     get futureVirtualAvailable() {
