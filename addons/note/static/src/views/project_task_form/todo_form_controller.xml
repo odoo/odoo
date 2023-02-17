@@ -15,6 +15,12 @@
                            t-on-change="_onNameChanged"/>
                 </div>
             </t>
+            <t t-set-slot="todo-mark-as-done-button">
+                <a title="Mark as done"
+                   t-on-click="_onDoneToggled"
+                   t-on-mouseleave="_actualizeDoneState"
+                   t-attf-class="o_todo_done_button fa fa-lg fa-check-circle{{!state_todo.isDone ? '-o' : ' done_button_enabled'}}"/>
+            </t>
         </xpath>
     </t>
 

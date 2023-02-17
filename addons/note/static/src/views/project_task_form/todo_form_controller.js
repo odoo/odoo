@@ -11,7 +11,7 @@ const PADDING_LEFT = PADDING_RIGHT - WIDTH_MARGIN;
 
 /**
  *  The FormController is overrided to be able to manage the edition of the name of a to-do directly
- *  in the breadcrumb.
+ *  in the breadcrumb as well as the mark as done button next to it.
  */
 
 export class TodoFormController extends FormController {
@@ -24,9 +24,13 @@ export class TodoFormController extends FormController {
         this.state_todo = useState({
             inputSize: 1,
             isUntitled: true,
+            isDone: false,
         });
 
         onMounted(() => {
+            this.isDone = false;
+            this.state_todo.isDone = this.isDone;
+
             this.field_input = document.getElementsByClassName("o_todo_breadcrumb_name_input")[0];
             this.field_input.value = this.name;
             this._setInputSize(this.name);
@@ -44,6 +48,7 @@ export class TodoFormController extends FormController {
                 this._setInputSize(this.name);
             }
             this.not_reload_name = false;
+            //TO-DO : Reload done state if needed (mark as done)
         });
             
     }
@@ -145,6 +150,23 @@ export class TodoFormController extends FormController {
         });
         this.not_reload_name = true;
         ev.target.blur();
+    }
+
+    /**
+     * @private
+     * @param {InputEvent} ev
+     */
+    _onDoneToggled(ev) {
+        this.isDone = !this.isDone;
+        //TODO: + orm call to update model state field
+    }
+
+    /**
+     * @private
+     * @param {InputEvent} ev
+     */
+    _actualizeDoneState(ev) {
+        this.state_todo.isDone = this.isDone;
     }
 }
 

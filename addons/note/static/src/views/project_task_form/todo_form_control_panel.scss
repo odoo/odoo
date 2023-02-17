@@ -1,3 +1,21 @@
 .o_todo_control_panel_status {
     display: inline-block;
 }
+
+.o_control_panel {
+    a.o_todo_done_button {
+        margin: 0px 5px;
+        @include o-hover-text-color($gray-400, $o-success);
+        &:hover:before {
+            content: "\f058";
+        }
+
+        &.done_button_enabled {
+            text-color: $o-success;
+            @include o-hover-text-color($o-success, $gray-400);
+            &:hover:before {
+                content: "\f05d";
+            }
+        }
+    }
+}

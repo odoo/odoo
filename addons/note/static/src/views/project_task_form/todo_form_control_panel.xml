@@ -19,6 +19,11 @@
         <xpath expr="//ol[hasclass('breadcrumb')]//li[hasclass('active')]" position="replace">
             <li t-else="" class="breadcrumb-item active"> <!-- copying the condition present on web.Breadcrumbs -->
                 <t t-slot="control-panel-todo-name" />
+                <t t-slot="todo-mark-as-done-button" />
+                <!-- <a title="Mark as done" -->
+                <!--    t-on-click="props.onDoneToggled" -->
+                <!--    t-attf-class="o_todo_done_button fa fa-lg fa-check-circle{{!props.isDone ? '-o' : ' done_button_enabled'}}"/> -->
+                <!-- <a title="Toggle favorite" t-on-click="props.onFavoriteToggled" t-attf-class="o_spreadsheet_favorite fa fa-lg fa-star{{!props.isDone ? '-o' : ' favorite_button_enabled'}}"/> -->
                 <div class="o_todo_control_panel_status">
                     <t t-slot="control-panel-status-indicator" />
                 </div>
