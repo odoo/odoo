@@ -1888,10 +1888,15 @@
         const targets = callbacksToTargets.get(callback) || [];
         return [...targets].map((target) => {
             const keysToCallbacks = targetToKeysToCallbacks.get(target);
-            return {
-                target,
-                keys: keysToCallbacks ? [...keysToCallbacks.keys()] : [],
-            };
+            let keys = [];
+            if (keysToCallbacks) {
+                for (const [key, cbs] of keysToCallbacks) {
+                    if (cbs.has(callback)) {
+                        keys.push(key);
+                    }
+                }
+            }
+            return { target, keys };
         });
     }
     // Maps reactive objects to the underlying target
@@ -2789,6 +2794,7 @@
         if (Array.isArray(schema)) {
             schema = toSchema(schema);
         }
+        obj = toRaw(obj);
         let errors = [];
         // check if each value in obj has correct shape
         for (let key in obj) {
@@ -4592,6 +4598,13 @@
                 id,
                 expr: `app.createComponent(${ast.isDynamic ? null : expr}, ${!ast.isDynamic}, ${!!ast.slots}, ${!!ast.dynamicProps}, ${!ast.props && !ast.dynamicProps})`,
             });
+            if (ast.isDynamic) {
+                // If the component class changes, this can cause delayed renders to go
+                // through if the key doesn't change. Use the component name for now.
+                // This means that two component classes with the same name isn't supported
+                // in t-component. We can generate a unique id per class later if needed.
+                keyArg = `(${expr}).name + ${keyArg}`;
+            }
             let blockExpr = `${id}(${propString}, ${keyArg}, node, this, ${ast.isDynamic ? expr : null})`;
             if (ast.isDynamic) {
                 blockExpr = `toggler(${expr}, ${blockExpr})`;
@@ -5577,6 +5590,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     };
     window.__OWL_DEVTOOLS__ || (window.__OWL_DEVTOOLS__ = {
         apps: new Set(),
+        Fiber: Fiber,
+        RootFiber: RootFiber,
     });
     class App extends TemplateSet {
         constructor(Root, config = {}) {
@@ -5882,9 +5897,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.5';
-    __info__.date = '2023-01-27T14:29:31.753Z';
-    __info__.hash = 'ea5d2be';
+    __info__.version = '2.0.6';
+    __info__.date = '2023-02-17T13:32:45.287Z';
+    __info__.hash = '1291f1f';
     __info__.url = 'https://github.com/odoo/owl';
 
 
