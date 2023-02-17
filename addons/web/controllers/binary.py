@@ -90,10 +90,11 @@ class Binary(http.Controller):
     # pylint: disable=redefined-builtin,invalid-name
     def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
         if not id:
+            domain = [('url', '!=', False)]
             if extra:
-                domain = [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
+                domain += [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
             else:
-                domain = [
+                domain += [
                     ('url', '=like', f'/web/assets/%/{filename}'),
                     ('url', 'not like', f'/web/assets/%/%/{filename}')
                 ]
