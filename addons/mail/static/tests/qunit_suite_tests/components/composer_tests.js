@@ -21,55 +21,6 @@ QUnit.module("mail", (hooks) => {
         QUnit.module("composer_tests.js");
 
         QUnit.skipRefactoring(
-            "remove an uploading attachment aborts upload",
-            async function (assert) {
-                assert.expect(1);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({});
-                const { afterEvent, openDiscuss, messaging } = await start({
-                    discuss: {
-                        context: { active_id: mailChannelId1 },
-                    },
-                    async mockRPC(route) {
-                        if (route === "/mail/attachment/upload") {
-                            // simulates uploading indefinitely
-                            await new Promise(() => {});
-                        }
-                    },
-                });
-                await openDiscuss();
-                const file = await createFile({
-                    content: "hello, world",
-                    contentType: "text/plain",
-                    name: "text.txt",
-                });
-                await afterNextRender(() =>
-                    inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [
-                        file,
-                    ])
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_AttachmentCard",
-                    "should contain an attachment"
-                );
-                const attachmentLocalId = document.querySelector(".o_AttachmentCard").dataset.id;
-
-                await afterEvent({
-                    eventName: "o-attachment-upload-abort",
-                    func: () => {
-                        document.querySelector(".o_AttachmentCard_asideItemUnlink").click();
-                    },
-                    message: "attachment upload request should have been aborted",
-                    predicate: ({ attachment }) => {
-                        return attachment.localId === attachmentLocalId;
-                    },
-                });
-            }
-        );
-
-        QUnit.skipRefactoring(
             "Show a default status in the recipient status text when the thread doesn't have a name.",
             async function (assert) {
                 assert.expect(1);
