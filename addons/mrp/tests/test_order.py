@@ -367,6 +367,43 @@ class TestMrpOrder(TestMrpCommon):
         production = mo_form.save()
         self.assertEqual(production.workorder_ids.duration_expected, 90)
 
+    def test_qty_producing(self):
+        """Qty producing should be the qty remain to produce, instead of 0"""
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.00}),
+            ],
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom
+        production_form.product_qty = 5
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        production_form = Form(production)
+        with production_form.workorder_ids.new() as wo:
+            wo.name = 'OP1'
+            wo.workcenter_id = self.workcenter_1
+            wo.duration_expected = 40
+        production = production_form.save()
+        production.action_confirm()
+        production.button_plan()
+
+        wo = production.workorder_ids[0]
+        wo.button_start()
+        self.assertEqual(wo.qty_producing, 5, "Wrong quantity is suggested to produce.")
+
+        # Simulate changing the qty_producing in the frontend
+        wo.qty_producing = 4
+        wo.button_pending()
+        wo.button_start()
+        self.assertEqual(wo.qty_producing, 4, "Changing the qty_producing in the frontend is not persisted")
+
     def test_update_quantity_5(self):
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
