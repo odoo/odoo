@@ -16,15 +16,3 @@ class AccountChartTemplate(models.Model):
                 'fiscalyear_last_month': '3',
             })
         return res
-
-
-class AccountTaxTemplate(models.Model):
-    _inherit = 'account.tax.template'
-
-    l10n_in_reverse_charge = fields.Boolean("Reverse charge", help="Tick this if this tax is reverse charge. Only for Indian accounting")
-    
-    def _get_tax_vals(self, company, tax_template_to_tax):
-        val = super(AccountTaxTemplate, self)._get_tax_vals(company, tax_template_to_tax)
-        if self.tax_group_id:
-            val['l10n_in_reverse_charge'] = self.l10n_in_reverse_charge
-        return val
