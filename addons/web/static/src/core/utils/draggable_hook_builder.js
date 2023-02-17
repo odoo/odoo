@@ -107,10 +107,7 @@ const elCache = {};
  * @returns {string}
  */
 function camelToKebab(str) {
-    return str.replaceAll(
-        /(?<=.)[A-Z]|[A-Z]/g,
-        (match, prev) => `${prev ? "-" : ""}${match.toLowerCase()}`
-    );
+    return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
 /**
