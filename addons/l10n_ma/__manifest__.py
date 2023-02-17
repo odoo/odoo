@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (c) 2010 kazacube (http://kazacube.com).
-
 {
     'name': 'Morocco - Accounting',
     'author': 'kazacube',
@@ -17,13 +13,12 @@ produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...
 L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable
 Seddik au cours du troisième trimestre 2010.""",
     'website': 'http://www.kazacube.com',
-    'depends': ['base', 'account'],
+    'depends': [
+        'base',
+        'account',
+    ],
     'data': [
-        'data/l10n_ma_chart_data.xml',
-        'data/account_tax_group_data.xml',
         'data/account_tax_report_data.xml',
-        'data/account_tax_data.xml',
-        'data/account_chart_template_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

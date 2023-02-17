@@ -9,7 +9,7 @@
         <field name="city">Santiago</field>
         <field name="country_id" ref="base.cl"/>
         <field name="state_id" ref="base.state_cl_13"/>
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+57 321 1234567</field>
         <field name="email">info@company.clexample.com</field>
         <field name="website">www.clexample.com</field>
@@ -30,7 +30,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_cl.cl_chart_template')]"/>
+        <value eval="[]"/>
+        <value>cl</value>
         <value model="res.company" eval="obj().env.ref('l10n_cl.demo_company_cl')"/>
     </function>
 </odoo>

@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
-
 {
     'name': 'France - Accounting',
     'version': '2.1',
@@ -32,21 +28,13 @@ configuration of their taxes and fiscal positions manually.
     'depends': [
         'base_iban',
         'base_vat',
-        'l10n_multilang',
+        'account',
     ],
     'data': [
-        'data/l10n_fr_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/account.group.template.csv',
         'data/account_chart_template_data.xml',
         'views/l10n_fr_view.xml',
-        'data/account_tax_group_data.xml',
         'data/tax_report_data.xml',
-        'data/account_tax_data.xml',
         'data/res_country_data.xml',
-        'data/account_fiscal_position_template_data.xml',
-        'data/account_reconcile_model_template.xml',
-        'data/account_chart_template_configure_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

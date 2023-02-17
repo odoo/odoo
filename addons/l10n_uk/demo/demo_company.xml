@@ -2,12 +2,12 @@
 <odoo>
     <record id="partner_demo_company_uk" model="res.partner">
         <field name="name">UK Company</field>
-        <field name="vat"></field>
-        <field name="street"></field>
-        <field name="city"></field>
+        <field name="vat"/>
+        <field name="street"/>
+        <field name="city"/>
         <field name="country_id" ref="base.uk"/>
         <field name="state_id" ref="base.state_uk119"/>
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+32 010 12 34 56</field>
         <field name="email">info@company.ukexample.com</field>
         <field name="website">www.ukexample.com</field>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_uk.l10n_uk')]"/>
+        <value eval="[]"/>
+        <value>uk</value>
         <value model="res.company" eval="obj().env.ref('l10n_uk.demo_company_uk')"/>
     </function>
 </odoo>

@@ -2,9 +2,9 @@
 <odoo>
     <record id="partner_demo_company_tw" model="res.partner">
         <field name="name">TW Company</field>
-        <field name="vat"></field>
+        <field name="vat"/>
         <field name="street">信義路</field>
-        <field name="city_id" ref="l10n_tw.city_tw_110" />
+        <field name="city_id" ref="l10n_tw.city_tw_110"/>
         <field name="country_id" ref="base.tw"/>
         <field name="state_id" ref="l10n_tw.state_tw_tpc"/>
         <field name="zip">110</field>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_tw.l10n_tw_chart_template')]"/>
+        <value eval="[]"/>
+        <value>tw</value>
         <value model="res.company" eval="obj().env.ref('l10n_tw.demo_company_tw')"/>
     </function>
 </odoo>

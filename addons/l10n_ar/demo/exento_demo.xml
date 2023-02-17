@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="partner_exento" model="res.partner">
-        <field name='name'>(AR) Exento</field>
-        <field name='l10n_ar_afip_responsibility_type_id' ref="res_IVAE"/>
-        <field name='l10n_latam_identification_type_id' ref="l10n_ar.it_cuit"/>
-        <field name='vat'>30999999995</field>
+        <field name="name">(AR) Exento</field>
+        <field name="l10n_ar_afip_responsibility_type_id" ref="res_IVAE"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_ar.it_cuit"/>
+        <field name="vat">30999999995</field>
         <field name="street">Soyexento 123</field>
         <field name="city">Rosario</field>
         <field name="country_id" ref="base.ar"/>
@@ -17,11 +17,11 @@
     </record>
 
     <record id="company_exento" model="res.company">
-        <field name='parent_id' ref='base.main_company'/>
-        <field name='currency_id' ref='base.ARS'/>
-        <field name='partner_id' ref='partner_exento'/>
-        <field name='name'>(AR) Exento</field>
-        <field name='l10n_ar_gross_income_type'>exempt</field>
+        <field name="parent_id" ref="base.main_company"/>
+        <field name="currency_id" ref="base.ARS"/>
+        <field name="partner_id" ref="partner_exento"/>
+        <field name="name">(AR) Exento</field>
+        <field name="l10n_ar_gross_income_type">exempt</field>
         <field name="l10n_ar_afip_start_date" eval="time.strftime('%Y-%m')+'-1'"/>
     </record>
 
@@ -31,21 +31,22 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_ar.l10nar_ex_chart_template')]"/>
+        <value eval="[]"/>
+        <value>ar_ex</value>
         <value model="res.company" eval="obj().env.ref('l10n_ar.company_exento')"/>
     </function>
 
     <data noupdate="1">
 
         <record id="sale_expo_journal_exento" model="account.journal">
-            <field name='name'>Expo Sales Journal</field>
-            <field name='company_id' ref="l10n_ar.company_exento"/>
-            <field name='type'>sale</field>
-            <field name='code'>S0002</field>
-            <field name='l10n_latam_use_documents' eval="True"/>
-            <field name='l10n_ar_afip_pos_number'>2</field>
-            <field name='l10n_ar_afip_pos_partner_id' ref="l10n_ar.partner_exento"/>
-            <field name='l10n_ar_afip_pos_system'>FEERCEL</field>
+            <field name="name">Expo Sales Journal</field>
+            <field name="company_id" ref="l10n_ar.company_exento"/>
+            <field name="type">sale</field>
+            <field name="code">S0002</field>
+            <field name="l10n_latam_use_documents" eval="True"/>
+            <field name="l10n_ar_afip_pos_number">2</field>
+            <field name="l10n_ar_afip_pos_partner_id" ref="l10n_ar.partner_exento"/>
+            <field name="l10n_ar_afip_pos_system">FEERCEL</field>
         </record>
 
     </data>

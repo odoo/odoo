@@ -3,11 +3,11 @@
     <record id="partner_demo_company_cr" model="res.partner">
         <field name="name">CR Company</field>
         <field name="vat">4000961586</field>
-        <field name="street"></field>
-        <field name="city"></field>
+        <field name="street"/>
+        <field name="city"/>
         <field name="country_id" ref="base.cr"/>
         <field name="state_id" ref="base.state_L"/>
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+506 8312 3456</field>
         <field name="email">info@company.crexample.com</field>
         <field name="website">www.crexample.com</field>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_cr.account_chart_template_0')]"/>
+        <value eval="[]"/>
+        <value>cr</value>
         <value model="res.company" eval="obj().env.ref('l10n_cr.demo_company_cr')"/>
     </function>
 </odoo>
