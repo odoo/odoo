@@ -30,7 +30,8 @@ class ProductReplenish(models.TransientModel):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        self.quantity = abs(self.product_id.virtual_available) if self.product_id.virtual_available < 0 else 1
+        if not self.env.context.get('default_quantity'):
+            self.quantity = abs(self.product_id.virtual_available) if self.product_id.virtual_available < 0 else 1
 
     @api.model
     def default_get(self, fields):
@@ -77,6 +78,10 @@ class ProductReplenish(models.TransientModel):
                     self._prepare_run_values()  # Values
                 )
             ])
+            return {
+                'type': 'ir.actions.act_window_close',
+                'infos': {'done': True},
+            }
         except UserError as error:
             raise UserError(error)
 
