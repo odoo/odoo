@@ -114,28 +114,29 @@
                     <field name="res_id" invisible="1" />
                     <field name="attendee_status" invisible="1"/>
                     <field name="active" invisible="1"/>
+                    <field name="user_can_edit" invisible="1"/>
                     <div class="oe_title mb-3">
                         <div>
                             <label for="name"/>
                         </div>
                         <h1>
-                            <field name="name" placeholder="e.g. Business Lunch"/>
+                            <field name="name" placeholder="e.g. Business Lunch" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="start_date" string="from" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)]}" force_save="1"/>
-                            <field name="stop_date" string="to" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)]}" force_save="1"/>
-        
-                            <field name="start" string="from" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}"/>
-                            <field name="stop" string="to" attrs="{'invisible': [('allday','=',True)]}"/>
+                            <field name="start_date" string="from" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('user_can_edit', '=', False)]}" force_save="1"/>
+                            <field name="stop_date" string="to" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('user_can_edit', '=', False)]}" force_save="1"/>
+
+                            <field name="start" string="from" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('user_can_edit', '=', False)]}"/>
+                            <field name="stop" string="to" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('user_can_edit', '=', False)]}"/>
                             <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                             <div attrs="{'invisible': [('allday','=',True)]}">
-                                <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': ['|', '&amp;', ('id', '!=', False), ('recurrency', '=', True), ('user_can_edit', '=', False)]}"/>
                                 <span> hours</span>
                             </div>
-                            <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
-                            <field name="allday" force_save="1"/>
+                            <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)], 'readonly': [('user_can_edit', '=', False)]}"/>
+                            <field name="allday" force_save="1" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
                         </group>
                         <group>
                             <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
@@ -166,10 +167,10 @@
                                     <field name="access_token" invisible="1" force_save="1"/>
                                     <label for="privacy"/>
                                     <div class="o_row">
-                                        <field name="show_as" nolabel="1"/>
-                                        <field name="privacy" nolabel="1"/>
+                                        <field name="show_as" attrs="{'readonly': [('user_can_edit', '=', False)]}" nolabel="1"/>
+                                        <field name="privacy" attrs="{'readonly': [('user_can_edit', '=', False)]}" nolabel="1"/>
                                     </div>
-                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="user_id" widget="many2one_avatar_user" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
                                     <field name="description"/>
                                 </group>
                                 <group>
@@ -193,6 +194,7 @@
                                             context="{'force_email':True}"
                                             domain="[('type','!=','private')]"
                                             class="oe_inline"
+                                            attrs="{'readonly': [('user_can_edit', '=', False)]}"
                                         />
                                     </div>
                                     <div class="alert alert-warning o_form_header mt-2" attrs="{'invisible': [('invalid_email_partner_ids', '=', [])]}" role="status">
@@ -206,23 +208,23 @@
                             <group>
                                 <div>
                                     <group>
-                                        <field name="recurrency"/>
+                                        <field name="recurrency" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
                                     </group>
                                     <div attrs="{'invisible': [('recurrency', '=', False)]}">
                                         <group>
                                             <label for="interval"/>
                                             <div class="o_col">
                                                 <div class="o_row">
-                                                    <field name="interval" class="oe_inline" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                    <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                    <field name="interval" class="oe_inline" attrs="{'required': [('recurrency', '=', True)], 'readonly': [('user_can_edit', '=', False)]}"/>
+                                                    <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)], 'readonly': [('user_can_edit', '=', False)]}"/>
                                                 </div>
-                                                <widget name="week_days" attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}"/>
+                                                <widget name="week_days" attrs="{'invisible': [('rrule_type', '!=', 'weekly')], 'readonly': [('user_can_edit', '=', False)]}"/>
                                             </div>
                                             <label string="Until" for="end_type"/>
                                             <div class="o_row">
-                                                <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
-                                                <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
-                                                <field name="until" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)]}"/>
+                                                <field name="end_type" attrs="{'required': [('recurrency', '=', True)], 'readonly': [('user_can_edit', '=', False)]}"/>
+                                                <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)], 'readonly': [('user_can_edit', '=', False)]}"/>
+                                                <field name="until" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)], 'readonly': [('user_can_edit', '=', False)]}"/>
                                             </div>
                                         </group>
                                         <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
@@ -231,13 +233,13 @@
                                                 <field name="month_by"/>
                                                 <field name="day"
                                                     attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],
-                                                            'invisible': [('month_by', '!=', 'date')]}"/>
+                                                            'invisible': [('month_by', '!=', 'date')], 'readonly': [('user_can_edit', '=', False)]}"/>
                                                 <field name="byday" string="The"
                                                     attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
-                                                            'invisible': [('month_by', '!=', 'day')]}"/>
+                                                            'invisible': [('month_by', '!=', 'day')], 'readonly': [('user_can_edit', '=', False)]}"/>
                                                 <field name="weekday" nolabel="1"
                                                     attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
-                                                            'invisible': [('month_by', '!=', 'day')]}"/>
+                                                            'invisible': [('month_by', '!=', 'day')], 'readonly': [('user_can_edit', '=', False)]}"/>
                                             </div>
                                         </group>
                                     </div>
@@ -248,7 +250,7 @@
                             </group>
                         </page>
 
-                        <page name="page_invitations" string="Invitations" groups="base.group_no_one">
+                        <page name="page_invitations" string="Invitations" groups="base.group_no_one" attrs="{'invisible': [('user_can_edit', '=', False)]}">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" mode="tree,kanban" readonly="1">
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
@@ -256,8 +258,7 @@
                                     <field name="email" widget="email"/>
                                     <field name="phone" widget="phone"/>
                                     <field name="state" />
-
-                                    <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" icon="fa-asterisk" />
+                                    <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" icon="fa-asterisk"/>
                                     <button name="do_accept" string="Accept" states="needsAction,tentative,declined" type="object" icon="fa-check text-success"/>
                                     <button name="do_decline" string="Decline" states="needsAction,tentative,accepted" type="object" icon="fa-times-circle text-danger"/>
                                 </tree>
@@ -287,8 +288,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="message_ids" />
+                    <field name="message_follower_ids" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
+                    <field name="message_ids" attrs="{'readonly': [('user_can_edit', '=', False)]}"/>
                 </div>
             </form>
         </field>
