@@ -9,7 +9,6 @@ from odoo.exceptions import ValidationError, UserError
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
-    ('monetary_without_symbol', "Monetary Without Symbol"),
     ('percentage', "Percentage"),
     ('integer', "Integer"),
     ('float', "Float"),
