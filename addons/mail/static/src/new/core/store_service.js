@@ -67,7 +67,6 @@ export class Store {
     internalUserGroupId = null;
     registeredImStatusPartners = null;
     ringingThreads = null;
-    outOfFocusUnreadMessageCounter = 0;
 
     // messaging menu
     menu = {

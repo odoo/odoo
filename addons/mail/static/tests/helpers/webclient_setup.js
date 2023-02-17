@@ -31,6 +31,7 @@ import { chatWindowService } from "@mail/new/web/chat_window/chat_window_service
 import { threadService } from "@mail/new/core/thread_service";
 import { messageService } from "@mail/new/core/message_service";
 import { activityService } from "@mail/new/web/activity/activity_service";
+import { outOfFocusService } from "@mail/new/core/out_of_focus_service";
 import { DiscussClientAction } from "@mail/new/discuss/discuss_client_action";
 import { personaService } from "@mail/new/core/persona_service";
 import { attachmentService } from "@mail/new/attachments/attachment_service";
@@ -124,6 +125,7 @@ export const setupManager = {
             "mail.sound_effects": soundEffects,
             "mail.user_settings": userSettingsService,
             "mail.persona": personaService,
+            "mail.out_of_focus": outOfFocusService,
             messaging: messagingService,
             messagingValues,
             presence: makeFakePresenceService({

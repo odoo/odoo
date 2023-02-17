@@ -3,18 +3,16 @@
 import { markup, reactive } from "@odoo/owl";
 import { Deferred } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
-import { cleanTerm, htmlToTextContentInline } from "@mail/new/utils/format";
+import { cleanTerm } from "@mail/new/utils/format";
 import { removeFromArray, removeFromArrayWithPredicate } from "@mail/new/utils/arrays";
 import { LinkPreview } from "./link_preview_model";
 import { CannedResponse } from "./canned_response_model";
 import { browser } from "@web/core/browser/browser";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
-import { url } from "@web/core/utils/urls";
 import { createLocalId } from "../utils/misc";
 import { registry } from "@web/core/registry";
 
-const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 export const OTHER_LONG_TYPING = 60000;
 
 export const asyncMethods = [
@@ -59,24 +57,15 @@ export class Messaging {
         this.messageService = services["mail.message"];
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
+        /** @type {import("@mail/new/core/out_of_focus_service").OutOfFocusService} */
+        this.outOfFocusService = services["mail.out_of_focus"];
         /** @type {import("@mail/new/rtc/rtc_service").Rtc} */
         this.rtc = services["mail.rtc"];
         this.router = services.router;
         this.bus = services.bus_service;
-        this.multiTab = services.multi_tab;
         this.presence = services.presence;
         this.isReady = new Deferred();
         this.imStatusService = services.im_status;
-        this.outOfFocusAudio = new Audio();
-        this.outOfFocusAudio.src = this.outOfFocusAudio.canPlayType("audio/ogg; codecs=vorbis")
-            ? url("/mail/static/src/audio/ting.ogg")
-            : url("/mail/static/src/audio/ting.mp3");
-        this.bus.addEventListener("window_focus", () => {
-            this.store.outOfFocusUnreadMessageCounter = 0;
-            this.bus.trigger("set_title_part", {
-                part: "_chat",
-            });
-        });
         const user = services.user;
         this.personaService.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
         this.registeredImStatusPartners = reactive([], () => this.updateImStatusRegistration());
@@ -183,116 +172,6 @@ export class Messaging {
     // -------------------------------------------------------------------------
     // process notifications received by the bus
     // -------------------------------------------------------------------------
-
-    notifyOutOfFocusMessage(message, channel) {
-        const author = message.author;
-        let notificationTitle;
-        if (!author) {
-            notificationTitle = _t("New message");
-        } else {
-            if (channel.channel_type === "channel") {
-                notificationTitle = sprintf(_t("%(author name)s from %(channel name)s"), {
-                    "author name": author.name,
-                    "channel name": channel.displayName,
-                });
-            } else {
-                notificationTitle = author.name;
-            }
-        }
-        const notificationContent = escape(
-            htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
-        );
-        this.sendNotification({
-            message: notificationContent,
-            title: notificationTitle,
-            type: "info",
-        });
-        this.store.outOfFocusUnreadMessageCounter++;
-        const titlePattern =
-            this.store.outOfFocusUnreadMessageCounter === 1 ? _t("%s Message") : _t("%s Messages");
-        this.bus.trigger("set_title_part", {
-            part: "_chat",
-            title: sprintf(titlePattern, this.store.outOfFocusUnreadMessageCounter),
-        });
-    }
-
-    /**
-     * Send a notification, preferably a native one. If native
-     * notifications are disable or unavailable on the current
-     * platform, fallback on the notification service.
-     *
-     * @param {Object} param0
-     * @param {string} [param0.message] The body of the
-     * notification.
-     * @param {string} [param0.title] The title of the notification.
-     * @param {string} [param0.type] The type to be passed to the no
-     * service when native notifications can't be sent.
-     */
-    sendNotification({ message, title, type }) {
-        if (!this.canSendNativeNotification) {
-            this.sendOdooNotification(message, { title, type });
-            return;
-        }
-        if (!this.multiTab.isOnMainTab()) {
-            return;
-        }
-        try {
-            this.sendNativeNotification(title, message);
-        } catch (error) {
-            // Notification without Serviceworker in Chrome Android doesn't works anymore
-            // So we fallback to the notification service in this case
-            // https://bugs.chromium.org/p/chromium/issues/detail?id=481856
-            if (error.message.includes("ServiceWorkerRegistration")) {
-                this.sendOdooNotification(message, { title, type });
-            } else {
-                throw error;
-            }
-        }
-    }
-
-    /**
-     * @param {string} message
-     * @param {Object} options
-     */
-    async sendOdooNotification(message, options) {
-        this.notificationService.add(message, options);
-        if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
-            try {
-                await this.outOfFocusAudio.play();
-            } catch {
-                // Ignore errors due to the user not having interracted
-                // with the page before playing the sound.
-            }
-        }
-    }
-
-    /**
-     * @param {string} title
-     * @param {string} message
-     */
-    sendNativeNotification(title, message) {
-        const notification = new Notification(
-            // The native Notification API works with plain text and not HTML
-            // unescaping is safe because done only at the **last** step
-            _.unescape(title),
-            {
-                body: _.unescape(message),
-                icon: this.icon,
-            }
-        );
-        notification.addEventListener("click", ({ target: notification }) => {
-            window.focus();
-            notification.close();
-        });
-    }
-
-    get canPlayAudio() {
-        return typeof Audio !== "undefined";
-    }
-
-    get canSendNativeNotification() {
-        return Boolean(browser.Notification && browser.Notification.permission === "granted");
-    }
 
     handleNotification(notifications) {
         console.log("notifications received", notifications);
@@ -550,7 +429,7 @@ export class Messaging {
         });
         if (channel.chatPartnerId !== this.store.partnerRoot?.id) {
             if (!this.presence.isOdooFocused() && channel.isChatChannel) {
-                this.notifyOutOfFocusMessage(message, channel);
+                this.outOfFocusService.notify(message, channel);
             }
 
             if (channel.type !== "channel" && !this.store.guest) {
@@ -737,7 +616,6 @@ export const messagingService = {
         "bus_service",
         "im_status",
         "notification",
-        "multi_tab",
         "presence",
         "mail.sound_effects",
         "mail.user_settings",
@@ -745,6 +623,7 @@ export const messagingService = {
         "mail.message",
         "mail.persona",
         "mail.rtc",
+        "mail.out_of_focus",
     ],
     async: asyncMethods,
     start(env, services) {
