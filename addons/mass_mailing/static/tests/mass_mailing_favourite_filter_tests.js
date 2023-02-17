@@ -129,9 +129,9 @@ QUnit.module('favorite filter widget', (hooks) => {
                         widget="mailing_filter"
                         options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
                 </form>`,
-            mockRPC: function (route, args) {
-                if (args.method === 'create' && args.model === 'mailing.filter') {
-                    assert.deepEqual(args.args,
+            mockRPC: function (_, { args, model, method }) {
+                if (method === 'create' && model === 'mailing.filter') {
+                    assert.deepEqual(args[0],
                         [{mailing_domain: '[["new_user","=",True]]', mailing_model_id: 1, name: 'event promo - new users'}],
                         "should pass correct data in create");
                 }

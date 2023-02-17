@@ -1289,10 +1289,10 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo" invisible="1"/>
                     <field name="int_field"/>
                 </tree>`,
-            mockRPC(route, args) {
-                assert.step(args.method);
-                if (args.method === "create") {
-                    assert.deepEqual(args.args, [{ int_field: 1 }]);
+            mockRPC(_, { args, method }) {
+                assert.step(method);
+                if (method === "create") {
+                    assert.deepEqual(args[0], [{ int_field: 1 }]);
                 }
             },
         });
@@ -7472,11 +7472,7 @@ QUnit.module("Views", (hooks) => {
             ".o_view_nocontent",
             "should have a no content helper displayed"
         );
-        assert.containsOnce(
-            target,
-            "div.table-responsive",
-            "should have a div.table-responsive"
-        );
+        assert.containsOnce(target, "div.table-responsive", "should have a div.table-responsive");
         assert.containsOnce(target, "table", "should have rendered a table");
 
         await click(target.querySelector(".o_list_button_add"));

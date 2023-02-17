@@ -130,7 +130,7 @@ QUnit.module("mail", {}, function () {
                 assert.expect(1);
 
                 const { messaging, pyEnv } = await start();
-                const partnerId = await messaging.rpc({
+                const [partnerId] = await messaging.rpc({
                     method: "create",
                     model: "res.partner",
                     args: [[{ name: "foo" }]],
@@ -143,9 +143,9 @@ QUnit.module("mail", {}, function () {
                 assert.expect(1);
 
                 const { messaging, pyEnv } = await start();
-                const partnerId = await messaging.rpc({
-                    method: "create",
+                const [partnerId] = await messaging.rpc({
                     model: "res.partner",
+                    method: "create",
                     kwargs: {
                         vals_list: [{ name: "foo" }],
                     },
