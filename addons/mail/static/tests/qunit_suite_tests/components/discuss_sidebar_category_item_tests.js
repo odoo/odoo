@@ -9,36 +9,6 @@ QUnit.module("mail", {}, function () {
         QUnit.module("discuss_sidebar_category_item_tests.js");
 
         QUnit.skipRefactoring(
-            "channel - avatar: should have correct avatar",
-            async function (assert) {
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({ avatarCacheKey: "100111" });
-
-                const { openDiscuss } = await start();
-                await openDiscuss();
-
-                const channelItem = document.querySelector(`
-        .o-mail-category-item[data-channel-id="${mailChannelId1}"]
-    `);
-                assert.strictEqual(
-                    channelItem.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_image`)
-                        .length,
-                    1,
-                    "channel should have an avatar"
-                );
-
-                assert.strictEqual(
-                    channelItem.querySelector(`:scope .o_DiscussSidebarCategoryItem_image`).dataset
-                        .src,
-                    `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=100111`,
-                    "should link to the correct picture source"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "channel - avatar: should update avatar url from bus",
             async function (assert) {
                 assert.expect(2);

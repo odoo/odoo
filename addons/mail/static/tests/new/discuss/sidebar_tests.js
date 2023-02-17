@@ -714,3 +714,20 @@ QUnit.test("sidebar: public channel rendering", async function (assert) {
     assert.containsOnce(target, "button:contains(channel1)");
     assert.containsOnce(target, "button:contains(channel1) .fa-globe");
 });
+
+QUnit.test("channel - avatar: should have correct avatar", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        name: "test",
+        avatarCacheKey: "100111",
+    });
+
+    const { openDiscuss } = await start();
+    await openDiscuss();
+
+    assert.containsOnce(target, ".o-mail-category-item img");
+    assert.containsOnce(
+        target,
+        `img[data-src='/web/image/mail.channel/${channelId}/avatar_128?unique=100111']`
+    );
+});
