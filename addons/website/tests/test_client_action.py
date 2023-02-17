@@ -21,7 +21,7 @@ class TestClientAction(odoo.tests.HttpCase):
             'url': '/test_client_action_redirect',
             'is_published': True,
         })
-        self.start_tour(page.url, 'client_action_redirect', login='admin')
+        self.start_tour(page.url, 'client_action_redirect', login='editor')
 
     def test_02_client_action_iframe_fallback(self):
-        self.start_tour('/@/', 'client_action_iframe_fallback', login='admin')
+        self.start_tour('/@/', 'client_action_iframe_fallback', login='editor')

@@ -60,11 +60,13 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
         }).lang_install()
         feature = self.env['website.configurator.feature'].search([('name', '=', 'Privacy Policy')])
         feature.with_context(lang='fr_FR').write({'name': 'Politique de confidentialité'})
-        self.env.ref('base.user_admin').write({'lang': self.env.ref('base.lang_fr').code})
+        # TODO: can't use demo in tests
+        tour_user = self.env.ref('website.user_editor')
+        tour_user.write({'lang': self.env.ref('base.lang_fr').code})
         website_fr = self.env['website'].create({
             'name': "New website",
         })
         # disable configurator todo to ensure this test goes through
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
         active_todo.update({'state': 'done'})
-        self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website_fr.id, 'configurator_translation', login='admin')
+        self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website_fr.id, 'configurator_translation', login=tour_user.login)
