@@ -5388,13 +5388,15 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                "<kanban>" +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="foo"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
+            arch: `
+                <kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
             groupBy: ["product_id"],
             async mockRPC(route, args, performRPC) {
                 if (args.method === "web_read_group") {
@@ -5402,6 +5404,9 @@ QUnit.module("Views", (hooks) => {
                     result.groups[2].__fold = true;
                     result.groups[8].__fold = true;
                     return result;
+                }
+                if (args.method === "web_search_read") {
+                    assert.step(`web_search_read domain: ${args.kwargs.domain}`);
                 }
             },
         });
@@ -5420,6 +5425,92 @@ QUnit.module("Views", (hooks) => {
         // we look if we have the right count of folded/unfolded column
         assert.containsN(target, ".o_kanban_group:not(.o_column_folded)", 10);
         assert.containsN(target, ".o_kanban_group.o_column_folded", 4);
+
+        assert.verifySteps([
+            "web_search_read domain: product_id,=,3",
+            "web_search_read domain: product_id,=,5",
+            "web_search_read domain: product_id,=,9",
+            "web_search_read domain: product_id,=,10",
+            "web_search_read domain: product_id,=,11",
+            "web_search_read domain: product_id,=,12",
+            "web_search_read domain: product_id,=,13",
+            "web_search_read domain: product_id,=,15",
+            "web_search_read domain: product_id,=,16",
+            "web_search_read domain: product_id,=,17",
+        ]);
+    });
+
+    QUnit.test("auto fold group when reach the limit (2)", async (assert) => {
+        // this test is similar to the previous one, except that in this one,
+        // read_group sets the __fold key on each group, even those that are
+        // unfolded, which could make subtle differences in the code
+        for (let i = 0; i < 12; i++) {
+            serverData.models.product.records.push({
+                id: 8 + i,
+                name: "column",
+            });
+            serverData.models.partner.records.push({
+                id: 20 + i,
+                foo: "dumb entry",
+                product_id: 8 + i,
+            });
+        }
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read_group") {
+                    const result = await performRPC(route, args);
+                    for (let i = 0; i < result.groups.length; i++) {
+                        result.groups[i].__fold = i == 2 || i == 8;
+                    }
+                    return result;
+                }
+                if (args.method === "web_search_read") {
+                    assert.step(`web_search_read domain: ${args.kwargs.domain}`);
+                }
+            },
+        });
+
+        // we look if column are folded/unfolded according to what is expected
+        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(3), "o_column_folded");
+        assert.doesNotHaveClass(getColumn(9), "o_column_folded");
+        assert.hasClass(getColumn(2), "o_column_folded");
+        assert.hasClass(getColumn(8), "o_column_folded");
+
+        // we look if columns are actually folded after we reached the limit
+        assert.hasClass(getColumn(12), "o_column_folded");
+        assert.hasClass(getColumn(13), "o_column_folded");
+
+        // we look if we have the right count of folded/unfolded column
+        assert.containsN(target, ".o_kanban_group:not(.o_column_folded)", 10);
+        assert.containsN(target, ".o_kanban_group.o_column_folded", 4);
+
+        assert.verifySteps([
+            "web_search_read domain: product_id,=,3",
+            "web_search_read domain: product_id,=,5",
+            "web_search_read domain: product_id,=,9",
+            "web_search_read domain: product_id,=,10",
+            "web_search_read domain: product_id,=,11",
+            "web_search_read domain: product_id,=,12",
+            "web_search_read domain: product_id,=,13",
+            "web_search_read domain: product_id,=,15",
+            "web_search_read domain: product_id,=,16",
+            "web_search_read domain: product_id,=,17",
+        ]);
     });
 
     QUnit.test(
@@ -9547,30 +9638,33 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(document.activeElement, getCard(0), "the first card should be focussed");
     });
 
-    QUnit.test("keyboard navigation on kanban basic rendering does not crash when the focus is inside a card", async (assert) => {
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<kanban><templates><t t-name="kanban-box">' +
-                "<div>" +
-                '<t t-esc="record.foo.value"/>' +
-                '<field name="foo"/>' +
-                '<a href="#" class="o-this-is-focussable">ho! this is focussable</a>' +
-                "</div>" +
-                "</t></templates></kanban>",
-        });
+    QUnit.test(
+        "keyboard navigation on kanban basic rendering does not crash when the focus is inside a card",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch:
+                    '<kanban><templates><t t-name="kanban-box">' +
+                    "<div>" +
+                    '<t t-esc="record.foo.value"/>' +
+                    '<field name="foo"/>' +
+                    '<a href="#" class="o-this-is-focussable">ho! this is focussable</a>' +
+                    "</div>" +
+                    "</t></templates></kanban>",
+            });
 
-        getCard(0).querySelector(".o-this-is-focussable").focus();
-        triggerHotkey("ArrowDown");
+            getCard(0).querySelector(".o-this-is-focussable").focus();
+            triggerHotkey("ArrowDown");
 
-        assert.strictEqual(
-            document.activeElement,
-            getCard(1),
-            "the second card should be focussed"
-        );
-    });
+            assert.strictEqual(
+                document.activeElement,
+                getCard(1),
+                "the second card should be focussed"
+            );
+        }
+    );
 
     QUnit.test("keyboard navigation on kanban grouped rendering", async (assert) => {
         await makeView({
