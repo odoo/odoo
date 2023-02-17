@@ -65,11 +65,6 @@ AccountFileUploader.components = {
     FileUploader,
 };
 AccountFileUploader.template = "account.AccountFileUploader";
-AccountFileUploader.extractProps = ({ attrs }) => ({
-    togglerTemplate: attrs.template || "account.JournalUploadLink",
-    btnClass: attrs.btnClass || "",
-    linkText: attrs.linkText || _lt("Upload"),
-});
 AccountFileUploader.props = {
     ...standardWidgetProps,
     record: { type: Object, optional: true},
@@ -77,14 +72,23 @@ AccountFileUploader.props = {
     btnClass: { type: String, optional: true },
     linkText: { type: String, optional: true },
     slots: { type: Object, optional: true },
-}
+};
 //when file uploader is used on account.journal (with a record)
-AccountFileUploader.fieldDependencies = {
-    id: { type: "integer" },
-    type: { type: "selection" },
+
+export const accountFileUploader = {
+    component: AccountFileUploader,
+    extractProps: ({ attrs }) => ({
+        togglerTemplate: attrs.template || "account.JournalUploadLink",
+        btnClass: attrs.btnClass || "",
+        linkText: attrs.linkText || _lt("Upload"),
+    }),
+    fieldDependencies: {
+        id: { type: "integer" },
+        type: { type: "selection" },
+    },
 };
 
-registry.category("view_widgets").add("account_file_uploader", AccountFileUploader);
+registry.category("view_widgets").add("account_file_uploader", accountFileUploader);
 
 export class AccountDropZone extends Component {
     setup() {

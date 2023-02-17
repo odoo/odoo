@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import { extractAttributes, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
 import {
@@ -9,7 +10,8 @@ import {
     processButton,
     stringToOrderBy,
 } from "@web/views/utils";
-import { Widget } from "@web/views/widgets/widget";
+
+const viewWidgetRegistry = registry.category("view_widgets");
 
 /**
  * NOTE ON 't-name="kanban-box"':
@@ -124,12 +126,8 @@ export class KanbanArchParser extends XMLParser {
                 );
             }
             if (node.tagName === "widget") {
-                const { WidgetComponent } = Widget.parseWidgetNode(node);
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    WidgetComponent.fieldDependencies
-                );
+                const { fieldDependencies } = viewWidgetRegistry.get(node.getAttribute("name"));
+                addFieldDependencies(activeFields, models[modelName], fieldDependencies);
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.

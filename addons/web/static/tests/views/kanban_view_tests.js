@@ -8964,12 +8964,15 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("basic support for widgets (being Owl Components)", async (assert) => {
         class MyComponent extends Component {
+            static template = owl.xml`<div t-att-class="props.class" t-esc="value"/>`;
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
         }
-        MyComponent.template = owl.xml`<div t-att-class="props.class" t-esc="value"/>`;
-        viewWidgetRegistry.add("test", MyComponent);
+        const myComponent = {
+            component: MyComponent,
+        };
+        viewWidgetRegistry.add("test", myComponent);
 
         await makeView({
             type: "kanban",
@@ -10851,14 +10854,18 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("kanban widget can extract props from attrs", async (assert) => {
-        class TestWidget extends Component {}
-        TestWidget.template = xml`<div class="o-test-widget-option" t-esc="props.title"/>`;
-        TestWidget.extractProps = ({ attrs }) => {
-            return {
-                title: attrs.title,
-            };
+        class TestWidget extends Component {
+            static template = xml`<div class="o-test-widget-option" t-esc="props.title"/>`;
+        }
+        const testWidget = {
+            component: TestWidget,
+            extractProps: ({ attrs }) => {
+                return {
+                    title: attrs.title,
+                };
+            },
         };
-        viewWidgetRegistry.add("widget_test_option", TestWidget);
+        viewWidgetRegistry.add("widget_test_option", testWidget);
 
         await makeView({
             arch: `

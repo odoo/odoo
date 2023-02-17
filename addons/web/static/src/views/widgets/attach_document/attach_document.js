@@ -8,6 +8,17 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { Component } from "@odoo/owl";
 
 export class AttachDocumentWidget extends Component {
+    static template = "web.AttachDocument";
+    static components = {
+        FileInput,
+    };
+    static props = {
+        ...standardWidgetProps,
+        string: { type: String },
+        action: { type: String, optional: true },
+        highlight: { type: Boolean },
+    };
+
     setup() {
         this.http = useService("http");
         this.notification = useService("notification");
@@ -60,23 +71,16 @@ export class AttachDocumentWidget extends Component {
     }
 }
 
-AttachDocumentWidget.template = "web.AttachDocument";
-AttachDocumentWidget.components = {
-    FileInput,
-};
-AttachDocumentWidget.props = {
-    ...standardWidgetProps,
-    string: { type: String },
-    action: { type: String, optional: true },
-    highlight: { type: Boolean },
-};
-AttachDocumentWidget.extractProps = ({ attrs }) => {
-    const { action, highlight, string } = attrs;
-    return {
-        action,
-        highlight: !!highlight,
-        string,
-    };
+export const attachDocumentWidget = {
+    component: AttachDocumentWidget,
+    extractProps: ({ attrs }) => {
+        const { action, highlight, string } = attrs;
+        return {
+            action,
+            highlight: !!highlight,
+            string,
+        };
+    },
 };
 
-registry.category("view_widgets").add("attach_document", AttachDocumentWidget);
+registry.category("view_widgets").add("attach_document", attachDocumentWidget);

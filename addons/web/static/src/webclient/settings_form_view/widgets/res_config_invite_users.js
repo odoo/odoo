@@ -9,6 +9,11 @@ import { Component, useState, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 class ResConfigInviteUsers extends Component {
+    static template = "res_config_invite_users";
+    static props = {
+        ...standardWidgetProps,
+    };
+
     setup() {
         this.orm = useService("orm");
         this.invite = useService("user_invite");
@@ -125,9 +130,8 @@ class ResConfigInviteUsers extends Component {
     }
 }
 
-ResConfigInviteUsers.template = "res_config_invite_users";
-ResConfigInviteUsers.props = {
-    ...standardWidgetProps,
+export const resConfigInviteUsers = {
+    component: ResConfigInviteUsers,
 };
 
-registry.category("view_widgets").add("res_config_invite_users", ResConfigInviteUsers);
+registry.category("view_widgets").add("res_config_invite_users", resConfigInviteUsers);
