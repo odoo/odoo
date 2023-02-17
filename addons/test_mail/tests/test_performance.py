@@ -832,8 +832,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
             unlinked_mails |= set(records.ids)
         unlinked_mails = set()
 
-        with (self.assertQueryCount(admin=43, employee=43),
-             patch.object(type(self.env['mail.mail']), 'unlink', _patched_unlink)):
+        with self.assertQueryCount(admin=43, employee=43), \
+             patch.object(type(self.env['mail.mail']), 'unlink', _patched_unlink):
             self.env['mail.mail'].sudo().browse(mails.ids).send()
 
         for mail in mails[:-2]:
