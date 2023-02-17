@@ -139,6 +139,9 @@ QUnit.module('Bus', {
         slaveEnv.services['bus_service'].addChannel('lambda');
 
         pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
+        // Wait one tick for the worker `postMessage` to reach the bus_service.
+        await nextTick();
+        // Wait another tick for the `bus.trigger` to reach the listeners.
         await nextTick();
 
         assert.deepEqual(
