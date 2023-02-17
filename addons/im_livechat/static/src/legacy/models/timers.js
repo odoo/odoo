@@ -1,14 +1,13 @@
 /** @odoo-module **/
 
-import Timer from '@im_livechat/legacy/models/timer';
+import Timer from "@im_livechat/legacy/models/timer";
 
-import Class from 'web.Class';
+import Class from "web.Class";
 
 /**
  * This class lists several timers that use a same callback and duration.
  */
 const Timers = Class.extend({
-
     /**
      * Instantiate a new list of timers
      *
@@ -39,7 +38,7 @@ const Timers = Class.extend({
      * @param {Array} [params.timeoutCallbackArguments]
      * @param {integer} params.timerID
      */
-     registerTimer(params) {
+    registerTimer(params) {
         const timerID = params.timerID;
         if (this._timers[timerID]) {
             this._timers[timerID].clear();
@@ -48,11 +47,11 @@ const Timers = Class.extend({
             duration: this._duration,
             onTimeout: this._timeoutCallback,
         };
-        if ('timeoutCallbackArguments' in params) {
-            timerParams.onTimeout = this._timeoutCallback.bind.apply(
-                this._timeoutCallback,
-                [null, ...params.timeoutCallbackArguments]
-            );
+        if ("timeoutCallbackArguments" in params) {
+            timerParams.onTimeout = this._timeoutCallback.bind.apply(this._timeoutCallback, [
+                null,
+                ...params.timeoutCallbackArguments,
+            ]);
         } else {
             timerParams.onTimeout = this._timeoutCallback;
         }
@@ -66,14 +65,13 @@ const Timers = Class.extend({
      * @param {Object} params
      * @param {integer} params.timerID
      */
-     unregisterTimer(params) {
+    unregisterTimer(params) {
         const timerID = params.timerID;
         if (this._timers[timerID]) {
             this._timers[timerID].clear();
             delete this._timers[timerID];
         }
     },
-
 });
 
 export default Timers;

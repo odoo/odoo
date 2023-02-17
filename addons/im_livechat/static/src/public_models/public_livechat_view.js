@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import PublicLivechatView from '@im_livechat/legacy/widgets/public_livechat_view/public_livechat_view';
+import PublicLivechatView from "@im_livechat/legacy/widgets/public_livechat_view/public_livechat_view";
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'PublicLivechatView',
+    name: "PublicLivechatView",
     lifecycleHooks: {
         _created() {
             this.update({
@@ -17,9 +17,9 @@ Model({
         },
     },
     fields: {
-        publicLivechatWindowOwner: one('PublicLivechatWindow', {
+        publicLivechatWindowOwner: one("PublicLivechatWindow", {
             identifying: true,
-            inverse: 'publicLivechatView',
+            inverse: "publicLivechatView",
         }),
         widget: attr(),
     },

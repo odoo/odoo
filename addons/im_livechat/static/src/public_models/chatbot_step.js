@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'ChatbotStep',
+    name: "ChatbotStep",
     fields: {
-        chabotOwner: one('Chatbot', {
+        chabotOwner: one("Chatbot", {
             identifying: true,
-            inverse: 'currentStep',
+            inverse: "currentStep",
         }),
         data: attr(),
     },

@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import PublicLivechatWindow from '@im_livechat/legacy/widgets/public_livechat_window/public_livechat_window';
+import PublicLivechatWindow from "@im_livechat/legacy/widgets/public_livechat_window/public_livechat_window";
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'PublicLivechatWindow',
+    name: "PublicLivechatWindow",
     lifecycleHooks: {
         _created() {
             this.update({
                 widget: new PublicLivechatWindow(
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
-                    this.messaging.publicLivechatGlobal.publicLivechat.widget,
+                    this.messaging.publicLivechatGlobal.publicLivechat.widget
                 ),
             });
         },
@@ -22,16 +22,25 @@ Model({
     },
     recordMethods: {
         enableInput() {
-            const $composerTextField = this.widget.$('.o_composer_text_field');
+            const $composerTextField = this.widget.$(".o_composer_text_field");
             $composerTextField
-                .prop('disabled', false)
-                .removeClass('text-center fst-italic bg-200')
-                .val('')
+                .prop("disabled", false)
+                .removeClass("text-center fst-italic bg-200")
+                .val("")
                 .focus();
 
-            $composerTextField.off('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
-            if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-                $composerTextField.on('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
+            $composerTextField.off(
+                "keydown",
+                this.messaging.publicLivechatGlobal.chatbot.onKeydownInput
+            );
+            if (
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type ===
+                "free_input_multi"
+            ) {
+                $composerTextField.on(
+                    "keydown",
+                    this.messaging.publicLivechatGlobal.chatbot.onKeydownInput
+                );
             }
         },
         /**
@@ -41,9 +50,10 @@ Model({
          * @private
          */
         disableInput(disableText) {
-            this.widget.$('.o_composer_text_field')
-                .prop('disabled', true)
-                .addClass('text-center fst-italic bg-200')
+            this.widget
+                .$(".o_composer_text_field")
+                .prop("disabled", true)
+                .addClass("text-center fst-italic bg-200")
                 .val(disableText);
         },
         renderMessages() {
@@ -54,11 +64,18 @@ Model({
             }
             const self = this;
 
-            this.widget.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
-                $(this).on('click', self.messaging.publicLivechatGlobal.livechatButtonView.widget._onChatbotOptionClicked.bind(self.messaging.publicLivechatGlobal.livechatButtonView.widget));
-            });
+            this.widget
+                .$(".o_thread_message:last .o_livechat_chatbot_options li")
+                .each(function () {
+                    $(this).on(
+                        "click",
+                        self.messaging.publicLivechatGlobal.livechatButtonView.widget._onChatbotOptionClicked.bind(
+                            self.messaging.publicLivechatGlobal.livechatButtonView.widget
+                        )
+                    );
+                });
 
-            this.widget.$('.o_livechat_chatbot_main_restart').on('click', (ev) => {
+            this.widget.$(".o_livechat_chatbot_main_restart").on("click", (ev) => {
                 ev.stopPropagation(); // prevent fold behaviour
                 this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript(ev);
             });
@@ -66,7 +83,11 @@ Model({
             if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
                 const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
                 const stepAnswers = lastMessage.widget.getChatbotStepAnswers();
-                if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.widget.getChatbotStepAnswerId()) {
+                if (
+                    stepAnswers &&
+                    stepAnswers.length !== 0 &&
+                    !lastMessage.widget.getChatbotStepAnswerId()
+                ) {
                     this.disableInput(this.env._t("Select an option above"));
                 }
             }
@@ -81,13 +102,13 @@ Model({
                 return this.env._t("Say something");
             },
         }),
-        publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+        publicLivechatGlobalOwner: one("PublicLivechatGlobal", {
             identifying: true,
-            inverse: 'chatWindow',
+            inverse: "chatWindow",
         }),
-        publicLivechatView: one('PublicLivechatView', {
+        publicLivechatView: one("PublicLivechatView", {
             default: {},
-            inverse: 'publicLivechatWindowOwner',
+            inverse: "publicLivechatWindowOwner",
         }),
         widget: attr(),
     },

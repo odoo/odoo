@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import Class from 'web.Class';
+import Class from "web.Class";
 
 /**
  * This class creates a timer which, when times out, calls a function.
  */
 const Timer = Class.extend({
-
     /**
      * Instantiate a new timer. Note that the timer is not started on
      * initialization (@see start method).
@@ -60,7 +59,6 @@ const Timer = Class.extend({
     _onTimeout() {
         this._timeoutCallback();
     },
-
 });
 
 export default Timer;

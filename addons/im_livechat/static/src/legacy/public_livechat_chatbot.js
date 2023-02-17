@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import session from 'web.session';
-import time from 'web.time';
-import utils from 'web.utils';
+import session from "web.session";
+import time from "web.time";
+import utils from "web.utils";
 
-import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
+import LivechatButton from "@im_livechat/legacy/widgets/livechat_button";
 
 /**
  * Override of the LivechatButton to include chatbot capabilities.
@@ -14,11 +14,10 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
  * - When the user picks an option or answers to the chatbot, display a "chatbot is typing..."
  *   message for a couple seconds and then trigger the next step of the script
  */
- LivechatButton.include({
-
-     //--------------------------------------------------------------------------
-     // Private - LiveChat Overrides
-     //--------------------------------------------------------------------------
+LivechatButton.include({
+    //--------------------------------------------------------------------------
+    // Private - LiveChat Overrides
+    //--------------------------------------------------------------------------
 
     /**
      * @private
@@ -28,7 +27,11 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
         const parameters = this._super(...arguments);
 
         const { publicLivechat } = this.messaging.publicLivechatGlobal;
-        if (publicLivechat && publicLivechat.isTemporary && !publicLivechat.data.chatbot_script_id) {
+        if (
+            publicLivechat &&
+            publicLivechat.isTemporary &&
+            !publicLivechat.data.chatbot_script_id
+        ) {
             return parameters;
         } else if (publicLivechat && publicLivechat.data.chatbot_script_id) {
             parameters.chatbot_script_id = publicLivechat.data.chatbot_script_id;
@@ -46,7 +49,9 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
         if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this.messaging.publicLivechatGlobal.chatbot.state === 'welcome' ? 0 : this.messaging.publicLivechatGlobal.chatbot.messageDelay,
+                this.messaging.publicLivechatGlobal.chatbot.state === "welcome"
+                    ? 0
+                    : this.messaging.publicLivechatGlobal.chatbot.messageDelay
             );
         } else {
             this._super(...arguments);
@@ -79,16 +84,14 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
         if (chatbotStep.chatbot_step_message) {
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
-                id: '_welcome_' + stepIndex,
+                id: "_welcome_" + stepIndex,
                 is_discussion: true, // important for css style -> we only want white background for chatbot
-                author: (
-                    this.messaging.publicLivechatGlobal.publicLivechat.operator
+                author: this.messaging.publicLivechatGlobal.publicLivechat.operator
                     ? {
-                        id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                        name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
-                    }
-                    : [['clear']]
-                ),
+                          id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
+                          name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                      }
+                    : [["clear"]],
                 body: utils.Markup(chatbotStep.chatbot_step_message),
                 chatbot_script_step_id: chatbotStep.chatbot_script_step_id,
                 chatbot_step_answers: chatbotStep.chatbot_step_answers,
@@ -106,7 +109,10 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
             this.messaging.publicLivechatGlobal.chatbot.update({
                 welcomeMessageTimeout: setTimeout(() => {
-                    if (!this.messaging.publicLivechatGlobal.chatWindow || !this.messaging.publicLivechatGlobal.chatWindow.exists()) {
+                    if (
+                        !this.messaging.publicLivechatGlobal.chatWindow ||
+                        !this.messaging.publicLivechatGlobal.chatWindow.exists()
+                    ) {
                         return;
                     }
                     this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
@@ -114,7 +120,10 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
                 }, welcomeMessageDelay),
             });
         } else {
-            if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator') {
+            if (
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type ===
+                "forward_operator"
+            ) {
                 // special case when the last welcome message is a forward to an operator
                 // we need to save the welcome messages before continuing the script
                 // indeed, if there are no operator available, the script will continue
@@ -147,10 +156,10 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
         ev.stopPropagation();
 
         const $target = $(ev.currentTarget);
-        const stepId = $target.closest('ul').data('chatbotStepId');
-        const selectedAnswer = $target.data('chatbotStepAnswerId');
+        const stepId = $target.closest("ul").data("chatbotStepId");
+        const selectedAnswer = $target.data("chatbotStepAnswerId");
 
-        const redirectLink = $target.data('chatbotStepRedirectLink');
+        const redirectLink = $target.data("chatbotStepRedirectLink");
         this.messaging.publicLivechatGlobal.chatbot.update({ isRedirecting: !!redirectLink });
 
         await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage({
@@ -171,18 +180,19 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
         }
         const messageId = stepMessage.id;
         stepMessage.widget.setChatbotStepAnswerId(selectedAnswer);
-        this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
+        this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id =
+            selectedAnswer;
         this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
         this.messaging.publicLivechatGlobal.chatbot.saveSession();
 
-        const saveAnswerPromise = session.rpc('/chatbot/answer/save', {
+        const saveAnswerPromise = session.rpc("/chatbot/answer/save", {
             channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
             message_id: messageId,
             selected_answer_id: selectedAnswer,
         });
 
         if (redirectLink) {
-            await saveAnswerPromise;  // ensure answer is saved before redirecting
+            await saveAnswerPromise; // ensure answer is saved before redirecting
             window.location = redirectLink;
         }
     },

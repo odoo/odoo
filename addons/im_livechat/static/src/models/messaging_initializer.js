@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { insert, Patch } from '@mail/model';
+import { insert, Patch } from "@mail/model";
 
 Patch({
-    name: 'MessagingInitializer',
+    name: "MessagingInitializer",
     recordMethods: {
         /**
          * @override
@@ -13,9 +13,9 @@ Patch({
             this._super();
             this.messaging.update({
                 commands: insert({
-                    channel_types: ['livechat'],
+                    channel_types: ["livechat"],
                     help: this.env._t("See 15 last visited pages"),
-                    methodName: 'execute_command_history',
+                    methodName: "execute_command_history",
                     name: "history",
                 }),
             });

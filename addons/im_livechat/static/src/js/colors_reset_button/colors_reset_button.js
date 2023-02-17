@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registry } from '@web/core/registry';
+import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 const { Component } = owl;
@@ -20,4 +20,4 @@ ColorsResetButton.extractProps = ({ attrs }) => {
     return attrs.options;
 };
 
-registry.category('view_widgets').add('colors_reset_button', ColorsResetButton);
+registry.category("view_widgets").add("colors_reset_button", ColorsResetButton);

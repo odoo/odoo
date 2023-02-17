@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-
 import { registry } from "@web/core/registry";
 import {
     Many2ManyTagsField,
@@ -19,11 +18,11 @@ export class ChatbotScriptTriggeringAnswersMany2Many extends Many2ManyTagsField 
 
         if (this.props.record.model.root.data.id) {
             this.env.services.user.updateContext({
-                force_domain_chatbot_script_id: this.props.record.model.root.data.id
+                force_domain_chatbot_script_id: this.props.record.model.root.data.id,
             });
         }
     }
-};
+}
 
 export const chatbotScriptTriggeringAnswersMany2Many = {
     ...many2ManyTagsField,

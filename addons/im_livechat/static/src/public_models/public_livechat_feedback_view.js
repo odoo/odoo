@@ -1,23 +1,23 @@
 /** @odoo-module **/
 
-import Feedback from '@im_livechat/legacy/widgets/feedback/feedback';
+import Feedback from "@im_livechat/legacy/widgets/feedback/feedback";
 
-import { attr, one, Model } from '@mail/model';
+import { attr, one, Model } from "@mail/model";
 
 Model({
-    name: 'PublicLivechatFeedbackView',
+    name: "PublicLivechatFeedbackView",
     lifecycleHooks: {
         _created() {
             this.update({
                 widget: new Feedback(
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
-                    this.messaging.publicLivechatGlobal.publicLivechat.widget,
+                    this.messaging.publicLivechatGlobal.publicLivechat.widget
                 ),
             });
             this.messaging.publicLivechatGlobal.chatWindow.widget.replaceContentWith(this.widget);
-            this.widget.on('feedback_sent', null, this._onFeedbackSent);
-            this.widget.on('send_message', null, this._onSendMessage);
+            this.widget.on("feedback_sent", null, this._onFeedbackSent);
+            this.widget.on("send_message", null, this._onSendMessage);
         },
         _willDelete() {
             this.widget.destroy();
@@ -32,9 +32,9 @@ Model({
         },
     },
     fields: {
-        publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+        publicLivechatGlobalOwner: one("PublicLivechatGlobal", {
             identifying: true,
-            inverse: 'feedbackView',
+            inverse: "feedbackView",
         }),
         widget: attr(),
     },
