@@ -36,11 +36,11 @@ class PurchaseOrderLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null')
     product_type = fields.Selection(related='product_id.detailed_type', readonly=True)
     price_unit = fields.Float(
-        string='Unit Price', required=True, digits='Product Price',
+        string='Unit Price', required=True, digits='Product Price', aggregator=None,
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
     price_unit_discounted = fields.Float('Unit Price (Discounted)', compute='_compute_price_unit_discounted')
 
-    price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
+    price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', aggregator=None, store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
 

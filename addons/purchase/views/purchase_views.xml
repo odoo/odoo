@@ -615,6 +615,8 @@
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="state in ['purchase', 'done']"/>
                     <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
+                    <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>
+                    <field name="company_currency_id" column_invisible="True"/>
                     <field name="state" optional="show" widget="badge" decoration-success="state == 'purchase' or state == 'done'"
                         decoration-warning="state == 'to approve'" decoration-info="state == 'draft' or state == 'sent'"/>
                     <field name="invoice_status" optional="hide"/>
@@ -649,6 +651,8 @@
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1"/>
                     <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
                     <field name="state" column_invisible="True"/>
+                    <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>
+                    <field name="company_currency_id" column_invisible="True"/>
                     <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="show"/>
                     <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
                 </tree>
