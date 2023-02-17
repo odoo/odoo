@@ -3,9 +3,9 @@
 import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
-export class CallInviteRequestPopup extends Component {
+export class CallInvitation extends Component {
     static props = ["thread"];
-    static template = "mail.call_invite_request_popup";
+    static template = "mail.call_invitation";
 
     setup() {
         this.threadService = useService("mail.thread");

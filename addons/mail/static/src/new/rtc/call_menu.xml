@@ -3,7 +3,6 @@
 
     <t t-name="mail.call_menu" owl="1">
         <div class="o-mail-call-menu dropdown" t-attf-class="{{ className }}" t-ref="root">
-            <!-- <CallInviteRequestPopupList/> TODO -->
             <button t-if="rtc.state.channel" class="px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="() => this.threadService.open(this.rtc.state.channel)">
                 <div class="o-mail-call-menu-button-content d-flex align-items-center">
                     <span class="position-relative me-2">

@@ -8,7 +8,6 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallMenu extends Component {
-    // static components = { CallInviteRequestPopupList }; TODO
     static props = [];
     static template = "mail.call_menu";
     setup() {
