@@ -12,7 +12,7 @@ import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
 
 const { Component, onWillStart, useState, useSubEnv } = owl;
 
-class StockForecasted extends Component {
+export class StockForecasted extends Component {
     setup() {
         useSubEnv({
             ...this.env,

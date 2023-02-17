@@ -371,12 +371,18 @@ class StockForecasted(models.AbstractModel):
     @api.model
     def action_reserve_linked_picks(self, move_id):
         move_id = self.env['stock.move'].browse(move_id)
-        move_id.browse(move_id._rollup_move_origs()).picking_id.filtered(lambda p: p.state not in ['draft', 'cancel', 'done']).action_assign()
+        move_ids = move_id.browse(move_id._rollup_move_origs())
+        picking_ids = move_ids.picking_id.filtered(lambda p: p.state not in ['draft', 'cancel', 'done'])
+        if picking_ids:
+            picking_ids.action_assign()
+        return move_ids
 
     @api.model
     def action_unreserve_linked_picks(self, move_id):
         move_id = self.env['stock.move'].browse(move_id)
-        move_id.browse(move_id._rollup_move_origs()).picking_id.filtered(lambda p: p.state not in ['draft', 'cancel', 'done']).do_unreserve()
+        move_ids = move_id.browse(move_id._rollup_move_origs())
+        move_ids.picking_id.filtered(lambda p: p.state not in ['draft', 'cancel', 'done']).do_unreserve()
+        return move_ids
 
 
 class StockForecastedTemplate(models.AbstractModel):
