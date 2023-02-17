@@ -3,3 +3,4 @@
 
 
 from . import calendar_provider_config
+from . import calendar_popover_delete_wizard
