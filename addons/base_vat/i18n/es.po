@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr "Empresas"
+msgstr "Compañías"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
@@ -60,6 +61,13 @@ msgstr ""
 " un contacto si IVA no es valido para el servicio Europeo VIES."
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_failed_message
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_failed_message
+msgid "Technical field display a message to the user if the VIES check fails."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -68,14 +76,7 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] either failed the VIES VAT "
-"validation check or did not respect the expected format %(expected_format)s."
-msgstr ""
-
-#. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -84,15 +85,14 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
-msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s either failed "
-"the VIES VAT validation check or did not respect the expected format "
-"%(expected_format)s."
+msgid "The VAT number %s failed the VIES VAT validation check."
 msgstr ""
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
@@ -106,20 +106,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "Verificar IVA"
+msgstr "Verificar NIFs"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "Verificar IVA con el servicio europeo VIES"
+msgstr "Verificar NIFs con el servicio europeo VIES"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
 msgstr "posición fiscal [%s]"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"

@@ -26,8 +26,8 @@ class PurchaseOrder(models.Model):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
-            order.amount_total = sum(order_lines.mapped('price_total'))
             order.amount_tax = sum(order_lines.mapped('price_tax'))
+            order.amount_total = order.amount_untaxed + order.amount_tax
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):

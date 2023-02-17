@@ -75,8 +75,8 @@ msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
 msgstr ""
-"Si coché, la matrice de produits configurables sera montrée sur le rapport "
-"de cet ordre."
+"Si coché, la matrice des produits configurables sera montrée sur le rapport "
+"de cette commande."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
@@ -101,17 +101,17 @@ msgstr "Modèle de produit"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr "Valeurs attributs de produit qui ne créent pas de variantes"
+msgstr "Valeurs d'attributs de produit qui ne créent pas de variantes"
 
 #. module: purchase_product_matrix
 #: model:ir.model,name:purchase_product_matrix.model_purchase_order
 msgid "Purchase Order"
-msgstr "Commande fournisseur"
+msgstr "Bon de commande"
 
 #. module: purchase_product_matrix
 #: model:ir.model,name:purchase_product_matrix.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Ligne de commande d'achat"
+msgstr "Ligne de commande"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
@@ -125,15 +125,14 @@ msgid ""
 "If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
-"Stockage technique du tarif. \n"
-"Si grid_update, sera chargé dans le PO. \n"
-"Si non, représente la matrice à ouvrir."
+"Stockage technique de grille. \n"
+"Si grid_update, sera chargé dans le bon de commande. \n"
+"Sinon, représente la matrice à ouvrir."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
-msgstr ""
-"Est-ce que le champ grille contient une nouvelle matrice à appliquer ou pas."
+msgstr "Si le champ grille contient une nouvelle matrice à appliquer ou pas."
 
 #. module: purchase_product_matrix
 #: code:addons/purchase_product_matrix/models/purchase.py:0
@@ -143,4 +142,4 @@ msgid ""
 "lines."
 msgstr ""
 "Vous ne pouvez modifier la quantité d'un produit présent dans différentes "
-"lignes de bons de commande."
+"lignes d'achat."

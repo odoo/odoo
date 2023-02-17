@@ -401,7 +401,7 @@ class SaleOrder(models.Model):
     @api.depends('partner_id')
     def _compute_user_id(self):
         for order in self:
-            if not order.user_id:
+            if order.partner_id and not order.user_id:
                 order.user_id = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id or \
                     (self.user_has_groups('sales_team.group_sale_salesman') and self.env.user)
 
@@ -426,8 +426,8 @@ class SaleOrder(models.Model):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
-            order.amount_total = sum(order_lines.mapped('price_total'))
             order.amount_tax = sum(order_lines.mapped('price_tax'))
+            order.amount_total = order.amount_untaxed + order.amount_tax
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):

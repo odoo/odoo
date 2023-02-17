@@ -8,9 +8,9 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Martin Trigaux, 2022
+# Noma Yuki, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
-# Noma Yuki, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Noma Yuki, 2023\n"
+"Last-Translator: Andy Yiu, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -731,7 +731,7 @@ msgid ""
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
 "<p>チャネルは、異なるトピックやグループにわたる情報の整理を容易にします。</p> "
-"<p><b>最初のチャンネルを作成</b>を、してみて下さい(例：セールス、マーケティング、プロダクトXYZ、ワーキングパーティーなど)</p>"
+"<p><b>最初のチャンネルを作成</b>を、してみて下さい(例：セールス、マーケティング、商品XYZ、ワーキングパーティーなど)</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -2350,6 +2350,7 @@ msgstr "会社"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -4129,7 +4130,7 @@ msgstr "エラーがあります"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__primary_color
 msgid "Header Color"
-msgstr "ヘッダー色"
+msgstr "ヘッダ色"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -5403,6 +5404,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #, python-format
 msgid "Log note"
 msgstr "メモを記録"
@@ -8891,6 +8893,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Tax Identification Number "
+"(納税者番号)。ここでの値は、国の形式に基づいて検証されます。パートナーに税金がかからないことを示すには、'/' を使用します。"
 
 #. module: mail
 #. odoo-javascript
@@ -9682,7 +9686,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
 msgid "Used to order subtypes."
-msgstr "サブタイプのオーダーに使用されます。"
+msgstr "サブタイプの注文ーに使用されます。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users

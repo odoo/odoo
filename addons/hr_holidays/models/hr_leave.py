@@ -839,7 +839,6 @@ class HolidaysRequest(models.Model):
                             )
                         ))
                 else:
-                    display_date = fields.Date.to_string(date_from_utc) or ""
                     if leave.number_of_days > 1 and date_from_utc and date_to_utc:
                         display_date += ' / %s' % format_date(self.env, date_to_utc) or ""
                     if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):

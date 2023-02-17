@@ -669,7 +669,8 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
             const selectedTable = closestElement(node, '.o_selected_table');
             if (selectedTable) {
                 for (const selectedTd of selectedTable.querySelectorAll('.o_selected_td')) {
-                    traversedNodes.add(selectedTd, ...descendants(selectedTd));
+                    traversedNodes.add(selectedTd);
+                    descendants(selectedTd).forEach(descendant => traversedNodes.add(descendant));
                 }
             } else {
                 traversedNodes.add(node);
@@ -692,7 +693,7 @@ export function getSelectedNodes(editable) {
         return [];
     }
     const range = sel.getRangeAt(0);
-    return getTraversedNodes(editable).flatMap(
+    return [...new Set(getTraversedNodes(editable).flatMap(
         node => {
             const td = closestElement(node, '.o_selected_td');
             if (td) {
@@ -703,7 +704,7 @@ export function getSelectedNodes(editable) {
                 return [];
             }
         },
-    );
+    ))];
 }
 
 /**
@@ -763,17 +764,18 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
             }
         }
     }
-    // A selection spanning multiple nodes and ending at position 0 of a
-    // node, like the one resulting from a triple click, are corrected so
-    // that it ends at the last position of the previous node instead.
-    const beforeEnd = end.previousSibling;
+    // A selection spanning multiple nodes and ending at position 0 of a node,
+    // like the one resulting from a triple click, is corrected so that it ends
+    // at the last position of the previous node instead.
+    const endLeaf = firstLeaf(end);
+    const beforeEnd = endLeaf.previousSibling;
     if (
         correctTripleClick &&
         !endOffset &&
         (start !== end || startOffset !== endOffset) &&
         (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)))
     ) {
-        const previous = previousLeaf(end, editable, true);
+        const previous = previousLeaf(endLeaf, editable, true);
         if (previous && closestElement(previous).isContentEditable) {
             [end, endOffset] = [previous, nodeSize(previous)];
         }
@@ -2573,4 +2575,15 @@ export function peek(arr) {
  */
 export function isMacOS() {
     return window.navigator.userAgent.includes('Mac');
+}
+
+/**
+ * Remove zero-width spaces from the provided node and its descendants.
+ *
+ * @param {Node} node
+ */
+export function cleanZWS(node) {
+    [node, ...descendants(node)]
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
 }

@@ -7397,6 +7397,54 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("kanban with sample data: do an on_create action", async (assert) => {
+        serverData.models.partner.records = [];
+        serverData.views["partner,some_view_ref,form"] = `<form><field name="foo"/></form>`;
+
+        await makeView({
+            arch: `
+                <kanban sample="1" on_create="myCreateAction">
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            serverData,
+            resModel: "partner",
+            type: "kanban",
+            mockRPC: async (route, args) => {
+                if (route === "/web/action/load" && args.action_id === "myCreateAction") {
+                    return {
+                        type: "ir.actions.act_window",
+                        name: "Archive Action",
+                        res_model: "partner",
+                        view_mode: "form",
+                        target: "new",
+                        views: [[false, "form"]],
+                    };
+                }
+            },
+        });
+
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
+        assert.containsN(
+            target,
+            ".o_kanban_record:not(.o_kanban_ghost)",
+            10,
+            "there should be 10 sample records"
+        );
+        assert.containsOnce(target, ".o_view_nocontent");
+
+        await createRecord(target);
+        assert.containsOnce(target, ".modal");
+
+        await click(target, ".modal .o_cp_buttons .o_form_button_save");
+        assert.doesNotHaveClass(target.querySelector(".o_content"), "o_view_sample_data");
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+        assert.containsNone(target, ".o_view_nocontent");
+    });
+
     QUnit.test("bounce create button when no data and click on empty area", async (assert) => {
         const kanban = await makeView({
             type: "kanban",
@@ -9497,6 +9545,31 @@ QUnit.module("Views", (hooks) => {
         triggerHotkey("ArrowLeft");
 
         assert.strictEqual(document.activeElement, getCard(0), "the first card should be focussed");
+    });
+
+    QUnit.test("keyboard navigation on kanban basic rendering does not crash when the focus is inside a card", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                '<kanban><templates><t t-name="kanban-box">' +
+                "<div>" +
+                '<t t-esc="record.foo.value"/>' +
+                '<field name="foo"/>' +
+                '<a href="#" class="o-this-is-focussable">ho! this is focussable</a>' +
+                "</div>" +
+                "</t></templates></kanban>",
+        });
+
+        getCard(0).querySelector(".o-this-is-focussable").focus();
+        triggerHotkey("ArrowDown");
+
+        assert.strictEqual(
+            document.activeElement,
+            getCard(1),
+            "the second card should be focussed"
+        );
     });
 
     QUnit.test("keyboard navigation on kanban grouped rendering", async (assert) => {

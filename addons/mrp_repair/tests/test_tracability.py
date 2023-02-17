@@ -95,6 +95,9 @@ class TestRepairTraceability(TestMrpCommon):
             wizard.process()
             return mo
 
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
+        picking_type.use_auto_consume_components_lots = True
+
         stock_location = self.env.ref('stock.stock_location_stock')
 
         finished, component = self.env['product.product'].create([{

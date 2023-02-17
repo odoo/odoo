@@ -17,6 +17,7 @@ import zipfile
 from threading import Thread
 import time
 import contextlib
+import requests
 
 from odoo import _, http, service
 from odoo.tools.func import lazy_property
@@ -256,7 +257,10 @@ def load_certificate():
                 Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
                 Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
             time.sleep(3)
-            start_nginx_server()
+            if platform.system() == 'Windows':
+                odoo_restart(0)
+            elif platform.system() == 'Linux':
+                start_nginx_server()
 
 def download_iot_handlers(auto=True):
     """
@@ -330,3 +334,36 @@ def write_file(filename, text, mode='w'):
         path = path_file(filename)
         with open(path, mode) as f:
             f.write(text)
+
+def download_from_url(download_url, path_to_filename):
+    """
+    This function downloads from its 'download_url' argument and
+    saves the result in 'path_to_filename' file
+    The 'path_to_filename' needs to be a valid path + file name
+    (Example: 'C:\\Program Files\\Odoo\\downloaded_file.zip')
+    """
+    try:
+        request_response = requests.get(download_url, timeout=60)
+        request_response.raise_for_status()
+        write_file(path_to_filename, request_response.content, 'wb')
+        _logger.info('Downloaded %s from %s', path_to_filename, download_url)
+    except Exception as e:
+        _logger.error('Failed to download from %s: %s', download_url, e)
+
+def unzip_file(path_to_filename, path_to_extract):
+    """
+    This function unzips 'path_to_filename' argument to
+    the path specified by 'path_to_extract' argument
+    and deletes the originally used .zip file
+    Example: unzip_file('C:\\Program Files\\Odoo\\downloaded_file.zip', 'C:\\Program Files\\Odoo\\new_folder'))
+    Will extract all the contents of 'downloaded_file.zip' to the 'new_folder' location)
+    """
+    try:
+        with writable():
+            path = path_file(path_to_filename)
+            with zipfile.ZipFile(path) as zip_file:
+                zip_file.extractall(path_file(path_to_extract))
+            Path(path).unlink()
+        _logger.info('Unzipped %s to %s', path_to_filename, path_to_extract)
+    except Exception as e:
+        _logger.error('Failed to unzip %s: %s', path_to_filename, e)

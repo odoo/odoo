@@ -63,6 +63,9 @@ const PTP_CLIENT_DISCONNECTED_STATES = [
     'disconnected',
 ];
 
+// this is a local cache for ice server descriptions
+let ICE_SERVERS = null;
+
 const Wysiwyg = Widget.extend({
     defaultOptions: {
         lang: 'odoo',
@@ -127,7 +130,7 @@ const Wysiwyg = Widget.extend({
         this.$editable.data('oe-model', options.recordInfo.res_model);
         this.$editable.data('oe-id', options.recordInfo.res_id);
         document.addEventListener('mousedown', this._onDocumentMousedown, true);
-        this.$editable.on('blur', this._onBlur);
+        this._bindOnBlur();
 
         this.toolbar = new Toolbar(this, this.options.toolbarTemplate);
         await this.toolbar.appendTo(document.createElement('void'));
@@ -216,7 +219,7 @@ const Wysiwyg = Widget.extend({
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -594,7 +597,10 @@ const Wysiwyg = Widget.extend({
         }, CHECK_OFFLINE_TIME);
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
-            let iceServers = await this._rpc({route: '/web_editor/get_ice_servers'});
+            if (!ICE_SERVERS) {
+                ICE_SERVERS = await this._rpc({route: '/web_editor/get_ice_servers'});
+            }
+            let iceServers = structuredClone(ICE_SERVERS);
             if (!iceServers.length) {
                 iceServers = [
                     {
@@ -2613,6 +2619,9 @@ const Wysiwyg = Widget.extend({
                 firstChild.setAttribute('data-last-history-steps', historyIds);
             }
         }
+    },
+    _bindOnBlur() {
+        this.$editable.on('blur', this._onBlur);
     },
 
 });

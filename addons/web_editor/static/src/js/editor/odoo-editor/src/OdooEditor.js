@@ -13,7 +13,6 @@ import './commands/align.js';
 import { sanitize } from './utils/sanitize.js';
 import { serializeNode, unserializeNode, serializeSelection } from './utils/serialize.js';
 import {
-    isMacOS,
     closestBlock,
     commonParentGet,
     containsUnremovable,
@@ -69,7 +68,10 @@ import {
     pxToFloat,
     parseHTML,
     splitTextNode,
-    isVoidElement
+    isMacOS,
+    isVoidElement,
+    cleanZWS,
+    isZWS,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2243,7 +2245,8 @@ export class OdooEditor extends EventTarget {
      */
     _handleSelectionInTable(ev=undefined) {
         const selection = this.document.getSelection();
-        const anchorNode = selection.anchorNode;
+        // Selection could be gone if the document comes from an iframe that has been removed.
+        const anchorNode = selection && selection.getRangeAt(0) && selection.anchorNode;
         if (anchorNode && (closestElement(anchorNode, '[data-oe-protected="true"]') || !ancestors(anchorNode).includes(this.editable))) {
             return false;
         }
@@ -3338,11 +3341,11 @@ export class OdooEditor extends EventTarget {
             // cell that is itself selected, or if all its own cells are
             // selected.
             const isTableFullySelected =
-                table.parentElement && closestElement(table.parentElement, 'td.o_selected_td') ||
+                table.parentElement && !!closestElement(table.parentElement, 'td.o_selected_td') ||
                 [...table.querySelectorAll('td')]
                     .filter(td => closestElement(td, 'table') === table)
                     .every(td => td.classList.contains('o_selected_td'));
-            if (!isTableFullySelected(table)) {
+            if (!isTableFullySelected) {
                 for (const td of tableClone.querySelectorAll('td:not(.o_selected_td)')) {
                     if (closestElement(td, 'table') === tableClone) { // ignore nested
                         td.remove();
@@ -3725,14 +3728,14 @@ export class OdooEditor extends EventTarget {
         // we only remove the attribute to ensure we don't break some style.
         // Otherwise we remove the entire inline element.
         for (const emptyElement of element.querySelectorAll('[data-oe-zws-empty-inline]')) {
-            if (emptyElement.textContent.length === 1 && emptyElement.textContent.includes('\u200B')) {
+            if (isZWS(emptyElement)) {
                 if (emptyElement.classList.length > 0) {
                     emptyElement.removeAttribute('data-oe-zws-empty-inline');
                 } else {
                     emptyElement.remove();
                 }
             } else {
-                emptyElement.textContent = emptyElement.textContent.replace('\u200B', '');
+                cleanZWS(emptyElement);
                 emptyElement.removeAttribute('data-oe-zws-empty-inline');
             }
         }
@@ -3759,7 +3762,7 @@ export class OdooEditor extends EventTarget {
         // Remove Zero Width Spaces on Font awesome elements
         const faSelector = 'i.fa,span.fa,i.fab,span.fab,i.fad,span.fad,i.far,span.far';
         for (const el of element.querySelectorAll(faSelector)) {
-            el.textContent = el.textContent.replace('\u200B', '');
+            cleanZWS(el);
         }
 
         // Clean custom selections

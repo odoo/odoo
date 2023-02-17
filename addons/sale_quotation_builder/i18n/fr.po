@@ -29,8 +29,8 @@ msgid ""
 "                                        product is put on the quote."
 msgstr ""
 ":\n"
-"                                        ce produit n’apparaîtra sur le devis que si ce\n"
-"                                        produit est présent dedans."
+"                                        ce contenu n’apparaîtra sur le devis que si ce\n"
+"                                        produit y figure."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 ":\n"
 "                                        ce contenu n’apparaîtra sur le devis que si ce\n"
-"                                        produit est présent dans le devis."
+"                                        produit figure dans le devis."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -61,14 +61,14 @@ msgid ""
 "                                    will appear on all quotations using this\n"
 "                                    template."
 msgstr ""
-"<strong>En-tête du Modèle:</strong> ce contenu\n"
-"                                    apparaitra sur tous les devis en utilisant ce\n"
+"<strong>En-tête du modèle :</strong> ce contenu\n"
+"                                    apparaîtra sur tous les devis en utilisant ce\n"
 "                                    modèle."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "About us"
-msgstr "À propos"
+msgstr "À propos de nous"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
@@ -82,7 +82,7 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
-"En tant que firme de services professionnels de premier plan,\n"
+"En tant qu'entreprise de prestation de services professionnels de premier plan,\n"
 "                                nous savons que le succès dépend entièrement de\n"
 "                                notre engagement dans des services de qualité."
 
@@ -99,7 +99,7 @@ msgstr "Sociétés"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Design Template"
-msgstr "Concevez un modèle"
+msgstr "Concevoir un modèle"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -137,12 +137,12 @@ msgstr "CRM Open Source"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Optional Product:"
-msgstr "Produit optionnel:"
+msgstr "Produit optionnel :"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Offer"
-msgstr "Notre Offre"
+msgstr "Notre offre"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -152,7 +152,7 @@ msgstr "Notre qualité"
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Service"
-msgstr "Notre Service"
+msgstr "Notre service"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -185,13 +185,13 @@ msgstr "Produit :"
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_description
 msgid "Quotation Description"
-msgstr "Description du Devis"
+msgstr "Description du devis"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
-msgstr "Description uniquement Devis"
+msgstr "Description uniquement devis"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template
@@ -201,12 +201,12 @@ msgstr "Modèle de devis"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr "Ligne Modèle de devis"
+msgstr "Ligne du modèle de devis"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr "Option Modèle de devis"
+msgstr "Option du modèle de devis"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_option
@@ -221,7 +221,7 @@ msgstr "Bon de commande"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ligne de bons de commande"
+msgstr "Ligne de commande"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -232,7 +232,7 @@ msgstr "Conditions générales"
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "The quotation description (not used on eCommerce)"
-msgstr "La description du devis (pas utilisée sur eCommerce)"
+msgstr "La description du devis (pas utilisée dans eCommerce)"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
@@ -241,7 +241,7 @@ msgid ""
 "This field uses the Quotation Only Description if it is defined, otherwise "
 "it will try to read the eCommerce Description."
 msgstr ""
-"Ce champs utilise la Description uniquement Devis si elle est définie, sinon"
+"Ce champs utilise la Description uniquement devis si elle est définie, sinon"
 " il tentera de lire la Description de l'eCommerce."
 
 #. module: sale_quotation_builder
@@ -252,7 +252,7 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
-"Il s'agit d'un <strong>modèle de devis</strong>. Vous devez\n"
+"Il s'agit d'un <strong>modèle de devis</strong>. Vous devriez\n"
 "                                l'adapter à vos besoins depuis l'application <i>Vente</i>\n"
 "                                à l'aide du menu : Configuration /\n"
 "                                Modèles de devis."
@@ -260,7 +260,7 @@ msgstr ""
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "This is a preview of the sale order template."
-msgstr "Ceci est un aperçu du modèle d'ordre de vente."
+msgstr "Ceci est un aperçu du modèle du bon de commande."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -293,7 +293,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option__website_description
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Website Description"
-msgstr "Description du site Web"
+msgstr "Description du site web"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default

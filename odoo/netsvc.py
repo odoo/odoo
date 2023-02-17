@@ -12,6 +12,8 @@ import time
 import traceback
 import warnings
 
+import werkzeug.serving
+
 from . import release
 from . import sql_db
 from . import tools
@@ -28,6 +30,7 @@ def log(logger, level, prefix, msg, depth=None):
 
 class WatchedFileHandler(logging.handlers.WatchedFileHandler):
     def __init__(self, filename):
+        self.errors = None  # py38
         super().__init__(filename)
         # Unfix bpo-26789, in case the fix is present
         self._builtin_open = None
@@ -207,6 +210,7 @@ def init_logger():
     else:
         formatter = DBFormatter(format)
         perf_filter = PerfFilter()
+        werkzeug.serving._log_add_style = False
     handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
     logging.getLogger('werkzeug').addFilter(perf_filter)

@@ -15,7 +15,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import email_split
 
@@ -793,7 +793,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
                 type='http', auth="public", website=True, sitemap=False)
     def slide_get_pdf_content(self, slide):
-        response = werkzeug.wrappers.Response()
+        response = Response()
         response.data = slide.binary_content and base64.b64decode(slide.binary_content) or b''
         response.mimetype = 'application/pdf'
         return response
