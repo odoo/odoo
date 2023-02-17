@@ -10,6 +10,7 @@ class UomCommon(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        # TODO ref without exists check
         cls.uom_gram = cls.env.ref('uom.product_uom_gram')
         cls.uom_kgm = cls.env.ref('uom.product_uom_kgm')
         cls.uom_ton = cls.env.ref('uom.product_uom_ton')

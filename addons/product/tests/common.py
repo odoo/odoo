@@ -9,6 +9,7 @@ from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.uom.tests.common import UomCommon
 
 
+
 class ProductCommon(
     BaseCommon,  # enforce constant test currency (USD)
     UomCommon,
@@ -50,6 +51,24 @@ class ProductCommon(
         cls.env['product.pricelist'].search([
             ('id', '!=', cls.pricelist.id),
         ]).action_archive()
+
+    @classmethod
+    def _create_pricelist(self, **create_vals):
+        return self.env['product.pricelist'].create({
+            'name': "Test Pricelist",
+            **create_vals,
+        })
+
+    @classmethod
+    def _create_product(self, **create_vals):
+        return self.env['product.product'].create({
+            'name': "Test Product",
+            'type': 'consu',
+            'list_price': 100.0,
+            'standard_price': 50.0,
+            'categ_id': self.product_category.id,
+            **create_vals,
+        })
 
 
 class ProductAttributesCommon(ProductCommon):
