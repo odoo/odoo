@@ -7,10 +7,6 @@ import { decodeObjectForTemplate } from "@web/views/view_compiler";
 import { Component, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
 
-function findWidgetComponent(name) {
-    return viewWidgetRegistry.get(name);
-}
-
 /**
  * A Component that supports rendering `<widget />` tags in a view arch
  * It should have minimum legacy support that is:
@@ -20,8 +16,8 @@ function findWidgetComponent(name) {
  * It supports instancing components from the "view_widgets" registry.
  */
 export class Widget extends Component {
-    get Widget() {
-        return findWidgetComponent(this.props.name);
+    setup() {
+        this.widget = viewWidgetRegistry.get(this.props.name);
     }
 
     get classNames() {
@@ -30,8 +26,8 @@ export class Widget extends Component {
             [`o_widget_${this.props.name}`]: true,
             [this.props.className]: Boolean(this.props.className),
         };
-        if (this.Widget.additionalClasses) {
-            for (const cls of this.Widget.additionalClasses) {
+        if (this.widget.additionalClasses) {
+            for (const cls of this.widget.additionalClasses) {
                 classNames[cls] = true;
             }
         }
@@ -42,7 +38,7 @@ export class Widget extends Component {
         const node = rawNode ? decodeObjectForTemplate(rawNode) : {};
         let propsFromAttrs = {};
         if (node.attrs) {
-            const extractProps = this.Widget.extractProps || (() => ({}));
+            const extractProps = this.widget.extractProps || (() => ({}));
             propsFromAttrs = extractProps({
                 attrs: {
                     ...node.attrs,
@@ -60,12 +56,12 @@ export class Widget extends Component {
 }
 Widget.template = xml/*xml*/ `
     <div t-att-class="classNames" t-att-style="props.style">
-        <t t-component="Widget" t-props="widgetProps" />
+        <t t-component="widget.component" t-props="widgetProps" />
     </div>`;
 
 Widget.parseWidgetNode = function (node) {
     const name = node.getAttribute("name");
-    const WidgetComponent = findWidgetComponent(name);
+    const widget = viewWidgetRegistry.get(name);
     const attrs = Object.fromEntries(
         [...node.attributes].map(({ name, value }) => {
             return [name, name === "modifiers" ? JSON.parse(value || "{}") : value];
@@ -75,7 +71,7 @@ Widget.parseWidgetNode = function (node) {
         options: evaluateExpr(node.getAttribute("options") || "{}"),
         name,
         rawAttrs: attrs,
-        WidgetComponent,
+        widget,
     };
 };
 Widget.props = {

@@ -40,4 +40,7 @@ DepartmentChart.props = {
     ...standardWidgetProps,
 };
 
-registry.category("view_widgets").add("hr_department_chart", DepartmentChart);
+export const departmentChart = {
+    component: DepartmentChart,
+};
+registry.category("view_widgets").add("hr_department_chart", departmentChart);

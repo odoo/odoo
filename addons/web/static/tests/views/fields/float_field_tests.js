@@ -408,13 +408,16 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("float field can be updated by another field/widget", async function (assert) {
         class MyWidget extends owl.Component {
+            static template = owl.xml`<button t-on-click="onClick">do it</button>`;
             onClick() {
                 const val = this.props.record.data.float_field;
                 this.props.record.update({ float_field: val + 1 });
             }
         }
-        MyWidget.template = owl.xml`<button t-on-click="onClick">do it</button>`;
-        registry.category("view_widgets").add("wi", MyWidget);
+        const myWidget = {
+            component: MyWidget,
+        };
+        registry.category("view_widgets").add("wi", myWidget);
         await makeView({
             type: "form",
             resModel: "partner",

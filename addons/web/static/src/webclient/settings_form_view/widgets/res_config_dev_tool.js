@@ -14,6 +14,15 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
  * Can be used to load the demo data.
  */
 class ResConfigDevTool extends Component {
+    static template = "res_config_dev_tool";
+    static components = {
+        SettingsBlock,
+        Setting,
+    };
+    static props = {
+        ...standardWidgetProps,
+    };
+
     setup() {
         this.isDebug = Boolean(odoo.debug);
         this.isAssets = odoo.debug.includes("assets");
@@ -35,13 +44,8 @@ class ResConfigDevTool extends Component {
     }
 }
 
-ResConfigDevTool.template = "res_config_dev_tool";
-ResConfigDevTool.components = {
-    SettingsBlock,
-    Setting,
-};
-ResConfigDevTool.props = {
-    ...standardWidgetProps,
+export const resConfigDevTool = {
+    component: ResConfigDevTool,
 };
 
-registry.category("view_widgets").add("res_config_dev_tool", ResConfigDevTool);
+registry.category("view_widgets").add("res_config_dev_tool", resConfigDevTool);

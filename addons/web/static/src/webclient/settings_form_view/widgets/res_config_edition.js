@@ -13,6 +13,12 @@ const { DateTime } = luxon;
  * Contains info about the odoo version, database expiration date and copyrights.
  */
 class ResConfigEdition extends Component {
+    static template = "res_config_edition";
+    static components = { Setting };
+    static props = {
+        ...standardWidgetProps,
+    };
+
     setup() {
         this.serverVersion = session.server_version;
         this.expirationDate = session.expiration_date
@@ -21,9 +27,8 @@ class ResConfigEdition extends Component {
     }
 }
 
-ResConfigEdition.template = "res_config_edition";
-ResConfigEdition.components = { Setting };
-ResConfigEdition.props = {
-    ...standardWidgetProps,
+export const resConfigEdition = {
+    component: ResConfigEdition,
 };
-registry.category("view_widgets").add("res_config_edition", ResConfigEdition);
+
+registry.category("view_widgets").add("res_config_edition", resConfigEdition);

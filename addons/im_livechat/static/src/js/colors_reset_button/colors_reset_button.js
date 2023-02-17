@@ -15,9 +15,12 @@ ColorsResetButton.props = {
     ...standardWidgetProps,
     default_colors: { type: Object },
 };
-ColorsResetButton.extractProps = ({ attrs }) => {
-    // Note: `options` should have `default_colors`. It's specified when using the widget.
-    return attrs.options;
-};
 
-registry.category("view_widgets").add("colors_reset_button", ColorsResetButton);
+export const colorsResetButton = {
+    component: ColorsResetButton,
+    extractProps: ({ attrs }) => {
+        // Note: `options` should have `default_colors`. It's specified when using the widget.
+        return attrs.options;
+    },
+};
+registry.category('view_widgets').add('colors_reset_button', colorsResetButton);

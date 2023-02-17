@@ -8,6 +8,13 @@ import { registry } from "@web/core/registry";
 const LINK_REGEX = new RegExp("^https?://");
 
 export class DocumentationLink extends Component {
+    static template = "web.DocumentationLink";
+    static props = {
+        ...standardWidgetProps,
+        record: { type: Object, optional: 1 }, // The record is not needed in this widget
+        path: { type: String },
+    };
+
     get url() {
         if (LINK_REGEX.test(this.props.path)) {
             return this.props.path;
@@ -19,18 +26,16 @@ export class DocumentationLink extends Component {
         }
     }
 }
-DocumentationLink.template = "web.DocumentationLink";
-DocumentationLink.props = {
-    ...standardWidgetProps,
-    record: { type: Object, optional: 1 }, // The record is not needed in this widget
-    path: { type: String },
-};
-DocumentationLink.extractProps = ({ attrs }) => {
-    const { path } = attrs;
-    return {
-        path,
-    };
-};
-DocumentationLink.additionalClasses = ["d-inline"];
 
-registry.category("view_widgets").add("documentation_link", DocumentationLink);
+export const documentationLink = {
+    component: DocumentationLink,
+    extractProps: ({ attrs }) => {
+        const { path } = attrs;
+        return {
+            path,
+        };
+    },
+    additionalClasses: ["d-inline"],
+};
+
+registry.category("view_widgets").add("documentation_link", documentationLink);
