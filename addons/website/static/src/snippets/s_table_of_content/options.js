@@ -24,6 +24,14 @@ options.registry.TableOfContent = options.Class.extend({
     /**
      * @override
      */
+    destroy: function () {
+        // The observer needs to be disconnected first.
+        this.observer.disconnect();
+        this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     onRemove() {
         this._disposeScrollSpy();
         const exception = (tocEl) => tocEl === this.$target[0];
