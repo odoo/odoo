@@ -202,6 +202,8 @@ class Repair(models.Model):
 
     def unlink(self):
         for order in self:
+            if order.state == 'done':
+                raise UserError(_('You cannot delete a completed repair order.'))
             if order.state not in ('draft', 'cancel'):
                 raise UserError(_('You can not delete a repair order once it has been confirmed. You must first cancel it.'))
             if order.state == 'cancel' and order.invoice_id and order.invoice_id.posted_before:
