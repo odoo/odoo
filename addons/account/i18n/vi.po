@@ -187,7 +187,7 @@ msgid ""
 "%s has reached its Credit Limit of : %s\n"
 "Total amount due "
 msgstr ""
-"%s đã đạt đến Giới hạn công nợ là: %s\n"
+"%s đã đạt đến Hạn mức Tín dụng là: %s\n"
 "Tổng số tiền phải trả "
 
 #. module: account
@@ -540,7 +540,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr "<em>Công nợ nháp</em>"
+msgstr "<em>Hóa đơn Nháp</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1207,7 +1207,7 @@ msgstr "<strong>Ngày:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
-msgstr "<strong>Ngày thanh toán:</strong>"
+msgstr "<strong>Hạn Thanh toán:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -2148,7 +2148,7 @@ msgstr "Thêm"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add Credit Note"
-msgstr "Thêm công nợ âm"
+msgstr "Thêm Giấy báo Có"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_new_bank_setting
@@ -2774,9 +2774,7 @@ msgstr "Áp dụng tự động cho năm tài chính này."
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery country matches the group."
-msgstr ""
-"Chỉ áp dụng khi quốc gia giao hàng hoặc lên công nợ khớp với dữ liệu trong "
-"nhóm."
+msgstr "Chỉ áp dụng khi quốc gia giao hàng khớp với dữ liệu trong nhóm."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
@@ -3299,8 +3297,8 @@ msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
 "Based on Payment: the tax is due as soon as the payment of the invoice is received."
 msgstr ""
-"Dựa trên Công nợ: thuế phải hoàn thành ngay sau khi hóa đơn được xác nhận.\n"
-"Căn cứ vào Thanh toán: thuế phải trả ngay khi việc thanh toán hoá đơn được nhận."
+"Căn cứ vào Hóa đơn: thuế phải trả ngay sau khi hóa đơn được xác nhận.\n"
+"Căn cứ vào Thanh toán: thuế phải trả ngay sau khi khoản thanh toán hoá đơn được nhận."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
@@ -3383,12 +3381,12 @@ msgstr "Phân tích hoá đơn"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Pay"
-msgstr "Công nợ chờ trả"
+msgstr "Hóa đơn cần Thanh toán"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Công nợ chờ xác nhận"
+msgstr "Hóa đơn cần Xác nhận"
 
 #. module: account
 #. odoo-python
@@ -3558,7 +3556,7 @@ msgstr "Đã hủy"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Invoice"
-msgstr "Công nợ đã hủy"
+msgstr "Hóa đơn Đã hủy"
 
 #. module: account
 #. odoo-python
@@ -3862,8 +3860,8 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
-"Việc đổi tên công ty của bạn là không được phép khi công nợ đã được ghi nhận"
-" cho tài khoản của bạn. Vui lòng liên hệ trực tiếp chúng tôi việc này."
+"Không được phép đổi tên công ty khi đã xuất hóa đơn cho tài khoản của bạn. "
+"Vui lòng liên hệ trực tiếp với chúng tôi để xử lý vấn đề này."
 
 #. module: account
 #. odoo-python
@@ -4762,7 +4760,7 @@ msgstr "Hạn mức tín dụng"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Credit Limits"
-msgstr "Giới hạn công nợ"
+msgstr "Hạn mức Tín dụng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__refund_method
@@ -4783,19 +4781,19 @@ msgstr "Phát sinh có"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
-msgstr "Công nợ âm"
+msgstr "Giấy báo Có"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
-msgstr "Công nợ âm đã tạo"
+msgstr "Giấy báo Có đã được Tạo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 msgid "Credit Note Currency"
-msgstr "Tiền tệ công nợ giảm"
+msgstr "Đơn vị Tiền tệ của Giấy báo Có"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
@@ -4808,7 +4806,7 @@ msgstr "Ghi chú Tín dụng: Đang gửi"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "Các công nợ âm"
+msgstr "Giấy báo Có"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -4827,7 +4825,7 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
-"Công nợ giảm_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 
 #. module: account
@@ -4983,7 +4981,7 @@ msgstr "Tài khoản ngân hàng của khách hàng"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "Giảm công nợ khách hàng"
+msgstr "Giấy báo Có Khách hàng"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__invoice
@@ -5301,7 +5299,7 @@ msgstr "Các tài khoản mặc định"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
 msgid "Default Credit Limit"
-msgstr "Hạn mức công nợ mặc định"
+msgstr "Hạn mức Tín dụng Mặc định"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5895,7 +5893,7 @@ msgstr "Hoá đơn nháp"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "Công nợ điều chỉnh giảm nháp"
+msgstr "Giấy báo Có Nháp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
@@ -5916,12 +5914,12 @@ msgstr "Bút toán Nháp"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Draft Invoice"
-msgstr "Công nợ nháp"
+msgstr "Hóa đơn Nháp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Draft Invoices"
-msgstr "Các công nợ nháp"
+msgstr "Hóa đơn Nháp"
 
 #. module: account
 #. odoo-python
@@ -5949,7 +5947,7 @@ msgstr "Biên lai bán hàng nháp"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
-msgstr "Công nợ nhà cung cấp âm nháp"
+msgstr "Giấy báo Có Nhà cung cấp Nháp"
 
 #. module: account
 #. odoo-python
@@ -6870,10 +6868,10 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Từ báo cáo này, bạn có thể có cái nhìn tổng quan về số tiền được lên hóa đơn"
-" từ nhà cung cấp của bạn. Công cụ tìm kiếm cũng có thể được sử dụng để cá "
-"nhân hóa các báo cáo Công nợ của bạn và do đó, hãy khớp việc phân tích này "
-"theo nhu cầu của bạn."
+"Từ báo cáo này, bạn có thể có cái nhìn tổng quan về số tiền đã lập hóa đơn "
+"từ nhà cung cấp của bạn. Công cụ tìm kiếm có thể được dùng để cá nhân hóa "
+"báo cáo Hóa đơn và hơn nữa là để, đáp ứng việc phân tích theo nhu cầu của "
+"bạn."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -6882,10 +6880,9 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Từ báo cáo này, bạn có thể có cái nhìn tổng quan về số tiền được lên hóa đơn"
-" cho khách hàng của bạn. Công cụ tìm kiếm cũng có thể được sử dụng để cá "
-"nhân hóa các báo cáo Công nợ của bạn và do đó, hãy khớp việc phân tích này "
-"theo nhu cầu của bạn."
+"Từ báo cáo này, bạn có thể có cái nhìn tổng quan về số tiền đã lập hóa đơn "
+"cho khách hàng của bạn. Công cụ tìm kiếm có thể được dùng để cá nhân hóa báo"
+" cáo Hóa đơn và hơn nữa là để, đáp ứng việc phân tích theo nhu cầu của bạn."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -6901,7 +6898,7 @@ msgstr "Hoàn tiền toàn bộ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__modify
 msgid "Full refund and new draft invoice"
-msgstr "Hoàn lại toàn bộ và công nợ nháp mới"
+msgstr "Hoàn tiền toàn bộ và hóa đơn nháp mới "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7871,7 +7868,7 @@ msgstr "Số lượng hoá đơn"
 #: model:mail.message.subtype,name:account.mt_invoice_created
 #, python-format
 msgid "Invoice Created"
-msgstr "Công nợ được tạo"
+msgstr "Hóa đơn đã được Tạo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_invoice_tree
@@ -7924,7 +7921,7 @@ msgstr "Số hóa đơn"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
 msgid "Invoice Online Payment"
-msgstr "Công nợ thanh toán Online"
+msgstr "Hóa đơn Thanh toán Online"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
@@ -8013,12 +8010,12 @@ msgstr "Hóa đơn và credit note nên có cùng thuế suất."
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_line_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_line_ids
 msgid "Invoice lines"
-msgstr "Chi tiết công nợ"
+msgstr "Chi tiết Hóa đơn"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr "Công nợ đã thanh toán hết"
+msgstr "Hóa đơn đã thanh toán"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -8078,7 +8075,7 @@ msgstr "Hóa đơn"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr "Hóa đơn &amp; Công nợ"
+msgstr "Hóa đơn &amp; Hóa đơn Thanh toán"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -8101,23 +8098,23 @@ msgstr "Thống kê hóa đơn"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
-msgstr "Công nợ nợ bạn"
+msgstr "Hóa đơn nợ bạn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr "Công nợ cần xác nhận"
+msgstr "Hóa đơn cần Xác nhận"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr "Khoản công nợ của bút toán đã được đối soát với thanh toán này."
+msgstr "Hóa đơn của bút toán đã được đối soát với khoản thanh toán này."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
-msgstr "Công nợ không có thanh toán"
+msgstr "Hóa đơn không có Thanh toán"
 
 #. module: account
 #. odoo-python
@@ -8249,7 +8246,7 @@ msgstr "Hợp lệ"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
-msgstr "Nó tạo hóa đơn nháp và công nợ nháp bằng cách gửi email."
+msgstr "Hóa đơn và hóa đơn thanh toán nháp được tạo ra bằng cách gửi email."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -8902,7 +8899,7 @@ msgstr "Hóa đơn trễ"
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_users__last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr "Công nợ mới nhất & Ngày thanh toán tương ứng"
+msgstr "Hóa đơn Mới nhất & Ngày Thanh toán Tương ứng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
@@ -9175,11 +9172,11 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Thủ công: Thanh toán hoặc Nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
-"Nhà cung cấp dịch vụ thanh toán: Mỗi nhà cung cấp dịch vụ thanh toán có Phương thức thanh toán riêng. Yêu cầu giao dịch trên / vào thẻ nhờ mã thông báo thanh toán do đối tác lưu khi mua hoặc đăng ký trực tuyến.\n"
-"Séc: Thanh toán hóa đơn bằng séc và in nó từ Odoo.\n"
-"Gửi tiền theo đợt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi một khoản tiền gửi theo đợt cho ngân hàng của bạn. Module account_batch_payment là cần thiết.\n"
-"Chuyển khoản tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển khoản tín dụng SEPA cho ngân hàng của bạn. Module account_sepa là cần thiết.\n"
-"Ghi nợ trực tiếp SEPA: Được thanh toán trong khu vực SEPA nhờ vào giấy ủy nhiệm mà đối tác của bạn sẽ cấp cho bạn. Module account_sepa là cần thiết.\n"
+"Nhà cung cấp Dịch vụ Thanh toán: Mỗi nhà cung cấp dịch vụ thanh toán có Phương thức thanh toán riêng. Yêu cầu giao dịch trên/vào thẻ nhờ token thanh toán do đối tác lưu khi mua hoặc đăng ký online.\n"
+"Séc: Thanh toán hóa đơn bằng séc và in từ Odoo.\n"
+"Gửi Hàng loạt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi hàng loạt tới ngân hàng. Cần có module account_batch_payment.\n"
+"Chuyển Tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp Chuyển Tín dụng SEPA cho ngân hàng của bạn. Cần có module account_sepa.\n"
+"Ghi nợ Trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy nhiệm mà đối tác sẽ cấp cho bạn. Cần có module account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -9503,7 +9500,7 @@ msgstr "Hạn chót hoạt động"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "My Invoices"
-msgstr "Công nợ của tôi"
+msgstr "Hóa đơn của Tôi"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -11565,7 +11562,7 @@ msgstr "Hóa đơn đã đối soát"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr "Công nợ đã đối soát"
+msgstr "Hóa đơn đã Đối soát"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_type
@@ -12903,7 +12900,7 @@ msgstr ""
 msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
-msgstr "Quy định cách làm tròn tổng tiền công nợ"
+msgstr "Quy định cách làm tròn tổng tiền hóa đơn đến độ chính xác làm tròn"
 
 #. module: account
 #. odoo-javascript
@@ -13133,7 +13130,7 @@ msgstr "Tài khoản tạm thời"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into refund/credit note"
-msgstr "Chuyển đổi thành khoản hoàn tiền/công nợ giảm"
+msgstr "Chuyển đổi thành khoản hoàn tiền/giấy báo có"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -14159,7 +14156,7 @@ msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr ""
-"Các công nợ sau sẽ không được gửi qua email, bởi vì khách hàng không có địa "
+"(Các) hóa đơn sau sẽ không được gửi qua email, vì khách hàng không có địa "
 "chỉ email."
 
 #. module: account
@@ -14361,8 +14358,8 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"Đối tác có ít nhất 1 khoản công nợ chưa được đối soát kể từ lần gần nhất bạn"
-" thực  hiện việc khớp hóa đơn và các thanh toán từ các đối tác."
+"Đối tác có ít nhất một khoản ghi nợ và ghi có chưa được đối soát kể từ lần "
+"gần nhất bạn thực hiện việc khớp hóa đơn và các khoản thanh toán."
 
 #. module: account
 #. odoo-python
@@ -15893,7 +15890,7 @@ msgstr "Tài khoản ngân hàng của nhà cung cấp"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_invoice
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Bill"
-msgstr "Công nợ nhà cung cấp"
+msgstr "Hóa đơn Nhà cung cấp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
@@ -15905,7 +15902,7 @@ msgstr "Số hóa đơn nhà cung cấp"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
-msgstr "Công nợ nhà cung cấp đã tạo"
+msgstr "Hóa đơn Nhà cung cấp đã được Tạo"
 
 #. module: account
 #. odoo-python
@@ -16168,6 +16165,16 @@ msgstr "Hàng năm"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -16298,9 +16305,9 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"Bạn có thể cài ở đây mặc định nội dung giao dịch sẽ hiển thị trên công nợ "
-"bán hàng, mỗi khi xác nhận, để giúp khách hàng theo dõi được công nợ khi họ "
-"thực hiện việc thanh toán."
+"Ở đây, bạn có thể cài đặt thông tin mặc định sẽ hiển thị trên hóa đơn khách "
+"hàng, mỗi khi xác nhận, để khách hàng có thể xem được hóa đơn đó khi tiến "
+"hành thanh toán."
 
 #. module: account
 #. odoo-python
@@ -16482,6 +16489,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -16851,9 +16864,9 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"Bạn không thể xác thực hóa đơn với tổng số tiền âm. Bạn nên tạo một công nợ "
-"điều chỉnh giảm thay thế. Sử dụng menu hành động để chuyển đổi nó thành một "
-"công nợ điều chỉnh giảm hoặc hoàn trả."
+"Bạn không thể xác thực hóa đơn với tổng tiền âm. Thay vào đó, bạn nên tạo "
+"một giấy báo có. Sử dụng menu hành động để chuyển đổi thành một giấy báo có "
+"hoặc khoản hoàn tiền."
 
 #. module: account
 #. odoo-python
@@ -17201,8 +17214,8 @@ msgid ""
 "reserves the right to call on the services of a debt recovery company. All "
 "legal expenses will be payable by the client."
 msgstr ""
-"có quyền yêu cầu các dịch vụ của một công ty thu hồi nợ. Tất cả các chi phí "
-"hợp pháp sẽ do khách hàng trả."
+"có quyền sử dụng dịch vụ của một công ty thu hồi nợ. Tất cả các chi phí hợp "
+"pháp sẽ do khách hàng chi trả."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17315,7 +17328,8 @@ msgstr "{{ (object.name or '').replace('/','-') }}"
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Công nợ giảm (Ref {{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} Giấy báo Có (Tham chiếu {{ object.name or "
+"'Không có' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice

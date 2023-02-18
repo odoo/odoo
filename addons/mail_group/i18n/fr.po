@@ -33,7 +33,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "<br/> You'll be notified as soon as some new content is posted."
-msgstr "<br/>Vous serez averti dès qu'un nouveau contenu sera publié."
+msgstr "<br/> Vous serez informé dès qu'un nouveau contenu sera publié."
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
@@ -50,7 +50,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Bonjour,<br/><br/>\n"
-"                Vous avez demandé à être abonné à la liste de diffusion <strong t-out=\"object.name or ''\"/>.\n"
+"                Vous avez demandé à être inscrit à la liste de diffusion <strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
 "                Pour confirmer, veuillez visiter le lien suivant : <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
@@ -73,7 +73,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Bonjour,<br/><br/>\n"
-"                Vous avez demandé à vous désabonner de la liste de diffusion <strong t-out=\"object.name or ''\"/>.\n"
+"                Vous avez demandé à vous désincrire de la liste de diffusion <strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
 "                Pour confirmer, veuillez visiter le lien suivant : <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
@@ -93,7 +93,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "                <p>Bonjour <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Veuillez trouver ci-dessous les directives de la liste de diffusion {{ object.mail_group_id.name }}.</p>\n"
+"                <p>Veuillez trouver ci-dessous les lignes de conduite de la liste de diffusion {{ object.mail_group_id.name }}.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
 "            </div>\n"
 "        "
@@ -105,7 +105,7 @@ msgid ""
 "title=\"Previous message\"/>"
 msgstr ""
 "<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Messages "
-"précédents\" title=\"Messages précédents\"/>"
+"précédents\" title=\"Message précédent\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -146,7 +146,7 @@ msgid ""
 "attachments\" title=\"Hide attachments\"/>"
 msgstr ""
 "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Cacher les pièces"
-" jointes\" title=\"Cacher les pièces jointes\"/>"
+" jointes\" title=\"Masquer les pièces jointes\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -155,7 +155,7 @@ msgid ""
 "title=\"Hide replies\"/>"
 msgstr ""
 "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Cacher les "
-"réponses\" title=\"Cacher les réponses\"/>"
+"réponses\" title=\"Masquer les réponses\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -189,7 +189,7 @@ msgid ""
 "<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
 msgstr ""
-"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Mis sur liste blanche</span>\n"
+"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Sur liste blanche</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Bloqué</span>"
 
 #. module: mail_group
@@ -218,7 +218,7 @@ msgid ""
 "creating new records for this alias."
 msgstr ""
 "Un dictionnaire Python qui sera interprété pour fournir les valeurs par "
-"défaut lors de la création des nouveaux enregistrements pour cet alias."
+"défaut lors de la création de nouveaux enregistrements pour cet alias."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -230,7 +230,7 @@ msgstr "Accepter"
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Accepted"
-msgstr "Acceptée"
+msgstr "Accepté"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
@@ -240,7 +240,7 @@ msgstr "Action"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__active
 msgid "Active"
-msgstr "Active"
+msgstr "Actif"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -261,7 +261,7 @@ msgstr "Alias"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
 msgid "Alias Contact Security"
-msgstr "Sécurité d'alias de contact"
+msgstr "Alias Contact Securité"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_fullname
@@ -291,7 +291,7 @@ msgstr "Tous les messages de ce groupe"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Allowed Emails"
-msgstr "Emails Autorisés"
+msgstr "Emails autorisés"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -301,7 +301,7 @@ msgstr "L'union fait la force"
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
 msgid "Always Allow"
-msgstr "Toujours Autoriser"
+msgstr "Toujours autoriser"
 
 #. module: mail_group
 #. openerp-web
@@ -342,12 +342,12 @@ msgid ""
 " did not match any partner."
 msgstr ""
 "Auteur du message. S'il n'est pas indiqué, email_from peut contenir une "
-"adresse électronique ne correspondant à aucun partenaire."
+"adresse email qui ne correspond à aucun partenaire."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
 msgid "Authorized Group"
-msgstr "Groupe Autorisé"
+msgstr "Groupe autorisé"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
@@ -365,7 +365,7 @@ msgstr "Bannir"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Ban the author of the message ("
-msgstr "Bannir l'auteur du message ("
+msgstr "Bannissez l'auteur du message ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -385,7 +385,7 @@ msgstr "Banni"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Banned Emails"
-msgstr "Emails Bannis"
+msgstr "Emails bannis"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
@@ -415,12 +415,12 @@ msgstr "Configurer un domaine personnalisé"
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
 msgid "Confirm subscription to {{ object.name }}"
-msgstr "Confirmer l'abonnement à {{ object.name }}"
+msgstr "Confirmer l'inscription à {{ object.name }}"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
 msgid "Confirm unsubscription to {{ object.name }}"
-msgstr "Confirmer le désabonnement de {{ object.name }}"
+msgstr "Confirmer la désinscription de {{ object.name }}"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
@@ -463,7 +463,7 @@ msgstr "L'utilisateur actuel est un modérateur du groupe"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Message personnalisé"
+msgstr "Message de rejet personnalisé"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
@@ -538,7 +538,7 @@ msgstr "Tout le monde"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid "Follow-Ups"
-msgstr "Suiveurs"
+msgstr "Suivis"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
@@ -583,12 +583,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Guidelines"
-msgstr "Directives"
+msgstr "Lignes de conduite"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_guidelines
 msgid "Guidelines of group {{ object.mail_group_id.name }}"
-msgstr "Directives du groupe {{ object.mail_group_id.name }}"
+msgstr "Lignes de conduite du groupe {{ object.mail_group_id.name }}"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -620,7 +620,7 @@ msgid ""
 "instead of the default message."
 msgstr ""
 "Si défini, ce contenu sera automatiquement envoyé à tous les utilisateurs "
-"non-autorisés à la place du message par défaut."
+"non autorisés à la place du message par défaut."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
@@ -632,19 +632,19 @@ msgstr "Image"
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Invalid action for URL generation (%s)"
-msgstr "Action non valide pour la génération d'URL (%s)"
+msgstr "Action invalide pour la génération d'URL (%s)"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_moderation.py:0
 #: code:addons/mail_group/models/mail_group_moderation.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr "Adresse email non valide %r"
+msgstr "Adresse email invalide %r"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
-msgstr "Lien de confirmation non valide ou expiré."
+msgstr "Lien de confirmation invalide ou expiré."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
@@ -709,7 +709,7 @@ msgstr "Quitter"
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "Let people subscribe to your list online or manually add them here."
 msgstr ""
-"Permettez aux gens de s'abonner à votre liste en ligne ou ajoutez-les "
+"Permettez aux gens de s'inscrire à votre liste en ligne ou ajoutez-les "
 "manuellement."
 
 #. module: mail_group
@@ -726,17 +726,17 @@ msgstr "Administrateur du groupe de messagerie"
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr "Groupe de messagerie : Abonnement à la liste de diffusion"
+msgstr "Groupe de messagerie : Inscription à la liste de diffusion"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr "Groupe de messagerie : Désabonnement de la liste de diffusion"
+msgstr "Groupe de messagerie : Désinscription de la liste de diffusion"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr "Groupe de messagerie : Envoi des directives"
+msgstr "Groupe de messagerie : Envoyer les lignes de conduite"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
@@ -880,7 +880,7 @@ msgstr "Modéré par"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
 msgid "Moderated Emails"
-msgstr "Emails Modérés"
+msgstr "Emails modérés"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
@@ -952,7 +952,7 @@ msgid ""
 "Need to unsubscribe? <br/>It's right here! <span class=\"fa fa-2x fa-arrow-"
 "down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
-"Voulez-vous vous désabonner ? <br/>C'est par ici ! <span class=\"fa fa-2x "
+"Voulez-vous vous désinscrire ? <br/>C'est par ici ! <span class=\"fa fa-2x "
 "fa-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Lisez ceci "
 "!\"/>"
 
@@ -962,17 +962,17 @@ msgid ""
 "Newcomers on this moderated group will automatically receive the guidelines."
 msgstr ""
 "Les nouveaux arrivants dans ce groupe modéré recevront automatiquement les "
-"directives."
+"lignes de conduite."
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "No Members in this list yet!"
-msgstr "Aucun membre dans cette liste pour le moment !"
+msgstr "Aucun membre dans cette liste pour l'instant !"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid "No Messages in this list yet!"
-msgstr "Aucun message dans cette liste pour le moment !"
+msgstr "Aucun message dans cette liste pour l'instant !"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
@@ -1005,8 +1005,8 @@ msgstr "Nombre de messages dans ce groupe"
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
 msgstr ""
-"Seul un administrateur ou un modérateur peut envoyer des directives aux "
-"membres du groupe."
+"Seul un administrateur ou un modérateur peut envoyer des lignes de conduite "
+"aux membres du groupe."
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
@@ -1054,7 +1054,7 @@ msgid ""
 msgstr ""
 "Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
 "pas nécessairement le modèle donné par alias_model_id (Ex. : project "
-"(parent_model) et task (modèle))"
+"(parent_model) et task (model))"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
@@ -1093,7 +1093,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
 msgid "Permanent Ban"
-msgstr "Exclusion Permanente"
+msgstr "Exclusion permanente"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
@@ -1104,9 +1104,9 @@ msgid ""
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 "Politique pour publier un message sur le document en utilisant la passerelle de messagerie.\n"
-"- tout le monde: tout le monde peut publier\n"
-"- partenaires: partenaires authentifiés uniquement\n"
-"- abonnés: seuls les abonnés du document concerné ou les membres des chaînes suivantes\n"
+"- tout le monde : tout le monde peut publier\n"
+"- partenaires : partenaires authentifiés uniquement\n"
+"- abonnés : seuls les abonnés du document concerné ou les membres des canaux suivants\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -1116,7 +1116,7 @@ msgstr "Publier sur :"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
 msgid "Posted"
-msgstr "Comptabilisé"
+msgstr "Publié"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
@@ -1133,7 +1133,7 @@ msgstr "Liste de diffusion publique"
 #: code:addons/mail_group/wizard/mail_group_message_reject.py:0
 #, python-format
 msgid "Re: %s"
-msgstr "Re: %s"
+msgstr "Re : %s"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
@@ -1151,7 +1151,7 @@ msgstr "Référence"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Reject"
-msgstr "Refuser"
+msgstr "Rejeter"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message_reject
@@ -1166,7 +1166,7 @@ msgstr "Rejeter en silence"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject the message"
-msgstr "Rejeter le message"
+msgstr "Rejetez le message"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
@@ -1203,12 +1203,12 @@ msgstr "Rechercher un groupe de messagerie"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Search Moderation List"
-msgstr "Recherche une liste de Modération"
+msgstr "Rechercher une liste de modération"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
 msgid "Selected group of users"
-msgstr "Sélectionnez un groupe d'utilisateurs "
+msgstr "Sélectionner un groupe d'utilisateurs "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -1234,7 +1234,7 @@ msgstr "Envoyer un email"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Send Guidelines"
-msgstr "Envoyer des directives"
+msgstr "Envoyer les lignes de conduite"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
@@ -1244,26 +1244,27 @@ msgstr "Envoyer un email à l'auteur du message"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new subscribers"
-msgstr "Envoyer les lignes de conduite aux nouveaux abonnés"
+msgstr "Envoyer les lignes de conduite aux nouveaux inscrits"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
-"Envoyé aux personnes qui se sont abonnées à un groupe de diffusion avec les "
-"directives du groupe"
+"Envoyé aux personnes qui se sont inscrites à un groupe de diffusion avec les"
+" lignes de conduite du groupe"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr "Envoyé aux personnes qui se sont désabonnées d'un groupe de diffusion"
+msgstr ""
+"Envoyé aux personnes qui se sont désinscrites d'un groupe de diffusion"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Status"
-msgstr "État"
+msgstr "Statut"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1283,12 +1284,12 @@ msgstr "Sujet"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 #, python-format
 msgid "Subscribe"
-msgstr "S'abonner"
+msgstr "S'inscrire"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr "Confirmation d'abonnement à un groupe de diffusion"
+msgstr "Confirmation de l'inscription à un groupe de diffusion"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
@@ -1333,13 +1334,13 @@ msgstr "Le groupe de ce message ne correspond pas."
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The guidelines description is empty."
-msgstr "La description des directives est vide."
+msgstr "La description des lignes de conduite est vide."
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The guidelines description is missing."
-msgstr "La description des directives manque."
+msgstr "La description des lignes de conduite manque."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
@@ -1350,7 +1351,7 @@ msgid ""
 msgstr ""
 "Le modèle (sorte de document Odoo) auquel correspond cet alias. Chaque email"
 " entrant ne correspondant pas à un enregistrement existant entraînera la "
-"création d'un nouvel enregistrement de ce modèle (Ex. : une tâche d'un "
+"création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
 "projet)"
 
 #. module: mail_group
@@ -1360,7 +1361,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Le nom de l'alias de messagerie, par exemple 'carrières' pour relever les "
-"emails de <jobs@example.odoo.com>"
+"emails de <carrières@example.odoo.com>"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
@@ -1399,14 +1400,14 @@ msgstr "L'enregistrement du message devrait être le groupe."
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is already subscribed."
-msgstr "Cet email est déjà abonné."
+msgstr "Cet email est déjà inscrit."
 
 #. module: mail_group
 #. openerp-web
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is not subscribed."
-msgstr "Cet email n'est pas abonné."
+msgstr "Cet email n'est pas inscrit."
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_message.py:0
@@ -1417,7 +1418,7 @@ msgstr "Ce message ne peut pas être modéré"
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
 msgid "This partner is already subscribed to the group"
-msgstr "Ce partenaire est déjà abonné au groupe."
+msgstr "Ce partenaire est déjà inscrit au groupe."
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_message.py:0
@@ -1437,12 +1438,12 @@ msgstr "À vérifier"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 #, python-format
 msgid "Unsubscribe"
-msgstr "Se désabonner"
+msgstr "Se désinscrire"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Unsubscribe:"
-msgstr "Se désabonner :"
+msgstr "Se désinscrire :"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
@@ -1461,13 +1462,13 @@ msgstr "Liste blanche"
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
 msgid "Whitelisted"
-msgstr "Mis sur liste blanche"
+msgstr "Sur liste blanche"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Wrong status (%s)"
-msgstr "Mauvais status (%s)"
+msgstr "Statut erroné (%s)"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
@@ -1489,7 +1490,7 @@ msgstr "_______________________________________________"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "and send an email to the author ("
-msgstr "et envoyer un email à l'auteur ("
+msgstr "et envoyez un email à l'auteur ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -1504,7 +1505,7 @@ msgstr "par"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"Newsletter\""
-msgstr "par exemple : \"Newsletter\""
+msgstr "par ex. \"Newsletter\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1523,7 +1524,7 @@ msgid ""
 "                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
 "membres<br/>\n"
-"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Trafic\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1543,7 +1544,7 @@ msgstr "réponses"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "subscribed to"
-msgstr "abonné à"
+msgstr "inscrit à"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -1553,9 +1554,9 @@ msgstr "la liste"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "unsubscribed from"
-msgstr "désabonné de"
+msgstr "désinscrit de"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "your email..."
-msgstr "Votre adresse email..."
+msgstr "votre adresse email..."

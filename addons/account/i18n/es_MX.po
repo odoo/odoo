@@ -277,7 +277,7 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". Odoo debe calcular los asientos de diario antes de publicarlas en la "
+". Odoo debe calcular los asientos contables antes de publicarlas en la "
 "divisa de su empresa."
 
 #. module: account
@@ -805,8 +805,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
-"<span class=\"o_form_label\">Se validarán y publicarán todos los asientos de"
-" diario seleccionados. No se pueden modificar después.</span>"
+"<span class=\"o_form_label\">Se validarán y publicarán todos los asientos "
+"contables seleccionados. No se pueden modificar después.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -918,7 +918,7 @@ msgstr "<span class=\"o_stat_text\">Facturado</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "<span class=\"o_stat_text\">Asiento de diario</span>"
+msgstr "<span class=\"o_stat_text\">Asiento contable</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1152,8 +1152,8 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Se generó este asiento a través de la aplicación de Facturación antes "
-"de instalar Contabilidad. Se importó el balance por separado.</span>"
+"<span>Se generó este asiento a través de la aplicación Facturación antes de "
+"instalar Contabilidad. Se importó el balance por separado.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1336,8 +1336,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Un asiento de diario está compuesto por varios apuntes de diario, siendo\n"
-"                cada uno de ellos una transacción de débito o crédito."
+"Un asiento contable está compuesto por varios apuntes contables, cada uno\n"
+"                de ellos es una transacción de débito o crédito."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
@@ -2665,7 +2665,7 @@ msgid ""
 "unique previous posted journal entry."
 msgstr ""
 "Ocurrió un error al calcular la inalterabilidad. Es imposible obtener el "
-"asiento de diario publicado anteriormente."
+"asiento contable publicado anteriormente."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
@@ -3949,7 +3949,7 @@ msgid ""
 "journal items."
 msgstr ""
 "Seleccione esta casilla si la cuenta permite emparejar facturas y pagos con "
-"apuntes de diario."
+"apuntes contables."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -4490,7 +4490,7 @@ msgstr "Crear asientos automáticos"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Create Automatic Entries for selected Journal Items"
-msgstr "Crear asientos automáticos para apuntes de diario seleccionados"
+msgstr "Crear asientos automáticos para apuntes contables seleccionados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -4845,7 +4845,7 @@ msgstr "Notas de crédito"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Abonar registros del diario que coincidan con este."
+msgstr "Abonar apuntes contables que coincidan con este apunte."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
@@ -4910,7 +4910,7 @@ msgstr "Asistente de conversión de divisa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_exchange_journal_id
 msgid "Currency Exchange Journal"
-msgstr "Diario de intercambio de divisa"
+msgstr "Diario de cambio de divisa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_rate
@@ -4935,12 +4935,12 @@ msgstr "Siempre debe proporcionar una divisa para generar un código QR"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr "Divisa del apunte del diario de crédito."
+msgstr "Divisa del apunte contable de crédito."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
 msgid "Currency of the debit journal item."
-msgstr "Divisa del apunte del diario de débito."
+msgstr "Divisa del apunte contable de débito."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__currency_rate
@@ -11123,7 +11123,7 @@ msgstr "Por favor, primero defina un país fiscal para la empresa %s."
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Please install Accounting for this feature"
-msgstr "Instale la aplicación de Contabilidad para obtener esta función"
+msgstr "Instale la aplicación Contabilidad para obtener esta función"
 
 #. module: account
 #. odoo-python
@@ -12545,7 +12545,7 @@ msgstr "Envíe facturas y seguimientos de pagos por correo postal"
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
 msgstr ""
-"Envíe facturas a sus clientes en poco tiempo con la <b>aplicación de "
+"Envíe facturas a sus clientes en poco tiempo con la <b>aplicación "
 "Facturación</b> ."
 
 #. module: account
@@ -14953,6 +14953,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"Ocurrió un error al tratar de agregar el rótulo al PDF original.\n"
+"Asegúrese de que el archivo original sea válido."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16315,6 +16317,19 @@ msgstr "Anualmente"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+"No puede importar \"openning_balance\" si ya se registró el movimiento de "
+"apertura (%s). Si está completamente seguro de que desea modificar el "
+"balance de apertura de sus cuentas, restablezca el movimiento a borrador."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -16632,6 +16647,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Contacte a su contador para imprimir el resultado de la integridad de hash."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""

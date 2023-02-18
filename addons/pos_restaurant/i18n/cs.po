@@ -10,7 +10,7 @@
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # xlu <xlu@seznam.cz>, 2022
 # Martin Trigaux, 2022
-# trendspotter <jirka.p@volny.cz>, 2022
+# Jiří Podhorecký, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
+"Last-Translator: Jiří Podhorecký, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr ""
+msgstr "Použít tiskárnu připojenou k zařízení IoT Box"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -69,7 +69,7 @@ msgstr "Přidat"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.js:0
 #, python-format
 msgid "Add Internal Note"
-msgstr ""
+msgstr "Přidat interní poznámku"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -99,7 +99,7 @@ msgstr "Přidat tlačítko"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr ""
+msgstr "Přidání interních poznámek k objednávkovým řádkům pro kuchyň"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -126,17 +126,17 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Povolit rozdělení účtu"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
 msgid "Allow custom internal notes on Orderlines."
-msgstr ""
+msgstr "Povolit vlastní interní poznámky na řádcích objednávek."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "Umožnit tisk účtenky před platbou"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -237,7 +237,7 @@ msgstr "Rozdělit Účet"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr ""
+msgstr "Blokovaná akce"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -347,7 +347,7 @@ msgstr "Nápoje"
 #: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
 #, python-format
 msgid "Due to a connection error, the orders are not synchronized."
-msgstr ""
+msgstr "Z důvodu chyby připojení nejsou objednávky synchronizovány."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -365,11 +365,15 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Každá tiskárna objednávek má IP adresu, která definuje IoT Box/Hardware "
+"Proxy, kde lze tiskárnu najít, a seznam kategorií produktů. Tiskárna "
+"objednávek bude tisknout aktualizace pouze pro produkty, které patří do "
+"jedné z jejích kategorií."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "Předčasný tisk účtenek"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -389,7 +393,7 @@ msgstr "Umožňuje rozdělení účtu na prodejním místě."
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Failed in printing the changes in the order"
-msgstr ""
+msgstr "Nepodařilo se vytisknout změny v objednávce"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -427,7 +431,7 @@ msgstr "Podlahy a stoly"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "Mapa lokálu a stolů"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -524,7 +528,7 @@ msgstr "Interní poznámka"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
 msgid "Internal Note added by the waiter."
-msgstr ""
+msgstr "Interní poznámka přidaná číšníkem."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -541,17 +545,17 @@ msgstr "Je bar / restaurace"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Keep Open"
-msgstr ""
+msgstr "Otevřeno"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Notes"
-msgstr ""
+msgstr "Poznámky kuchyně"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Printers"
-msgstr ""
+msgstr "Tiskárny kuchyně"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor____last_update
@@ -577,7 +581,7 @@ msgstr "Naposled upraveno"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "Poslední vytištěný stav objednávky"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -844,7 +848,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__product_categories_ids
 msgid "Printed Product Categories"
-msgstr ""
+msgstr "Kategorie tištěných produktů"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__name
@@ -866,7 +870,7 @@ msgstr "Tiskárny"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Printing failed"
-msgstr ""
+msgstr "Tisk se nezdařil"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -938,7 +942,7 @@ msgstr "Opakovaný tisk účtenek"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Restaurant &amp; Bar"
-msgstr ""
+msgstr "Restaurant &amp; Bar"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -1050,7 +1054,7 @@ msgstr "Podpis"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
 msgid "Skip line when sending ticket to kitchen printers."
-msgstr ""
+msgstr "Přeskočení řádku při odesílání tiketu do tiskárny v kuchyni."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
@@ -1144,7 +1148,7 @@ msgstr "Počet zákazníků, kteří byli touto objednávkou obslouženi."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "Barva pozadí lokálu ve formátu kompatibilním s html"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1197,7 +1201,7 @@ msgstr "Šířka stolu v pixelech"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/PrintBillButton.js:0
 #, python-format
 msgid "There are no order lines"
-msgstr ""
+msgstr "Nejsou zde žádné objednávky"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1214,6 +1218,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
+"Tato objednávka ještě není synchronizována se serverem. Ujistěte se, že je "
+"synchronizována, a zkuste to znovu."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1274,35 +1280,35 @@ msgstr "Tyrkysový"
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to change background color"
-msgstr ""
+msgstr "Nelze změnit barvu pozadí"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to create table because you are offline."
-msgstr ""
+msgstr "Nelze vytvořit tabulku, protože jste offline."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to delete table"
-msgstr ""
+msgstr "Nelze smazat tabulku"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to fetch orders"
-msgstr ""
+msgstr "Nelze načíst objednávky"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to get orders count"
-msgstr ""
+msgstr "Nelze zjistit počet objednávek"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1316,7 +1322,7 @@ msgstr "Neznámá chyba"
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Unsynced order"
-msgstr ""
+msgstr "Nesynchronizovaná objednávka"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid
@@ -1382,6 +1388,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
+"Lokál používaný v relaci PoS nelze odstranit, je třeba relaci (relace) "
+"nejprve uzavřít:\n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1391,6 +1399,8 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
+"Tabulku, která se používá v relaci PoS, nelze odebrat, nejprve relaci "
+"(relace) zavřete."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1434,3 +1444,9 @@ msgstr "tlačítko na panelu nástrojů  pro vytvoření nových stolů."
 #, python-format
 msgid "discount"
 msgstr "sleva"
+
+#. module: pos_restaurant
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash Bar"
+msgstr ""

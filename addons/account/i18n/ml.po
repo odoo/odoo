@@ -6181,7 +6181,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "ഫിസിക്കൽ പൊസിഷൻ"
+msgstr "ഫിസ്കൽ പൊസിഷൻ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__name
@@ -7571,7 +7571,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr ""
+msgstr "ഇൻവോയ്സ് ചെയ്തു"
 
 #. module: account
 #. odoo-python
@@ -7589,7 +7589,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "ഇൻവോയ്സുകൾ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
@@ -15250,6 +15250,16 @@ msgstr "വർഷം തോറും"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -15516,6 +15526,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
