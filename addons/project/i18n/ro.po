@@ -28,7 +28,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter.xml:0
 #, python-format
 msgid "!!widget.options.res_id && widget.get('messages') || []"
-msgstr ""
+msgstr "!!widget.options.res_id && widget.get('messages') || []"
 
 #. module: project
 #. openerp-web
@@ -279,6 +279,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"fa fa-lock text-muted\"/><span class=\"text-muted\"> Private</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"fa fa-lock text-muted\"/><span class=\"text-muted\"> Privat</span>"
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -363,6 +365,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Dragă <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Vă mulțumim pentru cererea dvs.<br/>\n"
+"    Dacă aveți întrebări, vă rugăm să ne contactați.\n"
+"    <br/><br/>\n"
+"    Vă mulțumim,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -411,7 +425,7 @@ msgstr "<p><em> Număr de sarcini: %(tasks_count)s</em></p>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Stage:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">Stadiu:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -425,7 +439,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o mr-2\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-clock-o mr-2\" title=\"Date\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -532,7 +546,7 @@ msgstr "<strong class=\"d-block mb-2\">Fișiere Atașate</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assignees</strong>"
-msgstr ""
+msgstr "<strong>Atribuitori</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -557,7 +571,7 @@ msgstr "<strong>Istoric mesaje și comunicare</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_planned_hours_template
 msgid "<strong>Planned Hours:</strong>"
-msgstr ""
+msgstr "<strong>Ore planificate:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -784,7 +798,7 @@ msgstr "Toate sarcinile"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
 msgid "Allow Sub-tasks"
-msgstr ""
+msgstr "Permite sub-sarcini"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -883,12 +897,12 @@ msgstr "Sigur doriți să ștergeți aceste etape?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow"
-msgstr ""
+msgstr "Săgeată"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow icon"
-msgstr ""
+msgstr "Pictogramă săgeată"
 
 #. module: project
 #. openerp-web
@@ -906,12 +920,12 @@ msgstr "Atribuie-mi"
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignee"
-msgstr ""
+msgstr " atribuit"
 
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignees"
-msgstr ""
+msgstr " atribuiți"
 
 #. module: project
 #. openerp-web
@@ -1149,7 +1163,7 @@ msgstr "Bifati daca contactul este o companie, in caz contrar este o persoana"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
 msgid "Child Text"
-msgstr ""
+msgstr "Text copil"
 
 #. module: project
 #. openerp-web
@@ -1236,6 +1250,10 @@ msgid ""
 " who print the t-shirt. Organize priorities amongst orders using the %s "
 "icon. %s"
 msgstr ""
+"Comunicați cu clienții despre sarcină folosind portalul de e-mail. Atașați "
+"designuri de logo la sarcină, astfel încât informațiile să circule de la "
+"designeri la lucrătorii care tipăresc tricoul. Organizați prioritățile între"
+" comenzile utilizând pictograma %s. %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1460,7 +1478,7 @@ msgstr "Evaluările clienților pe sarcină"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Customer Satisfaction"
-msgstr ""
+msgstr "Satisfacția clienților"
 
 #. module: project
 #. openerp-web
@@ -1795,7 +1813,7 @@ msgstr "Meniul derulant"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "E.g: Product Launch"
-msgstr ""
+msgstr "Ex: Lansare produs"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
@@ -1823,6 +1841,8 @@ msgid ""
 "Edit tasks' description collaboratively in real time. See each author's text"
 " in a distinct color."
 msgstr ""
+"Editați descrierea sarcinilor în mod colaborativ în timp real. Vedeți textul"
+" fiecărui autor într-o culoare distinctă."
 
 #. module: project
 #. openerp-web
@@ -2354,17 +2374,17 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Invite People"
-msgstr ""
+msgstr "Invitați persoane"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "Invitați angajați"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all employees"
-msgstr ""
+msgstr "Invitați utilizatori portal și toți angajații"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -2387,7 +2407,7 @@ msgstr "Este urmăritor"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
 msgid "Is Private"
-msgstr ""
+msgstr "Este privat"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_is_company
@@ -2775,7 +2795,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr ""
+msgstr "Amestec"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__mon
@@ -3022,7 +3042,7 @@ msgstr "Nu s-au găsit sarcini. Să creăm una!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid "No updates found. Let's create one!"
-msgstr ""
+msgstr "Nu s-au găsit actualizări. Să creăm una!"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3084,12 +3104,12 @@ msgstr "Numărul de zile lucrătoare pentru a deschide sarcina"
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_hours_close
 msgid "Number of Working Hours to close the task"
-msgstr ""
+msgstr "Numărul de ore de lucru pentru a închide sarcina"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_hours_open
 msgid "Number of Working Hours to open the task"
-msgstr ""
+msgstr "Numărul de ore de lucru pentru a deschide sarcina"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
@@ -3297,12 +3317,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Personal Stage"
-msgstr ""
+msgstr "Stadiu personal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr ""
+msgstr "Starea stadiului personal"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
@@ -4333,7 +4353,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "Stop Recurrence"
-msgstr ""
+msgstr "Oprește recurența"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
@@ -4901,22 +4921,26 @@ msgstr "Urmărește satisfacția clienților pe sarcini"
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
 msgstr ""
+"Urmărește punctele majore de progres care trebuie atinse pentru a atinge "
+"succesul."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the costs and revenues linked to your projects"
-msgstr ""
+msgstr "Urmăriți costurile și veniturile legate de proiectele dvs."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr ""
+msgstr "Urmăriți progresul proiectelor dvs."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Track the progress of your projects from their creation to their closing."
 msgstr ""
+"Urmăriți progresul proiectelor dvs. de la crearea lor până la închiderea "
+"lor."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
@@ -4963,7 +4987,7 @@ msgstr "Dezarhivează"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "Unassign Me"
-msgstr ""
+msgstr "Dezatribuie-mi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -4974,7 +4998,7 @@ msgstr "Neatribuit"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Unassigned Tasks"
-msgstr ""
+msgstr "Sarcini neatribuite"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5015,7 +5039,7 @@ msgstr "Actualizare"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use %s and %s bullets to indicate the status of a task. %s"
-msgstr ""
+msgstr "Utilizați %s și %s bullete pentru a indica starea unei sarcini. %s"
 
 #. module: project
 #. openerp-web
@@ -5079,6 +5103,8 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
+"Folosiți conversația pentru a <b>trimite e-mailuri</b> și pentru a comunica eficient cu clienții dvs. \n"
+"Adăugați noi persoane la lista de urmăritori pentru a le face cunoscute principalele modificări ale acestei sarcini."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5237,6 +5263,7 @@ msgstr ""
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
+"Nu puteți arhiva sarcinile recurente. Dezactivați mai întâi recurența."
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -5245,12 +5272,13 @@ msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
 msgstr ""
+"Nu puteți schimba compania unui cont analitic dacă este legat de un proiect."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create cyclic dependency."
-msgstr ""
+msgstr "Nu puteți crea o dependență ciclică."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5330,7 +5358,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. New Design"
-msgstr ""
+msgstr "de exemplu : New Design"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -5345,7 +5373,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "for customer:"
-msgstr ""
+msgstr "pentru client:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -5355,7 +5383,7 @@ msgstr "pentru proiect:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in priority:"
-msgstr ""
+msgstr "în prioritate:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -5365,7 +5393,7 @@ msgstr "in etapa:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "in status:"
-msgstr ""
+msgstr "în starea:"
 
 #. module: project
 #: code:addons/project/models/project.py:0
