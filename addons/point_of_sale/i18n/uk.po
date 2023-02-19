@@ -3,21 +3,15 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Zoriana Zaiats, 2018
-# Yaroslav Molochko <onorua@gmail.com>, 2018
-# trolka <trolka.olug@gmail.com>, 2018
-# ТАрас <tratatuta@i.ua>, 2020
-# Bohdan Lisnenko, 2020
-# Martin Trigaux, 2022
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
-"PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3139,6 +3133,13 @@ msgid "Maximum Exceeded"
 msgstr "Максимум перевищено"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Помилка доставлення повідомлення"
@@ -4058,6 +4059,8 @@ msgid "Picking Type"
 msgstr "Тип комплектування"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -5794,6 +5797,15 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
@@ -6128,6 +6140,16 @@ msgid ""
 msgstr ""
 "В компанії не встановлено плану рахунків. Перейдіть у налаштування "
 "виставлення рахунків для встановлення плану рахунків."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6546,6 +6568,17 @@ msgid "Type of the exception activity on record."
 msgstr "Тип дії виключення на записі."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Це замовлення ще не синхронізовано із сервером. Переконайтеся, що він "
+"синхронізований, а потім повторіть спробу."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6710,9 +6743,10 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "ПДВ:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr "Несинхронізоване замовлення"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6849,6 +6883,12 @@ msgid ""
 msgstr ""
 "Ви намагаєтеся продати товари з серійними/партійними номерами, але деякі з них не встановлені.\n"
 "Все одно продовжити??"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0

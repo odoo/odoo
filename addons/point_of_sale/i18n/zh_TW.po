@@ -3,21 +3,15 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Bill Hsu <hcm86@icloud.com>, 2018
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
-# Michael Yeung, 2019
-# Mandy Choy <mnc@odoo.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2021
 # Martin Trigaux, 2022
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
-"PO-Revision-Date: 2016-08-05 13:07+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:52+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3054,6 +3048,13 @@ msgid "Maximum Exceeded"
 msgstr "超過最大值"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "訊息遞送錯誤"
@@ -3958,6 +3959,8 @@ msgid "Picking Type"
 msgstr "揀貨類型"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -5668,6 +5671,15 @@ msgstr "營業點僅支持“增加捨入明細”捨入策略."
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr "您的付款明細的金額必須四捨五入以驗證交易."
@@ -5962,6 +5974,16 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr "公司沒有設定會計科目表. 請轉到會計設定以安裝會計科目表."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6351,6 +6373,15 @@ msgid "Type of the exception activity on record."
 msgstr "記錄的異常活動的類型。"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6510,9 +6541,10 @@ msgstr "UUID"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "稅金:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -6641,6 +6673,12 @@ msgstr "您不被允許更改此數量"
 msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
 msgstr ""
 
 #. module: point_of_sale
