@@ -13,7 +13,8 @@ class MrpProduction(models.Model):
 
     move_line_raw_ids = fields.One2many(
         'stock.move.line', string="Detail Component", readonly=False,
-        inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
+        inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids',
+        search="_search_move_line_raw_ids"
     )
     subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
     incoming_picking = fields.Many2one(related='move_finished_ids.move_dest_ids.picking_id')
@@ -42,6 +43,16 @@ class MrpProduction(models.Model):
 
         args = expression.AND([args, domain])
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+    def _search_move_line_raw_ids(self, operator, operand):
+        """
+        Allow the "mapped" for unlink method
+        :rtype: list
+        """
+        if operator not in ("in", "="):
+            raise NotImplementedError("Unsupported 'Not In' operation on visitors registrations")
+
+        return [("id", operator, operand)]
 
     @api.depends('move_raw_ids.move_line_ids')
     def _compute_move_line_raw_ids(self):
