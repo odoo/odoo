@@ -2561,7 +2561,7 @@ QUnit.module("Views", (hooks) => {
 
         // Select state in kanban
         await click(getCard(0), ".o_status");
-        await click(getCard(0), ".o_field_state_selection .dropdown-item:first-child");
+        await click(getCard(0), ".o_field_state_selection .dropdown-item:nth-child(2)");
 
         assert.hasClass(
             target.querySelector(".o_status"),
@@ -11651,7 +11651,7 @@ QUnit.module("Views", (hooks) => {
         // Changes the state of the first record of the "Yes" column to "def"
         // The updated record should remain visible
         await click(getCard(2), ".o_status");
-        await click(getCard(2), ".o_field_state_selection .dropdown-item:first-child");
+        await click(getCard(2), ".o_field_state_selection .dropdown-item:nth-child(2)");
 
         assert.deepEqual(getCounters(), ["1", "1"]);
         assert.containsN(getColumn(1), ".o_kanban_record", 2);
