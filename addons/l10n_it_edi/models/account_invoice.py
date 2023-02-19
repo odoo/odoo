@@ -39,6 +39,12 @@ class AccountMove(models.Model):
             invoice.l10n_it_einvoice_id = einvoice.attachment_id
             invoice.l10n_it_einvoice_name = einvoice.attachment_id.name
 
+    @api.depends('l10n_it_edi_transaction')
+    def _compute_show_reset_to_draft_button(self):
+        super(AccountMove, self)._compute_show_reset_to_draft_button()
+        for move in self.filtered(lambda m: m.l10n_it_edi_transaction):
+            move.show_reset_to_draft_button = False
+
     def invoice_generate_xml(self):
         self.ensure_one()
         report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
