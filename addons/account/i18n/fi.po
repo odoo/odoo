@@ -13399,6 +13399,8 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
+"Tätä tuotetta on jo käytetty kirjatuilla päiväkirjavienneillä.\n"
+"Jos haluat muuttaa sen mittayksikköä, arkistoi tämä tuota ja luo uusi tuote."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -13758,7 +13760,7 @@ msgstr "Kirjaamatta"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "Kirjaamattomat viennit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -14579,6 +14581,12 @@ msgstr ""
 "kohteita"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -14635,11 +14643,10 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Et voi muokata seuraavia kenttiä, koska päiväkirjalla on aktivoitu "
-"päiväkirjavientien lukitus: %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15126,7 +15133,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Your taxes have been updated !"
-msgstr ""
+msgstr "Verot ovat päivitetty!"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0

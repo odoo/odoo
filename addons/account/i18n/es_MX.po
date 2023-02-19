@@ -766,8 +766,8 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Se generó este asiento a través de la aplicación de Facturación antes "
-"de instalar Contabilidad. Se importó el balance por separado.</span>"
+"<span>Se generó este asiento a través de la aplicación Facturación antes de "
+"instalar Contabilidad. Se importó el balance por separado.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -10760,8 +10760,8 @@ msgstr "Envíe facturas y seguimientos de pagos por correo"
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
 msgstr ""
-"Envíe facturas a sus clientes en poco tiempo con la <b>aplicación de "
-"Facturación</b> ."
+"Envíe facturas a sus clientes en poco tiempo con la aplicación "
+"<b>Facturación</b>."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -14749,6 +14749,13 @@ msgstr ""
 "No puede cambiar la divisa de la empresa ya que contiene asientos contables"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Contacte a su contador para imprimir el resultado de la integridad de hash."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -14806,11 +14813,10 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"No puede editar los siguientes campos debido a que el modo restringido está "
-"activado en el diario: %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
