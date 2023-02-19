@@ -51,9 +51,6 @@ export class StateSelectionField extends Component {
             return [state, this.props.record.data[`legend_${state}`] || label];
         });
     }
-    get availableOptions() {
-        return this.options.filter((o) => o[0] !== this.currentValue);
-    }
     get currentValue() {
         return this.props.value || this.options[0][0];
     }
