@@ -222,7 +222,8 @@ class TestMailNotifyAPI(TestMessagePostCommon):
 
         # test notifying the class (void recordset)
         classify_res = self.env[base_record._name]._notify_get_recipients_classify(
-            pdata, 'My Custom Model Name', msg_vals=notify_msg_vals
+            self.env['mail.message'], pdata, 'My Custom Model Name',
+            msg_vals=notify_msg_vals,
         )
         # find back information for each recipients
         partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
@@ -249,7 +250,9 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                     'res_id': res_id,
                 })
                 classify_res = self.env[model].browse(res_id)._notify_get_recipients_classify(
-                    pdata, 'Test', msg_vals=notify_msg_vals)
+                    self.env['mail.message'], pdata, 'Test',
+                    msg_vals=notify_msg_vals,
+                )
                 # find back information for partner
                 partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
                 emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
@@ -271,7 +274,9 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                     'res_id': res_id,
                 })
                 classify_res = base_record._notify_get_recipients_classify(
-                    pdata, 'Test', msg_vals=notify_msg_vals)
+                    self.env['mail.message'], pdata, 'Test',
+                    msg_vals=notify_msg_vals,
+                )
                 # find back information for partner
                 partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
                 emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)

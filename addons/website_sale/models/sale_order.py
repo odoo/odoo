@@ -402,10 +402,12 @@ class SaleOrder(models.Model):
             self.cart_recovery_email_sent = True
         return super(SaleOrder, self)._message_post_after_hook(message, msg_vals)
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ In case of cart recovery email, update link to redirect directly
         to the cart (like ``mail_template_sale_cart_recovery`` template). """
-        groups = super(SaleOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         if not self:
             return groups
 

@@ -16,8 +16,10 @@ class MailThread(models.AbstractModel):
         domain=lambda self: [('model', '=', self._name), '|', ('message_type', '=', 'comment'), ('message_type', '=', 'email')], auto_join=True,
         help="Website communication history")
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
-        groups = super()._notify_get_recipients_groups(msg_vals=msg_vals)
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         if not self:
             return groups
 
@@ -37,11 +39,11 @@ class MailThread(models.AbstractModel):
 
             new_group = [
                 ('portal_customer', lambda pdata: pdata['id'] == customer.id, {
-                    'has_button_access': True,
+                    'active': True,
                     'button_access': {
                         'url': access_link,
                     },
-                    'notification_is_customer': True,
+                    'has_button_access': True,
                 })
             ]
         else:
