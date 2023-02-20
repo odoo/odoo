@@ -2,6 +2,7 @@
 
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 import { click, getFixture, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { dom, nextTick } from 'web.test_utils';
@@ -75,6 +76,12 @@ QUnit.module('mail', {}, function () {
     QUnit.test('many2many_avatar_user in kanban view', async function (assert) {
         assert.expect(5);
 
+        patchWithCleanup(browser, {
+            setTimeout: async (fn) => {
+                await new Promise((r) => setTimeout(r))
+                fn();
+            },
+        });
         const pyEnv = await startServer();
         const resUsersIds = pyEnv['res.users'].create(
             [{ name: "Mario" }, { name: "Yoshi" }, { name: "Luigi" }, { name: "Tapu" }],
