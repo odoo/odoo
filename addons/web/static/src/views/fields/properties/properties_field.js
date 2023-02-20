@@ -49,6 +49,7 @@ export class PropertiesField extends Component {
 
         const field = this.props.record.fields[this.props.name];
         this.definitionRecordField = field.definition_record;
+        this._updateFoldedSeparatorsState();
 
         onWillStart(async () => {
             await this._checkDefinitionAccess();
@@ -73,6 +74,15 @@ export class PropertiesField extends Component {
     /* --------------------------------------------------------
      * Public methods / Getters
      * -------------------------------------------------------- */
+
+    /**
+     * Return the number of columns
+     *
+     * @returns {object}
+     */
+    get columns() {
+        return this.env.isSmall ? 1 : this.props.columns;
+    }
 
     /**
      * Return the current context
@@ -103,27 +113,34 @@ export class PropertiesField extends Component {
      * @returns {Array<Array>}
      */
     get groupedPropertiesList() {
-        const columns = this.env.isSmall ? 1 : this.props.columns;
-        // If no properties, assure that the "Add Property" button is shown.
-        const res = [...Array(columns)].map((col) => []);
-        this.propertiesList.forEach((val, index) => {
-            res[index % columns].push(val);
+        const propertiesList = this.propertiesList;
+        propertiesList.add({nextProperty: true});  // flag to know where will be inserted the next property
+
+        const groupedProperties = !propertiesList.length || propertiesList[0].type !== "separator"
+            ? [{title: null, name: null, elements: []}] : [];
+
+        this.propertiesList.forEach(property => {
+            if (property.type === "separator") {
+                groupedProperties.push({title: property.string, name: property.name, elements: []});
+            } else {
+                groupedProperties[groupedProperties.length - 1].elements.push(property);
+            }
         });
 
-        // Compute the group for each properties, based on the "separator" properties type
-        // A properties is in a given group, if it's separator is in the same column
-        // and is the nearest above it.
-        for (const column of res) {
-            let currentGroup = null;
-            for (const property of column) {
-                if (property.type === "separator") {
-                    currentGroup = property.name;
-                }
-                property.group = currentGroup;
+        if (groupedProperties.length === 1) {
+            // only one group, split this group in the columns to take the entire width
+            const invisible = !groupedProperties[0].name;
+            groupedProperties[0].elements = [];
+            groupedProperties[0].invisible = invisible;
+            for (let col = 1; col < this.columns; ++col) {
+                groupedProperties.push({title: null, name: groupedProperties[0].name, elements: [], invisible});
             }
+            this.propertiesList.forEach((val, index) => {
+                groupedProperties[index % this.columns].elements.push(val);
+            });
         }
 
-        return res;
+        return groupedProperties;
     }
 
     /**
@@ -331,6 +348,9 @@ export class PropertiesField extends Component {
      * @param {string} propertyName, Name of the separator property
      */
     onSeparatorClick(propertyName) {
+        if (!propertyName) {
+            return;
+        }
         const fold = JSON.parse(window.localStorage.getItem("properties.fold")) || {};
         const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
         const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
@@ -348,6 +368,9 @@ export class PropertiesField extends Component {
         }
         fold[storageKey] = foldedSeparators;
         window.localStorage.setItem("properties.fold", JSON.stringify(fold));
+        this._updateFoldedSeparatorsState();
+
+        console.log(fold[storageKey])
     }
 
     /**
@@ -392,7 +415,7 @@ export class PropertiesField extends Component {
             .querySelector(".o_field_property_definition")
             .closest(".o_popover");
         const targetElement = document.querySelector(
-            `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
+            `*[property-name="${propertyName}"] .o_field_property_open_popover`
         );
 
         reposition(targetElement, popover, { position: "top", margin: 10 });
