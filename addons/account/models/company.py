@@ -4,6 +4,7 @@ from datetime import timedelta, datetime, date
 import calendar
 from dateutil.relativedelta import relativedelta
 
+from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.mail import is_html_empty
@@ -571,8 +572,13 @@ class ResCompany(models.Model):
             previous_hash = u''
             start_move_info = []
             hash_corrupted = False
+            current_hash_version = 1
             for move in moves:
-                if move.inalterable_hash != move._compute_hash(previous_hash=previous_hash):
+                computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
+                while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
+                    current_hash_version += 1
+                    computed_hash = move.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
+                if move.inalterable_hash != computed_hash:
                     rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.', move.id)})
                     results_by_journal['results'].append(rslt)
                     hash_corrupted = True

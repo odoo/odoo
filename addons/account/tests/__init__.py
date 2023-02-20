@@ -9,6 +9,7 @@ from . import test_account_move_in_refund
 from . import test_account_move_entry
 from . import test_account_move_date_algorithm
 from . import test_invoice_tax_totals
+from . import test_account_inalterable_hash
 from . import test_account_journal
 from . import test_account_account
 from . import test_account_tax

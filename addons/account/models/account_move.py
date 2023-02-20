@@ -18,10 +18,7 @@ import json
 import re
 import warnings
 
-
-#forbidden fields
-INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
-INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
+MAX_HASH_VERSION = 2
 
 
 def calc_check_digits(number):
@@ -214,6 +211,7 @@ class AccountMove(models.Model):
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         check_company=True)
     payment_reference = fields.Char(string='Payment Reference', index=True, copy=False,
+        compute='_compute_payment_reference', store=True, readonly=False,
         help="The payment reference to set on journal items.")
     payment_id = fields.Many2one(
         index=True,
@@ -1334,6 +1332,14 @@ class AccountMove(models.Model):
                     'message': "%s\n\n%s" % (changed, detected)
                 }}
 
+    @api.depends('state')
+    def _compute_payment_reference(self):
+        for move in self.filtered(lambda m: (
+            m.state == 'posted'
+            and m._auto_compute_invoice_reference()
+        )):
+            move.payment_reference = move._get_invoice_computed_reference()
+
     def _get_last_sequence_domain(self, relaxed=False):
         self.ensure_one()
         if not self.date or not self.journal_id:
@@ -2338,8 +2344,8 @@ class AccountMove(models.Model):
 
     def write(self, vals):
         for move in self:
-            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS)):
-                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
+            if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(move._get_integrity_hash_fields())):
+                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(move._get_integrity_hash_fields()))
             if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
                 raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
@@ -3110,15 +3116,6 @@ class AccountMove(models.Model):
         for move in to_post:
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
-            # Compute 'ref' for 'out_invoice'.
-            if move._auto_compute_invoice_reference():
-                to_write = {
-                    'payment_reference': move._get_invoice_computed_reference(),
-                    'line_ids': []
-                }
-                for line in move.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-                    to_write['line_ids'].append((1, line.id, {'name': to_write['payment_reference']}))
-                move.write(to_write)
 
         for move in to_post:
             if move.is_sale_document() \
@@ -3304,6 +3301,18 @@ class AccountMove(models.Model):
 
         return report_action
 
+    def _get_integrity_hash_fields(self):
+        # Use the latest hash version by default, but keep the old one for backward compatibility when generating the integrity report.
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        if hash_version == 1:
+            return ['date', 'journal_id', 'company_id']
+        elif hash_version == MAX_HASH_VERSION:
+            return ['name', 'date', 'journal_id', 'company_id']
+        raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
+
+    def _get_integrity_hash_fields_and_subfields(self):
+        return self._get_integrity_hash_fields() + [f'line_ids.{subfield}' for subfield in self.line_ids._get_integrity_hash_fields()]
+
     def _get_new_hash(self, secure_seq_number):
         """ Returns the hash to write on journal entries when they get posted"""
         self.ensure_one()
@@ -3327,6 +3336,8 @@ class AccountMove(models.Model):
         hash_string = sha256((previous_hash + self.string_to_hash).encode('utf-8'))
         return hash_string.hexdigest()
 
+    @api.depends(lambda self: self._get_integrity_hash_fields_and_subfields())
+    @api.depends_context('hash_version')
     def _compute_string_to_hash(self):
         def _getattrstring(obj, field_str):
             field_value = obj[field_str]
@@ -3336,11 +3347,11 @@ class AccountMove(models.Model):
 
         for move in self:
             values = {}
-            for field in INTEGRITY_HASH_MOVE_FIELDS:
+            for field in move._get_integrity_hash_fields():
                 values[field] = _getattrstring(move, field)
 
             for line in move.line_ids:
-                for field in INTEGRITY_HASH_LINE_FIELDS:
+                for field in line._get_integrity_hash_fields():
                     k = 'line_%d_%s' % (line.id, field)
                     values[k] = _getattrstring(line, field)
             #make the json serialization canonical
@@ -3669,7 +3680,7 @@ class AccountMoveLine(models.Model):
     account_internal_group = fields.Selection(related='account_id.user_type_id.internal_group', string="Internal Group", readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Label', tracking=True)
+    name = fields.Char(string='Label', tracking=True, compute='_compute_name', store=True, readonly=False)
     quantity = fields.Float(string='Quantity',
         default=lambda self: 0 if self._context.get('default_display_type') else 1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold. "
@@ -3853,6 +3864,15 @@ class AccountMoveLine(models.Model):
             account = repartition_line.account_id
         return account
 
+    def _get_integrity_hash_fields(self):
+        # Use the new hash version by default, but keep the old one for backward compatibility when generating the integrity report.
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+        if hash_version == 1:
+            return ['debit', 'credit', 'account_id', 'partner_id']
+        elif hash_version == MAX_HASH_VERSION:
+            return ['name', 'debit', 'credit', 'account_id', 'partner_id']
+        raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
+
     def _get_computed_name(self):
         self.ensure_one()
 
@@ -4003,6 +4023,11 @@ class AccountMoveLine(models.Model):
                 )
                 if rec:
                     record.analytic_tag_ids = rec.analytic_tag_ids
+
+    @api.depends('move_id.payment_reference')
+    def _compute_name(self):
+        for line in self.filtered(lambda l: not l.name and l.account_id.user_type_id.type in ('receivable', 'payable')):
+            line.name = line.move_id.payment_reference
 
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
         self.ensure_one()
@@ -4724,10 +4749,18 @@ class AccountMoveLine(models.Model):
         if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
 
+        inalterable_fields = set(self._get_integrity_hash_fields()).union({'inalterable_hash', 'secure_sequence_number'})
+        hashed_moves = self.move_id.filtered('inalterable_hash')
+        violated_fields = set(vals) & inalterable_fields
+        if hashed_moves and violated_fields:
+            raise UserError(_(
+                "You cannot edit the following fields: %s.\n"
+                "The following entries are already hashed:\n%s",
+                ', '.join(f['string'] for f in self.fields_get(violated_fields).values()),
+                '\n'.join(hashed_moves.mapped('name')),
+            ))
         for line in self:
             if line.parent_state == 'posted':
-                if line.move_id.restrict_mode_hash_table and set(vals).intersection(INTEGRITY_HASH_LINE_FIELDS):
-                    raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_LINE_FIELDS))
                 if any(key in vals for key in ('tax_ids', 'tax_line_id')):
                     raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
