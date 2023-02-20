@@ -1375,3 +1375,78 @@ QUnit.test(
         assert.containsOnce(target, ".o-mail-message:contains(Task created)");
     }
 );
+
+QUnit.test("message considered empty", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create([
+        {
+            model: "mail.channel",
+            res_id: channelId,
+        },
+        {
+            body: "",
+            model: "mail.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<p></p>",
+            model: "mail.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<p><br/></p>",
+            model: "mail.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<p><br></p>",
+            model: "mail.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<p>\n</p>",
+            model: "mail.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<p>\r\n\r\n</p>",
+            model: "mail.channel",
+            res_id: channelId,
+        },
+        {
+            body: "<p>   </p>  ",
+            model: "mail.channel",
+            res_id: channelId,
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsNone(target, ".o-mail-message");
+});
+
+QUnit.test("message with html not to be considered empty", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "<img src=''>",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsOnce(target, ".o-mail-message");
+});
+
+QUnit.test("message with body 'test' should not be considered empty", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "test",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsOnce(target, ".o-mail-message");
+});
