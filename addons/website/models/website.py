@@ -282,10 +282,10 @@ class Website(models.Model):
                 raise ValidationError(_("The homepage URL should be relative and start with '/'."))
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_last_remaining_website(self):
-        website = self.search([('id', 'not in', self.ids)], limit=1)
-        if not website:
-            raise UserError(_('You must keep at least one website.'))
+    def _unlink_except_default_website(self):
+        default_website = self.env.ref('website.default_website', raise_if_not_found=False)
+        if default_website and default_website in self:
+            raise UserError(_("You cannot delete default website %s. Try to change its settings instead", default_website.name))
 
     def unlink(self):
         self._remove_attachments_on_website_unlink()
