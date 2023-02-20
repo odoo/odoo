@@ -807,3 +807,19 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test(
+    "composer should be focused automatically after clicking on the send button",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["mail.channel"].create({ name: "test" });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        await insertText(".o-mail-composer-textarea", "Dummy Message");
+        await click(".o-mail-composer-send-button");
+        assert.strictEqual(
+            document.querySelector(".o-mail-composer-textarea"),
+            document.activeElement
+        );
+    }
+);
