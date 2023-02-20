@@ -30,7 +30,7 @@
             <div class="o-mail-background-inherit o-mail-channel-member-avatar-container position-relative d-flex ms-4 flex-shrink-0">
                 <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
                     t-att-src="member.persona.avatarUrl"/>
-                <PartnerImStatus className="'position-absolute bottom-0 end-0'" partner="member"/>
+                <PartnerImStatus className="'position-absolute bottom-0 end-0'" partner="member.persona"/>
             </div>
             <span class="o-mail-channel-member-name ms-2 text-truncate" t-esc="member.persona.name"/>
         </div>
