@@ -8,7 +8,6 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 import { getFixture } from "@web/../tests/helpers/utils";
-import { datetime_to_str } from "web.time";
 
 let target;
 QUnit.module("discuss", {
@@ -154,7 +153,7 @@ QUnit.test(
                         0,
                         0,
                         {
-                            last_interest_dt: datetime_to_str(new Date(2021, 0, 1)),
+                            last_interest_dt: "2021-01-01 10:00:00",
                             partner_id: pyEnv.currentPartnerId,
                         },
                     ],
@@ -170,7 +169,7 @@ QUnit.test(
                         0,
                         0,
                         {
-                            last_interest_dt: datetime_to_str(new Date(2021, 0, 2)),
+                            last_interest_dt: "2021-02-01 10:00:00",
                             partner_id: pyEnv.currentPartnerId,
                         },
                     ],

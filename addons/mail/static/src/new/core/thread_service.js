@@ -254,6 +254,11 @@ export class ThreadService {
             const thread2 = this.store.threads[id2];
             return String.prototype.localeCompare.call(thread1.name, thread2.name);
         });
+        this.store.discuss.chats.threads.sort((localId_1, localId_2) => {
+            const thread1 = this.store.threads[localId_1];
+            const thread2 = this.store.threads[localId_2];
+            return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
+        });
     }
 
     /**
@@ -437,7 +442,9 @@ export class ThreadService {
             ]);
 
             if (serverData.last_interest_dt) {
-                thread.lastInterestDateTime = luxon.DateTime.fromISO(serverData.last_interest_dt);
+                thread.lastInterestDateTime = luxon.DateTime.fromISO(
+                    new Date(serverData.last_interest_dt).toISOString()
+                );
             }
             if (serverData.channel && "serverMessageUnreadCounter" in serverData.channel) {
                 thread.serverMessageUnreadCounter = serverData.channel.serverMessageUnreadCounter;

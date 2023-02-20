@@ -1760,10 +1760,7 @@ QUnit.test(
 
 QUnit.test("composer state: attachments save and restore", async function (assert) {
     const pyEnv = await startServer();
-    const [channelId] = pyEnv["mail.channel"].create([
-        { name: "General" },
-        { name: "Special" },
-    ]);
+    const [channelId] = pyEnv["mail.channel"].create([{ name: "General" }, { name: "Special" }]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     // Add attachment in a message for #general

@@ -404,6 +404,9 @@ export class Messaging {
         if (channel) {
             this.threadService.update(channel, { serverData: { last_interest_dt } });
         }
+        if (["chat", "group"].includes(channel?.type)) {
+            this.threadService.sortChannels();
+        }
     }
 
     async _handleNotificationNewMessage(notif) {

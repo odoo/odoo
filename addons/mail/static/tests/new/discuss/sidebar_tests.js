@@ -1025,3 +1025,54 @@ QUnit.test("chat - avatar: should have correct avatar", async function (assert) 
         `img[data-src='/web/image/res.partner/${partnerId}/avatar_128?unique=${channel.avatarCacheKey}']`
     );
 });
+
+QUnit.test("chat - sorting: should be sorted by last activity time", async function (assert) {
+    const pyEnv = await startServer();
+    const [demo_id, yoshi_id] = pyEnv["res.partner"].create([{ name: "Demo" }, { name: "Yoshi" }]);
+    pyEnv["res.users"].create([{ partner_id: demo_id }, { partner_id: yoshi_id }]);
+    pyEnv["mail.channel"].create([
+        {
+            channel_member_ids: [
+                [
+                    0,
+                    0,
+                    {
+                        last_interest_dt: "2021-01-01 10:00:00",
+                        partner_id: pyEnv.currentPartnerId,
+                    },
+                ],
+                [0, 0, { partner_id: demo_id }],
+            ],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                [
+                    0,
+                    0,
+                    {
+                        last_interest_dt: "2021-02-01 10:00:00",
+                        partner_id: pyEnv.currentPartnerId,
+                    },
+                ],
+                [0, 0, { partner_id: yoshi_id }],
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    let $chats = $(".o-mail-category-chat ~ .o-mail-category-item");
+    assert.strictEqual($chats.length, 2);
+    assert.strictEqual($($chats[0]).text(), "Yoshi");
+    assert.strictEqual($($chats[1]).text(), "Demo");
+
+    // post a new message on the last channel
+    await click($($chats[1]));
+    await insertText(".o-mail-composer-textarea", "Blabla");
+    await click(".o-mail-composer-send-button");
+    $chats = $(".o-mail-category-chat ~ .o-mail-category-item");
+    assert.strictEqual($chats.length, 2);
+    assert.strictEqual($($chats[0]).text(), "Demo");
+    assert.strictEqual($($chats[1]).text(), "Yoshi");
+});
