@@ -466,12 +466,7 @@ export class MessageService {
      */
     sortMessages(thread) {
         thread.messages.sort((msg1, msg2) => {
-            const indicator = msg1.datetime - msg2.datetime;
-            if (indicator) {
-                return indicator;
-            } else {
-                return msg1.id - msg2.id;
-            }
+            return msg1.id - msg2.id;
         });
     }
 }
