@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
-const { Component, onWillStart, onWillUpdateProps } = owl;
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 export class RecordsSelector extends Component {
     setup() {

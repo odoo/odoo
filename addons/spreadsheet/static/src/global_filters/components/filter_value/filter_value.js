@@ -4,7 +4,7 @@ import { RecordsSelector } from "../records_selector/records_selector";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { DateFilterValue } from "../filter_date_value/filter_date_value";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FilterValue extends Component {
     setup() {

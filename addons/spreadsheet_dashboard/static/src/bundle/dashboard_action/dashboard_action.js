@@ -12,7 +12,7 @@ import { loadSpreadsheetDependencies } from "@spreadsheet/helpers/helpers";
 import { useService } from "@web/core/utils/hooks";
 
 const { Spreadsheet } = spreadsheet;
-const { Component, onWillStart, useState, useEffect } = owl;
+import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 
 export class SpreadsheetDashboardAction extends Component {
     setup() {
