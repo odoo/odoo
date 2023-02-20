@@ -7,7 +7,7 @@ import odoo.tests
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_free_delivery_when_exceed_threshold(self):
-        
+
         # Avoid Shipping/Billing address page
         self.env.ref('base.partner_admin').write({
             'street': '215 Vine St',
@@ -19,7 +19,7 @@ class TestUi(odoo.tests.HttpCase):
             'email': 'admin@yourcompany.example.com',
         })
 
-        office_chair = self.env['product.product'].create({
+        self.env['product.product'].create({
             'name': 'Office Chair Black TEST',
             'list_price': 12.50,
         })

@@ -49,7 +49,7 @@
                     <ul class="list-group">
                     <t t-foreach="deliveries" t-as="delivery">
                         <li class="list-group-item o_delivery_carrier_select">
-                            <t t-call="website_sale_delivery.payment_delivery_methods"/>
+                            <t t-call="website_sale.payment_delivery_methods"/>
                         </li>
                     </t>
                     </ul>

@@ -74,66 +74,6 @@ class WebsiteSaleDelivery(WebsiteSale):
 
         return super().cart(**post)
 
-    @http.route()
-    def process_express_checkout(
-            self, billing_address, shipping_address=None, shipping_option=None, **kwargs
-        ):
-        """ Override of `website_sale` to records the shipping information on the order when using
-        express checkout flow.
-
-        Depending on whether the partner is registered and logged in, either creates a new partner
-        or uses an existing one that matches all received data.
-
-        :param dict billing_address: Billing information sent by the express payment form.
-        :param dict shipping_address: Shipping information sent by the express payment form.
-        :param dict shipping_option: Carrier information sent by the express payment form.
-        :param dict kwargs: Optional data. This parameter is not used here.
-        :return int: The order's partner id.
-        """
-        if not (shipping_address and shipping_option):
-            return super().process_express_checkout(billing_address, **kwargs)
-
-        order_sudo = request.website.sale_get_order()
-
-        # Update the partner with all the information
-        self._include_country_and_state_in_address(shipping_address)
-
-        # At this point, if the user is a public user, the order will have a partner created by
-        # `process_express_checkout_delivery_choice`. No need to check if he is connected or not.
-
-        if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
-            # The existing partner was created by `process_express_checkout_delivery_choice`, it
-            # means that the partner is missing information, so we update it.
-            order_sudo.partner_shipping_id = self._create_or_edit_partner(
-                shipping_address,
-                edit=True,
-                type='delivery',
-                partner_id=order_sudo.partner_shipping_id.id,
-            )
-        elif any(
-            shipping_address[k] != order_sudo.partner_shipping_id[k] for k in shipping_address
-        ):
-            # The sale order's shipping partner's address is different from the one received. If all
-            # the sale order's child partners' address differs from the one received, we create a
-            # new partner. The phone isn't always checked because it isn't sent in shipping
-            # information with Google Pay.
-            child_partner_id = self._find_child_partner(
-                order_sudo.partner_id.commercial_partner_id.id, shipping_address
-            )
-            if child_partner_id:
-                order_sudo.partner_shipping_id = child_partner_id
-            else:
-                order_sudo.partner_shipping_id = self._create_or_edit_partner(
-                    shipping_address,
-                    type='delivery',
-                    parent_id=order_sudo.partner_id.id,
-                )
-
-        # Process the delivery carrier
-        order_sudo._check_carrier_quotation(force_carrier_id=int(shipping_option['id']))
-
-        return super().process_express_checkout(billing_address, **kwargs)
-
     @http.route(
         _express_checkout_shipping_route, type='json', auth='public', methods=['POST'],
         website=True, sitemap=False

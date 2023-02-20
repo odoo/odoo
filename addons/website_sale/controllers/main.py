@@ -1187,22 +1187,26 @@ class WebsiteSale(http.Controller):
         _express_checkout_route, type='json', methods=['POST'], auth="public", website=True,
         sitemap=False
     )
-    def process_express_checkout(self, billing_address, **kwargs):
+    def process_express_checkout(
+            self, billing_address, shipping_address=None, shipping_option=None, **kwargs
+        ):
         """ Records the partner information on the order when using express checkout flow.
 
         Depending on whether the partner is registered and logged in, either creates a new partner
         or uses an existing one that matches all received data.
 
         :param dict billing_address: Billing information sent by the express payment form.
+        :param dict shipping_address: Shipping information sent by the express payment form.
+        :param dict shipping_option: Carrier information sent by the express payment form.
         :param dict kwargs: Optional data. This parameter is not used here.
         :return int: The order's partner id.
         """
+
         order_sudo = request.website.sale_get_order()
         public_partner = request.website.partner_id
 
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
-
         if order_sudo.partner_id == public_partner:
             billing_partner_id = self._create_or_edit_partner(billing_address, type='invoice')
             order_sudo.partner_id = billing_partner_id
@@ -1220,20 +1224,44 @@ class WebsiteSale(http.Controller):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, billing_address
             )
-            if child_partner_id:
-                order_sudo.partner_invoice_id = child_partner_id
-            else:
-                billing_partner_id = self._create_or_edit_partner(
-                    billing_address,
-                    type='invoice',
-                    parent_id=order_sudo.partner_id.id,
-                )
-                order_sudo.partner_invoice_id = billing_partner_id
+            order_sudo.partner_invoice_id = child_partner_id or self._create_or_edit_partner(
+                billing_address,
+                type='invoice',
+                parent_id=order_sudo.partner_id.id,
+            )
 
         # In a non-express flow, `sale_last_order_id` would be added in the session before the
         # payment. As we skip all the steps with the express checkout, `sale_last_order_id` must be
         # assigned to ensure the right behavior from `shop_payment_confirmation()`.
         request.session['sale_last_order_id'] = order_sudo.id
+
+        if shipping_address and shipping_option:
+            self._include_country_and_state_in_address(shipping_address)
+
+            if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
+                # The existing partner was created by `process_express_checkout_delivery_choice`, it
+                # means that the partner is missing information, so we update it.
+                order_sudo.partner_shipping_id = self._create_or_edit_partner(
+                    shipping_address,
+                    edit=True,
+                    type='delivery',
+                    partner_id=order_sudo.partner_shipping_id.id,
+                )
+            elif any(
+                shipping_address[k] != order_sudo.partner_shipping_id[k] for k in shipping_address
+            ):
+                # The sale order's shipping partner's address is different from the one received. If
+                # all the sale order's child partners' address differs from the one received, we
+                # create a new partner. The phone isn't always checked because it isn't sent in
+                # shipping information with Google Pay.
+                child_partner_id = self._find_child_partner(
+                    order_sudo.partner_id.commercial_partner_id.id, shipping_address
+                )
+                order_sudo.partner_shipping_id = child_partner_id or self._create_or_edit_partner(
+                    shipping_address, type='delivery', parent_id=order_sudo.partner_id.id
+                )
+            # Process the delivery carrier
+            order_sudo._check_carrier_quotation(force_carrier_id=int(shipping_option['id']))
 
         return order_sudo.partner_id.id
 

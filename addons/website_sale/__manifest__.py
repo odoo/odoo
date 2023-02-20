@@ -8,7 +8,7 @@
     'summary': 'Sell your products online',
     'website': 'https://www.odoo.com/app/ecommerce',
     'version': '1.1',
-    'depends': ['website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest'],
+    'depends': ['website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery'],
     'data': [
         'security/ir.model.access.csv',
         'security/website_sale.xml',
@@ -38,7 +38,9 @@
         'views/product_product_add.xml',
         'views/website_views.xml',
         'views/website_pages_views.xml',
+        'views/website_sale_delivery_templates.xml',
         'views/website_sale_menus.xml',
+        'views/website_sale_delivery_views.xml',
     ],
     'demo': [
         'data/demo.xml',
@@ -53,6 +55,7 @@
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_mail.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
+            'website_sale/static/src/scss/website_sale_delivery.scss',
             'website/static/lib/multirange/multirange_custom.scss',
             'sale/static/src/scss/sale_portal.scss',
             'sale/static/src/scss/product_configurator.scss',
@@ -72,6 +75,7 @@
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             'website_sale/static/src/xml/website_sale_reorder_modal.xml',
             'website_sale/static/src/js/website_sale_reorder.js',
+            'website_sale/static/src/js/website_sale_delivery.js',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
