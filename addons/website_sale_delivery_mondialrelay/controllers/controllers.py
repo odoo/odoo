@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import http, _
 from odoo.addons.website_sale.controllers.main import WebsiteSale, PaymentPortal
-from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
+from odoo.addons.website_sale.controllers.delivery_main import WebsiteSaleDelivery
 
 from odoo.exceptions import AccessDenied, ValidationError, UserError
 from odoo.http import request
