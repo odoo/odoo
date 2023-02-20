@@ -1648,10 +1648,12 @@ class HolidaysRequest(models.Model):
             return leave_notif_subtype or self.env.ref('hr_holidays.mt_leave')
         return super(HolidaysRequest, self)._track_subtype(init_values)
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
-        groups = super(HolidaysRequest, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         if not self:
             return groups
 
@@ -1670,7 +1672,11 @@ class HolidaysRequest(models.Model):
         new_group = (
             'group_hr_holidays_user',
             lambda pdata: pdata['type'] == 'user' and holiday_user_group_id in pdata['groups'],
-            {'actions': hr_actions}
+            {
+                'actions': hr_actions,
+                'active': True,
+                'has_button_access': True,
+            }
         )
 
         return [new_group] + groups

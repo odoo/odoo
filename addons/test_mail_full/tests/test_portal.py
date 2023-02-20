@@ -182,7 +182,9 @@ class TestPortalFlow(MailCommon, HttpCase):
             'subject': 'Your quotation "{{ object.name }}"',
         })
         cls._create_portal_user()
-        for group_name, group_func, group_data in cls.record_portal.sudo()._notify_get_recipients_groups():
+        for group_name, group_func, group_data in cls.record_portal.sudo()._notify_get_recipients_groups(
+            cls.env['mail.message'], False
+        ):
             if group_name == 'portal_customer' and group_func(cls.customer):
                 cls.record_access_url = group_data['button_access']['url']
                 break

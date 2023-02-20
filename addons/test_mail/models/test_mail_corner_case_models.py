@@ -72,8 +72,10 @@ class MailTestLang(models.Model):
     def _mail_get_partner_fields(self):
         return ['customer_id']
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
-        groups = super(MailTestLang, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
 
         local_msg_vals = dict(msg_vals or {})
 

@@ -1924,10 +1924,12 @@ class Lead(models.Model):
                 _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
         return render_context
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
-        groups = super(Lead, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         if not self:
             return groups
 
@@ -1955,7 +1957,11 @@ class Lead(models.Model):
         new_group = (
             'group_sale_salesman',
             lambda pdata: pdata['type'] == 'user' and salesman_group_id in pdata['groups'],
-            {'actions': salesman_actions}
+            {
+                'actions': salesman_actions,
+                'active': True,
+                'has_button_access': True,
+            }
         )
 
         return [new_group] + groups

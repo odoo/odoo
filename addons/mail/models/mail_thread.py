@@ -2879,11 +2879,10 @@ class MailThread(models.AbstractModel):
          * performs the notification process by calling the various notification
            methods implemented;
 
-        :param message: ``mail.message`` record to notify;
-        :param msg_vals: dictionary of values used to create the message. If given it
-          may be used to access values related to ``message`` without accessing it
-          directly. It lessens query count in some optimized use cases by avoiding
-          access message content in db;
+        :param record message: <mail.message> record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
 
         Kwargs allow to pass various parameters that are given to sub notification
         methods. See those methods for more details about supported parameters.
@@ -2927,26 +2926,28 @@ class MailThread(models.AbstractModel):
         return recipients_data
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
-        """ Notification method: inbox. Does two main things :
+        """ Notificaty recipients inbox of a message. It does two main things :
 
           * create inbox notifications for users;
           * send bus notifications;
 
-        :param message: ``mail.message`` record to notify;
-        :param recipients_data: list of recipients information (based on res.partner
-          records), formatted like
-            [{'active': partner.active;
-              'id': id of the res.partner being recipient to notify;
-              'groups': res.group IDs if linked to a user;
-              'notif': 'inbox', 'email', 'sms' (SMS App);
-              'share': partner.partner_share;
-              'type': 'customer', 'portal', 'user;'
-             }, {...}].
-          See ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If given it
-          may be used to access values related to ``message`` without accessing it
-          directly. It lessens query count in some optimized use cases by avoiding
-          access message content in db;
+        :param record message: <mail.message> record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like [
+          {
+            'active': partner.active;
+            'id': id of the res.partner being recipient to notify;
+            'is_follower': follows the message related document;
+            'lang': its lang;
+            'groups': res.group IDs if linked to a user;
+            'notif': 'inbox', 'email', 'sms' (SMS App);
+            'share': is partner a customer (partner.partner_share);
+            'type': partner usage ('customer', 'portal', 'user');
+            'ushare': are users shared (if users, all users are shared);
+          }, {...}]. See ``MailThread._notify_get_recipients()``;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
         """
         bus_notifications = []
         inbox_pids = [r['id'] for r in recipients_data if r['notif'] == 'inbox']
@@ -2968,39 +2969,44 @@ class MailThread(models.AbstractModel):
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
                                 model_description=False, force_email_company=False, force_email_lang=False,  # rendering
+                                subtitles=None,  # rendering
                                 resend_existing=False, force_send=True, send_after_commit=True,  # email send
-                                subtitles=None, **kwargs):
-        """ Method to send email linked to notified messages.
+                                 **kwargs):
+        """ Method to send emails notifications linked to a message.
 
-        :param message: ``mail.message`` record to notify;
-        :param recipients_data: list of recipients information (based on res.partner
-          records), formatted like
-            [{'active': partner.active;
-              'id': id of the res.partner being recipient to notify;
-              'groups': res.group IDs if linked to a user;
-              'notif': 'inbox', 'email', 'sms' (SMS App);
-              'share': partner.partner_share;
-              'type': 'customer', 'portal', 'user;'
-             }, {...}].
-          See ``MailThread._notify_get_recipients``;
-        :param msg_vals: dictionary of values used to create the message. If given it
-          may be used to access values related to ``message`` without accessing it
-          directly. It lessens query count in some optimized use cases by avoiding
-          access message content in db;
+        :param record message: <mail.message> record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like [
+          {
+            'active': partner.active;
+            'id': id of the res.partner being recipient to notify;
+            'is_follower': follows the message related document;
+            'lang': its lang;
+            'groups': res.group IDs if linked to a user;
+            'notif': 'inbox', 'email', 'sms' (SMS App);
+            'share': is partner a customer (partner.partner_share);
+            'type': partner usage ('customer', 'portal', 'user');
+            'ushare': are users shared (if users, all users are shared);
+          }, {...}]. See ``MailThread._notify_get_recipients()``;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
 
-        :param mail_auto_delete: delete notification emails once sent;
+        :param bool mail_auto_delete: delete notification emails once sent;
 
-        :param model_description: model description used in email notification process
-          (computed if not given);
-        :param force_email_company: see ``_notify_by_email_prepare_rendering_context``;
-        :param force_email_lang: see ``_notify_by_email_prepare_rendering_context``;
+        :param str model_description: description of current model, given to
+          avoid fetching it and easing translation support;
+        :param record force_email_company: <res.company> record used when rendering
+          notification layout. Otherwise computed based on current record;
+        :param str force_email_lang: lang used when rendering content, used
+          notably to compute model name or translate access buttons;
+        :param list subtitles: optional list set as template value "subtitles";
 
-        :param resend_existing: check for existing notifications to update based on
-          mailed recipient, otherwise create new notifications;
-        :param force_send: send emails directly instead of using queue;
-        :param send_after_commit: if force_send, tells whether to send emails after
+        :param bool resend_existing: check for existing notifications to update
+          based on mailed recipient, otherwise create new notifications;
+        :param bool force_send: send emails directly instead of using queue;
+        :param bool send_after_commit: if force_send, tells to send emails after
           the transaction has been committed using a post-commit hook;
-        :param subtitles: optional list that will be set as template value "subtitles"
         """
         partners_data = [r for r in recipients_data if r['notif'] == 'email']
         if not partners_data:
@@ -3008,9 +3014,11 @@ class MailThread(models.AbstractModel):
 
         model = msg_vals.get('model') if msg_vals else message.model
         model_name = model_description or (self.env['ir.model']._get(model).display_name if model else False) # one query for display name
-        recipients_groups_data = self._notify_get_recipients_classify(partners_data, model_name, msg_vals=msg_vals)
+        recipients_groups_list = self._notify_get_recipients_classify(
+            message, partners_data, model_name, msg_vals=msg_vals
+        )
 
-        if not recipients_groups_data:
+        if not recipients_groups_list:
             return True
         force_send = self.env.context.get('mail_notify_force_send', force_send)
 
@@ -3039,10 +3047,10 @@ class MailThread(models.AbstractModel):
         # loop on groups (customer, portal, user,  ... + model specific like group_sale_salesman)
         notif_create_values = []
         recipients_max = 50
-        for recipients_group_data in recipients_groups_data:
+        for recipients_group in recipients_groups_list:
             # generate notification email content
-            recipients_ids = recipients_group_data.pop('recipients')
-            render_values = {**template_values, **recipients_group_data}
+            recipients_ids = recipients_group.pop('recipients')
+            render_values = {**template_values, **recipients_group}
             # {company, is_discussion, lang, message, model_description, record, record_name, signature, subtype, tracking_values, website_url}
             # {actions, button_access, has_button_access, recipients}
 
@@ -3114,8 +3122,10 @@ class MailThread(models.AbstractModel):
 
         return True
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
-                                                   force_email_company=False, force_email_lang=False):
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False,
+                                                   model_description=False,
+                                                   force_email_company=False,
+                                                   force_email_lang=False):
         """ Prepare rendering context for notification email.
 
         Signature: if asked a default signature is computed based on author. Either
@@ -3133,16 +3143,18 @@ class MailThread(models.AbstractModel):
         notification layout in the same language as the email content. A new
         parameter allows to force its value.
 
-        :param msg_vals: dictionary of values used to create the message. If given it
-          may be used to access values related to ``message`` without accessing it
-          directly. It lessens query count in some optimized use cases by avoiding
-          access message content in db;
-        :param model_description: model description used in email notification process
-          (computed if not given);
-        :param force_email_company: res.company record used when rendering notification
-          layout. Otherwise computed based on current record;
-        :param force_email_lang: lang used when rendering content, used notably to
-          compute model name;
+        :param record message: <mail.message> record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
+        :param str model_description: description of current model, given to
+          avoid fetching it and easing translation support;
+        :param record force_email_company: <res.company> record used when rendering
+          notification layout. Otherwise computed based on current record;
+        :param str force_email_lang: lang used when rendering content, used
+          notably to compute model name or translate access buttons;
+
+        :return: dictionary of values used when rendering notification layout;
         """
         if msg_vals is False:
             msg_vals = {}
@@ -3226,12 +3238,15 @@ class MailThread(models.AbstractModel):
         }
 
     def _notify_by_email_get_base_mail_values(self, message, additional_values=None):
-        """ Add model-specific values to the dictionary used to create the
-        notification email. Its base behavior is to compute model-specific
-        headers.
+        """ Return model-specific and message-related values to be used when
+        creating notification emails. It serves as a common basis for all
+        notification emails based on a given message.
 
-        :param dict base_mail_values: base mail.mail values, holding message
-        to notify (mail_message_id and its fields), server, references, subject.
+        :param record message: <mail.message> record being notified;
+        :param dict additional_values: optional additional values to add (ease
+          custom calls and inheritance);
+
+        :return: dictionary of values suitable for a <mail.mail> create;
         """
         mail_subject = message.subject
         if not mail_subject and self:
@@ -3265,14 +3280,20 @@ class MailThread(models.AbstractModel):
             base_mail_values['headers'] = repr(headers)
         return base_mail_values
 
-    def _notify_by_email_get_final_mail_values(self, recipient_ids, base_mail_values, additional_values=None):
-        """ Format email notification recipient values to store on the notification
-        mail.mail. Basic method just set the recipient partners as mail_mail
-        recipients. Override to generate other mail values like email_to or
-        email_cc.
-        :param recipient_ids: res.partner recordset to notify
+    def _notify_by_email_get_final_mail_values(self, recipient_ids, mail_values,
+                                               additional_values=None):
+        """ Perform final formatting of values to create notification emails.
+        Basic method just set the recipient partners as mail_mail recipients.
+        Override to generate other mail values like email_to or email_cc.
+
+        :param list recipient_ids: res.partner IDs to notify;
+        :param dict mail_values: notification mail values;
+        :param dict additional_values: optional additional values to add (ease
+          custom calls and inheritance);
+
+        :return: a new dictionary of values suitable for a <mail.mail> create;
         """
-        final_mail_values = dict(base_mail_values)
+        final_mail_values = dict(mail_values)
         final_mail_values['recipient_ids'] = [Command.link(pid) for pid in recipient_ids]
         if additional_values:
             final_mail_values.update(additional_values)
@@ -3282,8 +3303,10 @@ class MailThread(models.AbstractModel):
         """ Compute recipients to notify based on subtype and followers. This
         method returns data structured as expected for ``_notify_recipients``.
 
-        TDE/XDO TODO: flag rdata directly, with for example r['notif'] = 'ocn_client' and r['needaction']=False
-        and correctly override _notify_get_recipients
+        :param record message: <mail.message> record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
 
         Kwargs allow to pass various parameters that are used by sub notification
         methods. See those methods for more details about supported parameters.
@@ -3297,15 +3320,23 @@ class MailThread(models.AbstractModel):
             to avoid having several notifications / partner as it would make
             constraints crash. This is disabled by default to optimize speed;
 
-        :return list recipients_data: this is a list of recipients information (see
-          ``MailFollowers._get_recipient_data()`` for more details) formatted like
-          [{'active': partner.active;
-            'id': id of the res.partner;
+        TDE/XDO TODO: flag rdata directly, for example r['notif'] = 'ocn_client'
+        and r['needaction']=False and correctly override _notify_get_recipients
+
+        :return list recipients_data: list of recipients information (see
+          ``MailFollowers._get_recipient_data()`` for more details) formatted
+          like [
+          {
+            'active': partner.active;
+            'id': id of the res.partner being recipient to notify;
+            'is_follower': follows the message related document;
+            'lang': its lang;
             'groups': res.group IDs if linked to a user;
             'notif': 'inbox', 'email', 'sms' (SMS App);
-            'share': partner.partner_share;
-            'type': 'customer', 'portal', 'user;'
-           }, {...}]
+            'share': is partner a customer (partner.partner_share);
+            'type': partner usage ('customer', 'portal', 'user');
+            'ushare': are users shared (if users, all users are shared);
+          }, {...}]
         """
         msg_sudo = message.sudo()
         # get values from msg_vals or from message if msg_vals doen't exists
@@ -3352,133 +3383,184 @@ class MailThread(models.AbstractModel):
 
         return recipients_data
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Return groups used to classify recipients of a notification email.
-        Groups is a list of tuple containing of form (group_name, group_func,
-        group_data) where
-         * group_name is an identifier used only to be able to override and manipulate
-           groups. Default groups are user (recipients linked to an employee user),
-           portal (recipients linked to a portal user) and customer (recipients not
-           linked to any user). An example of override use would be to add a group
-           linked to a res.groups like Hr Officers to set specific action buttons to
-           them.
-         * group_func is a function pointer taking a partner record as parameter. This
-           method will be applied on recipients to know whether they belong to a given
-           group or not. Only first matching group is kept. Evaluation order is the
-           list order.
-         * group_data is a dict containing parameters for the notification email
-          * has_button_access: whether to display Access <Document> in email. True
-            by default for new groups, False for portal / customer.
-          * button_access: dict with url and title of the button
-          * actions: list of action buttons to display in the notification email.
-            Each action is a dict containing url and title of the button.
-        Groups has a default value that you can find in mail_thread
-        ``_notify_get_recipients_classify`` method.
+        Groups is a list of tuple (group_name, group_func, group_data) where
+
+         * 'group_name' is an identifier used only to be able to override and
+           manipulate groups;
+         * 'group_func' is a function pointer taking a partner data dict as
+           parameter. It is called on recipients to know if they belong to
+           the group. Only first matching group is kept, iterating on the
+           group list in order.
+         * 'group_data' is a dict containing parameters used in notification
+           process like {
+            'active': if not, it is skipped in notification process (ease
+                      inheritance to be already present);
+            'actions': list of actions to display as links or buttons in form
+                       {'url': link of the action, 'title': link or button
+                        string};
+            'button_access': main access document button information, {'url'
+                             link of the access, 'title': link or button
+                             string};
+            'has_button_access': display access document main button in email;
+            'notification_group_name': name of the group, to ease usage;
+            'recipients': list of partner IDs, will be fillup when evaluating
+                          groups;
+           }
+
+        Default groups:
+
+          * 'user': recipients linked to an internal user;
+          * 'portal': recipients linked to a portal user;
+          * 'follower': recipients (not internal/portal users) follower of the
+            related record;
+          * 'customer': other recipients;
+
+        When having to find a group for recipients, the first matching one
+        when iterating on groups is used. Reordering those groups is doable
+        through override. Adding groups is a common override, to add specific
+        buttons or actions for users belonging to some user groups.
+
+        :param record message: <mail.message> record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param str model_description: description of current model, given to
+          avoid fetching it and easing translation support;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
+
+        :return: list of groups definition
         """
-        is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
         return [
             [
                 'user',
                 lambda pdata: pdata['type'] == 'user',
-                {'has_button_access': is_thread_notification}
+                {
+                    'active': True,
+                    'has_button_access': self._is_thread_message(msg_vals=msg_vals),
+                }
             ], [
                 'portal',
                 lambda pdata: pdata['type'] == 'portal',
-                {'active': False,  # activate only on demand if rights are enabled
-                 'has_button_access': False,
+                {
+                    'active': False,  # activate only on demand if rights are enabled
+                    'has_button_access': False,
                 }
             ], [
                 'follower',
                 lambda pdata: pdata['is_follower'],
-                {'active': False,  # activate only on demand if rights are enabled
-                 'has_button_access': False,
+                {
+                    'active': False,  # activate only on demand if rights are enabled
+                    'has_button_access': False,
                 }
             ], [
                 'customer',
                 lambda pdata: True,
-                {'has_button_access': False}
+                {
+                    'active': True,
+                    'has_button_access': False,
+                }
             ]
         ]
 
-    def _notify_get_recipients_classify(self, recipient_data, model_name, msg_vals=None):
+    def _notify_get_recipients_groups_fillup(self, groups, model_description, msg_vals=None):
+        """ Iterate on recipients groups (see '_notify_get_recipients_groups')
+        and fill up the result with default values, allowing to compute links or
+        titles once.
+
+        :param list groups: recipients groups;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
+        :param str model_description: description of current model, given to
+          avoid fetching it and easing translation support;
+
+        :return: updated groups;
+        """
+        access_link = self._notify_get_action_link('view', **msg_vals)
+
+        if model_description:
+            view_title = _('View %s', model_description)
+        else:
+            view_title = _('View')
+
+        is_thread_message = self._is_thread_message(msg_vals=msg_vals)
+
+        # fill group_data with default_values if they are not complete
+        for group_name, _group_func, group_data in groups:
+            group_data.setdefault('active', True)
+            group_data.setdefault('actions', [])
+            group_data.setdefault('has_button_access', is_thread_message)
+            group_data.setdefault('notification_group_name', group_name)
+            group_data.setdefault('recipients', [])
+            group_button_access = group_data.setdefault('button_access', {})
+            group_button_access.setdefault('url', access_link)
+            group_button_access.setdefault('title', view_title)
+
+        return groups
+
+    def _notify_get_recipients_classify(self, message, recipients_data,
+                                        model_description, msg_vals=None):
         """ Classify recipients to be notified of a message in groups to have
         specific rendering depending on their group. For example users could
         have access to buttons customers should not have in their emails.
         Module-specific grouping should be done by overriding ``_notify_get_recipients_groups``
         method defined here-under.
 
-        :param recipient_data: list of recipients information (based on res.partner
-          records). See ``MailThread._notify_get_recipients()``;
+        :param record message: <mail.message> record being notified. May be
+          void as 'msg_vals' superseeds it;
+        :param list recipients_data: list of recipients data based on <res.partner>
+          records formatted like [
+          {
+            'active': partner.active;
+            'id': id of the res.partner being recipient to notify;
+            'is_follower': follows the message related document;
+            'lang': its lang;
+            'groups': res.group IDs if linked to a user;
+            'notif': 'inbox', 'email', 'sms' (SMS App);
+            'share': is partner a customer (partner.partner_share);
+            'type': partner usage ('customer', 'portal', 'user');
+            'ushare': are users shared (if users, all users are shared);
+          }, {...}]. See ``MailThread._notify_get_recipients()``;
+        :param str model_description: description of current model, given to
+          avoid fetching it and easing translation support;
+        :param dict msg_vals: values dict used to create the message, allows to
+          skip message usage and spare some queries;
 
-        :return list: list of groups formatted for notification processing like
-            [{'active': True,
-              'actions': [],
-              'button_access': {},
-              'has_button_access': False,
-              'recipients': [11],},
-             {'active': True,
-              'actions': [],
-              'button_access': {'title': 'View Simple Chatter Model',
-                                'url': '/mail/view?model=mail.test.simple&res_id=1497'},
-              'has_button_access': True,
-              'recipients': [4, 5, 6],},
-             {'active': True,
-              'actions': [],
-              'button_access': {'title': 'View Simple Chatter Model',
-                                'url': '/mail/view?model=mail.test.simple&res_id=1497'},
-              'has_button_access': True,
-              'recipients': [10, 11, 12],}
-            ]
+        :return list: list of groups (see '_notify_get_recipients_groups')
+          with 'recipients' key filled with matching partners, like
+            [{
+                'active': True,
+                'actions': [],
+                'button_access': {},
+                'has_button_access': False,
+                'notification_group_name': 'user',
+                'recipients': [11],
+             }, {...}]
         """
-        # keep a local copy of msg_vals as it may be modified to include more information about groups or links
+        # keep a local copy of msg_vals as it may be modified to include more
+        # information about groups or links
         local_msg_vals = dict(msg_vals) if msg_vals else {}
-        groups = self._notify_get_recipients_groups(msg_vals=local_msg_vals)
-        access_link = self._notify_get_action_link('view', **local_msg_vals)
-
-        if model_name:
-            view_title = _('View %s', model_name)
-        else:
-            view_title = _('View')
-
-        # fill group_data with default_values if they are not complete
-        for group_name, group_func, group_data in groups:
-            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=local_msg_vals)['is_thread_notification']
-            group_data.setdefault('active', True)
-            group_data.setdefault('actions', list())
-            group_data.setdefault('has_button_access', is_thread_notification)
-            group_data.setdefault('notification_is_customer', False)
-            group_data.setdefault('notification_group_name', group_name)
-            group_data.setdefault('recipients', list())
-            group_button_access = group_data.setdefault('button_access', {})
-            group_button_access.setdefault('url', access_link)
-            group_button_access.setdefault('title', view_title)
+        groups = self._notify_get_recipients_groups_fillup(
+            self._notify_get_recipients_groups(
+                message, model_description, msg_vals=local_msg_vals
+            ),
+            model_description,
+            msg_vals=local_msg_vals
+        )
 
         # classify recipients in each group
-        for recipient in recipient_data:
-            for group_name, group_func, group_data in groups:
-                if group_data['active'] and group_func(recipient):
-                    group_data['recipients'].append(recipient['id'])
+        for recipient_data in recipients_data:
+            for _group_name, group_func, group_data in groups:
+                if group_data['active'] and group_func(recipient_data):
+                    group_data['recipients'].append(recipient_data['id'])
                     break
 
         # filter out groups without recipients
-        return [group_data for _group_name, _group_func, group_data in groups
-                if group_data['recipients']]
-
-    def _notify_get_recipients_thread_info(self, msg_vals=None):
-        """ Tool method to compute thread info used in ``_notify_classify_recipients``
-        and its sub-methods. """
-        res_model = msg_vals['model'] if (msg_vals and 'model' in msg_vals) else self._name
-        res_id = msg_vals['res_id'] if (msg_vals and 'res_id' in msg_vals) else (self.ids[0] if self.ids else False)
-        return {
-            'is_thread_notification': bool(res_id) if (res_model and res_model != 'mail.thread') else False
-        }
-
-    @api.model
-    def _notify_encode_link(self, base_link, params):
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
-        token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
-        hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
-        return hm
+        return [
+            group_data
+            for _group_name, _group_func, group_data in groups
+            if group_data['recipients']
+        ]
 
     def _notify_get_action_link(self, link_type, **kwargs):
         """ Prepare link to an action: view document, follow document, ... """
@@ -3507,7 +3589,7 @@ class MailThread(models.AbstractModel):
             return ''
 
         if link_type not in ['view']:
-            token = self._notify_encode_link(base_link, params)
+            token = self._encode_link(base_link, params)
             params['token'] = token
 
         link = '%s?%s' % (base_link, urls.url_encode(params, sort=True))
@@ -3515,6 +3597,24 @@ class MailThread(models.AbstractModel):
             link = self[0].get_base_url() + link
 
         return link
+
+    @api.model
+    def _encode_link(self, base_link, params):
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
+        hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
+        return hm
+
+    def _is_thread_message(self, msg_vals=None):
+        """ Tool method to compute thread validity in notification methods.
+        msg_vals is used as a replacement for self, allowing to force model
+        and res_id independently of current recordset. Void values in dict
+        are kept e.g. model=False is valid. """
+        if msg_vals is None:
+            msg_vals = {}
+        res_model = msg_vals['model'] if 'model' in msg_vals else self._name
+        res_id = msg_vals['res_id'] if 'res_id' in msg_vals else (self.ids[0] if self.ids else False)
+        return bool(res_id) if (res_model and res_model != 'mail.thread') else False
 
     # ------------------------------------------------------
     # FOLLOWERS API

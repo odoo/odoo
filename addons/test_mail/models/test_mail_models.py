@@ -160,11 +160,13 @@ class MailTestTicket(models.Model):
             for record in self
         )
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Activate more groups to test query counters notably (and be backward
         compatible for tests). """
         local_msg_vals = dict(msg_vals or {})
-        groups = super()._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         for group_name, _group_method, group_data in groups:
             if group_name == 'portal':
                 group_data['active'] = True
@@ -311,10 +313,12 @@ class MailTestContainer(models.Model):
             for record in self
         )
 
-    def _notify_get_recipients_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Activate more groups to test query counters notably (and be backward
         compatible for tests). """
-        groups = super(MailTestContainer, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(
+            message, model_description, msg_vals=msg_vals
+        )
         for group_name, _group_method, group_data in groups:
             if group_name == 'portal':
                 group_data['active'] = True
