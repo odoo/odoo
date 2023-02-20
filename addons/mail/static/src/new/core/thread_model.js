@@ -147,7 +147,7 @@ export class Thread {
     }
 
     get allowSetLastSeenMessage() {
-        return ["chat", "channel"].includes(this.type);
+        return ["chat", "group", "channel"].includes(this.type);
     }
 
     get allowReactions() {
