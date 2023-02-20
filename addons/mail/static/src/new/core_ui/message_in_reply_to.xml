@@ -9,7 +9,7 @@
             <small class="position-relative d-block text-small mb-1" t-attf-class="{{ env.inChatWindow and props.alignedRight ? 'justify-content-end pe-5': 'ps-5' }}" t-on-click="props.onClick">
                 <span class="o-mail-message-in-reply-corner position-absolute bottom-0 top-50 pe-4 border-top text-300" t-attf-class="{{ env.inChatWindow and props.alignedRight ? 'o-isRightAlign border-end' : 'o-isLeftAlign border-start' }}" t-att-class="{ 'ms-n2': store.discuss.isActive }"/>
                 <span t-if="!message.parentMessage.isEmpty" class="cursor-pointer d-flex align-items-center text-muted opacity-75 opacity-100-hover"  t-attf-class="{{ env.inChatWindow and props.alignedRight ? 'pe-3': 'ps-3' }}">
-                    <img class="o-mail-message-in-reply-avatar me-2 rounded-circle" t-att-src="avatarUrl" t-att-title="message.parentMessage.author.name" alt="Avatar"/>
+                    <img class="o-mail-message-in-reply-avatar me-2 rounded-circle" t-att-src="message.parentMessage.authorAvatarUrl" t-att-title="message.parentMessage.author.name" alt="Avatar"/>
                     <span class="o-mail-message-in-reply-wrap-inner overflow-hidden">
                         <b>@<t t-out="message.parentMessage.author.name"/></b>:
                         <span class="o-mail-message-in-reply-body ms-1 text-break">
