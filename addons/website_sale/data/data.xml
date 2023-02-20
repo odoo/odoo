@@ -51,6 +51,10 @@
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
         </record>
 
+        <record id="delivery.free_delivery_carrier" model="delivery.carrier">
+            <field name="is_published" eval="True"/>
+        </record>
+
     </data>
     <data>
         <!-- Filters for Dynamic Filter -->

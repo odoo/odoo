@@ -716,6 +716,10 @@
             <field name="price_extra">18.00</field>
         </record>
 
+        <record id="delivery.delivery_carrier" model="delivery.carrier">
+            <field name="is_published" eval="False" />
+        </record>
+
         <record id="website_sale_activity_1" model="mail.activity">
             <field name="res_id" ref="website_sale.website_sale_order_3"/>
             <field name="res_model_id" ref="sale.model_sale_order"/>
