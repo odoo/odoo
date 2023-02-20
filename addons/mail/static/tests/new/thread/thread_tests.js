@@ -823,3 +823,30 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test(
+    "chat window header should not have unread counter for non-channel thread",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const resPartnerId1 = pyEnv["res.partner"].create({ name: "test" });
+        const mailMessageId1 = pyEnv["mail.message"].create({
+            author_id: resPartnerId1,
+            body: "not empty",
+            model: "res.partner",
+            needaction: true,
+            needaction_partner_ids: [pyEnv.currentPartnerId],
+            res_id: resPartnerId1,
+        });
+        pyEnv["mail.notification"].create({
+            mail_message_id: mailMessageId1,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        });
+        await start();
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+        await click(".o-mail-notification-item-name");
+        assert.containsOnce(target, ".o-mail-chat-window");
+        assert.containsNone(target, ".o-mail-chat-window-header-counter");
+    }
+);

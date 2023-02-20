@@ -21,6 +21,9 @@
                     'ms-3 me-1 my-0': !thread,
                 }"
             />
+            <div t-if="thread and thread.isChannel and threadService.localMessageUnreadCounter(thread) > 0" class="o-mail-chat-window-header-counter mx-1 my-0">
+                (<t t-out="threadService.localMessageUnreadCounter(thread)"/>)
+            </div>
             <div class="flex-grow-1"/>
             <div t-if="thread and thread.allowCalls and thread !== rtc.state.channel and !props.chatWindow.hidden" class="o-mail-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Start a Call" t-on-click.stop="() => this.rtc.toggleCall(this.props.chatWindow.thread)">
                 <i class="fa fa-phone"/>
