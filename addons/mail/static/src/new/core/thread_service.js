@@ -426,6 +426,9 @@ export class ThreadService {
                 "state",
             ]);
 
+            if (serverData.last_interest_dt) {
+                thread.lastInterestDateTime = luxon.DateTime.fromISO(serverData.last_interest_dt);
+            }
             if (serverData.channel && "serverMessageUnreadCounter" in serverData.channel) {
                 thread.serverMessageUnreadCounter = serverData.channel.serverMessageUnreadCounter;
             }

@@ -343,9 +343,8 @@ export class Messaging {
                 }
                 case "mail.channel.member/typing_status": {
                     const isTyping = notif.payload.isTyping;
-                    const channel = this.store.threads[
-                        createLocalId("mail.channel", notif.payload.channel.id)
-                    ];
+                    const channel =
+                        this.store.threads[createLocalId("mail.channel", notif.payload.channel.id)];
                     if (!channel) {
                         return;
                     }
@@ -369,9 +368,8 @@ export class Messaging {
                     break;
                 }
                 case "mail.channel/unpin": {
-                    const thread = this.store.threads[
-                        createLocalId("mail.channel", notif.payload.id)
-                    ];
+                    const thread =
+                        this.store.threads[createLocalId("mail.channel", notif.payload.id)];
                     if (!thread) {
                         return;
                     }
@@ -396,7 +394,17 @@ export class Messaging {
                         });
                     }
                     break;
+                case "mail.channel/last_interest_dt_changed":
+                    return this._handleNotificationLastInterestDtChanged(notif);
             }
+        }
+    }
+
+    _handleNotificationLastInterestDtChanged(notif) {
+        const { id, last_interest_dt } = notif.payload;
+        const channel = this.store.threads[createLocalId("mail.channel", id)];
+        if (channel) {
+            this.threadService.update(channel, { serverData: { last_interest_dt } });
         }
     }
 

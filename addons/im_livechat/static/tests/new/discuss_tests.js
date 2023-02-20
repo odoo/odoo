@@ -1,7 +1,14 @@
 /** @odoo-module */
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import {
+    afterNextRender,
+    click,
+    insertText,
+    start,
+    startServer,
+} from "@mail/../tests/helpers/test_utils";
 import { getFixture } from "@web/../tests/helpers/utils";
+import { datetime_to_str } from "web.time";
 
 let target;
 QUnit.module("discuss", {
@@ -102,3 +109,89 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
         ".o-mail-category-livechat + .o-mail-category-item:contains(Visitor (Belgium))"
     );
 });
+
+QUnit.test("reaction button should not be present on livechat", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+    });
+    const { insertText, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-composer-textarea", "Test");
+    await click(".o-mail-composer-send-button");
+    await click(".o-mail-message");
+    assert.containsNone(target, ".i[title='Add a Reaction']");
+});
+
+QUnit.test("invite button should be present on livechat", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsOnce(target, ".o-mail-discuss-actions [title='Add Users']");
+});
+
+QUnit.test(
+    "livechats are sorted by last activity time in the sidebar: most recent at the top",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create([
+            {
+                anonymous_name: "Visitor 11",
+                channel_member_ids: [
+                    [
+                        0,
+                        0,
+                        {
+                            last_interest_dt: datetime_to_str(new Date(2021, 0, 1)),
+                            partner_id: pyEnv.currentPartnerId,
+                        },
+                    ],
+                    [0, 0, { partner_id: pyEnv.publicPartnerId }],
+                ],
+                channel_type: "livechat",
+                livechat_operator_id: pyEnv.currentPartnerId,
+            },
+            {
+                anonymous_name: "Visitor 12",
+                channel_member_ids: [
+                    [
+                        0,
+                        0,
+                        {
+                            last_interest_dt: datetime_to_str(new Date(2021, 0, 2)),
+                            partner_id: pyEnv.currentPartnerId,
+                        },
+                    ],
+                    [0, 0, { partner_id: pyEnv.publicPartnerId }],
+                ],
+                channel_type: "livechat",
+                livechat_operator_id: pyEnv.currentPartnerId,
+            },
+        ]);
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        const initialLivechats = document.querySelectorAll(".o-mail-category-item");
+        assert.strictEqual(initialLivechats[0].textContent, "Visitor 12");
+        assert.strictEqual(initialLivechats[1].textContent, "Visitor 11");
+        // post a new message on the last channel
+        await click($(initialLivechats[1]));
+        await insertText(".o-mail-composer-textarea", "Blabla");
+        await click(".o-mail-composer-send-button");
+        const newLivechats = document.querySelectorAll(".o-mail-category-item");
+        assert.strictEqual(newLivechats.length, 2, "should have 2 livechat items");
+        assert.strictEqual(newLivechats[0].textContent, "Visitor 11");
+        assert.strictEqual(newLivechats[1].textContent, "Visitor 12");
+    }
+);
