@@ -1489,13 +1489,15 @@ class PosSession(models.Model):
         }
 
     def set_cashbox_pos(self, cashbox_value, notes):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("You don't have the access rights to set the point of sale cash box."))
         self.state = 'opened'
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_id.balance_start
         self._post_cash_details_message('Opening', difference, notes)
         #if there is a difference create an account move to register the loss
         if difference:
-            self.env['account.bank.statement.line'].create({
+            self.env['account.bank.statement.line'].sudo().create({
                 'payment_ref': 'Opening Balance difference for %s' % (self.name),
                 'journal_id': self.cash_register_id.journal_id.id,
                 'date': self.start_at,
