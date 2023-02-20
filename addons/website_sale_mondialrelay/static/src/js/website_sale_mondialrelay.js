@@ -52,7 +52,7 @@ WebsiteSaleDeliveryWidget.include({
      */
     _loadMondialRelayModal: function (result) {
         // add modal to body and bind 'save' button
-        $(QWeb.render('website_sale_delivery_mondialrelay', {})).appendTo('body');
+        $(QWeb.render('website_sale_mondialrelay', {})).appendTo('body');
         this.$modal_mondialrelay = $('#modal_mondialrelay');
         this.$modal_mondialrelay.find('#btn_confirm_relay').on('click', this._onClickBtnConfirmRelay.bind(this));
 
@@ -111,7 +111,7 @@ WebsiteSaleDeliveryWidget.include({
             return;
         }
         this._rpc({
-            route: '/website_sale_delivery_mondialrelay/update_shipping',
+            route: '/website_sale_mondialrelay/update_shipping',
             params: {
                 ...this.lastRelaySelected,
             },

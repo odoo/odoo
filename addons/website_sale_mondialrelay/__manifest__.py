@@ -16,8 +16,8 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_sale_delivery_mondialrelay/static/src/js/website_sale_delivery_mondialrelay.js',
-            'website_sale_delivery_mondialrelay/static/src/xml/website_sale_delivery_mondialrelay.xml',
+            'website_sale_mondialrelay/static/src/js/website_sale_mondialrelay.js',
+            'website_sale_mondialrelay/static/src/xml/website_sale_mondialrelay.xml',
         ],
     },
     'license': 'LGPL-3',

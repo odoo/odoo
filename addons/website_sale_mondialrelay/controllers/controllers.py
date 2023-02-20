@@ -9,7 +9,7 @@ from odoo.http import request
 
 class MondialRelay(http.Controller):
 
-    @http.route(['/website_sale_delivery_mondialrelay/update_shipping'], type='json', auth="public", website=True)
+    @http.route(['/website_sale_mondialrelay/update_shipping'], type='json', auth="public", website=True)
     def mondial_relay_update_shipping(self, **data):
         order = request.website.sale_get_order()
 
