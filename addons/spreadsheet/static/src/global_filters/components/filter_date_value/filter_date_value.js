@@ -4,7 +4,7 @@ import { YearPicker } from "../year_picker";
 import { dateOptions } from "@spreadsheet/global_filters/helpers";
 
 const { DateTime } = luxon;
-const { Component, onWillUpdateProps } = owl;
+import { Component, onWillUpdateProps } from "@odoo/owl";
 
 export class DateFilterValue extends Component {
     setup() {

@@ -8,7 +8,7 @@ import { LoadingDataError } from "../o_spreadsheet/errors";
 import { DisplayNameRepository } from "./display_name_repository";
 import { LabelsRepository } from "./labels_repository";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 /**
  * @typedef {object} Field

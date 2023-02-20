@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class DashboardMobileSearchPanel extends Component {
     setup() {
