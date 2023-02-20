@@ -25,7 +25,7 @@ patch(ProductScreen.prototype, "pos_event.ProductScreen", {
                 }
             }
         } else {
-            return _super._onClickPay(...arguments);
+            return _super(...arguments);
         }
     }
 });

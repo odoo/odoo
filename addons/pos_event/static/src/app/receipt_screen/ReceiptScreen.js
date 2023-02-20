@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { ReceiptScreen } from "@point_of_sale/js/Screens/ReceiptScreen/ReceiptScreen";
 
-patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
+patch(ReceiptScreen.prototype, "pos_event.ReceiptScreen", {
     _getRegistrationIds() {
         const eventLines = this.currentOrder.get_orderlines().filter(line => line.eventId);
         const registrationIds = eventLines.flatMap(line => line.eventRegistrationIds);

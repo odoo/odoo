@@ -4,11 +4,11 @@ import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/r
 import { EventConfiguratorPopup } from "../event_configurator_popup/event_configurator_popup";
 import { identifyError } from "@point_of_sale/js/utils";
 import { useService } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 
 
-export class EventButton extends PosComponent {
+export class EventButton extends LegacyComponent {
     static template = "pos_event.EventButton";
 
     setup() {

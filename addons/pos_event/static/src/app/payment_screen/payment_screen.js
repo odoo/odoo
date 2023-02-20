@@ -56,7 +56,7 @@ patch(PaymentScreen.prototype, "pos_event.PaymentScreen", {
                 }
             }
         }
-        return await _super.validateOrder(...arguments);
+        return await _super(...arguments);
     }
 
     /**
