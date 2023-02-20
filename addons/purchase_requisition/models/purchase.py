@@ -207,7 +207,7 @@ class PurchaseOrder(models.Model):
             'view_mode': 'list',
             'res_model': 'purchase.order.line',
             'views': [(view_id, "list")],
-            'domain': [('order_id', 'in', (self | self.alternative_po_ids).ids)],
+            'domain': [('order_id', 'in', (self | self.alternative_po_ids).ids), ('display_type', '=', False)],
             'context': ctx,
         }
 

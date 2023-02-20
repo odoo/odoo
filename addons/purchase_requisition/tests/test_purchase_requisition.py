@@ -153,6 +153,13 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             line.product_id = self.product_09
             line.product_qty = 5.0
             line.price_unit = unit_price
+            line.product_uom = self.env.ref('uom.product_uom_dozen')
+        with po_form.order_line.new() as line:
+            line.display_type = "line_section"
+            line.name = "Products"
+        with po_form.order_line.new() as line:
+            line.display_type = 'line_note'
+            line.name = 'note1'
         po_form.save()
 
         # first flow: check that creating an alt PO correctly auto-links both POs to each other
@@ -166,13 +173,17 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         # check alt po was created with correct values
         alt_po_1 = orig_po.alternative_po_ids.filtered(lambda po: po.id != orig_po.id)
-        self.assertEqual(orig_po.order_line.product_id, alt_po_1.order_line.product_id, "Alternative PO should have copied the product to purchase from original PO")
-        self.assertEqual(orig_po.order_line.product_qty, alt_po_1.order_line.product_qty, "Alternative PO should have copied the qty to purchase from original PO")
+        self.assertEqual(len(alt_po_1.order_line), 3)
+        self.assertEqual(orig_po.order_line[0].product_id, alt_po_1.order_line[0].product_id, "Alternative PO should have copied the product to purchase from original PO")
+        self.assertEqual(orig_po.order_line[0].product_qty, alt_po_1.order_line[0].product_qty, "Alternative PO should have copied the qty to purchase from original PO")
+        self.assertEqual(orig_po.order_line[0].product_uom, alt_po_1.order_line[0].product_uom, "Alternative PO should have copied the product unit of measure from original PO")
+        self.assertEqual((orig_po.order_line[1].display_type, orig_po.order_line[1].name), (alt_po_1.order_line[1].display_type, alt_po_1.order_line[1].name))
+        self.assertEqual((orig_po.order_line[2].display_type, orig_po.order_line[2].name), (alt_po_1.order_line[2].display_type, alt_po_1.order_line[2].name))
         self.assertEqual(len(alt_po_1.alternative_po_ids), 2, "Newly created PO should be auto-linked to itself and original PO")
 
         # check compare POLs correctly calcs best date/price PO lines: orig_po.date_planned = best & alt_po.price = best
-        alt_po_1.order_line.date_planned += timedelta(days=1)
-        alt_po_1.order_line.price_unit = unit_price - 10
+        alt_po_1.order_line[0].date_planned += timedelta(days=1)
+        alt_po_1.order_line[0].price_unit = unit_price - 10
         action = orig_po.action_compare_alternative_lines()
         best_price_ids, best_date_ids, best_price_unit_ids = orig_po.get_tender_best_lines()
         best_price_pol = self.env['purchase.order.line'].browse(best_price_ids)
