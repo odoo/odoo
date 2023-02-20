@@ -779,7 +779,7 @@ QUnit.test(
             "_find_or_create_for_user",
             [[currentUserId]]
         );
-        assert.notok(newSettings.is_discuss_sidebar_category_channel_open);
+        assert.notOk(newSettings.is_discuss_sidebar_category_channel_open);
     }
 );
 
