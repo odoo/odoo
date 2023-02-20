@@ -78,5 +78,11 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             'dest_address_id': self.origin_po_id.dest_address_id.id,
         }
         if self.copy_products and self.origin_po_id:
-            vals['order_line'] = [Command.create({'product_id': line.product_id.id, 'product_qty': line.product_qty}) for line in self.origin_po_id.order_line]
+            vals['order_line'] = [Command.create({
+                'product_id': line.product_id.id,
+                'product_qty': line.product_qty,
+                'product_uom': line.product_uom.id,
+                'display_type': line.display_type,
+                'name': line.name,
+            }) for line in self.origin_po_id.order_line]
         return vals
