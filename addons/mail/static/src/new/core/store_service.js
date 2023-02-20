@@ -133,11 +133,8 @@ export const storeService = {
         const res = reactive(new Store(env));
         res.discuss.activeTab = res.isSmall ? "mailbox" : "all";
         ui.bus.addEventListener("resize", () => {
-            const wasSmall = res.isSmall;
             res.isSmall = ui.isSmall;
-            if (res.isSmall && !wasSmall) {
-                res.discuss.activeTab = "mailbox";
-            } else if (!res.isSmall && wasSmall) {
+            if (!res.isSmall) {
                 res.discuss.activeTab = "all";
             }
         });

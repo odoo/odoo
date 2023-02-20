@@ -20,7 +20,16 @@ patch(ThreadService.prototype, "im_livechat", {
         }
         return thread;
     },
-
+    /**
+     * @override
+     * @param {import("@mail/new/core/thread_model").Thread} thread
+     */
+    setDiscussThread(thread) {
+        this._super(thread);
+        if (this.store.isSmall && thread.type === "livechat") {
+            this.store.discuss.activeTab = "livechat";
+        }
+    },
     remove(thread) {
         if (thread.type === "livechat") {
             removeFromArray(this.store.discuss.livechat.threads, thread.localId);
