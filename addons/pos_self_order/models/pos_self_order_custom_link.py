@@ -9,6 +9,6 @@ class PosSelfOrderCustomLink(models.Model):
 
     url =  fields.Char(string='URL', required=True)
     name = fields.Char(string='Label', required=True)
-    pos_config_id = fields.Many2one('pos.config', string='Pos Config')
+    pos_config_id = fields.Many2many('pos.config', string='Pos Config')
 
     

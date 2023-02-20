@@ -14,10 +14,10 @@ class PosSelfOrder(http.Controller):
     """
     # test route
     @http.route('/pos-self-order/test', auth='public', website=True)
-    def pos_self_order_test(self):
-        pos_sudo = request.env['pos_self_order.custom_link'].sudo().search([])
-        print(pos_sudo.read())
-        print(pos_sudo.read(['url', 'name']))
+    def pos_self_order_test(self, pos_id=None):
+        # we get the custom links that we want to show for this POS
+        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([])
+        print(custom_links_sudo.filtered(lambda link: int(pos_id) in [pos.id for pos in link.pos_config_id] or not link.pos_config_id).read(['name', 'url']))
         return "Hello World"
     @http.route('/pos-self-order/', auth='public', website=True)
     def pos_self_order_start(self, table_id=None, pos_id=None, message_to_display=None):
@@ -56,6 +56,11 @@ class PosSelfOrder(http.Controller):
         # FIXME: check if table_id and pos_id exist 
         # if not, send the user to the generic page where they can choose the POS and the table
         pos_sudo = request.env['pos.config'].sudo().search([('id', '=', pos_id)])
+        # On the landing page of the app we can have a number of custom links
+        # they are defined by the restaurant employee in the backend
+        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([])
+        # TODO: i'm not sure that it's intuitive to have the custom links show in the app when the pos_config_id is empty
+        custom_links_list = custom_links_sudo.filtered(lambda link: int(pos_id) in [pos.id for pos in link.pos_config_id] or not link.pos_config_id).read(['name', 'url'])
         context = {
             'pos_id': pos_id,
             'pos_name': pos_sudo.name,
@@ -67,6 +72,7 @@ class PosSelfOrder(http.Controller):
             'self_order_location': pos_sudo.self_order_location,
             'self_order_allow_open_tabs': pos_sudo.self_order_allow_open_tabs,
             'payment_methods' : pos_sudo.payment_method_ids.read(['name']),
+            'custom_links' : custom_links_list,
         }
         if pos_sudo.module_pos_restaurant:
             context.update({

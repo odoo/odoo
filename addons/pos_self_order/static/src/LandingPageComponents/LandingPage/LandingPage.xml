@@ -52,9 +52,11 @@
                 >
                     View Menu
                 </button>
-                <t t-if="1">
-                    <button type="button" class="my-2 btn btn-outline-primary btn-lg">Custom Link 1</button>
-                    <button type="button" class="my-2 btn btn-outline-primary btn-lg">Custom Link 2</button>
+<!-- Custom Links -->
+                <t t-foreach="window.odoo.custom_links" t-as="link" t-key="link.id">
+                    <a t-attf-href="//{{link.url}}" class="btn btn-lg btn-secondary my-2" target="_blank">
+                        <t t-esc="link.name"/>
+                    </a>
                 </t>
             </div>
             <LandingPageFooter/>
