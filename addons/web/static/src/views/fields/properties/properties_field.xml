@@ -4,7 +4,7 @@
         <div t-ref="properties" class="row align-items-start">
             <t t-set="foldedSeparators" t-value="state.foldedSeparators"/>
             <t t-foreach="groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">
-                <t t-set="foldable" t-value="!!propertiesListGroup.title"/>
+                <t t-set="foldable" t-value="propertiesListGroup.title &amp;&amp; propertiesListGroup.name"/>
                 <t t-set="isFolded" t-value="propertiesListGroup.name &amp;&amp; foldedSeparators.includes(propertiesListGroup.name)"/>
                 <div class="o_inner_group grid col-lg-6">
                     <div
@@ -80,6 +80,17 @@
                     </div>
                 </div>
             </t>
+
+            <div t-attf-class="o_field_property_add {{props.columns !== 1 ? 'g-col-2' : ''}}">
+                <button
+                    t-if="!props.readonly &amp;&amp; state.canChangeDefinition"
+                    class="btn btn-light text-muted text-break m-0"
+                    t-on-click="onPropertyCreate">
+                    <i class="fa fa-plus"/>
+                    Add a Property
+                </button>
+            </div>
+
         </div>
     </t>
 </templates>
