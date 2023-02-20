@@ -112,17 +112,13 @@ class SaleOrder(models.Model):
         values = {
             'order_id': self.id,
             'name': so_description,
+            'price_unit': price_unit,
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
             'tax_id': [(6, 0, taxes_ids)],
             'is_delivery': True,
         }
-        if carrier.invoice_policy == 'real':
-            values['price_unit'] = 0
-            values['name'] += _(' (Estimated Cost: %s )', self._format_currency_amount(price_unit))
-        else:
-            values['price_unit'] = price_unit
         if carrier.free_over and self.currency_id.is_zero(price_unit) :
             values['name'] += '\n' + _('Free Shipping')
         if self.order_line:
@@ -130,14 +126,6 @@ class SaleOrder(models.Model):
         sol = SaleOrderLine.sudo().create(values)
         del context
         return sol
-
-    def _format_currency_amount(self, amount):
-        pre = post = u''
-        if self.currency_id.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=self.currency_id.symbol or '')
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=self.currency_id.symbol or '')
-        return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
 
     @api.depends('order_line.is_delivery', 'order_line.is_downpayment')
     def _compute_invoice_status(self):

@@ -149,7 +149,7 @@ class StockPicking(models.Model):
         on the stock.quant.package.
         """
         self.ensure_one()
-        view_id = self.env.ref('delivery.choose_delivery_package_view_form').id
+        view_id = self.env.ref('stock_delivery.choose_delivery_package_view_form').id
         context = dict(
             self.env.context,
             current_package_carrier_type=self.carrier_id.delivery_type,
