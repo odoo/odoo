@@ -1944,10 +1944,6 @@ patch(MockServer.prototype, 'mail', {
             // members
             const channels = this.getRecords('mail.channel', [['id', '=', message.res_id]]);
             for (const channel of channels) {
-                notifications.push([channel, 'mail.channel/new_message', {
-                    'id': channel.id,
-                    'message': messageFormat,
-                }]);
                 // notify update of last_interest_dt
                 const now = datetime_to_str(new Date());
                 const members = this.getRecords('mail.channel.member', [['id', 'in', channel.channel_member_ids]]);
@@ -1959,9 +1955,14 @@ patch(MockServer.prototype, 'mail', {
                     // simplification, send everything on the current user "test" bus, but it should send to each member instead
                     notifications.push([member, 'mail.channel/last_interest_dt_changed', {
                         'id': channel.id,
+                        'isServerPinned': member.is_pinned,
                         'last_interest_dt': member.last_interest_dt,
                     }]);
                 }
+                notifications.push([channel, 'mail.channel/new_message', {
+                    'id': channel.id,
+                    'message': messageFormat,
+                }]);
             }
         }
         this.pyEnv['bus.bus']._sendmany(notifications);

@@ -3803,5 +3803,46 @@ QUnit.test('message being a replied to another message should show message being
     );
 });
 
+QUnit.test("Message shows up even if channel data is incomplete", async function (assert) {
+    const { click, env, openDiscuss, pyEnv } =  await start();
+    await openDiscuss();
+    const correspondentUserId = pyEnv["res.users"].create({ name: "Albert" });
+    const correspondentPartnerId = pyEnv["res.partner"].create({ name: "Albert", user_ids: [correspondentUserId] });
+    const channelId = pyEnv['mail.channel'].create(
+        {
+            channel_member_ids: [
+                [0, 0, {
+                    is_pinned: true,
+                    partner_id: pyEnv.currentPartnerId,
+                }],
+                [0, 0, { partner_id: correspondentPartnerId }],
+            ],
+            channel_type: "chat",
+        },
+    );
+    await env.services.rpc(
+        "/mail/channel/notify_typing",
+        {
+            context: {
+                mockedPartnerId: correspondentPartnerId,
+            },
+            is_typing: true,
+            channel_id: channelId,
+        },
+    );
+    const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);;
+    await afterNextRender(async () =>
+        await env.services.rpc("/mail/chat_post", {
+            context: {
+                mockedUserId: correspondentUserId,
+            },
+            message_content: "hello world",
+            uuid: channel.uuid,
+        })
+    );
+    await click(".o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem:contains(Albert)");
+    assert.containsOnce(document.body, ".o_Message:contains(hello world)");
+});
+
 });
 });
