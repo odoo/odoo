@@ -8,7 +8,7 @@
     """,
     'category': 'Website/Website',
     'version': '0.1',
-    'depends': ['website_sale_delivery', 'delivery_mondialrelay'],
+    'depends': ['website_sale', 'delivery_mondialrelay'],
     'data': [
         'views/delivery_carrier_views.xml',
         'views/res_config_settings_views.xml',

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import http
-from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
+from odoo.addons.website_sale.controllers.delivery_main import WebsiteSaleDelivery
 from odoo.http import request
 
 
