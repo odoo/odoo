@@ -770,17 +770,31 @@ class AccountChartTemplate(models.Model):
         account_template_vals = []
         for position, fp in pycompat.izip(positions, fps):
             for tax in position.tax_ids:
-                tax_template_vals.append((tax, {
-                    'tax_src_id': tax_template_ref[tax.tax_src_id.id],
-                    'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                    'position_id': fp.id,
-                }))
+                src_id = tax_template_ref[tax.tax_src_id.id]
+                dest_id = tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False
+                position_tax_exist = fp.tax_ids.filtered_domain([
+                    ('tax_src_id', '=', src_id),
+                    ('tax_dest_id', '=', dest_id)
+                ])
+                if not position_tax_exist:
+                    tax_template_vals.append((tax, {
+                        'tax_src_id': src_id,
+                        'tax_dest_id': dest_id,
+                        'position_id': fp.id,
+                    }))
             for acc in position.account_ids:
-                account_template_vals.append((acc, {
-                    'account_src_id': acc_template_ref[acc.account_src_id.id],
-                    'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                    'position_id': fp.id,
-                }))
+                src_id = acc_template_ref[acc.account_src_id.id]
+                dest_id = acc_template_ref[acc.account_dest_id.id]
+                position_account_exist = fp.tax_ids.filtered_domain([
+                    ('tax_src_id', '=', src_id),
+                    ('tax_dest_id', '=', dest_id)
+                ])
+                if not position_account_exist:
+                    account_template_vals.append((acc, {
+                        'account_src_id': src_id,
+                        'account_dest_id': dest_id,
+                        'position_id': fp.id,
+                    }))
         self._create_records_with_xmlid('account.fiscal.position.tax', tax_template_vals, company)
         self._create_records_with_xmlid('account.fiscal.position.account', account_template_vals, company)
 
