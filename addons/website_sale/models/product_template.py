@@ -185,12 +185,7 @@ class ProductTemplate(models.Model):
 
             product_taxes = template.sudo().taxes_id.filtered(lambda t: t.company_id == t.env.company)
             taxes = fiscal_position.map_tax(product_taxes)
-
-            price_reduce = self.env['account.tax']._fix_tax_included_price_company(
-                price_reduce, product_taxes, taxes, self.env.company)
-
             tax_display = 'total_excluded' if self.env.company.show_line_subtotals_tax_selection == 'tax_excluded' else 'total_included'
-            price_reduce = taxes.compute_all(price_reduce, currency, 1, template, partner_sudo)[tax_display]
 
             template_price_vals = {
                 'price_reduce': price_reduce
@@ -229,6 +224,8 @@ class ProductTemplate(models.Model):
                         fields.Datetime.now(),
                         round=False
                     )
+            template_price_vals['price_reduce'] = self.env['account.tax']._fix_tax_included_price_company(template_price_vals['price_reduce'], product_taxes, taxes, self.env.company)
+            template_price_vals['price_reduce'] = taxes.compute_all(template_price_vals['price_reduce'], pricelist.currency_id, 1, template, partner_sudo)[tax_display]
 
             res[template.id] = template_price_vals
 
