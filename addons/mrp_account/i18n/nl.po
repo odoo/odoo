@@ -3,8 +3,8 @@
 # 	* mrp_account
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
 # 
 msgid ""
@@ -22,18 +22,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/mrp_production.py:0
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+#, python-format
 msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytische regel"
+msgstr "Kostenplaatsregel"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
@@ -59,8 +61,10 @@ msgid "Bill of Material"
 msgstr "Stuklijst"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Bills of Materials"
 msgstr "Stuklijsten"
 
@@ -107,7 +111,7 @@ msgstr "Extra eenheidkosten"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Boeking"
+msgstr "Boekingsregel"
 
 #. module: mrp_account
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
@@ -115,8 +119,10 @@ msgid "Manufacturing Order"
 msgstr "Productieorder"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
+#, python-format
 msgid "Manufacturing Orders"
 msgstr "Productieorders"
 
@@ -187,7 +193,7 @@ msgstr "Werkplek"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "Werkplek gebruik"
+msgstr "Gebruik werkplek"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
@@ -200,9 +206,15 @@ msgid "Work Order Count"
 msgstr "Aantal werkorders"
 
 #. module: mrp_account
+#: code:addons/mrp_account/models/analytic_account.py:0
+#, python-format
+msgid "Work Orders"
+msgstr "Werkorders"
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr "Werkplek productiviteitslogboek"
+msgstr "Werkplek effectiviteitslog"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids

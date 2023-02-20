@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 14:37+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -26,19 +26,19 @@ msgstr ""
 msgid "All Onboarding Progress Records (across companies)."
 msgstr ""
 "Toutes les fiches de progression dans le parcours d'intégration (de toutes "
-"les entreprises)"
+"les sociétés)."
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__progress_ids
 msgid "All related Onboarding Progress Step Records (across companies)"
 msgstr ""
 "Toutes les fiches de progression dans le parcours d'intégration (de toutes "
-"les entreprises) par étape"
+"les sociétés) par étape"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_form
 msgid "Background color"
-msgstr "Couleur de l'arrière plan"
+msgstr "Couleur de fond"
 
 #. module: onboarding
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__panel_background_color__blue
@@ -58,7 +58,7 @@ msgstr "Action de fermeture"
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__panel_background_color
 msgid "Color gradient added to the panel's background."
-msgstr "Dégradé de couleurs ajouté à l'arrière-plan du panneau"
+msgstr "Dégradé de couleurs ajouté à l'arrière-plan du panneau."
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__company_id
@@ -130,14 +130,6 @@ msgid "Just done"
 msgstr "Fait à l'instant"
 
 #. module: onboarding
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_progress____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
-
-#. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__write_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__write_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__write_uid
@@ -154,6 +146,7 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: onboarding
+#. odoo-python
 #: code:addons/onboarding/models/onboarding_step.py:0
 #, python-format
 msgid "Let's do it"
@@ -169,7 +162,7 @@ msgstr "Nom du parcours d'intégration"
 msgid "Name of the onboarding model action to execute when closing the panel."
 msgstr ""
 "Nom de l'action du modèle d'intégration à exécuter lors de la fermeture du "
-"panneau"
+"panneau."
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__panel_step_open_action_name
@@ -198,7 +191,7 @@ msgstr "Pas fait"
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__onboarding_id
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__onboarding_id
 msgid "Onboarding"
-msgstr "Intégration"
+msgstr "Parcours d'intégration"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__current_progress_id
@@ -225,7 +218,7 @@ msgstr "Traqueur de l'étape de progression dans le parcours d'intégration"
 msgid "Onboarding Progress Step for the current context (company)."
 msgstr ""
 "Étape de progression dans le parcours d'intégration pour le contexte actuel "
-"(entreprise)"
+"(société)."
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_progress
@@ -237,7 +230,7 @@ msgstr "Traqueur de la progression dans le parcours d'intégration"
 msgid "Onboarding Progress for the current context (company)."
 msgstr ""
 "Progression dans le parcours d'intégration pour le contexte actuel "
-"(entreprise)"
+"(société)."
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_onboarding_step
@@ -286,7 +279,7 @@ msgstr "Étapes du parcours d'intégration"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__route_name
 msgid "One word name"
-msgstr "Nom uniterme"
+msgstr "Nom en un mot"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__panel_step_open_action_name
@@ -301,17 +294,17 @@ msgstr "Orange"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__panel_background_color
 msgid "Panel's Background color"
-msgstr "Couleur de l'arrière-plan du panneau"
+msgstr "Couleur de fond du panneau"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__panel_background_image
 msgid "Panel's background image"
-msgstr "Image d'arrière-plan du panneau"
+msgstr "Image de fond du panneau"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__progress_step_ids
 msgid "Progress Steps Trackers"
-msgstr "Traqueurs d'étape de progression"
+msgstr "Traqueurs d'étapes de progression"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__progress_id
@@ -333,9 +326,10 @@ msgstr "Séquence"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__is_per_company
 msgid "Should be done per company?"
-msgstr "À faire par entreprise ? "
+msgstr "À faire par société ? "
 
 #. module: onboarding
+#. odoo-python
 #: code:addons/onboarding/models/onboarding_step.py:0
 #, python-format
 msgid "Step Completed! - Click to review"
@@ -363,7 +357,7 @@ msgid ""
 "same company."
 msgstr ""
 "Il ne peut y avoir plusieurs enregistrements de la même réalisation de "
-"parcours d'intérêt pour la même entreprise."
+"parcours d'intégration pour la même société."
 
 #. module: onboarding
 #: model:ir.model.constraint,message:onboarding.constraint_onboarding_progress_step_progress_step_uniq

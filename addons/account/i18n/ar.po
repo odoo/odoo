@@ -6,18 +6,19 @@
 # Talal Albahra <talal.albahra@outlook.com>, 2023
 # ِAD Market <admarketsa@gmail.com>, 2023
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Niyas Raphy, 2023
 # Ziani Ahmed (Zity), 2023
+# islam abdelmaaboud <islamabdelmaaboud@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-02-17 06:41+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -327,6 +328,11 @@ msgstr "30 يوماً"
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
 msgid "30 days End of Month on the 10th"
 msgstr "30 يومًا نهاية الشهر في اليوم 10"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% مقدم بنهاية الشهر التالي"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
@@ -2751,11 +2757,6 @@ msgid "Attach a file"
 msgstr "إرفاق ملف"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
-msgid "Attachment"
-msgstr "مرفق"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_attachment_count
@@ -2770,6 +2771,7 @@ msgid "Attachment Count"
 msgstr "عدد المرفقات"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__attachment_ids
@@ -4875,6 +4877,7 @@ msgstr "فاتورة العميل"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -5340,6 +5343,26 @@ msgstr "حذف نسخة الرسالة"
 #: model:res.groups,name:account.group_delivery_invoice_address
 msgid "Delivery Address"
 msgstr "عنوان التوصيل "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "حساب أجور المدراء التنفيذيين التجريبي "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "حساب رأس المال التجريبي "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "حساب بيع الأرض التجريبي "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "حساب المخزون التجريبي "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -6103,17 +6126,6 @@ msgstr "Epd Needed"
 #, python-format
 msgid "Equity"
 msgstr "رأس المال "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid ""
-"Error when reading the original PDF for: %r.\n"
-"Please make sure the file is valid."
-msgstr ""
-"حدث خطأ ما أثناء قراءة ملف PDF الأصلي لـ: %r.\n"
-"يرجى التأكد من صلاحية الملف. "
 
 #. module: account
 #. odoo-python
@@ -9794,6 +9806,11 @@ msgid "Off-Balance Sheet"
 msgstr "خارج الميزانية العمومية "
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "أثاث مكتبي "
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10662,6 +10679,11 @@ msgstr "شروط الدفع: 30 يوماً، حصم بنسبة 2% عند الد�
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
 msgid "Payment terms: 30 days End of Month on the 10th"
 msgstr "شروط الدفع: 30 يوماً، نهاية الشهر بتاريخ 10 "
+
+#. module: account
+#: model_terms:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment terms: 30% Advance End of Following Month"
+msgstr "شروط السداد: 30% مقدم نهاية الشهر التالي"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
@@ -13532,6 +13554,15 @@ msgstr "يجب أن يكون لشروط الدفع بند رصيد واحد عل
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "الحساب %s (%s) مهمل."
 
@@ -14532,6 +14563,15 @@ msgid "There was an error processing this page."
 msgstr "حدث خطأ أثناء معالجة هذه الصفحة. "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "يتم تعيين هذه الضرائب عند إضافة أي منتج جديد. "
@@ -14832,6 +14872,15 @@ msgid ""
 msgstr ""
 "سوف يُستخدم شرط السداد هذا عوضاً عن الشرط الافتراضي لإصدار أوامر المبيعات "
 "وفواتير العملاء "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15237,6 +15286,13 @@ msgid "Unposted"
 msgstr "غير مُرحل"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr "القيود غير المُرحّلة"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "قيود يومية غير مُرحلة"
@@ -15589,6 +15645,7 @@ msgstr "تم إنشاء فاتورة المورد "
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -16221,17 +16278,6 @@ msgstr "لا يمكنك حذف عنصر مرتبط بقيد مرحّل. "
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"You cannot delete this entry, as it has already consumed a sequence number "
-"and is not the last one in the chain. You should probably revert it instead."
-msgstr ""
-"لا يمكنك حذف هذا القيد، حيث أنه استهلك رقم تسلسل بالفعل وليس الأخير في "
-"السلسلة. من الأفضل التراجع عوضاً عن ذلك. "
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -16300,6 +16346,16 @@ msgid ""
 msgstr ""
 "لا يمكنك امتلاك أكثر من حساب واحد مع \"أرباح السنة الجارية\" كنوع. "
 "(الحسابات: %s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted.                         If you are absolutely sure you want "
+"to modify the opening balance of your accounts, reset the move to draft."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16878,24 +16934,6 @@ msgstr "اليومية الهدف "
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "الشركة الرئيسية "
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
-"incompatible with its category : %s."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/product.py:0
-#, python-format
-msgid ""
-"This product is already being used in posted Journal Entries.\n"
-"If you want to change its Unit of Measure, please archive this product and create a new one."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form

@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-02-17 06:42+0000\n"
 "PO-Revision-Date: 2023-01-17 11:02+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -27,6 +27,7 @@ msgid "API"
 msgstr "API"
 
 #. module: base_geolocalize
+#. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
@@ -34,12 +35,12 @@ msgid ""
 "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
 msgstr ""
 "Clé API pour GeoCoding (Places) requise. \n"
-"Renvez-vous sur https://developers.google.com/maps/documentation/geocoding/get-api-key pour plus d'informations."
+"Rendez-vous sur https://developers.google.com/maps/documentation/geocoding/get-api-key pour plus d'informations."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "API:"
-msgstr "API:"
+msgstr "API :"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -54,7 +55,7 @@ msgstr "Calculer sur base de l'adresse"
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de config"
+msgstr "Paramètres de configuration"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -74,13 +75,14 @@ msgstr "Créé le"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: base_geolocalize
+#. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Error with geolocation server:"
-msgstr "Erreur avec le serveur de géolocalisation: "
+msgstr "Erreur avec le serveur de géolocalisation :"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -121,12 +123,7 @@ msgstr "ID"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
-msgstr "Clé:"
-
-#. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Clé :"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
@@ -146,7 +143,7 @@ msgstr "Lat :"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Long:"
-msgstr "Long:"
+msgstr "Long :"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
@@ -154,6 +151,7 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: base_geolocalize
+#. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 #, python-format
 msgid "No match found for %(partner_names)s address(es)."
@@ -165,6 +163,7 @@ msgid "Partner Assignment"
 msgstr "Assignation de partenaire"
 
 #. module: base_geolocalize
+#. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid "Provider %s is not implemented for geolocation service."
@@ -185,9 +184,10 @@ msgstr "Actualiser la localisation"
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
 msgid "Tech Name"
-msgstr "Nom Technique"
+msgstr "Nom technique"
 
 #. module: base_geolocalize
+#. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 #, python-format
 msgid ""
@@ -199,12 +199,12 @@ msgid ""
 "Then, go to Developer Console, and enable the APIs:\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 msgstr ""
-"Impossible à géolocaliser, erreur reçue:\n"
+"Impossible à géolocaliser, erreur reçue :\n"
 "%s\n"
 "\n"
-"Google en a fait une fonctionnalité payante.\n"
+"Google a rendu cette fonctionnalité payante.\n"
 "Vous devez d'abord activer la facturation sur votre compte Google.\n"
-"Ensuite, rendez-vous sur la Console Développeur et activer les APIs:\n"
+"Ensuite, allez à la Console Développeur et activez les APIs :\n"
 "Geocoding, Maps Static, Maps Javascript.\n"
 
 #. module: base_geolocalize
@@ -223,6 +223,7 @@ msgstr ""
 "plus d'informations."
 
 #. module: base_geolocalize
+#. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 #, python-format
 msgid "Warning"

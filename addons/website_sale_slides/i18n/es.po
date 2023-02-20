@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 15:00+0000\n"
 "Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
@@ -49,6 +49,7 @@ msgid "About us"
 msgstr "Acerca de"
 
 #. module: website_sale_slides
+#. odoo-python
 #: code:addons/website_sale_slides/models/product_product.py:0
 #, python-format
 msgid "Access to:%s%s"
@@ -72,14 +73,14 @@ msgid "Buy Now Button"
 msgstr "Botón comprar ahora"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Buy the course to validate your answers!"
 msgstr "Compre el curso para comprobar sus respuestas."
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Buy this Course"
@@ -99,7 +100,6 @@ msgid "Course"
 msgstr "Curso"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.default_product_course
 #: model:product.template,name:website_sale_slides.default_product_course_product_template
 msgid "Course Access"
 msgstr "Acceso al curso"
@@ -125,7 +125,6 @@ msgid "Currency"
 msgstr "Moneda"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.product_course_channel_6
 #: model:product.template,name:website_sale_slides.product_course_channel_6_product_template
 msgid "DIY Furniture Course"
 msgstr "Curso Muebles de bricolaje"
@@ -182,7 +181,7 @@ msgid "Join this Course"
 msgstr "Unirse a este curso"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid ""
@@ -288,14 +287,14 @@ msgid "Sales Order"
 msgstr "Pedido de venta"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Sign in"
 msgstr "Identificarse"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Sign in and buy the course to take the quiz"
@@ -307,7 +306,6 @@ msgid "Start Learning"
 msgstr "Comience a aprender"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.product_course_channel_1
 #: model:product.template,name:website_sale_slides.product_course_channel_1_product_template
 msgid "Taking care of Trees Course"
 msgstr "Curso Cuidado de los Árboles"
@@ -318,7 +316,7 @@ msgid "This course cannot be bought because its linked product"
 msgstr "Este curso no se puede comprar porque su producto está vinculado"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "This course is paid."
@@ -347,16 +345,6 @@ msgstr "Ingresos totales"
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
 msgid "Total revenues"
 msgstr "Ingresos totales"
-
-#. module: website_sale_slides
-#: model:product.product,uom_name:website_sale_slides.default_product_course
-#: model:product.product,uom_name:website_sale_slides.product_course_channel_1
-#: model:product.product,uom_name:website_sale_slides.product_course_channel_6
-#: model:product.template,uom_name:website_sale_slides.default_product_course_product_template
-#: model:product.template,uom_name:website_sale_slides.product_course_channel_1_product_template
-#: model:product.template,uom_name:website_sale_slides.product_course_channel_6_product_template
-msgid "Units"
-msgstr "Unidades"
 
 #. module: website_sale_slides
 #: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
@@ -392,6 +380,7 @@ msgstr ""
 "                       que haya usado en la descripción (encabezado 1, encabezado 2...)"
 
 #. module: website_sale_slides
+#. odoo-python
 #: code:addons/website_sale_slides/models/sale_order.py:0
 #, python-format
 msgid "You can only add a course once in your cart."

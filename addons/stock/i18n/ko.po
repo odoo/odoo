@@ -3,17 +3,17 @@
 # 	* stock
 # 
 # Translators:
-# JH CHOI <hwangtog@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Sarah Park, 2023
+# JH CHOI <hwangtog@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"POT-Creation-Date: 2023-02-17 06:41+0000\n"
 "PO-Revision-Date: 2023-01-17 14:58+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,6 +257,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -916,6 +917,13 @@ msgid "All at once"
 msgstr "한번에"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "전체 반품 이동"
@@ -1247,6 +1255,13 @@ msgid "Before scheduled date"
 msgstr ""
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "차단 메시지"
@@ -1284,6 +1299,11 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr "활성 필드의 선택을 취소하면, 삭제하지 않고 위치를 숨길 수 있습니다."
+
+#. module: stock
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
+msgstr "케이블 관리 상자"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1385,6 +1405,18 @@ msgid "Category Routes"
 msgstr "범주 경로"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
 msgid "Chained Move Exists"
 msgstr "연결된 이동이 있음"
@@ -1457,7 +1489,7 @@ msgstr "이 위치를 사용하여 폐기/손상된 상품을 넣을 수 있게 
 #: code:addons/stock/wizard/stock_label_type.py:0
 #, python-format
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "라벨 레이아웃 선택"
 
 #. module: stock
 #. odoo-python
@@ -1482,12 +1514,12 @@ msgstr "목적지 위치 선택"
 #. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
-msgstr ""
+msgstr "로트 라벨 인쇄용 시트 레이아웃 선택"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "라벨 인쇄용 시트 레이아웃 선택"
 
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
@@ -1512,7 +1544,7 @@ msgstr "라인 삭제"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Clear quantities"
-msgstr ""
+msgstr "수량 삭제"
 
 #. module: stock
 #. odoo-javascript
@@ -2270,9 +2302,11 @@ msgid "Delivered Qty"
 msgstr "배송된 수량"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__outgoing
 #: model:ir.ui.menu,name:stock.menu_delivery
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
 msgid "Delivery"
 msgstr "배송"
 
@@ -2289,6 +2323,7 @@ msgstr "배송 방법"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -2923,8 +2958,10 @@ msgstr ""
 "그렇지 않으면 여기에는 '내부' 유형의 재고 위치에 저장된 품목이 포함됩니다."
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+#, python-format
 msgid "Forecasted"
 msgstr "예측완료"
 
@@ -2946,7 +2983,9 @@ msgid "Forecasted Expected date"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Forecasted Inventory"
 msgstr "예상 재고"
 
@@ -2970,8 +3009,7 @@ msgstr "예상 입고"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
-#: model:ir.actions.report,name:stock.stock_replenishment_report_product_product_action
-#: model:ir.actions.report,name:stock.stock_replenishment_report_product_template_action
+#: model:ir.actions.client,name:stock.stock_replenishment_product_template_action
 #, python-format
 msgid "Forecasted Report"
 msgstr ""
@@ -2987,7 +3025,9 @@ msgid "Forecasted Weight"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Forecasted with Pending"
 msgstr ""
 
@@ -3003,7 +3043,9 @@ msgid "Free Qty"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Free Stock"
 msgstr "여유 재고"
 
@@ -3097,6 +3139,13 @@ msgstr "보다 전문화 된 범주에 우선 순위를 부여하여 목록 맨 
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
 msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "창고를 표시할 때 이 내역의 순서를 제공합니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3269,6 +3318,15 @@ msgstr "아이콘"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "예외 활동을 표시하기 위한 아이콘"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -3464,11 +3522,22 @@ msgid "In Type"
 msgstr "유형 있음"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__incoming_qty
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Incoming"
 msgstr "수신"
 
@@ -3478,7 +3547,9 @@ msgid "Incoming Date"
 msgstr "입고 날짜"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Incoming Draft Transfer"
 msgstr "입고 재고 이동 초안"
 
@@ -3602,6 +3673,14 @@ msgid "Invalid domain right operand %s"
 msgstr "잘못된 도메인 오른쪽 피연산자 %s"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr "재고 수량"
@@ -3683,7 +3762,10 @@ msgid "Inventory Loss"
 msgstr "재고 손실"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Inventory On Hand"
 msgstr "현재고"
 
@@ -4573,6 +4655,17 @@ msgid "My Activity Deadline"
 msgstr "내 활동 마감일"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr ""
@@ -4817,8 +4910,8 @@ msgstr "일반"
 #. odoo-python
 #. odoo-javascript
 #: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
 msgstr "사용불가"
@@ -4907,11 +5000,13 @@ msgid "October"
 msgstr "10월"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+#, python-format
 msgid "On Hand"
 msgstr "보유량"
 
@@ -5124,21 +5219,36 @@ msgid "Other Information"
 msgstr "기타 정보"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
 msgstr "출력 유형"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__outgoing_qty
-#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Outgoing"
 msgstr "출고"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Outgoing Draft Transfer"
 msgstr ""
 
@@ -5666,6 +5776,8 @@ msgid "Produced Qty"
 msgstr "생산된 수량"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model,name:stock.model_product_template
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_id
@@ -5690,7 +5802,6 @@ msgstr "생산된 수량"
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -5700,6 +5811,7 @@ msgstr "생산된 수량"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
+#, python-format
 msgid "Product"
 msgstr "품목"
 
@@ -5792,7 +5904,7 @@ msgstr "품목 수량이 업데이트되었습니다"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
 #, python-format
 msgid "Product Replenish"
@@ -6081,7 +6193,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities To Reset"
-msgstr ""
+msgstr "수량 재설정"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__quantity
@@ -6218,7 +6330,7 @@ msgstr "이 이동을 위해 이미 예약된 수량"
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__label_quantity
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__picking_quantity
 msgid "Quantity to print"
-msgstr ""
+msgstr "인쇄 수량"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant
@@ -6255,8 +6367,10 @@ msgid "Real Reserved Quantity"
 msgstr "실제 예약된 수량"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
 msgid "Receipt"
 msgstr "입고"
 
@@ -6268,6 +6382,7 @@ msgstr "입고 경로"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -6438,8 +6553,8 @@ msgstr "재주문 규칙 검색"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.xml:0
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
@@ -6464,12 +6579,14 @@ msgid "Replenish wizard"
 msgstr "보충 마법사"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
 #: model:ir.actions.server,name:stock.action_replenishment
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
+#, python-format
 msgid "Replenishment"
 msgstr "재보충"
 
@@ -6531,7 +6648,9 @@ msgid "Reservations"
 msgstr "예약"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserve"
 msgstr "예약"
 
@@ -6576,7 +6695,9 @@ msgid "Reserved Quantity"
 msgstr "예약된 수량"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserved from stock"
 msgstr "재고에서 예약됨"
 
@@ -6810,6 +6931,11 @@ msgstr "SMS 전송 에러"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
+msgstr ""
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr ""
 
 #. module: stock
@@ -7120,7 +7246,7 @@ msgstr "세부선택사항을 조정할 품목 속성 (예 : 색상, 크기) 설
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Set quantities"
-msgstr ""
+msgstr "수량 설정"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -7780,6 +7906,15 @@ msgid "The barcode for a location must be unique per company !"
 msgstr "공간(위치)의 바코드는 반드시 회사내에서 하나만 존재해야 합니다!"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
@@ -8149,6 +8284,15 @@ msgstr ""
 "방법은 품목을 보관하고 대신 신규 품목을 만드는 것입니다."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8400,7 +8544,7 @@ msgstr "전송"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__picking_quantity__picking
 msgid "Transfer Quantities"
-msgstr ""
+msgstr "이동할 수량"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
@@ -8483,7 +8627,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/js/report_stock_forecasted.js:0
+#: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #, python-format
 msgid "Try to add some incoming or outgoing transfers."
 msgstr "입고 또는 출고 이동을 추가해보세요."
@@ -8625,10 +8769,12 @@ msgid "Unpack"
 msgstr "포장 해체"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:stock.action_unreserve_picking
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, python-format
 msgid "Unreserve"
 msgstr "예약 해제"
 
@@ -8721,7 +8867,9 @@ msgid "Use your own routes"
 msgstr "나만의 경로 사용"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Used by"
 msgstr ""
 
@@ -8906,7 +9054,7 @@ msgstr "창고의 경로"
 
 #. module: stock
 #. odoo-javascript
-#: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 #, python-format
 msgid "Warehouse:"
 msgstr "창고:"
@@ -9271,8 +9419,8 @@ msgstr "수량은 음수값을 입력할 수 없습니다."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "임시 이동만 삭제할 수 있습니다."
+msgid "You can only delete draft or cancelled moves."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9312,6 +9460,13 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr "이미 '완료'된 재고이동을 취소할 수 없습니다. 반품을 통해 재고를 복구할 수 있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9547,6 +9702,11 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "품목 %s의 Lot/Serial 번호를 지정해야 합니다."
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
@@ -9584,6 +9744,13 @@ msgid ""
 "You'll find here smart replenishment propositions based on inventory forecasts.\n"
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
+msgstr ""
+
+#. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
 msgstr ""
 
 #. module: stock

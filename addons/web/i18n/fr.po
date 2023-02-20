@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -482,13 +482,6 @@ msgstr ""
 #, python-format
 msgid "ALL"
 msgstr "TOUT"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "ALT"
-msgstr "ALT"
 
 #. module: web
 #. odoo-javascript
@@ -2347,7 +2340,7 @@ msgstr "Impossible d'évaluer les critères de recherche"
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
 #, python-format
 msgid "False"
-msgstr "False"
+msgstr "Faux"
 
 #. module: web
 #. odoo-javascript
@@ -5227,11 +5220,13 @@ msgstr "Texte"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Le numéro d'identification fiscale. Complétez-le si le contact est soumis "
-"aux taxes gouvernementales. Utilisé dans certaines déclarations juridiques."
+"Le numéro d'identification fiscale. Les valeurs ici seront validées en "
+"fonction du format du pays. Vous pouvez utiliser '/' pour indiquer que le "
+"partenaire n'est pas sujet à la taxe."
 
 #. module: web
 #. odoo-python
@@ -5507,7 +5502,7 @@ msgstr "Traduire : %s"
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
 #, python-format
 msgid "True"
-msgstr "True"
+msgstr "Vrai"
 
 #. module: web
 #. odoo-javascript
@@ -6676,7 +6671,7 @@ msgstr "pas comme"
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "not set (false)"
-msgstr "non défini (false)"
+msgstr "non défini (faux)"
 
 #. module: web
 #. odoo-javascript
@@ -6796,7 +6791,7 @@ msgstr "défini"
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "set (true)"
-msgstr "défini (true)"
+msgstr "défini (vrai)"
 
 #. module: web
 #. odoo-javascript

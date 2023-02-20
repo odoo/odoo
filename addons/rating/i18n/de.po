@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 14:39+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -41,24 +41,6 @@ msgid "A star"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__access_token
-msgid "Access token to set the rating of the value"
-msgstr "Zugangsschlüssel, um die Bewertung dieses Wertes zu setzen"
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__message_id
-msgid ""
-"Associated message when posting a review. Mainly used in website addons."
-msgstr ""
-"Benachrichtigung, die auf eine versendete Beurteilung folgt. Hauptsächlich "
-"erfolgt dies in den Website Erweiterungen."
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__partner_id
-msgid "Author of the rating"
-msgstr "Autor dieser Bewertung"
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
 msgid "Average Rating"
@@ -86,6 +68,7 @@ msgid "Customer"
 msgstr "Kunde"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "Customer rated %r."
@@ -102,6 +85,7 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
@@ -175,6 +159,7 @@ msgid "Image URL"
 msgstr "Bild URL"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
 #: code:addons/rating/controllers/main.py:0
 #, python-format
@@ -192,11 +177,6 @@ msgid "Last 7 days"
 msgstr "Letzte 7 Tage"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
-msgid "Last Modified on"
-msgstr "Letzte Änderung am"
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert von"
@@ -211,11 +191,6 @@ msgstr "Zuletzt aktualisiert am"
 #: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Message"
 msgstr "Nachricht"
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__res_model_id
-msgid "Model of the followed resource"
-msgstr "Modell der verfolgten Ressource"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -239,6 +214,7 @@ msgid "No rating yet"
 msgstr "Noch keine Bewertung"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
@@ -246,11 +222,6 @@ msgstr "Noch keine Bewertung"
 #, python-format
 msgid "Okay"
 msgstr "Okay"
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
-msgid "Owner of the rated resource"
-msgstr "Inhaber der bewerteten Ressource"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
@@ -288,6 +259,7 @@ msgid "Percentage of happy ratings"
 msgstr "Prozentsatz der glücklichen Bewertungen"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/models/mail_thread.py:0
 #, python-format
 msgid "Posting a rating should be done using message post API."
@@ -373,12 +345,7 @@ msgid "Rating should be between 0 and 5"
 msgstr "Bewertung sollte zwischen 0 und 5 liegen"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__rating
-msgid "Rating value: 0=Unhappy, 5=Happy"
-msgstr "Bewertungswert: 0=Unzufrieden, 5=Glücklich"
-
-#. module: rating
-#. openerp-web
+#. odoo-javascript
 #: code:addons/rating/static/src/components/channel_preview_view/channel_preview_view.xml:0
 #: code:addons/rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #, python-format
@@ -397,12 +364,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Ratings"
 msgstr "Bewertungen"
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_mixin__rating_last_feedback
-#: model:ir.model.fields,help:rating.field_rating_rating__feedback
-msgid "Reason of the rating"
-msgstr "Begründung der Bewertung"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
@@ -431,6 +392,7 @@ msgid "Resource name"
 msgstr "Ressourcenname"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top

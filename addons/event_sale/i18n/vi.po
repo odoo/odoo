@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-02-17 06:42+0000\n"
 "PO-Revision-Date: 2023-01-17 11:03+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -174,6 +174,8 @@ msgstr "Được tạo vào"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__currency_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__currency_id
+#: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__currency_id
 msgid "Currency"
 msgstr "Tiền tệ"
 
@@ -247,18 +249,15 @@ msgstr "Sự kiện Ok"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_id
-#: model:product.product,name:event_sale.product_product_event
 msgid "Event Registration"
 msgstr "Đăng ký Sự kiện"
 
 #. module: event_sale
-#: model:product.product,name:event_sale.product_product_event_standard
 #: model:product.template,name:event_sale.product_product_event_standard_product_template
 msgid "Event Registration - Standard"
 msgstr ""
 
 #. module: event_sale
-#: model:product.product,name:event_sale.product_product_event_vip
 #: model:product.template,name:event_sale.product_product_event_vip_product_template
 msgid "Event Registration - VIP"
 msgstr ""
@@ -341,6 +340,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: event_sale
+#. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 #, python-format
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
@@ -366,14 +366,6 @@ msgstr ""
 #: model:ir.model,name:event_sale.model_account_move
 msgid "Journal Entry"
 msgstr "Bút toán "
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator____last_update
-#: model:ir.model.fields,field_description:event_sale.field_event_sale_report____last_update
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
-msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
@@ -676,15 +668,6 @@ msgstr "Giao dịch"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__draft
 msgid "Unconfirmed"
 msgstr "Chưa xác nhận"
-
-#. module: event_sale
-#: model:product.product,uom_name:event_sale.product_product_event
-#: model:product.product,uom_name:event_sale.product_product_event_standard
-#: model:product.product,uom_name:event_sale.product_product_event_vip
-#: model:product.template,uom_name:event_sale.product_product_event_standard_product_template
-#: model:product.template,uom_name:event_sale.product_product_event_vip_product_template
-msgid "Units"
-msgstr "Đơn vị"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed

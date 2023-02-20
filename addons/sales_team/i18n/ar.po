@@ -3,29 +3,24 @@
 # 	* sales_team
 # 
 # Translators:
-# Nisrine Tagri <nta@odoo.com>, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
-# Martin Trigaux, 2022
-# Niyas Raphy, 2022
+# Niyas Raphy, 2023
+# Nisrine Tagri <nta@odoo.com>, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Niyas Raphy, 2022\n"
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
+"PO-Revision-Date: 2023-01-17 14:58+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-
-#. module: sales_team
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
-msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"إدارة \"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -82,6 +77,7 @@ msgid ""
 msgstr "قم بإضافة أعضاء لإسناد مستنداتهم إلى فريق المبيعات هذا تلقائياً. "
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -92,6 +88,7 @@ msgstr ""
 "الحالي %(team_name)s. "
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 #, python-format
 msgid ""
@@ -102,6 +99,7 @@ msgstr ""
 "الحالي %(team_names)s. "
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -137,6 +135,7 @@ msgid "Avatar"
 msgstr "الصورة الرمزية"
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Big Pretty Button :)"
@@ -148,6 +147,7 @@ msgid "CRM Tag"
 msgstr "علامة تصنيف إدارة علاقات العملاء "
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
@@ -170,7 +170,6 @@ msgid "Company"
 msgstr "الشركة "
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_config
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Configuration"
 msgstr "التهيئة "
@@ -369,13 +368,6 @@ msgid "Is Follower"
 msgstr "متابع"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag____last_update
-#: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member____last_update
-msgid "Last Modified on"
-msgstr "آخر تعديل في"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__write_uid
@@ -568,6 +560,7 @@ msgid "Salesteams Search"
 msgstr "البحث في فرق المبيعات"
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Sample data"
@@ -656,6 +649,7 @@ msgstr ""
 "\"التحضير لاجتماع\"). "
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -685,6 +679,7 @@ msgid "UX: Limit to team company or all if no company"
 msgstr "تجربة المستخدم: يقتصر على شركة فريق أو الجميع، إذا لم تكن هناك شركة "
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
@@ -757,6 +752,7 @@ msgid "Website"
 msgstr "الموقع الإلكتروني"
 
 #. module: sales_team
+#. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 #, python-format
 msgid ""

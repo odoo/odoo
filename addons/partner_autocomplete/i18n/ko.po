@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 14:37+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -26,7 +26,7 @@ msgid "Additional info"
 msgstr "추가 정보"
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Buy more credits"
@@ -38,6 +38,7 @@ msgid "Companies"
 msgstr "회사"
 
 #. module: partner_autocomplete
+#. odoo-python
 #: code:addons/partner_autocomplete/models/res_company.py:0
 #, python-format
 msgid "Company auto-completed by Odoo Partner Autocomplete Service"
@@ -86,12 +87,7 @@ msgid "HTTP Routing"
 msgstr "HTTP 라우팅"
 
 #. module: partner_autocomplete
-#: model:ir.model,name:partner_autocomplete.model_iap_account
-msgid "IAP Account"
-msgstr "IAP 계정"
-
-#. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 #, python-format
 msgid "IAP Account Token missing"
@@ -118,11 +114,6 @@ msgid "Is synched"
 msgstr "동기화 여부"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync____last_update
-msgid "Last Modified on"
-msgstr "최근 수정일"
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
@@ -133,13 +124,14 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: partner_autocomplete
+#. odoo-python
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 #, python-format
 msgid "No account token"
 msgstr ""
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 #, python-format
 msgid "Not enough credits for Partner Autocomplete"
@@ -152,8 +144,6 @@ msgstr "파트너"
 
 #. module: partner_autocomplete
 #: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
-#: model:ir.cron,cron_name:partner_autocomplete.ir_cron_partner_autocomplete
-#: model:ir.cron,name:partner_autocomplete.ir_cron_partner_autocomplete
 msgid "Partner Autocomplete : Sync with remote DB"
 msgstr "협력사 자동 완성 : 원격 DB와 동기화"
 
@@ -163,33 +153,37 @@ msgid "Partner Autocomplete Sync"
 msgstr "협력사 자동 완성 동기화"
 
 #. module: partner_autocomplete
+#. odoo-python
 #: code:addons/partner_autocomplete/models/res_partner.py:0
 #, python-format
 msgid "Partner created by Odoo Partner Autocomplete Service"
 msgstr "Odoo 협력사 자동 완성 서비스로 만든 협력사"
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Placeholder"
 msgstr "자리 표시자"
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_fieldchar.js:0
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:0
 #, python-format
 msgid "Searching Autocomplete..."
 msgstr "자동 완성 검색중..."
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Set Your Account Token"
 msgstr "계정 토큰 설정"
 
 #. module: partner_autocomplete
+#. odoo-python
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 #, python-format
 msgid "Test mode"

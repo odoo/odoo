@@ -7,14 +7,15 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2023
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
 # Martin Trigaux, 2023
+# 宇洛 李, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 14:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: 宇洛 李, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -698,10 +699,10 @@ msgstr "<span class=\"o_stat_text\">已售</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">合计</span>\n"
-"                          <span groups=\"account.group_show_line_subtotals_tax_included\">总价</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">金额</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">总价格</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1501,6 +1502,11 @@ msgid "Currency Rate"
 msgstr "汇率"
 
 #. module: sale
+#: model:product.attribute.value,name:sale.product_attribute_value_7
+msgid "Custom"
+msgstr "自定义"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
 msgstr "自定义值"
@@ -1671,6 +1677,11 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "你能承诺给客户的交货日期，通过服务产品的订单明细行的最小前置时间计算。一旦发货，订单的发货策略将会被考虑来决定是使用订单明细行的最小或最大前置时间。"
+
+#. module: sale
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "定金"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id

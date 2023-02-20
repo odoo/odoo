@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-02-17 06:42+0000\n"
 "PO-Revision-Date: 2023-01-17 14:37+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -93,14 +93,14 @@ msgid "Add a new tag"
 msgstr "添加新標籤"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add a note"
 msgstr "增加備註"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add new note"
@@ -122,7 +122,7 @@ msgid "By sticky note Category"
 msgstr "按待辦事項類別"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Channel"
@@ -174,11 +174,6 @@ msgstr "刪除"
 #: model:ir.model.fields,field_description:note.field_note_tag__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
-
-#. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
-msgid "Dropdown menu"
-msgstr "下拉清單"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
@@ -244,7 +239,6 @@ msgstr "勾選代表有新訊息需要您留意。"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
-#: model:ir.model.fields,help:note.field_note_note__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "勾選代表有訊息發生傳送錯誤。"
 
@@ -252,13 +246,6 @@ msgstr "勾選代表有訊息發生傳送錯誤。"
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
 msgid "Is Follower"
 msgstr "是關注人"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note____last_update
-#: model:ir.model.fields,field_description:note.field_note_stage____last_update
-#: model:ir.model.fields,field_description:note.field_note_tag____last_update
-msgid "Last Modified on"
-msgstr "最後修改於"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_uid
@@ -357,6 +344,7 @@ msgid "Note Tag"
 msgstr "待辦事項標籤"
 
 #. module: note
+#. odoo-python
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
@@ -407,7 +395,7 @@ msgid "Related Note"
 msgstr "相關便簽"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Remember..."
@@ -425,16 +413,11 @@ msgid "Responsible User"
 msgstr "責任使用者"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "SAVE"
 msgstr "存檔"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "簡訊發送錯誤"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -514,7 +497,7 @@ msgid "Tags"
 msgstr "標籤"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/models/activity_menu_view.js:0
 #, python-format
 msgid "Today"
@@ -539,13 +522,3 @@ msgstr "記錄的異常活動的類型。"
 #: model:ir.model,name:note.model_res_users
 msgid "User"
 msgstr "使用者"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "網站訊息"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "網站溝通記錄"

@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -29,7 +29,7 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"                {{ (object.company_id.name + ': Nous sommes ravis de vous informer que votre commande n° ' + object.origin + ' a été expédiée.' if object.origin else object.company_id.name + ': Nous sommes ravis de vous informer que votre commande a été expédiée.') + (' Votre numéro de suivi est ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': Nous avons le plaisir de vous informer que votre commande n° ' + object.origin + ' a été expédiée.' if object.origin else object.company_id.name + ': Nous avons le plaisir de vous informer que votre commande a été expédiée.') + (' Votre numéro de suivi est ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 
 #. module: stock_sms
@@ -45,7 +45,7 @@ msgstr "Sociétés"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de config"
+msgstr "Paramètres de configuration"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -55,7 +55,7 @@ msgstr "Confirmer"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr "Confirmer stock SMS"
+msgstr "SMS pour confirmer le stock"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
@@ -70,7 +70,7 @@ msgstr "Créé le"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr "Livraison: Envoyer par SMS"
+msgstr "Livraison : Envoyer par SMS"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -80,22 +80,17 @@ msgstr "Désactiver SMS"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr "A reçu des avertissements stock SMS"
+msgstr "A reçu des avertissements de stock par SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
 msgid "ID"
 msgstr "ID"
-
-#. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
@@ -110,9 +105,10 @@ msgstr "Dernière mise à jour le"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__pick_ids
 msgid "Pick"
-msgstr "Préparer"
+msgstr "Picking"
 
 #. module: stock_sms
+#. odoo-python
 #: code:addons/stock_sms/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 #, python-format

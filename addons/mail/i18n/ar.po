@@ -7,17 +7,17 @@
 # MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2023
 # Niyas Raphy, 2023
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-02-17 06:42+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Mustafa J. Kadhem <safi2266@gmail.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -819,11 +819,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong>Original note:</strong>"
 msgstr "<strong>الملاحظة الأصلية:</strong>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<strong>Recommended Activities</strong>"
-msgstr "<strong>الأنشطة المقترحة</strong>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2383,6 +2378,7 @@ msgstr "الشركات "
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -5459,6 +5455,7 @@ msgstr "التسجيل كملاحظة داخلية "
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chatter/chatter.xml:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #, python-format
 msgid "Log note"
 msgstr "تسجل ملاحظة"
@@ -6848,6 +6845,13 @@ msgid "Open in Discuss"
 msgstr "فتح في المناقشة "
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
+msgstr "فتح ملف التعريف"
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
@@ -7575,6 +7579,11 @@ msgstr "اسم المستلم "
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Recipients"
 msgstr "المستلمين"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Recommended Activities"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
@@ -8987,11 +8996,10 @@ msgstr "تم رفض وضع ملء الشاشة من قِبَل المتصفح "
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"رقم التعريف الضريبي. قم بإكماله إذا كانت جهة الاتصال تخضع للضرائب الحكومية. "
-"يُستخدم في بعض المستندات القانونية."
 
 #. module: mail
 #. odoo-javascript
