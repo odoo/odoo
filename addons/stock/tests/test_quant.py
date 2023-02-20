@@ -510,7 +510,7 @@ class StockQuant(TransactionCase):
             })
         with self.assertRaises(AccessError):
             quant.with_user(self.demo_user).write({'quantity': 2.0})
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             quant.with_user(self.demo_user).unlink()
 
         self.env = self.env(user=self.stock_user)
