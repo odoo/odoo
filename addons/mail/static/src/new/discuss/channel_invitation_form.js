@@ -25,9 +25,15 @@ export class ChannelInvitationForm extends Component {
             selectedPartners: [],
             searchResultCount: 0,
         });
-        onWillStart(() => this.fetchPartnersToInvite());
+        onWillStart(() => {
+            if (this.store.user) {
+                this.fetchPartnersToInvite();
+            }
+        });
         onMounted(() => {
-            this.inputRef.el.focus();
+            if (this.store.user) {
+                this.inputRef.el.focus();
+            }
         });
     }
 
