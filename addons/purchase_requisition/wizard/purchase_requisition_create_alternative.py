@@ -83,4 +83,10 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
 
     @api.model
     def _get_alternative_line_value(self, order_line):
-        return {'product_id': order_line.product_id.id, 'product_qty': order_line.product_qty}
+        return {
+            'product_id': order_line.product_id.id,
+            'product_qty': order_line.product_qty,
+            'product_uom': order_line.product_uom.id,
+            'display_type': order_line.display_type,
+            'name': order_line.name,
+        }
