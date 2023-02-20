@@ -74,7 +74,7 @@ class IrUiView(models.Model):
         vals = {
             'inherit_id': self.id,
             'name': '%s (%s)' % (self.name, el.get('id')),
-            'arch': self._pretty_arch(arch),
+            'arch': etree.tostring(arch, encoding='unicode'),
             'key': '%s_%s' % (self.key, el.get('id')),
             'type': 'qweb',
             'mode': 'extension',
@@ -87,19 +87,6 @@ class IrUiView(models.Model):
     @api.model
     def _save_oe_structure_hook(self):
         return {}
-
-    @api.model
-    def _pretty_arch(self, arch):
-        # remove_blank_string does not seem to work on HTMLParser, and
-        # pretty-printing with lxml more or less requires stripping
-        # whitespace: http://lxml.de/FAQ.html#why-doesn-t-the-pretty-print-option-reformat-my-xml-output
-        # so serialize to XML, parse as XML (remove whitespace) then serialize
-        # as XML (pretty print)
-        arch_no_whitespace = etree.fromstring(
-            etree.tostring(arch, encoding='utf-8'),
-            parser=etree.XMLParser(encoding='utf-8', remove_blank_text=True))
-        return etree.tostring(
-            arch_no_whitespace, encoding='unicode', pretty_print=True)
 
     @api.model
     def _are_archs_equal(self, arch1, arch2):
@@ -207,7 +194,7 @@ class IrUiView(models.Model):
         old_arch = etree.fromstring(self.arch.encode('utf-8'))
         if not self._are_archs_equal(old_arch, new_arch):
             self._set_noupdate()
-            self.write({'arch': self._pretty_arch(new_arch)})
+            self.write({'arch': etree.tostring(new_arch, encoding='unicode')})
 
     @api.model
     def _view_get_inherited_children(self, view):
