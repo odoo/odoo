@@ -126,16 +126,19 @@ export const tooltipService = {
             if (elementsWithTooltips.has(el)) {
                 openTooltip(el, elementsWithTooltips.get(el));
             } else if (el.matches("[data-tooltip], [data-tooltip-template]")) {
-                const {
-                    tooltip,
-                    tooltipInfo,
-                    tooltipDelay,
-                    tooltipTemplate: template,
-                    tooltipPosition: position,
-                } = el.dataset;
-                const delay = parseInt(tooltipDelay);
-                const info = tooltipInfo ? JSON.parse(tooltipInfo) : null;
-                openTooltip(el, { tooltip, template, delay, info, position });
+                const dataset = el.dataset;
+                const params = {
+                    tooltip: dataset.tooltip,
+                    template: dataset.tooltipTemplate,
+                    position: dataset.tooltipPosition,
+                };
+                if (dataset.tooltipInfo) {
+                    params.info = JSON.parse(dataset.tooltipInfo);
+                }
+                if (dataset.tooltipDelay) {
+                    params.delay = parseInt(dataset.tooltipDelay, 10);
+                }
+                openTooltip(el, params);
             }
         }
 
