@@ -12,7 +12,7 @@
     'data': [
         'views/pos_payment_method_views.xml',
         ],
-    'auto-install': True,
+    'auto_install': True,
     'assets': {
         'point_of_sale.assets': [
             'pos_restaurant_adyen/static/**/*',
