@@ -254,10 +254,10 @@ msgstr ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                안녕하세요,\n"
 "                <br/><br/>\n"
-"                귀하가 제출한 다음 채용 포지션에 대한 지원서를 성공적으로 접수하였음을 알려드립니다.\n"
-"                 회사명 <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>, 포지션 \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\"\n"
+"                다음의 채용 부문에 대해 귀하의 지원서가 성공적으로 접수되었음을 알려드립니다.\n"
+"                 회사명 <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>, 모집 부문 \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\"\n"
 "                <br/><br/>\n"
-"                검토 후 연락드리겠습니다.\n"
+"                검토 후 연락 드리겠습니다.\n"
 "\n"
 "                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">직무 소개</a>\n"
@@ -275,7 +275,7 @@ msgstr ""
 "                </t>\n"
 "\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>다음 단계가 궁금하시다고요?</strong></h3>\n"
-"                일반적으로 <strong>며칠 내로 지원 결과에 대한 안내를 드리게 됩니다.</strong><br/><br/>\n"
+"                보통 <strong>며칠 안에 지원 결과에 대한 안내를 드리게 됩니다.</strong><br/><br/>\n"
 "                언제든지 <strong>먼저 결과 확인이 필요하신\n"
 "                경우</strong> 또는 예상보다 연락이 늦게 되는 경우 \n"
 "                저희에게 연락 주십시오 (본 이메일에 회신).\n"
@@ -2282,7 +2282,7 @@ msgstr "반려"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #, python-format
 msgid "Refuse Reason"
-msgstr ""
+msgstr "반려 사유"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
@@ -2489,7 +2489,7 @@ msgstr "원본"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_source_menu
 msgid "Source Analysis"
-msgstr ""
+msgstr "출처 분석"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
@@ -2607,7 +2607,7 @@ msgstr "태그"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_team_menu
 msgid "Team Performance"
-msgstr ""
+msgstr "팀 실적"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2712,7 +2712,7 @@ msgstr "이 단계에 표시할 레코드가 없으면 칸반 화면은 접혀 �
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_stage_report_menu
 msgid "Time In Stage Analysis"
-msgstr ""
+msgstr "단계별 시간 분석"
 
 #. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0

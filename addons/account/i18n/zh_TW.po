@@ -215,7 +215,7 @@ msgstr "（副本）"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "(included)."
-msgstr "（已包括）。"
+msgstr "（包括此日期）。"
 
 #. module: account
 #. odoo-python
@@ -1278,7 +1278,9 @@ msgstr "該地區已有財務規則牽涉國外增值稅。"
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr "流水賬的一項「記項」其實包含幾條流水賬交易，每項交易只可以是「借記」（debit）或「貸記」（credit）交易。"
+msgstr ""
+"日記賬的每項「記項」（entry）包含兩條甚至幾條日記賬項目（item）。\n"
+"                <br><br>這些交易項目的金額，只可記賬為「借記」（debit）或「貸記」（credit）款項。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
@@ -2105,7 +2107,7 @@ msgstr "增加日記帳分組"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a line"
-msgstr "增加明細"
+msgstr "新增資料行"
 
 #. module: account
 #. odoo-javascript
@@ -2147,7 +2149,7 @@ msgstr "增加小節"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add an internal note..."
-msgstr "增加內部備註..."
+msgstr "加入內部備註⋯"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -2726,7 +2728,7 @@ msgstr "關聯的科目模板"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__at_date
 msgid "At Date"
-msgstr "於日期"
+msgstr "於指定日期"
 
 #. module: account
 #. odoo-python
@@ -2826,14 +2828,14 @@ msgstr "自動建立的付款"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post
 msgid "Auto-post"
-msgstr "自動過帳"
+msgstr "自動過賬"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_until
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_until
 msgid "Auto-post until"
-msgstr "自動過帳直到"
+msgstr "自動過賬有效期至"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -3419,7 +3421,7 @@ msgstr "取消"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr "取消分錄"
+msgstr "取消記項"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
@@ -4343,7 +4345,7 @@ msgstr "建立客戶發票"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "建立日記帳分錄"
+msgstr "建立日記賬記項"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -5709,7 +5711,7 @@ msgstr "草稿分錄"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Entry"
-msgstr "分錄草稿"
+msgstr "草稿記項"
 
 #. module: account
 #. odoo-python
@@ -6320,7 +6322,7 @@ msgstr "已發送第一張發票！"
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post_origin_id
 msgid "First recurring entry"
-msgstr "第一個經常性分錄"
+msgstr "首次經常性記項"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
@@ -8159,7 +8161,7 @@ msgstr "日記帳項目標籤"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_pivot
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
-msgstr "流水賬項目"
+msgstr "日記賬項目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -10750,7 +10752,7 @@ msgstr "網站入口存取網址"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Post"
-msgstr "過帳"
+msgstr "過賬"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -11068,7 +11070,7 @@ msgstr "數量:"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__quarterly
 msgid "Quarterly"
-msgstr "每季度"
+msgstr "每季"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_mode
@@ -11460,7 +11462,7 @@ msgstr "重置為草稿"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reset to Draft"
-msgstr "重置為草稿"
+msgstr "重設為草稿"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -11574,14 +11576,14 @@ msgstr "撤銷日期必須晚於該日期."
 #: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversed_entry_id
 msgid "Reversal of"
-msgstr "撤銷於"
+msgstr "撤銷對象"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr "撤銷: %(move_name)s, %(reason)s"
+msgstr "撤銷對象： %(move_name)s ，原因： %(reason)s"
 
 #. module: account
 #. odoo-python
@@ -11591,7 +11593,7 @@ msgstr "撤銷: %(move_name)s, %(reason)s"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Reversal of: %s"
-msgstr "撤銷於: %s"
+msgstr "撤銷對象： %s"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
@@ -12492,7 +12494,7 @@ msgstr "指定一個任意值，該值將在整個訂單的預設項目上累積
 msgid ""
 "Specify whether this entry is posted automatically on its accounting date, "
 "and any similar recurring invoices."
-msgstr "指定此欄位是否在其會計日期自動過帳，以及任何類似的經常性應收憑單."
+msgstr "設定此記項（以及任何類似的經常性發票）是否按本身的會計日期自動過賬。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -14016,7 +14018,7 @@ msgstr "核銷模型只能可見於選擇的日記帳."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The recurrence will end on"
-msgstr "重複將結束於"
+msgstr "經常性記項自動過賬的有效期直至 "
 
 #. module: account
 #. odoo-python
@@ -14505,13 +14507,13 @@ msgstr "當使用者不確定對方的所有資訊時，使用該匹配規則."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move is configured to be auto-posted on %s"
-msgstr "此傳票設定會自動過帳在 %s"
+msgstr "記項已設置在 %s 自動過賬。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
-msgstr "此傳票設定為在會計日期自動過賬:"
+msgstr "記項已設置為自動過賬。過賬的會計日期為 "
 
 #. module: account
 #. odoo-python
@@ -14602,7 +14604,7 @@ msgstr "此重複分錄源自 %s"
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr "此重複性傳票將過帳至此日期 (包括此日期)"
+msgstr "本經常性記項會一直自動過賬，直至及包括此日期。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15570,6 +15572,16 @@ msgstr "每年"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -15842,6 +15854,12 @@ msgstr "已經存在日記帳項目，不能修改公司的幣別"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -16289,7 +16307,7 @@ msgstr "分配給應收憑單"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "auto-posting enabled. Next accounting date:"
-msgstr "已啟用自動過帳. 下一個會計日期:"
+msgstr "自動過賬已啟用。下一個會計日期為 "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
