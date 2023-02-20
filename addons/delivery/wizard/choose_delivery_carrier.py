@@ -56,10 +56,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     @api.depends('carrier_id')
     def _compute_invoicing_message(self):
         self.ensure_one()
-        if self.carrier_id.invoice_policy == 'real':
-            self.invoicing_message = _('The shipping price will be set once the delivery is done.')
-        else:
-            self.invoicing_message = ""
+        self.invoicing_message = ""
 
     @api.depends('partner_id')
     def _compute_available_carrier(self):
