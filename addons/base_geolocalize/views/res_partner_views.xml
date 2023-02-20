@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
                     <page string="Partner Assignment" name="geo_location">
+                        <field name="is_avatax_valid" invisible="1"/>
                         <group>
                             <group string="Geolocation">
                                 <label for="date_localization" string="Geo Location"/>
@@ -22,7 +23,9 @@
                                     <button attrs="{'invisible': ['|', ('partner_latitude', '!=', 0), ('partner_longitude', '!=', 0)]}"
                                         icon="fa-gear" string="Compute based on address" title="Compute Localization"
                                         name="geo_localize" type="object" class="btn btn-link p-0"/>
-                                    <button attrs="{'invisible': [('partner_latitude', '=', 0), ('partner_longitude', '=', 0)]}"
+                                    <button attrs="{'invisible': ['|', ('is_avatax_valid', '=', True),
+                                                                  '&amp;',('partner_latitude', '=', 0),
+                                                                  ('partner_longitude', '=', 0)]}"
                                         icon="fa-refresh" string="Refresh" title="Refresh Localization"
                                         name="geo_localize" type="object" class="btn btn-link p-0"/>
                                 </div>
