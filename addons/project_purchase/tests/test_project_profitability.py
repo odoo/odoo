@@ -31,6 +31,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
                 "price_unit": self.product_a.standard_price,
+                "currency_id": self.env.company.currency_id.id,
             })],
         })
         # the bill_1 is in draft, therefor it should have the cost "to_bill" same as the -product_price (untaxed)
@@ -74,12 +75,14 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
                 "price_unit": self.product_a.standard_price,
+                "currency_id": self.env.company.currency_id.id,
             }), Command.create({
                 "analytic_distribution": {self.analytic_account.id: 100},
                 "product_id": self.product_b.id,
                 "quantity": 2,
                 "product_uom_id": self.product_b.uom_id.id,
                 "price_unit": self.product_b.standard_price,
+                "currency_id": self.env.company.currency_id.id,
             })],
         })
         # bill_2 is not posted, therefor its cost should be "to_billed" = - sum of all product_price * qty for each line
@@ -125,6 +128,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 "product_id": self.product_order.id,
                 "product_qty": 1,
                 "price_unit": self.product_order.standard_price,
+                "currency_id": self.env.company.currency_id.id,
             })],
         })
         purchase_order.button_confirm()
@@ -215,6 +219,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 "product_id": self.product_order.id,
                 "product_qty": 1,
                 "price_unit": self.product_order.standard_price,
+                "currency_id": self.env.company.currency_id.id,
             })],
         })
         purchase_order.button_confirm()
