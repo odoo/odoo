@@ -580,7 +580,7 @@ class MrpWorkorder(models.Model):
             row_workcenter_ids = set()
             if 'groupedBy' in row and row.get('groupedBy')[0] == 'workcenter_id':
                 row_workcenter_ids.add(row.get('resId'))
-            else:
+            elif 'records' in row:
                 for record in row.get('records'):
                     row_workcenter_ids.add(record['workcenter_id'][0])
             row['workcenter_ids'] = row_workcenter_ids
