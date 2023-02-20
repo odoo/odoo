@@ -79,7 +79,6 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.qunit_suite_tests': [
             'im_livechat/static/tests/new/*.js',
-            'im_livechat/static/tests/qunit_suite_tests/components/**/*.js',
         ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
