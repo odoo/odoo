@@ -1720,7 +1720,8 @@ QUnit.module("Fields", (hooks) => {
                 }
                 if (method === "create") {
                     assert.step("create");
-                    assert.strictEqual(args[0].trululu, newRecordId);
+                    const [values] = args[0];
+                    assert.strictEqual(values.trululu, newRecordId);
                 }
             },
         });
