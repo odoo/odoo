@@ -16,8 +16,6 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_providers_state')
     first_provider_label = fields.Char(
         compute='_compute_providers_state')
-    module_payment_paypal = fields.Boolean(
-        string='Paypal - Express Checkout')
     is_stripe_supported_country = fields.Boolean(
         related='company_id.country_id.is_stripe_supported_country')
 
