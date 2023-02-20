@@ -233,10 +233,10 @@ QUnit.module('MrpDocumentsKanbanView', {
 
         assert.containsOnce(target, '.o_AttachmentViewer',
             "should have a document preview");
-        assert.containsOnce(target, '.o_AttachmentViewer_headerItemButtonClose',
+        assert.containsOnce(target, '.o-mail-attachment-viewer-headerItemButtonClose',
             "should have a close button");
 
-        await click(target, '.o_AttachmentViewer_headerItemButtonClose');
+        await click(target, '.o-mail-attachment-viewer-headerItemButtonClose');
         assert.containsNone(target, '.o_AttachmentViewer',
             "should not have a document preview");
     });
