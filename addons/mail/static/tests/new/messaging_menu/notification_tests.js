@@ -2,6 +2,7 @@
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 
 let target;
 
@@ -331,5 +332,19 @@ QUnit.test(
             $(target).find(".o-mail-notification-item:eq(1)"),
             ".o-mail-notification-item-name:contains(Channel 2020)"
         );
+    }
+);
+
+QUnit.test(
+    "messaging menu counter should ignore unread messages in channels that are unpinned",
+    async function (assert) {
+        patchWithCleanup(browser, {
+            Notification: {
+                ...browser.Notification,
+                permission: "denied",
+            },
+        });
+        await start();
+        assert.containsOnce(target, ".o-mail-messaging-menu-counter:contains(0)");
     }
 );
