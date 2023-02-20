@@ -84,7 +84,7 @@
 
     <t t-name="mail.Composer.suggestionPartner" owl="1">
         <t t-set="partner" t-value="option.partner"/>
-        <PartnerImStatus t-if="option.partner" partner="partner"/>
+        <ImStatus t-if="partner" persona="partner"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name" />
         </strong>

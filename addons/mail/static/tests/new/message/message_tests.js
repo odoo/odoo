@@ -1165,10 +1165,10 @@ QUnit.test(
         const { advanceTime, openFormView } = await start({ hasTimeControl: true });
         await openFormView("res.partner", partnerId_1);
         await afterNextRender(() => advanceTime(50 * 1000)); // next fetch of im_status
-        assert.containsOnce(target, ".o-mail-partner-im-status");
-        assert.hasClass(target.querySelector(".o-mail-partner-im-status"), "cursor-pointer");
+        assert.containsOnce(target, ".o-mail-im-status");
+        assert.hasClass(target.querySelector(".o-mail-im-status"), "cursor-pointer");
 
-        await click(".o-mail-partner-im-status");
+        await click(".o-mail-im-status");
         assert.containsOnce(target, ".o-mail-chat-window");
         assert.containsOnce(target, ".o-mail-chat-window-header:contains(Partner_2)");
     }

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
+import { ImStatus } from "@mail/new/discuss/im_status";
 import { AttachmentList } from "@mail/new/attachments/attachment_list";
 import { MessageInReplyTo } from "./message_in_reply_to";
 import { isEventHandled, markEventHandled } from "@mail/new/utils/misc";
@@ -47,7 +47,7 @@ export class Message extends Component {
         MessageInReplyTo,
         MessageReactions,
         MessageSeenIndicator,
-        PartnerImStatus,
+        ImStatus,
         RelativeTime,
     };
     static defaultProps = {
@@ -383,7 +383,7 @@ export class Message extends Component {
         });
     }
 
-    get partnerImStatusClassName() {
+    get imStatusClassName() {
         let res = "position-absolute bottom-0 end-0";
         if (this.hasOpenChatFeature) {
             res += " cursor-pointer";

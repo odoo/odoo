@@ -2,8 +2,8 @@
 
 import { Component } from "@odoo/owl";
 
-export class PartnerImStatus extends Component {
-    static props = ["partner", "className?"];
-    static template = "mail.partner_im_status";
+export class ImStatus extends Component {
+    static props = ["persona", "className?"];
+    static template = "mail.im_status";
     static defaultProps = { className: "" };
 }

@@ -2,13 +2,13 @@
 
 import { Component, useRef, useState, onMounted, onWillStart } from "@odoo/owl";
 import { useMessaging, useStore } from "@mail/new/core/messaging_hook";
-import { PartnerImStatus } from "./partner_im_status";
+import { ImStatus } from "./im_status";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class ChannelInvitationForm extends Component {
-    static components = { PartnerImStatus };
+    static components = { ImStatus };
     static props = ["thread", "close?", "chatState?"];
     static template = "mail.channel_invitation_form";
 

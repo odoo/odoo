@@ -57,7 +57,7 @@
                 onClick="() => notification.requestPermission()"
             >
                 <t t-set-slot="icon">
-                    <PartnerImStatus className="'position-absolute bottom-0 end-0'" partner="notificationRequest.partner"/>
+                    <ImStatus className="'position-absolute bottom-0 end-0'" persona="notificationRequest.partner"/>
                 </t>
             </NotificationItem>
             <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
@@ -72,7 +72,7 @@
                     onClick="(isMarkAsRead) => this.onClickPreview(isMarkAsRead, preview)"
                 >
                     <t t-set-slot="icon">
-                        <PartnerImStatus t-if="preview.type === 'chat'" className="'position-absolute bottom-0 end-0'" partner="store.personas[createLocalId('partner', preview.chatPartnerId)]"/>
+                        <ImStatus t-if="preview.type === 'chat'" className="'position-absolute bottom-0 end-0'" partner="store.personas[createLocalId('partner', preview.chatPartnerId)]"/>
                     </t>
                     <t t-if="preview.mostRecentMsg" t-set-slot="body-icon">
                         <t t-if="preview.mostRecentMsg.isSelfAuthored">

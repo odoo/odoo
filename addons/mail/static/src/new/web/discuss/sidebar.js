@@ -3,7 +3,7 @@
 import { useMessaging, useStore } from "@mail/new/core/messaging_hook";
 import { ThreadIcon } from "@mail/new/discuss/thread_icon";
 import { ChannelSelector } from "@mail/new/discuss/channel_selector";
-import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
+import { ImStatus } from "@mail/new/discuss/im_status";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { onExternalClick } from "@mail/new/utils/hooks";
@@ -19,7 +19,7 @@ import { _t } from "@web/core/l10n/translation";
  */
 export class Sidebar extends Component {
     static template = "mail.discuss_sidebar";
-    static components = { ChannelSelector, ThreadIcon, PartnerImStatus, ChatWindowIcon };
+    static components = { ChannelSelector, ThreadIcon, ImStatus, ChatWindowIcon };
     static props = [];
 
     setup() {

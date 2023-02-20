@@ -1,11 +1,11 @@
 /* @odoo-module */
 
 import { Component, useRef } from "@odoo/owl";
-import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
+import { ImStatus } from "@mail/new/discuss/im_status";
 import { RelativeTime } from "@mail/new/core_ui/relative_time";
 
 export class NotificationItem extends Component {
-    static components = { RelativeTime, PartnerImStatus };
+    static components = { RelativeTime, ImStatus };
     static props = [
         "body?",
         "count?",

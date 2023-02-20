@@ -2,11 +2,11 @@
 
 import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
 import { useMessaging, useStore } from "@mail/new/core/messaging_hook";
-import { PartnerImStatus } from "./partner_im_status";
+import { ImStatus } from "./im_status";
 import { useService } from "@web/core/utils/hooks";
 
 export class ChannelMemberList extends Component {
-    static components = { PartnerImStatus };
+    static components = { ImStatus };
     static props = ["thread", "className"];
     static template = "mail.channel_member_list";
 

@@ -3,7 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
-import { PartnerImStatus } from "../discuss/partner_im_status"; // Used in composer suggestion template
+import { ImStatus } from "../discuss/im_status"; // Used in composer suggestion template
 import {
     Component,
     onMounted,
@@ -16,7 +16,7 @@ import {
 import { markEventHandled } from "../utils/misc";
 
 export class NavigableList extends Component {
-    static components = { PartnerImStatus };
+    static components = { ImStatus };
     static template = "mail.navigable_list";
     static props = {
         anchorRef: {},

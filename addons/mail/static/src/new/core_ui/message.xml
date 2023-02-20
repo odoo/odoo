@@ -29,7 +29,7 @@
                         <img class="o-mail-message-author-avatar w-100 h-100 rounded-circle o_object_fit_cover"
                              t-att-src="message.authorAvatarUrl"
                              t-att-class="{ 'o_redirect cursor-pointer': hasOpenChatFeature }" />
-                        <PartnerImStatus t-if="message.author" partner="message.author" className="partnerImStatusClassName"/>
+                        <ImStatus t-if="message.author" persona="message.author" className="imStatusClassName"/>
                     </div>
                     <t t-elif="!message.isTransient">
                         <small t-if="isActive" class="o-mail-message-date text-muted opacity-50 ms-2" t-att-title="message.datetimeStr">
