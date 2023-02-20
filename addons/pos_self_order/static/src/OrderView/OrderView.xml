@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderView" owl="1">
+        <div class="d-flex align-items-center justify-content-between">
+            <h6 class="fst-italic">
+                <t t-esc="props.order.order_id"/>
+            </h6>
+            <span class="badge bg-primary">
+                <t t-esc="props.order.state"/>
+            </span>
+        </div>
+        <p class="fst-italic">
+            <!-- TODO: format this date properly -->
+            <t t-esc="props.order.date"/>
+        </p>
+    <!-- Looping through all the cart items  -->
+        <t t-foreach="props.order.items" t-as="cartItem" t-key="cartItem.product_id">
+            <!-- create a reference to the product -->
+            <t t-set="product" t-value="props.productList.find(x => x.product_id === cartItem.product_id)"/>
+            <div class="bg-white d-flex align-items-center shadow-sm">
+                <div class="mx-4 w-100 mt-2" >
+                    <div class="d-flex justify-content-between w-100">
+                        <p class="fw-bold"><t t-esc="product.name"/></p>
+                    </div>
+                    <div class="d-flex justify-content-between w-100">
+                        <t t-esc="cartItem.qty + ' x ' + product.list_price+ '€'" />
+                        <p class="fst-italic fw-bold text-right"><t t-esc="cartItem.qty *  product.list_price+ '€'" /></p>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-if="props.order.state === 'draft'">
+            <div class="d-flex justify-content-between align-items-center m-2">
+<!-- Payment Button -->
+                <button class="btn btn-primary" type="submit" 
+                    t-on-click="() => props.payOrder(props.order)">
+                Pay
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/>
+                        <path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/>
+                    </svg>
+                </button>
+                <p class="fst-italic text-end text-muted">
+                    Tax: <t t-esc="props.order.amount_tax + '€'" />
+                </p>
+                <h6 class="fst-italic text-end">
+                    <!-- TODO: use this function
+                    it now errors out ;; i think i am missing the 'session variable'-->
+                    <!-- Total: <t t-esc="formatMonetary(props.order.amount_total, options={currency_id: window.odoo.currency_id})" /> -->
+                    Total: <t t-esc="props.order.amount_total" />
+                </h6>
+            </div>
+        </t>
+    </t>
+</templates>

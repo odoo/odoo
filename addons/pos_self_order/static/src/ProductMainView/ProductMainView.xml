@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductMainView" owl="1">
+        <NavBar goBack="props.goBack"/>
+            <!-- this padding-bottom is important in order for the Cart button not to -->
+            <!-- appear over the last item -->
+            <div class="pb-5">
+                <div class="text-center m-4">
+                    <img class="img-fluid" t-attf-src="/pos-self-order/get-images/{{ props.product.product_id }}"  alt="Product image"/>
+                </div>
+                <div class="d-flex w-100 justify-content-around">
+    <!-- Product Name -->
+                    <h3><t t-esc="props.product.name"/></h3>
+    <!-- Price -->
+                    <h3 class="ml-auto text-secondary"><t t-esc="props.product.list_price + '€'"/></h3>
+                </div>
+    <!-- Product Description -->
+                <div class="p-3 text-center">
+
+                    <t t-if="props.product.description_sale != false">
+                        <t t-esc="props.product.description_sale"/>    
+                    </t>
+                </div>
+    <!-- Increment quantity -->
+                    <div class="m-5">
+                        <IncrementCounter setValue="setValue" value="this.private_state.qty"/>
+                    </div>
+    <!-- Add To Cart Button -->
+                    <button t-on-click="() => props.addToCart(props.product.product_id, this.private_state.qty)"
+                                class="p-3 fixed-bottom btn btn-primary btn-lg btn-block w-100">
+                <!-- we show a different text based on whether the item is already in the cart or not -->
+                                <t t-if="this.state.cart.some(item => item.product_id === this.state.currentProduct)">
+                                    Update Cart
+                                </t>
+                                <t t-else="">
+                                    Add to Cart
+                                </t>
+                    </button>
+            </div>
+    </t>
+</templates>

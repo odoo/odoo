@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PaymentMethodsSelect" owl="1">
+
+        <NavBar goBack="window.odoo.self_order_location === 'table' ? props.goBack : null" />
+        <div>
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasBottomLabel">Payment methods</h5>
+            </div>
+            <div class="offcanvas-body small">
+                <t t-foreach="window.odoo.payment_methods" t-as="option" t-key="option.id">
+                <!-- TODO: style this button -->
+                <!-- TODO: if there is only one option, use that by default -->
+                    <button class="btn btn-primary" t-on-click="() => makePayment(option)">
+                        <t t-esc="option.name"/>
+                    </button>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
+

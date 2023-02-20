@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="AlertMessage" owl="1">
+        <div t-att-class="alert.class" role="alert">
+            <h4 class="alert-heading">
+                <t t-esc="alert.title"/>
+            </h4>
+            <p>
+                <t t-esc="alert.message"/>
+            </p>
+        </div>
+    </t>
+</templates>
+

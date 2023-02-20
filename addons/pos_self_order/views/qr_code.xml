@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="report_self_order_qr_codes_page" model="ir.actions.report">
+            <field name="name">qr.codes</field>
+            <field name="model">pos.config</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pos_self_order.qr_codes_page</field>
+            <field name="report_file">pos_self_order.qr_codes_page</field>
+            <field name="print_report_name">"QR codes"</field>
+            <field name="binding_model_id" ref="model_pos_config"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+
+    <template id="qr_codes_page">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-set="qr_code_size" t-value="200"/>
+                    <div class="container text-center">
+                        <t t-foreach="groups_of_tables" t-as="group_of_tables">
+    <!-- 3 COLUMN bootstrap grid layout -->
+                            <div class="row row-cols-3 g-5" style="page-break-after:always;">
+    <!-- for each qr code -->
+                                <t t-foreach="group_of_tables" t-as="table">
+                                    <t t-call="pos_self_order.qr_code"/>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+    <template id="qr_code">
+        <div class="d-flex flex-column col align-items-center" >
+            <h3 class="fw-bold">
+                <t t-if="str(table['id']) != '0'">
+                    Table <t t-out="table['id']"/>
+                </t>
+                <t t-else="">
+                </t>
+            </h3>
+            <div class="qr_code_and_logo_container m-2" style="
+                position: relative;
+                top: 0;
+                left: 0;
+            ">
+    <!-- QRCode -->
+                <img class="qr_code" t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" style="
+                        position: relative;
+                        top: 0;
+                        left: 0;
+                    " />
+    <!-- O from odoo logo in the CENTER of the qr code -->
+                <svg class="logo" style="
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    " t-att-width="qr_code_size/4" t-att-height="qr_code_size/4" viewBox="0 0 120 120" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g id="Group 1">
+                        <rect id="Rectangle 1" width="120" height="120" rx="33" fill="white"/>
+                        <g id="Group 2">
+                            <path id="Vector" d="M60 110C87.6142 110 110 87.6142 110 60C110 32.3858 87.6142 10 60 10C32.3858 10 10 32.3858 10 60C10 87.6142 32.3858 110 60 110Z" fill="#9C5789"/>
+                            <path id="Vector_2" d="M59.5166 89.6961C75.8029 89.6961 89.0055 76.4935 89.0055 60.2072C89.0055 43.9209 75.8029 30.7182 59.5166 30.7182C43.2303 30.7182 30.0276 43.9209 30.0276 60.2072C30.0276 76.4935 43.2303 89.6961 59.5166 89.6961Z" fill="white"/>
+                        </g>
+                    </g>
+                </svg> 
+            </div>
+            <h3 class="fw-bold">
+                Scan me
+            </h3>
+            <!-- odoo logo -->
+            <!-- <img class="mt-2 w-25" src="/web/static/img/odoo_logo.svg"/> -->
+        </div>
+
+    </template>
+</odoo>

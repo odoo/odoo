@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+
+    <!-- Display of /payment/pay -->
+    <template id="pay">
+                <!-- <t t-call="portal.frontend_layout">
+            <t t-set="page_title" t-value="'Donation'"/>
+        <t t-esc="amount"
+        t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+        <t t-call="payment.checkout"/>
+        </t> -->
+        <t t-call="payment.pay"/>
+
+    </template>
+
+</odoo>

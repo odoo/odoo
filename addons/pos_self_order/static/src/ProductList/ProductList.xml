@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- Here we show the list of all the available products -->
+    <t t-name="ProductList" owl="1">
+            <!-- we only allow the user to go back if the pos is configured as "order at table" -->
+            <NavBar goBack="window.odoo.self_order_location === 'table' ? props.goBack : null" />
+<!-- tag and search bar -->
+        <div class="d-flex align-items-center ">
+    <!-- tag select -->
+            <div class="overflow-auto text-nowrap py-3">
+                <t t-foreach="window.odoo.pos_categories" t-as="tag" t-key="tag.id">
+                    <div class="mx-1 d-inline float-none"
+                        t-on-click="() => selectTag(tag.name)">
+                        <span t-attf-class="badge rounded-pill {{private_state.selected_tags.has(tag.name) ? 'text-bg-primary' : 'text-bg-light'}}">
+                            <t t-esc="tag.name"/>
+                        </span>
+                    </div>
+                </t>
+            </div>
+            <div class="mx-2">
+                <t t-if="private_state.search_is_focused">
+                    <div class="d-flex align-items-center">
+                        <input type="text" class="" t-ref="input" placeholder="Pizza"
+                                t-model="private_state.search_input"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+                            fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"
+                            t-on-click="() => closeSearch()">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                </t>
+                <t t-else="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
+                        fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"
+                        t-on-click="() => focusSearch()">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </t>
+            </div>
+        </div>
+
+
+
+            <div class="container mb-5">
+                <div class="row">
+<!-- Looping through all the available products -->
+                    <t t-foreach="filteredProducts()" t-as="product" t-key="product.product_id">
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div t-on-click="() => props.viewProduct(product.product_id)" class="mt-2 bg-white d-flex align-items-center shadow-sm m-1">
+            <!-- Product IMAGE -->
+                                <img class="w-25 img-fluid" t-attf-src="/pos-self-order/get-images/{{ product.product_id }}" alt="Product image"/>
+                                <div class="mt-4 mx-4">
+            <!-- Product NAME -->
+                                    <p class="fw-bold">
+                                        <t t-esc="product.name"/>
+                                    </p>
+            <!-- Product DESCRIPTION -->
+                                    <t t-if="product.description_sale != false">
+                                        <p class="break-line">
+                                            <t t-esc="product.description_sale" />
+                                        </p>
+                                    </t>
+            <!-- Product PRICE -->
+                                    <p class="fst-italic">
+                                        <t t-esc="product.list_price + '€'" />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+<!-- Go to Cart Button -->
+            <button t-on-click="() => props.viewCart()" class="fixed-bottom btn btn-primary btn-lg btn-block w-100 text-white">
+                <div class="d-flex align-items-center justify-content-between mx-2 ">
+                    <p>
+                        Review (<t t-esc="props.getTotalCartQty()"/>)
+                    </p>
+                    <p class="ml-auto">
+                        <t t-esc="props.getTotalCartCost() + props.currencyType"/>
+                    </p>
+                </div>
+            </button>
+    </t>
+</templates>
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="LandingPage" owl="1">
+        <div class="d-flex flex-column vh-100 justify-content-between align-items-center">
+            <LandingPageHeader 
+                user_name="this.state.user_name"
+                table_id="this.state.table_id"
+                t-on-click="resetNameAndTableNumber"
+            />
+            <div class="d-flex flex-column w-75 justify-content-around">
+                <t t-if="props.message_to_display">
+                    <AlertMessage alert_type="props.message_to_display" />
+                </t>
+                <t t-if="window.odoo.pos_is_open == false">
+                    <AlertMessage alert_type="'restaurant_is_closed'" />
+                </t>
+                <t t-if="window.odoo.self_order_location == 'table'">
+<!-- OrdersList -->
+                    <OrdersList 
+                        orders_list = "this.orders_list"
+                        productList = "props.productList"
+                        payOrder="props.payOrder"
+                            />
+                    <t t-if="!user_has_provided_name">
+                        <h3 class="">Your name:</h3>
+                        <h6 class="text-muted">Preferably the one from your reservation</h6>
+                        <div class="d-flex">
+<!-- Name Input -->
+                        <input type="text" class="my-2 form-control" placeholder="Ex: John Doe"
+                            t-model="state.user_name" />
+                        </div>
+                    </t>
+                    <t t-if="!window.odoo.table_id">
+<!-- Table Select -->
+                        <select class="form-select" 
+                                aria-label="Default select example"
+                                t-model="state.table_id"
+                            >
+                        <option selected>Select your table</option>
+                            <t t-foreach="[...Array(window.odoo.total_number_of_tables).keys()].map( i => i+1)" t-as="i" t-key="i" >
+                                <option t-attf-value="{{i}}">Table <t t-esc="i"></t></option>
+                            </t>
+                        </select>
+                    </t>
+                </t>
+                <!-- if order_location == 'table' we only enable the viewMenu button 
+                after the user has provided a name and table number -->
+<!-- View Menu Button -->
+                <button type="button" t-on-click="props.viewMenu" 
+                t-attf-class="my-2 btn btn-lg {{window.odoo.self_order_location === 'table' and !(this.state.user_name and this.state.table_id) ? 'btn-secondary' : 'btn-primary'}}"
+                t-att-disabled="window.odoo.self_order_location === 'table' and !(this.state.user_name and this.state.table_id)"
+                >
+                    View Menu
+                </button>
+                <t t-if="1">
+                    <button type="button" class="my-2 btn btn-outline-primary btn-lg">Custom Link 1</button>
+                    <button type="button" class="my-2 btn btn-outline-primary btn-lg">Custom Link 2</button>
+                </t>
+            </div>
+            <LandingPageFooter/>
+        </div>
+    </t>
+</templates>
+

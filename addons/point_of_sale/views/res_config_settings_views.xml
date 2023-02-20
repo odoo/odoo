@@ -79,6 +79,19 @@
                             <setting string="Margins &amp; Costs" help="Show margins &amp; costs on product information">
                                 <field name="pos_is_margins_costs_accessible_to_every_user"/>
                             </setting>
+                            <!-- Enable Module POS SELF ORDER -->
+                            <!-- TODO: change 'info' emoji  -->
+                            <setting string="Self Ordering ⓘ" help="Turn this Point of Sale into a self ordering station" id="pos_module_pos_self_order"
+                                    title="Enabling this will allow users to place orders either from a kiosk tablet or from their own devices"> 
+                                <field name="pos_module_pos_self_order" 
+                                    attrs="{'readonly': [('pos_has_active_session', '=', True)]}"
+                                />
+                                <div class="content-group" id="warning_text_pos_self_order" attrs="{'invisible': [('pos_module_pos_self_order', '=', False)]}">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
+                            </setting>
                         </block>
 
                         <block title="Accounting" id="pos_accounting_section">

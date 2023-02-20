@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrdersList" owl="1">
+
+
+
+    <div class="accordion mb-2" id="accordionExample">
+        <t t-if="props.orders_list.some((order) => order.state === 'draft')">
+            <div t-if="window.odoo.pos_allows_ongoing_orders == false"
+                 class="alert alert-info" role="alert">
+                Your order will be sent to the kitchen after payment.
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Ongoing Orders
+                </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <t t-foreach="props.orders_list.filter(order => order.state ==='draft')" t-as="order" t-key="order.order_id">
+                        <OrderView
+                            order = "order"
+                            productList = "props.productList"
+                            payOrder="props.payOrder"
+                        />
+                    </t>
+                </div>
+                </div>
+            </div>
+        </t>
+        <t t-if="props.orders_list.some((order) => order.state === 'paid' || order.state === 'done')">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Past Orders
+                </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <t t-foreach="props.orders_list.filter(order => order.state ==='paid' || order.state === 'done')" t-as="order" t-key="order.order_id">
+                        <OrderView
+                            order = "order"
+                            productList = "props.productList"
+                        />
+                    </t> 
+                
+                </div>
+                </div>
+            </div>
+        </t>
+    </div>
+    </t>
+
+    <!-- <t t-name="OrdersLoop" owl="1">
+        hello
+    </t> -->
+</templates>
+

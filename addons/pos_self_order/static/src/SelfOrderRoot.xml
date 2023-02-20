@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SelfOrderRoot" owl="1">
+    <!-- Landing Page at the start -->
+    <!-- This is the first page the users sees when they go on the website -->
+            <t t-if="state.currentScreen == 0">
+                <LandingPage 
+                    message_to_display="this.state.message_to_display" 
+                    viewMenu.bind="viewMenu"
+                    viewOrder="viewOrder"
+                    getUpdatedOrdersListFromServer = "getUpdatedOrdersListFromServer"
+                    productList="productList" 
+                    payOrder="payOrder"
+                />
+            </t>
+    <!-- Menu -->
+    <!-- We go here after clicking VIEW MENU -->
+            <t t-elif="state.currentScreen == 1">
+                <ProductList
+                productList="productList" 
+                viewProduct="viewProduct"
+                getTotalCartQty="getTotalCartQty"
+                getTotalCartCost="getTotalCartCost"
+                currencyType="currencyType"
+                viewCart="viewCart"
+                goBack.bind="viewLandingPage"
+                />
+            </t>
+    <!-- Product Main View -->
+    <!-- We go here when clicking on a product from the menu -->
+            <t t-elif="state.currentScreen == 2">
+                <ProductMainView 
+                product="productList.find(x => x.product_id === this.state.currentProduct)" 
+                goBack.bind="viewMenu" 
+                addToCart="addToCart"/>
+            </t>
+            <t t-elif="state.currentScreen == 3">
+                <CartView 
+                productList="productList" 
+                getTotalCartQty="getTotalCartQty"
+                getTotalCartCost="getTotalCartCost"
+                getTotalTax="getTotalTax"
+                currencyType="currencyType"
+                cartItems="this.state.cart"
+                viewProduct="viewProduct"
+                goBack.bind="viewMenu"
+                removeProductFromCart="removeProductFromCart"
+                sendOrder="sendOrder"
+                />
+            </t>
+            <t t-elif="state.currentScreen == 4">
+                <PaymentMethodsSelect
+                    goBack.bind="viewLandingPage" 
+                    order_id="this.state.order_id_user_is_paying_for"
+                    />
+            </t>
+        <!-- TODO: add a help icon in the corner of the screen 
+        that would signal to an employee that the user
+        needs help 
+        -->
+        <!-- <HelpIcon/> -->
+    </t>
+</templates>
+

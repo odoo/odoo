@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CartView" owl="1">
+        <!-- this padding-bottom is important in order for Pay button not to -->
+        <!-- appear over the last item -->
+        <div class="pb-5">
+            <NavBar goBack="props.goBack"/>
+<!-- Looping through all the cart items  -->
+            <t t-foreach="props.cartItems" t-as="cartItem" t-key="cartItem.product_id">
+                <!-- create a reference to the product -->
+                <t t-set="product" t-value="props.productList.find(x => x.product_id === cartItem.product_id)"/>
+                <div 
+                    t-on-click="() => props.viewProduct(product.product_id)"
+                    class="mt-2 bg-white d-flex align-items-center shadow-sm  m-1">
+                    <img class="w-25 img-fluid" t-attf-src="/pos-self-order/get-images/{{ product.product_id }}"  alt="Product image"/>
+                    <div class="mt-4 mx-4 w-100 me-5">
+                        <div class="d-flex justify-content-between w-100">
+                            <p class="fw-bold"><t t-esc="product.name"/></p>
+                        </div>
+                        <div class="d-flex justify-content-between w-100">
+                            <t t-esc="cartItem.qty + ' x ' + product.list_price+ '€'" />
+                            <p class="fst-italic fw-bold text-right"><t t-esc="cartItem.qty *  product.list_price+ '€'" /></p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <!-- TODO: style this -->
+            <p class="ml-auto text-muted">
+                Tax: <t t-esc="props.getTotalTax() + props.currencyType"/>
+            </p>
+<!-- Order Button -->
+            <t t-if="window.odoo.pos_is_open == false">
+                <AlertMessage alert_type="'restaurant_is_closed'"/>
+            </t>
+            <t t-else="">
+                <button t-on-click="() => props.sendOrder()"
+                        class="fixed-bottom text-white btn btn-primary btn-lg btn-block w-100">
+                        <div class="d-flex align-items-center justify-content-between mx-2 ">
+                        <p>
+                            Order (<t t-esc="props.getTotalCartQty()"/>)
+                        </p>
+                        <p class="ml-auto">
+                            Total: <t t-esc="props.getTotalCartCost() + props.currencyType"/>
+                        </p>
+                    <!-- TODO: also show final tax amount -->
+                        </div>
+                </button>
+            </t>
+        </div>
+    </t>
+</templates>
+
