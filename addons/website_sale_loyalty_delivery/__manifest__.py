@@ -6,7 +6,7 @@
     'description': """Allows to offer free shippings in loyalty program rewards on eCommerce""",
     'category': 'Website/Website',
     'version': '1.0',
-    'depends': ['website_sale_delivery', 'website_sale_loyalty', 'sale_loyalty_delivery'],
+    'depends': ['website_sale', 'website_sale_loyalty', 'sale_loyalty_delivery'],
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
@@ -18,3 +18,4 @@
     },
     'license': 'LGPL-3',
 }
+

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <template id="checkout_delivery" inherit_id="website_sale_delivery.payment_delivery_methods">
+    <template id="checkout_delivery" inherit_id="website_sale.payment_delivery_methods">
         <xpath expr="//input[@name='delivery_type']" position="attributes">
             <attribute name="t-att-data-delivery-type">delivery.delivery_type</attribute>
         </xpath>
