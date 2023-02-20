@@ -114,12 +114,13 @@ export class PropertiesField extends Component {
      */
     get groupedPropertiesList() {
         const propertiesList = this.propertiesList;
-        propertiesList.add({nextProperty: true});  // flag to know where will be inserted the next property
+        propertiesList.push({nextProperty: true});  // flag to know where will be inserted the next property
 
-        const groupedProperties = !propertiesList.length || propertiesList[0].type !== "separator"
+        // default invisible group
+        const groupedProperties = propertiesList[0].type !== "separator"
             ? [{title: null, name: null, elements: []}] : [];
 
-        this.propertiesList.forEach(property => {
+        propertiesList.forEach(property => {
             if (property.type === "separator") {
                 groupedProperties.push({title: property.string, name: property.name, elements: []});
             } else {
@@ -135,10 +136,12 @@ export class PropertiesField extends Component {
             for (let col = 1; col < this.columns; ++col) {
                 groupedProperties.push({title: null, name: groupedProperties[0].name, elements: [], invisible});
             }
-            this.propertiesList.forEach((val, index) => {
+            propertiesList.forEach((val, index) => {
                 groupedProperties[index % this.columns].elements.push(val);
             });
         }
+
+        console.log(groupedProperties)
 
         return groupedProperties;
     }
