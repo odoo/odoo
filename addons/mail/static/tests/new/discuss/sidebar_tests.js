@@ -229,14 +229,14 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async function 
     assert.containsOnce(target, ".o-mail-discuss-sidebar input[placeholder='Quick search...']");
 
     await editInput(target, ".o-mail-discuss-sidebar input[placeholder='Quick search...']", "1");
-    assert.containsN(document.body, ".o-mail-category-item", 11);
+    assert.containsN(target, ".o-mail-category-item", 11);
 
     await editInput(target, ".o-mail-discuss-sidebar input[placeholder='Quick search...']", "12");
-    assert.containsOnce(document.body, ".o-mail-category-item");
-    assert.containsOnce(document.body, ".o-mail-category-item:contains(channel12)");
+    assert.containsOnce(target, ".o-mail-category-item");
+    assert.containsOnce(target, ".o-mail-category-item:contains(channel12)");
 
     await editInput(target, ".o-mail-discuss-sidebar input[placeholder='Quick search...']", "123");
-    assert.containsNone(document.body, ".o-mail-category-item");
+    assert.containsNone(target, ".o-mail-category-item");
 });
 
 QUnit.test("sidebar: basic chat rendering", async function (assert) {
@@ -754,3 +754,250 @@ QUnit.test("channel - avatar: should update avatar url from bus", async function
         `img[data-src='/web/image/mail.channel/${channelId}/avatar_128?unique=${newCacheKey}']`
     );
 });
+
+QUnit.test(
+    "channel - states: close should update the value on the server",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create({ name: "test" });
+        pyEnv["res.users.settings"].create({
+            user_id: pyEnv.currentUserId,
+            is_discuss_sidebar_category_channel_open: true,
+        });
+        const currentUserId = pyEnv.currentUserId;
+        const { openDiscuss, env } = await start();
+        await openDiscuss();
+        const initalSettings = await env.services.orm.call(
+            "res.users.settings",
+            "_find_or_create_for_user",
+            [[currentUserId]]
+        );
+        assert.ok(initalSettings.is_discuss_sidebar_category_channel_open);
+        await click(".o-mail-category span:contains(Channels)");
+        const newSettings = await env.services.orm.call(
+            "res.users.settings",
+            "_find_or_create_for_user",
+            [[currentUserId]]
+        );
+        assert.notok(newSettings.is_discuss_sidebar_category_channel_open);
+    }
+);
+
+QUnit.test("channel - states: open should update the value on the server", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_channel_open: false,
+    });
+    const currentUserId = pyEnv.currentUserId;
+    const { openDiscuss, env } = await start();
+    await openDiscuss();
+    const initalSettings = await env.services.orm.call(
+        "res.users.settings",
+        "_find_or_create_for_user",
+        [[currentUserId]]
+    );
+    assert.notOk(initalSettings.is_discuss_sidebar_category_channel_open);
+
+    await click(".o-mail-category span:contains(Channels)");
+    const newSettings = await env.services.orm.call(
+        "res.users.settings",
+        "_find_or_create_for_user",
+        [[currentUserId]]
+    );
+    assert.ok(newSettings.is_discuss_sidebar_category_channel_open);
+});
+
+QUnit.test("channel - states: close from the bus", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ name: "test" });
+    const userSettingsId = pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_channel_open: true,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await afterNextRender(() => {
+        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+            "res.users.settings": {
+                id: userSettingsId,
+                is_discuss_sidebar_category_channel_open: false,
+            },
+        });
+    });
+    assert.containsOnce(target, ".o-mail-category-channel .fa-chevron-right");
+    assert.containsNone(target, "button:contains(test)");
+});
+
+QUnit.test("channel - states: open from the bus", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ name: "test" });
+    const userSettingsId = pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_channel_open: false,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await afterNextRender(() => {
+        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+            "res.users.settings": {
+                id: userSettingsId,
+                is_discuss_sidebar_category_channel_open: true,
+            },
+        });
+    });
+    assert.containsOnce(target, ".o-mail-category-channel .fa-chevron-down");
+    assert.containsOnce(target, "button:contains(test)");
+});
+
+QUnit.test(
+    "channel - states: the active category item should be visible even if the category is closed",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create({ name: "test" });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        await click(".o-mail-category-item:contains(test)");
+        assert.containsOnce(target, "button:contains(test).o-active");
+
+        await click(".o-mail-category span:contains(Channels)");
+        assert.containsOnce(target, ".o-mail-category-channel .fa-chevron-right");
+        assert.containsOnce(target, "button:contains(test)");
+
+        await click("button:contains(Inbox)");
+        assert.containsNone(target, "button:contains(test)");
+    }
+);
+
+QUnit.test("chat - states: open manually by clicking the title", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        channel_type: "chat",
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_chat_open: false,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click(".o-mail-category-chat span:contains(Direct messages)");
+    assert.containsOnce(target, "button:contains(Mitchell Admin)");
+});
+
+QUnit.test("chat - states: close should call update server data", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_chat_open: true,
+    });
+    const currentUserId = pyEnv.currentUserId;
+    const { openDiscuss, env } = await start();
+    await openDiscuss();
+    const initalSettings = await env.services.orm.call(
+        "res.users.settings",
+        "_find_or_create_for_user",
+        [[currentUserId]]
+    );
+    assert.ok(initalSettings.is_discuss_sidebar_category_chat_open);
+
+    await click(".o-mail-category-chat span:contains(Direct messages)");
+    const newSettings = await env.services.orm.call(
+        "res.users.settings",
+        "_find_or_create_for_user",
+        [[currentUserId]]
+    );
+    assert.notOk(newSettings.is_discuss_sidebar_category_chat_open);
+});
+
+QUnit.test("chat - states: open should call update server data", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_chat_open: false,
+    });
+    const { openDiscuss, env } = await start();
+    await openDiscuss();
+    const currentUserId = pyEnv.currentUserId;
+    const initalSettings = await env.services.orm.call(
+        "res.users.settings",
+        "_find_or_create_for_user",
+        [[currentUserId]]
+    );
+    assert.notOk(initalSettings.is_discuss_sidebar_category_chat_open);
+
+    await click(".o-mail-category-chat span:contains(Direct messages)");
+    const newSettings = await env.services.orm.call(
+        "res.users.settings",
+        "_find_or_create_for_user",
+        [[currentUserId]]
+    );
+    assert.ok(newSettings.is_discuss_sidebar_category_chat_open);
+});
+
+QUnit.test("chat - states: close from the bus", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ channel_type: "chat" });
+    const userSettingsId = pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_chat_open: true,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await afterNextRender(() => {
+        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+            "res.users.settings": {
+                id: userSettingsId,
+                is_discuss_sidebar_category_chat_open: false,
+            },
+        });
+    });
+    assert.containsOnce(target, ".o-mail-category-chat .fa-chevron-right");
+    assert.containsNone(target, "button:contains(Mitchell Admin)");
+});
+
+QUnit.test("chat - states: open from the bus", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ channel_type: "chat" });
+    const userSettingsId = pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_chat_open: false,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await afterNextRender(() => {
+        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
+            "res.users.settings": {
+                id: userSettingsId,
+                is_discuss_sidebar_category_chat_open: true,
+            },
+        });
+    });
+    assert.containsOnce(target, ".o-mail-category-chat .fa-chevron-down");
+    assert.containsOnce(target, "button:contains(Mitchell Admin)");
+});
+
+QUnit.test(
+    "chat - states: the active category item should be visible even if the category is closed",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create({ channel_type: "chat" });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.containsOnce(target, ".o-mail-category-chat .fa-chevron-down");
+        assert.containsOnce(target, "button:contains(Mitchell Admin)");
+
+        await click("button:contains(Mitchell Admin)");
+        assert.containsOnce(target, "button:contains(Mitchell Admin).o-active");
+
+        await click(".o-mail-category-chat span:contains(Direct messages)");
+        assert.containsOnce(target, ".o-mail-category-chat .fa-chevron-right");
+        assert.containsOnce(target, "button:contains(Mitchell Admin)");
+
+        await click("button:contains(Inbox)");
+        assert.containsOnce(target, ".o-mail-category-chat .fa-chevron-right");
+        assert.containsNone(target, "button:contains(Mitchell Admin)");
+    }
+);
