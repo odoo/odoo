@@ -343,14 +343,27 @@ QUnit.module("Tooltip service", (hooks) => {
         assert.containsNone(target, ".o_popover_container .o_popover");
     });
 
-    QUnit.test("tooltip with a delay", async (assert) => {
+    QUnit.test("tooltip with no delay (default delay)", async (assert) => {
+        assert.expect(1);
         class MyComponent extends Component {}
-        MyComponent.template = xml`<button data-tooltip="'helpful tooltip'" data-tooltip-delay="2000">Action</button>`;
+        MyComponent.template = xml`<button class="myBtn" data-tooltip="'helpful tooltip'">Action</button>`;
+        const mockSetTimeout = (fn, delay) => {
+            assert.strictEqual(delay, 400);
+        };
+        await makeParent(MyComponent, { mockSetTimeout });
+        target.querySelector("button.myBtn").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+    });
+
+    QUnit.test("tooltip with a delay", async (assert) => {
+        assert.expect(1);
+        class MyComponent extends Component {}
+        MyComponent.template = xml`<button class="myBtn" data-tooltip="'helpful tooltip'" data-tooltip-delay="2000">Action</button>`;
         const mockSetTimeout = (fn, delay) => {
             assert.strictEqual(delay, 2000);
         };
         await makeParent(MyComponent, { mockSetTimeout });
-        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        target.querySelector("button.myBtn").dispatchEvent(new Event("mouseenter"));
         await nextTick();
     });
 
