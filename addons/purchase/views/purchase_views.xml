@@ -568,8 +568,16 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Purchase Order" decoration-info="state in ['draft', 'sent']"
+<<<<<<< HEAD
                 decoration-muted="state == 'cancel'"
                 class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
+||||||| parent of 1b790d4c091 (temp)
+                decoration-muted="state == 'cancel'" decoration-bf="message_unread==True"
+                class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
+=======
+                decoration-muted="state == 'cancel'"
+                class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
+>>>>>>> 1b790d4c091 (temp)
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
