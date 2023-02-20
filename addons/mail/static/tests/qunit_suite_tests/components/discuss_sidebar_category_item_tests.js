@@ -7,41 +7,6 @@ import { datetime_to_str } from "web.time";
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("discuss_sidebar_category_item_tests.js");
-
-        QUnit.skipRefactoring("chat - avatar: should have correct avatar", async function (assert) {
-            assert.expect(2);
-
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({
-                name: "Demo",
-                im_status: "offline",
-            });
-            const mailChannelId1 = pyEnv["mail.channel"].create({
-                channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: resPartnerId1 }],
-                ],
-                channel_type: "chat",
-            });
-            const { openDiscuss } = await start();
-            await openDiscuss();
-
-            const chatItem = document.querySelector(`
-        .o-mail-category-item[data-channel-id="${mailChannelId1}"]
-    `);
-            assert.strictEqual(
-                chatItem.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_image`).length,
-                1,
-                "chat should have an avatar"
-            );
-
-            assert.strictEqual(
-                chatItem.querySelector(`:scope .o_DiscussSidebarCategoryItem_image`).dataset.src,
-                `/web/image/res.partner/${resPartnerId1}/avatar_128`,
-                "should link to the partner avatar"
-            );
-        });
-
         QUnit.skipRefactoring(
             "chat - sorting: should be sorted by last activity time",
             async function (assert) {

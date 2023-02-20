@@ -1001,3 +1001,27 @@ QUnit.test(
         assert.containsNone(target, "button:contains(Mitchell Admin)");
     }
 );
+
+QUnit.test("chat - avatar: should have correct avatar", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "Demo",
+        im_status: "offline",
+    });
+    const channelId = pyEnv["mail.channel"].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: partnerId }],
+        ],
+        channel_type: "chat",
+    });
+    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    const { openDiscuss } = await start();
+    await openDiscuss();
+
+    assert.containsOnce(target, ".o-mail-category-item img");
+    assert.containsOnce(
+        target,
+        `img[data-src='/web/image/res.partner/${partnerId}/avatar_128?unique=${channel.avatarCacheKey}']`
+    );
+});
