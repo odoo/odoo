@@ -4859,7 +4859,7 @@ msgstr "Nota de crèdit: S'està enviant"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "Abonaments"
+msgstr "Factures rectificatives"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -5326,7 +5326,7 @@ msgstr "Separador de decimals"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Seqüència de Notes de crèdit Dedicada"
+msgstr "Seqüència per factures rectificatives dedicada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
@@ -8047,8 +8047,8 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
-"La distribució de factures i notes de crèdit ha de tenir el mateix nombre de"
-" línies."
+"La distribució de factures i abonaments ha de tenir el mateix nombre de "
+"línies."
 
 #. module: account
 #. odoo-python
@@ -9910,8 +9910,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
 msgstr ""
-"Tingueu en compte que la manera més fàcil de crear una nota de crèdit del "
-"proveïdor és fer-ho directament des de la factura del proveïdor."
+"Tingueu en compte que la manera més fàcil de crear una factura rectificativa"
+" del proveïdor és fer-ho directament des de la factura del proveïdor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -16310,6 +16310,16 @@ msgstr "Anualment"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -16630,6 +16640,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -17000,9 +17016,9 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"No es pot validar una factura amb una quantitat total negativa. Hauríeu de "
-"crear una nota de crèdit en comptes d'això. Useu el menú d' acció per "
-"transformar- lo en una nota de crèdit o reemborsament."
+"No es pot validar una factura amb una quantitat total negativa. En comptes "
+"d'això, hauríeu de crear una factura rectificativa. Feu servir el menú "
+"d'acció per convertir-la en una factura rectificativa o abonament."
 
 #. module: account
 #. odoo-python

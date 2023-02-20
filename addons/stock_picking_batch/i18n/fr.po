@@ -28,7 +28,7 @@ msgid ""
 "'=', False)]}\">Group by</span>"
 msgstr ""
 "<span class=\"o_form_label fw-bold\" attrs=\"{'invisible':[('auto_batch', "
-"'=', False)]}\">Grouper par</span>"
+"'=', False)]}\">Regrouper par</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -38,22 +38,22 @@ msgstr "<strong>DE</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>Lot/Numéros de série</strong>"
+msgstr "<strong>Numéro de lot/série</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Package</strong>"
-msgstr "<strong>Paquet</strong>"
+msgstr "<strong>Colis</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Product Barcode</strong>"
-msgstr "Barcode produit"
+msgstr "<strong>Code-barres du produit</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Responsible:</strong>"
-msgstr "<strong>Responsable:</strong>"
+msgstr "<strong>Responsable :</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -113,12 +113,12 @@ msgstr "Icône de type d'activité"
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Add Operations"
-msgstr "Ajouter des Opérations"
+msgstr "Ajouter des opérations"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to"
-msgstr "Ajouter les transferts à"
+msgstr "Ajouter les pickings à"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -132,7 +132,7 @@ msgstr "Ajouter à"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
 #, python-format
 msgid "Add to Wave"
-msgstr "Ajouter à la vague"
+msgstr "Ajouter à une vague"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
@@ -147,12 +147,12 @@ msgstr "Ajouter à une vague"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Allocation"
-msgstr "Attribution"
+msgstr "Allocation"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr "Transfert autorisé"
+msgstr "Picking autorisé"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
@@ -163,12 +163,12 @@ msgstr "Assigné à %s responsable"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
 msgid "Attachment Count"
-msgstr "Compte des pièces jointes"
+msgstr "Nombre de pièces jointes"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
 msgid "Auto-confirm"
-msgstr "Auto-confirmer"
+msgstr "Confirmation automatique"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
@@ -202,8 +202,8 @@ msgstr ""
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
-"Mettez automatiquement les transferts par lots au fur et à mesure qu'ils "
-"sont confirmés lorsque cela est possible."
+"Mettez automatiquement les pickings par lots au fur et à mesure qu'ils sont "
+"confirmés lorsque cela est possible."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -213,7 +213,7 @@ msgstr "Code-barres"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
 msgid "Batch"
-msgstr "Mode groupé"
+msgstr "Lot"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -324,12 +324,12 @@ msgstr "Nombre de pickings par lot"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
 msgid "Count Picking Wave"
-msgstr "Nombre de transferts de la vague"
+msgstr "Nombre de pickings par vague"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch transfer"
-msgstr "Créer un nouveau transfert en lot"
+msgstr "Créer un nouveau transfert par lot"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -353,7 +353,7 @@ msgstr "Créé le"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
 msgid "Destination Country"
-msgstr "Pays de Destination"
+msgstr "Pays de destination"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
@@ -370,7 +370,7 @@ msgstr "Opérations détaillées"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__done
@@ -398,7 +398,7 @@ msgstr "Abonnés (Partenaires)"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icône Font Awesome e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -441,7 +441,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si actif, certains messages ont une erreur de livraison."
+msgstr "Si coché, certains messages ont une erreur de livraison."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
@@ -450,7 +450,7 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
-"Si la fonction Lots Automatiques est activée, au moins une option 'Grouper "
+"Si la fonction Lots automatiques est activée, au moins une option 'Grouper "
 "par' doit être sélectionnée."
 
 #. module: stock_picking_batch
@@ -563,7 +563,7 @@ msgstr "Date limite de l'activité à venir"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_summary
 msgid "Next Activity Summary"
-msgstr "Résumé d'activité suivant"
+msgstr "Résumé de l'activité suivante"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
@@ -603,12 +603,12 @@ msgstr "Opérations"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
 msgid "Picking"
-msgstr "Opération de manutention"
+msgstr "Picking"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Type de transfert"
+msgstr "Type de picking"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -642,7 +642,7 @@ msgstr "Mouvements de produit (Ligne de mouvement de stock)"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Put in Pack"
-msgstr "Faire les colis"
+msgstr "Mettre en colis"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -660,7 +660,7 @@ msgstr "Responsable"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_user_id
 msgid "Responsible User"
-msgstr "Responsable"
+msgstr "Utilisateur responsable"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
@@ -681,20 +681,20 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
-"Date prévue pour les transferts a effectuer\n"
-"               - Si définie manuellement, alors la date prévue pour tous les transferts de ce batch sera modifiée pour cette date.\n"
-"               - Si elle n'est pas modifiée manuellement et que les transferts son ajoutés/retirés/modifiés, alors ce sera la leur date prévue la  plus tôt\n"
+"Date prévue pour les transferts à traiter.\n"
+"               - Si elle est définie manuellement, la date prévue pour tous les transferts du lot sera modifiée automatiquement mise à jour à cette date.\n"
+"               - Si elle n'est pas modifiée manuellement et que des transferts sont ajoutés/retirés/mis à jour, il s'agira de la date prévue la plus proche\n"
 "                mais cette date prévue ne sera pas appliquée à tous les transferts du lot."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "Rechercher les transferts en lot"
+msgstr "Rechercher les transferts par lot"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Set quantities"
-msgstr "Copier les Quantités"
+msgstr "Définir les quantités"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
@@ -725,7 +725,7 @@ msgstr "Afficher le bouton Valider"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Montrez toutes les enregistrements pour lesquelles la date des prochaines "
+"Montrez tous les enregistrements pour lesquels la date des prochaines "
 "actions est pour aujourd'hui ou avant"
 
 #. module: stock_picking_batch
@@ -748,7 +748,7 @@ msgstr "État"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Status"
-msgstr "État"
+msgstr "Statut"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_state
@@ -767,12 +767,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr "Transfert de stock en lot"
+msgstr "Transfert de lot de stock"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
 msgid "Stock Move"
-msgstr "Stock déplacer"
+msgstr "Mouvement de stock"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_package_destination
@@ -802,9 +802,9 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"Les transferts suivants ne peuvent être ajoutés au transfert en lot %s. Vérifiez leurs états et type de transfert, s'ils ne sont pas des transferts immédiats.\n"
+"Les transferts suivants ne peuvent être ajoutés au transfert par lot %s. Vérifiez leurs états et types de transfert, s'ils ne sont pas des transferts immédiats.\n"
 "\n"
-"Incompatibilités:%s"
+"Incompatibilités : %s"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -814,10 +814,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"L'objectif des tranferts en lot est de grouper les opérations qui peuvent\n"
+"L'objectif des transferts par lot est de regrouper les opérations qui peuvent\n"
 "            (doivent) être faites ensemble afin d'améliorer l'efficacité.\n"
-"           Cela peut aussi être utile d'assigner les tâches (une personne = un lot) ou\n"
-"            améliore la gestion du temps des opérations (les tâches qui doivent être faites à 13.00)."
+"           Cela peut aussi être utile pour assigner les tâches (une personne = un lot) ou\n"
+"            améliorer la gestion du temps des opérations (les tâches qui doivent être faites à 13h00)."
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -827,34 +827,34 @@ msgid ""
 "                    It may also be useful to assign jobs (one person = one batch) or\n"
 "                    help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"Le but des transferts par vague est de grouper des opérations de différents transferts \n"
+"L'objectif des transferts par vague est de regrouper les opérations de différents transferts \n"
 "ensemble afin d'augmenter l'efficacité. \n"
-"Il pourrait être utile aussi d'assigner le travail (une personne=une vague) \n"
-"ou améliorer le timing de chaque opération"
+"Il pourrait être utile aussi pour assigner les tâches (une personne = un lot) \n"
+"ou améliorer la gestion du temps des opérations (les tâches qui doivent être faites à 13h00)."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected operations should belong to a unique company."
-msgstr "Les transferts sélectionnés doivent appartenir à la même société"
+msgstr "Les opérations sélectionnées doivent appartenir à la même société."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #, python-format
 msgid "The selected pickings should belong to an unique company."
-msgstr "Les transferts sélectionnés doivent appartenir à la même société"
+msgstr "Les pickings sélectionnés doivent appartenir à la même société."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to a unique company."
-msgstr "Les opérations sélectionnées doivent appartenir à la même société"
+msgstr "Les transferts sélectionnés doivent appartenir à la même société."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
-msgstr "Les transferts sélectionnées doivent être du même type"
+msgstr "Les transferts sélectionnées doivent être du même type d'opération"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
@@ -892,12 +892,12 @@ msgstr "Transferts"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
 msgid "Type of Operation"
-msgstr "Type d'Opération"
+msgstr "Type d'opération"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type d'activité d'exception enregistrée"
+msgstr "Type d'activité d'exception enregistrée."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -912,18 +912,18 @@ msgstr "Entrepôt"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
 msgid "Wave Transfer"
-msgstr "Transfert par Vague"
+msgstr "Transfert par vague"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
 msgid "Wave Transfer Lines"
-msgstr "Lignes de Transfert par Vague"
+msgstr "Lignes de transfert par vague"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
 msgid "Wave Transfers"
-msgstr "Transferts par Vague"
+msgstr "Transferts par vague"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -949,18 +949,18 @@ msgstr "Lorsque cette case est cochée, le lot est créé à l'état de brouillo
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr "Vous ne pouvez pas supprimer des transferts par lots finalisés"
+msgstr "Vous ne pouvez pas supprimer des transferts par lot finalisés"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "Vous devez assigner des pickings au lot"
+msgstr "Vous devez assigner des pickings au lot."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr "un nouveau transfert en lot"
+msgstr "un nouveau transfert par lot"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
@@ -970,7 +970,7 @@ msgstr "un nouveau transfert par vague"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr "un transfert en lot existant"
+msgstr "un transfert par lot existant"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
