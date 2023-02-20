@@ -2,7 +2,7 @@
 
 import { markup } from "@odoo/owl";
 import { Message } from "./message_model";
-import { removeFromArray, removeFromArrayWithPredicate } from "../utils/arrays";
+import { removeFromArrayWithPredicate } from "../utils/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "../utils/format";
 import { registry } from "@web/core/registry";
 import { MessageReactions } from "./message_reactions_model";
@@ -427,7 +427,7 @@ export class MessageService {
         }
         this.updateNotificationGroup(group, data);
         if (group.notifications.length === 0) {
-            removeFromArray(this.store.notificationGroups, group);
+            removeFromArrayWithPredicate(this.store.notificationGroups, (gr) => gr.id === group.id);
         }
         return group;
     }

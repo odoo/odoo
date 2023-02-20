@@ -152,9 +152,7 @@ export class Messaging {
                     author: this.store.user,
                 })
             );
-            this.store.notificationGroups.sort(
-                (n1, n2) => (n2.lastMessage?.id ?? 0) - (n1.lastMessage?.id ?? 0)
-            );
+            this.store.notificationGroups.sort((n1, n2) => n2.lastMessage.id - n1.lastMessage.id);
         });
     }
 
