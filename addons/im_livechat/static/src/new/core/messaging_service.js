@@ -16,12 +16,7 @@ patch(Messaging.prototype, "im_livechat", {
         this._super(notif);
         const channel = this.store.threads[createLocalId("mail.channel", notif.payload.id)];
         if (channel?.type === "livechat") {
-            // Live chats are sorted by most recent interest date time in the sidebar.
-            this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
-                const thread1 = this.store.threads[localId_1];
-                const thread2 = this.store.threads[localId_2];
-                return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
-            });
+            this.threadService.sortChannels();
         }
     },
 

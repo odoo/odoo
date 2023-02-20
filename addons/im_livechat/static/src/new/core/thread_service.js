@@ -15,12 +15,7 @@ patch(ThreadService.prototype, "im_livechat", {
             }
             if (isUnknown) {
                 this.store.discuss.livechat.threads.push(thread.localId);
-                // Live chats are sorted by most recent interest date time in the sidebar.
-                this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
-                    const thread1 = this.store.threads[localId_1];
-                    const thread2 = this.store.threads[localId_2];
-                    return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
-                });
+                this.sortChannels();
             }
         }
         return thread;
@@ -46,4 +41,14 @@ patch(ThreadService.prototype, "im_livechat", {
         }
         return this._super(thread);
     },
+
+    sortChannels() {
+        this._super();
+        // Live chats are sorted by most recent interest date time in the sidebar.
+        this.store.discuss.livechat.threads.sort((localId_1, localId_2) => {
+            const thread1 = this.store.threads[localId_1];
+            const thread2 = this.store.threads[localId_2];
+            return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
+        });
+    }
 });
