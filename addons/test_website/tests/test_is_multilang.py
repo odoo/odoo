@@ -31,7 +31,7 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         it = self.env.ref('base.lang_it').sudo()
         en = self.env.ref('base.lang_en').sudo()
         be = self.env.ref('base.lang_fr_BE').sudo()
-        country1 = self.env['res.country'].create({'name': "My Super Country"})
+        country1 = self.env['res.country'].create({'name': "My Super Country", 'code': 'ZV'})
 
         it.active = True
         be.active = True

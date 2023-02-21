@@ -193,7 +193,7 @@ class TestPartner(TransactionCase):
     def test_display_address_missing_key(self):
         """ Check _display_address when some keys are missing. As a defaultdict is used, missing keys should be
         filled with empty strings. """
-        country = self.env["res.country"].create({"name": "TestCountry", "address_format": "%(city)s %(zip)s"})
+        country = self.env["res.country"].create({"name": "TestCountry", "address_format": "%(city)s %(zip)s", "code": "ZV"})
         partner = self.env["res.partner"].create({
             "name": "TestPartner",
             "country_id": country.id,
