@@ -2198,7 +2198,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "Warning modal should be opened"
             );
 
-            await click(document.querySelector(".modal.o_technical_modal button.btn-close"));
+            await click(target.querySelector(".modal.o_technical_modal button.btn-primary"));
             assert.containsNone(
                 document.body,
                 ".modal.o_technical_modal",
@@ -2416,7 +2416,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         await warningOpened;
         assert.containsOnce(target, ".modal");
-        assert.containsOnce(target, ".modal .o_dialog_warning");
+        assert.containsOnce(target, ".modal .o_error_dialog");
         assert.strictEqual(
             target.querySelector(".modal .modal-title").textContent,
             "Validation Error"

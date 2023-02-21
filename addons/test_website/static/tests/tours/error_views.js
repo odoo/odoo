@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('test_error_website', {
         trigger: 'a[href="/test_internal_error_json"]',
     }, {
         content: "rpc error 500 modal is an ErrorDialog",
-        extra_trigger: 'div.o_dialog_error.modal-content div.alert.alert-warning',
+        extra_trigger: 'div.o_error_dialog.modal-content',
         trigger: '.modal-footer button.btn.btn-primary',
     },
     // HTTP ERROR
