@@ -2499,7 +2499,7 @@ export function getRangePosition(el, document, options = {}) {
         clonedRange.detach();
     }
 
-    if (!offset || offset.heigh === 0) {
+    if (!offset || offset.height === 0) {
         const clonedRange = range.cloneRange();
         const shadowCaret = document.createTextNode('|');
         clonedRange.insertNode(shadowCaret);
