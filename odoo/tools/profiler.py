@@ -692,8 +692,9 @@ class Nested:
         self.context_manager = context_manager
 
     def __enter__(self):
-        self.profiler.__enter__()
-        return self.context_manager.__enter__()
+        res = self.profiler.__enter__()
+        self.context_manager.__enter__()
+        return res
 
     def __exit__(self, exc_type, exc_value, traceback):
         try:

@@ -719,7 +719,7 @@ _Pool = None
 def db_connect(to, allow_uri=False):
     global _Pool
     if _Pool is None:
-        _Pool = ConnectionPool(int(tools.config['db_maxconn']))
+        _Pool = ConnectionPool(tools.config['db_maxconn'])
 
     db, info = connection_info_for(to)
     if not allow_uri and db != to:

@@ -211,8 +211,6 @@ class MrpStockReport(models.TransientModel):
         }
 
         context = dict(self.env.context)
-        if not config['test_enable']:
-            context['commit_assetsbundle'] = True
         if context.get('active_id') and context.get('active_model'):
             rcontext['reference'] = self.env[context.get('active_model')].browse(int(context.get('active_id'))).display_name
 

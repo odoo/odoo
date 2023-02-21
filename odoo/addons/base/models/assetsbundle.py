@@ -114,7 +114,7 @@ class AssetsBundle(object):
 
     TRACKED_BUNDLES = ['web.assets_common', 'web.assets_backend']
 
-    def __init__(self, name, files, env=None, css=True, js=True):
+    def __init__(self, name, files, env=None, css=True, js=True, user_direction=None):
         """
         :param name: bundle name
         :param files: files to be added to the bundle
@@ -128,7 +128,7 @@ class AssetsBundle(object):
         self.stylesheets = []
         self.css_errors = []
         self.files = files
-        self.user_direction = self.env['res.lang']._lang_get(
+        self.user_direction = user_direction or self.env['res.lang']._lang_get(
             self.env.context.get('lang') or self.env.user.lang
         ).direction
 
@@ -150,48 +150,43 @@ class AssetsBundle(object):
                     self.templates.append(XMLAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
     def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
-        """
-        :returns [(tagName, attributes, content)] if the tag is auto close
-        """
         response = []
         is_debug_assets = debug and 'assets' in debug
-        if css and self.stylesheets:
-            css_attachments = self.css(is_minified=not is_debug_assets) or []
-            for attachment in css_attachments:
-                if is_debug_assets:
-                    href = self.get_debug_asset_url(extra='rtl/' if self.user_direction == 'rtl' else '',
-                                                    name=css_attachments.name,
-                                                    extension='')
-                else:
-                    href = attachment.url
-                attr = dict([
-                    ["type", "text/css"],
-                    ["rel", "stylesheet"],
-                    ["href", href],
-                    ['data-asset-bundle', self.name],
-                    ['data-asset-version', self.version],
-                ])
-                response.append(("link", attr, None))
-            if self.css_errors:
-                msg = '\n'.join(self.css_errors).replace('"', '\\"').replace('\n', '\\n')
-                js_error = """
-                    window.__odooScssCompilationError = "%s";
-                    console.error("SCSS compilation failure:", window.__odooScssCompilationError);
-                    window.addEventListener("DOMContentLoaded", () => {
-                        if (!odoo || !odoo.define) {
-                            alert(window.__odooScssCompilationError);
-                        }
-                    });
-                """ % msg
-                response.append(JavascriptAsset(self, inline=js_error).to_node())
-                response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/dist/css/bootstrap.css").to_node())
 
-        if js and self.javascripts:
-            js_attachment = self.js(is_minified=not is_debug_assets)
+        if css and self.stylesheets:
             if is_debug_assets:
-                src = self.get_debug_asset_url(name=js_attachment.name, extension='')
+                href = self.get_debug_asset_url(
+                    extra='rtl/' if self.user_direction == 'rtl' else '',
+                    name=self.name,
+                    extension='css'
+                )
             else:
-                src = js_attachment[0].url
+                href = self.get_asset_url(
+                    unique=self.version,
+                    extra='rtl/' if self.user_direction == 'rtl' else '',
+                    name=self.name,
+                    extension='min.css'
+                )
+            attr = dict([
+                ["type", "text/css"],
+                ["rel", "stylesheet"],
+                ["href", href],
+                ['data-asset-bundle', self.name],
+                ['data-asset-version', self.version],
+            ])
+            response.append(("link", attr, None))
+        if js and self.javascripts:
+            if is_debug_assets:
+                src = self.get_debug_asset_url(
+                    name=self.name,
+                    extension='js'
+                )
+            else:
+                src = self.get_asset_url(
+                    unique=self.version,
+                    name=self.name,
+                    extension='min.js'
+                )
             attr = dict([
                 ["async", "async" if async_load else None],
                 ["defer", "defer" if defer_load or lazy_load else None],
@@ -201,8 +196,36 @@ class AssetsBundle(object):
                 ['data-asset-version', self.version],
             ])
             response.append(("script", attr, None))
-
         return response
+
+    def generate(self, css=False, js=False, minified=True, async_load=False, defer_load=False, lazy_load=False):
+        """
+        :returns [(tagName, attributes, content)] if the tag is auto close
+        """
+        if css and self.stylesheets:
+            attachment = self.css(is_minified=minified) or []
+            assert len(attachment) == 1
+            # previous version was iterating on attachment but it looks like we should get only one.
+            # css error are currently managed by adding a script instead to alert the error
+            # TODO: replace this
+
+            #if self.css_errors:
+            #    msg = '\n'.join(self.css_errors).replace('"', '\\"').replace('\n', '\\n')
+            #    js_error = """
+            #        window.__odooScssCompilationError = "%s";
+            #        console.error("SCSS compilation failure:", window.__odooScssCompilationError);
+            #        window.addEventListener("DOMContentLoaded", () => {
+            #            if (!odoo || !odoo.define) {
+            #                alert(window.__odooScssCompilationError);
+            #            }
+            #        });
+            #    """ % msg
+            #    response.append(JavascriptAsset(self, inline=js_error).to_node())
+            #    response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/dist/css/bootstrap.css").to_node())
+            return attachment
+
+        if js and self.javascripts:
+            return self.js(is_minified=minified)
 
     @func.lazy_property
     def last_modified_combined(self):
@@ -232,12 +255,12 @@ class AssetsBundle(object):
         return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
 
     def _get_asset_template_url(self):
-        return "/web/assets/{unique}/{extra}{name}.{extension}"
+        return "/web/assets/{unique}/{extra}/{name}.{extension}"
 
     def _get_asset_url_values(self, unique, extra, name, extension):  # extra can contain direction or/and website
         return {
             'unique': unique,
-            'extra': extra,
+            'extra': extra or '-',
             'name': name,
             'extension': extension,
         }
@@ -248,7 +271,7 @@ class AssetsBundle(object):
         )
 
     def get_debug_asset_url(self, extra='', name='%', extension='%'):
-        return f"/web/assets/debug/{extra}{name}{extension}"
+        return self.get_asset_url(unique='debug', extra=extra, name=name, extension=extension)
 
     def _unlink_attachments(self, attachments):
         """ Unlinks attachments without actually calling unlink, so that the ORM cache is not cleared.
@@ -339,7 +362,6 @@ class AssetsBundle(object):
         :return the ir.attachment records for a given bundle.
         """
         assert extension in ('js', 'min.js', 'js.map', 'css', 'min.css', 'css.map', 'xml', 'min.xml')
-        ira = self.env['ir.attachment']
 
         # Set user direction in name to store two bundles
         # 1 for ltr and 1 for rtl, this will help during cleaning of assets bundle
@@ -352,6 +374,13 @@ class AssetsBundle(object):
             'application/json' if extension in ['js.map', 'css.map'] else
             'application/javascript'
         )
+
+        url = self.get_asset_url(
+            unique=self.version,
+            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
+            name=self.name,
+            extension=extension
+        )
         values = {
             'name': fname,
             'mimetype': mimetype,
@@ -360,21 +389,9 @@ class AssetsBundle(object):
             'type': 'binary',
             'public': True,
             'raw': content.encode('utf8'),
-        }
-        attachment = ira.with_user(SUPERUSER_ID).create(values)
-        url = self.get_asset_url(
-            unique=self.version,
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
-            name=self.name,
-            extension=extension
-        )
-        values = {
             'url': url,
         }
-        attachment.write(values)
-
-        if self.env.context.get('commit_assetsbundle') is True:
-            self.env.cr.commit()
+        attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(values)
 
         self.clean_attachments(extension)
 
@@ -390,7 +407,8 @@ class AssetsBundle(object):
 
     def js(self, is_minified=True):
         extension = 'min.js' if is_minified else 'js'
-        js_attachment = self.get_attachments(extension)
+
+        js_attachment = self.get_attachments(extension)  # todo remove this
 
         if not js_attachment:
             template_bundle = ''

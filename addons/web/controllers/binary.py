@@ -82,12 +82,15 @@ class Binary(http.Controller):
 
         return stream.get_response(**send_file_kwargs)
 
-    @http.route(['/web/assets/debug/<string:filename>',
+    @http.route([
+        '/web/assets/debug/<string:filename>',
         '/web/assets/debug/<path:extra>/<string:filename>',
-        '/web/assets/<int:id>/<string:filename>',
-        '/web/assets/<int:id>-<string:unique>/<string:filename>',
-        '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
+        '/web/assets/<string:filename>',
+        '/web/assets/<string:unique>/<string:filename>',
+        '/web/assets/<string:unique>/<path:extra>/<string:filename>'
+    ], type='http', auth="public")
     # pylint: disable=redefined-builtin,invalid-name
+<<<<<<< HEAD
     def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
         if not id:
             domain = [('url', '!=', False)]
@@ -102,8 +105,34 @@ class Binary(http.Controller):
             if not attachment:
                 raise request.not_found()
             id = attachment.id
+=======
+    def content_assets(self, filename=None, unique=False, extra=None, nocache=False):
+        extra = extra or '-'
+        unique = unique or '%'
+        url = f'/web/assets/{unique}/{extra}/{filename}'
+        if unique:
+            domain = [('url', '=', url)]
+        else:
+            domain = [('url', '=like', url)]
+        # domain += [('name', '=', filename), ('public', '=', True)]
+        attachment = request.env['ir.attachment'].sudo().search(domain, limit=1, order='id desc')
+        if not attachment:
+            _logger.info('Generating assets bundle %s', filename)
+            attachment = request.env['ir.qweb']._generate_assets_bundle(filename, extra)
+            if attachment and unique and unique not in attachment.url:
+                # not sure this behaviour is the desired one:
+                # before this refactoring: if a page has an "old" asset unique
+                # the asset may be removed from the database and the page will return a 404
+                # with this change, we could return a kind of "debug=assets" behaviour by
+                # truing to generate the assets, but the get_attachment will return the last
+                # version if the current unique already has an attachment inside the
+                # _generate_assets_bundle logic.
+                attachment = None
+        if not attachment:
+            raise request.not_found()
+>>>>>>> wip
         with replace_exceptions(UserError, by=request.not_found()):
-            record = request.env['ir.binary']._find_record(res_id=int(id))
+            record = request.env['ir.binary']._find_record(res_id=int(attachment.id))
             stream = request.env['ir.binary']._get_stream_from(record, 'raw', filename)
 
         send_file_kwargs = {'as_attachment': False}

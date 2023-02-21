@@ -141,3 +141,4 @@ class WebClient(http.Controller):
         } for tag, attrs, content in files]
 
         return request.make_json_response(data)
+

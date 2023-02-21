@@ -684,17 +684,6 @@ class IrActionsReport(models.Model):
             # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
             additional_context = {'debug': False}
 
-            # As the assets are generated during the same transaction as the rendering of the
-            # templates calling them, there is a scenario where the assets are unreachable: when
-            # you make a request to read the assets while the transaction creating them is not done.
-            # Indeed, when you make an asset request, the controller has to read the `ir.attachment`
-            # table.
-            # This scenario happens when you want to print a PDF report for the first time, as the
-            # assets are not in cache and must be generated. To workaround this issue, we manually
-            # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
-            if not config['test_enable']:
-                additional_context['commit_assetsbundle'] = True
-
             html = self.with_context(**additional_context)._render_qweb_html(report_ref, res_ids_wo_stream, data=data)[0]
 
             bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(**additional_context)._prepare_html(html, report_model=report_sudo.model)

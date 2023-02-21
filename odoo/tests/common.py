@@ -801,7 +801,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             self.profile_session = profiler.make_session(test_method)
         return profiler.Profiler(
             description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
-            db=self.env.cr.dbname,
+            db=kwargs.pop('db', self.env.cr.dbname),
             profile_session=self.profile_session,
             **kwargs)
 
@@ -1996,8 +1996,12 @@ class HttpCase(TransactionCase):
         """
         sup = super()
         _profiler = sup.profile(**kwargs)
+        _profiler.request_profilers = []
+
         def route_profiler(request):
-            return sup.profile(description=request.httprequest.full_path)
+            request_profiler = sup.profile(**kwargs, description=request.httprequest.full_path)
+            _profiler.request_profilers.append(request_profiler)
+            return request_profiler
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
 
 

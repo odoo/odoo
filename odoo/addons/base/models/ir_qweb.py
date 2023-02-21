@@ -2527,14 +2527,31 @@ class IrQWeb(models.AbstractModel):
 
         return (files, remains)
 
-    def _get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True):
-        return AssetsBundle(bundle_name, files, env=env, css=css, js=js)
+    def _get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True, user_direction=None):
+        return AssetsBundle(bundle_name, files, env=env, css=css, js=js, user_direction=user_direction)
+
+    def _generate_assets_bundle(self, filename, extra):
+        css = js = minified = False
+        bundle_name = filename
+        if bundle_name.endswith('.css'):
+            css = True
+            bundle_name = bundle_name[:-4]
+        elif bundle_name.endswith('.js'):
+            js = True
+            bundle_name = bundle_name[:-3]
+        if bundle_name.endswith('.min'):
+            minified = True
+            bundle_name = bundle_name[:-4]
+        assert bool(css) != bool(js)
+        files, _remains = self._get_asset_content(bundle_name)  # defer_load, lazy_load and media are only usefull for remains, this could be refactored
+        if _remains:
+            _logger.warning('remains are not usefull here')
+        user_direction = 'rtl' if extra and 'rtl' in extra else 'ltr'
+        asset_bundle = self._get_asset_bundle(bundle_name, files, env=self.env, css=css, js=js, user_direction=user_direction)
+        return asset_bundle.generate(css=css, js=js, minified=minified)
 
     def _generate_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         files, remains = self._get_asset_content(bundle, defer_load=defer_load, lazy_load=lazy_load, media=css and media or None)
-        from pprint import pprint
-        pprint(files)
-        pprint(remains)
         asset = self._get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
         value = remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
