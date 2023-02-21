@@ -1429,7 +1429,7 @@ export function getColumnIndex(td) {
 
 // This is a list of "paragraph-related elements", defined as elements that
 // behave like paragraphs.
-const paragraphRelatedElements = [
+export const paragraphRelatedElements = [
     'P',
     'H1',
     'H2',
