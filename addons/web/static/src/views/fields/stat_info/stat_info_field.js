@@ -18,7 +18,7 @@ export class StatInfoField extends Component {
     };
 
     get formattedValue() {
-        const formatter = formatters.get(this.props.type);
+        const formatter = formatters.get(this.props.record.fields[this.props.name].type);
         return formatter(this.props.value || 0, { digits: this.props.digits });
     }
     get label() {

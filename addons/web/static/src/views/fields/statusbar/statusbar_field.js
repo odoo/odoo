@@ -168,7 +168,7 @@ export class StatusBarField extends Component {
 
     computeItems(grouped = true) {
         let items = null;
-        if (this.props.type === "many2one") {
+        if (this.props.record.fields[this.props.name].type === "many2one") {
             items = this.getVisibleMany2Ones();
         } else {
             items = this.getVisibleSelection();
@@ -196,7 +196,7 @@ export class StatusBarField extends Component {
             this.props.record.model.root instanceof this.props.record.constructor &&
             this.props.record.model.root;
         const isInEdition = rootRecord ? rootRecord.isInEdition : this.props.record.isInEdition;
-        switch (this.props.type) {
+        switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
                 this.props.record.update({ [this.props.name]: [item.id, item.name] });
                 // We save only if we're on view mode readonly and no readonly field modifier

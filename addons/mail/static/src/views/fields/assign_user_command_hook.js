@@ -15,6 +15,7 @@ export function useAssignUserCommand() {
     const env = useEnv();
     const orm = useService("orm");
     const user = useService("user");
+    const type = component.props.record.fields[component.props.name].type;
     if (
         component.props.relation !== "res.users" ||
         component.props.record.activeFields[component.props.name].viewType !== "form"
@@ -23,18 +24,18 @@ export function useAssignUserCommand() {
     }
 
     const getCurrentIds = () => {
-        if (component.props.type === "many2one" && component.props.value) {
+        if (type === "many2one" && component.props.value) {
             return [component.props.value[0]];
-        } else if (component.props.type === "many2many") {
+        } else if (type === "many2many") {
             return component.props.value.currentIds;
         }
         return [];
     };
 
     const add = async (record) => {
-        if (component.props.type === "many2one") {
+        if (type === "many2one") {
             component.props.record.update({ [component.props.name]: record });
-        } else if (component.props.type === "many2many") {
+        } else if (type === "many2many") {
             component.props.record.update({
                 [component.props.name]: {
                     operation: "REPLACE_WITH",
@@ -45,9 +46,9 @@ export function useAssignUserCommand() {
     };
 
     const remove = async (record) => {
-        if (component.props.type === "many2one") {
+        if (type === "many2one") {
             component.props.record.update({ [component.props.name]: [] });
-        } else if (component.props.type === "many2many") {
+        } else if (type === "many2many") {
             component.props.record.update({
                 [component.props.name]: {
                     operation: "REPLACE_WITH",
@@ -61,7 +62,7 @@ export function useAssignUserCommand() {
         const value = options.searchValue.trim();
         let domain = component.props.record.getFieldDomain(component.props.name);
         const context = component.props.record.getFieldContext(component.props.name);
-        if (component.props.type === "many2many") {
+        if (type === "many2many") {
             const selectedUserIds = getCurrentIds();
             if (selectedUserIds.length) {
                 domain = Domain.and([domain, [["id", "not in", selectedUserIds]]]);
