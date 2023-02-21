@@ -89,9 +89,9 @@ export const pdfViewerField = {
     component: PdfViewerField,
     displayName: _lt("PDF Viewer"),
     supportedTypes: ["binary"],
-    extractProps: ({ attrs }) => ({
+    extractProps: ({ attrs, options }) => ({
         fileNameField: attrs.filename,
-        previewImage: attrs.options.preview_image,
+        previewImage: options.preview_image,
     }),
 };
 

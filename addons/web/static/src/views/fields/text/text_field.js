@@ -129,9 +129,9 @@ export const textField = {
     component: TextField,
     displayName: _lt("Multiline Text"),
     supportedTypes: ["html", "text"],
-    extractProps: ({ attrs }) => ({
+    extractProps: ({ attrs, options }) => ({
         placeholder: attrs.placeholder,
-        dynamicPlaceholder: attrs.options.dynamic_placeholder,
+        dynamicPlaceholder: options.dynamic_placeholder,
         rowCount: attrs.rows && parseInteger(attrs.rows),
     }),
 };

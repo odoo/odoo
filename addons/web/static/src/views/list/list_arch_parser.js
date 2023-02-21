@@ -116,7 +116,9 @@ export class ListArchParser extends XMLParser {
                         className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
                         optional: node.getAttribute("optional") || false,
                         type: "field",
-                        hasLabel: !(fieldInfo.noLabel || fieldInfo.field.noLabel),
+                        hasLabel: !(
+                            archParseBoolean(fieldInfo.attrs.nolabel) || fieldInfo.field.noLabel
+                        ),
                         label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
                     });
                 }
@@ -133,7 +135,7 @@ export class ListArchParser extends XMLParser {
                     name: widgetInfo.name,
                     // FIXME: this is dumb, we encode it into a weird object so that the widget
                     // can decode it later...
-                    node: encodeObjectForTemplate({ attrs: widgetInfo.rawAttrs }).slice(1, -1),
+                    node: encodeObjectForTemplate({ attrs: widgetInfo.attrs }).slice(1, -1),
                     className: node.getAttribute("class") || "",
                 };
                 columns.push({

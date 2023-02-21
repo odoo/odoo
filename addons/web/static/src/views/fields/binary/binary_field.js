@@ -69,8 +69,8 @@ export const binaryField = {
     component: BinaryField,
     displayName: _lt("File"),
     supportedTypes: ["binary"],
-    extractProps: ({ attrs }) => ({
-        acceptedFileExtensions: attrs.options.accepted_file_extensions,
+    extractProps: ({ attrs, options }) => ({
+        acceptedFileExtensions: options.accepted_file_extensions,
         fileNameField: attrs.filename,
     }),
 };

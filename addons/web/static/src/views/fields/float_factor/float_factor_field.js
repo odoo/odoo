@@ -29,9 +29,9 @@ export class FloatFactorField extends FloatField {
 export const floatFactorField = {
     ...floatField,
     component: FloatFactorField,
-    extractProps: (params) => ({
-        ...floatField.extractProps(params),
-        factor: params.attrs.options.factor,
+    extractProps: (fieldInfo) => ({
+        ...floatField.extractProps(fieldInfo),
+        factor: fieldInfo.options.factor,
     }),
 };
 

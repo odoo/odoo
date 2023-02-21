@@ -20,10 +20,10 @@ patch(PhoneField, "sms.PhoneField", {
 });
 
 const patchDescr = {
-    extractProps({ attrs }) {
+    extractProps(fieldInfo) {
         return {
-            ...this._super({ attrs }),
-            enableButton: attrs.options.enable_sms,
+            ...this._super(fieldInfo),
+            enableButton: fieldInfo.options.enable_sms,
         };
     },
 };

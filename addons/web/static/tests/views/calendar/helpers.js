@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
 import { uiService } from "@web/core/ui/ui_service";
+import { createElement } from "@web/core/utils/xml";
 import { registry } from "@web/core/registry";
+import { Field } from "@web/views/fields/field";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, mount, nextTick, triggerEvent } from "../../helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
@@ -206,6 +208,8 @@ export const FAKE_FIELDS = {
 };
 
 function makeFakeModelState() {
+    const fakeFieldNode = createElement("field", { name: "name" });
+    const fakeModels = { event: FAKE_FIELDS };
     return {
         canCreate: true,
         canDelete: true,
@@ -228,7 +232,7 @@ function makeFakeModelState() {
         hasEditDialog: false,
         hasQuickCreate: false,
         popoverFields: {
-            name: { rawAttrs: {}, options: {} },
+            name: Field.parseFieldNode(fakeFieldNode, fakeModels, "event", "calendar"),
         },
         rangeEnd: makeFakeDate().endOf("month"),
         rangeStart: makeFakeDate().startOf("month"),

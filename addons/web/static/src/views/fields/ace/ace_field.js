@@ -123,8 +123,8 @@ export const aceField = {
     component: AceField,
     displayName: _lt("Ace Editor"),
     supportedTypes: ["text"],
-    extractProps: ({ attrs }) => ({
-        mode: attrs.options.mode,
+    extractProps: ({ options }) => ({
+        mode: options.mode,
     }),
 };
 

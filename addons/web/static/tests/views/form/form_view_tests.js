@@ -3566,9 +3566,9 @@ QUnit.module("Views", (hooks) => {
         MyField.template = owl.xml`<div>ok</div>`;
         fieldRegistry.add("my_field", {
             component: MyField,
-            extractProps: function ({ attrs }) {
-                assert.deepEqual(attrs.options, { horizontal: true });
-                return { horizontal: attrs.options.horizontal };
+            extractProps: function ({ options }) {
+                assert.deepEqual(options, { horizontal: true });
+                return { horizontal: options.horizontal };
             },
         });
 

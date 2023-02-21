@@ -28,8 +28,8 @@ export const booleanIconField = {
     component: BooleanIconField,
     displayName: _lt("Boolean Icon"),
     supportedTypes: ["boolean"],
-    extractProps: ({ attrs }) => ({
-        icon: attrs.options.icon,
+    extractProps: ({ options }) => ({
+        icon: options.icon,
     }),
 };
 

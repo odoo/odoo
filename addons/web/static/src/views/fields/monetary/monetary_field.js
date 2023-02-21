@@ -80,11 +80,11 @@ export const monetaryField = {
     component: MonetaryField,
     supportedTypes: ["monetary", "float"],
     displayName: _lt("Monetary"),
-    extractProps: ({ attrs }) => ({
-        currencyField: attrs.options.currency_field,
+    extractProps: ({ attrs, options }) => ({
+        currencyField: options.currency_field,
         inputType: attrs.type,
-        useFieldDigits: attrs.options.field_digits,
-        hideSymbol: attrs.options.no_symbol,
+        useFieldDigits: options.field_digits,
+        hideSymbol: options.no_symbol,
         placeholder: attrs.placeholder,
     }),
 };

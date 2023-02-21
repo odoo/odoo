@@ -154,11 +154,11 @@ export class DateRangeField extends Component {
 export const dateRangeField = {
     component: DateRangeField,
     supportedTypes: ["date", "datetime"],
-    extractProps: ({ attrs }) => ({
-        relatedEndDateField: attrs.options.related_end_date,
-        relatedStartDateField: attrs.options.related_start_date,
+    extractProps: ({ attrs, options }) => ({
+        relatedEndDateField: options.related_end_date,
+        relatedStartDateField: options.related_start_date,
+        formatType: options.format_type,
         placeholder: attrs.placeholder,
-        formatType: attrs.options.format_type,
     }),
 };
 

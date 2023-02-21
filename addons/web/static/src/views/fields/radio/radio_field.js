@@ -72,8 +72,8 @@ export const radioField = {
     displayName: _lt("Radio"),
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
-    extractProps: ({ attrs }) => ({
-        orientation: attrs.options.horizontal ? "horizontal" : "vertical",
+    extractProps: ({ options }) => ({
+        orientation: options.horizontal ? "horizontal" : "vertical",
     }),
     legacySpecialData: "_fetchSpecialMany2ones",
 };

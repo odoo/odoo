@@ -94,9 +94,9 @@ GaugeField.props = {
 
 export const gaugeField = {
     component: GaugeField,
-    extractProps: ({ attrs }) => ({
-        maxValueField: attrs.options.max_field,
-        title: attrs.options.title,
+    extractProps: ({ options }) => ({
+        maxValueField: options.max_field,
+        title: options.title,
     }),
 };
 

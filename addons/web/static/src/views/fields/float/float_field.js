@@ -57,19 +57,19 @@ export const floatField = {
     displayName: _lt("Float"),
     supportedTypes: ["float"],
     isEmpty: () => false,
-    extractProps: ({ attrs }) => {
+    extractProps: ({ attrs, options }) => {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         let digits;
         if (attrs.digits) {
             digits = JSON.parse(attrs.digits);
-        } else if (attrs.options.digits) {
-            digits = attrs.options.digits;
+        } else if (options.digits) {
+            digits = options.digits;
         }
 
         return {
-            inputType: attrs.options.type,
-            step: attrs.options.step,
+            inputType: options.type,
+            step: options.step,
             digits,
             placeholder: attrs.placeholder,
         };

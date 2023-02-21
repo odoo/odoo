@@ -225,10 +225,10 @@ export const statusBarField = {
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.model.env.isSmall && !record.data[fieldName],
     legacySpecialData: "_fetchSpecialStatus",
-    extractProps: ({ attrs }) => ({
+    extractProps: ({ attrs, options }) => ({
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
-        isDisabled: !attrs.options.clickable,
+        isDisabled: !options.clickable,
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
     }),

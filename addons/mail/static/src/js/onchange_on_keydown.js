@@ -52,21 +52,21 @@ TextField.props = {
 };
 
 const charExtractProps = charField.extractProps;
-charField.extractProps = (attrs) => {
-    return Object.assign(charExtractProps(attrs), {
-        onchangeOnKeydown: archParseBoolean(attrs.onchange_on_keydown),
-        keydownDebounceDelay: attrs.keydown_debounce_delay
-            ? Number(attrs.keydown_debounce_delay)
+charField.extractProps = (fieldInfo) => {
+    return Object.assign(charExtractProps(fieldInfo), {
+        onchangeOnKeydown: archParseBoolean(fieldInfo.attrs.onchange_on_keydown),
+        keydownDebounceDelay: fieldInfo.attrs.keydown_debounce_delay
+            ? Number(fieldInfo.attrs.keydown_debounce_delay)
             : 2000,
     });
 };
 
 const textExtractProps = textField.extractProps;
-textField.extractProps = (params) => {
-    return Object.assign(textExtractProps(params), {
-        onchangeOnKeydown: archParseBoolean(params.attrs.onchange_on_keydown),
-        keydownDebounceDelay: params.attrs.keydown_debounce_delay
-            ? Number(params.attrs.keydown_debounce_delay)
+textField.extractProps = (fieldInfo) => {
+    return Object.assign(textExtractProps(fieldInfo), {
+        onchangeOnKeydown: archParseBoolean(fieldInfo.attrs.onchange_on_keydown),
+        keydownDebounceDelay: fieldInfo.attrs.keydown_debounce_delay
+            ? Number(fieldInfo.attrs.keydown_debounce_delay)
             : 2000,
     });
 };

@@ -48,7 +48,7 @@
                 <t t-foreach="slot.record.fieldNames" t-as="fieldName" t-key="fieldName">
                     <t t-if="!slot.record.isInvisible(fieldName)">
                         <t t-set="fieldInfo" t-value="props.model.popoverFields[fieldName]" />
-                        <li class="list-group-item flex-shrink-0 d-flex flex-wrap align-items-center" t-att-class="fieldInfo.rawAttrs.class">
+                        <li class="list-group-item flex-shrink-0 d-flex flex-wrap align-items-center" t-att-class="fieldInfo.attrs.class">
                             <strong class="me-2">
                                 <t t-if="fieldInfo.options.icon">
                                     <b>

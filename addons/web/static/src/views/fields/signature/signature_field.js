@@ -136,12 +136,12 @@ export class SignatureField extends Component {
 
 export const signatureField = {
     component: SignatureField,
-    extractProps: ({ attrs }) => ({
-        defaultFont: attrs.options.default_font || "",
-        fullName: attrs.options.full_name,
-        height: attrs.options.size ? attrs.options.size[1] || undefined : attrs.height,
-        previewImage: attrs.options.preview_image,
-        width: attrs.options.size ? attrs.options.size[0] || undefined : attrs.width,
+    extractProps: ({ attrs, options }) => ({
+        defaultFont: options.default_font || "",
+        fullName: options.full_name,
+        height: options.size ? options.size[1] || undefined : attrs.height,
+        previewImage: options.preview_image,
+        width: options.size ? options.size[0] || undefined : attrs.width,
     }),
 };
 

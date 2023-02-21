@@ -98,9 +98,9 @@ export const charField = {
     component: CharField,
     displayName: _lt("Text"),
     supportedTypes: ["char"],
-    extractProps: ({ attrs }) => ({
+    extractProps: ({ attrs, options }) => ({
         isPassword: archParseBoolean(attrs.password),
-        dynamicPlaceholder: attrs.options.dynamic_placeholder,
+        dynamicPlaceholder: options.dynamic_placeholder,
         autocomplete: attrs.autocomplete,
         placeholder: attrs.placeholder,
     }),

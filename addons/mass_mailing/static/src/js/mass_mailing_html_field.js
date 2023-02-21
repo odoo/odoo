@@ -599,11 +599,11 @@ export const massMailingHtmlField = {
     ...htmlField,
     component: MassMailingHtmlField,
     displayName: _lt("Email"),
-    extractProps: (params) => ({
-        ...htmlField.extractProps(params),
-        filterTemplates: params.attrs.options.filterTemplates,
-        inlineField: params.attrs.options['inline-field'],
-        iframeHtmlClass: params.attrs['iframeHtmlClass'],
+    extractProps: (fieldInfo) => ({
+        ...htmlField.extractProps(fieldInfo),
+        filterTemplates: fieldInfo.options.filterTemplates,
+        inlineField: fieldInfo.options['inline-field'],
+        iframeHtmlClass: fieldInfo.attrs.iframeHtmlClass,
     }),
 };
 

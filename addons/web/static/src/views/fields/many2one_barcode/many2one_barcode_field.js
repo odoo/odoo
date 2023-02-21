@@ -15,8 +15,8 @@ export const many2OneBarcodeField = {
     ...many2OneField,
     component: Many2OneBarcodeField,
     displayName: _lt("Many2OneBarcode"),
-    extractProps: (params) => ({
-        ...many2OneField.extractProps(params),
+    extractProps: (fieldInfo) => ({
+        ...many2OneField.extractProps(fieldInfo),
         canScanBarcode: true,
     }),
 };

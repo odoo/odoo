@@ -153,10 +153,10 @@ FieldMany2OneMailingFilter.defaultProps = {
 export const fieldMany2OneMailingFilter = {
     ...many2OneField,
     component: FieldMany2OneMailingFilter,
-    extractProps: (params) => ({
-        ...many2OneField.extractProps(params),
-        domain_field: params.attrs.options.domain_field,
-        model_field: params.attrs.options.model_field,
+    extractProps: (fieldInfo) => ({
+        ...many2OneField.extractProps(fieldInfo),
+        domain_field: fieldInfo.options.domain_field,
+        model_field: fieldInfo.options.model_field,
     }),
 };
 

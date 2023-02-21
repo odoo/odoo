@@ -99,8 +99,8 @@ ImageRadioField.props = {
 export const imageRadioField = {
     component: ImageRadioField,
     supportedTypes: ['selection'],
-    extractProps: ({ attrs }) => ({
-        images: attrs.options.images,
+    extractProps: ({ options }) => ({
+        images: options.images,
     }),
 };
 

@@ -128,7 +128,7 @@ export const referenceField = {
     displayName: _lt("Reference"),
     supportedTypes: ["reference", "char"],
     legacySpecialData: "_fetchSpecialReference",
-    extractProps: (params) => ({
+    extractProps: (fieldInfo) => ({
         /*
         1 - <field name="ref" options="{'model_field': 'model_id'}" />
         2 - <field name="ref" options="{'hide_model': True}" />
@@ -137,9 +137,8 @@ export const referenceField = {
 
         We want to display the model selector only in the 4th case.
         */
-        ...many2OneField.extractProps(params),
-        hideModelSelector:
-            !!params.attrs.options["hide_model"] || !!params.attrs.options["model_field"],
+        ...many2OneField.extractProps(fieldInfo),
+        hideModelSelector: !!fieldInfo.options.hide_model || !!fieldInfo.options.model_field,
     }),
 };
 

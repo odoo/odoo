@@ -155,15 +155,14 @@ export const progressBarField = {
     component: ProgressBarField,
     displayName: _lt("Progress Bar"),
     supportedTypes: ["integer", "float"],
-    extractProps: ({ attrs }) => ({
-        maxValueField: attrs.options.max_value,
-        currentValueField: attrs.options.current_value,
-        isEditable: !attrs.options.readonly && attrs.options.editable,
-        isEditableInReadonly: attrs.options.editable_readonly,
+    extractProps: ({ attrs, options }) => ({
+        maxValueField: options.max_value,
+        currentValueField: options.current_value,
+        isEditable: !options.readonly && options.editable,
+        isEditableInReadonly: options.editable_readonly,
         isCurrentValueEditable:
-            attrs.options.editable &&
-            (!attrs.options.edit_max_value || attrs.options.edit_current_value),
-        isMaxValueEditable: attrs.options.editable && attrs.options.edit_max_value,
+            options.editable && (!options.edit_max_value || options.edit_current_value),
+        isMaxValueEditable: options.editable && options.edit_max_value,
         title: attrs.title,
     }),
 };

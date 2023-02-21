@@ -54,21 +54,21 @@ export const floatToggleField = {
     component: FloatToggleField,
     supportedTypes: ["float"],
     isEmpty: () => false,
-    extractProps: ({ attrs }) => {
+    extractProps: ({ attrs, options }) => {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         let digits;
         if (attrs.digits) {
             digits = JSON.parse(attrs.digits);
-        } else if (attrs.options.digits) {
-            digits = attrs.options.digits;
+        } else if (options.digits) {
+            digits = options.digits;
         }
 
         return {
             digits,
-            range: attrs.options.range,
-            factor: attrs.options.factor,
-            disableReadOnly: attrs.options.force_button || false,
+            range: options.range,
+            factor: options.factor,
+            disableReadOnly: options.force_button || false,
         };
     },
 };

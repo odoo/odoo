@@ -133,21 +133,14 @@ export const imageField = {
     displayName: _lt("Image"),
     supportedTypes: ["binary"],
     fieldDependencies: [{ name: "write_date", type: "datetime" }],
-    extractProps: ({ attrs }) => ({
-        enableZoom: attrs.options.zoom,
-        zoomDelay: attrs.options.zoom_delay,
-        previewImage: attrs.options.preview_image,
-        acceptedFileExtensions: attrs.options.accepted_file_extensions,
-        width:
-            attrs.options.size && Boolean(attrs.options.size[0])
-                ? attrs.options.size[0]
-                : attrs.width,
-        height:
-            attrs.options.size && Boolean(attrs.options.size[1])
-                ? attrs.options.size[1]
-                : attrs.height,
+    extractProps: ({ attrs, options }) => ({
+        enableZoom: options.zoom,
+        zoomDelay: options.zoom_delay,
+        previewImage: options.preview_image,
+        acceptedFileExtensions: options.accepted_file_extensions,
+        width: options.size && Boolean(options.size[0]) ? options.size[0] : attrs.width,
+        height: options.size && Boolean(options.size[1]) ? options.size[1] : attrs.height,
     }),
 };
 
 registry.category("fields").add("image", imageField);
-registry.category("fields").add("kanban.image", imageField); // FIXME WOWL: s.t. we don't use the legacy one
