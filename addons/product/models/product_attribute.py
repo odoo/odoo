@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -12,14 +11,13 @@ class ProductAttribute(models.Model):
     # `_sort_key_attribute_value` in `product.template`
     _order = 'sequence, id'
 
-    name = fields.Char('Attribute', required=True, translate=True)
-    value_ids = fields.One2many('product.attribute.value', 'attribute_id', 'Values', copy=True)
-    sequence = fields.Integer('Sequence', help="Determine the display order", index=True)
-    attribute_line_ids = fields.One2many('product.template.attribute.line', 'attribute_id', 'Lines')
-    create_variant = fields.Selection([
-        ('always', 'Instantly'),
-        ('dynamic', 'Dynamically'),
-        ('no_variant', 'Never (option)')],
+    name = fields.Char(string="Attribute", required=True, translate=True)
+    create_variant = fields.Selection(
+        selection=[
+            ('always', 'Instantly'),
+            ('dynamic', 'Dynamically'),
+            ('no_variant', 'Never (option)'),
+        ],
         default='always',
         string="Variants Creation Mode",
         help="""- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.
@@ -27,13 +25,33 @@ class ProductAttribute(models.Model):
         - Never: Variants are never created for the attribute.
         Note: the variants creation mode cannot be changed once the attribute is used on at least one product.""",
         required=True)
+    display_type = fields.Selection(
+        selection=[
+            ('radio', 'Radio'),
+            ('pills', 'Pills'),
+            ('select', 'Select'),
+            ('color', 'Color'),
+        ],
+        default='radio',
+        required=True,
+        help="The display type used in the Product Configurator.")
+    sequence = fields.Integer(string="Sequence", help="Determine the display order", index=True)
+
+    value_ids = fields.One2many(
+        comodel_name='product.attribute.value',
+        inverse_name='attribute_id',
+        string="Values", copy=True)
+
+    attribute_line_ids = fields.One2many(
+        comodel_name='product.template.attribute.line',
+        inverse_name='attribute_id',
+        string="Lines")
+    product_tmpl_ids = fields.Many2many(
+        comodel_name='product.template',
+        string="Related Products",
+        compute='_compute_products',
+        store=True)
     number_related_products = fields.Integer(compute='_compute_number_related_products')
-    product_tmpl_ids = fields.Many2many('product.template', string="Related Products", compute='_compute_products', store=True)
-    display_type = fields.Selection([
-        ('radio', 'Radio'),
-        ('pills', 'Pills'),
-        ('select', 'Select'),
-        ('color', 'Color')], default='radio', required=True, help="The display type used in the Product Configurator.")
 
     @api.depends('product_tmpl_ids')
     def _compute_number_related_products(self):
@@ -59,12 +77,14 @@ class ProductAttribute(models.Model):
         if 'create_variant' in vals:
             for pa in self:
                 if vals['create_variant'] != pa.create_variant and pa.number_related_products:
-                    raise UserError(
-                        _("You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n%s") %
-                        (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
-                    )
+                    raise UserError(_(
+                        "You cannot change the Variants Creation Mode of the attribute %(attribute)s"
+                        " because it is used on the following products:\n%(products)s",
+                        attribute=pa.display_name,
+                        products=", ".join(pa.product_tmpl_ids.mapped('display_name')),
+                    ))
         invalidate = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
-        res = super(ProductAttribute, self).write(vals)
+        res = super().write(vals)
         if invalidate:
             # prefetched o2m have to be resequenced
             # (eg. product.template: attribute_line_ids)
@@ -76,10 +96,12 @@ class ProductAttribute(models.Model):
     def _unlink_except_used_on_product(self):
         for pa in self:
             if pa.number_related_products:
-                raise UserError(
-                    _("You cannot delete the attribute %s because it is used on the following products:\n%s") %
-                    (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
-                )
+                raise UserError(_(
+                    "You cannot delete the attribute %(attribute)s because it is used on the"
+                    " following products:\n%(products)s",
+                    attribute=pa.display_name,
+                    products=", ".join(pa.product_tmpl_ids.mapped('display_name')),
+                ))
 
     def action_open_related_products(self):
         return {
