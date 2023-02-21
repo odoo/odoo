@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="test_field_id"/>
+                <field name="leave_reason" required="1"/>
             </field>
 
             <button name="action_draft" position="after">
