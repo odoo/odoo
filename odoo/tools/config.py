@@ -218,6 +218,13 @@ class configmanager(object):
                          choices=levels, my_default='info',
                          help='specify the level of the logging. Accepted values: %s.' % (levels,))
 
+        # Per https://wkhtmltopdf.org/usage/wkhtmltopdf.txt
+        # --log-level <level> Set log level to: none, error, warn or info
+        choices = ['none', 'error', 'warn', 'info']
+        group.add_option('--log-wkhtmltopdf-level', dest='log_wkhtmltopdf_level', type='choice',
+                         choices=choices, my_default='none',
+                         help='Logging wkhtmltopdf level. Accepted values: %s.' % (choices,))
+
         parser.add_option_group(group)
 
         # SMTP Group
