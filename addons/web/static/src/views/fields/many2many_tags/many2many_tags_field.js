@@ -40,7 +40,6 @@ export class Many2ManyTagsField extends Component {
         colorField: { type: String, optional: true },
         createDomain: { type: [Array, Boolean], optional: true },
         placeholder: { type: String, optional: true },
-        relation: { type: String },
         nameCreateField: { type: String, optional: true },
     };
     static defaultProps = {
@@ -92,7 +91,7 @@ export class Many2ManyTagsField extends Component {
 
         if (this.props.canQuickCreate) {
             this.quickCreate = async (name) => {
-                const created = await this.orm.call(this.props.relation, "name_create", [name], {
+                const created = await this.orm.call(this.relation, "name_create", [name], {
                     context: this.context,
                 });
                 return saveRecord([created[0]]);
@@ -100,6 +99,9 @@ export class Many2ManyTagsField extends Component {
         }
     }
 
+    get relation() {
+        return this.props.record.fields[this.props.name].relation;
+    }
     get domain() {
         return this.props.record.getFieldDomain(this.props.name);
     }
@@ -255,7 +257,7 @@ export const many2ManyTagsField = {
         }
         return fieldsToFetch;
     },
-    extractProps: ({ attrs, field }) => {
+    extractProps: ({ attrs }) => {
         const noCreate = Boolean(attrs.options.no_create);
         const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
         const noQuickCreate = Boolean(attrs.options.no_quick_create);
@@ -268,8 +270,6 @@ export const many2ManyTagsField = {
             canCreateEdit: canCreate && !noCreateEdit,
             createDomain: attrs.options.create,
             placeholder: attrs.placeholder,
-
-            relation: field.relation,
         };
     },
 };

@@ -11,7 +11,6 @@ export class PriorityField extends Component {
     static template = "web.PriorityField";
     static props = {
         ...standardFieldProps,
-        tooltipLabel: { type: String, optional: true },
     };
 
     setup() {
@@ -43,6 +42,9 @@ export class PriorityField extends Component {
         }
     }
 
+    get tooltipLabel() {
+        return this.props.record.fields[this.props.name].string;
+    }
     get options() {
         return Array.from(this.props.record.fields[this.props.name].selection);
     }
@@ -56,8 +58,8 @@ export class PriorityField extends Component {
     }
 
     getTooltip(value) {
-        return this.props.tooltipLabel && this.props.tooltipLabel !== value
-            ? `${this.props.tooltipLabel}: ${value}`
+        return this.tooltipLabel && this.tooltipLabel !== value
+            ? `${this.tooltipLabel}: ${value}`
             : value;
     }
     /**
@@ -89,9 +91,6 @@ export const priorityField = {
     component: PriorityField,
     displayName: _lt("Priority"),
     supportedTypes: ["selection"],
-    extractProps: ({ field }) => ({
-        tooltipLabel: field.string,
-    }),
 };
 
 registry.category("fields").add("priority", priorityField);

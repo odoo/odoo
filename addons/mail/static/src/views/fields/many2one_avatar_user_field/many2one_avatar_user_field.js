@@ -11,7 +11,8 @@ import { useAssignUserCommand } from "@mail/views/fields/assign_user_command_hoo
 export class Many2OneAvatarUserField extends Many2OneAvatarField {
     setup() {
         super.setup();
-        this.openChat = useOpenChat(this.props.relation);
+        const relation = this.props.record.fields[this.props.name].relation;
+        this.openChat = useOpenChat(relation);
         useAssignUserCommand();
     }
 

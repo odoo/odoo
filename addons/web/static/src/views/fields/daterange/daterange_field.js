@@ -63,17 +63,20 @@ export class DateRangeField extends Component {
         );
     }
 
+    get formatType() {
+        return this.props.formatType || this.props.record.fields[this.props.name].type;
+    }
     get isDateTime() {
-        return this.props.formatType === "datetime";
+        return this.formatType === "datetime";
     }
     get formattedValue() {
-        return this.formatValue(this.props.formatType, this.props.value);
+        return this.formatValue(this.formatType, this.props.value);
     }
     get formattedEndDate() {
-        return this.formatValue(this.props.formatType, this.endDate);
+        return this.formatValue(this.formatType, this.endDate);
     }
     get formattedStartDate() {
-        return this.formatValue(this.props.formatType, this.startDate);
+        return this.formatValue(this.formatType, this.startDate);
     }
     get startDate() {
         return this.props.record.data[this.props.relatedStartDateField || this.props.name];
@@ -106,7 +109,7 @@ export class DateRangeField extends Component {
     }
 
     onChangeInput(ev) {
-        const parse = parsers.get(this.props.formatType);
+        const parse = parsers.get(this.formatType);
         let value;
         try {
             value = parse(ev.target.value);
@@ -151,12 +154,11 @@ export class DateRangeField extends Component {
 export const dateRangeField = {
     component: DateRangeField,
     supportedTypes: ["date", "datetime"],
-    extractProps: ({ attrs, field }) => ({
+    extractProps: ({ attrs }) => ({
         relatedEndDateField: attrs.options.related_end_date,
         relatedStartDateField: attrs.options.related_start_date,
         placeholder: attrs.placeholder,
-
-        formatType: attrs.options.format_type || field.type,
+        formatType: attrs.options.format_type,
     }),
 };
 

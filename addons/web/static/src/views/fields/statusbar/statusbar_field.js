@@ -31,10 +31,7 @@ export class StatusBarField extends Component {
 
     setup() {
         if (this.props.record.activeFields[this.props.name].viewType === "form") {
-            const commandName = sprintf(
-                this.env._t(`Move to %s...`),
-                escape(this.props.displayName)
-            );
+            const commandName = sprintf(this.env._t(`Move to %s...`), escape(this.displayName));
             useCommand(
                 commandName,
                 () => {
@@ -60,7 +57,7 @@ export class StatusBarField extends Component {
                 }
             );
             useCommand(
-                sprintf(this.env._t(`Move to next %s`), this.props.displayName),
+                sprintf(this.env._t(`Move to next %s`), this.displayName),
                 () => {
                     const options = this.computeItems(false);
                     const nextOption =
@@ -118,6 +115,9 @@ export class StatusBarField extends Component {
         }
     }
 
+    get displayName() {
+        return this.props.record.fields[this.props.name].string;
+    }
     get type() {
         return this.props.record.fields[this.props.name].type;
     }
@@ -225,14 +225,12 @@ export const statusBarField = {
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.model.env.isSmall && !record.data[fieldName],
     legacySpecialData: "_fetchSpecialStatus",
-    extractProps: ({ attrs, field }) => ({
+    extractProps: ({ attrs }) => ({
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
         isDisabled: !attrs.options.clickable,
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
-
-        displayName: field.string,
     }),
 };
 

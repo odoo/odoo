@@ -22,9 +22,6 @@ export class CharField extends Component {
         isPassword: { type: Boolean, optional: true },
         placeholder: { type: String, optional: true },
         dynamicPlaceholder: { type: Boolean, optional: true },
-        shouldTrim: { type: Boolean, optional: true },
-        maxLength: { type: Number, optional: true },
-        isTranslatable: { type: Boolean, optional: true },
     };
     static defaultProps = { dynamicPlaceholder: false };
 
@@ -76,12 +73,21 @@ export class CharField extends Component {
         this.input.el.focus();
     }
 
+    get shouldTrim() {
+        return this.props.record.fields[this.props.name].trim && !this.props.isPassword;
+    }
+    get maxLength() {
+        return this.props.record.fields[this.props.name].size;
+    }
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
+    }
     get formattedValue() {
         return formatChar(this.props.value, { isPassword: this.props.isPassword });
     }
 
     parse(value) {
-        if (this.props.shouldTrim) {
+        if (this.shouldTrim) {
             return value.trim();
         }
         return value;
@@ -92,15 +98,11 @@ export const charField = {
     component: CharField,
     displayName: _lt("Text"),
     supportedTypes: ["char"],
-    extractProps: ({ attrs, field }) => ({
+    extractProps: ({ attrs }) => ({
         isPassword: archParseBoolean(attrs.password),
         dynamicPlaceholder: attrs.options.dynamic_placeholder,
         autocomplete: attrs.autocomplete,
         placeholder: attrs.placeholder,
-
-        shouldTrim: field.trim && !archParseBoolean(attrs.password), // passwords shouldn't be trimmed
-        maxLength: field.size,
-        isTranslatable: field.translate,
     }),
 };
 

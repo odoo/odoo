@@ -22,7 +22,7 @@ export class PercentageField extends Component {
         useInputField({
             getValue: () =>
                 formatPercentage(this.props.value, {
-                    digits: this.props.digits,
+                    digits: this.digits,
                     noSymbol: true,
                 }),
             refName: "numpadDecimal",
@@ -31,9 +31,13 @@ export class PercentageField extends Component {
         useNumpadDecimal();
     }
 
+    get digits() {
+        const fieldDigits = this.props.record.fields[this.props.name].digits;
+        return !this.props.digits && Array.isArray(fieldDigits) ? fieldDigits : this.props.digits;
+    }
     get formattedValue() {
         return formatPercentage(this.props.value, {
-            digits: this.props.digits,
+            digits: this.digits,
         });
     }
 }
@@ -42,7 +46,7 @@ export const percentageField = {
     component: PercentageField,
     displayName: _lt("Percentage"),
     supportedTypes: ["integer", "float"],
-    extractProps: ({ attrs, field }) => {
+    extractProps: ({ attrs }) => {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         let digits;
@@ -50,8 +54,6 @@ export const percentageField = {
             digits = JSON.parse(attrs.digits);
         } else if (attrs.options.digits) {
             digits = attrs.options.digits;
-        } else if (Array.isArray(field.digits)) {
-            digits = field.digits;
         }
 
         return {
