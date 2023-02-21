@@ -17,4 +17,5 @@ from . import test_redirect
 from . import test_reset_views
 from . import test_session
 from . import test_settings
+from . import test_systray
 from . import test_views_during_module_operation
