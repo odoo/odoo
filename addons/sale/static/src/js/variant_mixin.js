@@ -140,7 +140,6 @@ var VariantMixin = {
                     if (previousCustomValue) {
                         $input.val(previousCustomValue);
                     }
-                    $input[0].focus();
                 }
             } else {
                 $variantContainer.find('.variant_custom_value').remove();
