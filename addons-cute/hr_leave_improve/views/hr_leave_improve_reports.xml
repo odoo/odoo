@@ -67,7 +67,6 @@
                                     <td style="border: 1px solid black;border-collapse: collapse;padding: 10px;">
                                         <strong>ÜCRETSİZ ( <t t-if="o.holiday_status_id.unpaid">X</t> )</strong>
                                         <strong style="padding-left: 20%;">ÜCRETLİ ( <t t-if="not o.holiday_status_id.unpaid==True">X</t> )</strong>
-                                        <span t-esc="o.holiday_status_id.unpaid" />
                                     </td>
                                 </tr>
                                 <tr style="text-align: center;">
@@ -83,11 +82,12 @@
                                 <tr style="text-align: center;">
                                     <td style="border: 1px solid black;border-collapse: collapse; padding: 10px;">
                                         <strong>TARİH : <span t-esc="o.date_from.strftime('%d/%m/%Y')" /></strong>
-                                        <strong style="padding-left: 20%;">SAAT:<span t-esc="o.date_from.strftime('%H:%M')" /></strong>
+                                        <strong style="padding-left: 20%;">SAAT: <span t-field="o.date_from" t-options='{"format": "HH:mm"}' /></strong>
                                     </td>
                                     <td style="border: 1px solid black;border-collapse: collapse; padding: 10px;">
+                                        Hasan
                                         <strong>TARİH : <span t-esc="o.date_to.strftime('%d/%m/%Y')" /></strong>
-                                        <strong style="padding-left: 20%;">SAAT:<span t-esc="o.date_to.strftime('%H:%M')" /></strong>
+                                        <strong style="padding-left: 20%;">SAAT: <span t-field="o.date_to" t-options='{"format": "HH:mm"}' /></strong>
                                     </td>
                                 </tr>
 
