@@ -43,24 +43,24 @@ class ResourceCalendarLeaves(models.Model):
         resource_calendars = resource_calendars or self._get_resource_calendars()
         leaves_read_group = self.env['resource.calendar.leaves']._read_group(
             [('id', 'in', self.ids)],
-            ['calendar_id', 'ids:array_agg(id)', 'resource_ids:array_agg(resource_id)', 'min_date_from:min(date_from)', 'max_date_to:max(date_to)'],
             ['calendar_id'],
+            ['id:recordset', 'resource_id:recordset', 'date_from:min', 'date_to:max'],
         )
         # dict of keys: calendar_id
         #   and values : { 'date_from': datetime, 'date_to': datetime, resources: self.env['resource.resource'] }
         cal_attendance_intervals_dict = {}
-        for res in leaves_read_group:
+        for calendar, leaves, resources, date_from_min, date_to_max in leaves_read_group:
             calendar_data = {
-                'date_from': utc.localize(res['min_date_from']),
-                'date_to': utc.localize(res['max_date_to']),
-                'resources': self.env['resource.resource'].browse(res['resource_ids'] if res['resource_ids'] and res['resource_ids'][0] else []),
-                'leaves': self.env['resource.calendar.leaves'].browse(res['ids']),
+                'date_from': utc.localize(date_from_min),
+                'date_to': utc.localize(date_to_max),
+                'resources': resources,
+                'leaves': leaves,
             }
-            if not res.get('calendar_id', False):
+            if not calendar:
                 for calendar_id in resource_calendars.ids:
                     cal_attendance_intervals_dict[calendar_id] = calendar_data
             else:
-                cal_attendance_intervals_dict[res['calendar_id'][0]] = calendar_data
+                cal_attendance_intervals_dict[calendar.id] = calendar_data
         # to easily find the calendar with its id.
         calendars_dict = {calendar.id: calendar for calendar in resource_calendars}
 
@@ -97,14 +97,13 @@ class ResourceCalendarLeaves(models.Model):
         work_hours_data = self._work_time_per_day(resource_calendars)
         employees_groups = self.env['hr.employee']._read_group(
             [('resource_calendar_id', 'in', resource_calendars.ids)],
-            ['resource_calendar_id', 'ids:array_agg(id)'],
-            ['resource_calendar_id'])
+            ['resource_calendar_id'],
+            ['id:recordset'])
         mapped_employee = {
-            employee['resource_calendar_id'][0]: self.env['hr.employee'].browse(employee['ids'])
-            for employee in employees_groups
+            resource_calendar.id: employees
+            for resource_calendar, employees in employees_groups
         }
-        employee_ids_set = set()
-        employee_ids_set.update(*[line['ids'] for line in employees_groups])
+        employee_ids_all = [_id for __, employees in employees_groups for _id in employees._ids]
         min_date = max_date = None
         for values in work_hours_data.values():
             for vals in values.values():
@@ -117,15 +116,15 @@ class ResourceCalendarLeaves(models.Model):
                         max_date = d
 
         holidays_read_group = self.env['hr.leave']._read_group([
-            ('employee_id', 'in', list(employee_ids_set)),
+            ('employee_id', 'in', employee_ids_all),
             ('date_from', '<=', max_date),
             ('date_to', '>=', min_date),
             ('state', 'not in', ('cancel', 'refuse')),
-        ], ['date_from_list:array_agg(date_from)', 'date_to_list:array_agg(date_to)', 'employee_id'], ['employee_id'])
+        ], ['employee_id'], ['date_from:array_agg', 'date_to:array_agg'])
         holidays_by_employee = {
-            line['employee_id'][0]: [
-                (date_from.date(), date_to.date()) for date_from, date_to in zip(line['date_from_list'], line['date_to_list'])
-            ] for line in holidays_read_group
+            employee.id: [
+                (date_from.date(), date_to.date()) for date_from, date_to in zip(date_from_list, date_to_list)
+            ] for employee, date_from_list, date_to_list in holidays_read_group
         }
         vals_list = []
 

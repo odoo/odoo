@@ -28,9 +28,9 @@ class ChatbotScript(models.Model):
     ], compute="_compute_first_step_warning")
 
     def _compute_livechat_channel_count(self):
-        channels_data = self.env['im_livechat.channel.rule'].read_group(
-            [('chatbot_script_id', 'in', self.ids)], ['channel_id:count_distinct'], ['chatbot_script_id'])
-        mapped_channels = {channel['chatbot_script_id'][0]: channel['channel_id'] for channel in channels_data}
+        channels_data = self.env['im_livechat.channel.rule']._read_group(
+            [('chatbot_script_id', 'in', self.ids)], ['chatbot_script_id'], ['channel_id:count_distinct'])
+        mapped_channels = {chatbot_script.id: count_distinct for chatbot_script, count_distinct in channels_data}
         for script in self:
             script.livechat_channel_count = mapped_channels.get(script.id, 0)
 

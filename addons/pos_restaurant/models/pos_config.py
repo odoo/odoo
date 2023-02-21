@@ -29,8 +29,8 @@ class PosConfig(models.Model):
         tables = self.env['restaurant.table'].search([('floor_id.pos_config_ids', '=', self.id)])
         domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
 
-        order_stats = self.env['pos.order'].read_group(domain, ['table_id'], 'table_id')
-        orders_map = dict((s['table_id'][0], s['table_id_count']) for s in order_stats)
+        order_stats = self.env['pos.order']._read_group(domain, ['table_id'], ['__count'])
+        orders_map = {table.id: count for table, count in order_stats}
 
         result = []
         for table in tables:

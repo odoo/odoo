@@ -209,11 +209,11 @@ class ResCompany(models.Model):
     @api.depends('fiscal_position_ids.foreign_vat')
     def _compute_multi_vat_foreign_country(self):
         company_to_foreign_vat_country = {
-            val['company_id'][0]: val['country_ids']
-            for val in self.env['account.fiscal.position'].read_group(
+            company.id: country_ids
+            for company, country_ids in self.env['account.fiscal.position']._read_group(
                 domain=[('company_id', 'in', self.ids), ('foreign_vat', '!=', False)],
-                fields=['country_ids:array_agg(country_id)'],
-                groupby='company_id',
+                groupby=['company_id'],
+                aggregates=['country_id:array_agg'],
             )
         }
         for company in self:

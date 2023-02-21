@@ -17,17 +17,16 @@ class res_partner(models.Model):
         )
         purchase_order_groups = self.env['purchase.order']._read_group(
             domain=[('partner_id', 'in', all_partners.ids)],
-            fields=['partner_id'], groupby=['partner_id']
+            groupby=['partner_id'], aggregates=['__count'],
         )
-        partners = self.browse()
-        for group in purchase_order_groups:
-            partner = self.browse(group['partner_id'][0])
+        self_ids = set(self._ids)
+
+        self.purchase_order_count = 0
+        for partner, count in purchase_order_groups:
             while partner:
-                if partner in self:
-                    partner.purchase_order_count += group['partner_id_count']
-                    partners |= partner
+                if partner.id in self_ids:
+                    partner.purchase_order_count += count
                 partner = partner.parent_id
-        (self - partners).purchase_order_count = 0
 
     def _compute_supplier_invoice_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
@@ -38,17 +37,16 @@ class res_partner(models.Model):
         supplier_invoice_groups = self.env['account.move']._read_group(
             domain=[('partner_id', 'in', all_partners.ids),
                     ('move_type', 'in', ('in_invoice', 'in_refund'))],
-            fields=['partner_id'], groupby=['partner_id']
+            groupby=['partner_id'], aggregates=['__count']
         )
-        partners = self.browse()
-        for group in supplier_invoice_groups:
-            partner = self.browse(group['partner_id'][0])
+        self_ids = set(self._ids)
+
+        self.supplier_invoice_count = 0
+        for partner, count in supplier_invoice_groups:
             while partner:
-                if partner in self:
-                    partner.supplier_invoice_count += group['partner_id_count']
-                    partners |= partner
+                if partner.id in self_ids:
+                    partner.supplier_invoice_count += count
                 partner = partner.parent_id
-        (self - partners).supplier_invoice_count = 0
 
     @api.model
     def _commercial_fields(self):

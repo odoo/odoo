@@ -32,8 +32,8 @@ class ResourceCalendar(models.Model):
         count_data = self.env['hr.contract']._read_group(
             [('resource_calendar_id', 'in', self.ids)],
             ['resource_calendar_id'],
-            ['resource_calendar_id'])
-        mapped_counts = {cd['resource_calendar_id'][0]: cd['resource_calendar_id_count'] for cd in count_data}
+            ['__count'])
+        mapped_counts = {resource_calendar.id: count for resource_calendar, count in count_data}
         for calendar in self:
             calendar.contracts_count = mapped_counts.get(calendar.id, 0)
 

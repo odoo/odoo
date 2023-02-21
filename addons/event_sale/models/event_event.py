@@ -31,49 +31,21 @@ class Event(models.Model):
         have to do one conversion per sale.order (and a sale.order is created every time
         we sell a single event ticket). """
         date_now = fields.Datetime.now()
-        sale_price_by_event = {}
-        if self.ids:
-            event_subtotals = self.env['sale.order.line']._read_group(
-                [('event_id', 'in', self.ids),
-                 ('price_subtotal', '!=', 0)],
-                ['event_id', 'currency_id', 'price_subtotal:sum'],
-                ['event_id', 'currency_id'],
-                lazy=False
+        event_subtotals = self.env['sale.order.line']._read_group(
+            [('event_id', 'in', self.ids),
+                ('price_subtotal', '!=', 0)],
+            ['event_id', 'currency_id'],
+            ['price_subtotal:sum'],
+        )
+
+        self.sale_price_subtotal = 0
+        for event, currency, sum_price_subtotal in event_subtotals:
+            event.sale_price_subtotal += event.currency_id._convert(
+                sum_price_subtotal,
+                currency,
+                event.company_id,
+                date_now,
             )
-
-            company_by_event = {
-                event._origin.id or event.id: event.company_id
-                for event in self
-            }
-
-            currency_by_event = {
-                event._origin.id or event.id: event.currency_id
-                for event in self
-            }
-
-            currency_by_id = {
-                currency.id: currency
-                for currency in self.env['res.currency'].browse(
-                    [event_subtotal['currency_id'][0] for event_subtotal in event_subtotals]
-                )
-            }
-
-            for event_subtotal in event_subtotals:
-                price_subtotal = event_subtotal['price_subtotal']
-                event_id = event_subtotal['event_id'][0]
-                currency_id = event_subtotal['currency_id'][0]
-                sale_price = currency_by_event[event_id]._convert(
-                    price_subtotal,
-                    currency_by_id[currency_id],
-                    company_by_event[event_id],
-                    date_now)
-                if event_id in sale_price_by_event:
-                    sale_price_by_event[event_id] += sale_price
-                else:
-                    sale_price_by_event[event_id] = sale_price
-
-        for event in self:
-            event.sale_price_subtotal = sale_price_by_event.get(event._origin.id or event.id, 0)
 
     def action_view_linked_orders(self):
         """ Redirects to the orders linked to the current events """

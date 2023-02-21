@@ -19,18 +19,15 @@ class ResPartner(models.Model):
                     ('expiration_date', '>=', fields.Date().context_today(self)),
                     ('expiration_date', '=', False),
             ],
-            fields=['partner_id'],
             groupby=['partner_id'],
+            aggregates=['__count'],
         )
-        partners = self.browse()
-        for group in loyalty_groups:
-            partner = self.browse(group['partner_id'][0])
+        self.loyalty_card_count = 0
+        for partner, count in loyalty_groups:
             while partner:
                 if partner in self:
-                    partner.loyalty_card_count += group['partner_id_count']
-                    partners |= partner
+                    partner.loyalty_card_count += count
                 partner = partner.parent_id
-        (self - partners).loyalty_card_count = 0
 
     def action_view_loyalty_cards(self):
         action = self.env['ir.actions.act_window']._for_xml_id('loyalty.loyalty_card_action')

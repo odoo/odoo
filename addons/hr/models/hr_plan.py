@@ -21,7 +21,7 @@ class HrPlan(models.Model):
 
     @api.depends('plan_activity_type_ids')
     def _compute_steps_count(self):
-        activity_type_data = self.env['hr.plan.activity.type']._read_group([('plan_id', 'in', self.ids)], ['plan_id'], ['plan_id'])
-        steps_count = {x['plan_id'][0]: x['plan_id_count'] for x in activity_type_data}
+        activity_type_data = self.env['hr.plan.activity.type']._read_group([('plan_id', 'in', self.ids)], ['plan_id'], ['__count'])
+        steps_count = {plan.id: count for plan, count in activity_type_data}
         for plan in self:
             plan.steps_count = steps_count.get(plan.id, 0)

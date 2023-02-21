@@ -134,14 +134,14 @@ class Job(models.Model):
                 ('active', '=', True),
                 '&',
                 ('active', '=', False), ('refuse_reason_id', '!=', False),
-        ], ['job_id'], ['job_id'])
-        result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
+        ], ['job_id'], ['__count'])
+        result = {job.id: count for job, count in read_group_result}
         for job in self:
             job.all_application_count = result.get(job.id, 0)
 
     def _compute_application_count(self):
-        read_group_result = self.env['hr.applicant']._read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
-        result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
+        read_group_result = self.env['hr.applicant']._read_group([('job_id', 'in', self.ids)], ['job_id'], ['__count'])
+        result = {job.id: count for job, count in read_group_result}
         for job in self:
             job.application_count = result.get(job.id, 0)
 
@@ -189,8 +189,8 @@ class Job(models.Model):
         hired_data = self.env['hr.applicant']._read_group([
             ('job_id', 'in', self.ids),
             ('stage_id', 'in', hired_stages.ids),
-        ], ['job_id'], ['job_id'])
-        job_hires = {data['job_id'][0]: data['job_id_count'] for data in hired_data}
+        ], ['job_id'], ['__count'])
+        job_hires = {job.id: count for job, count in hired_data}
         for job in self:
             job.applicant_hired = job_hires.get(job.id, 0)
 

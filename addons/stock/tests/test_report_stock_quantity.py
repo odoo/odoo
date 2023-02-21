@@ -60,12 +60,11 @@ class TestReportStockQuantity(tests.TransactionCase):
     def test_report_stock_quantity(self):
         from_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=-1))
         to_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=4))
-        report = self.env['report.stock.quantity'].read_group(
+        report = self.env['report.stock.quantity']._read_group(
             [('date', '>=', from_date), ('date', '<=', to_date), ('product_id', '=', self.product1.id)],
-            ['product_qty', 'date', 'product_id', 'state'],
             ['date:day', 'product_id', 'state'],
-            lazy=False)
-        forecast_report = [x['product_qty'] for x in report if x['state'] == 'forecast']
+            ['product_qty:sum'])
+        forecast_report = [qty for __, __, state, qty in report if state == 'forecast']
         self.assertEqual(forecast_report, [0, 100, 100, 100, -20, -20])
 
     def test_report_stock_quantity_stansit(self):
@@ -96,26 +95,24 @@ class TestReportStockQuantity(tests.TransactionCase):
         })
 
         self.env.flush_all()
-        report = self.env['report.stock.quantity'].read_group(
+        report = self.env['report.stock.quantity']._read_group(
             [('date', '>=', fields.Date.today()), ('date', '<=', fields.Date.today()), ('product_id', '=', self.product1.id)],
-            ['product_qty', 'date', 'product_id', 'state'],
             ['date:day', 'product_id', 'state'],
-            lazy=False)
+            ['product_qty:sum'])
 
-        forecast_in_report = [x['product_qty'] for x in report if x['state'] == 'in']
+        forecast_in_report = [qty for __, __, state, qty in report if state == 'in']
         self.assertEqual(forecast_in_report, [25])
-        forecast_out_report = [x['product_qty'] for x in report if x['state'] == 'out']
+        forecast_out_report = [qty for __, __, state, qty in report if state == 'out']
         self.assertEqual(forecast_out_report, [-25])
 
     def test_report_stock_quantity_with_product_qty_filter(self):
         from_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=-1))
         to_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=4))
-        report = self.env['report.stock.quantity'].read_group(
+        report = self.env['report.stock.quantity']._read_group(
             [('product_qty', '<', 0), ('date', '>=', from_date), ('date', '<=', to_date), ('product_id', '=', self.product1.id)],
-            ['product_qty', 'date', 'product_id', 'state'],
             ['date:day', 'product_id', 'state'],
-            lazy=False)
-        forecast_report = [x['product_qty'] for x in report if x['state'] == 'forecast']
+            ['product_qty:sum'])
+        forecast_report = [qty for __, __, state, qty in report if state == 'forecast']
         self.assertEqual(forecast_report, [-20, -20])
 
     def test_replenishment_report_1(self):
@@ -225,15 +222,13 @@ class TestReportStockQuantity(tests.TransactionCase):
 
         self.env.flush_all()
 
-        data = self.env['report.stock.quantity'].read_group(
+        data = self.env['report.stock.quantity']._read_group(
             [('state', '=', 'forecast'), ('product_id', '=', product.id), ('date', '>=', two_days_ago), ('date', '<=', in_two_days)],
-            ['product_qty', 'date', 'warehouse_id'],
             ['date:day', 'warehouse_id'],
-            orderby='date, warehouse_id',
-            lazy=False,
+            ['product_qty:sum'],
         )
 
-        for row, qty in zip(data, [
+        for (date_day, warehouse, qty_rd), qty in zip(data, [
             # wh01_qty, wh02_qty
             3.0, 0.0,   # two days ago
             3.0, 0.0,
@@ -241,4 +236,4 @@ class TestReportStockQuantity(tests.TransactionCase):
             2.0, 1.0,
             1.0, 2.0,   # in two days
         ]):
-            self.assertEqual(row['product_qty'], qty, "Incorrect qty for Date '%s' Warehouse '%s'" % (row['date:day'], row['warehouse_id'][1]))
+            self.assertEqual(qty_rd, qty, f"Incorrect qty for Date '{date_day}' Warehouse '{warehouse.display_name}'")

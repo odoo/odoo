@@ -64,11 +64,11 @@ class ProjectTask(models.Model):
         stage_ids = self.env.registry.populated_models["project.task.type"]
         user_ids = self.env.registry.populated_models['res.users']
         partner_ids_per_company_id = {
-            group['company_id'][0]: group['ids']
-            for group in self.env['res.partner']._read_group(
+            company.id: ids
+            for company, ids in self.env['res.partner']._read_group(
                 [('company_id', '!=', False), ('id', 'in', self.env.registry.populated_models["res.partner"])],
-                ['company_id', 'ids:array_agg(id)'],
                 ['company_id'],
+                ['id:array_agg'],
             )
         }
         company_id_per_project_id = {

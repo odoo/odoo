@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
 
     @api.depends('expense_ids')
     def _compute_expense_count(self):
-        expense_data = self.env['hr.expense']._read_group([('sale_order_id', 'in', self.ids)], ['sale_order_id'], ['sale_order_id'])
-        mapped_data = dict([(item['sale_order_id'][0], item['sale_order_id_count']) for item in expense_data])
+        expense_data = self.env['hr.expense']._read_group([('sale_order_id', 'in', self.ids)], ['sale_order_id'], ['__count'])
+        mapped_data = {sale_order.id: count for sale_order, count in expense_data}
         for sale_order in self:
             sale_order.expense_count = mapped_data.get(sale_order.id, 0)

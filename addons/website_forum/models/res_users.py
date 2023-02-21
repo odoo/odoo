@@ -12,17 +12,14 @@ class Users(models.Model):
         'Waiting post', compute="_compute_forum_waiting_posts_count")
 
     def _compute_forum_waiting_posts_count(self):
-        if not self.ids:
-            self.forum_waiting_posts_count = 0
-            return
         read_group_res = self.env['forum.post']._read_group(
             [('create_uid', 'in', self.ids), ('state', '=', 'pending'), ('parent_id', '=', False)],
             ['create_uid'],
-            ['create_uid'],
+            ['__count'],
         )
         mapping = {
-            res_group['create_uid'][0]: res_group['create_uid_count']
-            for res_group in read_group_res
+            create_uid.id: count
+            for create_uid, count in read_group_res
         }
         for user in self:
             user.forum_waiting_posts_count = mapping.get(user.id, 0)

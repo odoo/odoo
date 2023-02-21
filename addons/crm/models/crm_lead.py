@@ -538,13 +538,10 @@ class Lead(models.Model):
             lead.recurring_revenue_prorated = (lead.recurring_revenue or 0.0) * (lead.probability or 0) / 100.0
 
     def _compute_calendar_event_count(self):
-        if self.ids:
-            meeting_data = self.env['calendar.event'].sudo()._read_group([
-                ('opportunity_id', 'in', self.ids)
-            ], ['opportunity_id'], ['opportunity_id'])
-            mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
-        else:
-            mapped_data = dict()
+        meeting_data = self.env['calendar.event'].sudo()._read_group([
+            ('opportunity_id', 'in', self.ids)
+        ], ['opportunity_id'], ['__count'])
+        mapped_data = {opportunity.id: count for opportunity, count in meeting_data}
         for lead in self:
             lead.calendar_event_count = mapped_data.get(lead.id, 0)
 
@@ -826,11 +823,11 @@ class Lead(models.Model):
         activity_asc = any('my_activity_date_deadline asc' in item for item in order_items)
         my_lead_activities = self.env['mail.activity']._read_group(
             [('res_model', '=', self._name), ('user_id', '=', self.env.uid)],
-            ['res_id', 'date_deadline:min'],
             ['res_id'],
-            orderby='date_deadline ASC'
+            ['date_deadline:min'],
+            order='date_deadline:min ASC, res_id',
         )
-        my_lead_mapping = dict((item['res_id'], item['date_deadline']) for item in my_lead_activities)
+        my_lead_mapping = dict(my_lead_activities)
         my_lead_ids = list(my_lead_mapping.keys())
         my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], domain])
         my_lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)

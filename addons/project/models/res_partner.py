@@ -22,15 +22,15 @@ class ResPartner(models.Model):
         )
         task_data = self.env['project.task']._read_group(
             domain=[('partner_id', 'in', all_partners.ids)],
-            fields=['partner_id'], groupby=['partner_id']
+            groupby=['partner_id'], aggregates=['__count']
         )
+        self_ids = set(self._ids)
 
         self.task_count = 0
-        for group in task_data:
-            partner = self.browse(group['partner_id'][0])
+        for partner, count in task_data:
             while partner:
-                if partner in self:
-                    partner.task_count += group['partner_id_count']
+                if partner.id in self_ids:
+                    partner.task_count += count
                 partner = partner.parent_id
 
 # Deprecated: remove me in MASTER

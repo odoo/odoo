@@ -197,12 +197,6 @@ class HrEmployee(models.Model):
                 'Your attendances have probably been modified manually by human resources.') % {'empl_name': self.sudo().name, })
         return attendance
 
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if 'pin' in groupby or 'pin' in self.env.context.get('group_by', '') or self.env.context.get('no_group_by'):
-            raise exceptions.UserError(_('Such grouping is not allowed.'))
-        return super(HrEmployee, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-
     def _compute_presence_icon(self):
         res = super()._compute_presence_icon()
         # All employee must chek in or check out. Everybody must have an icon

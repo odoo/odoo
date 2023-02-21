@@ -202,14 +202,14 @@ class Survey(models.Model):
         UserInput = self.env['survey.user_input']
         base_domain = [('survey_id', 'in', self.ids)]
 
-        read_group_res = UserInput._read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'scoring_percentage', 'scoring_success'], lazy=False)
-        for item in read_group_res:
-            stat[item['survey_id'][0]]['answer_count'] += item['__count']
-            stat[item['survey_id'][0]]['answer_score_avg_total'] += item['scoring_percentage']
-            if item['state'] == 'done':
-                stat[item['survey_id'][0]]['answer_done_count'] += item['__count']
-            if item['scoring_success']:
-                stat[item['survey_id'][0]]['success_count'] += item['__count']
+        read_group_res = UserInput._read_group(base_domain, ['survey_id', 'state', 'scoring_percentage', 'scoring_success'], ['__count'])
+        for survey, state, scoring_percentage, scoring_success, count in read_group_res:
+            stat[survey.id]['answer_count'] += count
+            stat[survey.id]['answer_score_avg_total'] += scoring_percentage
+            if state == 'done':
+                stat[survey.id]['answer_done_count'] += count
+            if scoring_success:
+                stat[survey.id]['success_count'] += count
 
         for survey_stats in stat.values():
             avg_total = survey_stats.pop('answer_score_avg_total')
@@ -262,18 +262,13 @@ class Survey(models.Model):
         context of sessions, so it should not matter too much. """
 
         for survey in self:
-            answer_count = 0
-            input_count = self.env['survey.user_input']._read_group(
+            [answer_count] = self.env['survey.user_input']._read_group(
                 [('survey_id', '=', survey.id),
                  ('is_session_answer', '=', True),
                  ('state', '!=', 'done'),
                  ('create_date', '>=', survey.session_start_time)],
-                ['create_uid:count'],
-                ['survey_id'],
-            )
-            if input_count:
-                answer_count = input_count[0].get('create_uid', 0)
-
+                aggregates=['create_uid:count'],
+            )[0]
             survey.session_answer_count = answer_count
 
     @api.depends('session_question_id', 'session_start_time', 'user_input_ids.user_input_line_ids')
@@ -283,17 +278,12 @@ class Survey(models.Model):
         This field is currently used to display the count about a single survey, in the
         context of sessions, so it should not matter too much. """
         for survey in self:
-            answer_count = 0
-            input_line_count = self.env['survey.user_input.line']._read_group(
+            [answer_count] = self.env['survey.user_input.line']._read_group(
                 [('question_id', '=', survey.session_question_id.id),
                  ('survey_id', '=', survey.id),
                  ('create_date', '>=', survey.session_start_time)],
-                ['user_input_id:count_distinct'],
-                ['question_id'],
-            )
-            if input_line_count:
-                answer_count = input_line_count[0].get('user_input_id', 0)
-
+                aggregates=['user_input_id:count_distinct'],
+            )[0]
             survey.session_question_answer_count = answer_count
 
     @api.depends('session_code')
@@ -1076,16 +1066,16 @@ class Survey(models.Model):
                 ('state', '=', 'done'),
                 ('test_entry', '=', False)
             ]
-        count_data_success = self.env['survey.user_input'].sudo()._read_group(user_input_domain, ['scoring_success', 'id:count_distinct'], ['scoring_success'])
+        count_data_success = self.env['survey.user_input'].sudo()._read_group(user_input_domain, ['scoring_success'], ['__count'])
         completed_count = self.env['survey.user_input'].sudo().search_count(user_input_domain + [('state', "=", "done")])
 
         scoring_success_count = 0
         scoring_failed_count = 0
-        for count_data_item in count_data_success:
-            if count_data_item['scoring_success']:
-                scoring_success_count += count_data_item['scoring_success_count']
+        for scoring_success, count in count_data_success:
+            if scoring_success:
+                scoring_success_count += count
             else:
-                scoring_failed_count += count_data_item['scoring_success_count']
+                scoring_failed_count += count
 
         success_graph = json.dumps([{
             'text': _('Passed'),

@@ -92,18 +92,15 @@ class ChatbotScriptStep(models.Model):
                 step_values.append(vals)
                 vals_by_chatbot_id[chatbot_id] = step_values
 
-        max_sequence_by_chatbot = {}
-        if vals_by_chatbot_id:
-            read_group_results = self.env['chatbot.script.step'].read_group(
-                [('chatbot_script_id', 'in', list(vals_by_chatbot_id.keys()))],
-                ['sequence:max'],
-                ['chatbot_script_id']
-            )
-
-            max_sequence_by_chatbot = {
-                read_group_result['chatbot_script_id'][0]: read_group_result['sequence']
-                for read_group_result in read_group_results
-            }
+        read_group_results = self.env['chatbot.script.step']._read_group(
+            [('chatbot_script_id', 'in', list(vals_by_chatbot_id))],
+            ['chatbot_script_id'],
+            ['sequence:max'],
+        )
+        max_sequence_by_chatbot = {
+            chatbot_script.id: sequence
+            for chatbot_script, sequence in read_group_results
+        }
 
         for chatbot_id, step_vals in vals_by_chatbot_id.items():
             current_sequence = 0

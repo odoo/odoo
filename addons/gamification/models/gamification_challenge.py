@@ -666,15 +666,14 @@ class Challenge(models.Model):
             challenge_ended = force or end_date == fields.Date.to_string(yesterday)
             if challenge.reward_id and (challenge_ended or challenge.reward_realtime):
                 # not using start_date as intemportal goals have a start date but no end_date
-                reached_goals = self.env['gamification.goal'].read_group([
+                reached_goals = self.env['gamification.goal']._read_group([
                     ('challenge_id', '=', challenge.id),
                     ('end_date', '=', end_date),
                     ('state', '=', 'reached')
-                ], fields=['user_id'], groupby=['user_id'])
-                for reach_goals_user in reached_goals:
-                    if reach_goals_user['user_id_count'] == len(challenge.line_ids):
+                ], groupby=['user_id'], aggregates=['__count'])
+                for user, count in reached_goals:
+                    if count == len(challenge.line_ids):
                         # the user has succeeded every assigned goal
-                        user = self.env['res.users'].browse(reach_goals_user['user_id'][0])
                         if challenge.reward_realtime:
                             badges = self.env['gamification.badge.user'].search_count([
                                 ('challenge_id', '=', challenge.id),

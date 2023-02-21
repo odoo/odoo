@@ -241,9 +241,9 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         stock_negative_landed_cost.button_validate()
         self.assertEqual(stock_negative_landed_cost.state, 'done', 'Negative landed costs should be in done state')
         self.assertTrue(stock_negative_landed_cost.account_move_id, 'Landed costs should be available account move lines')
-        account_entry = self.env['account.move.line'].read_group(
-            [('move_id', '=', stock_negative_landed_cost.account_move_id.id)], ['balance', 'move_id'], ['move_id'])[0]
-        self.assertEqual(account_entry['balance'], 0, 'Move is not balanced')
+        [balance] = self.env['account.move.line']._read_group(
+            [('move_id', '=', stock_negative_landed_cost.account_move_id.id)], aggregates=['balance:sum'])[0]
+        self.assertEqual(balance, 0, 'Move is not balanced')
         move_lines = [
             {'name': 'split by volume - Microwave Oven',                    'debit': 3.75,  'credit': 0.0},
             {'name': 'split by volume - Microwave Oven',                    'debit': 0.0,   'credit': 3.75},

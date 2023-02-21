@@ -26,9 +26,9 @@ class WebsiteCustomer(http.Controller):
 
         dom = [('website_published', '=', True), ('assigned_partner_id', '!=', False), ('country_id', '!=', False)]
         dom += sitemap_qs2dom(qs, '/customers/country')
-        countries = env['res.partner'].sudo().read_group(dom, ['id', 'country_id'], groupby='country_id')
-        for country in countries:
-            loc = '/customers/country/%s' % slug(country['country_id'])
+        countries = env['res.partner'].sudo()._read_group(dom, ['country_id'])
+        for [country] in countries:
+            loc = '/customers/country/%s' % slug(country)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 

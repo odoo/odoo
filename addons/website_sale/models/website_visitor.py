@@ -23,14 +23,11 @@ class WebsiteVisitor(models.Model):
         results = self.env['website.track']._read_group(
             [('visitor_id', 'in', self.ids), ('product_id', '!=', False),
              '|', ('product_id.company_id', 'in', self.env.companies.ids), ('product_id.company_id', '=', False)],
-            ['visitor_id', 'product_id'], ['visitor_id', 'product_id'],
-            lazy=False)
-        mapped_data = {}
-        for result in results:
-            visitor_info = mapped_data.get(result['visitor_id'][0], {'product_count': 0, 'product_ids': set()})
-            visitor_info['product_count'] += result['__count']
-            visitor_info['product_ids'].add(result['product_id'][0])
-            mapped_data[result['visitor_id'][0]] = visitor_info
+            ['visitor_id'], ['product_id:array_agg', '__count'])
+        mapped_data = {
+            visitor.id: {'product_count': count, 'product_ids': product_ids}
+            for visitor, product_ids, count in results
+        }
 
         for visitor in self:
             visitor_info = mapped_data.get(visitor.id, {'product_ids': [], 'product_count': 0})

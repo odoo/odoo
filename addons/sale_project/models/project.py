@@ -355,34 +355,32 @@ class Project(models.Model):
     def _get_revenues_items_from_sol(self, domain=None, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
-            ['product_id', 'ids:array_agg(id)', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced'],
             ['product_id'],
+            ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
         )
         display_sol_action = with_action and len(self) == 1 and self.user_has_groups('sales_team.group_sale_salesman')
         revenues_dict = {}
         total_to_invoice = total_invoiced = 0.0
         if sale_line_read_group:
             sols_per_product = {
-                res['product_id'][0]: (
-                    res['untaxed_amount_to_invoice'],
-                    res['untaxed_amount_invoiced'],
-                    res['ids'],
-                ) for res in sale_line_read_group
+                product.id: (
+                    untaxed_amount_to_invoice,
+                    untaxed_amount_invoiced,
+                    ids,
+                ) for product, ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group
             }
             product_read_group = self.env['product.product'].sudo()._read_group(
                 [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
-                ['invoice_policy', 'service_type', 'type', 'ids:array_agg(id)'],
                 ['invoice_policy', 'service_type', 'type'],
-                lazy=False,
+                ['id:array_agg'],
             )
             service_policy_to_invoice_type = self._get_service_policy_to_invoice_type()
             general_to_service_map = self.env['product.template']._get_general_to_service_map()
-            for res in product_read_group:
-                product_ids = res['ids']
+            for invoice_policy, service_type, type_, product_ids in product_read_group:
                 service_policy = None
-                if res['type'] == 'service':
+                if type_ == 'service':
                     service_policy = general_to_service_map.get(
-                        (res['invoice_policy'], res['service_type']),
+                        (invoice_policy, service_type),
                         'ordered_prepaid')
                 for product_id, (amount_to_invoice, amount_invoiced, sol_ids) in sols_per_product.items():
                     if product_id in product_ids:
@@ -497,15 +495,13 @@ class Project(models.Model):
         return {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}}
 
     def _add_invoice_items(self, domain, profitability_items, with_action=True):
-        sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
+        sale_lines = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
-            ['ids:array_agg(id)'],
-            ['product_id'],
-        )
+            [],
+            ['id:recordset'],
+        )[0][0]
         revenue_items_from_invoices = self._get_revenues_items_from_invoices(
-            excluded_move_line_ids=self.env['sale.order.line'].browse(
-                [sol_id for sol_read in sale_line_read_group for sol_id in sol_read['ids']]
-            ).invoice_lines.ids,
+            excluded_move_line_ids=sale_lines.invoice_lines.ids,
             with_action=with_action
         )
         profitability_items['revenues']['data'] += revenue_items_from_invoices['data']

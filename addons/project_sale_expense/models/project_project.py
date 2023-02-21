@@ -37,18 +37,16 @@ class Project(models.Model):
                 ('is_expense', '=', True),
                 ('state', 'in', ['sale', 'done']),
             ],
-            ['order_id', 'product_id', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced'],
             ['order_id', 'product_id'],
-            lazy=False)
+            ['untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'])
         total_amount_expense_invoiced = total_amount_expense_to_invoice = 0.0
         reinvoice_expense_ids = []
-        for res in sol_read_group:
-            expense_data_per_product_id = expenses_per_so_id[res['order_id'][0]]
-            product_id = res['product_id'][0]
-            if product_id in expense_data_per_product_id:
-                total_amount_expense_to_invoice += res['untaxed_amount_to_invoice']
-                total_amount_expense_invoiced += res['untaxed_amount_invoiced']
-                reinvoice_expense_ids += expense_data_per_product_id[product_id]
+        for order, product, untaxed_amount_to_invoice_sum, untaxed_amount_invoiced_sum in sol_read_group:
+            expense_data_per_product_id = expenses_per_so_id[order.id]
+            if product.id in expense_data_per_product_id:
+                total_amount_expense_to_invoice += untaxed_amount_to_invoice_sum
+                total_amount_expense_invoiced += untaxed_amount_invoiced_sum
+                reinvoice_expense_ids += expense_data_per_product_id[product.id]
         section_id = 'expenses'
         sequence = self._get_profitability_sequence_per_invoice_type()[section_id]
         expense_data = {

@@ -24,8 +24,8 @@ class Event(models.Model):
         compute='_compute_tracks_tag_ids', store=True)
 
     def _compute_track_count(self):
-        data = self.env['event.track']._read_group([('stage_id.is_cancel', '!=', True)], ['event_id'], ['event_id'])
-        result = dict((data['event_id'][0], data['event_id_count']) for data in data)
+        data = self.env['event.track']._read_group([('stage_id.is_cancel', '!=', True)], ['event_id'], ['__count'])
+        result = {event.id: count for event, count in data}
         for event in self:
             event.track_count = result.get(event.id, 0)
 

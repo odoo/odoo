@@ -71,12 +71,12 @@ class ProjectProductEmployeeMap(models.Model):
 
         read_group_data = self.env['resource.calendar']._read_group(
             [('id', 'in', self.employee_id.resource_calendar_id.ids)],
-            ['ids:array_agg(id)', 'hours_per_day'],
             ['hours_per_day'],
+            ['id:array_agg'],
         )
-        for res in read_group_data:
-            for calendar_id in res.get('ids', []):
-                resource_calendar_per_hours[calendar_id] = res.get('hours_per_day')
+        for hours_per_day, ids in read_group_data:
+            for calendar_id in ids:
+                resource_calendar_per_hours[calendar_id] = hours_per_day
 
         return resource_calendar_per_hours
 

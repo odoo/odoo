@@ -293,12 +293,10 @@ class StockWarehouseOrderpoint(models.Model):
             ('location_dest_id', 'in', self.location_id.ids),
             ('action', 'in', ['pull_push', 'pull']),
             ('route_id.active', '!=', False)
-        ], ['location_dest_id', 'route_id'], ['location_dest_id', 'route_id'], lazy=False)
-        for g in rules_groups:
-            if not g.get('route_id'):
-                continue
-            orderpoints = self.filtered(lambda o: o.location_id.id == g['location_dest_id'][0])
-            orderpoints.route_id = g['route_id']
+        ], ['location_dest_id', 'route_id'])
+        for location_dest, route in rules_groups:
+            orderpoints = self.filtered(lambda o: o.location_id.id == location_dest.id)
+            orderpoints.route_id = route
 
     def _get_lead_days_values(self):
         self.ensure_one()
@@ -374,11 +372,11 @@ class StockWarehouseOrderpoint(models.Model):
         # Group orderpoint by product-location
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
             [('id', 'in', orderpoints.ids)],
-            ['product_id', 'location_id', 'qty_to_order:sum'],
-            ['product_id', 'location_id'], lazy=False)
+            ['product_id', 'location_id'],
+            ['qty_to_order:sum'])
         orderpoint_by_product_location = {
-            (record.get('product_id')[0], record.get('location_id')[0]): record.get('qty_to_order')
-            for record in orderpoint_by_product_location
+            (product.id, location.id): qty_to_order_sum
+            for product, location, qty_to_order_sum in orderpoint_by_product_location
         }
         for (product, location), product_qty in to_refill.items():
             qty_in_progress = qty_by_product_loc.get((product, location)) or 0.0
@@ -393,18 +391,18 @@ class StockWarehouseOrderpoint(models.Model):
         # With archived ones to avoid `product_location_check` SQL constraints
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._read_group(
             [('id', 'in', orderpoints.ids)],
-            ['product_id', 'location_id', 'ids:array_agg(id)'],
-            ['product_id', 'location_id'], lazy=False)
+            ['product_id', 'location_id'],
+            ['id:recordset'])
         orderpoint_by_product_location = {
-            (record.get('product_id')[0], record.get('location_id')[0]): record.get('ids')[0]
-            for record in orderpoint_by_product_location
+            (product.id, location.id): orderpoint
+            for product, location, orderpoint in orderpoint_by_product_location
         }
 
         orderpoint_values_list = []
         for (product, location_id), product_qty in to_refill.items():
-            orderpoint_id = orderpoint_by_product_location.get((product, location_id))
-            if orderpoint_id:
-                self.env['stock.warehouse.orderpoint'].browse(orderpoint_id).qty_forecast += product_qty
+            orderpoint = orderpoint_by_product_location.get((product, location_id))
+            if orderpoint:
+                orderpoint.qty_forecast += product_qty
             else:
                 orderpoint_values = self.env['stock.warehouse.orderpoint']._get_orderpoint_values(product, location_id)
                 warehouse_id = self.env['stock.location'].browse(location_id).warehouse_id

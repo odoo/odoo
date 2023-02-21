@@ -54,14 +54,14 @@ class Department(models.Model):
             department.master_department_id = int(department.parent_path.split('/')[0])
 
     def _compute_total_employee(self):
-        emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
-        result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
+        emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
+        result = {department.id: count for department, count in emp_data}
         for department in self:
             department.total_employee = result.get(department.id, 0)
 
     def _compute_plan_count(self):
-        plans_data = self.env['hr.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
-        plans_count = {x['department_id'][0]: x['department_id_count'] for x in plans_data}
+        plans_data = self.env['hr.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
+        plans_count = {department.id: count for department, count in plans_data}
         for department in self:
             department.plans_count = plans_count.get(department.id, 0)
 

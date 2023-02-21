@@ -31,11 +31,11 @@ class HrEmployee(models.Model):
 
         name_mapping = dict(res)
         employees_count_per_user = {
-            res['user_id'][0]: res['user_id_count']
-            for res in self.env['hr.employee'].sudo()._read_group(
+            user.id: count
+            for user, count in self.env['hr.employee'].sudo()._read_group(
                 [('user_id', 'in', self.user_id.ids), ('company_id', 'in', allowed_company_ids)],
                 ['user_id'],
-                ['user_id'],
+                ['__count'],
             )
         }
         for employee in self:

@@ -150,7 +150,6 @@ class AccountAnalyticAccount(models.Model):
 
     @api.depends('line_ids.amount')
     def _compute_debit_credit_balance(self):
-        Curr = self.env['res.currency']
         analytic_line_obj = self.env['account.analytic.line']
         domain = [
             ('account_id', 'in', self.ids),
@@ -162,27 +161,25 @@ class AccountAnalyticAccount(models.Model):
             domain.append(('date', '<=', self._context['to_date']))
 
         user_currency = self.env.company.currency_id
-        credit_groups = analytic_line_obj.read_group(
+        credit_groups = analytic_line_obj._read_group(
             domain=domain + [('amount', '>=', 0.0)],
-            fields=['account_id', 'currency_id', 'amount'],
             groupby=['account_id', 'currency_id'],
-            lazy=False,
+            aggregates=['amount:sum'],
         )
         data_credit = defaultdict(float)
-        for l in credit_groups:
-            data_credit[l['account_id'][0]] += Curr.browse(l['currency_id'][0])._convert(
-                l['amount'], user_currency, self.env.company, fields.Date.today())
+        for account, currency, amount_sum in credit_groups:
+            data_credit[account.id] += currency._convert(
+                amount_sum, user_currency, self.env.company, fields.Date.today())
 
-        debit_groups = analytic_line_obj.read_group(
+        debit_groups = analytic_line_obj._read_group(
             domain=domain + [('amount', '<', 0.0)],
-            fields=['account_id', 'currency_id', 'amount'],
             groupby=['account_id', 'currency_id'],
-            lazy=False,
+            aggregates=['amount:sum'],
         )
         data_debit = defaultdict(float)
-        for l in debit_groups:
-            data_debit[l['account_id'][0]] += Curr.browse(l['currency_id'][0])._convert(
-                l['amount'], user_currency, self.env.company, fields.Date.today())
+        for account, currency, amount_sum in debit_groups:
+            data_debit[account.id] += currency._convert(
+                amount_sum, user_currency, self.env.company, fields.Date.today())
 
         for account in self:
             account.debit = abs(data_debit.get(account.id, 0.0))

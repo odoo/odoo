@@ -54,14 +54,14 @@ class MaintenanceEquipmentCategory(models.Model):
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
     def _compute_equipment_count(self):
-        equipment_data = self.env['maintenance.equipment']._read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
-        mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in equipment_data])
+        equipment_data = self.env['maintenance.equipment']._read_group([('category_id', 'in', self.ids)], ['category_id'], ['__count'])
+        mapped_data = {category.id: count for category, count in equipment_data}
         for category in self:
             category.equipment_count = mapped_data.get(category.id, 0)
 
     def _compute_maintenance_count(self):
-        maintenance_data = self.env['maintenance.request']._read_group([('category_id', 'in', self.ids)], ['category_id'], ['category_id'])
-        mapped_data = dict([(m['category_id'][0], m['category_id_count']) for m in maintenance_data])
+        maintenance_data = self.env['maintenance.request']._read_group([('category_id', 'in', self.ids)], ['category_id'], ['__count'])
+        mapped_data = {category.id: count for category, count in maintenance_data}
         for category in self:
             category.maintenance_count = mapped_data.get(category.id, 0)
 

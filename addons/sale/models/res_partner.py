@@ -25,17 +25,16 @@ class ResPartner(models.Model):
         )
         sale_order_groups = self.env['sale.order']._read_group(
             domain=expression.AND([self._get_sale_order_domain_count(), [('partner_id', 'in', all_partners.ids)]]),
-            fields=['partner_id'], groupby=['partner_id']
+            groupby=['partner_id'], aggregates=['__count']
         )
-        partners = self.browse()
-        for group in sale_order_groups:
-            partner = self.browse(group['partner_id'][0])
+        self_ids = set(self._ids)
+
+        self.sale_order_count = 0
+        for partner, count in sale_order_groups:
             while partner:
-                if partner in self:
-                    partner.sale_order_count += group['partner_id_count']
-                    partners |= partner
+                if partner.id in self_ids:
+                    partner.sale_order_count += count
                 partner = partner.parent_id
-        (self - partners).sale_order_count = 0
 
     def can_edit_vat(self):
         ''' Can't edit `vat` if there is (non draft) issued SO. '''
@@ -58,10 +57,9 @@ class ResPartner(models.Model):
     def _credit_debit_get(self):
         super()._credit_debit_get()
         domain = [('partner_id', 'in', self.ids), ('state', 'in', ['sale', 'done'])]
-        group = self.env['sale.order'].read_group(domain, ['amount_to_invoice'], ['partner_id'])
-        for res in group:
-            partner = self.browse(res['partner_id'][0])
-            partner.credit += res['amount_to_invoice']
+        group = self.env['sale.order']._read_group(domain, ['partner_id'], ['amount_to_invoice:sum'])
+        for partner, amount_to_invoice_sum in group:
+            partner.credit += amount_to_invoice_sum
 
     def unlink(self):
         # Unlink draft/cancelled SO so that the partner can be removed from database

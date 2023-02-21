@@ -555,9 +555,9 @@ class ReportBomStructure(models.AbstractModel):
                 domain.append(('warehouse_id', '=', self.env.context.get('warehouse')))
 
             # Seek the closest date in the forecast report where consummed quantity >= forecasted quantity
-            closest_forecasted = self.env['report.stock.quantity']._read_group(domain, ['min_date:min(date)', 'product_id'], ['product_id'])
-            if closest_forecasted:
-                days_to_forecast = (closest_forecasted[0]['min_date'] - date_today).days
+            [min_date] = self.env['report.stock.quantity']._read_group(domain, aggregates=['date:min'])[0]
+            if min_date:
+                days_to_forecast = (min_date - date_today).days
                 return ('expected', days_to_forecast)
         return ('unavailable', False)
 

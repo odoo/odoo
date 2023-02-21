@@ -354,20 +354,15 @@ class StockMove(models.Model):
 
             data = self.env['stock.move.line']._read_group(
                 [('id', 'in', list(move_lines_ids))],
-                ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
-                lazy=False
+                ['move_id', 'product_uom_id'], ['qty_done:sum']
             )
-
-            rec = defaultdict(list)
-            for d in data:
-                rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
+            sum_qty_done = defaultdict(float)
+            for move, product_uom, qty_done_sum in data:
+                uom = move.product_uom
+                sum_qty_done[move.id] += product_uom._compute_quantity(qty_done_sum, uom, round=False)
 
             for move in self:
-                uom = move.product_uom
-                move.quantity_done = sum(
-                    self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
-                     for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
-                )
+                move.quantity_done = sum_qty_done[move.id]
 
     def _quantity_done_set(self):
         def _process_decrease(move, quantity):
@@ -454,8 +449,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                     reserved_availability, move.product_uom, rounding_method='HALF-UP')
         else:
             # compute
-            result = {data['move_id'][0]: data['reserved_qty'] for data in
-                      self.env['stock.move.line']._read_group([('move_id', 'in', self.ids)], ['move_id', 'reserved_qty'], ['move_id'])}
+            result = {move.id: reserved_qty for move, reserved_qty in
+                      self.env['stock.move.line']._read_group([('move_id', 'in', self.ids)], ['move_id'], ['reserved_qty:sum'])}
             for move in self:
                 move.reserved_availability = move.product_id.uom_id._compute_quantity(
                     result.get(move.id, 0.0), move.product_uom, rounding_method='HALF-UP')
@@ -559,9 +554,9 @@ Please change the quantity done or the rounding precision of your unit of measur
         for domain in [domain_nosuggest, domain_suggest]:
             lots_by_move_id = self.env['stock.move.line']._read_group(
                 domain,
-                ['move_id', 'lot_ids:array_agg(lot_id)'], ['move_id'],
+                ['move_id'], ['lot_id:array_agg'],
             )
-            lots_by_move_id_list.append({by_move['move_id'][0]: by_move['lot_ids'] for by_move in lots_by_move_id})
+            lots_by_move_id_list.append({move.id: lot_ids for move, lot_ids in lots_by_move_id})
         for move in self:
             move.lot_ids = lots_by_move_id_list[0 if move.picking_type_id.show_reserved else 1].get(move._origin.id, [])
 

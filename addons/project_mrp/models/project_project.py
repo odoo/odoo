@@ -65,17 +65,16 @@ class Project(models.Model):
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
         mrp_category = 'manufacturing_order'
-        mrp_aal_read_group = self.env['account.analytic.line'].sudo()._read_group(
+        count, amount_sum = self.env['account.analytic.line'].sudo()._read_group(
             [('account_id', 'in', self.analytic_account_id.ids), ('category', '=', mrp_category)],
-            ['amount'],
-            ['account_id'],
-        )
-        if mrp_aal_read_group:
+            aggregates=['__count', 'amount:sum'],
+        )[0]
+        if count:
             can_see_manufactoring_order = with_action and len(self) == 1 and self.user_has_groups('mrp.group_mrp_user')
             mrp_costs = {
                 'id': mrp_category,
                 'sequence': self._get_profitability_sequence_per_invoice_type()[mrp_category],
-                'billed': sum([res['amount'] for res in mrp_aal_read_group]),
+                'billed': amount_sum,
                 'to_bill': 0.0,
             }
             if can_see_manufactoring_order:

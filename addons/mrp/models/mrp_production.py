@@ -411,8 +411,8 @@ class MrpProduction(models.Model):
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
-        delay_alert_date_data = self.env['stock.move']._read_group([('id', 'in', self.move_raw_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'raw_material_production_id')
-        delay_alert_date_data = {data['raw_material_production_id'][0]: data['delay_alert_date'] for data in delay_alert_date_data}
+        delay_alert_date_data = self.env['stock.move']._read_group([('id', 'in', self.move_raw_ids.ids), ('delay_alert_date', '!=', False)], ['raw_material_production_id'], ['delay_alert_date:max'])
+        delay_alert_date_data = {raw_material_production.id: delay_alert_date_max for raw_material_production, delay_alert_date_max in delay_alert_date_data}
         for production in self:
             production.delay_alert_date = delay_alert_date_data.get(production.id, False)
 
@@ -442,14 +442,11 @@ class MrpProduction(models.Model):
                 ('production_id', 'in', self.ids),
                 ('raw_material_production_id', 'in', self.ids)
         ]
-        res = self.env['stock.move'].read_group(domain, ['state', 'production_id', 'raw_material_production_id'], ['production_id', 'raw_material_production_id'], lazy=False)
-        productions_with_done_move = {}
-        for rec in res:
-            production_record = rec['production_id'] or rec['raw_material_production_id']
-            if production_record:
-                productions_with_done_move[production_record[0]] = True
-        for production in self:
-            production.confirm_cancel = productions_with_done_move.get(production.id, False)
+        res = self.env['stock.move']._read_group(domain, ['production_id', 'raw_material_production_id'])
+        self.confirm_cancel = False
+        for production, raw_material_production in res:
+            production_record = production or raw_material_production
+            production_record.confirm_cancel = True
 
     @api.depends('procurement_group_id', 'procurement_group_id.stock_move_ids.group_id')
     def _compute_picking_ids(self):
@@ -474,8 +471,8 @@ class MrpProduction(models.Model):
         location_by_company = self.env['stock.location']._read_group([
             ('company_id', 'in', self.company_id.ids),
             ('usage', '=', 'production')
-        ], ['company_id', 'ids:array_agg(id)'], ['company_id'])
-        location_by_company = {lbc['company_id'][0]: lbc['ids'] for lbc in location_by_company}
+        ], ['company_id'], ['id:array_agg'])
+        location_by_company = {company.id: ids for company, ids in location_by_company}
         for production in self:
             if production.product_id:
                 production.production_location_id = production.product_id.with_company(production.company_id).property_stock_production
@@ -608,8 +605,8 @@ class MrpProduction(models.Model):
         return True
 
     def _compute_scrap_move_count(self):
-        data = self.env['stock.scrap']._read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
-        count_data = dict((item['production_id'][0], item['production_id_count']) for item in data)
+        data = self.env['stock.scrap']._read_group([('production_id', 'in', self.ids)], ['production_id'], ['__count'])
+        count_data = {production.id: count for production, count in data}
         for production in self:
             production.scrap_count = count_data.get(production.id, 0)
 

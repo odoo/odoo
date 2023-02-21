@@ -719,13 +719,13 @@ class Message(models.Model):
         return super(Message, self).unlink()
 
     @api.model
-    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         if not self.env.is_admin():
             raise AccessError(_("Only administrators are allowed to use grouped read on message model"))
 
-        return super(Message, self)._read_group_raw(
-            domain=domain, fields=fields, groupby=groupby, offset=offset,
-            limit=limit, orderby=orderby, lazy=lazy,
+        return super()._read_group(
+            domain=domain, groupby=groupby, aggregates=aggregates,
+            having=having, offset=offset, limit=limit, order=order,
         )
 
     def export_data(self, fields_to_export):

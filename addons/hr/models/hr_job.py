@@ -37,8 +37,8 @@ class Job(models.Model):
 
     @api.depends('no_of_recruitment', 'employee_ids.job_id', 'employee_ids.active')
     def _compute_employees(self):
-        employee_data = self.env['hr.employee']._read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
-        result = dict((data['job_id'][0], data['job_id_count']) for data in employee_data)
+        employee_data = self.env['hr.employee']._read_group([('job_id', 'in', self.ids)], ['job_id'], ['__count'])
+        result = {job.id: count for job, count in employee_data}
         for job in self:
             job.no_of_employee = result.get(job.id, 0)
             job.expected_employees = result.get(job.id, 0) + job.no_of_recruitment

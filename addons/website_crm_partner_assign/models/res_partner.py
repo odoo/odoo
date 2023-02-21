@@ -42,16 +42,13 @@ class ResPartner(models.Model):
 
     @api.depends('implemented_partner_ids.is_published', 'implemented_partner_ids.active')
     def _compute_implemented_partner_count(self):
-        if not self.ids:
-            self.implemented_partner_count = 0
-            return
         rg_result = self.env['res.partner']._read_group(
             [('assigned_partner_id', 'in', self.ids),
              ('is_published', '=', True)],
             ['assigned_partner_id'],
-            ['assigned_partner_id']
+            ['__count'],
         )
-        rg_data = {rg_item['assigned_partner_id'][0]: rg_item['assigned_partner_id_count'] for rg_item in rg_result}
+        rg_data = {assigned_partner.id: count for assigned_partner, count in rg_result}
         for partner in self:
             partner.implemented_partner_count = rg_data.get(partner.id, 0)
 
@@ -62,13 +59,11 @@ class ResPartner(models.Model):
 
     def _compute_opportunity_count(self):
         super()._compute_opportunity_count()
-        assign_counts = {}
-        if self.ids:
-            opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
-                [('partner_assigned_id', 'in', self.ids)],
-                ['partner_assigned_id'], ['partner_assigned_id']
-            )
-            assign_counts = {datum['partner_assigned_id'][0]: datum['partner_assigned_id_count'] for datum in opportunity_data}
+        opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
+            [('partner_assigned_id', 'in', self.ids)],
+            ['partner_assigned_id'], ['__count']
+        )
+        assign_counts = {partner_assigned.id: count for partner_assigned, count in opportunity_data}
         for partner in self:
             partner.opportunity_count += assign_counts.get(partner.id, 0)
 

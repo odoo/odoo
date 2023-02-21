@@ -1067,12 +1067,6 @@ class HolidaysRequest(models.Model):
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
 
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'private_name' in groupby:
-            raise UserError(_('Such grouping is not allowed.'))
-        return super(HolidaysRequest, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-
     ####################################################
     # Business methods
     ####################################################
@@ -1705,13 +1699,12 @@ class HolidaysRequest(models.Model):
             ('display_type', '=', False),
             ('day_period', '!=', 'lunch'),
         ]
-        attendances = self.env['resource.calendar.attendance'].read_group(domain,
-            ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)',
-             'week_type', 'dayofweek', 'day_period'],
-            ['week_type', 'dayofweek', 'day_period'], lazy=False)
+        attendances = self.env['resource.calendar.attendance']._read_group(domain,
+            ['week_type', 'dayofweek', 'day_period'],
+            ['hour_from:min', 'hour_to:max'])
 
         # Must be sorted by dayofweek ASC and day_period DESC
-        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period'], group['week_type']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
+        attendances = sorted([DummyAttendance(hour_from, hour_to, dayofweek, day_period, week_type) for week_type, dayofweek, day_period, hour_from, hour_to in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
 
         default_value = DummyAttendance(0, 0, 0, 'morning', False)
 

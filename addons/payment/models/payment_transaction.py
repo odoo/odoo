@@ -133,10 +133,10 @@ class PaymentTransaction(models.Model):
     def _compute_refunds_count(self):
         rg_data = self.env['payment.transaction']._read_group(
             domain=[('source_transaction_id', 'in', self.ids), ('operation', '=', 'refund')],
-            fields=['source_transaction_id'],
             groupby=['source_transaction_id'],
+            aggregates=['__count'],
         )
-        data = {x['source_transaction_id'][0]: x['source_transaction_id_count'] for x in rg_data}
+        data = {source_transaction.id: count for source_transaction, count in rg_data}
         for record in self:
             record.refunds_count = data.get(record.id, 0)
 

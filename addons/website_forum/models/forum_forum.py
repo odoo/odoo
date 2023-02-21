@@ -155,15 +155,14 @@ class Forum(models.Model):
         result = {cid: dict(default_stats) for cid in self.ids}
         read_group_res = self.env['forum.post']._read_group(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
-            ['forum_id', 'views', 'child_count', 'favourite_count'],
-            groupby=['forum_id'],
-            lazy=False)
-        for res_group in read_group_res:
-            cid = res_group['forum_id'][0]
-            result[cid]['total_posts'] += res_group.get('__count', 0)
-            result[cid]['total_views'] += res_group.get('views', 0)
-            result[cid]['total_answers'] += res_group.get('child_count', 0)
-            result[cid]['total_favorites'] += 1 if res_group.get('favourite_count', 0) else 0
+            ['forum_id'],
+            ['__count', 'views:sum', 'child_count:sum', 'favourite_count:sum'])
+        for forum, count, views_sum, child_count_sum, favourite_count_sum in read_group_res:
+            stat_forum = result[forum.id]
+            stat_forum['total_posts'] += count
+            stat_forum['total_views'] += views_sum
+            stat_forum['total_answers'] += child_count_sum
+            stat_forum['total_favorites'] += 1 if favourite_count_sum else 0
 
         for record in self:
             record.update(result[record.id])

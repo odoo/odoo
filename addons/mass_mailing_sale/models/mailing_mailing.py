@@ -17,9 +17,9 @@ class MassMailing(models.Model):
     def _compute_sale_quotation_count(self):
         quotation_data = self.env['sale.order'].sudo()._read_group(
             [('source_id', 'in', self.source_id.ids)],
-            ['source_id'], ['source_id'],
+            ['source_id'], ['__count'],
         )
-        mapped_data = {datum['source_id'][0]: datum['source_id_count'] for datum in quotation_data}
+        mapped_data = {source.id: count for source, count in quotation_data}
         for mass_mailing in self:
             mass_mailing.sale_quotation_count = mapped_data.get(mass_mailing.source_id.id, 0)
 
@@ -30,9 +30,9 @@ class MassMailing(models.Model):
             [('state', 'not in', ['draft', 'cancel'])]
         ])
         moves_data = self.env['account.move'].sudo()._read_group(
-            domain, ['source_id', 'amount_untaxed_signed'], ['source_id'],
+            domain, ['source_id'], ['amount_untaxed_signed:sum'],
         )
-        mapped_data = {datum['source_id'][0]: datum['amount_untaxed_signed'] for datum in moves_data}
+        mapped_data = {source.id: amount_untaxed_signed for source, amount_untaxed_signed in moves_data}
         for mass_mailing in self:
             mass_mailing.sale_invoiced_amount = mapped_data.get(mass_mailing.source_id.id, 0)
 

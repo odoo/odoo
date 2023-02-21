@@ -100,12 +100,12 @@ class MailGroup(models.Model):
             ('mail_group_id', 'in', self.ids),
             ('create_date', '>=', fields.Datetime.to_string(month_date)),
             ('moderation_status', '=', 'accepted'),
-        ], ['mail_group_id'], ['mail_group_id'])
+        ], ['mail_group_id'], ['__count'])
 
         # { mail_discusison_id: number_of_mail_group_message_last_month_count }
         messages_data = {
-            message['mail_group_id'][0]: message['mail_group_id_count']
-            for message in messages_data
+            mail_group.id: count
+            for mail_group, count in messages_data
         }
 
         for group in self:
@@ -120,11 +120,11 @@ class MailGroup(models.Model):
         results = self.env['mail.group.message']._read_group(
             [('mail_group_id', 'in', self.ids)],
             ['mail_group_id'],
-            ['mail_group_id'],
+            ['__count'],
         )
         result_per_group = {
-            result['mail_group_id'][0]: result['mail_group_id_count']
-            for result in results
+            mail_group.id: count
+            for mail_group, count in results
         }
         for group in self:
             group.mail_group_message_count = result_per_group.get(group.id, 0)
@@ -134,11 +134,11 @@ class MailGroup(models.Model):
         results = self.env['mail.group.message']._read_group(
             [('mail_group_id', 'in', self.ids), ('moderation_status', '=', 'pending_moderation')],
             ['mail_group_id'],
-            ['mail_group_id'],
+            ['__count'],
         )
         result_per_group = {
-            result['mail_group_id'][0]: result['mail_group_id_count']
-            for result in results
+            mail_group.id: count
+            for mail_group, count in results
         }
 
         for group in self:
@@ -486,12 +486,11 @@ class MailGroup(models.Model):
             _logger.warning('Template "mail_group.mail_group_notify_moderation" was not found. Cannot send reminder notifications.')
             return
 
-        results = self.env['mail.group.message'].read_group(
+        results = self.env['mail.group.message']._read_group(
             [('mail_group_id', 'in', self.ids), ('moderation_status', '=', 'pending_moderation')],
             ['mail_group_id'],
-            ['mail_group_id'],
         )
-        groups = self.browse([result['mail_group_id'][0] for result in results])
+        groups = self.browse([mail_group.id for [mail_group] in results])
 
         for group in groups:
             moderators_to_notify = group.moderator_ids

@@ -61,10 +61,10 @@ class StockScrap(models.Model):
     @api.depends('company_id', 'picking_id')
     def _compute_location_id(self):
         groups = self.env['stock.warehouse']._read_group(
-            [('company_id', 'in', self.company_id.ids)], ['min_id:min(id)'], ['company_id'])
+            [('company_id', 'in', self.company_id.ids)], ['company_id'], ['lot_stock_id:array_agg'])
         locations_per_company = {
-            group['company_id'][0]: self.env['stock.warehouse'].browse(group['min_id']).lot_stock_id
-            for group in groups
+            company.id: lot_stock_ids[0] if lot_stock_ids else False
+            for company, lot_stock_ids in groups
         }
         for scrap in self:
             if scrap.picking_id:
@@ -75,10 +75,10 @@ class StockScrap(models.Model):
     @api.depends('company_id')
     def _compute_scrap_location_id(self):
         groups = self.env['stock.location']._read_group(
-            [('company_id', 'in', self.company_id.ids), ('scrap_location', '=', True)], ['min_id:min(id)'], ['company_id'])
+            [('company_id', 'in', self.company_id.ids), ('scrap_location', '=', True)], ['company_id'], ['id:min'])
         locations_per_company = {
-            group['company_id'][0]: self.env['stock.location'].browse(group['min_id'])
-            for group in groups
+            company.id: stock_warehouse_id
+            for company, stock_warehouse_id in groups
         }
         for scrap in self:
             scrap.scrap_location_id = locations_per_company[scrap.company_id.id]

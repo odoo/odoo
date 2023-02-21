@@ -12,13 +12,8 @@ class ResConfigSettings(models.TransientModel):
         if self.group_project_milestone:
             # Search the milestones containing a SOL and change the qty_delivered_method field of the SOL and the
             # service_policy field set on the product to convert from manual to milestones.
-            milestone_read_group = self.env['project.milestone'].read_group(
-                [('sale_line_id', '!=', False)],
-                ['sale_line_ids:array_agg(sale_line_id)'],
-                [],
-            )
-            sale_line_ids = milestone_read_group[0]['sale_line_ids'] if milestone_read_group else []
-            sale_lines = self.env['sale.order.line'].sudo().browse(sale_line_ids)
+            milestones = self.env['project.milestone'].search_fetch([('sale_line_id', '!=', False)], ['sale_line_id'])
+            sale_lines = milestones.sale_line_id.sudo()
             sale_lines.product_id.service_policy = 'delivered_milestones'
         else:
             product_domain = [('type', '=', 'service'), ('service_type', '=', 'milestones')]

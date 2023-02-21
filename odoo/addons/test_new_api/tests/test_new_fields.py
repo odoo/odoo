@@ -97,7 +97,7 @@ class TestFields(TransactionCaseWithUserDemo):
             cat.read_group([], fields=['zzz:sum'], groupby=['parent'])
         with self.assertRaisesRegex(ValueError, 'Invalid field'):
             cat.read_group([], fields=['color'], groupby=['zzz'])
-        with self.assertRaisesRegex(ValueError, 'Invalid field'):
+        with self.assertRaisesRegex(ValueError, 'is not a valid aggregate'):
             cat.read_group([], fields=['color'], groupby=['parent'], orderby='zzz')
         # exception: accept '__count' as field to aggregate
         cat.read_group([], fields=['__count'], groupby=['parent'])

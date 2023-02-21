@@ -398,9 +398,9 @@ class ResPartner(models.Model):
             ('state', 'not in', ['draft', 'cancel']),
             ('move_type', 'in', ('out_invoice', 'out_refund')),
         ]
-        price_totals = self.env['account.invoice.report'].read_group(domain, ['price_subtotal'], ['partner_id'])
+        price_totals = self.env['account.invoice.report']._read_group(domain, ['partner_id'], ['price_subtotal:sum'])
         for partner, child_ids in all_partners_and_children.items():
-            partner.total_invoiced = sum(price['price_subtotal'] for price in price_totals if price['partner_id'][0] in child_ids)
+            partner.total_invoiced = sum(price_subtotal_sum for partner, price_subtotal_sum in price_totals if partner.id in child_ids)
 
     def _compute_journal_item_count(self):
         AccountMoveLine = self.env['account.move.line']
@@ -526,8 +526,8 @@ class ResPartner(models.Model):
     )
 
     def _compute_bank_count(self):
-        bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
-        mapped_data = dict([(bank['partner_id'][0], bank['partner_id_count']) for bank in bank_data])
+        bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['__count'])
+        mapped_data = {partner.id: count for partner, count in bank_data}
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
 

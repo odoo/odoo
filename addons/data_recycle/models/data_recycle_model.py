@@ -95,8 +95,8 @@ class DataRecycleModel(models.Model):
         count_data = self.env['data_recycle.record']._read_group(
             [('recycle_model_id', 'in', self.ids)],
             ['recycle_model_id'],
-            ['recycle_model_id'])
-        counts = {cd['recycle_model_id'][0]: cd['recycle_model_id_count'] for cd in count_data}
+            ['__count'])
+        counts = {recycle_model.id: count for recycle_model, count in count_data}
         for model in self:
             model.records_to_recycle_count = counts[model.id] if model.id in counts else 0
 
