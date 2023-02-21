@@ -113,36 +113,41 @@ export class PropertiesField extends Component {
      * @returns {Array<Array>}
      */
     get groupedPropertiesList() {
-        const propertiesList = this.propertiesList;
+        return this._groupProperties(this.propertiesList);
+    }
+
+    _groupProperties(propertiesList) {
         // propertiesList.push({nextProperty: true});  // flag to know where will be inserted the next property
 
-        // default invisible group
-        const groupedProperties = [];
+        console.log(propertiesList)
 
-        propertiesList.forEach((property, index) => {
+        // default invisible group
+        const groupedProperties = !propertiesList.length || propertiesList[0].type === "separator"
+            ? [] : [{title: null, name: null, elements: [], invisible: true}];
+
+        propertiesList.forEach(property => {
             if (property.type === "separator") {
                 groupedProperties.push({title: property.string, name: property.name, elements: []});
-                return;
-            } else if (index % parseInt(propertiesList.length / this.props.columns) === 0) {
-                // should split to the new column
-                groupedProperties.push({title: "Column", name: null, elements: []});
+            } else {
+                groupedProperties[groupedProperties.length - 1].elements.push(property);
             }
-
-            groupedProperties[groupedProperties.length - 1].elements.push(property);
         });
 
-        // if (groupedProperties.length === 1) {
-        //     // only one group, split this group in the columns to take the entire width
-        //     const invisible = !groupedProperties[0].name;
-        //     groupedProperties[0].elements = [];
-        //     groupedProperties[0].invisible = invisible;
-        //     for (let col = 1; col < this.columns; ++col) {
-        //         groupedProperties.push({title: null, name: groupedProperties[0].name, elements: [], invisible});
-        //     }
-        //     propertiesList.forEach((val, index) => {
-        //         groupedProperties[parseInt(index / propertiesList.length * this.columns)].elements.push(val);
-        //     });
-        // }
+        if (groupedProperties.length === 1) {
+            console.log("special case, only one group")
+            // only one group, split this group in the columns to take the entire width
+            const invisible = !groupedProperties[0].name;
+            groupedProperties[0].elements = [];
+            groupedProperties[0].invisible = invisible;
+            for (let col = 1; col < this.columns; ++col) {
+                groupedProperties.push({title: null, name: groupedProperties[0].name, elements: [], invisible});
+            }
+            propertiesList.forEach((val, index) => {
+                if (val.type !== "separator") {
+                    groupedProperties[parseInt(index / propertiesList.length * this.columns)].elements.push(val);
+                }
+            });
+        }
 
         console.log(groupedProperties)
 
@@ -285,6 +290,8 @@ export class PropertiesField extends Component {
         this._regeneratePropertyName(propertyDefinition);
 
         propertiesValues[propertyIndex] = propertyDefinition;
+        this._generateColumnGroups(propertiesValues);
+
         this.props.update(propertiesValues);
     }
 
@@ -375,8 +382,6 @@ export class PropertiesField extends Component {
         fold[storageKey] = foldedSeparators;
         window.localStorage.setItem("properties.fold", JSON.stringify(fold));
         this._updateFoldedSeparatorsState();
-
-        console.log(fold[storageKey])
     }
 
     /**
@@ -451,6 +456,65 @@ export class PropertiesField extends Component {
             definitionRecordModel,
             "write"
         );
+    }
+
+    /**
+     * When we add or remove a separator, we should automatically create separators
+     * where the columns split was, in order to not change the groups.
+     *
+     * @param {array} propertiesValues
+     */
+    _generateColumnGroups(propertiesValues) {
+        if (this.props.columns === 1) {
+            // mono column, nothing to do
+            return;
+        }
+        console.log("definition changed")
+
+        // check if the columns are separated by groups
+        const checkState = (definitions) => {
+            const groups = this._groupProperties(definitions);
+            console.log("checkState", groups)
+            return groups.every(group => !!group.title);
+        };
+
+        const separatorsCount = (definitions) => {
+            return definitions.filter(property => property.type === "separator").length;
+        };
+
+        const previousState = checkState(this.propertiesList);
+        const newState = checkState(propertiesValues);
+
+        const previousSeparatorsCount = separatorsCount(this.propertiesList);
+        const newSeparatorsCount = separatorsCount(propertiesValues);
+
+        console.log(previousState, newState)
+
+        if (previousState) {
+            // nothing to do
+            return;
+        } else if (!previousState && !newState) {
+            return;
+        } else if (previousSeparatorsCount !== 0 && newSeparatorsCount === 0) {
+            // go back to the initial situation, with no group
+            return;
+        } else if (previousSeparatorsCount === 0 && newSeparatorsCount === 1 && propertiesValues[0].type === "separator") {
+            // situation where we have only one group that take all columns
+            return;
+        }
+
+        // insert separators where the columns separation was, to keep the same groups
+        const step = Math.ceil(propertiesValues.length / this.props.columns);
+        const start = step * (this.props.columns - 1);
+        for (let index = start; index >= 0;  index -= step) {
+            if (propertiesValues[index].type !== "separator") {
+                const name = uuid();
+                propertiesValues.splice(index, 0, {name: name, type: "separator", string: "Group " + name});
+            }
+        }
+
+        console.log("_generateColumnGroups")
+        console.log(propertiesValues)
     }
 
     /**
