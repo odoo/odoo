@@ -23,8 +23,6 @@ Object.assign(ActivityException, {
 
 registry.category("fields").add("activity_exception", {
     component: ActivityException,
-    fieldDependencies: {
-        activity_exception_icon: { type: "char" },
-    },
+    fieldDependencies: [{ name: "activity_exception_icon", type: "char" }],
     noLabel: true,
 });

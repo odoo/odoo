@@ -12141,9 +12141,7 @@ QUnit.module("Views", (hooks) => {
             component: class CustomField extends Component {
                 static template = xml`<span t-esc="props.record.data.int_field"/>`;
             },
-            fieldDependencies: {
-                int_field: { type: "integer" },
-            },
+            fieldDependencies: [{ name: "int_field", type: "integer" }],
         };
         registry.category("fields").add("custom_field", customField);
 
@@ -12174,9 +12172,7 @@ QUnit.module("Views", (hooks) => {
                 component: class CustomField extends Component {
                     static template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
                 },
-                fieldDependencies: {
-                    product_id: { type: "many2one", relation: "product" },
-                },
+                fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
             };
             registry.category("fields").add("custom_field", customField);
 
