@@ -389,7 +389,7 @@ QUnit.module("ActionManager", (hooks) => {
             target.querySelector(".modal-body .o_error_detail").textContent.includes("my error")
         );
 
-        await click(target, ".modal-footer button");
+        await click(target, ".modal-footer .btn-primary");
         assert.containsNone(target, ".modal");
 
         await doAction(webClient, {

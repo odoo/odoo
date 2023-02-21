@@ -76,6 +76,6 @@ QUnit.module("ActionManager", (hooks) => {
         await click(document.querySelector(".my_button"));
         await nextTick();
         assert.containsOnce(target, ".my_button");
-        assert.containsOnce(target, ".o_dialog_error");
+        assert.containsOnce(target, ".o_error_dialog");
     });
 });

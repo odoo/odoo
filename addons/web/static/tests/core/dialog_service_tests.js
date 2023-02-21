@@ -251,5 +251,5 @@ QUnit.test("dialog component crashes", async (assert) => {
 
     assert.verifySteps(["error"]);
     assert.containsOnce(target, ".modal");
-    assert.containsOnce(target, ".modal .o_dialog_error");
+    assert.containsOnce(target, ".modal .o_error_dialog");
 });

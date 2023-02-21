@@ -1026,9 +1026,9 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         assert.verifySteps(["clientAction setup"]);
         await nextTick();
-        assert.containsOnce(target, ".o_dialog_error");
+        assert.containsOnce(target, ".o_error_dialog");
         await click(target, ".modal-header .btn-close");
-        assert.containsNone(target, ".o_dialog_error");
+        assert.containsNone(target, ".o_error_dialog");
         await click(target, "nav .o_navbar_apps_menu .dropdown-toggle ");
         assert.containsN(target, ".dropdown-item.o_app", 3);
         assert.containsNone(target, ".o_menu_brand");
