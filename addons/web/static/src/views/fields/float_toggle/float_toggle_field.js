@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { formatFloat } from "../formatters";
+import { formatFloatFactor } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component } from "@odoo/owl";
@@ -46,8 +46,9 @@ export class FloatToggleField extends Component {
         return !this.props.digits && Array.isArray(fieldDigits) ? fieldDigits : this.props.digits;
     }
     get formattedValue() {
-        return formatFloat(this.props.record.data[this.props.name] * this.factor, {
+        return formatFloatFactor(this.props.record.data[this.props.name], {
             digits: this.digits,
+            factor: this.factor,
         });
     }
 }
