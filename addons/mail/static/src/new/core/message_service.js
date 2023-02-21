@@ -393,7 +393,7 @@ export class MessageService {
             partner: data.res_partner_id
                 ? this.personaService.insert({
                       id: data.res_partner_id[0],
-                      name: data.res_partner_id[1],
+                      displayName: data.res_partner_id[1],
                       type: "partner",
                   })
                 : undefined,

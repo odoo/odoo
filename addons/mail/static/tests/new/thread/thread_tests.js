@@ -725,13 +725,13 @@ QUnit.test(
 
 QUnit.test("basic rendering of canceled notification", async function (assert) {
     const pyEnv = await startServer();
-    const channeld = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["mail.channel"].create({ name: "test" });
     const partnerId = pyEnv["res.partner"].create({ name: "Someone" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "email",
         model: "mail.channel",
-        res_id: channeld,
+        res_id: channelId,
     });
     pyEnv["mail.notification"].create({
         failure_type: "SMTP",
@@ -741,7 +741,7 @@ QUnit.test("basic rendering of canceled notification", async function (assert) {
         res_partner_id: partnerId,
     });
     const { openDiscuss } = await start();
-    await openDiscuss(channeld);
+    await openDiscuss(channelId);
     assert.containsOnce(target, ".o-mail-message-notification .fa-envelope-o");
 
     await click(".o-mail-message-notification");
