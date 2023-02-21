@@ -17,7 +17,7 @@ export function useAssignUserCommand() {
     const user = useService("user");
     const type = component.props.record.fields[component.props.name].type;
     if (
-        component.props.relation !== "res.users" ||
+        component.relation !== "res.users" ||
         component.props.record.activeFields[component.props.name].viewType !== "form"
     ) {
         return;
@@ -68,7 +68,7 @@ export function useAssignUserCommand() {
                 domain = Domain.and([domain, [["id", "not in", selectedUserIds]]]);
             }
         }
-        const searchResult = await orm.call(component.props.relation, "name_search", [], {
+        const searchResult = await orm.call(component.relation, "name_search", [], {
             name: value,
             args: domain.toList(),
             operator: "ilike",

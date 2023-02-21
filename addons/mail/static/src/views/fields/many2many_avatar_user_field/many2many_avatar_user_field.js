@@ -17,7 +17,7 @@ Many2ManyAvatarUserTagsList.template = "mail.Many2ManyAvatarUserTagsList";
 export class Many2ManyTagsAvatarUserField extends Many2ManyTagsAvatarField {
     setup() {
         super.setup();
-        this.openChat = useOpenChat(this.props.relation);
+        this.openChat = useOpenChat(this.relation);
         useAssignUserCommand();
     }
 
@@ -46,7 +46,7 @@ registry.category("fields").add("many2many_avatar_user", many2ManyTagsAvatarUser
 export class KanbanMany2ManyTagsAvatarUserField extends ListKanbanMany2ManyTagsAvatarField {
     setup() {
         super.setup();
-        this.openChat = useOpenChat(this.props.relation);
+        this.openChat = useOpenChat(this.relation);
         useAssignUserCommand();
     }
 

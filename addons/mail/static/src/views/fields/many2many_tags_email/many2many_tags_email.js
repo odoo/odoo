@@ -22,7 +22,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         this.openedDialogs = 0;
         this.recordsIdsToAdd = [];
         this.openMany2xRecord = useOpenMany2XRecord({
-            resModel: this.props.relation,
+            resModel: this.relation,
             activeActions: {
                 create: false,
                 createEdit: false,

@@ -24,7 +24,7 @@ export class SaleOrderLineProductField extends Many2OneField {
                 }
             }
             if (newValue) {
-                if (this.props.relation === 'product.template') {
+                if (this.relation === 'product.template') {
                     this._onProductTemplateUpdate();
                 } else {
                     this._onProductUpdate();
@@ -38,7 +38,7 @@ export class SaleOrderLineProductField extends Many2OneField {
             this.quickCreate = async (name, params = {}) => {
                 await this.props.record.update({ [this.props.name]: [false, name]});
 
-                if (this.props.relation === 'product.template') {
+                if (this.relation === 'product.template') {
                     this._onProductTemplateUpdate();
                 } else {
                     this._onProductUpdate();

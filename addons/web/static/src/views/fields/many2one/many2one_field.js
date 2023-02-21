@@ -108,7 +108,7 @@ export class Many2OneField extends Component {
                 }
             },
             onClose: () => this.focusInput(),
-            fieldString: this.props.string,
+            fieldString: this.string,
         });
 
         this.update = (value, params = {}) => {
@@ -149,7 +149,9 @@ export class Many2OneField extends Component {
     get relation() {
         return this.props.relation || this.props.record.fields[this.props.name].relation;
     }
-
+    get string() {
+        return this.props.string || this.props.record.fields[this.props.name].string || "";
+    }
     get context() {
         return this.props.record.getFieldContext(this.props.name);
     }
@@ -180,7 +182,7 @@ export class Many2OneField extends Component {
             placeholder: this.props.placeholder,
             resModel: this.relation,
             autoSelect: true,
-            fieldString: this.props.string,
+            fieldString: this.string,
             activeActions: this.state.activeActions,
             update: this.update,
             quickCreate: this.quickCreate,
@@ -215,7 +217,7 @@ export class Many2OneField extends Component {
         return new Promise((resolve, reject) => {
             this.addDialog(CreateConfirmationDialog, {
                 value: request,
-                name: this.props.string,
+                name: this.string,
                 create: async () => {
                     try {
                         await this.quickCreate(request);
@@ -295,7 +297,7 @@ export const many2OneField = {
     component: Many2OneField,
     displayName: _lt("Many2one"),
     supportedTypes: ["many2one"],
-    extractProps: ({ attrs, field }) => {
+    extractProps: ({ attrs }) => {
         const canCreate =
             attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !attrs.options.no_create;
         return {
@@ -308,8 +310,7 @@ export const many2OneField = {
             nameCreateField: attrs.options.create_name_field,
             canScanBarcode: !!attrs.options.can_scan_barcode,
             openTarget: attrs.open_target,
-            relation: field.relation,
-            string: attrs.string || field.string,
+            string: attrs.string,
         };
     },
 };

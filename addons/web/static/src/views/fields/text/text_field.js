@@ -18,7 +18,6 @@ export class TextField extends Component {
     };
     static props = {
         ...standardFieldProps,
-        isTranslatable: { type: Boolean, optional: true },
         placeholder: { type: String, optional: true },
         dynamicPlaceholder: { type: Boolean, optional: true },
         rowCount: { type: Number, optional: true },
@@ -84,6 +83,9 @@ export class TextField extends Component {
         this.textareaRef.el.focus();
     }
 
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
+    }
     get minimumHeight() {
         return 50;
     }
@@ -127,12 +129,10 @@ export const textField = {
     component: TextField,
     displayName: _lt("Multiline Text"),
     supportedTypes: ["html", "text"],
-    extractProps: ({ attrs, field }) => ({
+    extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,
         dynamicPlaceholder: attrs.options.dynamic_placeholder,
         rowCount: attrs.rows && parseInteger(attrs.rows),
-
-        isTranslatable: field.translate,
     }),
 };
 
