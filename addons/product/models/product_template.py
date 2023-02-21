@@ -290,8 +290,8 @@ class ProductTemplate(models.Model):
                     template.barcode = archived_variants.barcode
 
     def _search_barcode(self, operator, value):
-        templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
-        return [('id', 'in', templates.ids)]
+        query = self.with_context(active_test=False)._search([('product_variant_ids.barcode', operator, value)])
+        return [('id', 'in', query)]
 
     def _set_barcode(self):
         variant_count = len(self.product_variant_ids)
