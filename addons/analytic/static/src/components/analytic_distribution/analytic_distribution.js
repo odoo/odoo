@@ -591,9 +591,7 @@ AnalyticDistribution.props = {
 export const analyticDistribution = {
     component: AnalyticDistribution,
     supportedTypes: ["char", "text"],
-    fieldDependencies: {
-        analytic_precision: { type: "integer" },
-    },
+    fieldDependencies: [{ name:"analytic_precision", type: "integer" }],
     extractProps: ({ attrs }) => ({
         business_domain: attrs.options.business_domain,
         account_field: attrs.options.account_field,

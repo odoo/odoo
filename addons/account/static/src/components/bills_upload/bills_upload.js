@@ -82,10 +82,10 @@ export const accountFileUploader = {
         btnClass: attrs.btnClass || "",
         linkText: attrs.linkText || _lt("Upload"),
     }),
-    fieldDependencies: {
-        id: { type: "integer" },
-        type: { type: "selection" },
-    },
+    fieldDependencies: [
+        { name: "id", type: "integer" },
+        { name: "type", type: "selection" },
+    ],
 };
 
 registry.category("view_widgets").add("account_file_uploader", accountFileUploader);

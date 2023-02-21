@@ -24,8 +24,9 @@ const NUMERIC_TYPES = ["integer", "float", "monetary"];
  * @param {Object} activeFields
  * @param {Object} [dependencies={}]
  */
-export function addFieldDependencies(activeFields, fields, dependencies = {}) {
-    for (const [name, dependency] of Object.entries(dependencies)) {
+export function addFieldDependencies(activeFields, fields, dependencies = []) {
+    for (const dependency of dependencies) {
+        const { name } = dependency;
         if (!(name in activeFields)) {
             activeFields[name] = Object.assign({ name, rawAttrs: {} }, dependency, {
                 modifiers: { invisible: true },
