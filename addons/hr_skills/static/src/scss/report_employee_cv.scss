@@ -23,8 +23,8 @@ div.o_employee_cv {
         line-height: 1.5;
     }
 
-    &:not(:first-child) .o_new_page {
-        page-break-before: always;
+    &:not(:last-child) .o_new_page {
+        page-break-after: always;
     }
 
     .o_sidebar {
@@ -42,6 +42,7 @@ div.o_employee_cv {
 
         .o_profile {
             padding: 30px;
+            padding-top: 15px;
             background: rgba(0, 0, 0, 0.2);
             text-align: center;
             color: #fff;
@@ -183,10 +184,6 @@ div.o_employee_cv {
 
         }
 
-        .o_main_panel_section:not(:last-of-type) {
-            margin-bottom: 60px;
-        }
-        
         .o_main_panel_resume_title {
             position: relative;
             overflow: hidden;

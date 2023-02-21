@@ -4,12 +4,20 @@
         <field name="name">hr.employee.cv.wizard.view.form</field>
         <field name="model">hr.employee.cv.wizard</field>
         <field name="arch" type="xml">
-            <form string="Print CV">
+            <form string="Print Resume">
+                <field name="can_show_others" invisible="1"/>
+                <field name="can_show_skills" invisible="1"/>
                 <group>
                     <group>
                         <field name="employee_ids" widget="many2many_tags" invisible="1"/>
-                        <field name="color" widget="color"/>
-                        <field name="side_panel_position"/>
+                        <label for="color_primary" string="Colors"/>
+                        <div class="d-flex flex-row">
+                            <field name="color_primary" widget="color" nolabel="1" style="width: 35px;"/>
+                            <field name="color_secondary" widget="color" nolabel="1"/>
+                        </div>
+                        <field name="show_contact"/>
+                        <field name="show_others" attrs="{'invisible': [('can_show_others', '=', False)]}"/>
+                        <field name="show_skills" attrs="{'invisible': [('can_show_skills', '=', False)]}"/>
                     </group>
                 </group>
                 <footer>
@@ -21,7 +29,7 @@
     </record>
 
     <record id="action_hr_employee_cv_wizard" model="ir.actions.act_window">
-        <field name="name">Print CV</field>
+        <field name="name">Print Resume</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.employee.cv.wizard</field>
         <field name="view_mode">form</field>
