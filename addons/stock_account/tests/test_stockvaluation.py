@@ -104,7 +104,6 @@ class TestStockValuation(TransactionCase):
             ('account_id', '=', self.stock_valuation_account.id),
         ], order='date, id')
 
-
     def _make_in_move(self, product, quantity, unit_cost=None):
         """ Helper to create and validate a receipt move.
         """

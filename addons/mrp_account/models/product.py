@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import fields, models
 from odoo.tools import float_round, groupby
 
 
 class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
+
+    def _get_product_accounts(self):
+        accounts = super()._get_product_accounts()
+        accounts.update({
+            'production': self.categ_id.property_stock_account_production_cost_id or False,
+        })
+        return accounts
 
     def action_bom_cost(self):
         templates = self.filtered(lambda t: t.product_variant_count == 1 and t.bom_count > 0)
@@ -105,3 +112,16 @@ class ProductProduct(models.Model):
             if byproduct_cost_share:
                 total *= float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001)
             return bom.product_uom_id._compute_price(total / bom.product_qty, self.uom_id)
+
+
+class ProductCategory(models.Model):
+    _inherit = 'product.category'
+
+    property_stock_account_production_cost_id = fields.Many2one(
+        'account.account', 'Production Account', company_dependent=True,
+        domain="[('company_id', '=', allowed_company_ids[0]), ('deprecated', '=', False)]", check_company=True,
+        help="""This account will be used as a valuation counterpart for both components and final products for manufacturing orders.
+                If there are any workcenter/employee costs, this value will remain on the account once the production is completed.""")
+
+    def _get_stock_account_property_field_names(self):
+        return super()._get_stock_account_property_field_names() + ['property_stock_account_production_cost_id']

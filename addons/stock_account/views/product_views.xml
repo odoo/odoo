@@ -20,7 +20,10 @@
                 <group name="logistics" position="after">
                     <group string="Inventory Valuation">
                         <field name="property_cost_method"/>
-                        <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
+                        <label for="property_valuation" groups="stock_account.group_stock_accounting_automatic"/>
+                        <div groups="stock_account.group_stock_accounting_automatic">
+                            <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
+                        </div>
                     </group>
                 </group>
             </field>

@@ -23,7 +23,7 @@ class StockMove(models.Model):
         if not currency.is_zero(subcontract_service_cost):
             del rslt['credit_line_vals']
             component_cost = -credit_value + subcontract_service_cost
-            component_cost_account = self.product_id.product_tmpl_id.get_product_accounts()['stock_output']
+            service_cost_account = self.product_id.product_tmpl_id.get_product_accounts()['stock_input']
             rslt['subcontract_credit_line_vals'] = {
                 'name': description,
                 'product_id': self.product_id.id,
@@ -32,7 +32,7 @@ class StockMove(models.Model):
                 'ref': description,
                 'partner_id': partner_id,
                 'balance': -subcontract_service_cost,
-                'account_id': credit_account_id,
+                'account_id': service_cost_account.id,
             }
             rslt['component_credit_line_vals'] = {
                 'name': description,
@@ -42,6 +42,6 @@ class StockMove(models.Model):
                 'ref': description,
                 'partner_id': partner_id,
                 'balance': component_cost,
-                'account_id': component_cost_account.id,
+                'account_id': credit_account_id,
             }
         return rslt

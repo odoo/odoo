@@ -75,6 +75,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         stock_in_acc_id = self.categ_fifo_auto.property_stock_account_input_categ_id.id
         stock_out_acc_id = self.categ_fifo_auto.property_stock_account_output_categ_id.id
         stock_valu_acc_id = self.categ_fifo_auto.property_stock_valuation_account_id.id
+        stock_cop_acc_id = self.categ_fifo_auto.property_stock_account_production_cost_id.id
 
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
         all_amls_ids += amls.ids
@@ -85,10 +86,10 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             # Receipt from subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 220.0, 'credit': 0.0},
             {'account_id': stock_in_acc_id,     'product_id': self.product_a.id,    'debit': 0.0,   'credit': 200.0},
-            {'account_id': stock_out_acc_id,    'product_id': self.product_a.id,    'debit': 0.0,   'credit': 20.0},
+            {'account_id': stock_cop_acc_id,    'product_id': self.product_a.id,    'debit': 0.0,   'credit': 20.0},
             # Delivery to subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.product_b.id,    'debit': 0.0,   'credit': 20.0},
-            {'account_id': stock_out_acc_id,    'product_id': self.product_b.id,    'debit': 20.0,  'credit': 0.0},
+            {'account_id': stock_cop_acc_id,    'product_id': self.product_b.id,    'debit': 20.0,  'credit': 0.0},
             # Initial dropshipped value
             {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 0.0,   'credit': 200.0},
             {'account_id': stock_out_acc_id,    'product_id': self.product_a.id,    'debit': 200.0, 'credit': 0.0},

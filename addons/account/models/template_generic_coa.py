@@ -33,6 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'stock_in',
             'property_stock_account_output_categ_id': 'stock_out',
             'property_stock_valuation_account_id': 'stock_valuation',
+            'property_stock_account_production_cost_id': 'cost_of_production',
         }
 
     @template('generic_coa', 'res.company')
