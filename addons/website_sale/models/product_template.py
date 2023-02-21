@@ -177,7 +177,7 @@ class ProductTemplate(models.Model):
         sales_prices = pricelist._get_products_price(self, 1.0)
         show_discount = pricelist and pricelist.discount_policy == 'without_discount'
 
-        base_sales_prices = self.price_compute('list_price', currency=currency)
+        base_sales_prices = self._price_compute('list_price', currency=currency)
 
         res = {}
         for template in self:

@@ -49,7 +49,7 @@ class HrExpenseSplit(models.TransientModel):
         for split in self:
             split.product_has_cost = split.product_id and (float_compare(split.product_id.standard_price, 0.0, precision_digits=2) != 0)
             if split.product_has_cost:
-                split.total_amount = split.product_id.price_compute('standard_price', currency=split.currency_id)[split.product_id.id]
+                split.total_amount = split.product_id._price_compute('standard_price', currency=split.currency_id)[split.product_id.id]
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -74,7 +74,7 @@ class HrExpenseSplit(models.TransientModel):
             'analytic_distribution': self.analytic_distribution,
             'employee_id': self.employee_id.id,
             'product_uom_id': self.product_id.uom_id.id,
-            'unit_amount': self.product_id.price_compute('standard_price', currency=self.currency_id)[self.product_id.id]
+            'unit_amount': self.product_id._price_compute('standard_price', currency=self.currency_id)[self.product_id.id]
         }
 
         account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
