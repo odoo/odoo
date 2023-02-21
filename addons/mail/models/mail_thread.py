@@ -149,15 +149,13 @@ class MailThread(models.AbstractModel):
 
     @api.depends('message_follower_ids')
     def _compute_is_follower(self):
-        followers = self.env['mail.followers'].sudo().search([
+        data = dict((d['res_id'], d['res_id_count']) for d in self.env['mail.followers'].sudo().read_group([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
             ('partner_id', '=', self.env.user.partner_id.id),
-            ])
-        # using read() below is much faster than followers.mapped('res_id')
-        following_ids = [res['res_id'] for res in followers.read(['res_id'])]
+            ], ['res_id'], ['res_id']))
         for record in self:
-            record.message_is_follower = record.id in following_ids
+            record.message_is_follower = bool(data.get(record.id))
 
     @api.model
     def _search_is_follower(self, operator, operand):
