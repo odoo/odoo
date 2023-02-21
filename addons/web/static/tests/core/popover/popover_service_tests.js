@@ -128,6 +128,28 @@ QUnit.test("close callback", async (assert) => {
     assert.verifySteps(["close"]);
 });
 
+QUnit.test("do not crash and close if target parent does not exist", async (assert) => {
+    assert.expect(3);
+
+    // This target does not have any parent, it simulate the case where the element disapeared
+    // from the DOM before the onMounted of the component is called
+    const dissapearedTarget = document.createElement("div");
+
+    assert.containsOnce(fixture, ".o_popover_container");
+
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
+
+    function onClose() {
+        assert.step("close");
+    }
+
+    popovers.add(dissapearedTarget, Comp, {}, { onClose });
+    await nextTick();
+
+    assert.verifySteps(["close"]);
+});
+
 QUnit.test("sub component triggers close", async (assert) => {
     assert.containsOnce(fixture, ".o_popover_container");
 

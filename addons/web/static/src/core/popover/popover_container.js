@@ -13,7 +13,12 @@ class PopoverController extends Component {
         onWillUnmount(this.onWillUnmount);
     }
     onMounted() {
-        this.targetObserver.observe(this.target.parentElement, { childList: true });
+        if (!this.target.parentElement) {
+            //The target disapeared before the call of onMounted
+            this.onTargetMutate();
+        } else {
+            this.targetObserver.observe(this.target.parentElement, { childList: true });
+        }
     }
     onWillUnmount() {
         this.targetObserver.disconnect();
