@@ -13,9 +13,9 @@ class Task(models.Model):
         time_off_type_read_group = self.env['hr.leave.type']._read_group(
             [('timesheet_task_id', 'in', self.ids)],
             ['timesheet_task_id'],
-            ['timesheet_task_id'],
+            ['__count'],
         )
-        time_off_type_count_per_task = {res['timesheet_task_id'][0]: res['timesheet_task_id_count'] for res in time_off_type_read_group}
+        time_off_type_count_per_task = {timesheet_task.id: count for timesheet_task, count in time_off_type_read_group}
         for task in self:
             task.leave_types_count = time_off_type_count_per_task.get(task.id, 0)
 
@@ -29,10 +29,10 @@ class Task(models.Model):
             raise NotImplementedError(_('Operation not supported'))
         leave_type_read_group = self.env['hr.leave.type']._read_group(
             [('timesheet_task_id', '!=', False)],
-            ['timesheet_task_ids:array_agg(timesheet_task_id)'],
-            [], limit=1
+            [],
+            ['timesheet_task_id:array_agg'],
         )
-        timeoff_task_ids = leave_type_read_group[0]['timesheet_task_ids'] or []
+        [timeoff_task_ids] = leave_type_read_group[0]
         if self.env.company.leave_timesheet_task_id:
             timeoff_task_ids.append(self.env.company.leave_timesheet_task_id.id)
         if operator == '!=':

@@ -26,10 +26,10 @@ class WebsiteVisitor(models.Model):
     def _compute_event_track_wishlisted_ids(self):
         results = self.env['event.track.visitor']._read_group(
             [('visitor_id', 'in', self.ids), ('is_wishlisted', '=', True)],
-            ['visitor_id', 'track_id:array_agg'],
-            ['visitor_id']
+            ['visitor_id'],
+            ['track_id:array_agg'],
         )
-        track_ids_map = {result['visitor_id'][0]: result['track_id'] for result in results}
+        track_ids_map = {visitor.id: track_ids for visitor, track_ids in results}
         for visitor in self:
             visitor.event_track_wishlisted_ids = track_ids_map.get(visitor.id, [])
             visitor.event_track_wishlisted_count = len(visitor.event_track_wishlisted_ids)

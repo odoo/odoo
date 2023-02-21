@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -48,25 +49,20 @@ class UtmCampaign(models.Model):
 
     @api.depends('mailing_mail_ids')
     def _compute_mailing_mail_count(self):
-        if self.ids:
-            mailing_data = self.env['mailing.mailing']._read_group(
-                [('campaign_id', 'in', self.ids), ('mailing_type', '=', 'mail')],
-                ['campaign_id', 'ab_testing_enabled'],
-                ['campaign_id', 'ab_testing_enabled'],
-                lazy=False,
-            )
-            ab_testing_mapped_data = {}
-            mapped_data = {}
-            for data in mailing_data:
-                if data['ab_testing_enabled']:
-                    ab_testing_mapped_data.setdefault(data['campaign_id'][0], []).append(data['__count'])
-                mapped_data.setdefault(data['campaign_id'][0], []).append(data['__count'])
-        else:
-            mapped_data = dict()
-            ab_testing_mapped_data = dict()
+        mailing_data = self.env['mailing.mailing']._read_group(
+            [('campaign_id', 'in', self.ids), ('mailing_type', '=', 'mail')],
+            ['campaign_id', 'ab_testing_enabled'],
+            ['__count'],
+        )
+        ab_testing_mapped_data = defaultdict(list)
+        mapped_data = defaultdict(list)
+        for campaign, ab_testing_enabled, count in mailing_data:
+            if ab_testing_enabled:
+                ab_testing_mapped_data[campaign.id].append(count)
+            mapped_data[campaign.id].append(count)
         for campaign in self:
-            campaign.mailing_mail_count = sum(mapped_data.get(campaign._origin.id or campaign.id, []))
-            campaign.ab_testing_mailings_count = sum(ab_testing_mapped_data.get(campaign._origin.id or campaign.id, []))
+            campaign.mailing_mail_count = sum(mapped_data[campaign._origin.id or campaign.id])
+            campaign.ab_testing_mailings_count = sum(ab_testing_mapped_data[campaign._origin.id or campaign.id])
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing campaign """

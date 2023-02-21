@@ -313,14 +313,12 @@ class HolidaysAllocation(models.Model):
     @api.depends('holiday_status_id', 'allocation_type', 'number_of_hours_display', 'number_of_days_display', 'date_to')
     def _compute_from_holiday_status_id(self):
         accrual_allocations = self.filtered(lambda alloc: alloc.allocation_type == 'accrual' and not alloc.accrual_plan_id and alloc.holiday_status_id)
-        accruals_dict = {}
-        if accrual_allocations:
-            accruals_read_group = self.env['hr.leave.accrual.plan'].read_group(
-                [('time_off_type_id', 'in', accrual_allocations.holiday_status_id.ids)],
-                ['time_off_type_id', 'ids:array_agg(id)'],
-                ['time_off_type_id'],
-            )
-            accruals_dict = {res['time_off_type_id'][0]: res['ids'] for res in accruals_read_group}
+        accruals_read_group = self.env['hr.leave.accrual.plan']._read_group(
+            [('time_off_type_id', 'in', accrual_allocations.holiday_status_id.ids)],
+            ['time_off_type_id'],
+            ['id:array_agg'],
+        )
+        accruals_dict = {time_off_type.id: ids for time_off_type, ids in accruals_read_group}
         for allocation in self:
             allocation.number_of_days = allocation.number_of_days_display
             if allocation.type_request_unit == 'hour':

@@ -28,19 +28,19 @@ class Department(models.Model):
         leave_data = Requests._read_group(
             [('department_id', 'in', self.ids),
              ('state', '=', 'confirm')],
-            ['department_id'], ['department_id'])
+            ['department_id'], ['__count'])
         allocation_data = Allocations._read_group(
             [('department_id', 'in', self.ids),
              ('state', '=', 'confirm')],
-            ['department_id'], ['department_id'])
+            ['department_id'], ['__count'])
         absence_data = Requests._read_group(
             [('department_id', 'in', self.ids), ('state', 'not in', ['cancel', 'refuse']),
              ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
-            ['department_id'], ['department_id'])
+            ['department_id'], ['__count'])
 
-        res_leave = dict((data['department_id'][0], data['department_id_count']) for data in leave_data)
-        res_allocation = dict((data['department_id'][0], data['department_id_count']) for data in allocation_data)
-        res_absence = dict((data['department_id'][0], data['department_id_count']) for data in absence_data)
+        res_leave = {department.id: count for department, count in leave_data}
+        res_allocation = {department.id: count for department, count in allocation_data}
+        res_absence = {department.id: count for department, count in absence_data}
 
         for department in self:
             department.leave_to_approve_count = res_leave.get(department.id, 0)

@@ -59,8 +59,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
     def _compute_info_invoice(self):
         for line in self:
             domain = self.env['sale.order.line']._timesheet_compute_delivered_quantity_domain()
-            timesheet = self.env['account.analytic.line'].read_group(domain + [('task_id', 'in', line.project_id.tasks.ids), ('so_line', '=', False), ('timesheet_invoice_id', '=', False)], ['unit_amount'], ['task_id'])
-            unit_amount = round(sum(t.get('unit_amount', 0) for t in timesheet), 2) if timesheet else 0
+            timesheet = self.env['account.analytic.line']._read_group(domain + [('task_id', 'in', line.project_id.tasks.ids), ('so_line', '=', False), ('timesheet_invoice_id', '=', False)], aggregates=['unit_amount:sum'])
+            [unit_amount] = timesheet[0]
             if not unit_amount:
                 line.info_invoice = False
                 continue
@@ -68,7 +68,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             label = _("hours")
             if company_uom == self.env.ref('uom.product_uom_day'):
                 label = _("days")
-            line.info_invoice = _("%(amount)s %(label)s will be added to the new Sales Order.", amount=unit_amount, label=label)
+            line.info_invoice = _("%(amount)s %(label)s will be added to the new Sales Order.", amount=round(unit_amount, 2), label=label)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):

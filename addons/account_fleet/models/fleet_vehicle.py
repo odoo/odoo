@@ -22,10 +22,10 @@ class FleetVehicle(models.Model):
                 ('parent_state', '!=', 'cancel'),
                 ('move_id.move_type', 'in', self.env['account.move'].get_purchase_types())
             ],
-            fields=['vehicle_id', 'move_id:array_agg'],
             groupby=['vehicle_id'],
+            aggregates=['move_id:array_agg'],
         )
-        vehicle_move_mapping = {move['vehicle_id'][0]: set(move['move_id']) for move in moves}
+        vehicle_move_mapping = {vehicle.id: set(move_ids) for vehicle, move_ids in moves}
         for vehicle in self:
             vehicle.account_move_ids = [Command.set(vehicle_move_mapping.get(vehicle.id, []))]
             vehicle.bill_count = len(vehicle.account_move_ids)

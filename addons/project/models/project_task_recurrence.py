@@ -66,11 +66,11 @@ class ProjectTaskRecurrence(models.Model):
 
     def _get_last_task_id_per_recurrence_id(self):
         return {} if not self else {
-            record['recurrence_id'][0]: record['max_id']
-            for record in self.env['project.task'].sudo()._read_group(
+            recurrence.id: max_task_id
+            for recurrence, max_task_id in self.env['project.task'].sudo()._read_group(
                 [('recurrence_id', 'in', self.ids)],
-                ['max_id:max(id)'],
                 ['recurrence_id'],
+                ['id:max'],
             )
         }
 

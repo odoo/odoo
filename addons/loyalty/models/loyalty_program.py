@@ -139,8 +139,8 @@ class LoyaltyProgram(models.Model):
 
     @api.depends('coupon_ids')
     def _compute_coupon_count(self):
-        read_group_data = self.env['loyalty.card']._read_group([('program_id', 'in', self.ids)], ['program_id'], ['program_id'])
-        count_per_program = {r['program_id'][0]: r['program_id_count'] for r in read_group_data}
+        read_group_data = self.env['loyalty.card']._read_group([('program_id', 'in', self.ids)], ['program_id'], ['__count'])
+        count_per_program = {program.id: count for program, count in read_group_data}
         for program in self:
             program.coupon_count = count_per_program.get(program.id, 0)
 

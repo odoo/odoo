@@ -12,20 +12,16 @@ class StockQuantPackage(models.Model):
     def _compute_weight(self):
         if self.env.context.get('picking_id'):
             package_weights = defaultdict(float)
-            # Ordering by qty_done prevents the default ordering by groupby fields that can inject multiple Left Joins in the resulting query.
-            res_groups = self.env['stock.move.line'].read_group(
+            res_groups = self.env['stock.move.line']._read_group(
                 [('result_package_id', 'in', self.ids), ('product_id', '!=', False), ('picking_id', '=', self.env.context['picking_id'])],
-                ['id:count'],
                 ['result_package_id', 'product_id', 'product_uom_id', 'qty_done'],
-                lazy=False, orderby='qty_done asc'
+                ['__count'],
             )
-            for res_group in res_groups:
-                product_id = self.env['product.product'].browse(res_group['product_id'][0])
-                product_uom_id = self.env['uom.uom'].browse(res_group['product_uom_id'][0])
-                package_weights[res_group['result_package_id'][0]] += (
-                    res_group['__count']
-                    * product_uom_id._compute_quantity(res_group['qty_done'], product_id.uom_id)
-                    * product_id.weight
+            for result_package, product, product_uom, qty_done, count in res_groups:
+                package_weights[result_package.id] += (
+                    count
+                    * product_uom._compute_quantity(qty_done, product.uom_id)
+                    * product.weight
                 )
         for package in self:
             weight = package.package_type_id.base_weight or 0.0

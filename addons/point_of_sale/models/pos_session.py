@@ -111,9 +111,8 @@ class PosSession(models.Model):
             if cash_payment_method:
                 total_cash_payment = 0.0
                 last_session = session.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
-                result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], ['amount'], ['session_id'])
-                if result:
-                    total_cash_payment = result[0]['amount']
+                result = self.env['pos.payment']._read_group([('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
+                total_cash_payment = result[0][0] or 0.0
                 session.cash_register_total_entry_encoding = sum(session.statement_line_ids.mapped('amount')) + (
                     0.0 if session.state == 'closed' else total_cash_payment
                 )
@@ -126,14 +125,14 @@ class PosSession(models.Model):
 
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
-        result = self.env['pos.payment']._read_group([('session_id', 'in', self.ids)], ['amount'], ['session_id'])
-        session_amount_map = dict((data['session_id'][0], data['amount']) for data in result)
+        result = self.env['pos.payment']._read_group([('session_id', 'in', self.ids)], ['session_id'], ['amount:sum'])
+        session_amount_map = {session.id: amount for session, amount in result}
         for session in self:
             session.total_payments_amount = session_amount_map.get(session.id) or 0
 
     def _compute_order_count(self):
-        orders_data = self.env['pos.order']._read_group([('session_id', 'in', self.ids)], ['session_id'], ['session_id'])
-        sessions_data = {order_data['session_id'][0]: order_data['session_id_count'] for order_data in orders_data}
+        orders_data = self.env['pos.order']._read_group([('session_id', 'in', self.ids)], ['session_id'], ['__count'])
+        sessions_data = {session.id: count for session, count in orders_data}
         for session in self:
             session.order_count = sessions_data.get(session.id, 0)
 
@@ -1741,16 +1740,16 @@ class PosSession(models.Model):
 
         # Add the 'sum_repartition_factor' as needed in the compute_all
         # Note that the factor = factor_percent/100
-        groups = self.env['account.tax.repartition.line'].read_group(
+        groups = self.env['account.tax.repartition.line']._read_group(
             domain=[
                 ('tax_id', 'in', tuple([t['id'] for t in taxes])),
                 ('document_type', '=', 'invoice'),
                 ('repartition_type', '=', 'tax'),
             ],
-            fields=["factor_percent:sum"],
             groupby=["tax_id"],
+            aggregates=["factor_percent:sum"],
         )
-        tax_id_to_factor_sum = {g['tax_id'][0]: g['factor_percent']/100 for g in groups}
+        tax_id_to_factor_sum = {tax.id: factor_sum / 100 for tax, factor_sum in groups}
         for tax in taxes:
             tax['sum_repartition_factor'] = tax_id_to_factor_sum[tax['id']]
 

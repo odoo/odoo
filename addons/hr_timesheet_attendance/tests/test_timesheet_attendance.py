@@ -24,12 +24,11 @@ class TestTimesheetAttendance(TestCommonTimesheet):
             'unit_amount': 6.0,
             'date': datetime(2022, 2, 9),
         })
-        report_data = self.env['hr.timesheet.attendance.report']._read_group(
+        total_timesheet, total_attendance = self.env['hr.timesheet.attendance.report']._read_group(
             [('user_id', '=', self.user_employee.id),
             ('date', '>=', datetime(2022, 2, 9, 8, 0)), ('date', '<=', datetime(2022, 2, 9, 16, 0))],
-            ['total_timesheet', 'total_attendance', 'total_difference'],
-            ['user_id'],
+            aggregates=['total_timesheet:sum', 'total_attendance:sum'],
         )[0]
-        self.assertEqual(report_data['total_timesheet'], 6.0, "Total timesheet in report should be 4.0")
-        self.assertEqual(report_data['total_attendance'], 7.0, "Total attendance in report should be 8.0")
-        self.assertEqual(report_data['total_attendance'] - report_data['total_timesheet'], 1)
+        self.assertEqual(total_timesheet, 6.0, "Total timesheet in report should be 4.0")
+        self.assertEqual(total_attendance, 7.0, "Total attendance in report should be 8.0")
+        self.assertEqual(total_attendance - total_timesheet, 1)

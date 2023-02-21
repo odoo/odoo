@@ -18,8 +18,8 @@ class EventEvent(models.Model):
     def _compute_lead_count(self):
         lead_data = self.env['crm.lead']._read_group(
             [('event_id', 'in', self.ids)],
-            ['event_id'], ['event_id']
+            ['event_id'], ['__count'],
         )
-        mapped_data = {item['event_id'][0]: item['event_id_count'] for item in lead_data}
+        mapped_data = {event.id: count for event, count in lead_data}
         for event in self:
             event.lead_count = mapped_data.get(event.id, 0)

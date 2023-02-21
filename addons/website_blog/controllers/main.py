@@ -5,9 +5,9 @@ import werkzeug
 import itertools
 import pytz
 import babel.dates
-from collections import OrderedDict
+from collections import defaultdict
 
-from odoo import http, fields, tools
+from odoo import http, fields, tools, models
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.portal.controllers.portal import _build_url_w_params
@@ -35,25 +35,23 @@ class WebsiteBlog(http.Controller):
         dom = blog and [('blog_id', '=', blog.id)] or []
         if not request.env.user.has_group('website.group_website_designer'):
             dom += [('post_date', '<=', fields.Datetime.now())]
-        groups = request.env['blog.post']._read_group_raw(
-            dom,
-            ['name', 'post_date'],
-            groupby=["post_date"], orderby="post_date desc")
-        for group in groups:
-            (r, label) = group['post_date']
-            start, end = r.split('/')
-            group['post_date'] = label
-            group['date_begin'] = start
-            group['date_end'] = end
+        groups = request.env['blog.post']._read_group(
+            dom, groupby=['post_date:month'])
 
-            locale = get_lang(request.env).code
-            start = pytz.UTC.localize(fields.Datetime.from_string(start))
-            tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
+        locale = get_lang(request.env).code
+        tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
+        fmt = tools.DEFAULT_SERVER_DATETIME_FORMAT
 
-            group['month'] = babel.dates.format_datetime(start, format='MMMM', tzinfo=tzinfo, locale=locale)
-            group['year'] = babel.dates.format_datetime(start, format='yyyy', tzinfo=tzinfo, locale=locale)
-
-        return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
+        res = defaultdict(list)
+        for [start] in groups:
+            year = babel.dates.format_datetime(start, format='yyyy', tzinfo=tzinfo, locale=locale)
+            res[year].append({
+                'date_begin': start.strftime(fmt),
+                'date_end': (start + models.READ_GROUP_TIME_GRANULARITY['month']).strftime(fmt),
+                'month': babel.dates.format_datetime(start, format='MMMM', tzinfo=tzinfo, locale=locale),
+                'year': year,
+            })
+        return res
 
     def _get_blog_post_search_options(self, blog=None, active_tags=None, date_begin=None, date_end=None, state=None, **post):
         return {

@@ -88,15 +88,16 @@ class ChannelUsersRelation(models.Model):
              ('slide_id.is_published', '=', True),
              ('slide_id.active', '=', True)],
             ['channel_id', 'partner_id'],
-            groupby=['channel_id', 'partner_id'], lazy=False)
-        mapped_data = defaultdict(dict)
-        for item in read_group_res:
-            mapped_data[item['channel_id'][0]][item['partner_id'][0]] = item['__count']
+            aggregates=['__count'])
+        mapped_data = {
+            (channel.id, partner.id): count
+            for channel, partner, count in read_group_res
+        }
 
         completed_records = self.env['slide.channel.partner']
         uncompleted_records = self.env['slide.channel.partner']
         for record in self:
-            record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
+            record.completed_slides_count = mapped_data.get((record.channel_id.id, record.partner_id.id), 0)
             record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
 
             if not record.channel_id.active:
@@ -378,15 +379,15 @@ class Channel(models.Model):
 
     @api.depends('channel_partner_ids.channel_id')
     def _compute_members_count(self):
-        read_group_res = self.env['slide.channel.partner'].sudo()._read_group([('channel_id', 'in', self.ids)], ['channel_id'], 'channel_id')
-        data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
+        read_group_res = self.env['slide.channel.partner'].sudo()._read_group([('channel_id', 'in', self.ids)], ['channel_id'], ['__count'])
+        data = {channel.id: count for channel, count in read_group_res}
         for channel in self:
             channel.members_count = data.get(channel.id, 0)
 
     @api.depends('channel_partner_ids.channel_id', 'channel_partner_ids.completed')
     def _compute_members_done_count(self):
-        read_group_res = self.env['slide.channel.partner'].sudo()._read_group(['&', ('channel_id', 'in', self.ids), ('completed', '=', True)], ['channel_id'], 'channel_id')
-        data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
+        read_group_res = self.env['slide.channel.partner'].sudo()._read_group(['&', ('channel_id', 'in', self.ids), ('completed', '=', True)], ['channel_id'], ['__count'])
+        data = {channel.id: count for channel, count in read_group_res}
         for channel in self:
             channel.members_done_count = data.get(channel.id, 0)
 
@@ -432,36 +433,20 @@ class Channel(models.Model):
         result = dict((cid, dict(default_vals)) for cid in self.ids)
         read_group_res = self.env['slide.slide']._read_group(
             [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
-            ['channel_id', 'slide_category', 'likes', 'dislikes', 'total_views', 'completion_time'],
-            groupby=['channel_id', 'slide_category'],
-            lazy=False)
-        for res_group in read_group_res:
-            cid = res_group['channel_id'][0]
-            result[cid]['total_views'] += res_group.get('total_views', 0)
-            result[cid]['total_votes'] += res_group.get('likes', 0)
-            result[cid]['total_votes'] -= res_group.get('dislikes', 0)
-            result[cid]['total_time'] += res_group.get('completion_time', 0)
-
-        category_stats = self._compute_slides_statistics_category(read_group_res)
-        for cid, cdata in category_stats.items():
-            result[cid].update(cdata)
+            ['channel_id', 'slide_category'],
+            aggregates=['__count', 'likes:sum', 'dislikes:sum', 'total_views:sum', 'completion_time:sum'])
+        for channel, slide_category, count, likes_sum, dislikes_sum, total_views_sum, completion_time_sum in read_group_res:
+            channel_dict = result[channel.id]
+            channel_dict['total_votes'] += likes_sum
+            channel_dict['total_votes'] -= dislikes_sum
+            channel_dict['total_views'] += total_views_sum
+            channel_dict['total_time'] += completion_time_sum
+            if slide_category:
+                channel_dict[f'nbr_{slide_category}'] = count
+                channel_dict['total_slides'] += count
 
         for record in self:
             record.update(result.get(record.id, default_vals))
-
-    def _compute_slides_statistics_category(self, read_group_res):
-        """ Compute statistics based on all existing slide categories """
-        slide_categories = self.env['slide.slide']._fields['slide_category'].get_values(self.env)
-        keys = ['nbr_%s' % slide_category for slide_category in slide_categories]
-        result = dict((cid, dict((key, 0) for key in keys + ['total_slides'])) for cid in self.ids)
-        for res_group in read_group_res:
-            cid = res_group['channel_id'][0]
-            slide_category = res_group.get('slide_category')
-            if slide_category:
-                slide_category_count = res_group.get('__count', 0)
-                result[cid]['nbr_%s' % slide_category] = slide_category_count
-                result[cid]['total_slides'] += slide_category_count
-        return result
 
     def _compute_rating_stats(self):
         super(Channel, self)._compute_rating_stats()

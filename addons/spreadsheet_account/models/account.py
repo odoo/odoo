@@ -136,8 +136,8 @@ class AccountMove(models.Model):
                 ("account_type", "in", account_types),
                 ("company_id", "=", self.env.company.id),
             ],
-            ["code:array_agg"],
-            ["account_type"],
+            ['account_type'],
+            ['code:array_agg'],
         )
-        mapped = {group["account_type"]: group["code"] for group in data}
+        mapped = dict(data)
         return [mapped.get(account_type, []) for account_type in account_types]

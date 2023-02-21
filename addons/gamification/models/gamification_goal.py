@@ -185,30 +185,18 @@ class Goal(models.Model):
                             subquery_domain.append((field_date_name, '<=', end_date))
 
                         if definition.computation_mode == 'count':
-                            value_field_name = field_name + '_count'
-                            if field_name == 'id':
-                                # grouping on id does not work and is similar to search anyway
-                                users = Obj.search(subquery_domain)
-                                user_values = [{'id': user.id, value_field_name: 1} for user in users]
-                            else:
-                                user_values = Obj.read_group(subquery_domain, fields=[field_name], groupby=[field_name])
+                            user_values = Obj._read_group(subquery_domain, groupby=[field_name], aggregates=['__count'])
 
                         else:  # sum
                             value_field_name = definition.field_id.name
-                            if field_name == 'id':
-                                user_values = Obj.search_read(subquery_domain, fields=['id', value_field_name])
-                            else:
-                                user_values = Obj.read_group(subquery_domain, fields=[field_name, "%s:sum" % value_field_name], groupby=[field_name])
+                            user_values = Obj._read_group(subquery_domain, groupby=[field_name], aggregates=[f'{value_field_name}:sum'])
 
-                        # user_values has format of read_group: [{'partner_id': 42, 'partner_id_count': 3},...]
+                        # user_values has format of _read_group: [(<partner>, <aggregate>), ...]
                         for goal in [g for g in goals if g.id in query_goals]:
-                            for user_value in user_values:
-                                queried_value = field_name in user_value and user_value[field_name] or False
-                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], int):
-                                    queried_value = queried_value[0]
+                            for field_value, aggregate in user_values:
+                                queried_value = field_value.id if isinstance(field_value, models.Model) else field_value
                                 if queried_value == query_goals[goal.id]:
-                                    new_value = user_value.get(value_field_name, goal.current)
-                                    goals_to_write.update(goal._get_write_values(new_value))
+                                    goals_to_write.update(goal._get_write_values(aggregate))
 
                 else:
                     for goal in goals:
@@ -223,8 +211,8 @@ class Goal(models.Model):
 
                         if definition.computation_mode == 'sum':
                             field_name = definition.field_id.name
-                            res = Obj.read_group(domain, [field_name], [])
-                            new_value = res and res[0][field_name] or 0.0
+                            res = Obj._read_group(domain, [], [field_name])
+                            new_value = res[0][0] or 0.0
 
                         else:  # computation mode = count
                             new_value = Obj.search_count(domain)

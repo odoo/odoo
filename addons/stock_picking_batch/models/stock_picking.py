@@ -31,20 +31,13 @@ class StockPickingType(models.Model):
 
     def _compute_picking_count(self):
         super()._compute_picking_count()
-        domains = {
-            'count_picking_batch': [('is_wave', '=', False)],
-            'count_picking_wave': [('is_wave', '=', True)],
-        }
-        for field in domains:
-            data = self.env['stock.picking.batch']._read_group(domains[field] +
-                [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
-                ['picking_type_id'], ['picking_type_id'])
-            count = {
-                x['picking_type_id'][0]: x['picking_type_id_count']
-                for x in data if x['picking_type_id']
-            }
-            for record in self:
-                record[field] = count.get(record.id, 0)
+        data = self.env['stock.picking.batch']._read_group(
+            [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
+            ['picking_type_id', 'is_wave'], ['__count'])
+        count = {(picking_type.id, is_wave): count for picking_type, is_wave, count in data}
+        for record in self:
+            record.count_picking_wave = count.get((record.id, True), 0)
+            record.count_picking_batch = count.get((record.id, False), 0)
 
     @api.model
     def _get_batch_group_by_keys(self):

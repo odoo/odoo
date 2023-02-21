@@ -86,10 +86,10 @@ class AccountPayment(models.Model):
                 ('source_payment_id', 'in', self.ids),
                 ('payment_transaction_id.operation', '=', 'refund')
             ],
-            fields=['source_payment_id'],
-            groupby=['source_payment_id']
+            groupby=['source_payment_id'],
+            aggregates=['__count']
         )
-        data = {x['source_payment_id'][0]: x['source_payment_id_count'] for x in rg_data}
+        data = {source_payment.id: count for source_payment, count in rg_data}
         for payment in self:
             payment.refunds_count = data.get(payment.id, 0)
 

@@ -21,8 +21,8 @@ class FleetVehicleAssignationLog(models.Model):
     def _compute_attachment_number(self):
         attachment_data = self.env['ir.attachment']._read_group([
             ('res_model', '=', 'fleet.vehicle.assignation.log'),
-            ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
-        attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
+            ('res_id', 'in', self.ids)], ['res_id'], ['__count'])
+        attachment = dict(attachment_data)
         for doc in self:
             doc.attachment_number = attachment.get(doc.id, 0)
 

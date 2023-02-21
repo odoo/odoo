@@ -18,9 +18,9 @@ class MassMailing(models.Model):
     def _compute_crm_lead_count(self):
         lead_data = self.env['crm.lead'].with_context(active_test=False).sudo()._read_group(
             [('source_id', 'in', self.source_id.ids)],
-            ['source_id'], ['source_id'],
+            ['source_id'], ['__count'],
         )
-        mapped_data = {datum['source_id'][0]: datum['source_id_count'] for datum in lead_data}
+        mapped_data = {source.id: count for source, count in lead_data}
         for mass_mailing in self:
             mass_mailing.crm_lead_count = mapped_data.get(mass_mailing.source_id.id, 0)
 

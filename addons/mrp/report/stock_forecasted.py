@@ -44,16 +44,16 @@ class StockForecasted(models.AbstractModel):
 
         # Pending incoming quantity.
         mo_domain = domain + [('location_dest_id', 'in', wh_location_ids)]
-        grouped_mo = self.env['mrp.production'].read_group(mo_domain, ['product_qty:sum'], 'product_id')
-        res['draft_production_qty']['in'] = sum(mo['product_qty'] for mo in grouped_mo)
+        [product_qty] = self.env['mrp.production']._read_group(mo_domain, aggregates=['product_qty:sum'])[0]
+        res['draft_production_qty']['in'] = product_qty or 0.0
 
         # Pending outgoing quantity.
         move_domain = domain + [
             ('raw_material_production_id', '!=', False),
             ('location_id', 'in', wh_location_ids),
         ]
-        grouped_moves = self.env['stock.move'].read_group(move_domain, ['product_qty:sum'], 'product_id')
-        res['draft_production_qty']['out'] = sum(move['product_qty'] for move in grouped_moves)
+        [product_qty] = self.env['stock.move']._read_group(move_domain, aggregates=['product_qty:sum'])[0]
+        res['draft_production_qty']['out'] = product_qty or 0.0
         res['qty']['in'] += res['draft_production_qty']['in']
         res['qty']['out'] += res['draft_production_qty']['out']
 

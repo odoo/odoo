@@ -24,17 +24,17 @@ class AccountMove(models.Model):
             return
         group_data = self.env['account.analytic.line']._read_group([
             ('timesheet_invoice_id', 'in', self.ids)
-        ], ['timesheet_invoice_id', 'unit_amount'], ['timesheet_invoice_id'])
+        ], ['timesheet_invoice_id'], ['unit_amount:sum'])
         timesheet_unit_amount_dict = defaultdict(float)
-        timesheet_unit_amount_dict.update({data['timesheet_invoice_id'][0]: data['unit_amount'] for data in group_data})
+        timesheet_unit_amount_dict.update({timesheet_invoice.id: amount for timesheet_invoice, amount in group_data})
         for invoice in self:
             total_time = invoice.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[invoice.id], invoice.timesheet_encode_uom_id)
             invoice.timesheet_total_duration = round(total_time)
 
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
-        timesheet_data = self.env['account.analytic.line']._read_group([('timesheet_invoice_id', 'in', self.ids)], ['timesheet_invoice_id'], ['timesheet_invoice_id'])
-        mapped_data = dict([(t['timesheet_invoice_id'][0], t['timesheet_invoice_id_count']) for t in timesheet_data])
+        timesheet_data = self.env['account.analytic.line']._read_group([('timesheet_invoice_id', 'in', self.ids)], ['timesheet_invoice_id'], ['__count'])
+        mapped_data = {timesheet_invoice.id: count for timesheet_invoice, count in timesheet_data}
         for invoice in self:
             invoice.timesheet_count = mapped_data.get(invoice.id, 0)
 
@@ -119,15 +119,13 @@ class AccountMoveLine(models.Model):
             ('timesheet_invoice_id.move_type', '=', 'out_invoice'),
             ('timesheet_invoice_id.state', '=', 'draft'),
             ('timesheet_invoice_id', 'in', self.move_id.ids)],
-            ['timesheet_invoice_id', 'so_line', 'ids:array_agg(id)'],
             ['timesheet_invoice_id', 'so_line'],
-            lazy=False)
+            ['id:array_agg'])
 
         timesheet_ids = []
-        for timesheet in timesheet_read_group:
-            move_id = timesheet['timesheet_invoice_id'][0]
-            if timesheet['so_line'][0] in sale_line_ids_per_move[move_id].ids:
-                timesheet_ids += timesheet['ids']
+        for timesheet_invoice, so_line, ids in timesheet_read_group:
+            if so_line.id in sale_line_ids_per_move[timesheet_invoice.id].ids:
+                timesheet_ids += ids
 
         self.sudo().env['account.analytic.line'].browse(timesheet_ids).write({'timesheet_invoice_id': False})
         return super().unlink()

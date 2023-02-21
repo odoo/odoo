@@ -39,8 +39,8 @@ class Digest(models.Model):
         response_time = self.env['im_livechat.report.channel'].sudo()._read_group([
             ('start_date', '>=', start),
             ('start_date', '<', end),
-        ], ['time_to_answer:avg'], [])
-        self.kpi_livechat_response_value = response_time[0]['time_to_answer']
+        ], [], ['time_to_answer:avg'])
+        self.kpi_livechat_response_value = response_time[0][0]
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)

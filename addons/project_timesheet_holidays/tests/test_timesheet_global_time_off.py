@@ -69,11 +69,11 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         ])
 
     def _get_timesheets_by_employee(self, leave_task):
-        timesheets_by_read_dict = self.env['account.analytic.line']._read_group([('task_id', '=', leave_task.id)], ['employee_id'], ['employee_id'])
-        timesheets_by_employee = {}
-        for timesheet in timesheets_by_read_dict:
-            timesheets_by_employee[timesheet['employee_id'][0]] = timesheet['employee_id_count']
-        return timesheets_by_employee
+        timesheets_by_read_dict = self.env['account.analytic.line']._read_group([('task_id', '=', leave_task.id)], ['employee_id'], ['__count'])
+        return {
+            timesheet.id: count
+            for timesheet, count in timesheets_by_read_dict
+        }
 
     # This tests that timesheets are created for every employee with the same calendar
     # when a global time off is created.

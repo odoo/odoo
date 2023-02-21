@@ -79,18 +79,18 @@ class TestReports(TestReportsCommon):
             'inventory_quantity': 50
         }).action_apply_inventory()
         self.env.flush_all()
-        report_records_today = self.env['report.stock.quantity'].read_group(
+        report_records_today = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty'], [], lazy=False)
-        report_records_tomorrow = self.env['report.stock.quantity'].read_group(
+            [], ['product_qty:sum'])
+        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
-            ['product_qty'], [])
-        report_records_yesterday = self.env['report.stock.quantity'].read_group(
+            [], ['product_qty:sum'])
+        report_records_yesterday = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() - timedelta(days=1))],
-            ['product_qty'], [])
-        self.assertEqual(sum([r['product_qty'] for r in report_records_today]), 50.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow]), 50.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_yesterday]), 0.0)
+            [], ['product_qty:sum'])
+        self.assertEqual(report_records_today[0][0], 50.0)
+        self.assertEqual(report_records_tomorrow[0][0], 50.0)
+        self.assertEqual(report_records_yesterday[0][0], 0.0)
 
         # Delivery of 20.0 units tomorrow
         move_out = self.env['stock.move'].create({
@@ -103,21 +103,21 @@ class TestReports(TestReportsCommon):
             'product_uom_qty': 20.0,
         })
         self.env.flush_all()
-        report_records_tomorrow = self.env['report.stock.quantity'].read_group(
+        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
-            ['product_qty'], [])
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow]), 50.0)
+            [], ['product_qty:sum'])
+        self.assertEqual(report_records_tomorrow[0][0], 50.0)
         move_out._action_confirm()
         self.env.flush_all()
-        report_records_tomorrow = self.env['report.stock.quantity'].read_group(
+        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow if r['state'] == 'forecast']), 30.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow if r['state'] == 'out']), -20.0)
-        report_records_today = self.env['report.stock.quantity'].read_group(
+            ['state'], ['product_qty:sum'])
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'forecast'), 30.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'out'), -20.0)
+        report_records_today = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_today if r['state'] == 'forecast']), 50.0)
+            ['state'], ['product_qty:sum'])
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'forecast'), 50.0)
 
         # Receipt of 10.0 units tomorrow
         move_in = self.env['stock.move'].create({
@@ -131,16 +131,16 @@ class TestReports(TestReportsCommon):
         })
         move_in._action_confirm()
         self.env.flush_all()
-        report_records_tomorrow = self.env['report.stock.quantity'].read_group(
+        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow if r['state'] == 'forecast']), 40.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow if r['state'] == 'out']), -20.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow if r['state'] == 'in']), 10.0)
-        report_records_today = self.env['report.stock.quantity'].read_group(
+            ['state'], ['product_qty:sum'])
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'forecast'), 40.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'out'), -20.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'in'), 10.0)
+        report_records_today = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_today if r['state'] == 'forecast']), 50.0)
+            ['state'], ['product_qty:sum'])
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'forecast'), 50.0)
 
         # Delivery of 20.0 units tomorrow
         move_out = self.env['stock.move'].create({
@@ -154,27 +154,27 @@ class TestReports(TestReportsCommon):
         })
         move_out._action_confirm()
         self.env.flush_all()
-        report_records_today = self.env['report.stock.quantity'].read_group(
+        report_records_today = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        report_records_tomorrow = self.env['report.stock.quantity'].read_group(
+            ['state'], ['product_qty:sum'])
+        report_records_tomorrow = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() + timedelta(days=1))],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        report_records_yesterday = self.env['report.stock.quantity'].read_group(
+            ['state'], ['product_qty:sum'])
+        report_records_yesterday = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today() - timedelta(days=1))],
-            ['product_qty', 'state'], ['state'], lazy=False)
+            ['state'], ['product_qty:sum'])
 
-        self.assertEqual(sum([r['product_qty'] for r in report_records_yesterday if r['state'] == 'forecast']), -30.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_yesterday if r['state'] == 'out']), -30.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_yesterday if r['state'] == 'in']), 0.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_yesterday if state == 'forecast'), -30.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_yesterday if state == 'out'), -30.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_yesterday if state == 'in'), 0.0)
 
-        self.assertEqual(sum([r['product_qty'] for r in report_records_today if r['state'] == 'forecast']), 20.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_today if r['state'] == 'out']), 0.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_today if r['state'] == 'in']), 0.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'forecast'), 20.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'out'), 0.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_today if state == 'in'), 0.0)
 
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow if r['state'] == 'forecast']), 10.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow if r['state'] == 'out']), -20.0)
-        self.assertEqual(sum([r['product_qty'] for r in report_records_tomorrow if r['state'] == 'in']), 10.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'forecast'), 10.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'out'), -20.0)
+        self.assertEqual(sum(product_qty for state, product_qty in report_records_tomorrow if state == 'in'), 10.0)
 
     def test_report_quantity_2(self):
         """ Not supported case.
@@ -215,14 +215,14 @@ class TestReports(TestReportsCommon):
         })
         move._action_confirm()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity'].read_group(
+        report_records = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today()), ('warehouse_id', '!=', False)],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records if r['state'] == 'forecast']), 40.0)
-        report_records = self.env['report.stock.quantity'].read_group(
+            ['state'], ['product_qty:sum'])
+        self.assertEqual(sum(product_qty for state, product_qty in report_records if state == 'forecast'), 40.0)
+        report_records = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records if r['state'] == 'forecast']), 40.0)
+            ['state'], ['product_qty:sum'])
+        self.assertEqual(sum(product_qty for state, product_qty in report_records if state == 'forecast'), 40.0)
         move = self.env['stock.move'].create({
             'name': 'Move outside warehouse',
             'location_id': stock_without_wh.id,
@@ -233,10 +233,10 @@ class TestReports(TestReportsCommon):
         })
         move._action_confirm()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity'].read_group(
+        report_records = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty', 'state'], ['state'], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records if r['state'] == 'forecast']), 40.0)
+            ['state'], ['product_qty:sum'])
+        self.assertEqual(sum(product_qty for state, product_qty in report_records if state == 'forecast'), 40.0)
 
     def test_report_quantity_3(self):
         product_form = Form(self.env['product.product'])
@@ -257,10 +257,10 @@ class TestReports(TestReportsCommon):
         })
 
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity'].read_group(
+        report_records = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty'], [], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records if r['product_qty']]), 0.0)
+            [], ['product_qty:sum'])
+        self.assertEqual(report_records[0][0], 0.0)
 
         # Receipt of 20.0 units tomorrow
         move_in = self.env['stock.move'].create({
@@ -276,10 +276,10 @@ class TestReports(TestReportsCommon):
         move_in.move_line_ids.qty_done = 20.0
         move_in._action_done()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity'].read_group(
+        report_records = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty'], [], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records]), 20.0)
+            [], ['product_qty:sum'])
+        self.assertEqual(report_records[0][0], 20.0)
 
         # Delivery of 10.0 units tomorrow
         move_out = self.env['stock.move'].create({
@@ -295,10 +295,10 @@ class TestReports(TestReportsCommon):
         move_out.move_line_ids.qty_done = 10.0
         move_out._action_done()
         self.env.flush_all()
-        report_records = self.env['report.stock.quantity'].read_group(
+        report_records = self.env['report.stock.quantity']._read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
-            ['product_qty'], [], lazy=False)
-        self.assertEqual(sum([r['product_qty'] for r in report_records]), 10.0)
+            [], ['product_qty:sum'])
+        self.assertEqual(report_records[0][0], 10.0)
 
     def test_report_forecast_1(self):
         """ Checks report data for product is empty. Then creates and process

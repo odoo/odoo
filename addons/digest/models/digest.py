@@ -416,14 +416,11 @@ class Digest(models.Model):
 
         values = self.env[model]._read_group(
             domain=base_domain,
-            fields=[f'{sum_field}:sum'] if sum_field else None,
             groupby=['company_id'],
+            aggregates=[f'{sum_field}:sum'] if sum_field else ['__count'],
         )
 
-        values_per_company = {
-            value['company_id'][0]: value[sum_field] if sum_field else value['company_id_count']
-            for value in values
-        }
+        values_per_company = {company.id: agg for company, agg in values}
         for digest in self:
             company = digest.company_id or self.env.company
             digest[digest_kpi_field] = values_per_company.get(company.id, 0)

@@ -39,10 +39,10 @@ class AccrualPlan(models.Model):
     def _compute_level_count(self):
         level_read_group = self.env['hr.leave.accrual.level']._read_group(
             [('accrual_plan_id', 'in', self.ids)],
-            fields=['accrual_plan_id'],
             groupby=['accrual_plan_id'],
+            aggregates=['__count'],
         )
-        mapped_count = {group['accrual_plan_id'][0]: group['accrual_plan_id_count'] for group in level_read_group}
+        mapped_count = {accrual_plan.id: count for accrual_plan, count in level_read_group}
         for plan in self:
             plan.level_count = mapped_count.get(plan.id, 0)
 
@@ -50,10 +50,10 @@ class AccrualPlan(models.Model):
     def _compute_employee_count(self):
         allocations_read_group = self.env['hr.leave.allocation']._read_group(
             [('accrual_plan_id', 'in', self.ids)],
-            ['accrual_plan_id', 'employee_count:count_distinct(employee_id)'],
             ['accrual_plan_id'],
+            ['employee_id:count_distinct'],
         )
-        allocations_dict = {res['accrual_plan_id'][0]: res['employee_count'] for res in allocations_read_group}
+        allocations_dict = {accrual_plan.id: count for accrual_plan, count in allocations_read_group}
         for plan in self:
             plan.employees_count = allocations_dict.get(plan.id, 0)
 
