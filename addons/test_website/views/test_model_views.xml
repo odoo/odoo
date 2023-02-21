@@ -49,4 +49,39 @@
     ]"/>
 </record>
 
+<!-- Backend access to test model -->
+<record id="action_test_website_test_model" model="ir.actions.act_window">
+    <field name="name">Test Model</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">test.model</field>
+    <field name="view_id" eval="False"/>
+</record>
+
+<menuitem name="Test Model"
+    id="menu_test_website_test_model"
+    action="action_test_website_test_model"
+    parent="website.menu_website_global_configuration"
+    sequence="100"
+    groups="base.group_no_one"/>
+
+<record id="view_test_model_form" model="ir.ui.view">
+    <field name="name">test.model.form</field>
+    <field name="model">test.model</field>
+    <field name="arch" type="xml">
+        <form string="Test Model">
+            <sheet>
+                <div name="button_box" position="inside">
+                    <field name="is_published" widget="website_redirect_button"/>
+                </div>
+                <div class="oe_title" name="title">
+                    <label for="name" string="Name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+            </sheet>
+        </form>
+    </field>
+</record>
+
 </odoo>
