@@ -43,7 +43,7 @@ export class ReferenceField extends Component {
         return p.record.preloadedData[p.name];
     }
     getValue(p) {
-        if (p.type === "char") {
+        if (p.record.fields[p.name].type === "char") {
             const pdata = this.getPreloadedData(p);
             if (!pdata) {
                 return null;
@@ -69,7 +69,10 @@ export class ReferenceField extends Component {
         return p;
     }
     get selection() {
-        if (this.props.type !== "char" && !this.props.hideModelSelector) {
+        if (
+            this.props.record.fields[this.props.name].type !== "char" &&
+            !this.props.hideModelSelector
+        ) {
             return this.props.record.fields[this.props.name].selection;
         }
         return [];

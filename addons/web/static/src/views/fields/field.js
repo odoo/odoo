@@ -157,6 +157,7 @@ export class Field extends Component {
         delete props.showTooltip;
         delete props.fieldInfo;
         delete props.attrs;
+        delete props.type;
 
         return {
             ...fieldInfo.props,
@@ -165,7 +166,6 @@ export class Field extends Component {
             readonly: !record.isInEdition || readonlyFromModifiers || false,
             ...propsFromAttrs,
             ...props,
-            type: field.type,
         };
     }
 

@@ -27,7 +27,7 @@ export class BadgeSelectionField extends Component {
     }
 
     get string() {
-        switch (this.props.type) {
+        switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
                 return this.props.value ? this.props.value[1] : "";
             case "selection":
@@ -40,7 +40,9 @@ export class BadgeSelectionField extends Component {
     }
     get value() {
         const rawValue = this.props.value;
-        return this.props.type === "many2one" && rawValue ? rawValue[0] : rawValue;
+        return this.props.record.fields[this.props.name].type === "many2one" && rawValue
+            ? rawValue[0]
+            : rawValue;
     }
 
     stringify(value) {
@@ -51,7 +53,7 @@ export class BadgeSelectionField extends Component {
      * @param {string | number | false} value
      */
     onChange(value) {
-        switch (this.props.type) {
+        switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
                 if (value === false) {
                     this.props.record.update({ [this.props.name]: false });
