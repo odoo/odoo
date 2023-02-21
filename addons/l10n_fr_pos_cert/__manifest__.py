@@ -3,7 +3,7 @@
 
 {
     'name': 'France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)',
-    'icon': '/l10n_fr/static/description/icon.png',
+    'icon': '/l10n_fr/static/description/icon.svg',
     'version': '1.0',
     'category': 'Accounting/Localizations/Point of Sale',
     'description': """

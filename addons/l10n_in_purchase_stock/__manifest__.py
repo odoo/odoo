@@ -3,7 +3,7 @@
 
 {
     'name': "India Purchase and Warehouse Management",
-    'icon': '/l10n_in/static/description/icon.png',
+    'icon': '/l10n_in/static/description/icon.svg',
 
     'summary': """
         Get warehouse address if the bill is created from Purchase Order""",

@@ -3,7 +3,7 @@
 
 {
     'name': 'Indian - Point of Sale',
-    'icon': '/l10n_in/static/description/icon.png',
+    'icon': '/l10n_in/static/description/icon.svg',
     'version': '1.0',
     'description': """GST Point of Sale""",
     'category': 'Accounting/Localizations/Point of Sale',

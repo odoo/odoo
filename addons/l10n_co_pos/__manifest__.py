@@ -3,7 +3,7 @@
 
 {
     'name': 'Colombian - Point of Sale',
-    'icon': '/l10n_co/static/description/icon.png',
+    'icon': '/l10n_co/static/description/icon.svg',
     'version': '1.0',
     'description': """Colombian - Point of Sale""",
     'category': 'Accounting/Localizations/Point of Sale',

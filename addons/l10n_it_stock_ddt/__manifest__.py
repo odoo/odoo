@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Italy - Stock DDT",
-    'icon': '/l10n_it/static/description/icon.png',
+    'icon': '/l10n_it/static/description/icon.svg',
     'website': 'https://www.odoo.com',
     'category': 'Accounting/Localizations/EDI',
     'version': '0.1',

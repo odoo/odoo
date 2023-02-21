@@ -4,7 +4,7 @@
     'name': 'Employees - Mexico',
     'version': '1.0',
     'category': 'Human Resources/Employees',
-    'icon': '/l10n_mx/static/description/icon.png',
+    'icon': '/l10n_mx/static/description/icon.svg',
     'sequence': 120,
     'summary': 'Adds specific fields to Employees for Mexican companies.',
     'depends': ['hr'],

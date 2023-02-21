@@ -3,7 +3,7 @@
 
 {
     'name': 'Indian - Stock Report(GST)',
-    'icon': '/l10n_in/static/description/icon.png',
+    'icon': '/l10n_in/static/description/icon.svg',
     'version': '1.0',
     'description': """GST Stock Report""",
     'category': 'Accounting/Localizations',

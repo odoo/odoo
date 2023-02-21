@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Germany SKR03 - Accounting',
-    'icon': '/l10n_de/static/description/icon.png',
+    'icon': '/l10n_de/static/description/icon.svg',
     'version': '3.1',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',

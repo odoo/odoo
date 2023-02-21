@@ -3,7 +3,7 @@
 {
     "name": """Indian - E-waybill""",
     "version": "1.03.00",
-    "icon": "/l10n_in/static/description/icon.png",
+    "icon": "/l10n_in/static/description/icon.svg",
     "category": "Accounting/Localizations/EDI",
     "depends": [
         "l10n_in_edi",
