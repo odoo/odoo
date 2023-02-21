@@ -38,6 +38,7 @@ class Country(models.Model):
         string='Country Name', required=True, translate=True)
     code = fields.Char(
         string='Country Code', size=2,
+        required=True,
         help='The ISO country code in two chars. \nYou can use this field for quick search.')
     address_format = fields.Text(string="Layout in Reports",
         help="Display format to use for addresses belonging to this country.\n\n"

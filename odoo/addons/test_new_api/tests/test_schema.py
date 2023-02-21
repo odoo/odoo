@@ -254,7 +254,7 @@ class TestSchema(common.TransactionCase):
     def test_10_char(self):
         """ check the database representation of a char field """
         model = self.env['res.country']
-        self.assertFalse(type(model).code.required)
+        self.assertTrue(type(model).code.required)
         self.assertEqual(type(model).code.size, 2)
         columns_data = self.get_columns_data(model._table)
         self.assertEqual(columns_data['code'], {
@@ -263,7 +263,7 @@ class TestSchema(common.TransactionCase):
             'column_name': u'code',
             'data_type': u'character varying',
             'datetime_precision': None,
-            'is_nullable': u'YES',
+            'is_nullable': u'NO',
             'is_updatable': u'YES',
             'numeric_precision': None,
             'numeric_precision_radix': None,

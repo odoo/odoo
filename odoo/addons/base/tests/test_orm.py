@@ -45,13 +45,13 @@ class TestORM(TransactionCase):
         self.assertTrue(type(Model).display_name.automatic, "test assumption not satisfied")
 
         # access regular field when another record from the same prefetch set has been deleted
-        records = Model.create([{'name': name} for name in ('Foo', 'Bar', 'Baz')])
+        records = Model.create([{'name': name[0], 'code': name[1]} for name in (['Foo', 'ZV'], ['Bar', 'ZX'], ['Baz', 'ZY'])])
         for record in records:
             record.name
             record.unlink()
 
         # access computed field when another record from the same prefetch set has been deleted
-        records = Model.create([{'name': name} for name in ('Foo', 'Bar', 'Baz')])
+        records = Model.create([{'name': name[0], 'code': name[1]} for name in (['Foo', 'ZV'], ['Bar', 'ZX'], ['Baz', 'ZY'])])
         for record in records:
             record.display_name
             record.unlink()
@@ -285,12 +285,14 @@ class TestORM(TransactionCase):
                 Command.create({'name': 'West Foo', 'code': 'WF'}),
                 Command.create({'name': 'East Foo', 'code': 'EF'}),
             ],
+            'code': 'ZV',
         }, {
             'name': 'Bar',
             'state_ids': [
                 Command.create({'name': 'North Bar', 'code': 'NB'}),
                 Command.create({'name': 'South Bar', 'code': 'SB'}),
             ],
+            'code': 'ZX',
         }]
         foo, bar = self.env['res.country'].create(vals_list)
         self.assertEqual(foo.name, 'Foo')

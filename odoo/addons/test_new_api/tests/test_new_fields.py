@@ -661,8 +661,9 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_13_inverse_with_unlink(self):
         """ test x2many delete command combined with an inverse field """
-        country1 = self.env['res.country'].create({'name': 'test country'})
-        country2 = self.env['res.country'].create({'name': 'other country'})
+
+        country1 = self.env['res.country'].create({'name': 'test country', 'code': 'ZV'})
+        country2 = self.env['res.country'].create({'name': 'other country', 'code': 'ZX'})
         company = self.env['res.company'].create({
             'name': 'test company',
             'child_ids': [
