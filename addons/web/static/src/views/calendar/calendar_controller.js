@@ -13,6 +13,7 @@ import { CalendarDatePicker } from "./date_picker/calendar_date_picker";
 import { CalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
 import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -221,5 +222,6 @@ CalendarController.components = {
     QuickCreate: CalendarQuickCreate,
     Layout,
     ViewScaleSelector,
+    SearchBar,
 };
 CalendarController.template = "web.CalendarController";

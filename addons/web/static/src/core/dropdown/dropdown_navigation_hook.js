@@ -21,7 +21,12 @@ import { useComponent, useEffect, useRef } from "@odoo/owl";
  */
 
 const ACTIVE_MENU_ELEMENT_CLASS = "focus";
-const MENU_ELEMENTS_SELECTORS = [":scope > .dropdown-item", ":scope > .dropdown"];
+const MENU_ELEMENTS_SELECTORS = [
+    ":scope > .dropdown-item",
+    ":scope > .dropdown",
+    ":scope > .o_dropdown_container > .dropdown-item",
+    ":scope > .o_dropdown_container > .dropdown",
+];
 const NEXT_ACTIVE_INDEX_FNS = {
     FIRST: () => 0,
     LAST: (list) => list.length - 1,

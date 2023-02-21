@@ -16,7 +16,7 @@
     </div>
 </t>
 
-<t t-name="website.ThemePreviewForm.ControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="primary" owl="1">
+<!-- <t t-name="website.ThemePreviewForm.ControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="primary" owl="1">
     <xpath expr="//div[hasclass('o_cp_bottom_right')]" position="replace">
         <div class="o_cp_bottom_right" role="group">
             <input class="btn-check" id="themeViewerDesktop" type="radio" name="viewer" data-mode='desktop' autocomplete="off" checked='checked'/>
@@ -25,15 +25,15 @@
             <label class="btn btn-secondary" for="themeViewerMobile" t-on-click="this.onMobileClick">Mobile</label>
         </div>
     </xpath>
-</t>
+</t> -->
 
 <t t-name="website.ThemePreviewForm.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
-    <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
+    <!-- <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
         <t t-call="website.ThemePreviewForm.ControlPanel.Regular"/>
-    </xpath>
+    </xpath> -->
 </t>
 
-<t t-name="website.ThemePreviewKanban.ControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="primary" owl="1">
+<!-- <t t-name="website.ThemePreviewKanban.ControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="primary" owl="1">
     <xpath expr="//div[hasclass('o_cp_top_left')]" position="replace">
         <div class="o_cp_top_left">
             <ol class="breadcrumb" role="navigation">
@@ -51,12 +51,12 @@
             </a>
         </div>
     </xpath>
-</t>
+</t> -->
 
 <t t-name="website.ThemePreviewKanban.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
-    <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
+    <!-- <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
         <t t-call="website.ThemePreviewKanban.ControlPanel.Regular"/>
-    </xpath>
+    </xpath> -->
 </t>
 
 </templates>

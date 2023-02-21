@@ -9,10 +9,7 @@ const { Component, onWillStart, useState } = owl;
 
 export class ReceptionReportMain extends Component {
     setup() {
-        this.controlPanelDisplay = {
-            "top-right": false,
-            "bottom-right": false,
-        };
+        this.controlPanelDisplay = {};
         this.ormService = useService("orm");
         this.actionService = useService("action");
         this.reportName = "stock.report_reception";
