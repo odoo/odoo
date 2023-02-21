@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mrp_subcontracting.PickingFormController" t-inherit="web.FormView" t-inherit-mode="primary" owl="1">
-        <xpath expr="//ActionMenus" position="replace"/>
+        <t t-set-slot="control-panel-additional-actions"/>
     </t>
 
 </templates>

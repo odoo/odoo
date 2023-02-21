@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CombinedActionMenus" owl="1">
+        <div class="o_cp_action_menus d-flex pe-2 gap-1">
+            <Dropdown togglerClass="'d-print-none btn btn-text ms-1 lh-sm'">
+                <t t-set-slot="toggler">
+                    <i class="fa fa-cog"/>
+                </t>
+                <t t-if="printItems.length">
+                    <div class="dropdown-menu_group dropdown-header">
+                        <i class="me-md-1 fa fa-print"/>
+                        Print
+                    </div>
+                    <t t-foreach="printItems" t-as="item" t-key="item.key">
+                        <DropdownItem class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                            <t t-esc="item.description"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+                <t t-if="actionItems.length">
+                    <div class="dropdown-menu_group dropdown-header">
+                        <i class="me-md-1 fa fa-cog"/>
+                        Action
+                    </div>
+                    <t t-foreach="actionItems" t-as="item" t-key="item.key">
+                        <t t-if="item.Component" t-component="item.Component" t-props="item.props" />
+                        <DropdownItem t-else="" class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                            <t t-esc="item.description"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+
+</templates>

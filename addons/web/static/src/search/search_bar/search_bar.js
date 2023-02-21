@@ -8,8 +8,16 @@ import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
+import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
 
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    useExternalListener,
+    useRef,
+    useState,
+} from "@odoo/owl";
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
@@ -29,6 +37,7 @@ export class SearchBar extends Component {
             expanded: [],
             focusedIndex: 0,
             query: "",
+            showSearchBar: !this.env.isSmall,
         });
 
         // derived state
@@ -363,9 +372,9 @@ export class SearchBar extends Component {
     // Handlers
     //---------------------------------------------------------------------
 
-    onFacetClick(target, facet) {
+    onFacetLabelClick(target, facet) {
         const { domain, groupId } = facet;
-        if (!target.classList.contains("o_searchview_facet_label") || !domain) {
+        if (!domain) {
             return;
         }
         const { resModel } = this.env.searchModel;
@@ -543,6 +552,10 @@ export class SearchBar extends Component {
         }
     }
 
+    onToggleSearchBar() {
+        this.state.showSearchBar = !this.state.showSearchBar;
+    }
+
     /**
      * @param {MouseEvent} ev
      */
@@ -563,4 +576,7 @@ export class SearchBar extends Component {
 }
 
 SearchBar.template = "web.SearchBar";
+SearchBar.components = {
+    SearchBarMenu,
+};
 SearchBar.props = {};

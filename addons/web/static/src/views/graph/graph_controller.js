@@ -4,9 +4,11 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
+import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 import { Component, useRef } from "@odoo/owl";
 
@@ -127,7 +129,7 @@ export class GraphController extends Component {
 }
 
 GraphController.template = "web.GraphView";
-GraphController.components = { Dropdown, DropdownItem, Layout };
+GraphController.components = { Dropdown, DropdownItem, Layout, GroupByMenu, SearchBar };
 
 GraphController.props = {
     ...standardViewProps,

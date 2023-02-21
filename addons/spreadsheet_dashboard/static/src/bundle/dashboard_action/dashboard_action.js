@@ -17,12 +17,7 @@ import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 export class SpreadsheetDashboardAction extends Component {
     setup() {
         this.Status = Status;
-        this.controlPanelDisplay = {
-            "top-left": true,
-            "top-right": true,
-            "bottom-left": false,
-            "bottom-right": false,
-        };
+        this.controlPanelDisplay = {};
         this.orm = useService("orm");
         this.router = useService("router");
         // Use the non-protected orm service (`this.env.services.orm` instead of `useService("orm")`)

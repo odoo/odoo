@@ -8,6 +8,7 @@ import { Layout } from "@web/search/layout";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 import { Component, useRef } from "@odoo/owl";
 
@@ -131,7 +132,7 @@ export class PivotController extends Component {
 }
 
 PivotController.template = "web.PivotView";
-PivotController.components = { Dropdown, DropdownItem, Layout };
+PivotController.components = { Dropdown, DropdownItem, Layout, SearchBar };
 
 PivotController.props = {
     ...standardViewProps,

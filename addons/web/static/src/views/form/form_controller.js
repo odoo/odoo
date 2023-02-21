@@ -9,7 +9,7 @@ import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { createElement } from "@web/core/utils/xml";
-import { ActionMenus } from "@web/search/action_menus/action_menus";
+import { CombinedActionMenus } from "@web/search/combined_action_menus/combined_action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/model";
@@ -496,7 +496,7 @@ export class FormController extends Component {
 
 FormController.template = `web.FormView`;
 FormController.components = {
-    ActionMenus,
+    CombinedActionMenus,
     FormStatusIndicator,
     Layout,
     ButtonBox,
