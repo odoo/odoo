@@ -93,7 +93,7 @@ class ManifestLinter(BaseCase):
         )
         self.assertNotEqual(
             value,
-            f"/{module}/static/description/icon.png",
+            f"/{module}/static/description/icon.svg",
             f"Setting manifest key icon to the default manifest value for module {module!r}. "
             "You can remove this key from the dict to reduce noise/inconsistencies between manifests specifications"
             " and ease understanding of manifest content."
