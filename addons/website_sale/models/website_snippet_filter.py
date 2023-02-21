@@ -104,8 +104,8 @@ class WebsiteSnippetFilter(models.Model):
             excluded_products = website.sale_get_order().order_line.product_id.ids
             tracked_products = self.env['website.track'].sudo()._read_group(
                 [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id.website_published', '=', True), ('product_id', 'not in', excluded_products)],
-                ['product_id', 'visit_datetime:max'], ['product_id'], limit=limit, orderby='visit_datetime DESC')
-            products_ids = [product['product_id'][0] for product in tracked_products]
+                ['product_id'], limit=limit, order='visit_datetime:max DESC')
+            products_ids = [product.id for [product] in tracked_products]
             if products_ids:
                 domain = expression.AND([
                     domain,

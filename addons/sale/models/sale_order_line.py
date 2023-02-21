@@ -705,29 +705,20 @@ class SaleOrderLine(models.Model):
 
         # group analytic lines by product uom and so line
         domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
-        data = self.env['account.analytic.line'].read_group(
+        data = self.env['account.analytic.line']._read_group(
             domain,
-            ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
+            ['product_uom_id', 'so_line'], ['unit_amount:sum'],
         )
 
-        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
-        # browse so lines and product uoms here to make them share the same prefetch
-        lines = self.browse([item['so_line'][0] for item in data])
-        lines_map = {line.id: line for line in lines}
-        product_uom_ids = [item['product_uom_id'][0] for item in data if item['product_uom_id']]
-        product_uom_map = {uom.id: uom for uom in self.env['uom.uom'].browse(product_uom_ids)}
-        for item in data:
-            if not item['product_uom_id']:
+        for uom, so_line, unit_amount_sum in data:
+            if not uom:
                 continue
-            so_line_id = item['so_line'][0]
-            so_line = lines_map[so_line_id]
-            result.setdefault(so_line_id, 0.0)
-            uom = product_uom_map.get(item['product_uom_id'][0])
+            result.setdefault(so_line.id, 0.0)
             if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom, rounding_method='HALF-UP')
+                qty = uom._compute_quantity(unit_amount_sum, so_line.product_uom, rounding_method='HALF-UP')
             else:
-                qty = item['unit_amount']
-            result[so_line_id] += qty
+                qty = unit_amount_sum
+            result[so_line.id] += qty
 
         return result
 

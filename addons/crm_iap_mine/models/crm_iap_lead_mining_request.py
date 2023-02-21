@@ -98,15 +98,12 @@ class CRMLeadMiningRequest(models.Model):
 
     @api.depends('lead_ids.lead_mining_request_id')
     def _compute_lead_count(self):
-        if self.ids:
-            leads_data = self.env['crm.lead']._read_group(
-                [('lead_mining_request_id', 'in', self.ids)],
-                ['lead_mining_request_id'], ['lead_mining_request_id'])
-        else:
-            leads_data = []
-        mapped_data = dict(
-            (m['lead_mining_request_id'][0], m['lead_mining_request_id_count'])
-            for m in leads_data)
+        leads_data = self.env['crm.lead']._read_group(
+            [('lead_mining_request_id', 'in', self.ids)],
+            ['lead_mining_request_id'], ['__count'])
+        mapped_data = {
+            lead_mining_request.id: count
+            for lead_mining_request, count in leads_data}
         for request in self:
             request.lead_count = mapped_data.get(request.id, 0)
 

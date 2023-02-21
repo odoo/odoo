@@ -90,17 +90,16 @@ class MrpWorkcenter(models.Model):
         # Count Late Workorder
         data = MrpWorkorder._read_group(
             [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready')), ('date_start', '<', datetime.now().strftime('%Y-%m-%d'))],
-            ['workcenter_id'], ['workcenter_id'])
-        count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
+            ['workcenter_id'], ['__count'])
+        count_data = {workcenter.id: count for workcenter, count in data}
         # Count All, Pending, Ready, Progress Workorder
         res = MrpWorkorder._read_group(
             [('workcenter_id', 'in', self.ids)],
-            ['workcenter_id', 'state', 'duration_expected'], ['workcenter_id', 'state'],
-            lazy=False)
-        for res_group in res:
-            result[res_group['workcenter_id'][0]][res_group['state']] = res_group['__count']
-            if res_group['state'] in ('pending', 'waiting', 'ready', 'progress'):
-                result_duration_expected[res_group['workcenter_id'][0]] += res_group['duration_expected']
+            ['workcenter_id', 'state'], ['duration_expected:sum', '__count'])
+        for workcenter, state, duration_sum, count in res:
+            result[workcenter.id][state] = count
+            if state in ('pending', 'waiting', 'ready', 'progress'):
+                result_duration_expected[workcenter.id] += duration_sum
         for workcenter in self:
             workcenter.workorder_count = sum(count for state, count in result[workcenter.id].items() if state not in ('done', 'cancel'))
             workcenter.workorder_pending_count = result[workcenter.id].get('pending', 0)
@@ -136,8 +135,8 @@ class MrpWorkcenter(models.Model):
             ('workcenter_id', 'in', self.ids),
             ('date_end', '!=', False),
             ('loss_type', '!=', 'productive')],
-            ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
-        count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
+            ['workcenter_id'], ['duration:sum'])
+        count_data = {workcenter.id: duration for workcenter, duration in data}
         for workcenter in self:
             workcenter.blocked_time = count_data.get(workcenter.id, 0.0) / 60.0
 
@@ -148,8 +147,8 @@ class MrpWorkcenter(models.Model):
             ('workcenter_id', 'in', self.ids),
             ('date_end', '!=', False),
             ('loss_type', '=', 'productive')],
-            ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
-        count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
+            ['workcenter_id'], ['duration:sum'])
+        count_data = {workcenter.id: duration for workcenter, duration in data}
         for workcenter in self:
             workcenter.productive_time = count_data.get(workcenter.id, 0.0) / 60.0
 
@@ -165,9 +164,9 @@ class MrpWorkcenter(models.Model):
         wo_data = self.env['mrp.workorder']._read_group([
             ('date_start', '>=', fields.Datetime.to_string(datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
-            ('state', '=', 'done')], ['duration_expected', 'workcenter_id', 'duration'], ['workcenter_id'], lazy=False)
-        duration_expected = dict((data['workcenter_id'][0], data['duration_expected']) for data in wo_data)
-        duration = dict((data['workcenter_id'][0], data['duration']) for data in wo_data)
+            ('state', '=', 'done')], ['workcenter_id'], ['duration_expected:sum', 'duration:sum'])
+        duration_expected = {workcenter.id: expected for workcenter, expected, __ in wo_data}
+        duration = {workcenter.id: duration for workcenter, __, duration in wo_data}
         for workcenter in self:
             if duration.get(workcenter.id):
                 workcenter.performance = 100 * duration_expected.get(workcenter.id, 0.0) / duration[workcenter.id]
@@ -437,8 +436,11 @@ class MrpWorkcenterProductivity(models.Model):
     @api.constrains('workorder_id')
     def _check_open_time_ids(self):
         for workorder in self.workorder_id:
-            open_time_ids_by_user = self.env["mrp.workcenter.productivity"].read_group([("id", "in", workorder.time_ids.ids), ("date_end", "=", False)], ["user_id", "open_time_ids_count:count(id)"], ["user_id"])
-            if any(data["open_time_ids_count"] > 1 for data in open_time_ids_by_user):
+            open_time_ids_by_user = self.env["mrp.workcenter.productivity"]._read_group(
+                [("id", "in", workorder.time_ids.ids), ("date_end", "=", False)],
+                ["user_id"], having=[("__count", ">", 1)],
+            )
+            if open_time_ids_by_user:
                 raise ValidationError(_('The Workorder (%s) cannot be started twice!', workorder.display_name))
 
     def button_block(self):

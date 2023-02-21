@@ -622,14 +622,14 @@ class WebsiteForum(WebsiteProfile):
             [('favourite_ids', '=', user.id), ('forum_id', 'in', forums.ids), ('parent_id', '=', False)])
 
         # votes which given on users questions and answers.
-        data = Vote.read_group([('forum_id', 'in', forums.ids), ('recipient_id', '=', user.id)], ["vote"],
-                               groupby=["vote"])
+        data = Vote._read_group([('forum_id', 'in', forums.ids), ('recipient_id', '=', user.id)], ['vote'],
+                               aggregates=['__count'])
         up_votes, down_votes = 0, 0
-        for rec in data:
-            if rec['vote'] == '1':
-                up_votes = rec['vote_count']
-            elif rec['vote'] == '-1':
-                down_votes = rec['vote_count']
+        for vote, count in data:
+            if vote == '1':
+                up_votes = count
+            elif vote == '-1':
+                down_votes = count
 
         # Votes which given by users on others questions and answers.
         vote_ids = Vote.search([('user_id', '=', user.id)])

@@ -77,8 +77,8 @@ class Team(models.Model):
             ('team_id', 'in', self.ids),
             ('type', '=', 'lead'),
             ('user_id', '=', False),
-        ], ['team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in leads_data}
+        ], ['team_id'], ['__count'])
+        counts = {team.id: count for team, count in leads_data}
         for team in self:
             team.lead_unassigned_count = counts.get(team.id, 0)
 
@@ -92,12 +92,10 @@ class Team(models.Model):
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
-        ], ['expected_revenue:sum', 'team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: datum['expected_revenue'] for datum in opportunity_data}
+        ], ['team_id'], ['__count', 'expected_revenue:sum'])
+        counts_amounts = {team.id: (count, expected_revenue_sum) for team, count, expected_revenue_sum in opportunity_data}
         for team in self:
-            team.opportunities_count = counts.get(team.id, 0)
-            team.opportunities_amount = amounts.get(team.id, 0)
+            team.opportunities_count, team.opportunities_amount = counts_amounts.get(team.id, (0, 0))
 
     def _compute_opportunities_overdue_data(self):
         opportunity_data = self.env['crm.lead']._read_group([
@@ -105,12 +103,10 @@ class Team(models.Model):
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
             ('date_deadline', '<', fields.Date.to_string(fields.Datetime.now()))
-        ], ['expected_revenue', 'team_id'], ['team_id'])
-        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: (datum['expected_revenue']) for datum in opportunity_data}
+        ], ['team_id'], ['__count', 'expected_revenue:sum'])
+        counts_amounts = {team.id: (count, expected_revenue_sum) for team, count, expected_revenue_sum in opportunity_data}
         for team in self:
-            team.opportunities_overdue_count = counts.get(team.id, 0)
-            team.opportunities_overdue_amount = amounts.get(team.id, 0)
+            team.opportunities_overdue_count, team.opportunities_overdue_amount = counts_amounts.get(team.id, (0, 0))
 
     @api.onchange('use_leads', 'use_opportunities')
     def _onchange_use_leads_opportunities(self):

@@ -16,8 +16,8 @@ class UtmCampaign(models.Model):
     def _compute_crm_lead_count(self):
         lead_data = self.env['crm.lead'].with_context(active_test=False)._read_group([
             ('campaign_id', 'in', self.ids)],
-            ['campaign_id'], ['campaign_id'])
-        mapped_data = {datum['campaign_id'][0]: datum['campaign_id_count'] for datum in lead_data}
+            ['campaign_id'], ['__count'])
+        mapped_data = {campaign.id: count for campaign, count in lead_data}
         for campaign in self:
             campaign.crm_lead_count = mapped_data.get(campaign.id, 0)
 

@@ -84,10 +84,8 @@ class StockForecasted(models.AbstractModel):
         res['outgoing_qty'] = sum(products.mapped('outgoing_qty'))
 
         in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
-        incoming_moves = self.env['stock.move']._read_group(in_domain, ['product_qty:sum'], 'product_id')
-        outgoing_moves = self.env['stock.move']._read_group(out_domain, ['product_qty:sum'], 'product_id')
-        in_sum = sum(move['product_qty'] for move in incoming_moves)
-        out_sum = sum(move['product_qty'] for move in outgoing_moves)
+        [in_sum] = self.env['stock.move']._read_group(in_domain, aggregates=['product_qty:sum'])[0]
+        [out_sum] = self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'])[0]
 
         res.update({
             'draft_picking_qty': {
@@ -285,15 +283,15 @@ class StockForecasted(models.AbstractModel):
             })
 
         qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
-                                                    ['product_id', 'location_id', 'quantity:sum', 'reserved_quantity:sum'], ['product_id', 'location_id'], lazy=False)
+                                                    ['product_id', 'location_id'], ['quantity:sum'])
         wh_stock_sub_location_ids = wh_stock_location.search([('id', 'child_of', wh_stock_location.id)]).ids
         currents = defaultdict(float)
-        for qty in qties:
-            location_id = qty['location_id'][0]
+        for product, location, quantity in qties:
+            location_id = location.id
             # any sublocation qties will be added to the main stock location qty
             if location_id in wh_stock_sub_location_ids:
                 location_id = wh_stock_location.id
-            currents[(qty['product_id'][0], location_id)] += qty['quantity']
+            currents[(product.id, location_id)] += quantity
         moves_data = {}
         for _, out_moves in outs_per_product.items():
             # to handle multiple out wtih same in (ex: same pick/pack for 2 outs)

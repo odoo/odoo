@@ -44,12 +44,10 @@ class SaleOrder(models.Model):
         sale_orders_data = self.env['event.registration']._read_group(
             [('sale_order_id', 'in', self.ids),
              ('state', '!=', 'cancel')],
-            ['sale_order_id'], ['sale_order_id']
+            ['sale_order_id'], ['__count'],
         )
         attendee_count_data = {
-            sale_order_data['sale_order_id'][0]:
-            sale_order_data['sale_order_id_count']
-            for sale_order_data in sale_orders_data
+            sale_order.id: count for sale_order, count in sale_orders_data
         }
         for sale_order in self:
             sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)

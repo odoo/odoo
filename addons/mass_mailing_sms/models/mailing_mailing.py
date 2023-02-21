@@ -70,23 +70,18 @@ class Mailing(models.Model):
 
     @api.depends('mailing_trace_ids.failure_type')
     def _compute_sms_has_iap_failure(self):
-        failures = ['sms_acc', 'sms_credit'] 
-        if not self.ids:
-            self.sms_has_insufficient_credit = self.sms_has_unregistered_account = False
-        else:
-            traces = self.env['mailing.trace'].sudo().read_group([
-                        ('mass_mailing_id', 'in', self.ids),
-                        ('trace_type', '=', 'sms'),
-                        ('failure_type', 'in', failures)
-            ], ['mass_mailing_id', 'failure_type'], ['mass_mailing_id', 'failure_type'], lazy=False)
+        self.sms_has_insufficient_credit = self.sms_has_unregistered_account = False
+        traces = self.env['mailing.trace'].sudo()._read_group([
+                    ('mass_mailing_id', 'in', self.ids),
+                    ('trace_type', '=', 'sms'),
+                    ('failure_type', 'in', ['sms_acc', 'sms_credit'])
+        ], ['mass_mailing_id', 'failure_type'])
 
-            trace_dict = dict.fromkeys(self.ids, {key: False for key in failures})
-            for t in traces:
-                trace_dict[t['mass_mailing_id'][0]][t['failure_type']] = bool(t['__count'])
-
-            for mail in self:
-                mail.sms_has_insufficient_credit = trace_dict[mail.id]['sms_credit']
-                mail.sms_has_unregistered_account = trace_dict[mail.id]['sms_acc']
+        for mass_mailing, failure_type in traces:
+            if failure_type == 'sms_credit':
+                mass_mailing.sms_has_insufficient_credit = True
+            elif failure_type == 'sms_acc':
+                mass_mailing.sms_has_unregistered_account = True
 
     # --------------------------------------------------
     # ORM OVERRIDES

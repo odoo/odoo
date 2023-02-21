@@ -63,7 +63,7 @@ class WebsiteMembership(http.Controller):
         if post_name:
             country_domain += ['|', ('name', 'ilike', post_name), ('website_description', 'ilike', post_name)]
 
-        countries = Partner.sudo().read_group(country_domain + [("website_published", "=", True)], ["id", "country_id"], groupby="country_id", orderby="country_id")
+        countries = Partner.sudo().read_group(country_domain + [("website_published", "=", True)], ["__count"], groupby="country_id")
         countries_total = sum(country_dict['country_id_count'] for country_dict in countries)
 
         line_domain = list(base_line_domain)

@@ -23,11 +23,11 @@ class SaleOrder(models.Model):
 
     def _compute_timesheet_count(self):
         timesheets_per_so = {
-            group['order_id'][0]: group['order_id_count']
-            for group in self.env['account.analytic.line']._read_group(
+            order.id: count
+            for order, count in self.env['account.analytic.line']._read_group(
                 [('order_id', 'in', self.ids), ('project_id', '!=', False)],
                 ['order_id'],
-                ['order_id']
+                ['__count'],
             )
         }
 
@@ -38,9 +38,9 @@ class SaleOrder(models.Model):
     def _compute_timesheet_total_duration(self):
         group_data = self.env['account.analytic.line']._read_group([
             ('order_id', 'in', self.ids)
-        ], ['order_id', 'unit_amount'], ['order_id'])
+        ], ['order_id'], ['unit_amount:sum'])
         timesheet_unit_amount_dict = defaultdict(float)
-        timesheet_unit_amount_dict.update({data['order_id'][0]: data['unit_amount'] for data in group_data})
+        timesheet_unit_amount_dict.update({order.id: unit_amount for order, unit_amount in group_data})
         for sale_order in self:
             total_time = sale_order.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[sale_order.id], sale_order.timesheet_encode_uom_id)
             sale_order.timesheet_total_duration = round(total_time)
@@ -310,8 +310,8 @@ class SaleOrderLine(models.Model):
         timesheet_action = self.env.ref('sale_timesheet.timesheet_action_from_sales_order_item').id
         timesheet_ids_per_sol = {}
         if self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
-            timesheet_read_group = self.env['account.analytic.line']._read_group([('so_line', 'in', self.ids), ('project_id', '!=', False)], ['so_line', 'ids:array_agg(id)'], ['so_line'])
-            timesheet_ids_per_sol = {res['so_line'][0]: res['ids'] for res in timesheet_read_group}
+            timesheet_read_group = self.env['account.analytic.line']._read_group([('so_line', 'in', self.ids), ('project_id', '!=', False)], ['so_line'], ['id:array_agg'])
+            timesheet_ids_per_sol = {so_line.id: ids for so_line, ids in timesheet_read_group}
         for sol in self:
             timesheet_ids = timesheet_ids_per_sol.get(sol.id, [])
             if sol.is_service and len(timesheet_ids) > 0:

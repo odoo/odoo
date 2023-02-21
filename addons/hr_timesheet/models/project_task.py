@@ -66,8 +66,8 @@ class Task(models.Model):
             for task in self:
                 task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
             return
-        timesheet_read_group = self.env['account.analytic.line'].read_group([('task_id', 'in', self.ids)], ['unit_amount', 'task_id'], ['task_id'])
-        timesheets_per_task = {res['task_id'][0]: res['unit_amount'] for res in timesheet_read_group}
+        timesheet_read_group = self.env['account.analytic.line']._read_group([('task_id', 'in', self.ids)], ['task_id'], ['unit_amount:sum'])
+        timesheets_per_task = {task.id: amount for task, amount in timesheet_read_group}
         for task in self:
             task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
 
@@ -223,9 +223,8 @@ class Task(models.Model):
         timesheet_data = self.env['account.analytic.line'].sudo()._read_group(
             [('task_id', 'in', self.ids)],
             ['task_id'],
-            ['task_id'],
         )
-        task_with_timesheets_ids = [res['task_id'][0] for res in timesheet_data]
+        task_with_timesheets_ids = [task.id for task in timesheet_data]
         if task_with_timesheets_ids:
             if len(task_with_timesheets_ids) > 1:
                 warning_msg = _("These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries.")

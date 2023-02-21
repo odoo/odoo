@@ -516,14 +516,13 @@ class SaleOrder(models.Model):
         if not confirmed_orders:
             return
         line_invoice_status_all = [
-            (d['order_id'][0], d['invoice_status'])
-            for d in self.env['sale.order.line'].read_group([
+            (order.id, invoice_status)
+            for order, invoice_status in self.env['sale.order.line']._read_group([
                     ('order_id', 'in', confirmed_orders.ids),
                     ('is_downpayment', '=', False),
                     ('display_type', '=', False),
                 ],
-                ['order_id', 'invoice_status'],
-                ['order_id', 'invoice_status'], lazy=False)]
+                ['order_id', 'invoice_status'])]
         for order in confirmed_orders:
             line_invoice_status = [d[1] for d in line_invoice_status_all if d[0] == order.id]
             if order.state not in ('sale', 'done'):

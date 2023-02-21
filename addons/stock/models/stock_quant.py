@@ -161,9 +161,8 @@ class StockQuant(models.Model):
                         ('package_id', 'in', self.package_id.ids),
                         ('result_package_id', 'in', self.package_id.ids),
             ],
-            ['date:max', 'product_id', 'lot_id', 'package_id', 'owner_id', 'result_package_id', 'location_id', 'location_dest_id'],
             ['product_id', 'lot_id', 'package_id', 'owner_id', 'result_package_id', 'location_id', 'location_dest_id'],
-            lazy=False)
+            ['date:max'])
 
         def _update_dict(date_by_quant, key, value):
             current_date = date_by_quant.get(key)
@@ -171,15 +170,14 @@ class StockQuant(models.Model):
                 date_by_quant[key] = value
 
         date_by_quant = {}
-        for group in groups:
-            move_line_date = group['date']
-            location_id = group['location_id'][0]
-            location_dest_id = group['location_dest_id'][0]
-            package_id = group['package_id'] and group['package_id'][0]
-            result_package_id = group['result_package_id'] and group['result_package_id'][0]
-            lot_id = group['lot_id'] and group['lot_id'][0]
-            owner_id = group['owner_id'] and group['owner_id'][0]
-            product_id = group['product_id'][0]
+        for product, lot, package, owner, result_package, location, location_dest, move_line_date in groups:
+            location_id = location.id
+            location_dest_id = location_dest.id
+            package_id = package.id
+            result_package_id = result_package.id
+            lot_id = lot.id
+            owner_id = owner.id
+            product_id = product.id
             _update_dict(date_by_quant, (location_id, package_id, product_id, lot_id, owner_id), move_line_date)
             _update_dict(date_by_quant, (location_dest_id, package_id, product_id, lot_id, owner_id), move_line_date)
             _update_dict(date_by_quant, (location_id, result_package_id, product_id, lot_id, owner_id), move_line_date)
@@ -212,8 +210,8 @@ class StockQuant(models.Model):
     def _compute_sn_duplicated(self):
         self.sn_duplicated = False
         domain = [('tracking', '=', 'serial'), ('lot_id', 'in', self.lot_id.ids), ('location_id.usage', 'in', ['internal', 'transit'])]
-        results = self._read_group(domain, ['lot_id'], ['lot_id'])
-        duplicated_sn_ids = [x['lot_id'][0] for x in results if x['lot_id_count'] > 1]
+        results = self._read_group(domain, ['lot_id'], having=[('__count', '>', 1)])
+        duplicated_sn_ids = [lot.id for [lot] in results]
         quants_with_duplicated_sn = self.env['stock.quant'].search([('lot_id', 'in', duplicated_sn_ids)])
         quants_with_duplicated_sn.sn_duplicated = True
 

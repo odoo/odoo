@@ -18,8 +18,8 @@ class FleetVehicleModelBrand(models.Model):
     def _compute_model_count(self):
         model_data = self.env['fleet.vehicle.model']._read_group([
             ('brand_id', 'in', self.ids),
-        ], ['brand_id'], ['brand_id'])
-        models_brand = {x['brand_id'][0]: x['brand_id_count'] for x in model_data}
+        ], ['brand_id'], ['__count'])
+        models_brand = {brand.id: count for brand, count in model_data}
 
         for record in self:
             record.model_count = models_brand.get(record.id, 0)

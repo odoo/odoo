@@ -13,9 +13,9 @@ class UtmCampaign(models.Model):
     def _compute_clicks_count(self):
         click_data = self.env['link.tracker.click']._read_group(
             [('campaign_id', 'in', self.ids)],
-            ['campaign_id'], ['campaign_id'])
+            ['campaign_id'], ['__count'])
 
-        mapped_data = {datum['campaign_id'][0]: datum['campaign_id_count'] for datum in click_data}
+        mapped_data = {campaign.id: count for campaign, count in click_data}
 
         for campaign in self:
             campaign.click_count = mapped_data.get(campaign.id, 0)

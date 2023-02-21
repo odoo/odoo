@@ -26,13 +26,12 @@ class AccountAccount(models.Model):
     def _check_account_type_unique_current_year_earning(self):
         result = self._read_group(
             domain=[('account_type', '=', 'equity_unaffected')],
-            fields=['company_id', 'ids:array_agg(id)'],
             groupby=['company_id'],
+            aggregates=['id:recordset'],
+            having=[('__count', '>', 1)],
         )
-        for res in result:
-            if res.get('company_id_count', 0) >= 2:
-                account_unaffected_earnings = self.browse(res['ids'])
-                raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
+        for _company, account_unaffected_earnings in result:
+            raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
@@ -354,11 +353,11 @@ class AccountAccount(models.Model):
 
     def _compute_current_balance(self):
         balances = {
-            read['account_id'][0]: read['balance']
-            for read in self.env['account.move.line']._read_group(
+            account.id: balance
+            for account, balance in self.env['account.move.line']._read_group(
                 domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted')],
-                fields=['balance', 'account_id'],
                 groupby=['account_id'],
+                aggregates=['balance:sum'],
             )
         }
         for record in self:

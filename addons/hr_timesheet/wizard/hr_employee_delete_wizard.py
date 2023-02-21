@@ -16,9 +16,9 @@ class HrEmployeDeleteWizard(models.TransientModel):
     def _compute_has_timesheet(self):
         timesheet_read_group = self.env['account.analytic.line']._read_group([
             ('employee_id', 'in', self.employee_ids.ids)],
-            ['employee_id'], ['employee_id'],
+            ['employee_id'],
         )
-        timesheet_employee_map = set(employee_info['employee_id'][0] for employee_info in timesheet_read_group)
+        timesheet_employee_map = {employee.id for [employee] in timesheet_read_group}
         for wizard in self:
             wizard.has_timesheet = timesheet_employee_map & set(wizard.employee_ids.ids)
 

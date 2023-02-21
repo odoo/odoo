@@ -108,12 +108,12 @@ class ResourceCalendar(models.Model):
     associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
 
     def _compute_associated_leaves_count(self):
-        leaves_read_group = self.env['resource.calendar.leaves'].read_group(
-            [('resource_id', '=', False)],
+        leaves_read_group = self.env['resource.calendar.leaves']._read_group(
+            [('resource_id', '=', False), ('calendar_id', 'in', [False, *self.ids])],
             ['calendar_id'],
-            ['calendar_id']
+            ['__count'],
         )
-        result = dict((data['calendar_id'][0] if data['calendar_id'] else 'global', data['calendar_id_count']) for data in leaves_read_group)
+        result = {calendar.id if calendar else 'global': count for calendar, count in leaves_read_group}
         global_leave_count = result.get('global', 0)
         for calendar in self:
             calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count

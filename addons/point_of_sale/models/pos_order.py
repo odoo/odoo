@@ -389,13 +389,13 @@ class PosOrder(models.Model):
         Practical to be used for migrations
         """
         amounts = {order_id: {'paid': 0, 'return': 0, 'taxed': 0, 'taxes': 0} for order_id in self.ids}
-        for order in self.env['pos.payment'].read_group([('pos_order_id', 'in', self.ids)], ['pos_order_id', 'amount'], ['pos_order_id']):
-            amounts[order['pos_order_id'][0]]['paid'] = order['amount']
-        for order in self.env['pos.payment'].read_group(['&', ('pos_order_id', 'in', self.ids), ('amount', '<', 0)], ['pos_order_id', 'amount'], ['pos_order_id']):
-            amounts[order['pos_order_id'][0]]['return'] = order['amount']
-        for order in self.env['pos.order.line'].read_group([('order_id', 'in', self.ids)], ['order_id', 'price_subtotal', 'price_subtotal_incl'], ['order_id']):
-            amounts[order['order_id'][0]]['taxed'] = order['price_subtotal_incl']
-            amounts[order['order_id'][0]]['taxes'] = order['price_subtotal_incl'] - order['price_subtotal']
+        for pos_order, amount in self.env['pos.payment']._read_group([('pos_order_id', 'in', self.ids)], ['pos_order_id'], ['amount:sum']):
+            amounts[pos_order.id]['paid'] = amount
+        for pos_order, amount in self.env['pos.payment']._read_group(['&', ('pos_order_id', 'in', self.ids), ('amount', '<', 0)], ['pos_order_id'], ['amount:sum']):
+            amounts[pos_order.id]['return'] = amount
+        for order, price_subtotal, price_subtotal_incl in self.env['pos.order.line']._read_group([('order_id', 'in', self.ids)], ['order_id'], ['price_subtotal:sum', 'price_subtotal_incl:sum']):
+            amounts[order.id]['taxed'] = price_subtotal_incl
+            amounts[order.id]['taxes'] = price_subtotal_incl - price_subtotal
 
         for order in self:
             order.write({

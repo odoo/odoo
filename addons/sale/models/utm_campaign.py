@@ -17,8 +17,8 @@ class UtmCampaign(models.Model):
     def _compute_quotation_count(self):
         quotation_data = self.env['sale.order']._read_group([
             ('campaign_id', 'in', self.ids)],
-            ['campaign_id'], ['campaign_id'])
-        data_map = {datum['campaign_id'][0]: datum['campaign_id_count'] for datum in quotation_data}
+            ['campaign_id'], ['__count'])
+        data_map = {campaign.id: count for campaign, count in quotation_data}
         for campaign in self:
             campaign.quotation_count = data_map.get(campaign.id, 0)
 

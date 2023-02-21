@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo import Command
@@ -55,16 +56,14 @@ class Event(models.Model):
     def _get_booth_stat_count(self):
         elements = self.env['event.booth'].sudo()._read_group(
             [('event_id', 'in', self.ids)],
-            ['event_id', 'state'], ['event_id', 'state'], lazy=False
+            ['event_id', 'state'], ['__count']
         )
-        elements_total_count = dict()
+        elements_total_count = defaultdict(int)
         elements_available_count = dict()
-        for element in elements:
-            event_id = element['event_id'][0]
-            if element['state'] == 'available':
-                elements_available_count[event_id] = element['__count']
-            elements_total_count.setdefault(event_id, 0)
-            elements_total_count[event_id] += element['__count']
+        for event, state, count in elements:
+            if state == 'available':
+                elements_available_count[event.id] = count
+            elements_total_count[event.id] += count
         return elements_available_count, elements_total_count
 
     @api.depends('event_booth_ids', 'event_booth_ids.state')

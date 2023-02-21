@@ -14,9 +14,9 @@ class ResPartner(models.Model):
     def _compute_certifications_count(self):
         read_group_res = self.env['survey.user_input'].sudo()._read_group(
             [('partner_id', 'in', self.ids), ('scoring_success', '=', True)],
-            ['partner_id'], 'partner_id'
+            ['partner_id'], ['__count']
         )
-        data = dict((res['partner_id'][0], res['partner_id_count']) for res in read_group_res)
+        data = {partner.id: count for partner, count in read_group_res}
         for partner in self:
             partner.certifications_count = data.get(partner.id, 0)
 

@@ -323,30 +323,18 @@ class Slide(models.Model):
 
     @api.depends('slide_partner_ids.vote')
     def _compute_like_info(self):
-        if not self.ids:
-            self.update({'likes': 0, 'dislikes': 0})
-            return
-
-        rg_data_like = self.env['slide.slide.partner'].sudo().read_group(
-            [('slide_id', 'in', self.ids), ('vote', '=', 1)],
-            ['slide_id'], ['slide_id']
+        rg_data = self.env['slide.slide.partner'].sudo()._read_group(
+            [('slide_id', 'in', self.ids), ('vote', 'in', (-1, 1))],
+            ['slide_id', 'vote'], ['__count'],
         )
-        rg_data_dislike = self.env['slide.slide.partner'].sudo().read_group(
-            [('slide_id', 'in', self.ids), ('vote', '=', -1)],
-            ['slide_id'], ['slide_id']
-        )
-        mapped_data_like = dict(
-            (rg_data['slide_id'][0], rg_data['slide_id_count'])
-            for rg_data in rg_data_like
-        )
-        mapped_data_dislike = dict(
-            (rg_data['slide_id'][0], rg_data['slide_id_count'])
-            for rg_data in rg_data_dislike
-        )
+        mapped_data = {
+            (slide.id, vote): count
+            for slide, vote, count in rg_data
+        }
 
         for slide in self:
-            slide.likes = mapped_data_like.get(slide.id, 0)
-            slide.dislikes = mapped_data_dislike.get(slide.id, 0)
+            slide.likes = mapped_data.get((slide.id, 1), 0)
+            slide.dislikes = mapped_data.get((slide.id, -1), 0)
 
     @api.depends('slide_partner_ids.slide_id')
     def _compute_slide_views(self):
@@ -354,26 +342,23 @@ class Slide(models.Model):
         read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
             [('slide_id', 'in', self.ids)],
             ['slide_id'],
-            groupby=['slide_id']
+            aggregates=['__count'],
         )
-        mapped_data = dict((res['slide_id'][0], res['slide_id_count']) for res in read_group_res)
+        mapped_data = {slide.id: count for slide, count in read_group_res}
         for slide in self:
             slide.slide_views = mapped_data.get(slide.id, 0)
 
     @api.depends('embed_ids.slide_id')
     def _compute_embed_counts(self):
-        mapped_data = {}
-
-        if self.ids:
-            read_group_res = self.env['slide.embed']._read_group(
-                [('slide_id', 'in', self.ids)],
-                ['count_views'],
-                ['slide_id']
-            )
-            mapped_data = {
-                res['slide_id'][0]: res.get('count_views', 0)
-                for res in read_group_res
-            }
+        read_group_res = self.env['slide.embed']._read_group(
+            [('slide_id', 'in', self.ids)],
+            ['slide_id'],
+            ['count_views:sum'],
+        )
+        mapped_data = {
+            slide.id: count_views_sum
+            for slide, count_views_sum in read_group_res
+        }
 
         for slide in self:
             slide.embed_count = mapped_data.get(slide.id, 0)
@@ -386,29 +371,16 @@ class Slide(models.Model):
         default_vals = dict((key, 0) for key in keys + ['total_slides'])
 
         res = self.env['slide.slide']._read_group(
-            [('is_published', '=', True), ('category_id', 'in', self.ids), ('is_category', '=', False)],
-            ['category_id', 'slide_category'], ['category_id', 'slide_category'],
-            lazy=False)
+            [('is_published', '=', True), ('category_id', 'in', self.filtered('is_category').ids), ('is_category', '=', False)],
+            ['category_id', 'slide_category'], ['__count'])
 
-        category_stats = self._compute_slides_statistics_category(res)
+        result = {category_id: dict(default_vals) for category_id in self.ids}
+        for category, slide_category, count in res:
+            result[category.id][f'nbr_{slide_category}'] = count
+            result[category.id]['total_slides'] += count
 
-        for record in self.filtered(lambda slide: slide.is_category):
-            record.update(category_stats.get(record._origin.id, default_vals))
-
-    def _compute_slides_statistics_category(self, read_group_res):
-        """ Compute statistics based on all existing slide categories """
-        slide_categories = self.env['slide.slide']._fields['slide_category'].get_values(self.env)
-        keys = ['nbr_%s' % slide_category for slide_category in slide_categories]
-        result = dict((cid, dict((key, 0) for key in keys + ['total_slides'])) for cid in self.ids)
-        for res_group in read_group_res:
-            cid = res_group['category_id'][0]
-            slide_category = res_group.get('slide_category')
-            if slide_category:
-                slide_category_count = res_group.get('__count', 0)
-                result[cid]['nbr_%s' % slide_category] += slide_category_count
-                result[cid]['total_slides'] += slide_category_count
-
-        return result
+        for record in self:
+            record.update(result.get(record._origin.id, default_vals))
 
     @api.depends('slide_ids.sequence', 'slide_ids.active', 'slide_ids.completion_time', 'slide_ids.is_published', 'slide_ids.is_category')
     def _compute_category_completion_time(self):

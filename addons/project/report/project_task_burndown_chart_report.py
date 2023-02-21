@@ -264,7 +264,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         context of the Burndown Chart. Indeed, series are generated so no empty are returned by the `SQL`, except if
         explicitly specified in the domain through the `date` field, which is then expected.
         """
-
+        # TODO
         # --- Below code is custom
 
         self._validate_group_by(groupby)

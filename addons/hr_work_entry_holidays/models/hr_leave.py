@@ -135,11 +135,11 @@ Contracts:
                 ('date_start', '<', stop),
                 ('date_stop', '>', start),
                 ('employee_id', 'in', self.employee_id.ids),
-            ], ['work_entry_ids:array_agg(id)', 'employee_id'], ['employee_id', 'date_start', 'date_stop'], lazy=False)
-            work_entries_by_employee = defaultdict(lambda: self.env['hr.work.entry'])
-            for group in work_entry_groups:
-                employee_id = group.get('employee_id')[0]
-                work_entries_by_employee[employee_id] |= self.env['hr.work.entry'].browse(group.get('work_entry_ids'))
+            ], ['employee_id'], ['id:recordset'])
+            work_entries_by_employee = {
+                employee.id: work_entries
+                for employee, work_entries in work_entry_groups
+            }
 
             # 3. Archive work entries included in leaves
             included = self.env['hr.work.entry']

@@ -88,13 +88,13 @@ class HrEmployeeBase(models.AbstractModel):
             ('state', '=', 'validate'),
             ('date_from', '<=', current_date),
             ('date_to', '>=', current_date),
-        ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
-        rg_results = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data)
+        ], ['employee_id'], ['__count', 'number_of_days:sum'])
+        rg_results = {employee.id: (count, days) for employee, count, days in data}
         for employee in self:
-            result = rg_results.get(employee.id)
-            employee.allocation_count = float_round(result['number_of_days'], precision_digits=2) if result else 0.0
+            count, days = rg_results.get(employee.id, (0, 0))
+            employee.allocation_count = float_round(days, precision_digits=2)
             employee.allocation_display = "%g" % employee.allocation_count
-            employee.allocations_count = result['employee_id_count'] if result else 0.0
+            employee.allocations_count = count
 
     def _compute_allocation_remaining_display(self):
         allocations = self.env['hr.leave.allocation'].search([('employee_id', 'in', self.ids)])
