@@ -2,25 +2,43 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Command
 
 
 class ProductTemplateAttributeLine(models.Model):
     """Attributes available on product.template with their selected values in a m2m.
     Used as a configuration model to generate the appropriate product.template.attribute.value"""
 
-    _name = "product.template.attribute.line"
+    _name = 'product.template.attribute.line'
     _rec_name = 'attribute_id'
     _rec_names_search = ['attribute_id', 'value_ids']
-    _description = 'Product Template Attribute Line'
+    _description = "Product Template Attribute Line"
     _order = 'attribute_id, id'
 
     active = fields.Boolean(default=True)
-    product_tmpl_id = fields.Many2one('product.template', string="Product Template", ondelete='cascade', required=True, index=True)
-    attribute_id = fields.Many2one('product.attribute', string="Attribute", ondelete='restrict', required=True, index=True)
-    value_ids = fields.Many2many('product.attribute.value', string="Values", domain="[('attribute_id', '=', attribute_id)]",
-                                 relation='product_attribute_value_product_template_attribute_line_rel', ondelete='restrict')
-    value_count = fields.Integer(compute='_compute_value_count', store=True, readonly=True)
-    product_template_value_ids = fields.One2many('product.template.attribute.value', 'attribute_line_id', string="Product Attribute Values")
+    product_tmpl_id = fields.Many2one(
+        comodel_name='product.template',
+        string="Product Template",
+        ondelete='cascade',
+        required=True,
+        index=True)
+    attribute_id = fields.Many2one(
+        comodel_name='product.attribute',
+        string="Attribute",
+        ondelete='restrict',
+        required=True,
+        index=True)
+    value_ids = fields.Many2many(
+        comodel_name='product.attribute.value',
+        relation='product_attribute_value_product_template_attribute_line_rel',
+        string="Values",
+        domain="[('attribute_id', '=', attribute_id)]",
+        ondelete='restrict')
+    value_count = fields.Integer(compute='_compute_value_count', store=True)
+    product_template_value_ids = fields.One2many(
+        comodel_name='product.template.attribute.value',
+        inverse_name='attribute_line_id',
+        string="Product Attribute Values")
 
     @api.depends('value_ids')
     def _compute_value_count(self):
@@ -35,16 +53,20 @@ class ProductTemplateAttributeLine(models.Model):
     def _check_valid_values(self):
         for ptal in self:
             if ptal.active and not ptal.value_ids:
-                raise ValidationError(
-                    _("The attribute %s must have at least one value for the product %s.") %
-                    (ptal.attribute_id.display_name, ptal.product_tmpl_id.display_name)
-                )
+                raise ValidationError(_(
+                    "The attribute %(attribute)s must have at least one value for the product %(product)s.",
+                    attribute=ptal.attribute_id.display_name,
+                    product=ptal.product_tmpl_id.display_name,
+                ))
             for pav in ptal.value_ids:
                 if pav.attribute_id != ptal.attribute_id:
-                    raise ValidationError(
-                        _("On the product %s you cannot associate the value %s with the attribute %s because they do not match.") %
-                        (ptal.product_tmpl_id.display_name, pav.display_name, ptal.attribute_id.display_name)
-                    )
+                    raise ValidationError(_(
+                        "On the product %(product)s you cannot associate the value %(value)s"
+                        " with the attribute %(attribute)s because they do not match.",
+                        product=ptal.product_tmpl_id.display_name,
+                        value=pav.display_name,
+                        attribute=ptal.attribute_id.display_name,
+                    ))
         return True
 
     @api.model_create_multi
@@ -79,7 +101,7 @@ class ProductTemplateAttributeLine(models.Model):
                 activated_lines += archived_ptal
             else:
                 create_values.append(value)
-        res = activated_lines + super(ProductTemplateAttributeLine, self).create(create_values)
+        res = activated_lines + super().create(create_values)
         res._update_product_template_attribute_values()
         return res
 
@@ -93,23 +115,29 @@ class ProductTemplateAttributeLine(models.Model):
         if 'product_tmpl_id' in values:
             for ptal in self:
                 if ptal.product_tmpl_id.id != values['product_tmpl_id']:
-                    raise UserError(
-                        _("You cannot move the attribute %s from the product %s to the product %s.") %
-                        (ptal.attribute_id.display_name, ptal.product_tmpl_id.display_name, values['product_tmpl_id'])
-                    )
+                    raise UserError(_(
+                        "You cannot move the attribute %(attribute)s from the product"
+                        " %(product_src)s to the product %(product_dest)s.",
+                        attribute=ptal.attribute_id.display_name,
+                        product_src=ptal.product_tmpl_id.display_name,
+                        product_dest=values['product_tmpl_id'],
+                    ))
 
         if 'attribute_id' in values:
             for ptal in self:
                 if ptal.attribute_id.id != values['attribute_id']:
-                    raise UserError(
-                        _("On the product %s you cannot transform the attribute %s into the attribute %s.") %
-                        (ptal.product_tmpl_id.display_name, ptal.attribute_id.display_name, values['attribute_id'])
-                    )
+                    raise UserError(_(
+                        "On the product %(product)s you cannot transform the attribute"
+                        " %(attribute_src)s into the attribute %(attribute_dest)s.",
+                        product=ptal.product_tmpl_id.display_name,
+                        attribute_src=ptal.attribute_id.display_name,
+                        attribute_dest=values['attribute_id'],
+                    ))
         # Remove all values while archiving to make sure the line is clean if it
         # is ever activated again.
         if not values.get('active', True):
-            values['value_ids'] = [(5, 0, 0)]
-        res = super(ProductTemplateAttributeLine, self).write(values)
+            values['value_ids'] = [Command.clear()]
+        res = super().write(values)
         if 'active' in values:
             self.env.flush_all()
             self.env['product.template'].invalidate_model(['attribute_line_ids'])
