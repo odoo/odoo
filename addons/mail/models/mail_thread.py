@@ -127,11 +127,13 @@ class MailThread(models.AbstractModel):
         """
         # TOFIX make it work with not in
         assert operator != "not in", "Do not search message_follower_ids with 'not in'"
-        followers = self.env['mail.followers'].sudo().search([
-            ('res_model', '=', self._name),
-            ('partner_id', operator, operand)])
-        # using read() below is much faster than followers.mapped('res_id')
-        return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+        domain = [('res_model', '=', self._name),
+                  ('partner_id', operator, operand)]
+        Follower = self.env['mail.followers'].sudo()
+        Follower._flush_search(domain, fields=['res_id'])
+        query = expression.expression(domain, Follower).query
+        query._subselect_field = 'res_id'
+        return [('id', 'in', query)]
 
     @api.model
     def _search_follower_channels(self, operator, operand):
@@ -141,11 +143,13 @@ class MailThread(models.AbstractModel):
         """
         # TOFIX make it work with not in
         assert operator != "not in", "Do not search message_follower_ids with 'not in'"
-        followers = self.env['mail.followers'].sudo().search([
-            ('res_model', '=', self._name),
-            ('channel_id', operator, operand)])
-        # using read() below is much faster than followers.mapped('res_id')
-        return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+        domain = [('res_model', '=', self._name),
+                  ('channel_id', operator, operand)]
+        Follower = self.env['mail.followers'].sudo()
+        Follower._flush_search(domain, fields=['res_id'])
+        query = expression.expression(domain, Follower).query
+        query._subselect_field = 'res_id'
+        return [('id', 'in', query)]
 
     @api.depends('message_follower_ids')
     def _compute_is_follower(self):
@@ -159,17 +163,18 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_is_follower(self, operator, operand):
-        followers = self.env['mail.followers'].sudo().search([
-            ('res_model', '=', self._name),
-            ('partner_id', '=', self.env.user.partner_id.id),
-            ])
+        assert operator in ('=', '!=') , "Search message_is_follower with operator '=' or '!='"
+        domain = [('res_model', '=', self._name),
+                  ('partner_id', '=', self.env.user.partner_id.id)]
+        Follower = self.env['mail.followers'].sudo()
+        Follower._flush_search(domain, fields=['res_id'])
+        query = expression.expression(domain, Follower).query
+        query._subselect_field = 'res_id'
         # Cases ('message_is_follower', '=', True) or  ('message_is_follower', '!=', False)
         if (operator == '=' and operand) or (operator == '!=' and not operand):
-            # using read() below is much faster than followers.mapped('res_id')
-            return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+            return [('id', 'in', query)]
         else:
-            # using read() below is much faster than followers.mapped('res_id')
-            return [('id', 'not in', [res['res_id'] for res in followers.read(['res_id'])])]
+            return [('id', 'not in', query)]
 
     def _get_message_unread(self):
         partner_id = self.env.user.partner_id.id

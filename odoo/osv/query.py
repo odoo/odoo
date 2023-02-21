@@ -70,6 +70,8 @@ class Query(object):
         self._where_clauses = []
         self._where_params = []
 
+        self._subselect_field = None
+
         # order, limit, offset
         self.order = None
         self.limit = None
@@ -120,8 +122,9 @@ class Query(object):
     def select(self, *args):
         """ Return the SELECT query as a pair ``(query_string, query_params)``. """
         from_clause, where_clause, params = self.get_sql()
+        subselect_field = 'id' if not self._subselect_field else f'"{self._subselect_field}"'
         query_str = 'SELECT {} FROM {} WHERE {}{}{}{}'.format(
-            ", ".join(args or [f'"{next(iter(self._tables))}".id']),
+            ", ".join(args or [f'"{next(iter(self._tables))}".{subselect_field}']),
             from_clause,
             where_clause or "TRUE",
             (" ORDER BY %s" % self.order) if self.order else "",
