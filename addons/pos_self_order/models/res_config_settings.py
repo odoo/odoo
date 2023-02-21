@@ -7,14 +7,10 @@ from werkzeug.urls import url_quote
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
     # FIXME: the select box has three optios: null; table; kiosk 
-    # --> make it so that it only has two options: table; kiosk
-    pos_self_order_location = fields.Selection([
-        ('table', 'Table'),
-        ('kiosk', 'Kiosk')],
-        compute='_compute_pos_module_pos_self_order', store=True, readonly=False)
-    pos_self_order_allow_open_tabs = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No')],
+    self_order_pay_after = fields.Selection([
+        ('each', 'Each Order'),
+        ('meal', 'Meal')
+        ],
         compute='_compute_pos_module_pos_self_order', store=True, readonly=False)
 
     @api.depends('pos_module_pos_self_order', 'pos_config_id')
@@ -22,13 +18,11 @@ class ResConfigSettings(models.TransientModel):
         for res_config in self:
             if not res_config.pos_module_pos_self_order:
                 res_config.update({
-                    'pos_self_order_location': False,
-                    'pos_self_order_allow_open_tabs': False,
+                    'self_order_pay_after': False,
                 })
             else:
                 res_config.update({
-                    'pos_self_order_location': res_config.pos_config_id.self_order_location,
-                    'pos_self_order_allow_open_tabs': res_config.pos_config_id.self_order_allow_open_tabs,
+                    'self_order_pay_after': res_config.pos_config_id.self_order_pay_after,
                 })
     def generate_qr_codes_page(self):
         business_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')

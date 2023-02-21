@@ -16,8 +16,12 @@ class PosSelfOrder(http.Controller):
     @http.route('/pos-self-order/test', auth='public', website=True)
     def pos_self_order_test(self, pos_id=None):
         # we get the custom links that we want to show for this POS
-        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([])
-        print(custom_links_sudo.filtered(lambda link: int(pos_id) in [pos.id for pos in link.pos_config_id] or not link.pos_config_id).read(['name', 'url']))
+        pos_sudo = request.env['pos.config'].sudo().browse(int(pos_id))
+        print("pos_sudo", pos_sudo.self_order_kiosk_mode)
+        print("pos_sudo", pos_sudo.self_order_phone_mode)
+        print("pos_sudo", pos_sudo.compute_self_order_location())
+        print("pos_sudo open tabs ", pos_sudo.self_order_pay_after)
+
         return "Hello World"
     @http.route('/pos-self-order/', auth='public', website=True)
     def pos_self_order_start(self, table_id=None, pos_id=None, message_to_display=None):
@@ -56,6 +60,13 @@ class PosSelfOrder(http.Controller):
         # FIXME: check if table_id and pos_id exist 
         # if not, send the user to the generic page where they can choose the POS and the table
         pos_sudo = request.env['pos.config'].sudo().search([('id', '=', pos_id)])
+
+        if not pos_sudo.self_order_allow_view_menu():   
+            raise werkzeug.exceptions.NotFound()
+            
+        if not pos_sudo.has_active_session:
+            message_to_display = "restaurant_is_closed"
+
         # On the landing page of the app we can have a number of custom links
         # they are defined by the restaurant employee in the backend
         custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([])
@@ -65,12 +76,12 @@ class PosSelfOrder(http.Controller):
             'pos_id': pos_id,
             'pos_name': pos_sudo.name,
             'currency_id': pos_sudo.currency_id.id,
-            'pos_is_open': pos_sudo.has_active_session,
             'pos_categories': request.env['pos.category'].sudo().search([]).read(['name', 'parent_id', 'child_id']),
             'message_to_display': message_to_display,
+            'self_order_allow_order': pos_sudo.has_active_session and pos_sudo.self_order_allow_order(),
             'show_prices_with_tax_included': True,
-            'self_order_location': pos_sudo.self_order_location,
-            'self_order_allow_open_tabs': pos_sudo.self_order_allow_open_tabs,
+            'self_order_location': pos_sudo.compute_self_order_location(),
+            'self_order_allow_open_tabs': pos_sudo.self_order_allow_open_tabs(),
             'payment_methods' : pos_sudo.payment_method_ids.read(['name']),
             'custom_links' : custom_links_list,
         }
@@ -90,6 +101,9 @@ class PosSelfOrder(http.Controller):
     def pos_self_order_get_menu(self, pos_id=None):
         if not pos_id:
             raise werkzeug.exceptions.NotFound() 
+        pos_sudo = request.env['pos.config'].sudo().search([('id', '=', pos_id)])
+        if not pos_sudo.self_order_allow_view_menu():   
+            raise werkzeug.exceptions.NotFound()
         # TODO: only get the products that are available in THIS POS
         products_sudo = request.env['product.product'].sudo().search(
             [('available_in_pos', '=', True)])
@@ -105,6 +119,7 @@ class PosSelfOrder(http.Controller):
 
     # FIXME: crop the images to be square -- maybe we want to do this in the frontend?
     # TODO: maybe we want to lazy load the images
+    # TODO: right now this route will return the image to whoever calls it; is there any reason to not make it public?
     # this is the route that the POS Self Order App uses to GET THE PRODUCT IMAGES
     @http.route('/pos-self-order/get-images/<int:product_id>', methods=['GET'], type='http', auth='public')
     def pos_self_order_get_images(self, product_id):
@@ -154,6 +169,11 @@ class PosSelfOrder(http.Controller):
         # we also have to check if the pos_id and table_id are valid
         # the values of cart have to be integers, for ex, etc.
 
+
+        pos_sudo = request.env['pos.config'].sudo().search([('id', '=', pos_id)])
+
+        if not pos_sudo.self_order_allow_order():   
+            raise werkzeug.exceptions.NotFound()
 
         pos_session_sudo = getPosSessionSudo(pos_id)
 

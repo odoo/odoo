@@ -11,9 +11,6 @@
                 <t t-if="props.message_to_display">
                     <AlertMessage alert_type="props.message_to_display" />
                 </t>
-                <t t-if="window.odoo.pos_is_open == false">
-                    <AlertMessage alert_type="'restaurant_is_closed'" />
-                </t>
                 <t t-if="window.odoo.self_order_location == 'table'">
 <!-- OrdersList -->
                     <OrdersList 

@@ -21,6 +21,7 @@
                         <t t-esc="props.product.description_sale"/>    
                     </t>
                 </div>
+                <t t-if="window.odoo.self_order_allow_order">
     <!-- Increment quantity -->
                     <div class="m-5">
                         <IncrementCounter setValue="setValue" value="this.private_state.qty"/>
@@ -36,6 +37,7 @@
                                     Add to Cart
                                 </t>
                     </button>
+                </t>
             </div>
     </t>
 </templates>

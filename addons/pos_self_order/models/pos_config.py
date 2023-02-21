@@ -7,17 +7,11 @@ from odoo.exceptions import ValidationError
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    self_order_location = fields.Selection([
-        ('table', 'Table'),
-        ('kiosk', 'Kiosk')
+    self_order_pay_after = fields.Selection([
+        ('each', 'Each Order'),
+        ('meal', 'Meal')
         ],
-        string='Order at', default='kiosk', readonly=False,
-        help="Choose where the customer will order from")
-    self_order_allow_open_tabs = fields.Selection([
-        ('yes', 'Yes'),
-        ('no', 'No')
-        ],
-        string='Pay After:', default='no', 
+        string='Pay After:', default='each', 
         help="Choose when the customer will pay")
 
     @api.constrains('self_order_location', 'self_order_allow_open_tabs')
@@ -26,3 +20,21 @@ class PosConfig(models.Model):
             raise ValidationError(_('Please select the order location for self order'))
         if self.self_order_location == 'table' and not self.self_order_allow_open_tabs:
             raise ValidationError(_('Please select a value for "Pay After"'))
+
+    def self_order_allow_view_menu(self):
+        self.ensure_one()
+        return self.self_order_view_mode or self.self_order_kiosk_mode
+    def self_order_allow_order(self):
+        self.ensure_one()
+        return self.compute_self_order_location != 'none'
+    def self_order_allow_open_tabs(self):
+        self.ensure_one()
+        return self.self_order_pay_after == 'meal'
+    def compute_self_order_location(self):
+        self.ensure_one()
+        if self.self_order_kiosk_mode:
+            return 'kiosk'
+        elif self.self_order_phone_mode:
+            return 'table'
+        else:
+            return 'none'

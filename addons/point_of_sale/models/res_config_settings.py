@@ -44,8 +44,48 @@ class ResConfigSettings(models.TransientModel):
     pos_module_pos_discount = fields.Boolean(related='pos_config_id.module_pos_discount', readonly=False)
     pos_module_pos_hr = fields.Boolean(related='pos_config_id.module_pos_hr', readonly=False)
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
-    pos_module_pos_self_order = fields.Boolean(related='pos_config_id.module_pos_self_order', readonly=False)
 
+
+    """
+    what we do here is kind of complicated...
+    we have the variable pos_module_pos_self_order. When this 
+    variable is set to True, the pos_self_order module is installed.
+    the problem is that we want to install the module when either the 
+    user clicks on "Self Ordering" setting from the "POS interface" section
+    or when the user clicks on "QR Code Menu" from the restaurant section.
+    We also have to know by which means did the user install the self_order module,
+    Because the module behaves differently depending on this info.
+
+    """
+    # Customer will be able to order from a kiosk
+    pos_self_order_kiosk_mode = fields.Boolean(related='pos_config_id.self_order_kiosk_mode', readonly=False)
+    # Customer will be able to see the menu on their phone
+    pos_self_order_view_mode = fields.Boolean(related='pos_config_id.self_order_view_mode', readonly=False)
+    # Customer will be able to order their phone
+    pos_self_order_phone_mode = fields.Boolean(related='pos_config_id.self_order_phone_mode', readonly=False)
+    # the pos_self_order module is installed
+    pos_module_pos_self_order = fields.Boolean(related='pos_config_id.module_pos_self_order', readonly=False)
+    @api.onchange('pos_self_order_kiosk_mode','pos_self_order_view_mode', 'pos_self_order_phone_mode')
+    def _compute_module_pos_self_order(self):
+        for record in self:
+            if record.pos_self_order_kiosk_mode :
+                record.pos_module_pos_self_order = True
+                record.pos_self_order_phone_mode = False
+                record.pos_self_order_view_mode = False
+            elif record.pos_self_order_view_mode:
+                record.pos_module_pos_self_order = True
+                record.pos_self_order_kiosk_mode = False
+            elif record.pos_self_order_phone_mode:
+                record.pos_module_pos_self_order = True
+                record.pos_self_order_view_mode = True
+                record.pos_self_order_kiosk_mode = False
+            else:
+                record.pos_module_pos_self_order = False
+
+    
+    
+    
+    
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
     pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_pricelist_id', readonly=False, store=True)

@@ -29,7 +29,7 @@
                 Tax: <t t-esc="props.getTotalTax() + props.currencyType"/>
             </p>
 <!-- Order Button -->
-            <t t-if="window.odoo.pos_is_open == false">
+            <t t-if="window.odoo.self_order_allow_order == false">
                 <AlertMessage alert_type="'restaurant_is_closed'"/>
             </t>
             <t t-else="">

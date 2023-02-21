@@ -41,6 +41,28 @@
                             </div>
                         </div>
                     </setting>
+                    <setting string="QR Code Menu" help="Allow customers to see the menu from their phone" 
+                        id="pos_self_order_view_mode"
+                        attrs="{'invisible': [('pos_self_order_kiosk_mode', '=', True)]}"
+                        >
+                        <field name="pos_self_order_view_mode" 
+                            attrs="{'readonly': [('pos_has_active_session', '=', True)]}"
+                        />
+                        <div class="content-group" id="warning_text_pos_self_order_view" attrs="{'invisible': [('pos_self_order_phone_mode', '=', False)]}">
+                            <div class="text-warning mt16 mb4">
+                                Save this page and come back here to set up the feature.
+                            </div>
+                        </div>
+                    </setting>
+<!-- Self Order -->
+                    <setting string="Self Order" help="Allow customers to order from their phone" 
+                        id="pos_self_order_phone_mode"
+                        attrs="{'invisible': [('pos_self_order_kiosk_mode', '=', True)]}"
+                        >
+                        <field name="pos_self_order_phone_mode" 
+                            attrs="{'readonly': [('pos_has_active_session', '=', True)]}"
+                        />
+                    </setting>
                 </block>
             </block>
             <div id="tip_product" position="after">

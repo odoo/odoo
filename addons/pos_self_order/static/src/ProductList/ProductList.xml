@@ -71,16 +71,18 @@
                 </div>
             </div>
 <!-- Go to Cart Button -->
-            <button t-on-click="() => props.viewCart()" class="fixed-bottom btn btn-primary btn-lg btn-block w-100 text-white">
-                <div class="d-flex align-items-center justify-content-between mx-2 ">
-                    <p>
-                        Review (<t t-esc="props.getTotalCartQty()"/>)
-                    </p>
-                    <p class="ml-auto">
-                        <t t-esc="props.getTotalCartCost() + props.currencyType"/>
-                    </p>
-                </div>
-            </button>
+            <t t-if="window.odoo.self_order_allow_order">
+                <button t-on-click="() => props.viewCart()" class="fixed-bottom btn btn-primary btn-lg btn-block w-100 text-white">
+                    <div class="d-flex align-items-center justify-content-between mx-2 ">
+                        <p>
+                            Review (<t t-esc="props.getTotalCartQty()"/>)
+                        </p>
+                        <p class="ml-auto">
+                            <t t-esc="props.getTotalCartCost() + props.currencyType"/>
+                        </p>
+                    </div>
+                </button>
+            </t>
     </t>
 </templates>
 
