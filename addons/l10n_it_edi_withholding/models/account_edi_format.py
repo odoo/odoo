@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import _, fields, models
 import logging
 
 
@@ -75,18 +75,20 @@ class AccountEdiFormat(models.Model):
     def _import_fattura_pa_line(self, element, invoice_line_form, extra_info):
         messages_to_log = super()._import_fattura_pa_line(element, invoice_line_form, extra_info)
 
+        company = self.env["res.company"].browse([invoice_line_form['company_id']])
+        currency = self.env['res.currency'].browse([invoice_line_form['currency_id']])
+
         for withholding_tax in extra_info.get('withholding_taxes', []):
-            withholding_tags = element.xpath("Ritenuta")
+            withholding_tags = element.xpath('Ritenuta')
             if withholding_tags and withholding_tags[0].text == 'SI':
-                invoice_line_form.tax_ids |= withholding_tax
+                invoice_line_form["tax_ids"].append(fields.Command.link(withholding_tax.id))
         for pension_fund_tax in extra_info.get('pension_fund_taxes', []):
-            invoice_line_form.tax_ids |= pension_fund_tax
+            invoice_line_form["tax_ids"].append(fields.Command.link(pension_fund_tax.id))
 
         if extra_info['simplified']:
             return messages_to_log
 
-        price_subtotal = invoice_line_form.price_unit
-        company = invoice_line_form.company_id
+        price_subtotal = invoice_line_form['price_unit']
 
         # ENASARCO Pension Fund tax (works as a withholding)
         for other_data_element in element.xpath('.//AltriDatiGestionali'):
@@ -99,15 +101,15 @@ class AccountEdiFormat(models.Model):
             if data_kind != 'cassa-prev' or ('enasarco' not in data_text and not 'tc07' in data_text):
                 continue
             enasarco_amount = float(number_text)
-            enasarco_percentage = -self.env.company.currency_id.round(enasarco_amount / price_subtotal * 100)
+            enasarco_percentage = -currency.round(enasarco_amount / price_subtotal * 100)
             enasarco_tax = self._l10n_it_edi_search_tax_for_import(company, enasarco_percentage, [
                 ('l10n_it_pension_fund_type', '=', 'TC07'),
             ])
             if enasarco_tax:
-                invoice_line_form.tax_ids |= enasarco_tax
+                invoice_line_form["tax_ids"].append(fields.Command.link(enasarco_tax.id))
             else:
                 messages_to_log.append("%s<br/>%s" % (
-                    _("Enasarco tax not found for line with description '%s'", invoice_line_form.name),
+                    _("Enasarco tax not found for line with description '%s'", invoice_line_form['name']),
                     self.env['account.move']._compose_info_message(other_data_element, '.'),
                 ))
 

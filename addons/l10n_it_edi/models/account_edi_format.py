@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, fields, _, _lt
+from odoo.fields import Command
 from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
@@ -514,178 +515,187 @@ class AccountEdiFormat(models.Model):
                 move_type = "in_invoice"
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
 
-            # Setup the context for the Invoice Form
-            invoice_ctx = invoice.with_company(company) \
-                                 .with_context(default_move_type=move_type)
+            vals = {
+                'company_id': company.id,
+                'move_type': move_type,
+            }
 
-            # move could be a single record (editing) or be empty (new).
-            with invoice_ctx._get_edi_creation() as invoice_form:
+            # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
+            extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, body_tree)
 
-                # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
-                extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, body_tree)
+            partner = self._l10n_it_get_partner_invoice(tree, company)
+            if partner:
+                vals['partner_id'] = partner.id
+            else:
+                message_to_log.append("%s<br/>%s" % (
+                    _("Vendor not found, useful informations from XML file:"),
+                    invoice._compose_info_message(
+                        tree, './/CedentePrestatore')))
 
-                partner = self._l10n_it_get_partner_invoice(tree, company)
-                if partner:
-                    invoice_form.partner_id = partner
+            # Numbering attributed by the transmitter. <1.1.2>
+            elements = tree.xpath('//ProgressivoInvio')
+            if elements:
+                vals['payment_reference'] = elements[0].text
+
+            elements = body_tree.xpath('.//DatiGeneraliDocumento//Numero')
+            if elements:
+                vals['ref'] = elements[0].text
+
+            # Currency. <2.1.1.2>
+            currency = self.env.ref('base.EUR')
+            elements = body_tree.xpath('.//DatiGeneraliDocumento/Divisa')
+            if elements:
+                currency_str = elements[0].text
+                currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
+                if currency != self.env.company.currency_id and currency.active:
+                    vals['currency_id'] = currency.id
+
+            # Date. <2.1.1.3>
+            elements = body_tree.xpath('.//DatiGeneraliDocumento/Data')
+            if elements:
+                document_date = self._convert_date_from_xml(elements[0].text)
+                if document_date:
+                    vals['invoice_date'] = document_date
                 else:
                     message_to_log.append("%s<br/>%s" % (
-                        _("Vendor not found, useful informations from XML file:"),
-                        invoice._compose_info_message(
-                            tree, './/CedentePrestatore')))
+                        _("Document date invalid in XML file:"),
+                        invoice._compose_info_message(elements[0], '.')
+                    ))
 
-                # Numbering attributed by the transmitter. <1.1.2>
-                elements = tree.xpath('//ProgressivoInvio')
-                if elements:
-                    invoice_form.payment_reference = elements[0].text
+            #  Dati Bollo. <2.1.1.6>
+            elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
+            if elements:
+                vals['l10n_it_stamp_duty'] = float(elements[0].text)
 
-                elements = body_tree.xpath('.//DatiGeneraliDocumento//Numero')
-                if elements:
-                    invoice_form.ref = elements[0].text
 
-                # Currency. <2.1.1.2>
-                elements = body_tree.xpath('.//DatiGeneraliDocumento/Divisa')
-                if elements:
-                    currency_str = elements[0].text
-                    currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                    if currency != self.env.company.currency_id and currency.active:
-                        invoice_form.currency_id = currency
+            # Comment. <2.1.1.11>
+            elements = body_tree.xpath('.//DatiGeneraliDocumento//Causale')
+            for element in elements:
+                # Default narration is just for sale documents, and we're importing vendor bills
+                vals['narration'] = (element.text or '') + '<br/>'
 
-                # Date. <2.1.1.3>
-                elements = body_tree.xpath('.//DatiGeneraliDocumento/Data')
+            # Information about the contract, the agreement, the reception phase
+            # or invoices previously transmitted, <2.1.3> - <2.1.6>
+            for document_type in ['DatiContratto', 'DatiConvenzione', 'DatiRicezione', 'DatiFattureCollegate']:
+                elements = body_tree.xpath('.//DatiGenerali/' + document_type)
                 if elements:
-                    document_date = self._convert_date_from_xml(elements[0].text)
-                    if document_date:
-                        invoice_form.invoice_date = document_date
+                    for element in elements:
+                        message_to_log.append("%s %s<br/>%s" % (document_type, _("from XML file:"),
+                        invoice._compose_info_message(element, '.')))
+
+            #  Dati DDT. <2.1.8>
+            elements = body_tree.xpath('.//DatiGenerali/DatiDDT')
+            if elements:
+                message_to_log.append("%s<br/>%s" % (
+                    _("Transport informations from XML file:"),
+                    invoice._compose_info_message(body_tree, './/DatiGenerali/DatiDDT')))
+
+            # Due date. <2.4.2.5>
+            elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
+            if elements:
+                date_str = elements[0].text.strip()
+                if date_str:
+                    due_date = self._convert_date_from_xml(date_str)
+                    if due_date:
+                        vals['invoice_date_due'] = fields.Date.to_string(due_date)
                     else:
                         message_to_log.append("%s<br/>%s" % (
-                            _("Document date invalid in XML file:"),
+                            _("Payment due date invalid in XML file:"),
                             invoice._compose_info_message(elements[0], '.')
                         ))
 
-                #  Dati Bollo. <2.1.1.6>
-                elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
+            # Total amount. <2.4.2.6>
+            elements = body_tree.xpath('.//ImportoPagamento')
+            amount_total_import = 0
+            for element in elements:
+                amount_total_import += float(element.text)
+            if amount_total_import:
+                message_to_log.append(_("Total amount from the XML File: %s") % (
+                    amount_total_import))
+
+            # Bank account. <2.4.2.13>
+            if vals['move_type'] not in ('out_invoice', 'in_refund'):
+                elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/IBAN')
                 if elements:
-                    invoice_form.l10n_it_stamp_duty = float(elements[0].text)
-
-
-                # Comment. <2.1.1.11>
-                elements = body_tree.xpath('.//DatiGeneraliDocumento//Causale')
-                for element in elements:
-                    invoice_form.narration = '%s%s<br/>' % (invoice_form.narration or '', element.text)
-
-                # Informations relative to the purchase order, the contract, the agreement,
-                # the reception phase or invoices previously transmitted
-                # <2.1.2> - <2.1.6>
-                for document_type in ['DatiOrdineAcquisto', 'DatiContratto', 'DatiConvenzione', 'DatiRicezione', 'DatiFattureCollegate']:
-                    elements = body_tree.xpath('.//DatiGenerali/' + document_type)
-                    if elements:
-                        for element in elements:
-                            message_to_log.append("%s %s<br/>%s" % (document_type, _("from XML file:"),
-                            invoice._compose_info_message(element, '.')))
-
-                #  Dati DDT. <2.1.8>
-                elements = body_tree.xpath('.//DatiGenerali/DatiDDT')
-                if elements:
-                    message_to_log.append("%s<br/>%s" % (
-                        _("Transport informations from XML file:"),
-                        invoice._compose_info_message(body_tree, './/DatiGenerali/DatiDDT')))
-
-                # Due date. <2.4.2.5>
-                elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
-                if elements:
-                    date_str = elements[0].text.strip()
-                    if date_str:
-                        due_date = self._convert_date_from_xml(date_str)
-                        if due_date:
-                            invoice_form.invoice_date_due = fields.Date.to_string(due_date)
-                        else:
-                            message_to_log.append("%s<br/>%s" % (
-                                _("Payment due date invalid in XML file:"),
-                                invoice._compose_info_message(elements[0], '.')
-                            ))
-
-                # Total amount. <2.4.2.6>
-                elements = body_tree.xpath('.//ImportoPagamento')
-                amount_total_import = 0
-                for element in elements:
-                    amount_total_import += float(element.text)
-                if amount_total_import:
-                    message_to_log.append(_("Total amount from the XML File: %s") % (
-                        amount_total_import))
-
-                # Bank account. <2.4.2.13>
-                if invoice_form.move_type not in ('out_invoice', 'in_refund'):
-                    elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/IBAN')
-                    if elements:
-                        if invoice_form.partner_id and invoice_form.partner_id.commercial_partner_id:
-                            bank = self.env['res.partner.bank'].search([
-                                ('acc_number', '=', elements[0].text),
-                                ('partner_id', '=', invoice_form.partner_id.commercial_partner_id.id),
-                                ('company_id', 'in', [invoice_form.company_id.id, False])
-                            ], order='company_id', limit=1)
-                        else:
-                            bank = self.env['res.partner.bank'].search([
-                                ('acc_number', '=', elements[0].text), ('company_id', 'in', [invoice_form.company_id.id, False])
-                            ], order='company_id', limit=1)
-                        if bank:
-                            invoice_form.partner_bank_id = bank
-                        else:
-                            message_to_log.append("%s<br/>%s" % (
-                                _("Bank account not found, useful informations from XML file:"),
-                                invoice._compose_multi_info_message(
-                                    body_tree, ['.//DatiPagamento//Beneficiario',
-                                        './/DatiPagamento//IstitutoFinanziario',
-                                        './/DatiPagamento//IBAN',
-                                        './/DatiPagamento//ABI',
-                                        './/DatiPagamento//CAB',
-                                        './/DatiPagamento//BIC',
-                                        './/DatiPagamento//ModalitaPagamento'])))
-                else:
-                    elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento')
-                    if elements:
+                    if vals['partner_id'] and vals['partner_id'].commercial_partner_id:
+                        bank = self.env['res.partner.bank'].search([
+                            ('acc_number', '=', elements[0].text),
+                            ('partner_id', '=', vals['partner_id'].commercial_partner_id.id),
+                            ('company_id', 'in', [company.id, False])
+                        ], order='company_id', limit=1)
+                    else:
+                        bank = self.env['res.partner.bank'].search([
+                            ('acc_number', '=', elements[0].text), ('company_id', 'in', [company.id, False])
+                        ], order='company_id', limit=1)
+                    if bank:
+                        vals['partner_bank_id'] = bank
+                    else:
                         message_to_log.append("%s<br/>%s" % (
                             _("Bank account not found, useful informations from XML file:"),
-                            invoice._compose_info_message(body_tree, './/DatiPagamento')))
+                            invoice._compose_multi_info_message(
+                                body_tree, ['.//DatiPagamento//Beneficiario',
+                                    './/DatiPagamento//IstitutoFinanziario',
+                                    './/DatiPagamento//IBAN',
+                                    './/DatiPagamento//ABI',
+                                    './/DatiPagamento//CAB',
+                                    './/DatiPagamento//BIC',
+                                    './/DatiPagamento//ModalitaPagamento'])))
+            else:
+                elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento')
+                if elements:
+                    message_to_log.append("%s<br/>%s" % (
+                        _("Bank account not found, useful informations from XML file:"),
+                        invoice._compose_info_message(body_tree, './/DatiPagamento')))
 
-                # Invoice lines. <2.2.1>
-                if not extra_info['simplified']:
-                    elements = body_tree.xpath('.//DettaglioLinee')
-                else:
-                    elements = body_tree.xpath('.//DatiBeniServizi')
+            # Invoice lines. <2.2.1>
+            if not extra_info['simplified']:
+                elements = body_tree.xpath('.//DettaglioLinee')
+            else:
+                elements = body_tree.xpath('.//DatiBeniServizi')
 
-                for element in (elements or []):
-                    invoice_line_form = invoice_form.invoice_line_ids.create({'move_id': invoice_form.id})
-                    if invoice_line_form:
-                        message_to_log += self._import_fattura_pa_line(element, invoice_line_form, extra_info)
+            invoice_lines = []
+            for element in (elements or []):
+                invoice_line = {
+                    'company_id': company.id,
+                    'partner_id': partner.id,
+                    'currency_id': currency.id,
+                    'tax_ids': [Command.clear()],
+                }
+                message_to_log += self._import_fattura_pa_line(element, invoice_line, extra_info)
+                invoice_lines.append(invoice_line)
 
-                # Global discount summarized in 1 amount
-                discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
-                if discount_elements:
-                    taxable_amount = float(invoice_form.tax_totals['amount_untaxed'])
-                    discounted_amount = taxable_amount
-                    for discount_element in discount_elements:
-                        discount_type = discount_element.xpath('.//Tipo')
-                        discount_sign = 1
-                        if discount_type and discount_type[0].text == 'MG':
-                            discount_sign = -1
-                        discount_amount = discount_element.xpath('.//Importo')
-                        if discount_amount:
-                            discounted_amount -= discount_sign * float(discount_amount[0].text)
-                            continue
-                        discount_percentage = discount_element.xpath('.//Percentuale')
-                        if discount_percentage:
-                            discounted_amount *= 1 - discount_sign * float(discount_percentage[0].text) / 100
+            untaxed_amount = currency.round(sum([line['price_subtotal'] for line in invoice_lines]))
 
-                    general_discount = discounted_amount - taxable_amount
-                    sequence = len(elements) + 1
+            # Global discount summarized in 1 amount
+            discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
+            if discount_elements:
+                taxable_amount = float(untaxed_amount)
+                discounted_amount = taxable_amount
+                for discount_element in discount_elements:
+                    discount_type = discount_element.xpath('.//Tipo')
+                    discount_sign = 1
+                    if discount_type and discount_type[0].text == 'MG':
+                        discount_sign = -1
+                    discount_amount = discount_element.xpath('.//Importo')
+                    if discount_amount:
+                        discounted_amount -= discount_sign * float(discount_amount[0].text)
+                        continue
+                    discount_percentage = discount_element.xpath('.//Percentuale')
+                    if discount_percentage:
+                        discounted_amount *= 1 - discount_sign * float(discount_percentage[0].text) / 100
 
-                    with invoice_form.invoice_line_ids.new() as invoice_line_global_discount:
-                        invoice_line_global_discount.tax_ids.clear()
-                        invoice_line_global_discount.sequence = sequence
-                        invoice_line_global_discount.name = 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE'
-                        invoice_line_global_discount.price_unit = general_discount
+                general_discount = discounted_amount - taxable_amount
+                sequence = len(elements) + 1
 
-            new_invoice = invoice_form
+                invoice_lines.append({
+                    'tax_ids': (6, 0, []),
+                    'sequence': sequence,
+                    'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
+                    'price_unit': general_discount,
+                })
+            vals['line_ids'] = [(0, 0, line_vals) for line_vals in invoice_lines]
+
+            new_invoice = self.env['account.move'].with_company(company).create(vals)
 
             elements = body_tree.xpath('.//Allegati')
             if elements:
@@ -713,16 +723,22 @@ class AccountEdiFormat(models.Model):
 
         return invoices
 
-    def _import_fattura_pa_line(self, element, invoice_line_form, extra_info=None):
-        extra_info = extra_info or {}
-        company = invoice_line_form.company_id
-        partner = invoice_line_form.partner_id
+    def _get_xml_node_text(self, parent, selector):
+        elements = parent.xpath(selector)
+        return elements and elements[0].text or None
+
+
+    def _import_fattura_pa_line(self, element, invoice_line, extra_info=None):
         message_to_log = []
+        extra_info = extra_info or {}
+        currency = self.env['res.currency'].browse([invoice_line['currency_id']])
+        company = self.env['res.company'].browse([invoice_line['company_id']])
+        partner = self.env['res.partner'].browse([invoice_line['partner_id']])
 
         # Sequence.
         line_elements = element.xpath('.//NumeroLinea')
         if line_elements:
-            invoice_line_form.sequence = int(line_elements[0].text)
+            invoice_line['sequence'] = int(line_elements[0].text)
 
         # Product.
         elements_code = element.xpath('.//CodiceArticolo')
@@ -733,79 +749,87 @@ class AccountEdiFormat(models.Model):
                 if type_code.text == 'EAN':
                     product = self.env['product.product'].search([('barcode', '=', code.text)])
                     if product:
-                        invoice_line_form.product_id = product
+                        invoice_line['product_id'] = product
                         break
                 if partner:
                     product_supplier = self.env['product.supplierinfo'].search([('partner_id', '=', partner.id), ('product_code', '=', code.text)], limit=2)
                     if product_supplier and len(product_supplier) == 1 and product_supplier.product_id:
-                        invoice_line_form.product_id = product_supplier.product_id
+                        invoice_line['product_id'] = product_supplier.product_id
                         break
-            if not invoice_line_form.product_id:
+
+            if not invoice_line.get('product_id'):
+            # if not invoice_line_form.product_id:
                 for element_code in elements_code:
                     code = element_code.xpath('.//CodiceValore')[0]
                     product = self.env['product.product'].search([('default_code', '=', code.text)], limit=2)
                     if product and len(product) == 1:
-                        invoice_line_form.product_id = product
+                        invoice_line['product_id'] = product
                         break
 
         # Label.
         line_elements = element.xpath('.//Descrizione')
         if line_elements:
-            invoice_line_form.name = " ".join(line_elements[0].text.split())
+            invoice_line['name'] = " ".join(line_elements[0].text.split())
 
         # Quantity.
         line_elements = element.xpath('.//Quantita')
         if line_elements:
-            invoice_line_form.quantity = float(line_elements[0].text)
+            invoice_line['quantity'] = float(line_elements[0].text)
         else:
-            invoice_line_form.quantity = 1
+            invoice_line['quantity'] = 1
 
-        # Taxes
-        percentage = None
+        # Price and taxes
+        tax_percentage = None
         price_subtotal = 0
         if not extra_info['simplified']:
-            tax_element = element.xpath('.//AliquotaIVA')
-            if tax_element and tax_element[0].text:
-                percentage = float(tax_element[0].text)
+            tax_text = self._get_xml_node_text(element, './/AliquotaIVA')
+            price_subtotal_text = self._get_xml_node_text(element, './/PrezzoTotale')
+            price_unit_text = self._get_xml_node_text(element, './/PrezzoUnitario')
+            if (tax_text and price_subtotal_text and price_unit_text):
+                tax_percentage = currency.round(float(tax_text))
+                price_subtotal = currency.round(float(price_subtotal_text))
+                price_unit = currency.round(float(price_unit_text))
+            else:
+                message_to_log.append("%s %s" % (
+                    _("Invalid price or tax information for line with name:"),
+                    invoice_line.get('name')))
         else:
             amount_element = element.xpath('.//Importo')
             if amount_element and amount_element[0].text:
                 amount = float(amount_element[0].text)
                 tax_element = element.xpath('.//Aliquota')
                 if tax_element and tax_element[0].text:
-                    percentage = float(tax_element[0].text)
-                    price_subtotal = amount / (1 + percentage / 100)
+                    tax_percentage = float(tax_element[0].text)
+                    price_subtotal = amount * 100 / (1 + tax_percentage)
+                    price_unit = price_subtotal
                 else:
                     tax_element = element.xpath('.//Imposta')
                     if tax_element and tax_element[0].text:
                         tax_amount = float(tax_element[0].text)
                         price_subtotal = amount - tax_amount
-                        percentage = round(tax_amount / price_subtotal * 100)
+                        tax_percentage = round(tax_amount / price_subtotal * 100)
+                        price_unit = price_subtotal
+        if tax_percentage and price_subtotal:
+            invoice_line['price_unit'] = price_unit
+            invoice_line['price_subtotal'] = price_subtotal
+            invoice_line['price_total'] = currency.round(price_subtotal * (1 + tax_percentage / 100.0))
 
         natura_element = element.xpath('.//Natura')
-        invoice_line_form.tax_ids = []
-        if percentage is not None:
+        invoice_line['tax_ids'] = [Command.clear()]
+        if tax_percentage is not None:
             l10n_it_kind_exoneration = bool(natura_element) and natura_element[0].text
             conditions = (
                 l10n_it_kind_exoneration and [('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration)]
                 or [('l10n_it_has_exoneration', '=', False)]
             )
-            tax = self._l10n_it_edi_search_tax_for_import(company, percentage, conditions)
+            tax = self._l10n_it_edi_search_tax_for_import(company, tax_percentage, conditions)
             if tax:
-                invoice_line_form.tax_ids += tax
+                invoice_line['tax_ids'].append(Command.link(tax.id))
             else:
                 message_to_log.append("%s<br/>%s" % (
-                    _("Tax not found for line with description '%s'", invoice_line_form.name),
+                    _("Tax not found for line with description '%s'", invoice_line.get('name')),
                     self.env['account.move']._compose_info_message(element, '.'),
                 ))
-
-        # Price Unit.
-        if not extra_info['simplified']:
-            line_elements = element.xpath('.//PrezzoUnitario')
-            if line_elements:
-                invoice_line_form.price_unit = float(line_elements[0].text)
-        else:
-            invoice_line_form.price_unit = price_subtotal
 
         # Discounts
         discount_elements = element.xpath('.//ScontoMaggiorazione')
@@ -818,12 +842,11 @@ class AccountEdiFormat(models.Model):
                 discount_sign = 1
                 if discount_type and discount_type[0].text == 'MG':
                     discount_sign = -1
-                invoice_line_form.discount = discount_sign * float(discount_percentage[0].text)
+                invoice_line['discount'] = discount_sign * float(discount_percentage[0].text)
             # Discounts in cascade summarized in 1 percentage
             else:
-                total = float(element.xpath('.//PrezzoTotale')[0].text)
-                discount = 100 - (100 * total) / (invoice_line_form.quantity * invoice_line_form.price_unit)
-                invoice_line_form.discount = discount
+                discount = 100 - (100 * invoice_line['price_total']) / (invoice_line['quantity'] * invoice_line['price_unit'])
+                invoice_line['discount'] = discount
 
         return message_to_log
 
