@@ -6,7 +6,7 @@
             <div class="o_kanban_header_title position-relative d-flex lh-lg" t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave">
                 <div t-if="!env.isSmall and group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover">
                     <t t-esc="groupName"></t>
-                    <span class="badge text-bg-500 rounded-pill ms-2" t-esc="group.count"></t>
+                    <span class="badge text-bg-500 rounded-pill lh-1 ms-2" t-esc="group.count"></t>
                 </div>
                 <span t-else=""
                     t-esc="groupName"

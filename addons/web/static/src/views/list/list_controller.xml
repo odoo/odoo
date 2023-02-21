@@ -4,26 +4,76 @@
     <t t-name="web.ListView" owl="1">
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
-                <t t-set-slot="layout-buttons">
-                    <t t-if="env.isSmall and nbSelected">
-                        <t t-call="web.ListView.Selection" />
-                    </t>
-                    <t t-else="">
-                        <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
-                            <t t-call="{{ props.buttonTemplate }}"/>
-                        </div>
+                <t t-set-slot="control-panel-create-button">
+                    <t t-if="activeActions.create and (!model.root.isGrouped or !editable)">
+                        <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
+                            New
+                        </button>
                     </t>
                 </t>
-                <t t-set-slot="control-panel-bottom-left">
-                    <t t-if="props.info.actionMenus and model.root.selection.length">
-                        <ActionMenus
-                            getActiveIds="() => model.root.selection.map((r) => r.resId)"
-                            context="props.context"
+
+                <t t-set-slot="control-panel-always-buttons">
+                    <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
+                        <MultiRecordViewButton
+                            t-if="button.display === 'always'"
+                            list="model.root"
+                            className="button.className"
+                            clickParams="button.clickParams"
+                            defaultRank="'btn-secondary'"
                             domain="props.domain"
-                            items="actionMenuItems"
-                            isDomainSelected="model.root.isDomainSelected"
-                            resModel="model.root.resModel"
-                            onActionExecuted="() => model.load()"/>
+                            icon="button.icon"
+                            string="button.string"
+                            title="button.title"
+                        />
+                    </t>
+                </t>
+
+                <t t-set-slot="layout-buttons">
+                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                        <t t-call="{{ props.buttonTemplate }}"/>
+                    </div>
+                </t>
+
+                <t t-set-slot="layout-actions">
+                    <SearchBar/>
+                </t>
+
+                <t t-set-slot="control-panel-additional-actions">
+                    <div t-if="nbSelected" class="d-flex ms-3">
+                        <t t-call="web.ListView.Selection"/>
+                        <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
+                            <MultiRecordViewButton
+                                t-if="button.display !== 'always'"
+                                list="model.root"
+                                className="button.className"
+                                clickParams="button.clickParams"
+                                defaultRank="'btn-secondary'"
+                                domain="props.domain"
+                                icon="button.icon"
+                                string="button.string"
+                                title="button.title"
+                            />
+                        </t>
+                        <t t-if="props.info.actionMenus">
+                            <ActionMenus
+                                getActiveIds="() => model.root.selection.map((r) => r.resId)"
+                                context="props.context"
+                                domain="props.domain"
+                                items="actionMenuItems"
+                                isDomainSelected="model.root.isDomainSelected"
+                                resModel="model.root.resModel"
+                                onActionExecuted="() => model.load()"/>
+                        </t>
+                    </div>
+                    <t t-else="">
+                        <Dropdown togglerClass="'d-print-none btn btn-text ms-1 lh-sm'">
+                            <t t-set-slot="toggler">
+                                <i class="fa fa-cog"/>
+                            </t>
+                            <DropdownItem t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable" onSelected.bind="onDirectExportData">
+                                Export All
+                            </DropdownItem>
+                        </Dropdown>
                     </t>
                 </t>
                 <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" allowSelectors="props.allowSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord"/>
@@ -32,56 +82,32 @@
     </t>
 
     <t t-name="web.ListView.Buttons" owl="1">
-        <div class="o_list_buttons d-flex flex-wrap" role="toolbar" aria-label="Main actions">
-            <t t-if="props.showButtons">
-                <t t-if="model.root.editedRecord">
-                    <button type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
-                        Save
-                    </button>
-                    <button type="button" class="btn btn-secondary o_list_button_discard" data-hotkey="j" t-on-click="onClickDiscard" t-on-mousedown="onMouseDownDiscard">
-                        Discard
-                    </button>
-                </t>
-                <t t-elif="activeActions.create and (!model.root.isGrouped or !editable)">
-                    <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
-                        New
-                    </button>
-                </t>
-                <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
-                    <MultiRecordViewButton
-                        t-if="nbSelected || (button.display === 'always')"
-                        list="model.root"
-                        className="button.className"
-                        clickParams="button.clickParams"
-                        defaultRank="'btn-secondary'"
-                        domain="props.domain"
-                        icon="button.icon"
-                        string="button.string"
-                        title="button.title"
-                    />
-                </t>
-                <t t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable and !env.isSmall">
-                    <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All" t-on-click="onDirectExportData"/>
-                </t>
-            </t>
-            <t t-if="!env.isSmall and nbSelected">
-                <t t-call="web.ListView.Selection"/>
+        <div t-if="props.showButtons" class="o_list_buttons d-flex d-empty-none align-items-baseline" role="toolbar" aria-label="Main actions">
+            <t t-if="model.root.editedRecord">
+                <button type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
+                    Save
+                </button>
+                <button type="button" class="btn btn-secondary o_list_button_discard" data-hotkey="j" t-on-click="onClickDiscard" t-on-mousedown="onMouseDownDiscard">
+                    Discard
+                </button>
             </t>
         </div>
     </t>
 
     <t t-name="web.ListView.Selection" owl="1">
-        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center p-1" role="alert">
-            <span t-if="isDomainSelected" class="p-1">All <t t-esc="nbTotal"/> selected</span>
-            <t t-else="">
-                <span class="me-1" t-esc="nbSelected"/> selected
-                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info p-1 border-0 fw-normal" t-on-click="onSelectDomain">
-                    <i class="fa fa-fw fa-arrow-right"/> Select all <span t-esc="nbTotal"/>
+        <div class="o_list_selection_box list-group flex-row me-2" role="alert">
+            <span class="list-group-item active d-flex align-items-center alisgn-self-stretch pe-0 py-0 rounded-1 lh-1">
+                <span t-if="isDomainSelected">All <b t-esc="nbTotal"/> selected</span>
+                <t t-else="">
+                    <b class="me-1" t-esc="nbSelected"/> selected
+                    <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-3 btn btn-sm btn-info p-1 me-n2 border-0 fw-normal" t-on-click="onSelectDomain">
+                        <i class="fa fa-fw fa-arrow-right"/> Select all <span t-esc="nbTotal"/>
+                    </a>
+                </t>
+                <a href="#" title="Unselect All" class="o_list_unselect_all btn btn-link py-0 ms-2" t-on-click="onUnselectAll">
+                    <i class="oi oi-close oi-large"/>
                 </a>
-            </t>
-            <a t-if="nbSelected > 1" href="#" class="o_list_unselect_all ms-2 btn btn-sm btn-info p-1 border-0 fw-normal" t-att-class="{'btn-link': env.isSmall}" t-on-click="onUnselectAll">
-                <i class="fa fa-fw fa-times"/><t t-if="!env.isSmall"> Unselect all</t>
-            </a>
+            </span>
         </div>
     </t>
 
