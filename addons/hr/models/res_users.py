@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.tools.misc import clean_context
@@ -222,8 +224,9 @@ class User(models.Model):
         """
         return ['name', 'email', 'image_1920', 'tz']
 
-    def _get_personal_info_partner_ids_to_notify(self):
-        return self.env.ref('hr.group_hr_manager').users.filtered(lambda u: u.company_id == self.env.company).partner_id.ids
+    def _get_personal_info_partner_ids_to_notify(self, employee):
+        # To override in appropriate module
+        return ('', [])
 
     def write(self, vals):
         """
@@ -232,7 +235,7 @@ class User(models.Model):
         their own data (otherwise sudo is applied for self data).
         """
         hr_fields = {
-            field
+            field_name: field
             for field_name, field in self._fields.items()
             if field.related_field and field.related_field.model_name == 'hr.employee' and field_name in vals
         }
@@ -244,11 +247,22 @@ class User(models.Model):
         employee_domain = [('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)]
         if hr_fields:
             employees = self.env['hr.employee'].sudo().search(employee_domain)
+            get_field = self.env['ir.model.fields']._get
+            field_names = Markup().join([
+                 Markup("<li>%s</li>") % get_field("res.users", fname).field_description for fname in hr_fields
+            ])
             for employee in employees:
-                employee.message_notify(
-                    body=_('Personal information update.'),
-                    partner_ids=self._get_personal_info_partner_ids_to_notify(),
-                )
+                reason_message, partner_ids = self._get_personal_info_partner_ids_to_notify(employee)
+                if partner_ids:
+                    employee.message_notify(
+                        body=Markup("<p>%s</p><p>%s</p><ul>%s</ul><p><em>%s</em></p>") % (
+                            _('Personal information update.'),
+                            _("The following fields were modified by %s", employee.name),
+                            field_names,
+                            reason_message,
+                        ),
+                        partner_ids=partner_ids,
+                    )
         result = super(User, self).write(vals)
 
         employee_values = {}
