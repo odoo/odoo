@@ -34,8 +34,7 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
             'input_quantity': quantity >= 0 ? quantity : false,
             'access_token': self.orderDetail.token
         }).then((data) => {
-            self._updateOrderLineValues($target.closest('tr'), data);
-            self._updateOrderValues(data);
+            window.location.reload();
         });
     },
     /**
@@ -53,7 +52,7 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
             'unlink': $target.data('unlink'),
             'access_token': self.orderDetail.token
         }).then((data) => {
-            window.location.reload()
+            window.location.reload();
         });
     },
     /**
