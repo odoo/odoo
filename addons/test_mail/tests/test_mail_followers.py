@@ -325,8 +325,8 @@ class AdvancedFollowersTest(TestMailCommon):
         })
         self.assertFalse(new_record.message_partner_ids,
                          'Filters out inactive partners')
-        self.assertEqual(new_record.message_follower_ids.partner_id, self.partner_admin,
-                         'TODO: should not subscribe inactive partner')
+        self.assertFalse(new_record.message_follower_ids.partner_id,
+                         'Does not subscribe inactive partner')
 
     def test_auto_subscribe_post(self):
         """ People posting a message are automatically added as followers """
