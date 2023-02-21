@@ -243,7 +243,7 @@ class ProductTemplate(models.Model):
         price_context = product_or_template._get_product_price_context(combination)
         product_or_template = product_or_template.with_context(**price_context)
 
-        list_price = product_or_template.price_compute('list_price')[product_or_template.id]
+        list_price = product_or_template._price_compute('list_price')[product_or_template.id]
         price_extra = product_or_template._get_attributes_extra_price()
         price = pricelist._get_product_price(product_or_template, quantity)
 

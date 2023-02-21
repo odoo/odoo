@@ -645,7 +645,7 @@ class ProductProduct(models.Model):
         return self.price_extra + sum(
             self.env.context.get('no_variant_attributes_price_extra', []))
 
-    def price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
+    def _price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company
         date = date or fields.Date.context_today(self)
 
