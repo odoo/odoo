@@ -29,7 +29,7 @@ export const busService = {
         let worker;
         let isActive = false;
         let isInitialized = false;
-        let isUsingSharedWorker = 'SharedWorker' in browser && !isIosApp();
+        let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
         const connectionInitializedDeferred = new Deferred();
 
         /**
