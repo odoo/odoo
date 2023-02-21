@@ -15,7 +15,7 @@ from odoo.tools import email_split, float_repr, float_compare, is_html_empty
 class HrExpense(models.Model):
 
     _name = "hr.expense"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'analytic.mixin']
+    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin', 'analytic.mixin']
     _description = "Expense"
     _order = "date desc, id desc"
     _check_company_auto = True
@@ -784,7 +784,7 @@ class HrExpenseSheet(models.Model):
         =================================================================================
     """
     _name = "hr.expense.sheet"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _description = "Expense Report"
     _order = "accounting_date desc, id desc"
     _check_company_auto = True
