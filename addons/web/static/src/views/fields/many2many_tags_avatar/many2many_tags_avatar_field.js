@@ -18,7 +18,7 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     get tags() {
         return super.tags.map((tag) => ({
             ...tag,
-            img: `/web/image/${this.props.relation}/${tag.resId}/avatar_128`,
+            img: `/web/image/${this.relation}/${tag.resId}/avatar_128`,
             onDelete: !this.props.readonly ? () => this.deleteTag(tag.id) : undefined,
         }));
     }
@@ -39,7 +39,7 @@ export class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField
     getTagProps(record) {
         return {
             ...super.getTagProps(record),
-            img: `/web/image/${this.props.relation}/${record.resId}/avatar_128`,
+            img: `/web/image/${this.relation}/${record.resId}/avatar_128`,
         };
     }
 }

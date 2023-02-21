@@ -9,14 +9,14 @@
             <div t-ref="div">
                 <textarea
                     class="o_input"
-                    t-att-class="{'o_field_translate': props.isTranslatable}"
+                    t-att-class="{'o_field_translate': isTranslatable}"
                     t-att-id="props.id"
                     t-att-placeholder="props.placeholder"
                     t-att-rows="rowCount"
                     t-on-input="onInput"
                     t-ref="textarea"
                 />
-                <t t-if="props.isTranslatable">
+                <t t-if="isTranslatable">
                     <TranslationButton
                         fieldName="props.name"
                         record="props.record"

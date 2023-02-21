@@ -25,6 +25,10 @@ export class GaugeField extends Component {
         });
     }
 
+    get title() {
+        return this.props.title || this.props.record.fields[this.props.name].string || "";
+    }
+
     get formattedValue() {
         return formatFloat(this.props.value, { humanReadable: true, decimals: 1 });
     }
@@ -44,7 +48,7 @@ export class GaugeField extends Component {
                     {
                         data: [gaugeValue, maxValue - gaugeValue],
                         backgroundColor: ["#1f77b4", "#dddddd"],
-                        label: this.props.title,
+                        label: this.title,
                     },
                 ],
             },
@@ -65,7 +69,7 @@ export class GaugeField extends Component {
                 },
                 title: {
                     display: true,
-                    text: this.props.title,
+                    text: this.title,
                     padding: 4,
                 },
                 layout: {
@@ -85,15 +89,14 @@ GaugeField.template = "web.GaugeField";
 GaugeField.props = {
     ...standardFieldProps,
     maxValueField: { type: String },
-    title: { type: String },
+    title: { type: String, optional: true },
 };
 
 export const gaugeField = {
     component: GaugeField,
-    extractProps: ({ attrs, field }) => ({
+    extractProps: ({ attrs }) => ({
         maxValueField: attrs.options.max_field,
-
-        title: attrs.options.title || field.string,
+        title: attrs.options.title,
     }),
 };
 

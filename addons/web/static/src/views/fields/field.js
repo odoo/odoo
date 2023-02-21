@@ -125,7 +125,6 @@ export class Field extends Component {
     get fieldComponentProps() {
         const record = this.props.record;
         const evalContext = record.evalContext;
-        const field = record.fields[this.props.name];
         const fieldInfo = this.props.fieldInfo;
 
         const modifiers = fieldInfo.modifiers || {};
@@ -143,7 +142,6 @@ export class Field extends Component {
         if (this.props.attrs) {
             const extractProps = this.field.extractProps || (() => ({}));
             propsFromAttrs = extractProps.call(this.field, {
-                field,
                 attrs: {
                     ...this.props.attrs,
                     options: evaluateExpr(this.props.attrs.options || "{}"),
@@ -232,7 +230,6 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         // FIXME WOWL: find a better solution
         const extractProps = field.extractProps || (() => ({}));
         fieldInfo.propsFromAttrs = extractProps.call(field, {
-            field: fields[name],
             attrs: { ...fieldInfo.rawAttrs, options: fieldInfo.options },
         });
     }

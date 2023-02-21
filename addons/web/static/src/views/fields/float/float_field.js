@@ -36,11 +36,15 @@ export class FloatField extends Component {
         return this.props.inputType === "number" ? Number(value) : parseFloat(value);
     }
 
+    get digits() {
+        const fieldDigits = this.props.record.fields[this.props.name].digits;
+        return !this.props.digits && Array.isArray(fieldDigits) ? fieldDigits : this.props.digits;
+    }
     get formattedValue() {
         if (this.props.inputType === "number" && !this.props.readonly && this.value) {
             return this.value;
         }
-        return formatFloat(this.value, { digits: this.props.digits });
+        return formatFloat(this.value, { digits: this.digits });
     }
 
     get value() {
@@ -53,7 +57,7 @@ export const floatField = {
     displayName: _lt("Float"),
     supportedTypes: ["float"],
     isEmpty: () => false,
-    extractProps: ({ attrs, field }) => {
+    extractProps: ({ attrs }) => {
         // Sadly, digits param was available as an option and an attr.
         // The option version could be removed with some xml refactoring.
         let digits;
@@ -61,8 +65,6 @@ export const floatField = {
             digits = JSON.parse(attrs.digits);
         } else if (attrs.options.digits) {
             digits = attrs.options.digits;
-        } else if (Array.isArray(field.digits)) {
-            digits = field.digits;
         }
 
         return {

@@ -13,6 +13,10 @@ export class Many2OneAvatarField extends Component {
     static props = {
         ...Many2OneField.props,
     };
+
+    get relation() {
+        return this.props.relation || this.props.record.fields[this.props.name].relation;
+    }
 }
 
 export const many2OneAvatarField = {

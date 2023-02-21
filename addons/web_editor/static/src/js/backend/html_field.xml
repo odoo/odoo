@@ -25,7 +25,7 @@
                     editingValue="this.currentEditingValue"
                     widgetArgs="[this.wysiwygOptions]" />
             </t>
-            <t t-if="props.isTranslatable">
+            <t t-if="isTranslatable">
                 <span t-attf-style="font-size: 15px; position: absolute; right: {{this.props.codeview ? '40px' : '5px'}}; top: 5px;">
                     <TranslationButton
                         fieldName="props.name"

@@ -17,7 +17,6 @@ export class Many2ManyBinaryField extends Component {
         ...standardFieldProps,
         acceptedFileExtensions: { type: String, optional: true },
         className: { type: String, optional: true },
-        uploadText: { type: String, optional: true },
     };
 
     setup() {
@@ -26,6 +25,9 @@ export class Many2ManyBinaryField extends Component {
         this.operations = useX2ManyCrud(() => this.props.value, true);
     }
 
+    get uploadText() {
+        return this.props.record.fields[this.props.name].string;
+    }
     get files() {
         return this.props.value.records.map((record) => record.data);
     }
@@ -64,10 +66,9 @@ export const many2ManyBinaryField = {
         { name: "name", type: "char" },
         { name: "mimetype", type: "char" },
     ],
-    extractProps: ({ attrs, field }) => ({
+    extractProps: ({ attrs }) => ({
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         className: attrs.class,
-        uploadText: field.string,
     }),
 };
 

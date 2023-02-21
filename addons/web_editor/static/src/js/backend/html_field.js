@@ -141,7 +141,7 @@ export class HtmlField extends Component {
                         // Ensure all external links are opened in a new tab.
                         retargetLinks(this.readonlyElementRef.el);
 
-                        const hasReadonlyModifiers = Boolean(this.props.record.isReadonly(this.props.fieldName));
+                        const hasReadonlyModifiers = Boolean(this.props.record.isReadonly(this.props.name));
                         if (!hasReadonlyModifiers) {
                             const $el = $(this.readonlyElementRef.el);
                             $el.off('.checklistBinding');
@@ -167,6 +167,9 @@ export class HtmlField extends Component {
         });
     }
 
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
+    }
     get markupValue () {
         return markup(this.props.value);
     }
@@ -211,12 +214,18 @@ export class HtmlField extends Component {
             }
         }
 
+        const wysiwygOptions = { ...this.props.wysiwygOptions };
+        const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];
+        if (sanitize_tags || (sanitize_tags === undefined && sanitize)) {
+            wysiwygOptions.allowCommandVideo = false; // Tag-sanitized fields remove videos.
+        }
+
         return {
             value: this.props.value,
             autostart: false,
             onAttachmentChange: this._onAttachmentChange.bind(this),
             onWysiwygBlur: this._onWysiwygBlur.bind(this),
-            ...this.props.wysiwygOptions,
+            ...wysiwygOptions,
             ...dynamicPlaceholderOptions,
             recordInfo: {
                 res_model: this.props.record.resModel,
@@ -224,7 +233,7 @@ export class HtmlField extends Component {
             },
             collaborationChannel: this.props.isCollaborative && {
                 collaborationModelName: this.props.record.resModel,
-                collaborationFieldName: this.props.fieldName,
+                collaborationFieldName: this.props.name,
                 collaborationResId: parseInt(this.props.record.resId),
             },
             mediaModalParams: {
@@ -557,7 +566,7 @@ export class HtmlField extends Component {
         const value = await this.rpc('/web_editor/checklist', {
             res_model: this.props.record.resModel,
             res_id: this.props.record.resId,
-            filename: this.props.fieldName,
+            filename: this.props.name,
             checklistId: checklistId,
             checked: !checked,
         });
@@ -585,7 +594,7 @@ export class HtmlField extends Component {
         const value = await this.rpc('/web_editor/stars', {
             res_model: this.props.record.resModel,
             res_id: this.props.record.resId,
-            filename: this.props.fieldName,
+            filename: this.props.name,
             starsId,
             rating,
         });
@@ -606,9 +615,7 @@ HtmlField.defaultProps = {
 };
 HtmlField.props = {
     ...standardFieldProps,
-    isTranslatable: { type: Boolean, optional: true },
     placeholder: { type: String, optional: true },
-    fieldName: { type: String, optional: true },
     codeview: { type: Boolean, optional: true },
     isCollaborative: { type: Boolean, optional: true },
     dynamicPlaceholder: { type: Boolean, optional: true, default: false },
@@ -623,7 +630,7 @@ export const htmlField = {
     component: HtmlField,
     displayName: _lt("Html"),
     supportedTypes: ["html"],
-    extractProps: ({ attrs, field }) => {
+    extractProps: ({ attrs }) => {
         const wysiwygOptions = {
             placeholder: attrs.placeholder,
             noAttachment: attrs.options['no-attachment'],
@@ -651,16 +658,12 @@ export const htmlField = {
             // can be set elsewhere otherwise.
             wysiwygOptions.allowCommandImage = Boolean(attrs.options.allowCommandImage);
         }
-        if (field.sanitize_tags || (field.sanitize_tags === undefined && field.sanitize)) {
-            wysiwygOptions.allowCommandVideo = false; // Tag-sanitized fields remove videos.
-        } else if ('allowCommandVideo' in attrs.options) {
+        if ('allowCommandVideo' in attrs.options) {
             // Set the option only if it is explicitly set in the view so a default
             // can be set elsewhere otherwise.
             wysiwygOptions.allowCommandVideo = Boolean(attrs.options.allowCommandVideo);
         }
         return {
-            isTranslatable: field.translate,
-            fieldName: field.name,
             codeview: Boolean(odoo.debug && attrs.options.codeview),
             placeholder: attrs.placeholder,
 
