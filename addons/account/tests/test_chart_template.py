@@ -7,7 +7,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
-def _get_chart_template_mapping(self):
+def _get_chart_template_mapping(self, get_all=False):
     return {'test': {
         'name': 'test',
         'country_id': None,

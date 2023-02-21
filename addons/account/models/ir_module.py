@@ -1,7 +1,7 @@
 from importlib import import_module
 from inspect import getmembers, ismodule, isclass, isfunction
 
-from odoo import models, fields
+from odoo import api, models, fields
 
 
 def get_flag(country_code):
@@ -29,6 +29,7 @@ class IrModule(models.Model):
 
     account_templates = fields.Binary(compute='_compute_account_templates', exportable=False)
 
+    @api.depends('state')
     def _compute_account_templates(self):
         chart_category = self.env.ref('base.module_category_accounting_localizations_account_charts')
         ChartTemplate = self.env['account.chart.template']
@@ -46,6 +47,7 @@ class IrModule(models.Model):
                             'parent': fct(ChartTemplate).get('parent'),
                             'country': fct(ChartTemplate).get('country', ''),
                             'visible': fct(ChartTemplate).get('visible', True),
+                            'installed': module.state == "installed",
                             'module': module.name,
                         }
                         for _name, mdl in getmembers(python_module, template_module)
