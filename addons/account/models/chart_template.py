@@ -80,7 +80,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_chart_template_mapping(self, get_all=False):
         """Get basic information about available CoA and their modules.
 
-        :return: a mapping between the template code and a dictionnary constaining the
+        :return: a mapping between the template code and a dictionary containing the
                  name, country id, country name, module dependencies and parent template
         :rtype: dict[str, dict]
         """
@@ -363,7 +363,7 @@ class AccountChartTemplate(models.AbstractModel):
         """Load all the data linked to the template into the database.
 
         The data can contain translation values (i.e. `name@fr_FR` to translate the name in French)
-        An xml_id tht doesn't contain a `.` will be treated as being linked to `account` and prefixed
+        An xml_id that doesn't contain a `.` will be treated as being linked to `account` and prefixed
         with the company's id (i.e. `cash` is interpreted as `account.1_cash` if the company's id is 1)
 
         :param data: Basically all the final data of records to create/update for the chart
@@ -383,7 +383,11 @@ class AccountChartTemplate(models.AbstractModel):
                     field.type == 'many2one'
                     or (field.type in ('integer', 'many2one_reference') and not value.isdigit())
                 ):
-                    values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
+                    try:
+                        values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
+                    except ValueError as e:
+                        _logger.warning("Failed when trying to recover %s for field=%s", value, field)
+                        raise e
                 elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
                     for i, (command, _id, *last_part) in enumerate(value):
                         if last_part:
@@ -523,7 +527,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _get_chart_template_data(self, template_code):
         template_data = defaultdict(lambda: defaultdict(dict))
-        template_data['res.company']
+        template_data['res.company']  # ensure it's the first property when iterating
         for code in [None] + self._get_parent_template(template_code):
             for model, funcs in sorted(
                 self._template_register[code].items(),
@@ -611,6 +615,157 @@ class AccountChartTemplate(models.AbstractModel):
         accounts = self.env['account.account'].create(accounts_data.values())
         for company_attr_name, account in zip(accounts_data.keys(), accounts):
             company[company_attr_name] = account
+
+    @api.model
+    def _instantiate_foreign_taxes(self, country, company):
+        """Create and configure foreign taxes from the provided country.
+
+        Instantiate the taxes as they would be for the foreign localization only replacing the accounts used by the most
+        probable account we can retrieve from the company's localization.
+        This method is intended as a shortcut for instantiation, accelerating it, not as an out-of-the-box solution 100%
+        correct solution.
+        """
+        # Implementation:
+        # - Check if there is any tax for this country and stop the process if yes
+        # - Retrieve the tax group and tax template data
+        # - Try to create accounts at most probable location in the CoA
+        # - Assign those accounts to the data
+        # - Creates tax group and taxes with their ir.model.data
+
+        taxes_in_country = self.env['account.tax'].search([
+            ('country_id', '=', country.id),
+            ('company_id', '=', company.id)
+        ])
+        if taxes_in_country:
+            return
+
+        def create_foreign_tax_account(existing_account, additional_label):
+            new_code = self.env['account.account']._search_new_account_code(
+                existing_account.company_id,
+                len(existing_account.code),
+                existing_account.code[:-2]
+            )
+            return self.env['account.account'].create({
+                'name': f"{existing_account.name} - {additional_label}",
+                'code': new_code,
+                'account_type': existing_account.account_type,
+                'company_id': existing_account.company_id.id,
+            })
+
+        existing_accounts = {'': None, None: None}  # keeps tracks of the created account by foreign xml_id
+        default_company_taxes = company.account_sale_tax_id + company.account_purchase_tax_id
+        chart_template_code = self._guess_chart_template(country=country)
+        tax_group_data = self._get_chart_template_data(chart_template_code)['account.tax.group']
+        tax_data = self._get_chart_template_data(chart_template_code)['account.tax']
+
+        # Populate foreign accounts mapping
+        # Try to create tax group accounts if not mapped
+        field_and_names = (
+            ('tax_payable_account_id', _("Foreign tax account payable (%s)", country.code)),
+            ('tax_receivable_account_id', _("Foreign tax account receivable (%s)", country.code)),
+            ('advance_tax_payment_account_id', _("Foreign tax account advance payment (%s)", country.code)),
+        )
+        for field, account_name in field_and_names:
+            for tax_group in tax_group_data.values():
+                account_template_xml_id = tax_group.get(field)
+                if account_template_xml_id in existing_accounts:
+                    continue
+                local_tax_group = self.env["account.tax.group"].search([
+                    ('country_id', '=', company.account_fiscal_country_id.id),
+                    (field, '!=', False),
+                ], limit=1)
+                if local_tax_group:
+                    existing_accounts[account_template_xml_id] = create_foreign_tax_account(local_tax_group[field], account_name).id
+
+        # Try to create repartition lines account if not mapped
+        for tax_template in tax_data.values():
+            for _command, _id, rep_line in tax_template.get('repartition_line_ids', []):
+                if 'account_id' in rep_line and rep_line['repartition_type'] == 'tax':
+                    type_tax_use, foreign_tax_rep_line = tax_template['type_tax_use'], rep_line
+                    account_template_xml_id = foreign_tax_rep_line['account_id']
+                    if account_template_xml_id in existing_accounts:
+                        continue
+
+                    sign_comparator = '<' if float(foreign_tax_rep_line.get('factor_percent', 100)) < 0 else '>'
+                    minimal_domain = [
+                        ('company_id', '=', company.id),
+                        ('account_id', '!=', False),
+                        ('factor_percent', sign_comparator, 0),
+                    ]
+                    additional_domain = [
+                        ('tax_id.type_tax_use', '=', type_tax_use),
+                        ('tax_id.country_id', '=', company.account_fiscal_country_id.id),
+                        ('tax_id', 'in', default_company_taxes.ids),
+                    ]
+
+                    # Trying to find an account being less restrictive on each iteration until the minimum acceptable is
+                    # reached. If nothing is found, don't fill it to avoid setting a wrong account
+                    similar_repartition_line = None
+                    while not similar_repartition_line and additional_domain:
+                        search_domain = minimal_domain + additional_domain
+                        similar_repartition_line = self.env['account.tax.repartition.line'].search(search_domain, limit=1)
+                        additional_domain.pop()
+
+                    if similar_repartition_line:
+                        local_tax_account = similar_repartition_line.account_id
+                        similar_account_id = create_foreign_tax_account(local_tax_account, _("Foreign tax account (%s)", country.code))
+                        existing_accounts[account_template_xml_id] = similar_account_id.id
+
+        # Try to create cash basis account if not mapped
+        local_cash_basis_tax = self.env["account.tax"].search([
+            ('country_id', '=', company.account_fiscal_country_id.id),
+            ('cash_basis_transition_account_id', '!=', False)
+        ], limit=1)
+        for tax_template in tax_data.values():
+            account_xml_id = tax_template.get('cash_basis_transition_account_id')
+            if account_xml_id in existing_accounts:
+                continue
+
+            if local_cash_basis_tax:
+                existing_accounts[account_xml_id] = create_foreign_tax_account(
+                    local_cash_basis_tax.cash_basis_transition_account_id,
+                    _("Cash basis transition account")
+                ).id
+                continue
+
+            account_id = [rep_line['account_id'] for _command, _id, rep_line in tax_template['repartition_line_ids'] if rep_line.get('account_id')]
+            if account_id:
+                local_account = self.env['account.account'].browse(account_id[0])
+                existing_accounts[account_xml_id] = create_foreign_tax_account(local_account, _("Cash basis transition account")).id
+                continue
+
+        # Assign the account based on the map
+        for field, account_name in field_and_names:
+            for tax_group in tax_group_data.values():
+                tax_group[field] = existing_accounts.get(account_template_xml_id)
+
+        for tax_template in tax_data.values():
+            # This is required because the country isn't provided directly by the template
+            tax_template['country_id'] = country.id
+
+            if tax_template.get('tax_group_id'):
+                tax_template['tax_group_id'] = f"{chart_template_code}_{tax_template['tax_group_id']}"
+
+            for _command, _id, rep_line in tax_template.get('repartition_line_ids', []):
+                rep_line['account_id'] = existing_accounts.get(rep_line.get('account_id'))
+
+            account_xml_id = tax_template.get('cash_basis_transition_account_id')
+            tax_template['cash_basis_transition_account_id'] = existing_accounts[account_xml_id]
+
+        data = {
+            'account.tax.group': tax_group_data,
+            'account.tax': tax_data,
+        }
+        # prefix the xml_id with the chart template code to avoid collision
+        # because since 16.2 xml_ids are regrouped under module account
+        data = {
+            model: {
+                f"{chart_template_code}_{xml_id}": template
+                for xml_id, template in templates.items()
+            }
+            for model, templates in data.items()
+        }
+        self._load_data(data)
 
     # --------------------------------------------------------------------------------
     # Root template functions
