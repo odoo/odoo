@@ -6,8 +6,8 @@
             <t t-nocache="The wishlist depends on the user and must not be shared with other users. As this rendering is in the loop, the product value is set in the template, we must retain the id of the product on which we are."
                t-nocache-product_template_id="product.id">
                 <t t-set="product" t-value="products.filtered(lambda p: p.id == product_template_id)"/>
-                <t t-set="in_wish" t-value="product._is_in_wishlist()"/>
-                <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
+                <t t-set="in_wish" t-value="product and product._is_in_wishlist()"/>
+                <t t-set="product_variant_id" t-value="product and product._get_first_possible_variant_id()"/>
                 <button t-if="product_variant_id" type="button" role="button" class="btn btn-outline-primary bg-white o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant_id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
             </t>
         </xpath>
