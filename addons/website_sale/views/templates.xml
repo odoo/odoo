@@ -1163,12 +1163,14 @@
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])">
+                    <bdi dir="inherit">
                     <span t-esc="combination_info['compare_list_price']"
                           groups="website_sale.group_product_price_comparison"
                           t-options='{
                            "widget": "monetary",
                            "display_currency": website.currency_id,
                        }'/>
+                    </bdi>
                 </del>
             </h3>
             <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
@@ -1179,12 +1181,14 @@
                 }'/>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])">
+                    <bdi dir="inherit">
                     <span t-field="product.compare_list_price"
                           groups="website_sale.group_product_price_comparison"
                           t-options='{
                            "widget": "monetary",
                            "display_currency": website.currency_id,
                        }'/>
+                    </bdi>
                 </del>
             </h3>
         </div>
