@@ -255,10 +255,18 @@ class ProductTemplate(models.Model):
         self._compute_template_field_from_variant_field('barcode')
 
     def _search_barcode(self, operator, value):
+<<<<<<< HEAD
         subquery = self.with_context(active_test=False)._search([
             ('product_variant_ids.barcode', operator, value),
         ])
         return [('id', 'in', subquery)]
+||||||| parent of d5fec548f2a (temp)
+        templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
+        return [('id', 'in', templates.ids)]
+=======
+        query = self.with_context(active_test=False)._search([('product_variant_ids.barcode', operator, value)])
+        return [('id', 'in', query)]
+>>>>>>> d5fec548f2a (temp)
 
     def _set_barcode(self):
         self._set_product_variant_field('barcode')
