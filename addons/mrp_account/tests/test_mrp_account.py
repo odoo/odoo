@@ -195,6 +195,13 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.production_account = cls.env['account.account'].create({
+            'name': 'Cost of Production',
+            'code': 'ProductionCost',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        cls.auto_categ.property_stock_account_production_cost_id = cls.production_account
         cls.product_B = cls.env["product.product"].create(
             {
                 "name": "Product B",
@@ -238,11 +245,11 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('credit', '=', 0)])
         productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('debit', '=', 0)])
         self.assertEqual(productA_debit_line.account_id, self.stock_valuation_account)
-        self.assertEqual(productA_credit_line.account_id, self.stock_input_account)
+        self.assertEqual(productA_credit_line.account_id, self.production_account)
         # component move
         productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('credit', '=', 0)])
         productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('debit', '=', 0)])
-        self.assertEqual(productB_debit_line.account_id, self.stock_output_account)
+        self.assertEqual(productB_debit_line.account_id, self.production_account)
         self.assertEqual(productB_credit_line.account_id, self.stock_valuation_account)
 
         # unbuild
@@ -253,71 +260,10 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         # finished product move
         productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('credit', '=', 0)])
         productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('debit', '=', 0)])
-        self.assertEqual(productA_debit_line.account_id, self.stock_input_account)
+        self.assertEqual(productA_debit_line.account_id, self.production_account)
         self.assertEqual(productA_credit_line.account_id, self.stock_valuation_account)
         # component move
         productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('credit', '=', 0)])
         productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('debit', '=', 0)])
         self.assertEqual(productB_debit_line.account_id, self.stock_valuation_account)
-        self.assertEqual(productB_credit_line.account_id, self.stock_output_account)
-
-    def test_unbuild_account_01(self):
-        """Test when production location has its valuation accounts. After unbuild,
-        the journal entries are the reversal of the journal entries created when
-        produce the product.
-        """
-        # set accounts for production location
-        production_location = self.product_A.property_stock_production
-        wip_incoming_account = self.env['account.account'].create({
-            'name': 'wip incoming',
-            'code': '000001',
-            'account_type': 'asset_current',
-        })
-        wip_outgoing_account = self.env['account.account'].create({
-            'name': 'wip outgoing',
-            'code': '000002',
-            'account_type': 'asset_current',
-        })
-        production_location.write({
-            'valuation_in_account_id': wip_incoming_account.id,
-            'valuation_out_account_id': wip_outgoing_account.id,
-        })
-
-        # build
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_A
-        production_form.bom_id = self.bom
-        production_form.product_qty = 1
-        production = production_form.save()
-        production.action_confirm()
-        mo_form = Form(production)
-        mo_form.qty_producing = 1
-        production = mo_form.save()
-        production._post_inventory()
-        production.button_mark_done()
-
-        # finished product move
-        productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('credit', '=', 0)])
-        productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('debit', '=', 0)])
-        self.assertEqual(productA_debit_line.account_id, self.stock_valuation_account)
-        self.assertEqual(productA_credit_line.account_id, wip_outgoing_account)
-        # component move
-        productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('credit', '=', 0)])
-        productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('debit', '=', 0)])
-        self.assertEqual(productB_debit_line.account_id, wip_incoming_account)
-        self.assertEqual(productB_credit_line.account_id, self.stock_valuation_account)
-
-        # unbuild
-        res_dict = production.button_unbuild()
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.action_validate()
-
-        productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('credit', '=', 0)])
-        productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('debit', '=', 0)])
-        self.assertEqual(productA_debit_line.account_id, wip_outgoing_account)
-        self.assertEqual(productA_credit_line.account_id, self.stock_valuation_account)
-        # component move
-        productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('credit', '=', 0)])
-        productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('debit', '=', 0)])
-        self.assertEqual(productB_debit_line.account_id, self.stock_valuation_account)
-        self.assertEqual(productB_credit_line.account_id, wip_incoming_account)
+        self.assertEqual(productB_credit_line.account_id, self.production_account)

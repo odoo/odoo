@@ -4,7 +4,9 @@
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
+from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuation
 from odoo.tests import Form
+from odoo.tests.common import tagged
 
 
 class TestMrpValuationCommon(TestStockValuationCommon):
@@ -348,3 +350,158 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         ])
         self.assertEqual(self.component.qty_available, 1)
         self.assertEqual(self.component.value_svl, 1424)
+
+
+@tagged("post_install", "-at_install")
+class TestMrpStockValuation(TestStockValuation):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.production_account = cls.env['account.account'].create({
+            'name': 'Cost of Production',
+            'code': 'ProductionCost',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        cls.product1.categ_id.property_stock_account_production_cost_id = cls.production_account
+
+    def _get_production_cost_move_lines(self):
+        return self.env['account.move.line'].search([
+            ('account_id', '=', self.production_account.id),
+        ], order='date, id')
+
+    def test_production_account_00(self):
+        """Create move into/out of a production location, test we create account
+        entries with the Production Cost account.
+        """
+        production_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.company.id)])
+        picking_type_in = self.env.ref('stock.picking_type_in')
+        picking_type_out = self.env.ref('stock.picking_type_out')
+
+        self.product1.categ_id.property_cost_method = 'standard'
+        self.product1.standard_price = 10
+
+        # move into production location
+        production_in = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': production_location.id,
+            'picking_type_id': picking_type_out.id,
+        })
+        move = self.env['stock.move'].create({
+            'picking_id': production_in.id,
+            'name': 'IN 10 @ 10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': production_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        production_in.action_confirm()
+        move.quantity_done = 10
+        production_in.button_validate()
+
+        in_aml = self._get_production_cost_move_lines()
+        self.assertEqual(in_aml.debit, 100)
+        self.assertEqual(in_aml.product_id, self.product1)
+
+        # move out of production location
+        production_out = self.env['stock.picking'].create({
+            'location_id': production_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': picking_type_in.id,
+        })
+        move = self.env['stock.move'].create({
+            'picking_id': production_out.id,
+            'name': 'OUT 10 @ 10',
+            'location_id': production_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        production_out.action_confirm()
+        move.quantity_done = 10
+        production_out.button_validate()
+
+        out_aml = self._get_production_cost_move_lines() - in_aml
+        self.assertEqual(out_aml.credit, 100)
+        self.assertEqual(in_aml.product_id, self.product1)
+
+    def test_production_account_01(self):
+        """Create move into/out of a production location with its own stock accounts
+        test we create account entries with those accounts instead of Production
+        Cost account.
+        """
+        production_out_account = self.env['account.account'].create({
+            'name': 'Production out',
+            'code': 'ProductionOut',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        production_in_account = self.env['account.account'].create({
+            'name': 'Production in',
+            'code': 'ProductionIn',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+
+        production_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.company.id)])
+        production_location.write({
+            'valuation_in_account_id': production_in_account.id,
+            'valuation_out_account_id': production_out_account.id,
+        })
+        picking_type_in = self.env.ref('stock.picking_type_in')
+        picking_type_out = self.env.ref('stock.picking_type_out')
+
+        self.product1.categ_id.property_cost_method = 'standard'
+        self.product1.standard_price = 10
+
+        # move into production location
+        production_in = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': production_location.id,
+            'picking_type_id': picking_type_out.id,
+        })
+        move = self.env['stock.move'].create({
+            'picking_id': production_in.id,
+            'name': 'IN 10 @ 10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': production_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        production_in.action_confirm()
+        move.quantity_done = 10
+        production_in.button_validate()
+
+        in_aml = self.env['account.move.line'].search([
+            ('account_id', '=', production_in_account.id),
+        ], order='date, id')
+        self.assertEqual(in_aml.debit, 100)
+        self.assertEqual(in_aml.product_id, self.product1)
+
+        # move out of production location
+        production_out = self.env['stock.picking'].create({
+            'location_id': production_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': picking_type_in.id,
+        })
+        move = self.env['stock.move'].create({
+            'picking_id': production_out.id,
+            'name': 'OUT 10 @ 10',
+            'location_id': production_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        production_out.action_confirm()
+        move.quantity_done = 10
+        production_out.button_validate()
+
+        out_aml = self.env['account.move.line'].search([
+            ('account_id', '=', production_out_account.id),
+        ], order='date, id')
+        self.assertEqual(out_aml.credit, 100)
+        self.assertEqual(in_aml.product_id, self.product1)
