@@ -32,6 +32,12 @@ class MailTestSimple(models.Model):
         return headers
 
 
+class MailTestSimpleWithMainAttachment(models.Model):
+    _description = 'Simple Chatter Model With Main Attachment Management'
+    _name = 'mail.test.simple.main.attachment'
+    _inherit = ['mail.test.simple', 'mail.thread.main.attachment']
+
+
 class MailTestGateway(models.Model):
     """ A very simple model only inheriting from mail.thread to test pure mass
     mailing features and base performances. """
