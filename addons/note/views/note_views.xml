@@ -96,7 +96,7 @@
             <t t-name="kanban-box">
               <t t-set="noteHasFollowers" t-value="record.message_partner_ids.raw_value.length &gt; 1"/>
 
-              <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+              <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_content oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
 
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
@@ -111,12 +111,14 @@
                       </a>
                     </span>
 
-                    <span t-attf-class="oe_kanban_content flex-grow-1 text-break #{record.open.raw_value ? '' : 'note_text_line_through'}">
+                    <span t-attf-class="flex-grow-1 text-break #{record.open.raw_value ? '' : 'note_text_line_through'}">
                       <!-- title -->
                       <field name="name"/>
                     </span>
                   </div>
-                  <div t-attf-class="d-flex #{noteHasFollowers ? 'w-100 align-items-center justify-content-end' : 'align-items-end'}">
+                </div>
+                <div class="o_kanban_record_bottom">
+                  <div t-attf-class="oe_kanban_bottom_left d-flex #{noteHasFollowers ? 'w-100 align-items-center justify-content-end' : 'align-items-end'}">
                     <div t-if="noteHasFollowers" class="d-flex align-items-center me-2 mt-2">
                       <t t-foreach="record.message_partner_ids.raw_value" t-as="follower" t-key="follower">
                         <img
@@ -131,6 +133,8 @@
                             class="text-info fw-bold ms-1"/>
                       </t>
                     </div>
+                  </div>
+                  <div class="oe_kanban_bottom_right mt-2">
                     <field name="activity_ids" widget="kanban_activity" />
                   </div>
                 </div>
