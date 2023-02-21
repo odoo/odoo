@@ -5,17 +5,10 @@
         <t t-call="web.basic_layout">
         <t t-foreach="docs" t-as="o">
             <div class="o_employee_cv page">
+                <t t-call="hr_skills.report_employee_cv_company"/>
+                <t t-call="hr_skills.report_employee_cv_sidepanel"/>
+                <t t-call="hr_skills.report_employee_cv_main_panel"/>
                 <p class="o_new_page"/>
-                <t t-if="side_panel_position == 'right'">
-                    <t t-call="hr_skills.report_employee_cv_company"/>
-                    <t t-call="hr_skills.report_employee_cv_sidepanel"/>
-                    <t t-call="hr_skills.report_employee_cv_main_panel"/>
-                </t>
-                <t t-else="">
-                    <t t-call="hr_skills.report_employee_cv_sidepanel"/>
-                    <t t-call="hr_skills.report_employee_cv_company"/>
-                    <t t-call="hr_skills.report_employee_cv_main_panel"/>
-                </t>
             </div>
         </t>
         </t>
@@ -23,8 +16,11 @@
 
     <template id="report_employee_cv_company">
         <div class="o_company row">
-            <div class="col-12 mb-4 mt-5">
+            <div class="col-12 mb-4">
                 <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
+            </div>
+            <div class="col-12 mb-4" style="font-weight: bold;">
+              <t t-esc="o.company_id.partner_id.name"/>
             </div>
             <div class="col-12" t-field="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
         </div>
@@ -32,15 +28,14 @@
 
     <template id="report_employee_cv_sidepanel">
         <div class="o_sidebar" t-attf-style="
-            background: #{color};
-            background-color: #{color};">
+            background: #{color_primary};
+            background-color: #{color_primary};">
             <div class="o_profile">
-                <img class="img img-fluid rounded-circle o_profile_image" t-attf-src="data:image/png;base64,#{o.image_128}" alt=""/>
+                <img class="img img-fluid rounded-circle o_profile_image" t-attf-src="data:image/png;base64,#{o.image_128}" alt="" t-if="o.image_128"/>
                 <h1 class="o_profile_name mt-2" t-field="o.name"/>
                 <h3 class="o_profile_job mb-2" t-field="o.job_id"/>
             </div>
-            
-            <div class="o_sidebar_section">
+            <div class="o_sidebar_section" t-if="show_contact">
                 <ul class="o_social">
                     <li class="email" t-if="o.company_id.email">
                         <i class="fa fa-solid fa-envelope pe-2"/>
@@ -60,42 +55,40 @@
     </template>
 
     <template id="report_employee_cv_main_panel">
-        <div class="o_main_panel">
-            <div class="o_main_panel_section">
-                <t t-foreach="o.resume_line_ids.line_type_id" t-as="line_type">
-                    <h2 class="o_main_panel_title mt-4" t-attf-style="color: #{color};">
-                        <span class="o_main_panel_icon" t-attf-style="background: #{color};">
+        <t t-foreach="resume_lines[o]" t-as="line_type">
+            <div class="o_main_panel">
+                <div class="o_main_panel_section">
+                    <h2 class="o_main_panel_title mt-4" t-attf-style="color: #{color_secondary};">
+                        <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
                             <i class="fa fa-solid fa-briefcase"/>
                         </span>
-                        <t t-esc="line_type.name"/>
+                        <t t-esc="line_type"/>
                     </h2>
-                    <t t-foreach="o.resume_line_ids" t-as="resume_line">
-                        <t t-if="resume_line.line_type_id == line_type">
-                            <div class="o_main_panel_resume_title ps-5">
-                                <div class="o_main_panel_resume_title_job">
-                                    <h3 class="o_main_panel_resume_job" t-field="resume_line.name"/>
-                                </div>
-                                <div class="o_main_panel_resume_title_dates">
-                                    <t t-set="present">Present</t>
-                                    <div class="o_main_panel_resume_year">
-                                        <t t-esc="resume_line.date_start.year"/> - <t t-esc="resume_line.date_end.year if resume_line.date_end else present"/>
-                                    </div>
+                    <t t-foreach="resume_lines[o][line_type]" t-as="resume_line">
+                        <div class="o_main_panel_resume_title ps-5">
+                            <div class="o_main_panel_resume_title_job">
+                                <h3 class="o_main_panel_resume_job" t-field="resume_line.name"/>
+                            </div>
+                            <div class="o_main_panel_resume_title_dates">
+                                <t t-set="present">Present</t>
+                                <div class="o_main_panel_resume_year">
+                                    <t t-esc="resume_line.date_start.year"/> - <t t-esc="resume_line.date_end.year if resume_line.date_end else present"/>
                                 </div>
                             </div>
-                            <div class="o_main_panel_resume_description ps-5">
-                                <p t-field="resume_line.description"/>
-                            </div>
-                        </t>
+                        </div>
+                        <div class="o_main_panel_resume_description ps-5">
+                            <p t-field="resume_line.description"/>
+                        </div>
                     </t>
-                </t>
+                </div>
             </div>
-        </div>
+        </t>
 
         <t t-set="has_languages" t-value="skill_type_language and any(skill_line.skill_type_id == skill_type_language for skill_line in o.employee_skill_ids)"/>
         <div class="o_main_panel mt-4" t-if="has_languages">
             <div class="o_main_panel_section" t-if="skill_type_language">
-                <h2 class="o_main_panel_title" t-attf-style="color: #{color};">
-                    <span class="o_main_panel_icon" t-attf-style="background: #{color};">
+                <h2 class="o_main_panel_title" t-attf-style="color: #{color_secondary};">
+                    <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
                         <i class="fa fa-solid fa-language"/>
                     </span>
                     Languages
@@ -112,11 +105,11 @@
             </div>
         </div>
 
-        <t t-set="has_skills" t-value="any(skill_line.skill_type_id != skill_type_language for skill_line in o.employee_skill_ids)"/>
+        <t t-set="has_skills" t-value="show_skills and any(skill_line.skill_type_id != skill_type_language for skill_line in o.employee_skill_ids)"/>
         <div class="o_main_panel mt-4" t-if="has_skills">
             <div class="o_main_panel_section">
-                <h2 class="o_main_panel_title" t-attf-style="color: #{color};">
-                    <span class="o_main_panel_icon" t-attf-style="background: #{color};">
+                <h2 class="o_main_panel_title" t-attf-style="color: #{color_secondary};">
+                    <span class="o_main_panel_icon" t-attf-style="background: #{color_secondary};">
                         <i class="fa fa-solid fa-rocket"/>
                     </span>Skills
                 </h2>
@@ -131,11 +124,11 @@
                                     <div
                                         class="o_main_panel_skill_progress_bar_color"
                                         role="progressbar"
-                                        t-attf-style="width: #{skill_line.level_progress}%; background: #{color};"
+                                        t-attf-style="width: #{skill_line.level_progress}%; background: #{color_primary};"
                                         t-att-aria-valuenow="skill_line.level_progress"
                                         aria-valuemin="0"
                                         aria-valuemax="100"/>
-                                </div>                               
+                                </div>
                             </div>
                         </t>
                     </div>
