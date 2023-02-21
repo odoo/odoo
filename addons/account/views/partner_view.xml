@@ -10,8 +10,7 @@
                          class="alert alert-info mb-0"
                          role="alert"
                          attrs="{'invisible': [('foreign_vat_header_mode', '=', False)]}">
-
-                        <div attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'templates_found')]}">
+                        <div attrs="{'invisible': [('foreign_vat_header_mode', 'not in', ('templates_found', 'no_template'))]}">
                             Click
                             <button
                                 string="here"
@@ -21,17 +20,6 @@
                                 style="padding: 0; vertical-align: baseline;"/>
                             to create the taxes for this country.
                         </div>
-
-                        <span attrs="{'invisible': [('foreign_vat_header_mode', '!=', 'no_template')]}">
-                            No tax template found for this country. Please install the corresponding localization module.
-                            <button
-                                string="Install new module"
-                                type="action"
-                                name="account.open_account_charts_modules"
-                                class="oe_link"
-                                groups="base.group_system"
-                                style="padding: 0; vertical-align: baseline;"/>
-                        </span>
                     </div>
 
                     <sheet>

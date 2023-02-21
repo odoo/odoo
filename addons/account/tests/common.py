@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, Command
-from odoo.tests.common import TransactionCase, HttpCase, Form
+from odoo.tests.common import TransactionCase, HttpCase, tagged, Form
 
 import json
 import time
