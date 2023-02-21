@@ -70,7 +70,7 @@ Widget.parseWidgetNode = function (node) {
     return {
         options: evaluateExpr(node.getAttribute("options") || "{}"),
         name,
-        rawAttrs: attrs,
+        attrs,
         widget,
     };
 };

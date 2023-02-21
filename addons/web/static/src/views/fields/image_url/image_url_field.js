@@ -53,12 +53,10 @@ export const imageUrlField = {
     component: ImageUrlField,
     displayName: _lt("Image"),
     supportedTypes: ["char"],
-    extractProps: ({ attrs }) => ({
-        width: attrs.options.size ? attrs.options.size[0] : attrs.width,
-        height: attrs.options.size ? attrs.options.size[1] : attrs.height,
+    extractProps: ({ attrs, options }) => ({
+        width: options.size ? options.size[0] : attrs.width,
+        height: options.size ? options.size[1] : attrs.height,
     }),
 };
 
 registry.category("fields").add("image_url", imageUrlField);
-// TODO WOWL: remove below when old registry is removed.
-registry.category("fields").add("kanban.image_url", imageUrlField);

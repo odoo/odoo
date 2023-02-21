@@ -6,6 +6,5 @@ export const standardFieldProps = {
     readonly: { type: Boolean, optional: true },
     record: { type: Object },
     value: true,
-    decorations: { type: Object, optional: true },
     setDirty: { type: Function, optional: true },
 };

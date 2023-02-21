@@ -50,9 +50,9 @@ KanbanMany2OneAvatarUserField.props = {
 export const kanbanMany2OneAvatarUserField = {
     ...many2OneAvatarUserField,
     component: KanbanMany2OneAvatarUserField,
-    extractProps: (params) => ({
-        ...many2OneAvatarUserField.extractProps(params),
-        displayAvatarName: params.attrs.options.display_avatar_name || false,
+    extractProps: (fieldInfo) => ({
+        ...many2OneAvatarUserField.extractProps(fieldInfo),
+        displayAvatarName: fieldInfo.options.display_avatar_name || false,
     }),
 };
 

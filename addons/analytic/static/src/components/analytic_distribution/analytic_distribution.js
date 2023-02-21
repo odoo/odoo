@@ -592,13 +592,13 @@ export const analyticDistribution = {
     component: AnalyticDistribution,
     supportedTypes: ["char", "text"],
     fieldDependencies: [{ name:"analytic_precision", type: "integer" }],
-    extractProps: ({ attrs }) => ({
-        business_domain: attrs.options.business_domain,
-        account_field: attrs.options.account_field,
-        product_field: attrs.options.product_field,
+    extractProps: ({ attrs, options }) => ({
+        business_domain: options.business_domain,
+        account_field: options.account_field,
+        product_field: options.product_field,
         business_domain_compute: attrs.business_domain_compute,
-        force_applicability: attrs.options.force_applicability,
-        allow_save: !attrs.options.disable_save,
+        force_applicability: options.force_applicability,
+        allow_save: !options.disable_save,
     }),
 };
 

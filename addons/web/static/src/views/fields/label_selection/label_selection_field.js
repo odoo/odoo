@@ -31,8 +31,8 @@ export const labelSelectionField = {
     component: LabelSelectionField,
     displayName: _lt("Label Selection"),
     supportedTypes: ["selection"],
-    extractProps: ({ attrs }) => ({
-        classesObj: attrs.options.classes,
+    extractProps: ({ options }) => ({
+        classesObj: options.classes,
     }),
 };
 

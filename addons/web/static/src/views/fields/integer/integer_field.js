@@ -44,9 +44,9 @@ export const integerField = {
     displayName: _lt("Integer"),
     supportedTypes: ["integer"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
-    extractProps: ({ attrs }) => ({
-        inputType: attrs.options.type,
-        step: attrs.options.step,
+    extractProps: ({ attrs, options }) => ({
+        inputType: options.type,
+        step: options.step,
         placeholder: attrs.placeholder,
     }),
 };

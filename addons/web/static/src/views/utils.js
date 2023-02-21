@@ -28,7 +28,7 @@ export function addFieldDependencies(activeFields, fields, dependencies = []) {
     for (const dependency of dependencies) {
         const { name } = dependency;
         if (!(name in activeFields)) {
-            activeFields[name] = Object.assign({ name, rawAttrs: {} }, dependency, {
+            activeFields[name] = Object.assign({ name, attrs: {} }, dependency, {
                 modifiers: { invisible: true },
             });
         }

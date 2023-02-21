@@ -36,10 +36,10 @@ FilterableSelectionField.props = {
 export const filterableSelectionField = {
     ...selectionField,
     component: FilterableSelectionField,
-    extractProps: (params) => ({
-        ...selectionField.extractProps(params),
-        whitelisted_values: params.attrs.options.whitelisted_values,
-        blacklisted_values: params.attrs.options.blacklisted_values,
+    extractProps: (fieldInfo) => ({
+        ...selectionField.extractProps(fieldInfo),
+        whitelisted_values: fieldInfo.options.whitelisted_values,
+        blacklisted_values: fieldInfo.options.blacklisted_values,
     }),
 };
 

@@ -144,9 +144,9 @@ export const domainField = {
     displayName: _lt("Domain"),
     supportedTypes: ["char"],
     isEmpty: () => false,
-    extractProps: ({ attrs }) => ({
-        editInDialog: attrs.options.in_dialog,
-        resModel: attrs.options.model,
+    extractProps: ({ options }) => ({
+        editInDialog: options.in_dialog,
+        resModel: options.model,
     }),
 };
 

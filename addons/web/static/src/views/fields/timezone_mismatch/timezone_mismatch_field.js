@@ -74,10 +74,10 @@ export const timezoneMismatchField = {
     ...selectionField,
     component: TimezoneMismatchField,
     additionalClasses: ["d-flex"],
-    extractProps: (params) => ({
-        ...selectionField.extractProps(params),
-        tzOffsetField: params.attrs.options.tz_offset_field,
-        mismatchTitle: params.attrs.options.mismatch_title,
+    extractProps: (fieldInfo) => ({
+        ...selectionField.extractProps(fieldInfo),
+        tzOffsetField: fieldInfo.options.tz_offset_field,
+        mismatchTitle: fieldInfo.options.mismatch_title,
     }),
 };
 
