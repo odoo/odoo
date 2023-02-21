@@ -264,7 +264,7 @@ class HrExpense(models.Model):
                 continue
             # Only change unit_amount if the product has no cost defined on it
             if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
-                expense.unit_amount = expense.product_id.price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
+                expense.unit_amount = expense.product_id._price_compute('standard_price', currency=expense.currency_id)[expense.product_id.id]
             expense = expense.with_company(expense.company_id)
             expense.name = expense.name or expense.product_id.display_name
             expense.product_uom_id = expense.product_id.uom_id

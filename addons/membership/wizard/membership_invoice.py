@@ -15,7 +15,7 @@ class MembershipInvoice(models.TransientModel):
     def onchange_product(self):
         """This function returns value of  product's member price based on product id.
         """
-        price_dict = self.product_id.price_compute('list_price')
+        price_dict = self.product_id._price_compute('list_price')
         self.member_price = price_dict.get(self.product_id.id) or False
 
     def membership_invoice(self):
