@@ -94,8 +94,8 @@ export const stateSelectionField = {
     component: StateSelectionField,
     displayName: _lt("Label Selection"),
     supportedTypes: ["selection"],
-    extractProps: ({ attrs }) => ({
-        hideLabel: !!attrs.options.hide_label,
+    extractProps: ({ options }) => ({
+        hideLabel: !!options.hide_label,
     }),
 };
 

@@ -297,20 +297,20 @@ export const many2OneField = {
     component: Many2OneField,
     displayName: _lt("Many2one"),
     supportedTypes: ["many2one"],
-    extractProps: ({ attrs }) => {
+    extractProps: ({ attrs, options, string }) => {
         const canCreate =
-            attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !attrs.options.no_create;
+            attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !options.no_create;
         return {
             placeholder: attrs.placeholder,
-            canOpen: !attrs.options.no_open,
+            canOpen: !options.no_open,
             canCreate,
             canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
-            canQuickCreate: canCreate && !attrs.options.no_quick_create,
-            canCreateEdit: canCreate && !attrs.options.no_create_edit,
-            nameCreateField: attrs.options.create_name_field,
-            canScanBarcode: !!attrs.options.can_scan_barcode,
+            canQuickCreate: canCreate && !options.no_quick_create,
+            canCreateEdit: canCreate && !options.no_create_edit,
+            nameCreateField: options.create_name_field,
+            canScanBarcode: !!options.can_scan_barcode,
             openTarget: attrs.open_target,
-            string: attrs.string,
+            string,
         };
     },
 };

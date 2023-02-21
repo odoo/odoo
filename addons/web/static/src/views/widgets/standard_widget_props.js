@@ -5,6 +5,6 @@ export const standardWidgetProps = {
     record: { type: Object },
     // TODO TO REMOVE - ListView - FGE
     options: { type: Object, optional: true },
-    rawAttrs: { type: Object, optional: true },
+    attrs: { type: Object, optional: true },
     className: { type: String, optional: true },
 };

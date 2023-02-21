@@ -52,8 +52,8 @@ export const dateTimeField = {
     component: DateTimeField,
     displayName: _lt("Date & Time"),
     supportedTypes: ["datetime"],
-    extractProps: ({ attrs }) => ({
-        pickerOptions: attrs.options.datepicker,
+    extractProps: ({ attrs, options }) => ({
+        pickerOptions: options.datepicker,
         placeholder: attrs.placeholder,
     }),
 };

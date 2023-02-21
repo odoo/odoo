@@ -28,9 +28,7 @@ export const percentPieField = {
     displayName: _lt("PercentPie"),
     supportedTypes: ["float", "integer"],
     additionalClasses: ["o_field_percent_pie"],
-    extractProps: ({ attrs }) => ({
-        string: attrs.string,
-    }),
+    extractProps: ({ string }) => ({ string }),
 };
 
 registry.category("fields").add("percentpie", percentPieField);

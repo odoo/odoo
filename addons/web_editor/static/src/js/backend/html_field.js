@@ -630,49 +630,49 @@ export const htmlField = {
     component: HtmlField,
     displayName: _lt("Html"),
     supportedTypes: ["html"],
-    extractProps: ({ attrs }) => {
+    extractProps: ({ attrs, options }) => {
         const wysiwygOptions = {
             placeholder: attrs.placeholder,
-            noAttachment: attrs.options['no-attachment'],
-            inIframe: Boolean(attrs.options.cssEdit),
-            iframeCssAssets: attrs.options.cssEdit,
+            noAttachment: options['no-attachment'],
+            inIframe: Boolean(options.cssEdit),
+            iframeCssAssets: options.cssEdit,
             iframeHtmlClass: attrs.iframeHtmlClass,
-            snippets: attrs.options.snippets,
+            snippets: options.snippets,
             mediaModalParams: {
-                noVideos: 'noVideos' in attrs.options ? attrs.options.noVideos : true,
+                noVideos: 'noVideos' in options ? options.noVideos : true,
                 useMediaLibrary: true,
             },
             linkForceNewWindow: true,
             tabsize: 0,
-            height: attrs.options.height,
-            minHeight: attrs.options.minHeight,
-            maxHeight: attrs.options.maxHeight,
-            resizable: 'resizable' in attrs.options ? attrs.options.resizable : false,
+            height: options.height,
+            minHeight: options.minHeight,
+            maxHeight: options.maxHeight,
+            resizable: 'resizable' in options ? options.resizable : false,
             editorPlugins: [QWebPlugin],
         };
-        if ('collaborative' in attrs.options) {
-            wysiwygOptions.collaborative = attrs.options.collaborative;
+        if ('collaborative' in options) {
+            wysiwygOptions.collaborative = options.collaborative;
         }
-        if ('allowCommandImage' in attrs.options) {
+        if ('allowCommandImage' in options) {
             // Set the option only if it is explicitly set in the view so a default
             // can be set elsewhere otherwise.
-            wysiwygOptions.allowCommandImage = Boolean(attrs.options.allowCommandImage);
+            wysiwygOptions.allowCommandImage = Boolean(options.allowCommandImage);
         }
-        if ('allowCommandVideo' in attrs.options) {
+        if ('allowCommandVideo' in options) {
             // Set the option only if it is explicitly set in the view so a default
             // can be set elsewhere otherwise.
-            wysiwygOptions.allowCommandVideo = Boolean(attrs.options.allowCommandVideo);
+            wysiwygOptions.allowCommandVideo = Boolean(options.allowCommandVideo);
         }
         return {
-            codeview: Boolean(odoo.debug && attrs.options.codeview),
+            codeview: Boolean(odoo.debug && options.codeview),
             placeholder: attrs.placeholder,
 
-            isCollaborative: attrs.options.collaborative,
-            cssReadonlyAssetId: attrs.options.cssReadonly,
-            dynamicPlaceholder: attrs.options.dynamic_placeholder,
-            cssEditAssetId: attrs.options.cssEdit,
-            isInlineStyle: attrs.options['style-inline'],
-            wrapper: attrs.options.wrapper,
+            isCollaborative: options.collaborative,
+            cssReadonlyAssetId: options.cssReadonly,
+            dynamicPlaceholder: options.dynamic_placeholder,
+            cssEditAssetId: options.cssEdit,
+            isInlineStyle: options['style-inline'],
+            wrapper: options.wrapper,
 
             wysiwygOptions,
         };

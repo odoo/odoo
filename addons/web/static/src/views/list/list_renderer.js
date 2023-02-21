@@ -535,12 +535,12 @@ export class ListRenderer extends Component {
             if (type !== "integer" && type !== "float" && type !== "monetary") {
                 continue;
             }
-            const { rawAttrs, widget } = column;
+            const { attrs, widget } = column;
             const func =
-                (rawAttrs.sum && "sum") ||
-                (rawAttrs.avg && "avg") ||
-                (rawAttrs.max && "max") ||
-                (rawAttrs.min && "min");
+                (attrs.sum && "sum") ||
+                (attrs.avg && "avg") ||
+                (attrs.max && "max") ||
+                (attrs.min && "min");
             if (func) {
                 let aggregateValue = 0;
                 if (func === "max") {
@@ -556,11 +556,11 @@ export class ListRenderer extends Component {
 
                 const formatter = formatters.get(widget, false) || formatters.get(type, false);
                 const formatOptions = {
-                    digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : undefined,
+                    digits: attrs.digits ? JSON.parse(attrs.digits) : undefined,
                     escape: true,
                 };
                 aggregates[fieldName] = {
-                    help: rawAttrs[func],
+                    help: attrs[func],
                     value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
                 };
             }
@@ -569,7 +569,7 @@ export class ListRenderer extends Component {
     }
 
     formatAggregateValue(group, column) {
-        const { widget, rawAttrs } = column;
+        const { widget, attrs } = column;
         const fieldType = this.props.list.fields[column.name].type;
         const aggregateValue = group.aggregates[column.name];
         if (!(column.name in group.aggregates)) {
@@ -577,7 +577,7 @@ export class ListRenderer extends Component {
         }
         const formatter = formatters.get(widget, false) || formatters.get(fieldType, false);
         const formatOptions = {
-            digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : undefined,
+            digits: attrs.digits ? JSON.parse(attrs.digits) : undefined,
             escape: true,
         };
         return formatter ? formatter(aggregateValue, formatOptions) : aggregateValue;
@@ -677,12 +677,8 @@ export class ListRenderer extends Component {
                 classNames.push("o_list_button");
             } else if (column.type === "field") {
                 classNames.push("o_field_cell");
-                if (
-                    column.rawAttrs &&
-                    column.rawAttrs.class &&
-                    this.canUseFormatter(column, record)
-                ) {
-                    classNames.push(column.rawAttrs.class);
+                if (column.attrs && column.attrs.class && this.canUseFormatter(column, record)) {
+                    classNames.push(column.attrs.class);
                 }
                 const typeClass = FIELD_CLASSES[this.fields[column.name].type];
                 if (typeClass) {
@@ -743,7 +739,7 @@ export class ListRenderer extends Component {
     }
 
     getFieldClass(column) {
-        return column.rawAttrs && column.rawAttrs.class;
+        return column.attrs && column.attrs.class;
     }
 
     getFormattedValue(column, record) {
@@ -753,8 +749,8 @@ export class ListRenderer extends Component {
         const formatOptions = {
             escape: false,
             data: record.data,
-            isPassword: "password" in column.rawAttrs,
-            digits: column.rawAttrs.digits ? JSON.parse(column.rawAttrs.digits) : field.digits,
+            isPassword: "password" in column.attrs,
+            digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : field.digits,
             field: record.fields[fieldName],
         };
         return formatter(record.data[fieldName], formatOptions);
@@ -1660,8 +1656,8 @@ export class ListRenderer extends Component {
     }
 
     calculateColumnWidth(column) {
-        if (column.options && column.rawAttrs.width) {
-            return { type: "absolute", value: column.rawAttrs.width };
+        if (column.options && column.attrs.width) {
+            return { type: "absolute", value: column.attrs.width };
         }
 
         if (column.type !== "field") {

@@ -250,25 +250,25 @@ export const many2ManyTagsField = {
     displayName: _lt("Tags"),
     supportedTypes: ["many2many"],
     isSet: (value) => value.count > 0,
-    fieldsToFetch: (fieldInfo) => {
+    fieldsToFetch: ({ options }) => {
         const fieldsToFetch = [{ name: "display_name", type: "char" }];
-        if (fieldInfo.options.color_field) {
-            fieldsToFetch.push({ name: fieldInfo.options.color_field, type: "integer" });
+        if (options.color_field) {
+            fieldsToFetch.push({ name: options.color_field, type: "integer" });
         }
         return fieldsToFetch;
     },
-    extractProps: ({ attrs }) => {
-        const noCreate = Boolean(attrs.options.no_create);
+    extractProps: ({ attrs, options }) => {
+        const noCreate = Boolean(options.no_create);
         const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
-        const noQuickCreate = Boolean(attrs.options.no_quick_create);
-        const noCreateEdit = Boolean(attrs.options.no_create_edit);
+        const noQuickCreate = Boolean(options.no_quick_create);
+        const noCreateEdit = Boolean(options.no_create_edit);
         return {
-            colorField: attrs.options.color_field,
-            nameCreateField: attrs.options.create_name_field,
+            colorField: options.color_field,
+            nameCreateField: options.create_name_field,
             canCreate,
             canQuickCreate: canCreate && !noQuickCreate,
             canCreateEdit: canCreate && !noCreateEdit,
-            createDomain: attrs.options.create,
+            createDomain: options.create,
             placeholder: attrs.placeholder,
         };
     },
@@ -359,9 +359,9 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
 export const many2ManyTagsFieldColorEditable = {
     ...many2ManyTagsField,
     component: Many2ManyTagsFieldColorEditable,
-    extractProps: (params) => ({
-        ...many2ManyTagsField.extractProps(params),
-        canEditColor: !params.attrs.options.no_edit_color && !!params.attrs.options.color_field,
+    extractProps: (fieldInfo) => ({
+        ...many2ManyTagsField.extractProps(fieldInfo),
+        canEditColor: !fieldInfo.options.no_edit_color && !!fieldInfo.options.color_field,
     }),
 };
 

@@ -38,9 +38,9 @@ export const urlField = {
     component: UrlField,
     displayName: _lt("URL"),
     supportedTypes: ["char"],
-    extractProps: ({ attrs }) => ({
+    extractProps: ({ attrs, options }) => ({
         text: attrs.text,
-        websitePath: attrs.options.website_path,
+        websitePath: options.website_path,
         placeholder: attrs.placeholder,
     }),
 };

@@ -66,8 +66,8 @@ export const many2ManyBinaryField = {
         { name: "name", type: "char" },
         { name: "mimetype", type: "char" },
     ],
-    extractProps: ({ attrs }) => ({
-        acceptedFileExtensions: attrs.options.accepted_file_extensions,
+    extractProps: ({ attrs, options }) => ({
+        acceptedFileExtensions: options.accepted_file_extensions,
         className: attrs.class,
     }),
 };
