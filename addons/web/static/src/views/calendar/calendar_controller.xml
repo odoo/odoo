@@ -7,7 +7,9 @@
                 <t t-set-slot="layout-buttons">
                     <t t-call="{{ props.buttonTemplate }}"/>
                 </t>
-
+                <t t-set-slot="layout-actions">
+                    <SearchBar/>
+                </t>
                 <div class="o_calendar_container">
                     <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
                     <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block">

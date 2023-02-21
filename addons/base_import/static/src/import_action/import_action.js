@@ -63,11 +63,7 @@ export class ImportAction extends Component {
 
     get display() {
         return {
-            controlPanel: {
-                "top-right": false,
-                "bottom-left": true,
-                "bottom-right": false,
-            },
+            controlPanel: {},
         };
     }
 

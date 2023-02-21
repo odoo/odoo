@@ -9,6 +9,7 @@ import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { KanbanRenderer } from "./kanban_renderer";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 import { Component, reactive, useRef } from "@odoo/owl";
 
@@ -174,7 +175,7 @@ export class KanbanController extends Component {
 }
 
 KanbanController.template = `web.KanbanView`;
-KanbanController.components = { Layout, KanbanRenderer, MultiRecordViewButton };
+KanbanController.components = { Layout, KanbanRenderer, MultiRecordViewButton, SearchBar };
 KanbanController.props = {
     ...standardViewProps,
     defaultGroupBy: { validate: (dgb) => !dgb || typeof dgb === "string", optional: true },

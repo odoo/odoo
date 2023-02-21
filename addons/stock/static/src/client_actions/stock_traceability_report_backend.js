@@ -63,7 +63,7 @@ export class TraceabilityReport extends Component {
         });
 
         this.display = {
-            controlPanel: { "top-right": false, "bottom-right": false },
+            controlPanel: {},
             searchPanel: false,
         };
     }

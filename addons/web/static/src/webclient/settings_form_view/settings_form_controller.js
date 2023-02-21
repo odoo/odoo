@@ -15,6 +15,7 @@ export class SettingsFormController extends formView.Controller {
         this.state = useState({ displayNoContent: false });
         this.searchState = useState({ value: "" });
         this.rootRef = useRef("root");
+        this.canCreate = false;
         useSubEnv({ searchState: this.searchState });
         useEffect(
             () => {

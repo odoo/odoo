@@ -4,8 +4,8 @@
 <!-- Owl Templates -->
 
 <t t-name="web.Legacy.ControlPanel" owl="1">
-    <div class="o_control_panel" data-command-category="actions">
-        <div class="o_cp_top">
+    <div class="o_control_panel px-3" data-command-category="actions">
+        <div class="o_cp_top mb-1">
             <div class="o_cp_top_left">
                 <ol t-if="props.withBreadcrumbs" class="breadcrumb" role="navigation">
                     <li t-foreach="props.breadcrumbs" t-as="bc" t-key="bc.controllerID"

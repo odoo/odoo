@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormStatusIndicator" owl="1">
-        <div class="o_form_status_indicator d-md-flex align-items-center" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isNew }">
+        <div class="o_form_status_indicator d-md-flex align-items-center align-self-md-end me-auto" t-att-class="{ o_form_status_indicator_new_record: props.model.root.isNew }">
             <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ invisible: !(props.model.root.isNew or displayButtons) }">
                 <button
                     type="button"
-                    class="o_form_button_save btn btn-light px-1 lh-sm"
+                    class="o_form_button_save btn btn-light px-1 py-0 lh-sm"
                     t-att-disabled="props.isDisabled || !props.model.root.isNew and indicatorMode === 'invalid'"
                     data-hotkey="s"
                     t-on-click.stop="save"
@@ -16,7 +16,7 @@
                 </button>
                 <button
                     type="button"
-                    class="o_form_button_cancel btn btn-light px-1 lh-sm"
+                    class="o_form_button_cancel btn btn-light px-1 py-0 lh-sm"
                     t-att-disabled="props.isDisabled"
                     data-hotkey="j"
                     t-on-click.stop="discard"
