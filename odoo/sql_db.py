@@ -565,7 +565,7 @@ class ConnectionPool(object):
         self._lock = threading.Lock()
 
     def __repr__(self):
-        used = len([1 for c, u in self._connections[:] if u])
+        used = len([1 for c, u, _ in self._connections[:] if u])
         count = len(self._connections)
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
