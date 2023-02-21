@@ -336,6 +336,38 @@ class MrpProduction(models.Model):
             else:
                 production.is_planned = False
 
+<<<<<<< HEAD
+||||||| parent of e02c4417f9e (temp)
+    def _search_is_planned(self, operator, value):
+        if operator not in ('=', '!='):
+            raise UserError(_('Invalid domain operator %s', operator))
+
+        if value not in (False, True):
+            raise UserError(_('Invalid domain right operand %s', value))
+        ops = {'=': py_operator.eq, '!=': py_operator.ne}
+        ids = []
+        for mo in self.search([]):
+            if ops[operator](value, mo.is_planned):
+                ids.append(mo.id)
+
+        return [('id', 'in', ids)]
+
+=======
+    def _search_is_planned(self, operator, value):
+        if operator not in ('=', '!='):
+            raise UserError(_('Invalid domain operator %s', operator))
+
+        if value not in (False, True):
+            raise UserError(_('Invalid domain right operand %s', value))
+        query = self.env['mrp.workorder'].sudo()._search([
+            ('state', '!=', 'done'),
+            ('date_planned_start', '!=', False),
+            ('date_planned_finished', '!=', False),
+            ('production_id.state', 'not in', ('done', 'cancel'))])
+        op = 'in' if operator == '=' else 'not in'
+        return [('workorder_ids', op, query)]
+
+>>>>>>> e02c4417f9e (temp)
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
         delay_alert_date_data = self.env['stock.move'].read_group([('id', 'in', self.move_raw_ids.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'raw_material_production_id')
