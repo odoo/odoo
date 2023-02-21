@@ -12,11 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
         super()._post_load_data(template_code, company, template_data)
         company = company or self.env.company
         categ_values = {category.id: False for category in self.env['product.category'].search([])}
-        for fname in [
-            'property_stock_account_input_categ_id',
-            'property_stock_account_output_categ_id',
-            'property_stock_valuation_account_id',
-        ]:
+        for fname in self.env['product.category']._get_stock_account_property_field_names():
             self.env['ir.property'].with_company(company.id)._set_multi(fname, 'product.category', categ_values, True)
             value = template_data.get(fname)
             if value:
