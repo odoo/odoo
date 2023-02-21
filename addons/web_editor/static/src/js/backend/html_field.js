@@ -289,7 +289,11 @@ export class HtmlField extends Component {
     async updateValue() {
         const value = this.getEditingValue();
         const lastValue = (this.props.value || "").toString();
-        if (value !== null && !(!lastValue && stripHistoryIds(value) === "<p><br></p>") && value !== lastValue) {
+        if (
+            value !== null &&
+            !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
+            stripHistoryIds(value) !== stripHistoryIds(lastValue)
+        ) {
             this.props.setDirty(false);
             this.currentEditingValue = value;
             await this.props.record.update({ [this.props.name]: value });
