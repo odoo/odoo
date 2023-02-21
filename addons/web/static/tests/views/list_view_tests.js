@@ -17061,17 +17061,17 @@ QUnit.module("Views", (hooks) => {
 
             await click(target.querySelectorAll(".o_data_cell")[0]);
             await nextTick();
-            assert.containsOnce(target, ".o_dialog_error");
+            assert.containsOnce(target, ".o_error_dialog");
 
-            await click(target, ".o_dialog_error .btn-primary.o-default-button");
+            await click(target, ".o_error_dialog .btn-primary.o-default-button");
             assert.containsOnce(target, ".o_selected_row");
             assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
 
             await click(target.querySelectorAll(".o_data_cell")[0]);
             await nextTick();
-            assert.containsOnce(target, ".o_dialog_error");
+            assert.containsOnce(target, ".o_error_dialog");
 
-            await click(target, ".o_dialog_error .btn-primary.o-default-button");
+            await click(target, ".o_error_dialog .btn-primary.o-default-button");
             assert.containsOnce(target, ".o_selected_row");
             assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
         }

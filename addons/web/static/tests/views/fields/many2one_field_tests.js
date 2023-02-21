@@ -2983,7 +2983,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
         await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
         await nextTick(); // wait for the error service to ensure that there's no error dialog
-        assert.containsNone(target, ".o_dialog_error");
+        assert.containsNone(target, ".o_error_dialog");
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
             target.querySelector(".modal .o_field_widget[name='name'] input").value,

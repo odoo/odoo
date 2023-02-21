@@ -11787,7 +11787,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".breadcrumb-item.o_back_button"));
         assert.verifySteps(["write"]);
         await nextTick();
-        assert.containsOnce(target, ".o_form_error_dialog");
+        assert.containsOnce(target, ".o_error_dialog");
     });
 
     QUnit.test("Auto save: save when action changed", async function (assert) {
@@ -12384,7 +12384,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_cp_action_menus .dropdown-menu .dropdown-item"));
         assert.verifySteps(["write"]);
         await nextTick();
-        assert.containsOnce(target, ".o_form_error_dialog");
+        assert.containsOnce(target, ".o_error_dialog");
     });
 
     QUnit.test("Auto save: save when create button clicked", async function (assert) {
@@ -12445,7 +12445,7 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_form_button_create");
         assert.verifySteps(["write"]);
         await nextTick();
-        assert.containsOnce(target, ".o_form_error_dialog");
+        assert.containsOnce(target, ".o_error_dialog");
     });
 
     QUnit.test("no 'oh snap' error in form view in dialog", async (assert) => {
@@ -12490,7 +12490,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".modal  footer .myButton"));
         assert.verifySteps(["create"]);
         await nextTick();
-        assert.containsNone(target, ".o_form_error_dialog");
+        assert.containsOnce(target, ".o_error_dialog");
         assert.containsN(target, ".modal", 2);
         assert.strictEqual(
             target.querySelectorAll(".modal .modal-body")[1].textContent,
