@@ -23,11 +23,11 @@ class MailMainAttachmentMixin(models.AbstractModel):
 
     def _message_set_main_attachment_id(self, attachment_ids):
         if attachment_ids and not self.message_main_attachment_id:
-            all_attachments = self.env['ir.attachment'].browse(attachment_ids)
-            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
-                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments
-            self.sudo().with_context(tracking_disable=True).message_main_attachment_id = prioritary_attachments[0].id
+            # Assign one of the attachments as the main according to the following priority: pdf, image, other types.
+            self.sudo().with_context(tracking_disable=True).message_main_attachment_id = max(
+                self.env['ir.attachment'].browse(attachment_ids),
+                key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'))
+            ).id
 
     def _get_mail_thread_data(self, request_list):
         res = super()._get_mail_thread_data(request_list)
