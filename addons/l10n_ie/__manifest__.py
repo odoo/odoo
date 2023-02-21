@@ -1,24 +1,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Ireland - Accounting',
-    'icon': '/account/static/description/l10n.png',
+    "name": "Ireland - Accounting",
+    "version": "2.0",
     'countries': ['ie'],
-    'version': '1.0',
-    'category': 'Accounting/Localizations/Account Charts',
-    'description': """
-    This module is for all the Irish SMEs who would like to setup their accounting quickly. The module provides:
-
-    - a Chart of Accounts customised to Ireland
-    - VAT Rates and Structure""",
-    'author': 'Target Integration (http://www.targetintegration.com)',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
-    'depends': [
-        'account',
-        'base_iban',
-        'base_vat',
+    "icon": '/account/static/description/l10n.png',
+    "category": "Accounting/Localizations/Account Charts",
+    "description": """
+    This is the base module to manage the accounting chart for Republic of Ireland in Odoo. 
+    """,
+    "author": "Odoo SA",
+    "depends": [
+        "account",
+        "base_iban",
+        "base_vat",
     ],
-    'demo': [
-        'demo/demo_company.xml',
+    "data": [
+        "data/tax_report-ie.xml",
     ],
-    'license': 'LGPL-3',
+    "demo": [
+        "demo/demo_company.xml",
+    ],
+    "license": "LGPL-3",
 }

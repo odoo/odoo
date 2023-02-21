@@ -9,10 +9,14 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ie')
     def _get_ie_template_data(self):
         return {
-            'property_account_receivable_id': 'l10n_ie_a9999',
-            'property_account_payable_id': 'l10n_ie_a9998',
-            'property_account_expense_categ_id': 'l10n_ie_a9995',
-            'property_account_income_categ_id': 'l10n_ie_a9996',
+            'property_account_receivable_id': 'l10n_ie_account_2100',
+            'property_account_payable_id': 'l10n_ie_account_34',
+            'property_account_expense_categ_id': 'l10n_ie_account_60',
+            'property_account_income_categ_id': 'l10n_ie_account_70',
+            'property_stock_valuation_account_id': 'l10n_ie_account_630',
+            'property_advance_tax_payment_account_id': 'l10n_ie_account_2132',
+            'property_tax_payable_account_id': 'l10n_ie_account_3804',
+            'property_tax_receivable_account_id': 'l10n_ie_account_2131',
             'use_anglo_saxon': False,
             'code_digits': '6',
         }
@@ -22,11 +26,17 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ie',
-                'bank_account_code_prefix': '1200',
-                'cash_account_code_prefix': '1210',
-                'transfer_account_code_prefix': '1220',
-                'account_default_pos_receivable_account_id': 'l10n_ie_a9990',
-                'income_currency_exchange_account_id': 'l10n_ie_a7700',
-                'expense_currency_exchange_account_id': 'l10n_ie_a7700',
+                'bank_account_code_prefix': '230',
+                'cash_account_code_prefix': '231',
+                'transfer_account_code_prefix': '232',
+                'account_default_pos_receivable_account_id': 'l10n_ie_account_2101',
+                'income_currency_exchange_account_id': 'l10n_ie_account_761',
+                'expense_currency_exchange_account_id': 'l10n_ie_account_661',
+                'deferred_expense_account_id': 'l10n_ie_account_2161',
+                'deferred_revenue_account_id': 'l10n_ie_account_39',
+                'account_journal_early_pay_discount_loss_account_id': 'l10n_ie_account_640',
+                'account_journal_early_pay_discount_gain_account_id': 'l10n_ie_account_730',
+                'default_cash_difference_expense_account_id': 'l10n_ie_account_641',
+                'default_cash_difference_income_account_id': 'l10n_ie_account_731',
             },
         }
