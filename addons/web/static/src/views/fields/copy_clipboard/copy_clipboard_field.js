@@ -28,10 +28,13 @@ class CopyClipboardField extends Component {
     }
 
     get copyButtonClassName() {
-        return `o_btn_${this.props.type}_copy btn-sm`;
+        return `o_btn_${this.type}_copy btn-sm`;
     }
     get fieldProps() {
         return omit(this.props, "string", "disabledExpr");
+    }
+    get type() {
+        return this.props.record.fields[this.props.name].type;
     }
     get disabled() {
         const context = this.props.record.evalContext;
@@ -48,7 +51,7 @@ export class CopyClipboardButtonField extends CopyClipboardField {
     static components = { CopyButton };
 
     get copyButtonClassName() {
-        return `o_btn_${this.props.type}_copy rounded-2`;
+        return `o_btn_${this.type}_copy rounded-2`;
     }
 }
 

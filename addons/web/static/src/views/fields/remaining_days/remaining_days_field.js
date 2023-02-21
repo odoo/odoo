@@ -16,7 +16,7 @@ export class RemainingDaysField extends Component {
     };
 
     get hasTime() {
-        return this.props.type === "datetime";
+        return this.props.record.fields[this.props.name].type === "datetime";
     }
 
     get pickerComponent() {
