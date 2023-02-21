@@ -19,6 +19,103 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
         this.orderDetail = this.$el.find('table#sales_order_table').data();
     },
 
+<<<<<<< HEAD
+||||||| parent of b447c663ad2 (temp)
+        this._callUpdateLineRoute(self.orderDetail.orderId, {
+            'line_id': $target.data('lineId'),
+            'input_quantity': quantity >= 0 ? quantity : false,
+            'access_token': self.orderDetail.token
+        }).then((data) => {
+            self._updateOrderLineValues($target.closest('tr'), data);
+            self._updateOrderValues(data);
+        });
+    },
+    /**
+     * Reacts to the click on the -/+ buttons
+     *
+     * @param {Event} ev
+     */
+    _onClick(ev) {
+        ev.preventDefault();
+        let self = this,
+            $target = $(ev.currentTarget);
+        this._callUpdateLineRoute(self.orderDetail.orderId, {
+            'line_id': $target.data('lineId'),
+            'remove': $target.data('remove'),
+            'unlink': $target.data('unlink'),
+            'access_token': self.orderDetail.token
+        }).then((data) => {
+            window.location.reload()
+        });
+    },
+    /**
+     * trigger when optional product added to order from portal.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onClickOptionalProduct(ev) {
+        ev.preventDefault();
+        let self = this,
+            $target = $(ev.currentTarget);
+        // to avoid double click on link with href.
+        $target.css('pointer-events', 'none');
+
+        this._rpc({
+            route: "/my/orders/" + self.orderDetail.orderId + "/add_option/" + $target.data('optionId'),
+            params: {access_token: self.orderDetail.token}
+        }).then((data) => {
+            window.location.reload();
+        });
+    },
+=======
+        this._callUpdateLineRoute(self.orderDetail.orderId, {
+            'line_id': $target.data('lineId'),
+            'input_quantity': quantity >= 0 ? quantity : false,
+            'access_token': self.orderDetail.token
+        }).then((data) => {
+            window.location.reload();
+        });
+    },
+    /**
+     * Reacts to the click on the -/+ buttons
+     *
+     * @param {Event} ev
+     */
+    _onClick(ev) {
+        ev.preventDefault();
+        let self = this,
+            $target = $(ev.currentTarget);
+        this._callUpdateLineRoute(self.orderDetail.orderId, {
+            'line_id': $target.data('lineId'),
+            'remove': $target.data('remove'),
+            'unlink': $target.data('unlink'),
+            'access_token': self.orderDetail.token
+        }).then((data) => {
+            window.location.reload();
+        });
+    },
+    /**
+     * trigger when optional product added to order from portal.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onClickOptionalProduct(ev) {
+        ev.preventDefault();
+        let self = this,
+            $target = $(ev.currentTarget);
+        // to avoid double click on link with href.
+        $target.css('pointer-events', 'none');
+
+        this._rpc({
+            route: "/my/orders/" + self.orderDetail.orderId + "/add_option/" + $target.data('optionId'),
+            params: {access_token: self.orderDetail.token}
+        }).then((data) => {
+            window.location.reload();
+        });
+    },
+>>>>>>> b447c663ad2 (temp)
     /**
      * Calls the route to get updated values of the line and order
      * when the quantity of a product has changed
