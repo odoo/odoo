@@ -132,9 +132,7 @@ export const imageField = {
     component: ImageField,
     displayName: _lt("Image"),
     supportedTypes: ["binary"],
-    fieldDependencies: {
-        write_date: { type: "datetime" },
-    },
+    fieldDependencies: [{ name: "write_date", type: "datetime" }],
     extractProps: ({ attrs }) => ({
         enableZoom: attrs.options.zoom,
         zoomDelay: attrs.options.zoom_delay,

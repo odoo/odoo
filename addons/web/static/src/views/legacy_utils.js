@@ -96,7 +96,7 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
             specialData: fieldDescr.field && fieldDescr.field.legacySpecialData,
             domain,
             context: fieldDescr.context,
-            fieldDependencies: {}, // ??
+            fieldDependencies: [], // ??
             force_save: fieldDescr.forceSave,
             mode,
             modifiers: fieldDescr.modifiers,

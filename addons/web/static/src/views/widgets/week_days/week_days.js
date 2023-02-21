@@ -30,15 +30,15 @@ export class WeekDays extends Component {
 
 export const weekDays = {
     component: WeekDays,
-    fieldDependencies: {
-        sun: { type: "boolean", string: _lt("Sun") },
-        mon: { type: "boolean", string: _lt("Mon") },
-        tue: { type: "boolean", string: _lt("Tue") },
-        wed: { type: "boolean", string: _lt("Wed") },
-        thu: { type: "boolean", string: _lt("Thu") },
-        fri: { type: "boolean", string: _lt("Fri") },
-        sat: { type: "boolean", string: _lt("Sat") },
-    },
+    fieldDependencies: [
+        { name: "sun", type: "boolean", string: _lt("Sun") },
+        { name: "mon", type: "boolean", string: _lt("Mon") },
+        { name: "tue", type: "boolean", string: _lt("Tue") },
+        { name: "wed", type: "boolean", string: _lt("Wed") },
+        { name: "thu", type: "boolean", string: _lt("Thu") },
+        { name: "fri", type: "boolean", string: _lt("Fri") },
+        { name: "sat", type: "boolean", string: _lt("Sat") },
+    ],
 };
 
 registry.category("view_widgets").add("week_days", weekDays);

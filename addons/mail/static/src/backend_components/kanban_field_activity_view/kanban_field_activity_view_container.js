@@ -86,14 +86,14 @@ Object.assign(KanbanFieldActivityViewContainer, {
 
 export const kanbanFieldActivityViewContainer = {
     component: KanbanFieldActivityViewContainer,
-    fieldDependencies: {
-        activity_exception_decoration: { type: "selection" },
-        activity_exception_icon: { type: "char" },
-        activity_state: { type: "selection" },
-        activity_summary: { type: "char" },
-        activity_type_icon: { type: "char" },
-        activity_type_id: { type: "many2one", relation: "mail.activity.type" },
-    },
+    fieldDependencies: [
+        { name: "activity_exception_decoration", type: "selection" },
+        { name: "activity_exception_icon", type: "char" },
+        { name: "activity_state", type: "selection" },
+        { name: "activity_summary", type: "char" },
+        { name: "activity_type_icon", type: "char" },
+        { name: "activity_type_id", type: "many2one", relation: "mail.activity.type" },
+    ],
 };
 
 registry.category("fields").add("kanban_activity", kanbanFieldActivityViewContainer);
