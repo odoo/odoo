@@ -25,6 +25,7 @@ class AccountMove(models.Model):
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
+    l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
 
     @api.depends('amount_total')
     def _compute_amount_total_words(self):
