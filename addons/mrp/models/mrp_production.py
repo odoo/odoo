@@ -337,13 +337,13 @@ class MrpProduction(models.Model):
 
         if value not in (False, True):
             raise UserError(_('Invalid domain right operand %s', value))
-        ops = {'=': py_operator.eq, '!=': py_operator.ne}
-        ids = []
-        for mo in self.search([]):
-            if ops[operator](value, mo.is_planned):
-                ids.append(mo.id)
-
-        return [('id', 'in', ids)]
+        query = self.env['mrp.workorder'].sudo()._search([
+            ('state', '!=', 'done'),
+            ('date_planned_start', '!=', False),
+            ('date_planned_finished', '!=', False),
+            ('production_id.state', 'not in', ('done', 'cancel'))])
+        op = 'in' if operator == '=' else 'not in'
+        return [('workorder_ids', op, query)]
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
