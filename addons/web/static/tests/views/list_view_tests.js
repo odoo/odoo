@@ -1513,6 +1513,21 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelectorAll(".o_data_row td")[2].innerHTML, "");
     });
 
+    QUnit.test("invisble fields must not have a tooltip", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo" attrs="{'invisible': [('id','=', 1)]}"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, ".o_data_row", 4);
+        assert.containsN(target, ".o_data_row td[data-tooltip]", 3);
+    });
+
     QUnit.test(
         "do not perform extra RPC to read invisible many2one fields",
         async function (assert) {
