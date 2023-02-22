@@ -1010,7 +1010,7 @@ Model({
             this.update({
                 isCurrentPartnerTyping: false,
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: unlink(memberOfCurrentUser),
+                typingMembers: memberOfCurrentUser ? unlink(memberOfCurrentUser) : undefined,
             });
             // Notify typing status to other members.
             if (immediateNotify) {
