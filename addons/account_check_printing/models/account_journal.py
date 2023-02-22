@@ -74,17 +74,14 @@ class AccountJournal(models.Model):
                 'company_id': journal.company_id.id,
             })
 
-    def get_journal_dashboard_datas(self):
-        domain_checks_to_print = [
-            ('journal_id', '=', self.id),
+    def _get_journal_dashboard_data_batched(self):
+        dashboard_data = super()._get_journal_dashboard_data_batched()
+        self._fill_dashboard_data_count(dashboard_data, 'account.payment', 'num_checks_to_print', [
             ('payment_method_line_id.code', '=', 'check_printing'),
             ('state', '=', 'posted'),
             ('is_move_sent','=', False),
-        ]
-        return dict(
-            super(AccountJournal, self).get_journal_dashboard_datas(),
-            num_checks_to_print=self.env['account.payment'].search_count(domain_checks_to_print),
-        )
+        ])
+        return dashboard_data
 
     def action_checks_to_print(self):
         payment_method_line = self.outbound_payment_method_line_ids.filtered(lambda l: l.code == 'check_printing')
