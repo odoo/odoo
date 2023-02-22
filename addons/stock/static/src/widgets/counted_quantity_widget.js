@@ -41,7 +41,7 @@ export class CountedQuantityWidgetField extends FloatField {
     get formattedValue() {
         if (
             this.props.readonly &&
-            !this.props.value & !this.props.record.data.inventory_quantity_set
+            !this.props.record.data[this.props.name] & !this.props.record.data.inventory_quantity_set
         ) {
             return "";
         }

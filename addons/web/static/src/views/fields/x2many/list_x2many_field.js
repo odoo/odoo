@@ -11,7 +11,7 @@ export class ListX2ManyField extends Component {
     static props = { ...standardFieldProps };
 
     get formattedValue() {
-        return formatX2many(this.props.value);
+        return formatX2many(this.props.record.data[this.props.name]);
     }
 }
 

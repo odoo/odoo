@@ -29,7 +29,7 @@ export class MrpTimer extends Component {
         this.state = useState({
             // duration is expected to be given in minutes
             duration:
-                this.props.value !== undefined ? this.props.value : this.props.record.data.duration,
+                this.props.record.data[this.props.name] !== undefined ? this.props.record.data[this.props.name] : this.props.record.data.duration,
         });
         this.lastDateTime = Date.now();
         useInputField({
@@ -61,7 +61,7 @@ export class MrpTimer extends Component {
             const rerun = !this.ongoing && newOngoing;
             this.ongoing = newOngoing;
             if (rerun) {
-                this.state.duration = nextProps.value;
+                this.state.duration = nextProps.record.data[nextProps.name];
                 this._runTimer();
                 this._runSleepTimer()
             }
@@ -70,8 +70,12 @@ export class MrpTimer extends Component {
     }
 
     get durationFormatted() {
-        if(this.props.value != this.state.duration && this.props.record && this.props.record.isDirty){
-            this.state.duration = this.props.value;
+        if (
+            this.props.record.data[this.props.name] != this.state.duration &&
+            this.props.record &&
+            this.props.record.isDirty
+        ) {
+            this.state.duration = this.props.record.data[this.props.name];
         }
         return formatMinutes(this.state.duration);
     }
@@ -102,7 +106,6 @@ MrpTimer.props = {
     ...standardFieldProps,
     duration: { type: Number, optional: true },
     ongoing: { type: Boolean, optional: true },
-    value: { optional: true },
 };
 MrpTimer.template = "mrp.MrpTimer";
 

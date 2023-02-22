@@ -8,10 +8,13 @@ const { Component } = owl;
 
 export class IconSelectionField extends Component {
     get icon() {
-        return this.props.icons[this.props.value];
+        return this.props.icons[this.props.record.data[this.props.name]];
     }
     get title() {
-        return this.props.value.charAt(0).toUpperCase() + this.props.value.slice(1);
+        return (
+            this.props.record.data[this.props.name].charAt(0).toUpperCase() +
+            this.props.record.data[this.props.name].slice(1)
+        );
     }
 }
 IconSelectionField.template = "event.IconSelectionField";

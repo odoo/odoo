@@ -20,7 +20,7 @@ export class BadgeField extends Component {
 
     get formattedValue() {
         const formatter = formatters.get(this.props.record.fields[this.props.name].type);
-        return formatter(this.props.value, {
+        return formatter(this.props.record.data[this.props.name], {
             selection: this.props.record.fields[this.props.name].selection,
         });
     }

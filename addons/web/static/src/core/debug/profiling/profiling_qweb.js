@@ -69,8 +69,8 @@ export class ProfilingQwebView extends Component {
      * @returns {archs, data: {template, xpath, directive, time, duration, query }[]}
      */
     get profile() {
-        if (this.props.value) {
-            return JSON.parse(this.props.value)[0].results;
+        if (this.props.record.data[this.props.name]) {
+            return JSON.parse(this.props.record.data[this.props.name])[0].results;
         }
         return { archs: {}, data: [] };
     }

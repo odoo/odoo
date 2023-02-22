@@ -58,6 +58,7 @@ export class Many2OneField extends Component {
         string: { type: String, optional: true },
         canScanBarcode: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
+        value: { optional: true },
     };
     static defaultProps = {
         canOpen: true,
@@ -86,7 +87,7 @@ export class Many2OneField extends Component {
         };
 
         this.state = useState({
-            isFloating: !this.props.value,
+            isFloating: !this.value,
         });
         this.computeActiveActions(this.props);
 
@@ -95,7 +96,7 @@ export class Many2OneField extends Component {
             activeActions: this.state.activeActions,
             isToMany: false,
             onRecordSaved: async (record) => {
-                const resId = this.props.value[0];
+                const resId = this.value[0];
                 const fields = ["display_name"];
                 const context = this.props.record.getFieldContext(this.props.name);
                 const records = await this.orm.read(this.relation, [resId], fields, { context });
@@ -130,7 +131,8 @@ export class Many2OneField extends Component {
         };
 
         onWillUpdateProps(async (nextProps) => {
-            this.state.isFloating = !nextProps.value;
+            this.state.isFloating =
+                "value" in nextProps ? !nextProps.value : !nextProps.record.data[nextProps.name];
             this.computeActiveActions(nextProps);
         });
     }
@@ -156,21 +158,24 @@ export class Many2OneField extends Component {
         return this.props.record.getFieldDomain(this.props.name);
     }
     get hasExternalButton() {
-        return this.props.canOpen && !!this.props.value && !this.state.isFloating;
+        return this.props.canOpen && !!this.value && !this.state.isFloating;
     }
     get displayName() {
-        return this.props.value ? this.props.value[1].split("\n")[0] : "";
+        return this.value ? this.value[1].split("\n")[0] : "";
     }
     get extraLines() {
-        return this.props.value
-            ? this.props.value[1]
+        return this.value
+            ? this.value[1]
                   .split("\n")
                   .map((line) => line.trim())
                   .slice(1)
             : [];
     }
     get resId() {
-        return this.props.value && this.props.value[0];
+        return this.value && this.value[0];
+    }
+    get value() {
+        return "value" in this.props ? this.props.value : this.props.record.data[this.props.name];
     }
     get Many2XAutocompleteProps() {
         return {

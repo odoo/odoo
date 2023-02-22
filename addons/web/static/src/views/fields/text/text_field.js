@@ -38,7 +38,10 @@ export class TextField extends Component {
                 dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField)
             );
         }
-        useInputField({ getValue: () => this.props.value || "", refName: "textarea" });
+        useInputField({
+            getValue: () => this.props.record.data[this.props.name] || "",
+            refName: "textarea",
+        });
         useSpellCheck({ refName: "textarea" });
 
         useEffect(() => {

@@ -3,7 +3,7 @@
 
     <t t-name="web.ImageUrlField" owl="1">
         <img
-            t-if="props.value"
+            t-if="props.record.data[props.name]"
             class="img img-fluid"
             alt="Image"
             t-att-src="state.src"
