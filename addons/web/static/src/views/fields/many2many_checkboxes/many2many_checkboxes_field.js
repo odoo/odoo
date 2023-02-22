@@ -19,19 +19,22 @@ export class Many2ManyCheckboxesField extends Component {
     }
 
     isSelected(item) {
-        return this.props.value.currentIds.includes(item[0]);
+        return this.props.record.data[this.props.name].currentIds.includes(item[0]);
     }
 
     onChange(resId, checked) {
         if (checked) {
-            this.props.value.replaceWith([...this.props.value.currentIds, resId]);
+            this.props.record.data[this.props.name].replaceWith([
+                ...this.props.record.data[this.props.name].currentIds,
+                resId,
+            ]);
         } else {
-            const currentIds = [...this.props.value.currentIds];
+            const currentIds = [...this.props.record.data[this.props.name].currentIds];
             const index = currentIds.indexOf(resId);
             if (index > -1) {
                 currentIds.splice(index, 1);
             }
-            this.props.value.replaceWith(currentIds);
+            this.props.record.data[this.props.name].replaceWith(currentIds);
         }
     }
 }

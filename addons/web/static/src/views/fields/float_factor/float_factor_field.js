@@ -22,7 +22,7 @@ export class FloatFactorField extends FloatField {
     }
 
     get value() {
-        return this.props.value * this.props.factor;
+        return this.props.record.data[this.props.name] * this.props.factor;
     }
 }
 

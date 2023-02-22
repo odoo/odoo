@@ -58,7 +58,7 @@ export class ListFieldActivityViewContainer extends Component {
         const listFieldActivityView = messaging.models["ListFieldActivityView"].insert({
             id: this.listFieldActivityViewId,
             thread: {
-                activities: props.value.records.map((activityData) => {
+                activities: props.record.data[props.name].records.map((activityData) => {
                     return {
                         id: activityData.resId,
                     };

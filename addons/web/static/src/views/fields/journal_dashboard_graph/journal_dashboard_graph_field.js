@@ -19,7 +19,7 @@ export class JournalDashboardGraphField extends Component {
         this.chart = null;
         this.cookies = useService("cookie");
         this.canvasRef = useRef("canvas");
-        this.data = JSON.parse(this.props.value);
+        this.data = JSON.parse(this.props.record.data[this.props.name]);
 
         onWillStart(() => loadJS("/web/static/lib/Chart/Chart.js"));
 

@@ -37,13 +37,13 @@ export class DomainField extends Component {
         this.isDebugEdited = false;
 
         onWillStart(() => {
-            this.displayedDomain = this.props.value;
+            this.displayedDomain = this.props.record.data[this.props.name];
             this.loadCount(this.props);
         });
         onWillUpdateProps((nextProps) => {
             this.isDebugEdited = this.isDebugEdited && this.props.readonly === nextProps.readonly;
             if (!this.isDebugEdited) {
-                this.displayedDomain = nextProps.value;
+                this.displayedDomain = nextProps.record.data[nextProps.name];
                 this.loadCount(nextProps);
             }
         });
@@ -79,7 +79,10 @@ export class DomainField extends Component {
                 noCreate: true,
                 multiSelect: false,
                 resModel: this.getResModel(this.props),
-                domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
+                domain:
+                    this.getDomain(this.props.record.data[this.props.name]).toList(
+                        this.getContext(this.props)
+                    ) || [],
                 context: this.getContext(this.props) || {},
             },
             {
@@ -90,7 +93,7 @@ export class DomainField extends Component {
     }
     get isValidDomain() {
         try {
-            this.getDomain(this.props.value).toList();
+            this.getDomain(this.props.record.data[this.props.name]).toList();
             return true;
         } catch {
             // WOWL TODO: rethrow error when not the expected type
@@ -108,7 +111,9 @@ export class DomainField extends Component {
 
         let recordCount;
         try {
-            const domain = this.getDomain(props.value).toList(this.getContext(props));
+            const domain = this.getDomain(props.record.data[props.name]).toList(
+                this.getContext(props)
+            );
             recordCount = await this.orm.silent.call(
                 this.getResModel(props),
                 "search_count",
@@ -131,7 +136,7 @@ export class DomainField extends Component {
     onEditDialogBtnClick() {
         this.addDialog(DomainSelectorDialog, {
             resModel: this.getResModel(this.props),
-            initialValue: this.props.value || "[]",
+            initialValue: this.props.record.data[this.props.name] || "[]",
             readonly: this.props.readonly,
             isDebugMode: !!this.env.debug,
             onSelected: (value) => this.props.record.update({ [this.props.name]: value }),

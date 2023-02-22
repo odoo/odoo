@@ -67,8 +67,8 @@ export class StatusBarField extends Component {
                                 (option) =>
                                     option.id ===
                                     (this.type === "many2one"
-                                        ? this.props.value[0]
-                                        : this.props.value)
+                                        ? this.props.record.data[this.props.name][0]
+                                        : this.props.record.data[this.props.name])
                             ) + 1
                         ];
                     this.selectItem(nextOption);
@@ -82,7 +82,9 @@ export class StatusBarField extends Component {
                             !this.props.readonly &&
                             !this.props.isDisabled &&
                             options[options.length - 1].id !==
-                                (this.type === "many2one" ? this.props.value[0] : this.props.value)
+                                (this.type === "many2one"
+                                    ? this.props.record.data[this.props.name][0]
+                                    : this.props.record.data[this.props.name])
                         );
                     },
                 }
@@ -94,12 +96,16 @@ export class StatusBarField extends Component {
         switch (this.type) {
             case "many2one": {
                 const item = this.options.find(
-                    (item) => this.props.value && item.id === this.props.value[0]
+                    (item) =>
+                        this.props.record.data[this.props.name] &&
+                        item.id === this.props.record.data[this.props.name][0]
                 );
                 return item ? item.display_name : "";
             }
             case "selection": {
-                const item = this.options.find((item) => item[0] === this.props.value);
+                const item = this.options.find(
+                    (item) => item[0] === this.props.record.data[this.props.name]
+                );
                 return item ? item[1] : "";
             }
         }
@@ -147,7 +153,9 @@ export class StatusBarField extends Component {
         });
         return items.map((item) => ({
             ...item,
-            isSelected: this.props.value && item.id === this.props.value[0],
+            isSelected:
+                this.props.record.data[this.props.name] &&
+                item.id === this.props.record.data[this.props.name][0],
         }));
     }
 
@@ -156,13 +164,14 @@ export class StatusBarField extends Component {
         if (this.props.visibleSelection.length) {
             selection = selection.filter(
                 (item) =>
-                    this.props.visibleSelection.includes(item[0]) || item[0] === this.props.value
+                    this.props.visibleSelection.includes(item[0]) ||
+                    item[0] === this.props.record.data[this.props.name]
             );
         }
         return selection.map((item) => ({
             id: item[0],
             name: item[1],
-            isSelected: item[0] === this.props.value,
+            isSelected: item[0] === this.props.record.data[this.props.name],
             isFolded: false,
         }));
     }

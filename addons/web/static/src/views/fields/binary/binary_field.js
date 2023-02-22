@@ -36,7 +36,7 @@ export class BinaryField extends Component {
     }
 
     get fileName() {
-        return this.state.fileName || this.props.value || "";
+        return this.state.fileName || this.props.record.data[this.props.name] || "";
     }
 
     update({ data, name }) {
@@ -58,7 +58,9 @@ export class BinaryField extends Component {
                 filename_field: this.fileName,
                 filename: this.fileName || "",
                 download: true,
-                data: isBinarySize(this.props.value) ? null : this.props.value,
+                data: isBinarySize(this.props.record.data[this.props.name])
+                    ? null
+                    : this.props.record.data[this.props.name],
             },
             url: "/web/content",
         });

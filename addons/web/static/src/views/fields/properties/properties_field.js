@@ -92,7 +92,9 @@ export class PropertiesField extends Component {
      * @returns {array}
      */
     get propertiesList() {
-        const propertiesValues = JSON.parse(JSON.stringify(this.props.value || []));
+        const propertiesValues = JSON.parse(
+            JSON.stringify(this.props.record.data[this.props.name] || [])
+        );
         return propertiesValues.filter((definition) => !definition.definition_deleted);
     }
 
@@ -428,7 +430,7 @@ export class PropertiesField extends Component {
         // initial properties values, if the type or the model changed, the
         // name will be regenerated in order to reset the value on the children
         this.initialValues = {};
-        for (const propertiesValues of this.props.value || []) {
+        for (const propertiesValues of this.props.record.data[this.props.name] || []) {
             this.initialValues[propertiesValues.name] = {
                 name: propertiesValues.name,
                 type: propertiesValues.type,

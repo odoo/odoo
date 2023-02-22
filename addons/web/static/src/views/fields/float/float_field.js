@@ -48,7 +48,7 @@ export class FloatField extends Component {
     }
 
     get value() {
-        return this.props.value;
+        return this.props.record.data[this.props.name];
     }
 }
 

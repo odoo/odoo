@@ -20,12 +20,12 @@ export class ImageUrlField extends Component {
     setup() {
         this.notification = useService("notification");
         this.state = useState({
-            src: this.props.value,
+            src: this.props.record.data[this.props.name],
         });
 
         onWillUpdateProps((nextProps) => {
-            if (this.props.value !== nextProps.value) {
-                this.state.value = nextProps.value;
+            if (this.props.record.data[this.props.name] !== nextProps.record.data[nextProps.name]) {
+                this.state.value = nextProps.record.data[nextProps.name];
             }
         });
     }

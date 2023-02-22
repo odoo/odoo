@@ -12,7 +12,7 @@ export class PrioritySwitchField extends PriorityField {
             {
                 category: "smart_action",
                 hotkey: "alt+r",
-                isAvailable: () => this.props.value !== id,
+                isAvailable: () => this.props.record.data[this.props.name] !== id,
             },
         ]);
     }

@@ -60,7 +60,7 @@ export class PriorityField extends Component {
     get index() {
         return this.state.index > -1
             ? this.state.index
-            : this.options.findIndex((o) => o[0] === this.props.value);
+            : this.options.findIndex((o) => o[0] === this.props.record.data[this.props.name]);
     }
     get isReadonly() {
         return this.props.record.isReadonly(this.props.name);
@@ -75,7 +75,7 @@ export class PriorityField extends Component {
      * @param {string} value
      */
     onStarClicked(value) {
-        if (this.props.value === value) {
+        if (this.props.record.data[this.props.name] === value) {
             this.state.index = -1;
             this.updateRecord(this.options[0][0]);
         } else {

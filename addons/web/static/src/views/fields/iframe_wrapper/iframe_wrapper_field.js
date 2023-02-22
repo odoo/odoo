@@ -31,7 +31,7 @@ export class IframeWrapperField extends Component {
                 iframeDoc.write(value);
                 iframeDoc.close();
             },
-            () => [this.props.value]
+            () => [this.props.record.data[this.props.name]]
         );
     }
 }

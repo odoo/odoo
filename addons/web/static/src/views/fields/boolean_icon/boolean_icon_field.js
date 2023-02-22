@@ -17,7 +17,7 @@ export class BooleanIconField extends Component {
     };
 
     update() {
-        this.props.record.update({ [this.props.name]: !this.props.value });
+        this.props.record.update({ [this.props.name]: !this.props.record.data[this.props.name] });
     }
 }
 

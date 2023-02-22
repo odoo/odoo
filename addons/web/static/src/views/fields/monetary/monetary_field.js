@@ -65,10 +65,14 @@ export class MonetaryField extends Component {
     }
 
     get formattedValue() {
-        if (this.props.inputType === "number" && !this.props.readonly && this.props.value) {
-            return this.props.value;
+        if (
+            this.props.inputType === "number" &&
+            !this.props.readonly &&
+            this.props.record.data[this.props.name]
+        ) {
+            return this.props.record.data[this.props.name];
         }
-        return formatMonetary(this.props.value, {
+        return formatMonetary(this.props.record.data[this.props.name], {
             digits: this.currencyDigits,
             currencyId: this.currencyId,
             noSymbol: !this.props.readonly || this.props.hideSymbol,

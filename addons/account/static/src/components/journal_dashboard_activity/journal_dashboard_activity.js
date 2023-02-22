@@ -13,7 +13,7 @@ export class JournalDashboardActivity extends Component {
     }
 
     formatData(props) {
-        this.info = JSON.parse(this.props.value);
+        this.info = JSON.parse(this.props.record.data[this.props.name]);
         this.info.more_activities = false;
         if (this.info.activities.length > this.MAX_ACTIVITY_DISPLAY) {
             this.info.more_activities = true;

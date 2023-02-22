@@ -24,7 +24,9 @@ export class FloatToggleField extends Component {
     // TODO perf issue (because of update round trip)
     // we probably want to have a state and a useEffect or onWillUpateProps
     onChange() {
-        let currentIndex = this.props.range.indexOf(this.props.value * this.factor);
+        let currentIndex = this.props.range.indexOf(
+            this.props.record.data[this.props.name] * this.factor
+        );
         currentIndex++;
         if (currentIndex > this.props.range.length - 1) {
             currentIndex = 0;
@@ -44,7 +46,7 @@ export class FloatToggleField extends Component {
         return !this.props.digits && Array.isArray(fieldDigits) ? fieldDigits : this.props.digits;
     }
     get formattedValue() {
-        return formatFloat(this.props.value * this.factor, {
+        return formatFloat(this.props.record.data[this.props.name] * this.factor, {
             digits: this.digits,
         });
     }

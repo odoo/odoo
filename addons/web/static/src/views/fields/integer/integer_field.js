@@ -33,9 +33,9 @@ export class IntegerField extends Component {
 
     get formattedValue() {
         if (!this.props.readonly && this.props.inputType === "number") {
-            return this.props.value;
+            return this.props.record.data[this.props.name];
         }
-        return formatInteger(this.props.value);
+        return formatInteger(this.props.record.data[this.props.name]);
     }
 }
 

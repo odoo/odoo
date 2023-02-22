@@ -23,7 +23,9 @@ export class FontSelectionField extends Component {
         return this.props.record.isRequired(this.props.name);
     }
     get string() {
-        return formatSelection(this.props.value, { selection: this.options });
+        return formatSelection(this.props.record.data[this.props.name], {
+            selection: this.options,
+        });
     }
 
     stringify(value) {

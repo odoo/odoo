@@ -107,11 +107,11 @@ TaxGroupComponent.template = "account.TaxGroupComponent";
 export class TaxTotalsComponent extends Component {
     setup() {
         super.setup();
-        this.totals = this.props.value;
+        this.totals = this.props.record.data[this.props.name];
         this.readonly = this.props.readonly;
         onWillUpdateProps((nextProps) => {
             // We only reformat tax groups if there are changed
-            this.totals = nextProps.value;
+            this.totals = nextProps.record.data[nextProps.name];
             this.readonly = nextProps.readonly;
             this._computeTotalsFormat();
         });

@@ -18,7 +18,7 @@
                             </button>
                         </t>
                         <button
-                            t-if="props.value and state.isValid"
+                            t-if="props.record.data[props.name] and state.isValid"
                             class="o_clear_file_button btn btn-light border-0 rounded-circle m-1 p-1"
                             data-tooltip="Clear"
                             aria-label="Clear"

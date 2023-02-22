@@ -154,7 +154,7 @@ export function useInputField(params) {
                 return;
             }
 
-            if ((val || false) !== (component.props.value || false)) {
+            if ((val || false) !== (component.props.record.data[component.props.name] || false)) {
                 await component.props.record.update({ [component.props.name]: val });
                 lastSetValue = inputRef.el.value;
                 component.props.record.model.env.bus.trigger(

@@ -59,7 +59,7 @@ export class DateRangeField extends Component {
                     }
                 };
             },
-            () => [this.root.el, this.props.value]
+            () => [this.root.el, this.props.record.data[this.props.name]]
         );
     }
 
@@ -70,7 +70,7 @@ export class DateRangeField extends Component {
         return this.formatType === "datetime";
     }
     get formattedValue() {
-        return this.formatValue(this.formatType, this.props.value);
+        return this.formatValue(this.formatType, this.props.record.data[this.props.name]);
     }
     get formattedEndDate() {
         return this.formatValue(this.formatType, this.endDate);

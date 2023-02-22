@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.SignatureField" owl="1">
-        <t t-if="props.value">
+        <t t-if="props.record.data[props.name]">
             <img class="o_signature img img-fluid"
                 alt="Binary file"
                 t-att-src="getUrl"

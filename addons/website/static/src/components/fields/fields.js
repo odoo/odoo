@@ -38,7 +38,7 @@ class PageUrlField extends Component {
     }
 
     get fieldURL() {
-        const value = this.props.value;
+        const value = this.props.record.data[this.props.name];
         return (value.url !== undefined ? value.url : value).replace(/^\//g, '');
     }
 

@@ -61,13 +61,14 @@ export class KanbanMany2ManyTagsAvatarUserField extends ListKanbanMany2ManyTagsA
 
     get displayText() {
         return (
-            (this.props.displayText && this.props.value.records.length === 1) ||
+            (this.props.displayText && this.props.record.data[this.props.name].records.length === 1) ||
             !this.props.readonly
         );
     }
 
     get tags() {
-        const recordFromId = (id) => this.props.value.records.find((rec) => rec.id === id);
+        const recordFromId = (id) =>
+            this.props.record.data[this.props.name].records.find((rec) => rec.id === id);
         return super.tags.map((tag) => ({
             ...tag,
             onImageClicked: () => {

@@ -13,11 +13,11 @@ export class ColorField extends Component {
 
     setup() {
         this.state = useState({
-            color: this.props.value || "",
+            color: this.props.record.data[this.props.name] || "",
         });
 
         onWillUpdateProps((nextProps) => {
-            this.state.color = nextProps.value || "";
+            this.state.color = nextProps.record.data[nextProps.name] || "";
         });
     }
 

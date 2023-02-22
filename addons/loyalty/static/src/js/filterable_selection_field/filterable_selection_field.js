@@ -16,11 +16,11 @@ export class FilterableSelectionField extends SelectionField {
         let options = super.options;
         if (this.props.whitelisted_values) {
             options = options.filter((option) => {
-                return option[0] === this.props.value || this.props.whitelisted_values.includes(option[0])
+                return option[0] === this.props.record.data[this.props.name] || this.props.whitelisted_values.includes(option[0])
             });
         } else if (this.props.blacklisted_values) {
             options = options.filter((option) => {
-                return option[0] === this.props.value || !this.props.blacklisted_values.includes(option[0]);
+                return option[0] === this.props.record.data[this.props.name] || !this.props.blacklisted_values.includes(option[0]);
             });
         }
         return options;

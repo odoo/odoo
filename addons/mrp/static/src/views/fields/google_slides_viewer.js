@@ -18,15 +18,15 @@ export class SlidesViewer extends CharField {
     }
 
     get fileName() {
-        return this.state.fileName || this.props.value || "";
+        return this.state.fileName || this.props.record.data[this.props.name] || "";
     }
 
     get url() {
         var src = false;
-        if (this.props.value) {
+        if (this.props.record.data[this.props.name]) {
             // check given google slide url is valid or not
             var googleRegExp = /(^https:\/\/docs.google.com).*(\/d\/e\/|\/d\/)([A-Za-z0-9-_]+)/;
-            var google = this.props.value.match(googleRegExp);
+            var google = this.props.record.data[this.props.name].match(googleRegExp);
             if (google && google[3]) {
                 src =
                     "https://docs.google.com/presentation" +

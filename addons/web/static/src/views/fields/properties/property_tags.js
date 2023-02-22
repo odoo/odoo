@@ -312,7 +312,7 @@ export class PropertyTagsField extends Component {
 
     get propertyTagsProps() {
         return {
-            selectedTags: this.props.value || [],
+            selectedTags: this.props.record.data[this.props.name] || [],
             tags: this.props.record.fields[this.props.name].tags || [],
             deleteAction: "value",
             readonly: this.props.readonly,

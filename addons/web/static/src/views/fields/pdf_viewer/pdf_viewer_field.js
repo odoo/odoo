@@ -36,11 +36,11 @@ export class PdfViewerField extends Component {
     }
 
     get fileName() {
-        return this.state.fileName || this.props.value || "";
+        return this.state.fileName || this.props.record.data[this.props.name] || "";
     }
 
     get url() {
-        if (!this.state.isValid || !this.props.value) {
+        if (!this.state.isValid || !this.props.record.data[this.props.name]) {
             return null;
         }
         const page = this.props.record.data[`${this.props.name}_page`] || 1;

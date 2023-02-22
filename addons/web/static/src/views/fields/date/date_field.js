@@ -35,13 +35,18 @@ export class DateField extends Component {
         return this.props.record.fields[this.props.name].type === "datetime";
     }
     get date() {
-        return this.props.value && this.props.value.startOf("day");
+        return (
+            this.props.record.data[this.props.name] &&
+            this.props.record.data[this.props.name].startOf("day")
+        );
     }
 
     get formattedValue() {
         return this.isDateTime
-            ? formatDateTime(this.props.value, { format: localization.dateFormat })
-            : formatDate(this.props.value);
+            ? formatDateTime(this.props.record.data[this.props.name], {
+                  format: localization.dateFormat,
+              })
+            : formatDate(this.props.record.data[this.props.name]);
     }
 
     onDateTimeChanged(date) {

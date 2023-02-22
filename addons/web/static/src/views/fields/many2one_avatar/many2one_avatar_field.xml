@@ -4,8 +4,8 @@
     <t t-name="web.Many2OneAvatarField" owl="1">
         <div class="d-flex">
             <span class="o_m2o_avatar">
-                <span t-if="props.value === false and !props.readonly" class="o_m2o_avatar_empty"></span>
-                <img t-if="props.value !== false" t-attf-src="/web/image/{{relation}}/{{props.value[0]}}/avatar_128" />
+                <span t-if="props.record.data[props.name] === false and !props.readonly" class="o_m2o_avatar_empty"></span>
+                <img t-if="props.record.data[props.name] !== false" t-attf-src="/web/image/{{relation}}/{{props.record.data[props.name][0]}}/avatar_128" />
             </span>
             <Many2OneField t-props="many2OneProps" canOpen="!props.readonly"/>
         </div>

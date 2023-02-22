@@ -24,19 +24,19 @@ export class TimezoneMismatchField extends SelectionField {
 
     get mismatch() {
         const userOffset = this.props.record.data[this.props.tzOffsetField];
-        if (userOffset && this.props.value) {
+        if (userOffset && this.props.record.data[this.props.name]) {
             const offset = -new Date().getTimezoneOffset();
             let browserOffset = offset < 0 ? "-" : "+";
             browserOffset += _.str.sprintf("%02d", Math.abs(offset / 60));
             browserOffset += _.str.sprintf("%02d", Math.abs(offset % 60));
             return browserOffset !== userOffset;
-        } else if (!this.props.value) {
+        } else if (!this.props.record.data[this.props.name]) {
             return true;
         }
         return false;
     }
     get mismatchTitle() {
-        if (!this.props.value) {
+        if (!this.props.record.data[this.props.name]) {
             return this.env._t("Set a timezone on your user");
         }
         return this.props.mismatchTitle;
@@ -47,7 +47,7 @@ export class TimezoneMismatchField extends SelectionField {
         }
         return super.options.map((option) => {
             const [value, label] = option;
-            if (value === this.props.value) {
+            if (value === this.props.record.data[this.props.name]) {
                 const offset = this.props.record.data[this.props.tzOffsetField].match(
                     /([+-])([0-9]{2})([0-9]{2})/
                 );

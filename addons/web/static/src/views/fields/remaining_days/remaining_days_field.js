@@ -24,17 +24,21 @@ export class RemainingDaysField extends Component {
     }
 
     get diffDays() {
-        if (!this.props.value) {
+        if (!this.props.record.data[this.props.name]) {
             return null;
         }
         const today = luxon.DateTime.local().startOf("day");
-        return Math.floor(this.props.value.startOf("day").diff(today, "days").days);
+        return Math.floor(
+            this.props.record.data[this.props.name].startOf("day").diff(today, "days").days
+        );
     }
 
     get formattedValue() {
         return this.hasTime
-            ? formatDateTime(this.props.value, { format: localization.dateFormat })
-            : formatDate(this.props.value);
+            ? formatDateTime(this.props.record.data[this.props.name], {
+                  format: localization.dateFormat,
+              })
+            : formatDate(this.props.record.data[this.props.name]);
     }
 
     onDateTimeChanged(datetime) {

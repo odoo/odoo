@@ -53,8 +53,9 @@ export class SignatureField extends Component {
                 });
             } else {
                 // Use magic-word technique for detecting image type
-                const magic = fileTypeMagicWordMap[this.props.value[0]] || "png";
-                return `data:image/${magic};base64,${this.props.value}`;
+                const magic =
+                    fileTypeMagicWordMap[this.props.record.data[this.props.name][0]] || "png";
+                return `data:image/${magic};base64,${this.props.record.data[this.props.name]}`;
             }
         }
         return placeholder;

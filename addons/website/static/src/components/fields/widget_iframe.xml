@@ -3,13 +3,13 @@
 <templates xml:space="preserve">
 
 <t t-name="website.iframeWidget" owl="1">
-    <div t-if="props.value" class="h-100" t-att-class="{ 'is_mobile': this.state.isMobile }">
+    <div t-if="props.record.data[props.name]" class="h-100" t-att-class="{ 'is_mobile': this.state.isMobile }">
         <iframe
             frameBorder="0"
             class="d-block"
             height="100%"
             width="100%"
-            t-att-src="props.value"/>
+            t-att-src="props.record.data[props.name]"/>
         <img t-if="this.state.isMobile"
              alt="phone"
              class="img_mobile"
