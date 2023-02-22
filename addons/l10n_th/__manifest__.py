@@ -18,6 +18,7 @@ Thai accounting chart and localization.
     ],
     'data': [
         'data/account_tax_report_data.xml',
+        'views/report_invoice.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
