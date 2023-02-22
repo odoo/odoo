@@ -408,11 +408,11 @@ class StockWarehouseOrderpoint(models.Model):
                 self.env['stock.warehouse.orderpoint'].browse(orderpoint_id).qty_forecast += product_qty
             else:
                 orderpoint_values = self.env['stock.warehouse.orderpoint']._get_orderpoint_values(product, location_id)
-                warehouse_id = self.env['stock.location'].browse(location_id).warehouse_id
+                location = self.env['stock.location'].browse(location_id)
                 orderpoint_values.update({
                     'name': _('Replenishment Report'),
-                    'warehouse_id': warehouse_id.id,
-                    'company_id': warehouse_id.company_id.id,
+                    'warehouse_id': location.warehouse_id.id or self.env['stock.warehouse'].search([('company_id', '=', location.company_id.id)]).id,
+                    'company_id': location.company_id.id,
                 })
                 orderpoint_values_list.append(orderpoint_values)
 
