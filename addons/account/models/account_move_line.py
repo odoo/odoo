@@ -456,7 +456,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.currency_id = line.currency_id or line.company_id.currency_id
 
-    @api.depends('product_id', 'journal_id')
+    @api.depends('product_id')
     def _compute_name(self):
         for line in self:
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
