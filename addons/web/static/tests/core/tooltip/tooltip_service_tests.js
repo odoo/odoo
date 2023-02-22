@@ -424,4 +424,28 @@ QUnit.module("Tooltip service", (hooks) => {
         await triggerEvent(target, "button[data-tooltip]", "touchstart");
         assert.containsNone(target, ".o_popover_container .o_popover");
     });
+
+    QUnit.test("tooltip does not crash with disappearing target", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
+        let simulateTimeout;
+        const mockSetTimeout = async (fn) => {
+            simulateTimeout = fn;
+        };
+        await makeParent(MyComponent, { mockSetTimeout });
+
+        assert.containsNone(target, ".o_popover_container .o_popover");
+        target.querySelector(".mybtn").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
+
+        // the element disappeared from the DOM during the setTimeout
+        target.querySelector(".mybtn").remove();
+
+        simulateTimeout();
+        await nextTick();
+
+        // tooltip did not crash and is not shown
+        assert.containsNone(target, ".o_popover_container .o_popover");
+    });
 });
