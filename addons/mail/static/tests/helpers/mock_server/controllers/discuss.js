@@ -180,6 +180,9 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             ["channel_id", "=", channel_id],
             ["partner_id", "=", partnerId],
         ]);
+        if (!memberOfCurrentUser) {
+            return;
+        }
         this._mockMailChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },
     /**
