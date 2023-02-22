@@ -101,11 +101,11 @@ export class Store {
             threads: [], // list of ids
         },
         // mailboxes in sidebar
-        /** @type {Thread} */
+        /** @type {import("@mail/new/core/thread_model").Thread} */
         inbox: null,
-        /** @type {Thread} */
+        /** @type {import("@mail/new/core/thread_model").Thread} */
         starred: null,
-        /** @type {Thread} */
+        /** @type {import("@mail/new/core/thread_model").Thread} */
         history: null,
     };
     cannedResponses = [];
