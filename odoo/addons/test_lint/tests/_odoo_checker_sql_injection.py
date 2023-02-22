@@ -120,18 +120,18 @@ class OdooBaseChecker(checkers.BaseChecker):
         # Thanks @moylop260 (Moisés López) & @nilshamerlinck (Nils Hamerlinck)
         current_file_bname = os.path.basename(self.linter.current_file)
         if not (
-            # .execute() or .executemany()
             isinstance(node, astroid.Call) and node.args and
             isinstance(node.func, astroid.Attribute) and
             node.func.attrname in ('execute', 'executemany') and
-            # cursor expr (see above)
-            self._get_cursor_name(node.func) in DFTL_CURSOR_EXPR and
-            # cr.execute("select * from %s" % foo, [bar]) -> probably a good reason for string formatting
-            len(node.args) <= 1 and
-            # ignore in test files, probably not accessible
-            not current_file_bname.startswith('test_')
+            self._get_cursor_name(node.func) in DFTL_CURSOR_EXPR
         ):
-            return False
+            return False  # not an execute() on a cursor with arguments
+        if len(node.args) > 1: # cr.execute("select * from %s" % foo, [bar])
+            return False  # probably a good reason for string formatting
+        if isinstance(node.args[0], astroid.nodes.Starred): # cr.execute(*query_values)
+            return False  # probably comes from a well formed query,param tuple
+        if current_file_bname.startswith('test_'):
+            return False  # ignore in test files, probably not accessible
         first_arg = node.args[0]
 
         is_concatenation = self._check_concatenation(first_arg)
