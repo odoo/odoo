@@ -104,14 +104,17 @@ export const tooltipService = {
             }
 
             openTooltipTimeout = browser.setTimeout(() => {
-                closeTooltip = popover.add(
-                    target,
-                    Tooltip,
-                    { tooltip, template, info },
-                    { position }
-                );
-                // Prevent title from showing on a parent at the same time
-                target.title = "";
+                // verify that the element is still in the DOM
+                if (target.isConnected) {
+                    closeTooltip = popover.add(
+                        target,
+                        Tooltip,
+                        { tooltip, template, info },
+                        { position }
+                    );
+                    // Prevent title from showing on a parent at the same time
+                    target.title = "";
+                }
             }, delay);
         }
 
