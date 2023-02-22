@@ -142,7 +142,13 @@ class PosConfig(models.Model):
     self_order_kiosk_mode = fields.Boolean("Kiosk Mode")
     self_order_phone_mode = fields.Boolean("Phone Mode")
     self_order_view_mode = fields.Boolean("View Mode")
-
+    @api.onchange('module_pos_self_order, self_order_kiosk_mode, self_order_phone_mode, self_order_view_mode')
+    def _onchange_self_order(self):
+        self.ensure_one()
+        print("self_order_kiosk_mode",self.self_order_kiosk_mode)
+        print("self_order_phone_mode",self.self_order_phone_mode)
+        print("self_order_view_mode",self.self_order_view_mode)
+        print("module_pos_self_order",self.module_pos_self_order)
 
 
     is_posbox = fields.Boolean("PosBox")

@@ -103,7 +103,6 @@ class PosSelfOrder(http.Controller):
         return response
 
     # this is the route that the POS Self Order App uses to GET THE MENU
-
     @http.route('/pos-self-order/get-menu', auth='public', type="json", website=True)
     def pos_self_order_get_menu(self, pos_id=None):
         if not pos_id:

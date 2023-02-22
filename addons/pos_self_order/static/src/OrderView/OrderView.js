@@ -3,6 +3,7 @@
 const { Component } = owl;
 import { NavBar } from "../NavBar/NavBar.js";
 import { formatMonetary } from "@web/views/fields/formatters";
+import { session } from "@web/session.js";
 export class OrderView extends Component {
     setup() {
         this.formatMonetary = formatMonetary;

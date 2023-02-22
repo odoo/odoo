@@ -63,27 +63,18 @@ class ResConfigSettings(models.TransientModel):
     pos_self_order_view_mode = fields.Boolean(related='pos_config_id.self_order_view_mode', readonly=False)
     # Customer will be able to order from their phone
     pos_self_order_phone_mode = fields.Boolean(related='pos_config_id.self_order_phone_mode', readonly=False)
-    # the pos_self_order module is installed
-    pos_module_pos_self_order = fields.Boolean(related='pos_config_id.module_pos_self_order', readonly=False)
     @api.onchange('pos_self_order_kiosk_mode','pos_self_order_view_mode', 'pos_self_order_phone_mode')
     def _compute_module_pos_self_order(self):
-        for record in self:
-            if record.pos_self_order_kiosk_mode :
-                record.pos_module_pos_self_order = True
-                record.pos_self_order_phone_mode = False
-                record.pos_self_order_view_mode = False
-            elif record.pos_self_order_view_mode:
-                record.pos_module_pos_self_order = True
-                record.pos_self_order_kiosk_mode = False
-            elif record.pos_self_order_phone_mode:
-                record.pos_module_pos_self_order = True
-                record.pos_self_order_view_mode = True
-                record.pos_self_order_kiosk_mode = False
-            else:
-                record.pos_module_pos_self_order = False
-
-    
-    
+        self.ensure_one()
+        self.env["pos.config"].search([]).module_pos_self_order = self.pos_self_order_kiosk_mode or self.pos_self_order_view_mode or self.pos_self_order_phone_mode
+        if self.pos_self_order_kiosk_mode :
+            self.pos_self_order_phone_mode = False
+            self.pos_self_order_view_mode = False
+        elif self.pos_self_order_view_mode:
+            self.pos_self_order_kiosk_mode = False
+        elif self.pos_self_order_phone_mode:
+            self.pos_self_order_view_mode = True
+            self.pos_self_order_kiosk_mode = False
     
     
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
