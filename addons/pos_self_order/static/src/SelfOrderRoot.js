@@ -69,7 +69,6 @@ class SelfOrderRoot extends Component {
             currentScreen: 0,
             currentProduct: 0,
             cart: JSON.parse(localStorage.getItem("cart")) ?? [],
-            // FIXME: use owl.validation before trying to parse local storage
             currentOrderDetails: JSON.parse(localStorage.getItem("currentOrderDetails")) ?? {},
             // this is a message that will be displayed to the user on the landing page
             // example: "Your order has been placed successfully", "Your order has been paid successfully"

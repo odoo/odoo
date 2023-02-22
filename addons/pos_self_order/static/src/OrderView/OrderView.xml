@@ -40,12 +40,12 @@
                         <path d="M2 10a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1z"/>
                     </svg>
                 </button>
+<!-- Tax Amount -->
                 <p class="fst-italic text-end text-muted">
                     Tax: <t t-esc="props.order.amount_tax + '€'" />
                 </p>
+<!-- Total Amount -->
                 <h6 class="fst-italic text-end">
-                    <!-- TODO: use this function
-                    it now errors out ;; i think i am missing the 'session variable'-->
                     Total: <t t-esc="formatMonetary(props.order.amount_total, options={currency_id: selfOrder.config.currency_id})" />
                     Total: <t t-esc="props.order.amount_total" />
                 </h6>
