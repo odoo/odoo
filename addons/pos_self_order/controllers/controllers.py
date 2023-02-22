@@ -23,6 +23,7 @@ class PosSelfOrder(http.Controller):
         print("pos_sudo open tabs ", pos_sudo.self_order_pay_after)
 
         return "Hello World"
+
     @http.route('/pos-self-order/', auth='public', website=True)
     def pos_self_order_start(self, table_id=None, pos_id=None, message_to_display=None):
         """
@@ -37,31 +38,32 @@ class PosSelfOrder(http.Controller):
         but they will not be able to send the order
         """
         # TODO: we should have another parameter: personal_access_token
-        # if self_order_location == 'table', this access token will be 
+        # if self_order_location == 'table', this access token will be
         # the access token of that table from the restaurant.table model
         # (at the moment, there is no access token for this model, but we can either add it
         # or we can use some hash based on the fields of this model)
         # this access token will be written in the url of the QR code
         # ---------------
         # if self_order_location == 'kiosk', this access_token could be different
-        # for each session. This could also be a hash based on the fields of the 
+        # for each session. This could also be a hash based on the fields of the
         # pos.session model. This means that each time the restaurant employee
         # wants to open the kiosk, they will have to get the latest link from the
-        # backend. This way, the kioks becomes much more secure, even though the 
+        # backend. This way, the kioks becomes much more secure, even though the
         # route will still be public.
         # This means that if self_order_location == 'kiosk', it would be virtually impossible
         # for someone else to send an order to the POS, because they would need to know
-        # the access token of the current session. 
+        # the access token of the current session.
 
         # TODO: maybe add a new route where the user can choose the pos_id
         # and then redirect to this route with the pos_id ( i don't think we need this for now )
         if not pos_id:
             raise werkzeug.exceptions.NotFound()
-        # FIXME: check if table_id and pos_id exist 
+        # FIXME: check if table_id and pos_id exist
         # if not, send the user to the generic page where they can choose the POS and the table
-        pos_sudo = request.env['pos.config'].sudo().search([('id', '=', pos_id)])
+        pos_sudo = request.env['pos.config'].sudo().search(
+            [('id', '=', pos_id)])
 
-        if not pos_sudo.self_order_allow_view_menu():   
+        if not pos_sudo.self_order_allow_view_menu():
             raise werkzeug.exceptions.NotFound()
 
         if not pos_sudo.has_active_session:
@@ -69,9 +71,11 @@ class PosSelfOrder(http.Controller):
 
         # On the landing page of the app we can have a number of custom links
         # they are defined by the restaurant employee in the backend
-        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([])
+        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([
+        ])
         # TODO: i'm not sure that it's intuitive to have the custom links show in the app when the pos_config_id is empty
-        custom_links_list = custom_links_sudo.filtered(lambda link: int(pos_id) in [pos.id for pos in link.pos_config_id] or not link.pos_config_id).read(['name', 'url'])
+        custom_links_list = custom_links_sudo.filtered(lambda link: int(pos_id) in [
+                                                       pos.id for pos in link.pos_config_id] or not link.pos_config_id).read(['name', 'url'])
         context = {
             'pos_id': pos_id,
             'pos_name': pos_sudo.name,
@@ -82,39 +86,42 @@ class PosSelfOrder(http.Controller):
             'show_prices_with_tax_included': True,
             'self_order_location': pos_sudo.compute_self_order_location(),
             'allow_open_tabs': pos_sudo.self_order_allow_open_tabs(),
-            'payment_methods' : pos_sudo.payment_method_ids.read(['name']),
-            'custom_links' : custom_links_list,
+            'payment_methods': pos_sudo.payment_method_ids.read(['name']),
+            'custom_links': custom_links_list,
         }
         if pos_sudo.module_pos_restaurant:
             context.update({
                 'total_number_of_tables': len(pos_sudo.get_tables_order_count()),
                 'table_id': 0 if len(pos_sudo.get_tables_order_count()) == 0 else table_id,
             })
-        
+        session_info = request.env['ir.http'].session_info()
+        session_info['pos_self_order'] = context
         response = request.render(
-            'pos_self_order.pos_self_order_index', context)
+            'pos_self_order.pos_self_order_index', {
+                'session_info': session_info,
+            })
         return response
 
-
     # this is the route that the POS Self Order App uses to GET THE MENU
+
     @http.route('/pos-self-order/get-menu', auth='public', type="json", website=True)
     def pos_self_order_get_menu(self, pos_id=None):
         if not pos_id:
-            raise werkzeug.exceptions.NotFound() 
-        pos_sudo = request.env['pos.config'].sudo().search([('id', '=', pos_id)])
-        if not pos_sudo.self_order_allow_view_menu():   
+            raise werkzeug.exceptions.NotFound()
+        pos_sudo = request.env['pos.config'].sudo().search(
+            [('id', '=', pos_id)])
+        if not pos_sudo.self_order_allow_view_menu():
             raise werkzeug.exceptions.NotFound()
         # TODO: only get the products that are available in THIS POS
         products_sudo = request.env['product.product'].sudo().search(
             [('available_in_pos', '=', True)])
         # for each of the items in products_sudo, we get the price with tax included
-        menu = list(map(lambda product:
-        { 
+        menu = [{
             **{
-                'price_info' : product.get_product_info_pos(product.list_price, 1, int(pos_id))['all_prices'],
-            },  
-                **product.read(['id', 'name', 'description_sale', 'pos_categ_id'])[0],
-        }, products_sudo))
+                'price_info': product.get_product_info_pos(product.list_price, 1, int(pos_id))['all_prices'],
+            },
+            **product.read(['id', 'name', 'description_sale', 'pos_categ_id'])[0],
+        } for product in products_sudo]
         return menu
 
     # FIXME: crop the images to be square -- maybe we want to do this in the frontend?
@@ -131,7 +138,7 @@ class PosSelfOrder(http.Controller):
         return request.env['ir.binary']._get_image_stream_from(product_sudo, field_name='image_1920').get_response()
 
     @http.route('/pos-self-order/send-order/<int:pos_id>/<int:table_id>/', auth='public', type="json", website=True)
-    def pos_self_order_send_order(self, cart, pos_id, table_id=0, order_id=None, access_token=None ):
+    def pos_self_order_send_order(self, cart, pos_id, table_id=0, order_id=None, access_token=None):
         """
         This is the route that the POS Self Order App uses to SEND THE ORDER
         There are 3 types of self order pos configurations:
@@ -163,16 +170,15 @@ class PosSelfOrder(http.Controller):
 
         """
 
-
         # TODO: we need to check if the order is valid --
         # We have to check the cart variable -- this is the variable that contains the order
         # we also have to check if the pos_id and table_id are valid
         # the values of cart have to be integers, for ex, etc.
 
+        pos_sudo = request.env['pos.config'].sudo().search(
+            [('id', '=', pos_id)])
 
-        pos_sudo = request.env['pos.config'].sudo().search([('id', '=', pos_id)])
-
-        if not pos_sudo.self_order_allow_order():   
+        if not pos_sudo.self_order_allow_order():
             raise werkzeug.exceptions.NotFound()
 
         pos_session_sudo = getPosSessionSudo(pos_id)
@@ -186,13 +192,15 @@ class PosSelfOrder(http.Controller):
             if existing_order_sudo and existing_order_sudo.state == "draft":
                 if access_token == existing_order_sudo["access_token"]:
                     sequence_number = existing_order_sudo["sequence_number"]
-                    cart = returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order_sudo)
+                    cart = returnCartUpdatedWithItemsFromExistingOrder(
+                        cart, existing_order_sudo)
         # if the conditions above are not met, we will create a new order
         if not sequence_number:
-            sequence_number = findNewSequenceNumber(pos_id, table_id, pos_session_sudo["id"])
-            order_id = generate_unique_id(pos_session_sudo["id"], 900+table_id, sequence_number)
+            sequence_number = findNewSequenceNumber(
+                pos_id, table_id, pos_session_sudo["id"])
+            order_id = generate_unique_id(
+                pos_session_sudo["id"], 900+table_id, sequence_number)
 
-        
         lines = createOrderLinesFromCart(cart, pos_id)
         amount_total = computeAmountTotalFromOrderLines(lines)
         # TODO: there are some fields that are not set
@@ -207,11 +215,12 @@ class PosSelfOrder(http.Controller):
                      'lines': lines,
                      'statement_ids': [],
                      'pos_session_id': pos_session_sudo.get("id"),
-                    #  FIXME: find out what pricelist_id to use
-                    #  'pricelist_id': 1,
+                     #  FIXME: find out what pricelist_id to use
+                     #  'pricelist_id': 1,
                      'partner_id': False,
                      'user_id': request.session.uid,
-                     'uid': order_id[6:], #  we only need the digits of the order_id, not the whole id, which starts with word "Order"
+                     # we only need the digits of the order_id, not the whole id, which starts with word "Order"
+                     'uid': order_id[6:],
                      'sequence_number': sequence_number,
                      #  the date is formatted in the way that the regular POS does it
                      #  'creation_date': str(fields.Datetime.now()).replace(" ", "T"),
@@ -226,37 +235,36 @@ class PosSelfOrder(http.Controller):
                      'to_ship': False,
                      'is_tipped': False,
                      'tip_amount': 0,
-                    #  If the order is new, we will generate a new access token
-                    #  If the order is an update of an existing order, we will keep the same access token
-                     'access_token': uuid.uuid4().hex if not (existing_order_sudo and existing_order_sudo.state=="draft") else existing_order_sudo.access_token,
+                     #  If the order is new, we will generate a new access token
+                     #  If the order is an update of an existing order, we will keep the same access token
+                     'access_token': uuid.uuid4().hex if not (existing_order_sudo and existing_order_sudo.state == "draft") else existing_order_sudo.access_token,
                      'customer_count': 1,
-                    #  FIXME: is server_id ever mandatory?
-                    # maybe for restaurants and not for bars?
+                     #  FIXME: is server_id ever mandatory?
+                     # maybe for restaurants and not for bars?
                      "server_id": False,
                      #  'multiprint_resume': '{}',
                      #  TODO: configure the printing_changes variable
-                    #   'printing_changes': '{"new":[{"product_id":55,"name":"Bacon Burger","note":"","quantity":1}],"cancelled":[]}',
+                     #   'printing_changes': '{"new":[{"product_id":55,"name":"Bacon Burger","note":"","quantity":1}],"cancelled":[]}',
 
                  },
                  'to_invoice': False,
                  'session_id': pos_session_sudo.get("id")}
 
         if table_id:
-            order["data"].update(table_id = table_id)
-        
-        # FIXME: ERROR rd-dem odoo.addons.point_of_sale.models.pos_order: 
-        # Could not fully process the POS Order: Order / is not fully paid.  
+            order["data"].update(table_id=table_id)
+
+        # FIXME: ERROR rd-dem odoo.addons.point_of_sale.models.pos_order:
+        # Could not fully process the POS Order: Order / is not fully paid.
         # When i write an order i get this error.
         # When the regular pos writes an order (even if not paid, just draft state),
         # it does not get this error
 
-
-        order_sudo =  request.env['pos.order'].sudo().create_from_ui([order])[0]
+        order_sudo = request.env['pos.order'].sudo().create_from_ui([order])[0]
         order_id = order_sudo.get("pos_reference")
         response_sudo = {
             "order_id": order_id,
-            "order_items": [{"product_id": line[2]["product_id"], "qty": line[2]["qty"] } for line in order["data"]["lines"]],
-            "order_total": amount_total, 
+            "order_items": [{"product_id": line[2]["product_id"], "qty": line[2]["qty"]} for line in order["data"]["lines"]],
+            "order_total": amount_total,
             "date": order["data"]["creation_date"],
             "access_token": order["data"]["access_token"],
             "state": "draft",
@@ -264,9 +272,7 @@ class PosSelfOrder(http.Controller):
         }
         return response_sudo
 
-
-
-    @http.route('/pos-self-order/view-order', auth='public', type="json" , website=True)
+    @http.route('/pos-self-order/view-order', auth='public', type="json", website=True)
     def pos_self_order_view_order(self, order_id=None, access_token=None):
         """
         Return some information about a given order.
@@ -283,7 +289,8 @@ class PosSelfOrder(http.Controller):
         """
         if not order_id or not access_token:
             raise werkzeug.exceptions.NotFound()
-        order_sudo = request.env['pos.order'].sudo().search([('pos_reference' , '=', order_id)], limit=1)
+        order_sudo = request.env['pos.order'].sudo().search(
+            [('pos_reference', '=', order_id)], limit=1)
         if not order_sudo:
             raise werkzeug.exceptions.NotFound()
         order_sudo = order_sudo[0]
@@ -294,22 +301,23 @@ class PosSelfOrder(http.Controller):
             'order_id': order_id,
             'access_token': access_token,
             'state': order_sudo['state'],
-            'date': str(order_json.get("creation_date")) ,
+            'date': str(order_json.get("creation_date")),
             'amount_total': order_sudo['amount_total'],
             'amount_tax': order_sudo['amount_tax'],
             'items': [
-                    {
-                        'product_id' : line[2]['product_id'],
-                        'qty'        : line[2]['qty'],
-                    } 
-                    for line in order_json['lines']
+                {
+                    'product_id': line[2]['product_id'],
+                    'qty': line[2]['qty'],
+                }
+                for line in order_json['lines']
             ],
         }
+
 
 def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
     """
     If the customer has an existing order, we will add the items from the existing order to the cart.
-    
+
     :param cart: The cart from the frontend.
     :type cart: list of objects with keys: product_id, qty
     :param existing_order: The existing order.
@@ -351,7 +359,7 @@ def createOrderLinesFromCart(cart, pos_id):
     for item in cart:
         product_sudo = request.env['product.product'].sudo().search(
             [('available_in_pos', '=', True), ('id', '=', item.get("product_id"))], limit=1)
-        
+
         # TODO: add the rest of the fields
         lines.append([0, 0, {
             'product_id': item.get('product_id'),
@@ -368,25 +376,29 @@ def createOrderLinesFromCart(cart, pos_id):
             'price_extra': 0,
             'customer_note': '',
             'price_manually_set': False,
-            'note': '',                                                                                                              
+            'note': '',
             'uuid': uuid.uuid4().hex if not item.get("uuid") else item.get("uuid"),
         }])
     return lines
+
+
 def computeAmountTotalFromOrderLines(lines):
     return sum(orderline[2].get("price_subtotal_incl") for orderline in lines)
+
+
 def computeAmountTaxFromOrderLines(lines):
     return sum(orderline[2].get("price_subtotal_incl")-orderline[2].get("price_subtotal") for orderline in lines)
+
 
 def findNewSequenceNumber(pos_id, table_id, session_id):
     sequence_number = 1
     # TODO: TEST if this is correct
     old_sequence_number = request.env['pos.order'].sudo().search([('config_id', '=', int(pos_id)),
-            ("pos_reference", "=like", f"Order {session_id:0>5}-{900 + table_id}-____")]).read(['sequence_number'])
+                                                                  ("pos_reference", "=like", f"Order {session_id:0>5}-{900 + table_id}-____")]).read(['sequence_number'])
     if old_sequence_number:
         old_sequence_number = old_sequence_number[0].get("sequence_number")
         sequence_number = old_sequence_number + 1
     return sequence_number
-
 
 
 # the 2nd argument of order_id is the login number;
@@ -436,10 +448,3 @@ def getPosSessionSudo(pos_id):
         # FIXME: this error is not working
         raise werkzeug.exceptions.NotFound()
     return pos_session_sudo[0]
-
-
-
-
-
-
-

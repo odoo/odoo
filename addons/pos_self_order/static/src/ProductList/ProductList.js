@@ -1,10 +1,14 @@
 /** @odoo-module */
 
-const { Component, useState, useRef } = owl;
+const { Component, useState  } = owl;
 import { _t } from "@web/core/l10n/translation";
-import { NavBar } from '../NavBar/NavBar.js';
-// @js-ignore  
-// import "../utils/jsDocTypes";
+import { useAutofocus } from "@web/core/utils/hooks";
+import { NavBar } from '../NavBar/NavBar';
+/** 
+ * @typedef {import("@pos_self_order/jsDocTypes").Product} Product  
+ * @typedef {import("@pos_self_order/jsDocTypes").Order} Order  
+ * @typedef {import("@pos_self_order/jsDocTypes").CartItem} CartItem  
+ */
 export class ProductList extends Component {
     setup() {
         this.state = useState(this.env.state);
@@ -17,10 +21,8 @@ export class ProductList extends Component {
             search_is_focused: false,
             search_input: '',
         });
-
+        useAutofocus({refName: 'searchInput', mobile: true});
     }
-    inputRef = useRef('input');
-
     filteredProducts = () => {
         // here we only want to return the products
         // that have the selected tags
@@ -80,9 +82,9 @@ export class ProductList extends Component {
         this.private_state.selected_tags.clear();
         // FIXME: this is a hack: we want to focus the input after the search bar
         // is rendered, but we don't know when it is rendered
-        setTimeout(() => {
-            this.inputRef.el.focus();
-        }, 50);
+        // setTimeout(() => {
+        //     this.inputRef.el.focus();
+        // }, 50);
     }
     closeSearch = () => {
         this.private_state.search_is_focused = false;

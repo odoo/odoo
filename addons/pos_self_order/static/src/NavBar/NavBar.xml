@@ -17,9 +17,9 @@
         </svg>
     </t>
 <!-- Restaurant NAME and Table NUMBER appear in the NAVBAR-->
-<!-- The NavBar gets this data from the window.odoo -->
+<!-- The NavBar gets this data from the selfOrder.config -->
 <!-- This is a global variable that is set in the POSController -->
-        <span class="navbar-brand h1 text-center"><t t-esc="window.odoo.pos_name"/></span>
+        <span class="navbar-brand h1 text-center"><t t-esc="selfOrder.config.pos_name"/></span>
         <!-- 
             TODO: we need to format the table number before showing it 
             ex: if a restaurant has 10 tables inside and 10 tables outside 
@@ -33,8 +33,8 @@
 
             ...this could be confusing for the waiters... 
         -->
-        <t t-if="window.odoo.table_id">
-            <h1 class="text-white"><t t-esc="'T' + window.odoo.table_id"/></h1>
+        <t t-if="selfOrder.config.table_id">
+            <h1 class="text-white"><t t-esc="'T' + selfOrder.config.table_id"/></h1>
         </t>
     </nav>
     </t>

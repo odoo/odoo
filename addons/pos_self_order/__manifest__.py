@@ -56,6 +56,7 @@
             'web/static/src/views/fields/formatters.js',
 
             'pos_self_order/static/src/**/*',
+            'point_of_sale/static/src/utils.js',
         ],
 
     }

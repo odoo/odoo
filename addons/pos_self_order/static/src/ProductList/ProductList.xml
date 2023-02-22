@@ -3,12 +3,12 @@
     <!-- Here we show the list of all the available products -->
     <t t-name="ProductList" owl="1">
             <!-- we only allow the user to go back if the pos is configured as "order at table" -->
-            <NavBar goBack="window.odoo.self_order_location === 'table' ? props.goBack : null" />
+            <NavBar goBack="selfOrder.config.self_order_location === 'table' ? props.goBack : null" />
 <!-- tag and search bar -->
         <div class="d-flex align-items-center ">
     <!-- tag select -->
             <div class="overflow-auto text-nowrap py-3">
-                <t t-foreach="window.odoo.pos_categories" t-as="tag" t-key="tag.id">
+                <t t-foreach="selfOrder.config.pos_categories" t-as="tag" t-key="tag.id">
                     <div class="mx-1 d-inline float-none"
                         t-on-click="() => selectTag(tag.name)">
                         <span t-attf-class="badge rounded-pill {{private_state.selected_tags.has(tag.name) ? 'text-bg-primary' : 'text-bg-light'}}">
@@ -20,7 +20,7 @@
             <div class="mx-2">
                 <t t-if="private_state.search_is_focused">
                     <div class="d-flex align-items-center">
-                        <input type="text" class="" t-ref="input" placeholder="Pizza"
+                        <input type="text" class="" t-ref="searchInput" placeholder="Pizza"
                                 t-model="private_state.search_input"/>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
                             fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"
@@ -71,7 +71,7 @@
                 </div>
             </div>
 <!-- Go to Cart Button -->
-            <t t-if="window.odoo.self_order_allow_order">
+            <t t-if="selfOrder.config.self_order_allow_order">
                 <button t-on-click="() => props.viewCart()" class="fixed-bottom btn btn-primary btn-lg btn-block w-100 text-white">
                     <div class="d-flex align-items-center justify-content-between mx-2 ">
                         <p>

@@ -36,11 +36,11 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
  * @returns {Ref} the element reference
  */
-export function useAutofocus({ refName, selectAll } = {}) {
+export function useAutofocus({ refName, selectAll, mobile } = {}) {
     const comp = useComponent();
     const ref = useRef(refName || "autofocus");
     // Prevent autofocus in mobile
-    if (comp.env.isSmall) {
+    if (!mobile && comp.env.isSmall) {
         return ref;
     }
     // LEGACY

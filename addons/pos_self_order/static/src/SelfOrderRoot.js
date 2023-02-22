@@ -1,32 +1,25 @@
 /** @odoo-module */
-import { Component, reactive, whenReady, App, useState, onWillStart, useSubEnv, toRaw} from "@odoo/owl";
+import { Component, whenReady, App, useState, onWillStart, useSubEnv } from "@odoo/owl";
 import { makeEnv, startServices } from "@web/env";
-import { setLoadXmlDefaultApp, loadJS, templates } from '@web/core/assets';
+import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-import { LandingPage } from "./LandingPageComponents/LandingPage/LandingPage.js";
-import { NavBar } from "./NavBar/NavBar.js";
-import { ProductMainView } from "./ProductMainView/ProductMainView.js";
-import { ProductList } from "./ProductList/ProductList.js";
-import { CartView } from "./CartView/CartView.js";
-import { OrderView } from "./OrderView/OrderView.js";
-import { OrdersList } from "./OrdersList/OrdersList.js";
-import { PaymentMethodsSelect } from "./PaymentMethodsSelect/PaymentMethodsSelect.js";
-import { HelpIcon } from "./HelpIcon/HelpIcon.js";
+import { LandingPage } from "./LandingPageComponents/LandingPage/LandingPage";
+import { NavBar } from "./NavBar/NavBar";
+import { ProductMainView } from "./ProductMainView/ProductMainView";
+import { ProductList } from "./ProductList/ProductList";
+import { CartView } from "@pos_self_order/CartView/CartView";
+import { OrderView } from "./OrderView/OrderView";
+import { OrdersList } from "./OrdersList/OrdersList";
+import { PaymentMethodsSelect } from "./PaymentMethodsSelect/PaymentMethodsSelect";
+import { HelpIcon } from "./HelpIcon/HelpIcon";
 import { useService } from "@web/core/utils/hooks";
-// import "./utils/jsDocTypes";
+import { useSelfOrder } from "./SelfOrderService";
+import { effect } from "@point_of_sale/utils";
 /**
- * Creates a side-effect that runs based on the content of reactive objects.
- * @template {object[]} T
- * @param {(...args: [...T]) => void} cb callback for the effect
- * @param {[...T]} deps the reactive objects that the effect depends on
+ * @typedef {import("@pos_self_order/jsDocTypes").Product} Product
+ * @typedef {import("@pos_self_order/jsDocTypes").Order} Order
+ * @typedef {import("@pos_self_order/jsDocTypes").CartItem} CartItem
  */
-export function effect(cb, deps) {
-    const reactiveDeps = reactive(deps, () => {
-        cb(...reactiveDeps);
-    });
-    cb(...reactiveDeps);
-}
-// TODO: find a solution for when LocalStorage is full
 class SelfOrderRoot extends Component {
     /*
     This is the Root Component of the SelfOrder App
@@ -59,64 +52,82 @@ class SelfOrderRoot extends Component {
         - The current user name
 
         */
-       /**
-        * @type {{
-        * currentScreen: number,
-        * currentProduct: number,
-        * cart: CartItem[],
-        * currentOrderDetails: Object,
-        * message_to_display: string,
-        * user_name: string,
-        * table_id: string,
-        * order_to_pay: Order,
-        * }} 
-        */
-        this.state = useState({ 
-                                currentScreen: 0,
-                                currentProduct: 0, 
-                                cart: JSON.parse(localStorage.getItem('cart')) ?? [],
-                                // FIXME: use owl.validation before trying to parse local storage
-                                currentOrderDetails: JSON.parse(localStorage.getItem('currentOrderDetails')) ?? {},
-                                // this is a message that will be displayed to the user on the landing page
-                                // example: "Your order has been placed successfully", "Your order has been paid successfully"
-                                message_to_display: odoo.message_to_display ?? "",
-                                user_name: localStorage.getItem('user_name') ?? '',
-                                table_id: odoo.table_id ?? localStorage.getItem('table_id') ?? '',
-                                order_to_pay: {},
-                            });
-        effect((state)=>{
-            // it is possible to call the /pos-self-order route with the "message_to_display"
-            // query param; the controller will put the value of this param in the "odoo.message_to_display"
-            // variable; here we don't need this parameter anymore in the url so we remove it
-            let url = new URL(location.href);
-            url.searchParams.delete('message_to_display');
-            window.history.replaceState({}, "", url.href)
-            // we only want to display the message for 9 seconds
-            setTimeout(
-            () => {
-                state.message_to_display = '';
-            }
-            , "9000"); 
-        }, [this.state])
+        this.selfOrder = useSelfOrder();
+        /**
+         * @type {{
+         * currentScreen: number,
+         * currentProduct: number,
+         * cart: CartItem[],
+         * currentOrderDetails: Object,
+         * message_to_display: string,
+         * user_name: string,
+         * table_id: string,
+         * order_to_pay: Order,
+         * }}
+         */
+        this.state = useState({
+            currentScreen: 0,
+            currentProduct: 0,
+            cart: JSON.parse(localStorage.getItem("cart")) ?? [],
+            // FIXME: use owl.validation before trying to parse local storage
+            currentOrderDetails: JSON.parse(localStorage.getItem("currentOrderDetails")) ?? {},
+            // this is a message that will be displayed to the user on the landing page
+            // example: "Your order has been placed successfully", "Your order has been paid successfully"
+            message_to_display: this.selfOrder.config.message_to_display ?? "",
+            user_name: localStorage.getItem("user_name") ?? "",
+            table_id: this.selfOrder.config.table_id ?? localStorage.getItem("table_id") ?? "",
+            order_to_pay: {},
+        });
+        effect(
+            (state) => {
+                // it is possible to call the /pos-self-order route with the "message_to_display"
+                // query param; the controller will put the value of this param in the "this.selfOrder.config.message_to_display"
+                // variable; here we don't need this parameter anymore in the url so we remove it
+                const url = new URL(location.href);
+                url.searchParams.delete("message_to_display");
+                window.history.replaceState({}, "", url.href);
+                // we only want to display the message for 9 seconds
+                setTimeout(() => {
+                    state.message_to_display = "";
+                }, "9000");
+            },
+            [this.state]
+        );
         // Keep local storage in sync with state
-        // TODO: could i use a single effect for all of these?
-        effect((state)=>{
-            window.odoo.table_id = state.table_id;
-            localStorage.setItem('table_id', state.table_id);
-        }, [this.state])
-        effect((state)=>{
-            localStorage.setItem('user_name', state.user_name);
-        }, [this.state])
-        effect((state)=>{
-            localStorage.setItem('cart', JSON.stringify(state.cart));
-        }, [this.state])
-        effect((state)=>{
-            localStorage.setItem('currentOrderDetails', JSON.stringify(state.currentOrderDetails));
-        }, [this.state])
+        effect(
+            (state) => {
+                this.selfOrder.config.table_id = state.table_id;
+                localStorage.setItem("table_id", state.table_id);
+            },
+            [this.state]
+        );
+        effect(
+            (state) => {
+                localStorage.setItem("user_name", state.user_name);
+            },
+            [this.state]
+        );
+        effect(
+            (state) => {
+                localStorage.setItem("cart", JSON.stringify(state.cart));
+            },
+            [this.state]
+        );
+        effect(
+            (state) => {
+                localStorage.setItem(
+                    "currentOrderDetails",
+                    JSON.stringify(state.currentOrderDetails)
+                );
+            },
+            [this.state]
+        );
         useSubEnv({ state: this.state });
         this.rpc = useService("rpc");
         onWillStart(async () => {
-            this.result_from_get_menu = await this.rpc(`/pos-self-order/get-menu`, {pos_id: odoo.pos_id});
+            this.result_from_get_menu = await this.rpc(`/pos-self-order/get-menu`, {
+                pos_id: this.selfOrder.config.pos_id,
+            });
             // we rename the "id" field to "product_id"
             // the product.product model uses "id",
             // but the pos.order.line model uses "product_id"
@@ -126,21 +137,25 @@ class SelfOrderRoot extends Component {
             /**
              * @type {Product[]}
              */
-            this.productList =  this.result_from_get_menu.map(({ id, name, description_sale, price_info, pos_categ_id}) => ({
-                product_id: id,
-                name: name,
-                // TODO: we have to TEST if prices are correctly displayed / calculated with tax included or tax excluded
-                list_price: odoo.show_prices_with_tax_included ? price_info["price_with_tax"] : price_info["price_without_tax"],
-                description_sale: description_sale,
-                price_info: price_info,
-                // We are using a system of tags to categorize products
-                // the categories of a product will also be considered as tags
-                // ex of tags: "Pizza", "Drinks", "Italian", "Vegetarian", "Vegan", "Gluten Free","healthy", "organic",
-                // "Spicy", "Hot", "Cold", "Alcoholic", "Non Alcoholic", "Dessert", "Breakfast", "Lunch", "Dinner"
-                // "pairs well with wine", "pairs well with beer", "pairs well with soda", "pairs well with water",
-                // "HAPPY HOUR", "kids menu",  "local", "seasonal"
-                tag_list : pos_categ_id ? new Set(pos_categ_id[1].split(' / ')) : new Set(),
-                }));
+            this.productList = this.result_from_get_menu.map(
+                ({ id, name, description_sale, price_info, pos_categ_id }) => ({
+                    product_id: id,
+                    name: name,
+                    // TODO: we have to TEST if prices are correctly displayed / calculated with tax included or tax excluded
+                    list_price: this.selfOrder.config.show_prices_with_tax_included
+                        ? price_info["price_with_tax"]
+                        : price_info["price_without_tax"],
+                    description_sale: description_sale,
+                    price_info: price_info,
+                    // We are using a system of tags to categorize products
+                    // the categories of a product will also be considered as tags
+                    // ex of tags: "Pizza", "Drinks", "Italian", "Vegetarian", "Vegan", "Gluten Free","healthy", "organic",
+                    // "Spicy", "Hot", "Cold", "Alcoholic", "Non Alcoholic", "Dessert", "Breakfast", "Lunch", "Dinner"
+                    // "pairs well with wine", "pairs well with beer", "pairs well with soda", "pairs well with water",
+                    // "HAPPY HOUR", "kids menu",  "local", "seasonal"
+                    tag_list: pos_categ_id ? new Set(pos_categ_id[1].split(" / ")) : new Set(),
+                })
+            );
         });
     }
 
@@ -154,62 +169,73 @@ class SelfOrderRoot extends Component {
     viewProduct = (id) => {
         this.state.currentScreen = 2;
         this.state.currentProduct = id;
-    }
+    };
     viewCart = () => {
         this.state.currentScreen = 3;
-    }
+    };
     payOrder = (order) => {
         this.state.order_to_pay = order;
         this.state.currentScreen = 4;
-    }
+    };
     /**
-     * @param {number} id 
-     * @param {number} qty 
+     * @param {number} id
+     * @param {number} qty
      */
     addToCart = (id, qty) => {
-        // if the product is already in the cart we just increase the quantity  
-        if (this.state.cart.find(item => item.product_id === id)){
-            if(qty){
-                this.state.cart.find(item => item.product_id === id).qty = qty;
-            }
-            else{
+        // if the product is already in the cart we just increase the quantity
+        if (this.state.cart.find((item) => item.product_id === id)) {
+            if (qty) {
+                this.state.cart.find((item) => item.product_id === id).qty = qty;
+            } else {
                 this.removeProductFromCart(id);
             }
         }
         // if the product is not in the cart we add it to the cart
-        else{
-            if(qty){
-                this.state.cart.push({product_id: id, qty: qty});
+        else {
+            if (qty) {
+                this.state.cart.push({ product_id: id, qty: qty });
             }
         }
         this.viewMenu();
-    }
+    };
 
-    removeProductFromCart = (id) =>{
-        this.state.cart = this.state.cart.filter(item => item.product_id !== id);
-    }
-    getTotalCartQty = () =>{
+    removeProductFromCart = (id) => {
+        this.state.cart = this.state.cart.filter((item) => item.product_id !== id);
+    };
+    getTotalCartQty = () => {
         return this.state.cart.reduce((sum, cartItem) => {
-            return sum +  cartItem.qty;
-        },0);
-    }
+            return sum + cartItem.qty;
+        }, 0);
+    };
     getTotalCartCost = () => {
         return this.state.cart.reduce((sum, cartItem) => {
-            return sum +  this.productList.find(x => x.product_id === cartItem.product_id).price_info.price_with_tax * cartItem.qty;
-        },0);
-    }
+            return (
+                sum +
+                this.productList.find((x) => x.product_id === cartItem.product_id).price_info
+                    .price_with_tax *
+                    cartItem.qty
+            );
+        }, 0);
+    };
     getTotalTax = () => {
         return this.state.cart.reduce((sum, cartItem) => {
-            const product_price = this.productList.find(x => x.product_id === cartItem.product_id).price_info;
-            return sum +  (product_price.price_with_tax - product_price.price_without_tax) * cartItem.qty;
-        },0);
-    }
+            const product_price = this.productList.find(
+                (x) => x.product_id === cartItem.product_id
+            ).price_info;
+            return (
+                sum +
+                (product_price.price_with_tax - product_price.price_without_tax) * cartItem.qty
+            );
+        }, 0);
+    };
     getOrdersListWithAddedOrder = (orders_list, order) => {
-        const existing_order_index = orders_list.findIndex(x => x.order_id === order.order_id);
-        if (existing_order_index === -1) return [].concat(order, orders_list);
+        const existing_order_index = orders_list.findIndex((x) => x.order_id === order.order_id);
+        if (existing_order_index === -1) {
+            return [].concat(order, orders_list);
+        }
         orders_list[existing_order_index] = order;
         return orders_list;
-    }
+    };
     sendOrder = async () => {
         try {
             /*
@@ -223,15 +249,27 @@ class SelfOrderRoot extends Component {
                 cart: this.state.cart,
                 order_id: this.state.currentOrderDetails.order_id ?? null,
                 access_token: this.state.currentOrderDetails.access_token ?? null,
-            }
-            this.posted_order = await this.rpc(`/pos-self-order/send-order/${odoo.pos_id}/${odoo.table_id}`, order_context);
-            if( odoo.self_order_location === 'table' ){
-                localStorage.setItem("orders_list", 
-                    JSON.stringify(this.getOrdersListWithAddedOrder(JSON.parse(localStorage.getItem("orders_list")) ?? [],
-                                                    this.posted_order)));
+            };
+            this.posted_order = await this.rpc(
+                `/pos-self-order/send-order/${this.selfOrder.config.pos_id}/${this.selfOrder.config.table_id}`,
+                order_context
+            );
+            if (this.selfOrder.config.self_order_location === "table") {
+                localStorage.setItem(
+                    "orders_list",
+                    JSON.stringify(
+                        this.getOrdersListWithAddedOrder(
+                            JSON.parse(localStorage.getItem("orders_list")) ?? [],
+                            this.posted_order
+                        )
+                    )
+                );
                 // we want to keep the order id and access token  of the current order in the local storage
                 // we will need them when the user wants to add more items to the order
-                this.state.currentOrderDetails = (({order_id, access_token})=>({order_id, access_token}))(this.posted_order);
+                this.state.currentOrderDetails = (({ order_id, access_token }) => ({
+                    order_id,
+                    access_token,
+                }))(this.posted_order);
             }
             this.state.message_to_display = "success";
             // we only want to clear the cart if the order was sent successfully
@@ -241,45 +279,57 @@ class SelfOrderRoot extends Component {
             console.error(error);
             this.state.message_to_display = "error";
         }
-        if( odoo.self_order_location === 'table' ){
+        if (this.selfOrder.config.self_order_location === "table") {
             this.viewLandingPage();
-        }
-        else if( odoo.self_order_location === 'kiosk' ){
+        } else if (this.selfOrder.config.self_order_location === "kiosk") {
             this.payOrder(this.posted_order);
         }
-    }
+    };
     //TODO QUESTION:
     // some of this functions i pass as props to the components that need them
     // why don't i export them from this file and import them in the components?
 
     /**
-     * @param {Order[]} old_orders_list 
+     * @param {Order[]} old_orders_list
      * @returns {Order[]}
      */
     getUpdatedOrdersListFromServer = async (old_orders_list) => {
-        return await Promise.all(old_orders_list.map(async order => 
-            order.state === 'paid' ? order :  await this.getUpdatedOrderFromServer(order)
-        ));
-    }
+        return await Promise.all(
+            old_orders_list.map(async (order) =>
+                order.state === "paid" ? order : await this.getUpdatedOrderFromServer(order)
+            )
+        );
+    };
     /**
-     * @param {Order} order 
-     * @returns 
+     * @param {Order} order
+     * @returns
      */
     getUpdatedOrderFromServer = async (order) => {
         try {
-            console.log("getting update for order ", order.order_id, order.access_token );
-            return await this.rpc(`/pos-self-order/view-order/`, 
-                { order_id: order.order_id, access_token: order.access_token });
+            console.log("getting update for order ", order.order_id, order.access_token);
+            return await this.rpc(`/pos-self-order/view-order/`, {
+                order_id: order.order_id,
+                access_token: order.access_token,
+            });
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
-    // TODO: replace the euro sign string from the rest of the app with 
-    // the odoo.currency variable
+    // TODO: replace the euro sign string from the rest of the app with
+    // the this.selfOrder.config.currency variable
     currencyType = "€";
-    static components = { LandingPage, ProductMainView, NavBar, ProductList, CartView, OrderView,
-                          OrdersList, HelpIcon, PaymentMethodsSelect };  
+    static components = {
+        LandingPage,
+        ProductMainView,
+        NavBar,
+        ProductList,
+        CartView,
+        OrderView,
+        OrdersList,
+        HelpIcon,
+        PaymentMethodsSelect,
+    };
 }
 SelfOrderRoot.template = "SelfOrderRoot";
 export async function createPublicRoot() {
@@ -294,8 +344,7 @@ export async function createPublicRoot() {
         translatableAttributes: ["data-tooltip"],
     });
     setLoadXmlDefaultApp(app);
-    return app.mount(document.body)
+    return app.mount(document.body);
 }
 createPublicRoot();
 export default { SelfOrderRoot, createPublicRoot };
-

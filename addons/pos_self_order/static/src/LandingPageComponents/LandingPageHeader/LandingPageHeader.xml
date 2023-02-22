@@ -5,7 +5,7 @@
                 <div class="m-3">
                     <img src="/logo?company=#{pos.company.id}" alt="logo" class="rounded"/>
                 </div>
-                <t t-if="window.odoo.self_order_location === 'table'">
+                <t t-if="selfOrder.config.self_order_location === 'table'">
                     <div class="d-flex justify-content-center">
 
                     <t t-if="props.table_id">
