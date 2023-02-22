@@ -47,45 +47,37 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
             'user_ids',
         ]
 
-    def _get_group_by_SQL(self, task_specific_domain, count_field, select_terms, from_clause, where_clause,
-                          where_clause_params, groupby_terms, orderby_terms, limit, offset, groupby, annotated_groupbys,
-                          prefix_term, prefix_terms):
-        """ Prepare and return the SQL to be used for the read_group. """
+    def _where_calc(self, domain, active_test=True):
+        burndown_specific_domain, task_specific_domain = self._determine_domains(domain)
+
+        main_query = super()._where_calc(burndown_specific_domain, active_test)
 
         # Build the query on `project.task` with the domain fields that are linked to that model. This is done in order
         # to be able to reduce the number of treated records in the query by limiting them to the one corresponding to
         # the ids that are returned from this sub query.
+        self.env['project.task']._flush_search(task_specific_domain, fields=self.task_specific_fields)
         project_task_query = self.env['project.task']._where_calc(task_specific_domain)
         project_task_from_clause, project_task_where_clause, project_task_where_clause_params = project_task_query.get_sql()
+
+        # Insert `WHERE` clause parameter that apply on `project_task` prior to the one that apply on
+        # `project_task_burndown_chart_report` as the `project_task` CTE is placed at the beginning of the `SQL`.
+        main_query._where_params = project_task_where_clause_params + main_query._where_params
 
         # Get the stage_id `ir.model.fields`'s id in order to inject it directly in the query and avoid having to join
         # on `ir_model_fields` table.
         IrModelFieldsSudo = self.env['ir.model.fields'].sudo()
         field_id = IrModelFieldsSudo.search([('name', '=', 'stage_id'), ('model', '=', 'project.task')]).id
 
-        # Get the date aggregation SQL statement in order to be able to inject it in the SQL.
-        date_group_by_field = next(filter(lambda gb: gb.startswith('date'), groupby))
-        date_annotated_groupby = [
-            annotated_groupby for annotated_groupby in annotated_groupbys
-            if annotated_groupby['groupby'] == date_group_by_field
-        ][0]
-        date_begin, date_end = (
-            date_annotated_groupby['qualified_field'].replace(
-                '"%s"."%s"' % (self._table, date_annotated_groupby['field']), '"%s_%s"' % (date_annotated_groupby['field'], field)
-            )
-            for field in ['begin', 'end']
-        )
-
-        # Insert `WHERE` clause parameter that apply on `project_task` prior to the one that apply on
-        # `project_task_burndown_chart_report` as the `project_task` CTE is placed at the beginning of the `SQL`.
-        for param in reversed(project_task_where_clause_params):
-            where_clause_params.insert(0, param)
+        groupby = self.env.context['project_task_burndown_chart_report_groupby']
+        date_groupby = [g for g in groupby if g.startswith('date')][0]
 
         # Computes the interval which needs to be used in the `SQL` depending on the date group by interval.
-        if date_annotated_groupby['groupby'].split(':')[1] != 'quarter':
-            interval = '1 %s' % date_annotated_groupby['groupby'].split(':')[1]
-        else:
-            interval = '3 month'
+        interval = date_groupby.split(':')[1]
+        sql_interval = '1 %s' % interval if interval != 'quarter' else '3 month'
+
+        simple_date_groupby_sql, __ = self._read_group_groupby(f"date:{interval}", main_query)
+        # Removing unexistant table name from the expression
+        simple_date_groupby_sql = simple_date_groupby_sql.replace('"project_task_burndown_chart_report".', '')
 
         burndown_chart_query = """
               WITH task_ids AS (
@@ -94,7 +86,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                  %(task_query_where)s
               ),
               all_stage_task_moves AS (
-                 SELECT count(*) as %(count_field)s,
+                 SELECT count(*) as __count,
                         sum(planned_hours) as planned_hours,
                         project_id,
                         %(date_begin)s as date_begin,
@@ -177,44 +169,22 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                      project_id,
                      stage_id,
                      date,
-                     %(count_field)s
+                     __count
                 FROM all_stage_task_moves t
                          JOIN LATERAL generate_series(t.date_begin, t.date_end-INTERVAL '1 day', '%(interval)s')
                             AS date ON TRUE
         """ % {
             'task_query_from': project_task_from_clause,
-            'task_query_where': prefix_term('WHERE', project_task_where_clause),
-            'count_field': count_field,
-            'date_begin': date_begin,
-            'date_end': date_end,
-            'interval': interval,
+            'task_query_where': f'WHERE {project_task_where_clause}' if project_task_where_clause else '',
+            'date_begin': simple_date_groupby_sql.replace('"date"', '"date_begin"'),
+            'date_end': simple_date_groupby_sql.replace('"date"', '"date_end"'),
+            'interval': sql_interval,
             'field_id': field_id,
         }
 
-        # Replace, in the `FROM` clause generated on `project_task_burndown_chart_report`, the
-        # `project_task_burndown_chart_report` table name by the burndown_chart_query `SQL` aliased as
-        # `project_task_burndown_chart_report`.
-        from_clause = from_clause.replace('"project_task_burndown_chart_report"', '(%s) AS "project_task_burndown_chart_report"' % burndown_chart_query, 1)
+        main_query._tables['project_task_burndown_chart_report'] = burndown_chart_query
 
-        return """
-            SELECT min("%(table)s".id) AS id, sum(%(table)s.%(count_field)s) AS "%(count_field)s" %(extra_fields)s
-            FROM %(from)s
-            %(where)s
-            %(groupby)s
-            %(orderby)s
-            %(limit)s
-            %(offset)s
-        """ % {
-            'table': self._table,
-            'count_field': count_field,
-            'extra_fields': prefix_terms(',', select_terms),
-            'from': from_clause,
-            'where': prefix_term('WHERE', where_clause),
-            'groupby': prefix_terms('GROUP BY', groupby_terms),
-            'orderby': prefix_terms('ORDER BY', orderby_terms),
-            'limit': prefix_term('LIMIT', int(limit) if limit else None),
-            'offset': prefix_term('OFFSET', int(offset) if limit else None),
-        }
+        return main_query
 
     @api.model
     def _validate_group_by(self, groupby):
@@ -252,150 +222,16 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         non_task_specific_domain = filter_domain_leaf(domain, lambda field: field not in self.task_specific_fields)
         return non_task_specific_domain, task_specific_domain
 
-    @api.model
-    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """ Although not being a good practice, this code is, for a big part, duplicated from `read_group_raw` from
-        `models.py`. In order to be able to use the report on big databases, it is necessary to inject `WHERE`
-        statements at the lowest levels in the report `SQL`. As a result, using a view was no more an option as
-        `Postgres` could not optimise the `SQL`.
-        The code of `fill_temporal` has been removed from what's available in `models.py` as it is not relevant in the
-        context of the Burndown Chart. Indeed, series are generated so no empty are returned by the `SQL`, except if
-        explicitly specified in the domain through the `date` field, which is then expected.
-        """
-        # TODO
-        # --- Below code is custom
+    def _read_group_select(self, aggregate_spec, query):
+        if aggregate_spec == '__count':
+            return f'SUM("{self._table}"."__count")', []
+        return super()._read_group_select(aggregate_spec, query)
 
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         self._validate_group_by(groupby)
-        burndown_specific_domain, task_specific_domain = self._determine_domains(domain)
+        self = self.with_context(project_task_burndown_chart_report_groupby=groupby)
 
-        # --- Below code is from models.py read_group_raw
-
-        self.check_access_rights('read')
-        query = self._where_calc(burndown_specific_domain)
-        fields = fields or [f.name for f in self._fields.values() if f.store]
-
-        groupby = [groupby] if isinstance(groupby, str) else list(OrderedSet(groupby))
-        groupby_list = groupby[:1] if lazy else groupby
-        annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
-        groupby_fields = [g['field'] for g in annotated_groupbys]
-        order = orderby or ','.join([g for g in groupby_list])
-        groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
-
-        self._apply_ir_rules(query, 'read')
-        for gb in groupby_fields:
-            if gb not in self._fields:
-                raise UserError(_("Unknown field %r in 'groupby'", gb))
-            if not self._fields[gb].base_field.groupable:
-                raise UserError(_(
-                    "Field %s is not a stored field, only stored fields (regular or "
-                    "many2many) are valid for the 'groupby' parameter", self._fields[gb],
-                ))
-
-        aggregated_fields = []
-        select_terms = []
-        fnames = []                     # list of fields to flush
-
-        for fspec in fields:
-            if fspec == 'sequence':
-                continue
-            if fspec == '__count':
-                # the web client sometimes adds this pseudo-field in the list
-                continue
-
-            match = regex_field_agg.match(fspec)
-            if not match:
-                raise UserError(_("Invalid field specification %r.", fspec))
-
-            name, func, fname = match.groups()
-            if func:
-                # we have either 'name:func' or 'name:func(fname)'
-                fname = fname or name
-                field = self._fields.get(fname)
-                if not field:
-                    raise ValueError(_("Invalid field %r on model %r", (fname, self._name)))
-                if not (field.base_field.store and field.base_field.column_type):
-                    raise UserError(_("Cannot aggregate field %r.", fname))
-                if func not in VALID_AGGREGATE_FUNCTIONS:
-                    raise UserError(_("Invalid aggregation function %r.", func))
-            else:
-                # we have 'name', retrieve the aggregator on the field
-                field = self._fields.get(name)
-                if not field:
-                    raise ValueError(_("Invalid field %r on model %r", (name, self._name)))
-                if not (field.base_field.store and
-                        field.base_field.column_type and field.group_operator):
-                    continue
-                func, fname = field.group_operator, name
-
-            fnames.append(fname)
-
-            if fname in groupby_fields:
-                continue
-            if name in aggregated_fields:
-                raise UserError(_("Output name %r is used twice.", name))
-            aggregated_fields.append(name)
-
-            expr = self._inherits_join_calc(self._table, fname, query)
-            if func.lower() == 'count_distinct':
-                term = 'COUNT(DISTINCT %s) AS "%s"' % (expr, name)
-            else:
-                term = '%s(%s) AS "%s"' % (func, expr, name)
-            select_terms.append(term)
-
-        for gb in annotated_groupbys:
-            select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
-
-        # --- Below code is custom
-        # --- As the report is base on `project.task` we flush that specific model
-
-        # self._flush_search(domain, fields=fnames + groupby_fields)
-        self.env['project.task']._flush_search(task_specific_domain, fields=self.task_specific_fields)
-
-        # --- Below code is from models.py read_group_raw
-
-        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
-        from_clause, where_clause, where_clause_params = query.get_sql()
-        if lazy and (len(groupby_fields) >= 2 or not self._context.get('group_by_no_leaf')):
-            count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
-        else:
-            count_field = '_'
-        count_field += '_count'
-
-        prefix_terms = lambda prefix, terms: (prefix + " " + ",".join(terms)) if terms else ''
-        prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
-
-        # --- Below code is custom
-
-        query = self._get_group_by_SQL(task_specific_domain, count_field, select_terms, from_clause, where_clause,
-                                       where_clause_params, groupby_terms, orderby_terms, limit, offset, groupby,
-                                       annotated_groupbys, prefix_term, prefix_terms)
-
-        # --- Below code is from models.py read_group_raw
-
-        self._cr.execute(query, where_clause_params)
-        fetched_data = self._cr.dictfetchall()
-
-        if not groupby_fields:
-            return fetched_data
-
-        self._read_group_resolve_many2x_fields(fetched_data, annotated_groupbys)
-
-        data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
-
-        result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
-
-        # --- Below code is custom
-        # --- We removed fill_temporal handling as not relevant in the context of the Burndown Chart
-
-        # --- Below code is from models.py read_group_raw
-
-        if lazy:
-            # Right now, read_group only fill results in lazy mode (by default).
-            # If you need to have the empty groups in 'eager' mode, then the
-            # method _read_group_fill_results need to be completely reimplemented
-            # in a sane way
-            result = self._read_group_fill_results(
-                domain, groupby_fields[0], groupby[len(annotated_groupbys):],
-                aggregated_fields, count_field, result, read_group_order=order,
-            )
-        return result
+        return super()._read_group(
+            domain=domain, groupby=groupby, aggregates=aggregates,
+            having=having, offset=offset, limit=limit, order=order,
+        )

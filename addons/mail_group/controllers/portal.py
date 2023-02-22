@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel.dates
 import werkzeug
 
-from odoo import http, fields, tools
+from odoo import http, fields, tools, models
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools.misc import get_lang
 
 
 class PortalMailGroup(http.Controller):
@@ -23,22 +25,24 @@ class PortalMailGroup(http.Controller):
     def _get_archives(self, group_id):
         """Return the different date range and message count for the group messages."""
         domain = expression.AND([self._get_website_domain(), [('mail_group_id', '=', group_id)]])
-        results = request.env['mail.group.message']._read_group_raw(
+        results = request.env['mail.group.message']._read_group(
             domain,
-            ['subject', 'create_date'],
-            groupby=['create_date'], orderby='create_date')
+            groupby=['create_date:month'],
+            aggregates=['__count'],
+        )
 
         date_groups = []
 
-        for result in results:
-            (dates_range, label) = result['create_date']
-            start, end = dates_range.split('/')
-
+        locale = get_lang(self.env).code
+        fmt = models.READ_GROUP_DISPLAY_FORMAT['month']
+        interval = models.READ_GROUP_TIME_GRANULARITY['month']
+        for start, count in results:
+            label = babel.dates.format_datetime(start, format=fmt, locale=locale)
             date_groups.append({
                 'date': label,
-                'date_begin': fields.Date.to_string(fields.Date.to_date(start)),
-                'date_end': fields.Date.to_string(fields.Date.to_date(end)),
-                'messages_count': result['create_date_count'],
+                'date_begin': fields.Date.to_string(start),
+                'date_end': fields.Date.to_string(start + interval),
+                'messages_count': count,
             })
 
         thread_domain = expression.AND([domain, [('group_message_parent_id', '=', False)]])
