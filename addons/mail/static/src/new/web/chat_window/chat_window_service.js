@@ -101,6 +101,10 @@ export class ChatWindowService {
         return chatWindow;
     }
 
+    focus(chatWindow) {
+        chatWindow.autofocus++;
+    }
+
     makeVisible(chatWindow) {
         const swaped = this.visible[this.visible.length - 1];
         this.hide(swaped);
@@ -146,7 +150,7 @@ export class ChatWindowService {
             thread.state = "closed";
         }
         if (escape && this.store.chatWindows.length > 0) {
-            this.store.chatWindows[index - 1].autofocus++;
+            this.focus(this.store.chatWindows[index - 1]);
         }
     }
 }

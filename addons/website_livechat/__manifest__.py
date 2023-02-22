@@ -30,7 +30,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/legacy/widgets/*/*',
         ],
         'mail.assets_messaging': [
-            'website_livechat/static/src/models/*.js',
+            'website_livechat/static/src/new/core/*',
         ],
         'web.assets_frontend': [
             'website_livechat/static/src/legacy/public_livechat.js',
@@ -43,7 +43,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/js/systray_items/*.js',
         ],
         'web.assets_backend': [
-            'website_livechat/static/src/new/**/*',
+            'website_livechat/static/src/new/core_ui/*',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
