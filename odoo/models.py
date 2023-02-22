@@ -4528,16 +4528,33 @@ Fields:
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')
 
+        limit_count = None
+        if self.env.context.get('web_search_count') == self and not self.env.context.get('force_search_count'):
+            limit_count = self.env['ir.config_parameter'].sudo().get_param('web_search_count_limit')
+            if limit_count:
+                limit_count = int(limit_count)
+                if not limit or limit > limit_count:
+                    limit = limit_count
+                else:
+                    limit_count = None
+
+        query.limit = limit
+
         if count:
             # Ignore order, limit and offset when just counting, they don't make sense and could
             # hurt performance
-            query_str, params = query.select("count(1)")
+            if limit_count:
+                # Special case to avoid counting every record in DB (which can be really slow).
+                # The result will be between 0 and limit.
+                query_str, params = query.select('')  # generates a `SELECT FROM` (faster)
+                query_str = f'SELECT COUNT(*) FROM ({query_str}) t'
+            else:
+                query_str, params = query.select('COUNT(1)')
             self._cr.execute(query_str, params)
             res = self._cr.fetchone()
             return res[0]
 
         query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
-        query.limit = limit
         query.offset = offset
 
         return query
