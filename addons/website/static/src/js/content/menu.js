@@ -483,7 +483,10 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
  * Note: this works well with the affixMenu... by chance (menuDirection is
  * called after alphabetically).
  *
- * @todo check bootstrap v4: maybe handled automatically now ?
+ * @todo @deprecated For the moment, dynamic positioning of dropdown elements is
+ * explicitly disabled by Bootstrap on dropdowns that are in the navbar. In
+ * master, we will patch the BS dropdown to allow this and remove the following
+ * widget.
  */
 publicWidget.registry.menuDirection = publicWidget.Widget.extend({
     selector: 'header .navbar .nav',
@@ -496,7 +499,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'right' : 'left';
+        this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'end' : 'start';
         return this._super.apply(this, arguments);
     },
 
@@ -506,7 +509,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
 
     /**
      * @private
-     * @param {string} alignment - either 'left' or 'right'
+     * @param {string} alignment - either 'start' or 'end'
      * @param {integer} liOffset
      * @param {integer} liWidth
      * @param {integer} menuWidth
@@ -514,7 +517,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @returns {boolean}
      */
     _checkOpening: function (alignment, liOffset, liWidth, menuWidth, pageWidth) {
-        if (alignment === 'left') {
+        if (alignment === 'start') {
             // Check if ok to open the dropdown to the right (no window overflow)
             return (liOffset + menuWidth <= pageWidth);
         } else {
@@ -531,19 +534,19 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @private
      */
     _onDropdownShow: function (ev) {
-        var $li = $(ev.target);
-        var $menu = $li.children('.dropdown-menu');
-        var liOffset = $li.offset().left;
-        var liWidth = $li.outerWidth();
+        const $dropdown = $(ev.target).closest('.nav-item.dropdown');
+        var $menu = $dropdown.children('.dropdown-menu');
+        var liOffset = $dropdown.offset().left;
+        var liWidth = $dropdown.outerWidth();
         var menuWidth = $menu.outerWidth();
         var pageWidth = $('#wrapwrap').outerWidth();
 
         $menu.removeClass('dropdown-menu-start dropdown-menu-end');
 
         var alignment = this.defaultAlignment;
-        if ($li.nextAll(':visible').length === 0) {
+        if ($dropdown.nextAll(':visible').length === 0) {
             // The dropdown is the last menu item, open to the left
-            alignment = 'right';
+            alignment = 'end';
         }
 
         // If can't open in the current direction because it would overflow the
@@ -551,7 +554,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         // same, change back the direction.
         for (var i = 0; i < 2; i++) {
             if (!this._checkOpening(alignment, liOffset, liWidth, menuWidth, pageWidth)) {
-                alignment = (alignment === 'left' ? 'right' : 'left');
+                alignment = (alignment === 'start' ? 'end' : 'start');
             }
         }
 
