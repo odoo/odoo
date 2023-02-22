@@ -59,4 +59,11 @@ export class Navbar extends LegacyComponent {
         }
         return 0;
     }
+
+    get configName() {
+        if (this.env.pos) {
+            return this.env.pos.config.name;
+        }
+        return "Shop";
+    }
 }
