@@ -87,10 +87,7 @@
         ],
         'web.assets_backend': [
             'website_sale/static/src/js/website_sale_video_field_preview.js',
-            'website_sale/static/src/js/website_sale_backend.js',
-            'website_sale/static/src/scss/website_sale_dashboard.scss',
             'website_sale/static/src/scss/website_sale_backend.scss',
-            'website_sale/static/src/xml/website_sale_dashboard.xml',
             'website_sale/static/src/js/tours/website_sale_shop.js',
             'website_sale/static/src/xml/website_sale.xml',
         ],
