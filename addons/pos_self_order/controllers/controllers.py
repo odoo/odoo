@@ -63,7 +63,7 @@ class PosSelfOrder(http.Controller):
 
         if not pos_sudo.self_order_allow_view_menu():   
             raise werkzeug.exceptions.NotFound()
-            
+
         if not pos_sudo.has_active_session:
             message_to_display = "restaurant_is_closed"
 
@@ -81,14 +81,14 @@ class PosSelfOrder(http.Controller):
             'self_order_allow_order': pos_sudo.has_active_session and pos_sudo.self_order_allow_order(),
             'show_prices_with_tax_included': True,
             'self_order_location': pos_sudo.compute_self_order_location(),
-            'self_order_allow_open_tabs': pos_sudo.self_order_allow_open_tabs(),
+            'allow_open_tabs': pos_sudo.self_order_allow_open_tabs(),
             'payment_methods' : pos_sudo.payment_method_ids.read(['name']),
             'custom_links' : custom_links_list,
         }
         if pos_sudo.module_pos_restaurant:
             context.update({
-                'table_id': table_id,
                 'total_number_of_tables': len(pos_sudo.get_tables_order_count()),
+                'table_id': 0 if len(pos_sudo.get_tables_order_count()) == 0 else table_id,
             })
         
         response = request.render(

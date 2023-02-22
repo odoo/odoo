@@ -61,7 +61,7 @@ class ResConfigSettings(models.TransientModel):
     pos_self_order_kiosk_mode = fields.Boolean(related='pos_config_id.self_order_kiosk_mode', readonly=False)
     # Customer will be able to see the menu on their phone
     pos_self_order_view_mode = fields.Boolean(related='pos_config_id.self_order_view_mode', readonly=False)
-    # Customer will be able to order their phone
+    # Customer will be able to order from their phone
     pos_self_order_phone_mode = fields.Boolean(related='pos_config_id.self_order_phone_mode', readonly=False)
     # the pos_self_order module is installed
     pos_module_pos_self_order = fields.Boolean(related='pos_config_id.module_pos_self_order', readonly=False)

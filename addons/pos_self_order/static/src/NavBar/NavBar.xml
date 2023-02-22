@@ -33,7 +33,9 @@
 
             ...this could be confusing for the waiters... 
         -->
-        <h1 class="text-white"><t t-esc="'T' + window.odoo.table_id"/></h1>
+        <t t-if="window.odoo.table_id">
+            <h1 class="text-white"><t t-esc="'T' + window.odoo.table_id"/></h1>
+        </t>
     </nav>
     </t>
 </templates>
