@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
+
 from odoo import api, Command, fields, models, _
-from odoo.osv import expression
+from odoo.osv.expression import AND, OR
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import remove_accents
@@ -767,20 +769,26 @@ class AccountJournal(models.Model):
     # -------------------------------------------------------------------------
 
     def _get_journal_bank_account_balance(self, domain=None):
-        ''' Get the bank balance of the current journal by filtering the journal items using the journal's accounts.
+        self.ensure_one()
+        return self._get_journal_bank_account_balance_batched(domain)[self.default_account_id.id]
 
-        /!\ The current journal is not part of the applied domain. This is the expected behavior since we only want
-        a logic based on accounts.
+    def _get_journal_bank_account_balance_batched(self, domain=None):
+        ''' Get the bank balance of the current journals.
+
+        We only filter the journal items using the journal's accounts.
+        The journal is not part of the applied domain. This is the expected behavior
+        since we only want a logic based on accounts.
 
         :param domain:  An additional domain to be applied on the account.move.line model.
-        :return:        Tuple having balance expressed in journal's currency
-                        along with the total number of move lines having the same account as of the journal's default account.
+        :return:        A mapping between the journal's default accounts' ids and their
+                        bank balance as well as the number of entries.
+        :rtype: dict[int, tuple[float, int]]
         '''
-        self.ensure_one()
-        self.env['account.move.line'].check_access_rights('read')
+        result = defaultdict(lambda: (0.0, 0))
+        if not self:
+            return result
 
-        if not self.default_account_id:
-            return 0.0, 0
+        self.env['account.move.line'].check_access_rights('read')
 
         domain = (domain or []) + [
             ('account_id', 'in', tuple(self.default_account_id.ids)),
@@ -788,23 +796,22 @@ class AccountJournal(models.Model):
             ('parent_state', '!=', 'cancel'),
         ]
         query = self.env['account.move.line']._where_calc(domain)
-        tables, where_clause, where_params = query.get_sql()
-
-        query = '''
-            SELECT
-                COUNT(account_move_line.id) AS nb_lines,
-                COALESCE(SUM(account_move_line.balance), 0.0),
-                COALESCE(SUM(account_move_line.amount_currency), 0.0)
-            FROM ''' + tables + '''
-            WHERE ''' + where_clause + '''
-        '''
+        query_str, params = query.select(
+            "account_move_line.account_id",
+            "COUNT(account_move_line.id) AS nb_lines",
+            "COALESCE(SUM(account_move_line.balance), 0.0)",
+            "COALESCE(SUM(account_move_line.amount_currency), 0.0)",
+        )
+        query_str += " GROUP BY account_move_line.account_id"
 
         company_currency = self.company_id.currency_id
         journal_currency = self.currency_id if self.currency_id and self.currency_id != company_currency else False
 
-        self._cr.execute(query, where_params)
-        nb_lines, balance, amount_currency = self._cr.fetchone()
-        return amount_currency if journal_currency else balance, nb_lines
+        self._cr.execute(query_str, params)
+        for account_id, nb_lines, balance, amount_currency in self.env.cr.fetchall():
+            result[account_id] = (amount_currency if journal_currency else balance, nb_lines)
+        return result
+
 
     def _get_journal_inbound_outstanding_payment_accounts(self):
         """
@@ -827,80 +834,114 @@ class AccountJournal(models.Model):
         return self.env['account.account'].browse(account_ids)
 
     def _get_journal_outstanding_payments_account_balance(self, domain=None, date=None):
-        ''' Get the outstanding payments balance of the current journal by filtering the journal items using the
-        journal's accounts.
+        self.ensure_one()
+        return self._get_journal_outstanding_payments_account_balance_batched(domain, date)[self.id]
+
+    def _get_journal_outstanding_payments_account_balance_batched(self, domain=None, date=None):
+        ''' Get the outstanding payments balance of current journals.
+
+        We filter the journal items using the journal's accounts.
 
         :param domain:  An additional domain to be applied on the account.move.line model.
         :param date:    The date to be used when performing the currency conversions.
-        :return:        The balance expressed in the journal's currency.
+        :return:        A mapping between the journal ids and their outstanding balance as
+                        well as the number of entries.
+        :rtype: dict[int, list[float, int]]
         '''
-        self.ensure_one()
         self.env['account.move.line'].check_access_rights('read')
         conversion_date = date or fields.Date.context_today(self)
+        result = defaultdict(lambda: [0.0, 0])
 
-        accounts = self._get_journal_inbound_outstanding_payment_accounts().union(self._get_journal_outbound_outstanding_payment_accounts())
-        if not accounts:
-            return 0.0, 0
+        outstandings = {}
+        for journal in self:
+            accounts = journal._get_journal_inbound_outstanding_payment_accounts() | journal._get_journal_outbound_outstanding_payment_accounts()
+            # Allow user managing payments without any statement lines.
+            # In that case, the user manages transactions only using the register payment wizard.
+            if accounts and journal.default_account_id not in accounts:
+                outstandings[journal.id] = accounts
 
-        # Allow user managing payments without any statement lines.
-        # In that case, the user manages transactions only using the register payment wizard.
-        if self.default_account_id in accounts:
-            return 0.0, 0
+        if not outstandings:
+            return result
 
-        domain = (domain or []) + [
-            ('account_id', 'in', tuple(accounts.ids)),
-            ('display_type', 'not in', ('line_section', 'line_note')),
-            ('parent_state', '!=', 'cancel'),
-            ('reconciled', '=', False),
-            ('journal_id', '=', self.id),
-        ]
+        domain = AND([
+            domain or [],
+            [
+                ('display_type', 'not in', ('line_section', 'line_note')),
+                ('parent_state', '!=', 'cancel'),
+                ('reconciled', '=', False),
+            ],
+            OR([
+                ['&', ('journal_id', '=', journal_id), ('account_id', 'in', tuple(accounts.ids))]
+                for journal_id, accounts in outstandings.items()
+            ])
+        ])
         query = self.env['account.move.line']._where_calc(domain)
         tables, where_clause, where_params = query.get_sql()
 
         self._cr.execute('''
             SELECT
-                COUNT(account_move_line.id) AS nb_lines,
+                account_move_line.journal_id,
                 account_move_line.currency_id,
-                account.reconcile AS is_account_reconcile,
-                SUM(account_move_line.amount_residual) AS amount_residual,
-                SUM(account_move_line.balance) AS balance,
-                SUM(account_move_line.amount_residual_currency) AS amount_residual_currency,
-                SUM(account_move_line.amount_currency) AS amount_currency
+                COUNT(account_move_line.id) AS nb_lines,
+                SUM(CASE WHEN account.reconcile THEN account_move_line.amount_residual          ELSE account_move_line.balance         END) AS balance,
+                SUM(CASE WHEN account.reconcile THEN account_move_line.amount_residual_currency ELSE account_move_line.amount_currency END) AS amount_currency
             FROM ''' + tables + '''
             JOIN account_account account ON account.id = account_move_line.account_id
             WHERE ''' + where_clause + '''
-            GROUP BY account_move_line.currency_id, account.reconcile
+            GROUP BY account_move_line.currency_id, account_move_line.journal_id
         ''', where_params)
 
-        company_currency = self.company_id.currency_id
-        journal_currency = self.currency_id if self.currency_id and self.currency_id != company_currency else False
-        balance_currency = journal_currency or company_currency
 
-        total_balance = 0.0
-        nb_lines = 0
         for res in self._cr.dictfetchall():
-            nb_lines += res['nb_lines']
+            journal = self.browse(res['journal_id'])
+            company_currency = journal.company_id.currency_id
+            journal_currency = journal.currency_id if journal.currency_id != company_currency else False
+            target_currency = journal_currency or company_currency
 
-            amount_currency = res['amount_residual_currency'] if res['is_account_reconcile'] else res['amount_currency']
-            balance = res['amount_residual'] if res['is_account_reconcile'] else res['balance']
+            journal_res = result[res['journal_id']]
+            journal_res[1] += res['nb_lines']
 
             if res['currency_id'] and journal_currency and res['currency_id'] == journal_currency.id:
-                total_balance += amount_currency
+                journal_res[0] += res['amount_currency']
             elif journal_currency:
-                total_balance += company_currency._convert(balance, balance_currency, self.company_id, conversion_date)
+                journal_res[0] += company_currency._convert(res['balance'], target_currency, self.company_id, conversion_date)
             else:
-                total_balance += balance
-        return total_balance, nb_lines
+                journal_res[0] += res['balance']
+        return result
 
     def _get_last_bank_statement(self, domain=None):
-        ''' Retrieve the last bank statement created using this journal.
-        :param domain:  An additional domain to be applied on the account.bank.statement model.
-        :return:        An account.bank.statement record or an empty recordset.
-        '''
         self.ensure_one()
-        last_statement_domain = (domain or []) + [('journal_id', '=', self.id), ('statement_id', '!=', False)]
-        last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
-        return last_st_line.statement_id
+        return self._get_last_bank_statement_batched(domain)[self.id]
+
+    def _get_last_bank_statement_batched(self, domain=None):
+        ''' Retrieve the last bank statement created using these journals.
+
+        :param domain:  An additional domain to be applied on the account.bank.statement model.
+        :return:        A mapping between the journal ids and their last statements
+        :rtype: dict[int, Model<account.bank.statement.line>]
+        '''
+        query = self.env['account.bank.statement.line']._search(
+            [('journal_id', 'in', self.ids), ('statement_id', '!=', False)]
+            + (domain or [])
+        , order=None)
+        from_clause, where_clause, params = query.get_sql()
+        self.env.cr.execute(f"""
+            SELECT DISTINCT ON (account_bank_statement_line__move_id.journal_id)
+                   account_bank_statement_line__move_id.journal_id,
+                   account_bank_statement_line.id
+              FROM {from_clause}
+             WHERE {where_clause}
+          ORDER BY account_bank_statement_line__move_id.journal_id,
+                   account_bank_statement_line__move_id.date DESC,
+                   account_bank_statement_line.id DESC
+        """, params)
+        query_result = {journal_id: id for journal_id, id in self.env.cr.fetchall()}
+        StatementLine = self.env['account.bank.statement.line']
+        StatementLine.browse(list(query_result.values())).statement_id  # prefetch
+        return {
+            journal.id: StatementLine.browse(query_result.get(journal.id)).statement_id
+            for journal in self
+        }
 
     def _get_available_payment_method_lines(self, payment_type):
         """

@@ -1,71 +1,27 @@
-import json
-from datetime import datetime, timedelta
-
+import ast
 from babel.dates import format_datetime, format_date
+from collections import defaultdict
+from datetime import datetime, timedelta
+import json
+import random
+
 from odoo import models, api, _, fields
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools.misc import formatLang, format_date as odoo_format_date, get_lang
-import random
 
-import ast
+
+def group_by_journal(vals_list):
+    res = defaultdict(list)
+    for vals in vals_list:
+        res[vals['journal_id']].append(vals)
+    return res
 
 
 class account_journal(models.Model):
     _inherit = "account.journal"
-
-    def _kanban_dashboard(self):
-        for journal in self:
-            journal.kanban_dashboard = json.dumps(journal.get_journal_dashboard_datas())
-
-    def _kanban_dashboard_graph(self):
-        for journal in self:
-            if (journal.type in ['sale', 'purchase']):
-                journal.kanban_dashboard_graph = json.dumps(journal.get_bar_graph_datas())
-            elif (journal.type in ['cash', 'bank']):
-                journal.kanban_dashboard_graph = json.dumps(journal.get_line_graph_datas())
-            else:
-                journal.kanban_dashboard_graph = False
-
-    def _get_json_activity_data(self):
-        for journal in self:
-            activities = []
-            # search activity on move on the journal
-            sql_query = '''
-                SELECT act.id,
-                    act.res_id,
-                    act.res_model,
-                    act.summary,
-                    act_type.name as act_type_name,
-                    act_type.category as activity_category,
-                    act.date_deadline,
-                    m.date,
-                    m.ref,
-                    CASE WHEN act.date_deadline < CURRENT_DATE THEN 'late' ELSE 'future' END as status
-                FROM account_move m
-                    LEFT JOIN mail_activity act ON act.res_id = m.id
-                    LEFT JOIN mail_activity_type act_type ON act.activity_type_id = act_type.id
-                WHERE act.res_model = 'account.move'
-                    AND m.journal_id = %s
-            '''
-            self.env.cr.execute(sql_query, (journal.id,))
-            for activity in self.env.cr.dictfetchall():
-                act = {
-                    'id': activity.get('id'),
-                    'res_id': activity.get('res_id'),
-                    'res_model': activity.get('res_model'),
-                    'status': activity.get('status'),
-                    'name': (activity.get('summary') or activity.get('act_type_name')),
-                    'activity_category': activity.get('activity_category'),
-                    'date': odoo_format_date(self.env, activity.get('date_deadline'))
-                }
-                if activity.get('activity_category') == 'tax_report' and activity.get('res_model') == 'account.move':
-                    act['name'] = activity.get('ref')
-
-                activities.append(act)
-            journal.json_activity_data = json.dumps({'activities': activities})
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
@@ -75,6 +31,61 @@ class account_journal(models.Model):
     entries_count = fields.Integer(compute='_compute_entries_count')
     has_sequence_holes = fields.Boolean(compute='_compute_has_sequence_holes')
 
+    def _kanban_dashboard(self):
+        if self.user_has_groups('account.group_account_readonly'):
+            # TODO this should probably be a custo on the prod...
+            # Do not bother checking weird global access rights if you have
+            # access to move lines.
+            # This is the entry point of the dashboard computation, so basically
+            # everything will be executed with sudo.
+            self = self.sudo()
+        dashboard_data = self._get_journal_dashboard_data_batched()
+        for journal in self:
+            journal.kanban_dashboard = json.dumps(dashboard_data[journal.id])
+
+    @api.depends('kanban_dashboard')
+    def _kanban_dashboard_graph(self):
+        for journal in self:
+            journal.kanban_dashboard_graph = json.dumps(json.loads(journal.kanban_dashboard).get('graph_data', {}))
+
+    def _get_json_activity_data(self):
+        activities = defaultdict(list)
+        # search activity on move on the journal
+        sql_query = '''
+            SELECT activity.id,
+                   activity.res_id,
+                   activity.res_model,
+                   activity.summary,
+                   CASE WHEN activity.date_deadline < CURRENT_DATE THEN 'late' ELSE 'future' END as status,
+                   act_type.name as act_type_name,
+                   act_type.category as activity_category,
+                   activity.date_deadline,
+                   move.date,
+                   move.ref,
+                   move.journal_id
+              FROM account_move move
+              JOIN mail_activity activity ON activity.res_id = move.id AND activity.res_model = 'account.move'
+         LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
+             WHERE move.journal_id = ANY(%s)
+        '''
+        self.env.cr.execute(sql_query, (self.ids,))
+        for activity in self.env.cr.dictfetchall():
+            act = {
+                'id': activity['id'],
+                'res_id': activity['res_id'],
+                'res_model': activity['res_model'],
+                'status': activity['status'],
+                'name': activity['summary'] or activity['act_type_name'],
+                'activity_category': activity['activity_category'],
+                'date': odoo_format_date(self.env, activity['date_deadline'])
+            }
+            if activity['activity_category'] == 'tax_report' and activity['res_model'] == 'account.move':
+                act['name'] = activity['ref']
+
+            activities[activity['journal_id']].append(act)
+        for journal in self:
+            journal.json_activity_data = json.dumps({'activities': activities[journal.id]})
+
     def _query_has_sequence_holes(self):
         self.env.cr.execute("""
             SELECT move.journal_id,
@@ -83,7 +94,7 @@ class account_journal(models.Model):
               JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
                AND move.state = 'posted'
-               AND (company.fiscalyear_lock_date IS NULL OR move.date >= company.fiscalyear_lock_date) 
+               AND (company.fiscalyear_lock_date IS NULL OR move.date >= company.fiscalyear_lock_date)
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
         """, {
@@ -116,324 +127,390 @@ class account_journal(models.Model):
         elif self.type == 'bank':
             return ['', _('Bank: Balance')]
 
-    # Below method is used to get data of bank and cash statemens
     def get_line_graph_datas(self):
-        """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
-        currency = self.currency_id or self.company_id.currency_id
+        self.ensure_one()
+        return self._get_line_graph_data_batched()[self.id]
 
-        def build_graph_data(date, amount):
+    def _get_line_graph_data_batched(self):
+        """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
+        def build_graph_data(date, amount, currency):
             #display date in locale format
             name = format_date(date, 'd LLLL Y', locale=locale)
             short_name = format_date(date, 'd MMM', locale=locale)
-            return {'x':short_name,'y': amount, 'name':name}
+            return {'x': short_name, 'y': currency.round(amount), 'name': name}
 
-        self.ensure_one()
-        data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
         locale = get_lang(self.env).code
 
-        #starting point of the graph is the last statement
-        last_stmt = self._get_last_bank_statement(domain=[('move_id.state', '=', 'posted')])
+        query = """
+            SELECT move.journal_id,
+                   move.date,
+                   SUM(st_line.amount) AS amount
+              FROM account_bank_statement_line st_line
+              JOIN account_move move ON move.id = st_line.move_id
+             WHERE move.journal_id = ANY(%s)
+               AND move.date > %s
+               AND move.date <= %s
+          GROUP BY move.date, move.journal_id
+          ORDER BY move.date DESC
+        """
+        self.env.cr.execute(query, (self.ids, last_month, today))
+        query_result = group_by_journal(self.env.cr.dictfetchall())
 
-        last_balance = last_stmt and last_stmt.balance_end_real or 0
-        data.append(build_graph_data(today, last_balance))
+        last_statements = self._get_last_bank_statement_batched(
+            domain=[('move_id.state', '=', 'posted')],
+        )
 
-        #then we subtract the total amount of bank statement lines per day to get the previous points
-        #(graph is drawn backward)
-        date = today
-        amount = last_balance
-        query = '''
-            SELECT move.date, sum(st_line.amount) as amount
-            FROM account_bank_statement_line st_line
-            JOIN account_move move ON move.id = st_line.move_id
-            WHERE move.journal_id = %s
-            AND move.date > %s
-            AND move.date <= %s
-            GROUP BY move.date
-            ORDER BY move.date desc
-        '''
-        self.env.cr.execute(query, (self.id, last_month, today))
-        query_result = self.env.cr.dictfetchall()
-        for val in query_result:
-            date = val['date']
-            if date != today.strftime(DF):  # make sure the last point in the graph is today
-                data[:0] = [build_graph_data(date, amount)]
-            amount = currency.round(amount - val['amount'])
+        result = {}
+        for journal in self:
+            graph_title, graph_key = journal._graph_title_and_key()
+            currency = journal.currency_id or journal.company_id.currency_id
+            journal_result = query_result[journal.id]
 
-        # make sure the graph starts 1 month ago
-        if date.strftime(DF) != last_month.strftime(DF):
-            data[:0] = [build_graph_data(last_month, amount)]
+            color = '#875A7B' if 'e' in version else '#7c7bad'
+            #starting point of the graph is the last statement
+            last_stmt = last_statements[journal.id]
 
-        [graph_title, graph_key] = self._graph_title_and_key()
-        color = '#875A7B' if 'e' in version else '#7c7bad'
+            last_balance = last_stmt.balance_end_real
 
-        is_sample_data = not last_stmt and len(query_result) == 0
-        if is_sample_data:
             data = []
-            for i in range(30, 0, -5):
-                current_date = today + timedelta(days=-i)
-                data.append(build_graph_data(current_date, random.randint(-5, 15)))
+            data.append(build_graph_data(today, last_balance, currency))
+            date = today
+            amount = last_balance
+            #then we subtract the total amount of bank statement lines per day to get the previous points
+            #(graph is drawn backward)
+            for val in journal_result:
+                date = val['date']
+                if date != today.strftime(DF):  # make sure the last point in the graph is today
+                    data[:0] = [build_graph_data(date, amount, currency)]
+                amount -= val['amount']
 
-        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
+            # make sure the graph starts 1 month ago
+            if date.strftime(DF) != last_month.strftime(DF):
+                data[:0] = [build_graph_data(last_month, amount, currency)]
+
+            is_sample_data = not last_stmt and len(journal_result) == 0
+            if is_sample_data:
+                data = []
+                for i in range(30, 0, -5):
+                    current_date = today + timedelta(days=-i)
+                    data.append(build_graph_data(current_date, random.randint(-5, 15), currency))
+
+            result[journal.id] = [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color, 'is_sample_data': is_sample_data}]
+        return result
 
     def get_bar_graph_datas(self):
-        data = []
+        self.ensure_one()
+        return self._get_bar_graph_datas_batched()[self.id]
+
+    def _get_bar_graph_datas_batched(self):
         today = fields.Date.today()
-        data.append({'label': _('Due'), 'value':0.0, 'type': 'past'})
         day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
-        for i in range(-1,4):
-            if i==0:
-                label = _('This Week')
-            elif i==3:
-                label = _('Not Due')
-            else:
-                start_week = first_day_of_week + timedelta(days=i*7)
-                end_week = start_week + timedelta(days=6)
-                if start_week.month == end_week.month:
-                    label = str(start_week.day) + '-' + str(end_week.day) + ' ' + format_date(end_week, 'MMM', locale=get_lang(self.env).code)
-                else:
-                    label = format_date(start_week, 'd MMM', locale=get_lang(self.env).code) + '-' + format_date(end_week, 'd MMM', locale=get_lang(self.env).code)
-            data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
+        format_month = lambda d: format_date(d, 'MMM', locale=get_lang(self.env).code)
 
-        # Build SQL query to find amount aggregated by week
-        (select_sql_clause, query_args) = self._get_bar_graph_select_query()
-        query = ''
-        start_date = (first_day_of_week + timedelta(days=-7))
-        weeks = []
-        for i in range(0,6):
-            if i == 0:
-                query += "("+select_sql_clause+" and invoice_date_due < '"+start_date.strftime(DF)+"')"
-                weeks.append((start_date.min, start_date))
-            elif i == 5:
-                query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"')"
-                weeks.append((start_date, start_date.max))
-            else:
-                next_date = start_date + timedelta(days=7)
-                query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"' and invoice_date_due < '"+next_date.strftime(DF)+"')"
-                weeks.append((start_date, next_date))
-                start_date = next_date
-        # Ensure results returned by postgres match the order of data list
-        self.env.cr.execute(query, query_args)
-        query_results = self.env.cr.dictfetchall()
-        is_sample_data = True
-        for index in range(0, len(query_results)):
-            if query_results[index].get('aggr_date') != None:
-                is_sample_data = False
-                aggr_date = query_results[index]['aggr_date']
-                week_index = next(i for i in range(0, len(weeks)) if weeks[i][0] <= aggr_date < weeks[i][1])
-                data[week_index]['value'] = query_results[index].get('total')
-
-        [graph_title, graph_key] = self._graph_title_and_key()
-
-        if is_sample_data:
-            for index in range(0, len(query_results)):
-                data[index]['type'] = 'o_sample_data'
-                # we use unrealistic values for the sample data
-                data[index]['value'] = random.randint(0, 20)
-                graph_key = _('Sample data')
-
-        return [{'values': data, 'title': graph_title, 'key': graph_key, 'is_sample_data': is_sample_data}]
-
-    def _get_bar_graph_select_query(self):
-        """
-        Returns a tuple containing the base SELECT SQL query used to gather
-        the bar graph's data as its first element, and the arguments dictionary
-        for it as its second.
-        """
-        sign = '' if self.type == 'sale' else '-'
-        return ('''
-            SELECT
-                ''' + sign + ''' + SUM(move.amount_residual_signed) AS total,
-                MIN(invoice_date_due) AS aggr_date
-            FROM account_move move
-            WHERE move.journal_id = %(journal_id)s
-            AND move.state = 'posted'
-            AND move.payment_state in ('not_paid', 'partial')
-            AND move.move_type IN %(invoice_types)s
-        ''', {
+        self.env.cr.execute("""
+            SELECT move.journal_id,
+                   COALESCE(SUM(move.amount_residual_signed) FILTER (WHERE invoice_date_due < %(start_week1)s), 0) AS total_before,
+                   COALESCE(SUM(move.amount_residual_signed) FILTER (WHERE invoice_date_due >= %(start_week1)s AND invoice_date_due < %(start_week2)s), 0) AS total_week1,
+                   COALESCE(SUM(move.amount_residual_signed) FILTER (WHERE invoice_date_due >= %(start_week2)s AND invoice_date_due < %(start_week3)s), 0) AS total_week2,
+                   COALESCE(SUM(move.amount_residual_signed) FILTER (WHERE invoice_date_due >= %(start_week3)s AND invoice_date_due < %(start_week4)s), 0) AS total_week3,
+                   COALESCE(SUM(move.amount_residual_signed) FILTER (WHERE invoice_date_due >= %(start_week4)s AND invoice_date_due < %(start_week5)s), 0) AS total_week4,
+                   COALESCE(SUM(move.amount_residual_signed) FILTER (WHERE invoice_date_due >= %(start_week5)s), 0) AS total_after
+              FROM account_move move
+             WHERE move.journal_id = ANY(%(journal_ids)s)
+               AND move.state = 'posted'
+               AND move.payment_state in ('not_paid', 'partial')
+               AND move.move_type IN %(invoice_types)s
+          GROUP BY move.journal_id
+        """, {
             'invoice_types': tuple(self.env['account.move'].get_invoice_types(True)),
-            'journal_id': self.id
+            'journal_ids': self.ids,
+            'start_week1': first_day_of_week + timedelta(days=-7),
+            'start_week2': first_day_of_week + timedelta(days=0),
+            'start_week3': first_day_of_week + timedelta(days=7),
+            'start_week4': first_day_of_week + timedelta(days=14),
+            'start_week5': first_day_of_week + timedelta(days=21),
         })
+        query_results = {r['journal_id']: r for r in self.env.cr.dictfetchall()}
+        result = {}
+        for journal in self:
+            graph_title, graph_key = journal._graph_title_and_key()
+            sign = 1 if journal.type == 'sale' else -1
+            journal_data = query_results.get(journal.id)
+            data = []
+            data.append({'label': _('Due'), 'type': 'past'})
+            for i in range(-1, 3):
+                if i == 0:
+                    label = _('This Week')
+                else:
+                    start_week = first_day_of_week + timedelta(days=i*7)
+                    end_week = start_week + timedelta(days=6)
+                    if start_week.month == end_week.month:
+                        label = f"{start_week.day} - {end_week.day} {format_month(end_week)}"
+                    else:
+                        label = f"{start_week.day} {format_month(start_week)} - {end_week.day} {format_month(end_week)}"
+                data.append({'label': label, 'type': 'past' if i < 0 else 'future'})
+            data.append({'label': _('Not Due'), 'type': 'future'})
+
+            is_sample_data = not journal_data
+            if not is_sample_data:
+                data[0]['value'] = sign * journal_data['total_before']
+                data[1]['value'] = sign * journal_data['total_week1']
+                data[2]['value'] = sign * journal_data['total_week2']
+                data[3]['value'] = sign * journal_data['total_week3']
+                data[4]['value'] = sign * journal_data['total_week4']
+                data[5]['value'] = sign * journal_data['total_after']
+            else:
+                for index in range(6):
+                    data[index]['type'] = 'o_sample_data'
+                    # we use unrealistic values for the sample data
+                    data[index]['value'] = random.randint(0, 20)
+                    graph_key = _('Sample data')
+
+            result[journal.id] = [{'values': data, 'title': graph_title, 'key': graph_key, 'is_sample_data': is_sample_data}]
+        return result
 
     def get_journal_dashboard_datas(self):
-        currency = self.currency_id or self.company_id.currency_id
-        number_to_reconcile = number_to_check = last_balance = 0
-        has_at_least_one_statement = False
-        bank_account_balance = nb_lines_bank_account_balance = 0
-        outstanding_pay_account_balance = nb_lines_outstanding_pay_account_balance = 0
-        title = ''
-        number_draft = number_waiting = number_late = to_check_balance = 0
-        sum_draft = sum_waiting = sum_late = 0.0
-        if self.type in ('bank', 'cash'):
-            last_statement = self._get_last_bank_statement(
-                domain=[('move_id.state', '=', 'posted')])
-            last_balance = last_statement.balance_end
-            has_at_least_one_statement = bool(last_statement)
-            bank_account_balance, nb_lines_bank_account_balance = self._get_journal_bank_account_balance(
-                domain=[('parent_state', '=', 'posted')])
-            outstanding_pay_account_balance, nb_lines_outstanding_pay_account_balance = self._get_journal_outstanding_payments_account_balance(
-                domain=[('parent_state', '=', 'posted')])
+        return self._get_journal_dashboard_data_batched()[self.id]
 
-            if self.default_account_id:
-                self._cr.execute('''
-                    SELECT COUNT(st_line.id)
-                    FROM account_bank_statement_line st_line
-                    JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
-                    JOIN account_move_line aml ON aml.move_id = st_line_move.id
-                    WHERE st_line_move.journal_id IN %s
-                    AND NOT st_line.is_reconciled
-                    AND st_line_move.to_check IS NOT TRUE
-                    AND st_line_move.state = 'posted'
-                    AND aml.account_id = %s
-                ''', [tuple(self.ids), self.default_account_id.id])
-                number_to_reconcile = self.env.cr.fetchone()[0]
-            else:
-                number_to_reconcile = 0
+    def _get_journal_dashboard_data_batched(self):
+        self.env['account.move'].flush_model()
+        self.env['account.move.line'].flush_model()
+        dashboard_data = {}  # container that will be filled by functions below
+        for journal in self:
+            dashboard_data[journal.id] = {
+                'currency_id': journal.currency_id.id or journal.company_id.currency_id.id,
+                'company_count': len(self.env.companies),
+            }
+        self._fill_bank_cash_dashboard_data(dashboard_data)
+        self._fill_sale_purchase_dashboard_data(dashboard_data)
+        self._fill_general_dashboard_data(dashboard_data)
+        return dashboard_data
 
-            to_check_ids = self.to_check_ids()
-            number_to_check = len(to_check_ids)
-            to_check_balance = sum([r.amount for r in to_check_ids])
-        #TODO need to check if all invoices are in the same currency than the journal!!!!
-        elif self.type in ['sale', 'purchase']:
-            title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
-            self.env['account.move'].flush_model()
+    def _fill_dashboard_data_count(self, dashboard_data, model, name, domain):
+        """Populate the dashboard data with the result of a count.
 
-            (query, query_args) = self._get_open_bills_to_pay_query()
-            self.env.cr.execute(query, query_args)
-            query_results_to_pay = self.env.cr.dictfetchall()
-
-            (query, query_args) = self._get_draft_bills_query()
-            self.env.cr.execute(query, query_args)
-            query_results_drafts = self.env.cr.dictfetchall()
-
-            (query, query_args) = self._get_late_bills_query()
-            self.env.cr.execute(query, query_args)
-            late_query_results = self.env.cr.dictfetchall()
-
-            curr_cache = {}
-            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
-            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
-            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
-            if read:
-                number_to_check = read[0]['__count']
-                to_check_balance = read[0]['amount_total']
-        elif self.type == 'general':
-            read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
-            if read:
-                number_to_check = read[0]['__count']
-                to_check_balance = read[0]['amount_total']
-
-        is_sample_data = self.kanban_dashboard_graph and any(data.get('is_sample_data', False) for data in json.loads(self.kanban_dashboard_graph))
-
-        return {
-            'number_to_check': number_to_check,
-            'to_check_balance': formatLang(self.env, to_check_balance, currency_obj=currency),
-            'number_to_reconcile': number_to_reconcile,
-            'account_balance': formatLang(self.env, currency.round(bank_account_balance), currency_obj=currency),
-            'has_at_least_one_statement': has_at_least_one_statement,
-            'nb_lines_bank_account_balance': nb_lines_bank_account_balance,
-            'outstanding_pay_account_balance': formatLang(self.env, currency.round(outstanding_pay_account_balance), currency_obj=currency),
-            'nb_lines_outstanding_pay_account_balance': nb_lines_outstanding_pay_account_balance,
-            'last_balance': formatLang(self.env, currency.round(last_balance) + 0.0, currency_obj=currency),
-            'number_draft': number_draft,
-            'number_waiting': number_waiting,
-            'number_late': number_late,
-            'sum_draft': formatLang(self.env, currency.round(sum_draft) + 0.0, currency_obj=currency),
-            'sum_waiting': formatLang(self.env, currency.round(sum_waiting) + 0.0, currency_obj=currency),
-            'sum_late': formatLang(self.env, currency.round(sum_late) + 0.0, currency_obj=currency),
-            'currency_id': currency.id,
-            'bank_statements_source': self.bank_statements_source,
-            'title': title,
-            'is_sample_data': is_sample_data,
-            'company_count': len(self.env.companies)
+        :param dashboard_data: a mapping between a journal ids and the data needed to display their
+                               dashboard kanban card.
+        :type dashboard_data: dict[int, dict]
+        :param model: the model on which to perform the count
+        :type model: str
+        :param name: the name of the variable to inject in the dashboard's data
+        :type name: str
+        :param domain: the domain of records to count
+        :type domain: list[tuple]
+        """
+        self.env['account.move'].check_access_rights('read')
+        assert not self.company_id - self.env.companies
+        res = {
+            r['journal_id'][0]: r['journal_id_count']
+            for r in self.env[model].sudo()._read_group(
+                domain=[('journal_id', 'in', self.ids)] + domain,
+                fields=['journal_id'],
+                groupby=['journal_id'],
+            )
         }
+        for journal in self:
+            dashboard_data[journal.id][name] = res.get(journal.id, 0)
+
+    def _fill_bank_cash_dashboard_data(self, dashboard_data):
+        """Populate all bank and cash journal's data dict with relevant information for the kanban card."""
+        bank_cash_journals = self.filtered(lambda journal: journal.type in ('bank', 'cash'))
+        if not bank_cash_journals:
+            return
+        self._cr.execute('''
+            SELECT st_line_move.journal_id,
+                   COUNT(st_line.id)
+              FROM account_bank_statement_line st_line
+              JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
+             WHERE st_line_move.journal_id IN %s
+               AND NOT st_line.is_reconciled
+               AND st_line_move.to_check IS NOT TRUE
+               AND st_line_move.state = 'posted'
+          GROUP BY st_line_move.journal_id
+        ''', [tuple(bank_cash_journals.ids)])
+        number_to_reconcile = {
+            journal_id: count
+            for journal_id, count in self.env.cr.fetchall()
+        }
+        bank_account_balances = bank_cash_journals._get_journal_bank_account_balance_batched(
+            domain=[('parent_state', '=', 'posted')],
+        )
+        outstanding_pay_account_balances = bank_cash_journals._get_journal_outstanding_payments_account_balance_batched(
+            domain=[('parent_state', '=', 'posted')],
+        )
+        to_check = {
+            res['journal_id'][0]: (res['amount'], res['journal_id_count'])
+            for res in self.env['account.bank.statement.line'].read_group(
+                domain=[
+                    ('journal_id', 'in', bank_cash_journals.ids),
+                    ('move_id.to_check', '=', True),
+                    ('move_id.state', '=', 'posted'),
+                ],
+                fields=['amount'],
+                groupby=['journal_id'],
+            )
+        }
+        graph_datas = bank_cash_journals._get_line_graph_data_batched()
+
+        last_statements = bank_cash_journals._get_last_bank_statement_batched(
+            domain=[('move_id.state', '=', 'posted')],
+        )
+
+        for journal in bank_cash_journals:
+            last_statement = last_statements[journal.id]
+            graph_data = graph_datas[journal.id]
+
+            currency = journal.currency_id or journal.company_id.currency_id
+            bank_account_balance, nb_lines_bank_account_balance = bank_account_balances[journal.default_account_id.id]
+            outstanding_pay_account_balance, nb_lines_outstanding_pay_account_balance = outstanding_pay_account_balances[journal.id]
+            to_check_balance, number_to_check = to_check.get(journal.id, (0, 0))
+
+            dashboard_data[journal.id].update({
+                'number_to_check': number_to_check,
+                'to_check_balance': to_check_balance,
+                'number_to_reconcile': number_to_reconcile.get(journal.id, 0),
+                'account_balance': currency.format(bank_account_balance),
+                'has_at_least_one_statement': bool(last_statement),
+                'nb_lines_bank_account_balance': nb_lines_bank_account_balance,
+                'outstanding_pay_account_balance': currency.format(outstanding_pay_account_balance),
+                'nb_lines_outstanding_pay_account_balance': nb_lines_outstanding_pay_account_balance,
+                'last_balance': currency.format(last_statement.balance_end),
+                'bank_statements_source': journal.bank_statements_source,
+                'graph_data': graph_data,
+                'is_sample_data': graph_data and any(data.get('is_sample_data', False) for data in graph_data),
+            })
+
+    def _fill_sale_purchase_dashboard_data(self, dashboard_data):
+        """Populate all sale and purchase journal's data dict with relevant information for the kanban card."""
+        sale_purchase_journals = self.filtered(lambda journal: journal.type in ('sale', 'purchase'))
+        if not sale_purchase_journals:
+            return
+        field_list = [
+            "account_move.journal_id",
+            "(CASE WHEN account_move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * account_move.amount_residual AS amount_total",
+            "account_move.amount_residual_signed AS amount_total_company",
+            "account_move.currency_id AS currency",
+            "account_move.move_type",
+            "account_move.invoice_date",
+            "account_move.company_id",
+        ]
+        self.env.cr.execute(*sale_purchase_journals._get_open_bills_to_pay_query().select(*field_list))
+        query_results_to_pay = group_by_journal(self.env.cr.dictfetchall())
+
+        self.env.cr.execute(*sale_purchase_journals._get_draft_bills_query().select(*field_list))
+        query_results_drafts = group_by_journal(self.env.cr.dictfetchall())
+
+        self.env.cr.execute(*sale_purchase_journals._get_late_bills_query().select(*field_list))
+        late_query_results = group_by_journal(self.env.cr.dictfetchall())
+
+        to_check_vals = {
+            vals['journal_id']: vals
+            for vals in self.env['account.move'].read_group(
+                domain=[('journal_id', 'in', sale_purchase_journals.ids), ('to_check', '=', True)],
+                fields=['amount_total'],
+                groupby='journal_id',
+            )
+        }
+        graph_datas = sale_purchase_journals._get_bar_graph_datas_batched()
+
+        curr_cache = {}
+        sale_purchase_journals._fill_dashboard_data_count(dashboard_data, 'account.move', 'entries_count', [])
+        for journal in sale_purchase_journals:
+            currency = journal.currency_id or journal.company_id.currency_id
+            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay[journal.id], currency, curr_cache=curr_cache)
+            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency, curr_cache=curr_cache)
+            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency, curr_cache=curr_cache)
+            to_check = to_check_vals.get(journal.id, {})
+            graph_data = graph_datas[journal.id]
+            dashboard_data[journal.id].update({
+                'number_to_check': to_check.get('__count', 0),
+                'to_check_balance': to_check.get('amount_total', 0),
+                'title': _('Bills to pay') if journal.type == 'purchase' else _('Invoices owed to you'),
+                'number_draft': number_draft,
+                'number_waiting': number_waiting,
+                'number_late': number_late,
+                'sum_draft': currency.format(sum_draft),
+                'sum_waiting': currency.format(sum_waiting),
+                'sum_late': currency.format(sum_late),
+                'has_sequence_holes': journal.has_sequence_holes,
+                'graph_data': graph_data,
+                'is_sample_data': graph_data and any(data.get('is_sample_data', False) for data in graph_data),
+            })
+
+    def _fill_general_dashboard_data(self, dashboard_data):
+        """Populate all miscelaneous journal's data dict with relevant information for the kanban card."""
+        general_journals = self.filtered(lambda journal: journal.type == 'general')
+        if not general_journals:
+            return
+        to_check_vals = {
+            vals['journal_id']: vals
+            for vals in self.env['account.move'].read_group(
+                domain=[('journal_id', 'in', general_journals.ids), ('to_check', '=', True)],
+                fields=['amount_total'],
+                groupby='journal_id',
+                lazy=False,
+            )
+        }
+        for journal in general_journals:
+            vals = to_check_vals.get('journal_id', {})
+            dashboard_data[journal.id].update({
+                'number_to_check': vals.get('__count', 0),
+                'to_check_balance': vals.get('amount_total', 0),
+            })
 
     def _get_open_bills_to_pay_query(self):
-        """
-        Returns a tuple containing the SQL query used to gather the open bills
-        data as its first element, and the arguments dictionary to use to run
-        it as its second.
-        """
-        return ('''
-            SELECT
-                (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_residual AS amount_total,
-                move.currency_id AS currency,
-                move.move_type,
-                move.invoice_date,
-                move.company_id
-            FROM account_move move
-            WHERE move.journal_id = %(journal_id)s
-            AND move.state = 'posted'
-            AND move.payment_state in ('not_paid', 'partial')
-            AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
-        ''', {'journal_id': self.id})
+        return self.env['account.move']._where_calc([
+            ('journal_id', 'in', self.ids),
+            ('state', '=', 'posted'),
+            ('payment_state', 'in', ('not_paid', 'partial')),
+            ('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
+        ])
 
     def _get_draft_bills_query(self):
-        """
-        Returns a tuple containing as its first element the SQL query used to
-        gather the bills in draft state data, and the arguments
-        dictionary to use to run it as its second.
-        """
-        return ('''
-            SELECT
-                (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_total AS amount_total,
-                move.currency_id AS currency,
-                move.move_type,
-                move.invoice_date,
-                move.company_id
-            FROM account_move move
-            WHERE move.journal_id = %(journal_id)s
-            AND move.state = 'draft'
-            AND move.payment_state in ('not_paid', 'partial')
-            AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
-        ''', {'journal_id': self.id})
+        return self.env['account.move']._where_calc([
+            ('journal_id', 'in', self.ids),
+            ('state', '=', 'draft'),
+            ('payment_state', 'in', ('not_paid', 'partial')),
+            ('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
+        ])
 
     def _get_late_bills_query(self):
-        return """
-            SELECT
-                (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
-                currency_id AS currency,
-                move_type,
-                invoice_date,
-                company_id
-            FROM account_move move
-            WHERE journal_id = %(journal_id)s
-            AND invoice_date_due < %(today)s
-            AND state = 'posted'
-            AND payment_state in ('not_paid', 'partial')
-            AND move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
-        """, {'journal_id': self.id, 'today': fields.Date.context_today(self)}
+        return self.env['account.move']._where_calc([
+            ('journal_id', 'in', self.ids),
+            ('invoice_date_due', '<', fields.Date.context_today(self)),
+            ('state', '=', 'posted'),
+            ('payment_state', 'in', ('not_paid', 'partial')),
+            ('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
+        ])
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
         """ Loops on a query result to count the total number of invoices and sum
         their amount_total field (expressed in the given target currency).
         amount_total must be signed !
         """
-        rslt_count = 0
-        rslt_sum = 0.0
         # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
         # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
         # calls of the method.
         curr_cache = {} if curr_cache is None else curr_cache
+        total_amount = 0
         for result in results_dict:
-            cur = self.env['res.currency'].browse(result.get('currency'))
+            document_currency = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
-            rslt_count += 1
             date = result.get('invoice_date') or fields.Date.context_today(self)
 
-            amount = result.get('amount_total', 0) or 0
-            if cur != target_currency:
-                key = (cur, target_currency, company, date)
-                # Using setdefault will call _get_conversion_rate, so we explicitly check the
-                # existence of the key in the cache instead.
+            if document_currency == target_currency:
+                total_amount += result.get('amount_total') or 0
+            elif company.currency_id == target_currency:
+                total_amount += result.get('amount_total_company') or 0
+            else:
+                key = (document_currency, target_currency, company, date)
                 if key not in curr_cache:
                     curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
-                amount *= curr_cache[key]
-            rslt_sum += target_currency.round(amount)
-        return (rslt_count, rslt_sum)
+                total_amount += (result.get('amount_total') or 0) * curr_cache[key]
+        return (len(results_dict), target_currency.round(total_amount))
 
     def _get_move_action_context(self):
         ctx = self._context.copy()
