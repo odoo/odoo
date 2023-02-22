@@ -172,3 +172,19 @@ PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('0.0');
 
 registry.category("web_tour.tours").add('PaymentScreenRoundingHalfUp', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.exec.addOrderline('Product Test', '1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('1.95');
+PaymentScreen.exec.pay('Cash', '5');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('3.05');
+PaymentScreen.check.totalDueIs('1.95');
+Chrome.do.clickTicketButton();
+
+registry.category("web_tour.tours").add('PaymentScreenTotalDueWithOverPayment', { test: true, url: '/pos/ui', steps: getSteps() });
