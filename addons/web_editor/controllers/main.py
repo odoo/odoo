@@ -28,7 +28,7 @@ from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_M
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 
-diverging_history_regex = 'data-last-history-steps="([0-9,]*?)"'
+diverging_history_regex = 'data-last-history-steps="([0-9,]+)"'
 
 def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
     server_history_matches = re.search(diverging_history_regex, record[html_field_name])
