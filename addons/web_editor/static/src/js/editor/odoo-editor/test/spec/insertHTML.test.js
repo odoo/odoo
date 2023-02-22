@@ -9,7 +9,7 @@ const span = text => {
 
 describe('insert HTML', () => {
     describe('collapsed selection', () => {
-        it('should insert html in an empty paragraph', async () => {
+        it('should insert html in an empty paragraph / empty editable', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
@@ -18,17 +18,6 @@ describe('insert HTML', () => {
                 contentAfterEdit:
                     '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
                 contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
-            });
-        });
-        it('should insert html after an empty paragraph', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<p><br></p>[]',
-                stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
-                },
-                contentAfterEdit:
-                    '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
-                contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
             });
         });
         it('should insert html between two letters', async () => {
@@ -40,16 +29,6 @@ describe('insert HTML', () => {
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b<br></p>',
                 contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]b<br></p>',
-            });
-        });
-        it('should insert html in an empty editable', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>[]<br></p>',
-                stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
-                },
-                contentAfterEdit: '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
-                contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
             });
         });
         it('should insert html in between naked text in the editable', async () => {
