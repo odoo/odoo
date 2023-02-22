@@ -53,7 +53,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/tests/new/**/*',
-            'website_livechat/static/tests/qunit_suite_tests/**/*.js',
         ],
         'im_livechat.external_lib': [
             'website_livechat/static/src/external_lib/livechat_button.js',
