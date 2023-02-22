@@ -388,6 +388,7 @@ export {
     afterNextRender,
     dragenterFiles,
     dropFiles,
+    insertText,
     isScrolledToBottom,
     nextAnimationFrame,
     nextTick,
