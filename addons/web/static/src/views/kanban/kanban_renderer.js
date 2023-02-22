@@ -73,7 +73,7 @@ export class KanbanRenderer extends Component {
                 enable: () => this.canResequenceRecords,
                 // Params
                 ref: this.rootRef,
-                elements: ".o_record_draggable",
+                elements: ".o_draggable",
                 ignore: ".dropdown",
                 groups: () => this.props.list.isGrouped && ".o_kanban_group",
                 connectGroups: () => this.canMoveRecords,
