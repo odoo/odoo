@@ -222,7 +222,10 @@ class ReceptionReport(models.AbstractModel):
         new_move_vals = []
         for out, qty_to_link in zip(outs, qtys):
             if float_compare(out.product_qty, qty_to_link, precision_rounding=out.product_id.uom_id.rounding) == 1:
-                new_move_vals += out._split(out.product_qty - qty_to_link)
+                new_move = out._split(out.product_qty - qty_to_link)
+                if new_move:
+                    new_move[0]['reservation_date'] = out.reservation_date
+                new_move_vals += new_move
                 out_to_new_out[out.id] = self.env['stock.move']
         new_outs = self.env['stock.move'].create(new_move_vals)
         # don't do action confirm to avoid creating additional unintentional reservations
@@ -301,6 +304,7 @@ class ReceptionReport(models.AbstractModel):
             new_move_vals = out._split(out.product_qty - total_still_linked)
             if new_move_vals:
                 new_move_vals[0]['procure_method'] = 'make_to_order'
+                new_move_vals[0]['reservation_date'] = out.reservation_date
                 new_out = self.env['stock.move'].create(new_move_vals)
                 # don't do action confirm to avoid creating additional unintentional reservations
                 new_out.write({'state': 'confirmed'})
