@@ -65,16 +65,26 @@ class ResConfigSettings(models.TransientModel):
     pos_self_order_phone_mode = fields.Boolean(related='pos_config_id.self_order_phone_mode', readonly=False)
     @api.onchange('pos_self_order_kiosk_mode','pos_self_order_view_mode', 'pos_self_order_phone_mode')
     def _compute_module_pos_self_order(self):
-        self.ensure_one()
-        self.env["pos.config"].search([]).module_pos_self_order = self.pos_self_order_kiosk_mode or self.pos_self_order_view_mode or self.pos_self_order_phone_mode
-        if self.pos_self_order_kiosk_mode :
-            self.pos_self_order_phone_mode = False
-            self.pos_self_order_view_mode = False
-        elif self.pos_self_order_view_mode:
-            self.pos_self_order_kiosk_mode = False
-        elif self.pos_self_order_phone_mode:
-            self.pos_self_order_view_mode = True
-            self.pos_self_order_kiosk_mode = False
+        # self.ensure_one()
+        # self.env["pos.config"].search([]).module_pos_self_order = self.pos_self_order_kiosk_mode or self.pos_self_order_view_mode or self.pos_self_order_phone_mode
+        # if self.pos_self_order_kiosk_mode :
+        #     self.pos_self_order_phone_mode = False
+        #     self.pos_self_order_view_mode = False
+        # elif self.pos_self_order_view_mode:
+        #     self.pos_self_order_kiosk_mode = False
+        # elif self.pos_self_order_phone_mode:
+        #     self.pos_self_order_view_mode = True
+        #     self.pos_self_order_kiosk_mode = False
+        for record in self:
+            record.env["pos.config"].search([]).module_pos_record_order = record.pos_record_order_kiosk_mode or record.pos_record_order_view_mode or record.pos_record_order_phone_mode
+            if record.pos_record_order_kiosk_mode :
+                record.pos_record_order_phone_mode = False
+                record.pos_record_order_view_mode = False
+            elif record.pos_record_order_view_mode:
+                record.pos_record_order_kiosk_mode = False
+            elif record.pos_record_order_phone_mode:
+                record.pos_record_order_view_mode = True
+                record.pos_record_order_kiosk_mode = False
     
     
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
