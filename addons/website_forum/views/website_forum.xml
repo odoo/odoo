@@ -279,7 +279,7 @@
         <div>
             <span class="mx-1 d-none d-sm-inline">&amp;nbsp;|</span>
             <a t-if="question.child_count" class="fw-bold" t-attf-href="/forum/#{ slug(question.forum_id) }/#{ slug(question) }">
-                <t t-esc="question.child_count"/>
+                <t t-esc="question.child_count"/>&amp;nbsp;
                 <t t-if="question.child_count == 1">Answer</t>
                 <t t-else="">Answers</t>
             </a>
@@ -348,8 +348,8 @@
             </t>
             <t t-if="len(answer.website_message_ids)&gt;0">
                 (<t t-esc="len(answer.website_message_ids)"/>
-                <t t-if="len(answer.website_message_ids)&gt;1"> Comments</t>
-                <t t-if="len(answer.website_message_ids)&lt;=1"> Comment</t>)
+                <t t-if="len(answer.website_message_ids)&gt;1">Comments</t>
+                <t t-if="len(answer.website_message_ids)&lt;=1">Comment</t>)
             </t>
         </div>
         <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
@@ -1179,7 +1179,7 @@
 
                 <section t-if="question.child_count" t-attf-class="#{question.website_message_ids and 'mt-5' or 'mt-4'}">
                     <h5>
-                        <t t-esc="question.child_count"/>
+                        <t t-esc="question.child_count"/>&amp;nbsp;
                         <t t-if="question.child_count == 1">Answer</t>
                         <t t-else="">Answers</t>
                     </h5>
@@ -1456,7 +1456,7 @@
     <div class="o_wforum_post_comments_container ms-2 ms-md-5">
         <div t-if="len(object.website_message_ids)" class="o_wforum_comments_count_header mb-2">
             <div class="text-muted fw-bold small">
-                <span class="o_wforum_comments_count" t-esc="len(object.website_message_ids)"/>
+                <span class="o_wforum_comments_count" t-esc="len(object.website_message_ids)"/>&amp;nbsp;
                 <t t-if="len(object.website_message_ids) == 1">Comment</t>
                 <t t-else="">Comments</t>
             </div>
