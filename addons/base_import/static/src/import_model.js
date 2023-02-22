@@ -164,7 +164,7 @@ export class BaseImportModel {
         const startRow = this.importOptions.skip;
         const importRes = {
             ids: [],
-            fields: this.columns.map((e) => Boolean(e.fieldInfo) && e.fieldInfo.name),
+            fields: this.columns.map((e) => Boolean(e.fieldInfo) && e.fieldInfo.fieldPath),
             columns: this.columns.map((e) => e.name.trim().toLowerCase()),
             hasError: false,
         };
