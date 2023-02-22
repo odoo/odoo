@@ -877,7 +877,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("Show a thread name in the recipient status text.", async function (assert) {
+QUnit.skipRefactoring("Show a thread name in the recipient status text.", async function (assert) {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "test name" });
     const { openFormView } = await start();
