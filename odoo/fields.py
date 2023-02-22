@@ -3364,7 +3364,7 @@ class Properties(Field):
         convert_to_record / convert_to_read.
         """
         definition_records_map = {
-            record: record[self.definition_record][self.definition_record_field]
+            record: record[self.definition_record].sudo()[self.definition_record_field]
             for record in records
         }
 
