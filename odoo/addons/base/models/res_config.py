@@ -541,7 +541,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             else:
                 value = self[name]
             if name not in current_settings or value != current_settings[name]:
-                IrDefault.set(model, field, value)
+                IrDefault.set(model, field, value, company_id=self.company_id.id)
 
         # group fields: modify group / implied groups
         for name, groups, implied_group in sorted(classified['group'], key=lambda k: self[k[0]]):
