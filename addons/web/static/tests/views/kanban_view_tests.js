@@ -5423,7 +5423,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
             assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
             assert.deepEqual(getCardTexts(), ["yop", "gnap", "blip", "blip"]);
-            assert.containsNone(target, ".o_record_draggable");
+            assert.containsNone(target, ".o_draggable");
 
             // attempt to drag&drop a record in another column
             await dragAndDrop(
