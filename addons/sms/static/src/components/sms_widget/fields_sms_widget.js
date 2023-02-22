@@ -20,10 +20,10 @@ export class SmsWidget extends EmojisTextField {
     }
 
     get encoding() {
-        return this._extractEncoding(this.props.value || '');
+        return this._extractEncoding(this.props.record.data[this.props.name] || '');
     }
     get nbrChar() {
-        const content = this.props.value || '';
+        const content = this.props.record.data[this.props.name] || '';
         return content.length + (content.match(/\n/g) || []).length;
     }
     get nbrSMS() {
@@ -77,7 +77,7 @@ export class SmsWidget extends EmojisTextField {
      * @private
      */
     async onBlur() {
-        var content = this.props.value || '';
+        var content = this.props.record.data[this.props.name] || '';
         if( !content.trim().length && content.length > 0) {
             this.notification.add(
                 this.env._t("Your SMS Text Message must include at least one non-whitespace character"),

@@ -24,7 +24,6 @@ import {
 import { toInline } from 'web_editor.convertInline';
 import { loadJS } from '@web/core/assets';
 import {
-    markup,
     Component,
     useRef,
     useSubEnv,
@@ -152,7 +151,7 @@ export class HtmlField extends Component {
                 } else {
                     const codeViewEl = this._getCodeViewEl();
                     if (codeViewEl) {
-                        codeViewEl.value = this.props.value;
+                        codeViewEl.value = this.props.record.data[this.props.name];
                     }
                 }
             })();
@@ -174,7 +173,7 @@ export class HtmlField extends Component {
         return this.props.record.fields[this.props.name].translate;
     }
     get markupValue () {
-        return markup(this.props.value);
+        return this.props.record.data[this.props.name];
     }
     get showIframe () {
         return this.props.readonly && this.props.cssReadonlyAssetId;
@@ -220,7 +219,7 @@ export class HtmlField extends Component {
         }
 
         return {
-            value: this.props.value,
+            value: this.props.record.data[this.props.name],
             autostart: false,
             onAttachmentChange: this._onAttachmentChange.bind(this),
             onWysiwygBlur: this._onWysiwygBlur.bind(this),
@@ -288,7 +287,7 @@ export class HtmlField extends Component {
     }
     async updateValue() {
         const value = this.getEditingValue();
-        const lastValue = (this.props.value || "").toString();
+        const lastValue = (this.props.record.data[this.props.name] || "").toString();
         if (
             value !== null &&
             !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
@@ -391,7 +390,7 @@ export class HtmlField extends Component {
         }
     }
     _isDirty() {
-        const strippedPropValue = stripHistoryIds(String(this.props.value));
+        const strippedPropValue = stripHistoryIds(String(this.props.record.data[this.props.name]));
         const strippedEditingValue = stripHistoryIds(this.getEditingValue());
         return !this.props.readonly && strippedPropValue !== strippedEditingValue;
     }
@@ -401,13 +400,13 @@ export class HtmlField extends Component {
     async _setupReadonlyIframe() {
         const iframeTarget = this.iframeRef.el.contentDocument.querySelector('#iframe_target');
         if (this.iframePromise && iframeTarget) {
-            if (iframeTarget.innerHTML !== this.props.value) {
-                iframeTarget.innerHTML = this.props.value;
+            if (iframeTarget.innerHTML !== this.props.record.data[this.props.name]) {
+                iframeTarget.innerHTML = this.props.record.data[this.props.name];
             }
             return this.iframePromise;
         }
         this.iframePromise = new Promise((resolve) => {
-            let value = this.props.value;
+            let value = this.props.record.data[this.props.name];
             if (this.props.wrapper) {
                 value = this._wrap(value);
             }

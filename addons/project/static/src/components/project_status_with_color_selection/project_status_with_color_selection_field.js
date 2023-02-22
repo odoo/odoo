@@ -13,7 +13,7 @@ export class ProjectStatusWithColorSelectionField extends SelectionField {
     }
 
     get currentValue() {
-        return this.props.value || this.options[0][0];
+        return this.props.record.data[this.props.name] || this.options[0][0];
     }
 
     statusColor(value) {

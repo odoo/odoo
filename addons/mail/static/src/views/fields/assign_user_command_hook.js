@@ -21,10 +21,10 @@ export function useAssignUserCommand() {
     }
 
     const getCurrentIds = () => {
-        if (type === "many2one" && component.props.value) {
-            return [component.props.value[0]];
+        if (type === "many2one" && component.props.record.data[component.props.name]) {
+            return [component.props.record.data[component.props.name][0]];
         } else if (type === "many2many") {
-            return component.props.value.currentIds;
+            return component.props.record.data[component.props.name].currentIds;
         }
         return [];
     };

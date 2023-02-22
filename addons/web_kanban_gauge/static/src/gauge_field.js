@@ -30,11 +30,14 @@ export class GaugeField extends Component {
     }
 
     get formattedValue() {
-        return formatFloat(this.props.value, { humanReadable: true, decimals: 1 });
+        return formatFloat(this.props.record.data[this.props.name], {
+            humanReadable: true,
+            decimals: 1,
+        });
     }
 
     renderChart() {
-        const gaugeValue = this.props.value;
+        const gaugeValue = this.props.record.data[this.props.name];
         let maxValue = Math.max(gaugeValue, this.props.record.data[this.props.maxValueField]);
         let maxLabel = maxValue;
         if (gaugeValue === 0 && maxValue === 0) {

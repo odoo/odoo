@@ -35,7 +35,10 @@ export class CharField extends Component {
                 dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField)
             );
         }
-        useInputField({ getValue: () => this.props.value || "", parse: (v) => this.parse(v) });
+        useInputField({
+            getValue: () => this.props.record.data[this.props.name] || "",
+            parse: (v) => this.parse(v),
+        });
     }
 
     get shouldTrim() {
@@ -48,7 +51,9 @@ export class CharField extends Component {
         return this.props.record.fields[this.props.name].translate;
     }
     get formattedValue() {
-        return formatChar(this.props.value, { isPassword: this.props.isPassword });
+        return formatChar(this.props.record.data[this.props.name], {
+            isPassword: this.props.isPassword,
+        });
     }
 
     parse(value) {

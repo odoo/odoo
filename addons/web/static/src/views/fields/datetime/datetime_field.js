@@ -31,11 +31,11 @@ export class DateTimeField extends Component {
     }
 
     get formattedValue() {
-        return formatDateTime(this.props.value);
+        return formatDateTime(this.props.record.data[this.props.name]);
     }
 
     onDateTimeChanged(date) {
-        if (!areDateEquals(this.props.value || "", date)) {
+        if (!areDateEquals(this.props.record.data[this.props.name] || "", date)) {
             this.props.record.update({ [this.props.name]: date });
         }
     }

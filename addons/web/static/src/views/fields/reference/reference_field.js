@@ -28,14 +28,17 @@ export class ReferenceField extends Component {
             resModel: this.relation,
         });
 
+        this.currentValue = this.getValue(this.props);
+
         onWillUpdateProps((nextProps) => {
             if (
-                valuesEqual(this.getValue(this.props) || {}, this.getValue(nextProps) || {}) &&
+                valuesEqual(this.currentValue || {}, this.getValue(nextProps) || {}) &&
                 this.state.resModel &&
                 this.getRelation(nextProps) !== this.state.resModel
             ) {
                 nextProps.record.update({ [this.props.name]: false });
             }
+            this.currentValue = this.getValue(this.props);
         });
     }
 
@@ -54,7 +57,7 @@ export class ReferenceField extends Component {
                 displayName: pdata.data.display_name,
             };
         } else {
-            return p.value;
+            return p.record.data[p.name];
         }
     }
     get m2oProps() {

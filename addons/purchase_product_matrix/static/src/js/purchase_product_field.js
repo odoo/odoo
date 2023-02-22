@@ -13,12 +13,13 @@ export class PurchaseOrderLineProductField extends Many2OneField {
     setup() {
         super.setup();
         this.dialog = useService("dialog");
+        this.currentValue = this.value;
 
         onWillUpdateProps(async (nextProps) => {
-            if (nextProps.record.mode === 'edit' && nextProps.value) {
+            if (nextProps.record.mode === 'edit' && nextProps.record.data[nextProps.name]) {
                 if (
-                    !this.props.value ||
-                    this.props.value[0] != nextProps.value[0]
+                    !this.currentValue ||
+                    this.currentValue[0] != nextProps.record.data[nextProps.name][0]
                 ) {
                     // Field was updated if line was open in edit mode,
                     //      field is not emptied,
@@ -27,6 +28,7 @@ export class PurchaseOrderLineProductField extends Many2OneField {
                     this._onProductTemplateUpdate();
                 }
             }
+            this.currentValue = nextProps.record.data[nextProps.name];
         });
     }
 

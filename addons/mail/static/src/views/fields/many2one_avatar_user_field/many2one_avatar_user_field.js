@@ -24,7 +24,7 @@ export class Many2OneAvatarUserField extends Many2OneAvatarField {
     }
 
     onClickAvatar() {
-        this.openChat(this.props.value[0]);
+        this.openChat(this.props.record.data[this.props.name][0]);
     }
 }
 Many2OneAvatarUserField.template = "mail.Many2OneAvatarUserField";

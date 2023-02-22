@@ -42,9 +42,11 @@ export class RadioField extends Component {
     get value() {
         switch (this.props.record.fields[this.props.name].type) {
             case "selection":
-                return this.props.value;
+                return this.props.record.data[this.props.name];
             case "many2one":
-                return Array.isArray(this.props.value) ? this.props.value[0] : this.props.value;
+                return Array.isArray(this.props.record.data[this.props.name])
+                    ? this.props.record.data[this.props.name][0]
+                    : this.props.record.data[this.props.name];
             default:
                 return null;
         }

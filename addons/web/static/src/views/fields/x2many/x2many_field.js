@@ -103,7 +103,7 @@ export class X2ManyField extends Component {
                 : true;
 
         const selectCreate = useSelectCreate({
-            resModel: this.props.value.resModel,
+            resModel: this.props.record.data[this.props.name].resModel,
             activeActions: this.activeActions,
             onSelected: (resIds) => saveRecord(resIds),
             onCreateEdit: ({ context }) => this._openRecord({ context }),
@@ -112,7 +112,11 @@ export class X2ManyField extends Component {
 
         this.selectCreate = (params) => {
             const p = Object.assign({}, params);
-            p.domain = [...(p.domain || []), "!", ["id", "in", this.props.value.currentIds]];
+            p.domain = [
+                ...(p.domain || []),
+                "!",
+                ["id", "in", this.props.record.data[this.props.name].currentIds],
+            ];
             return selectCreate(p);
         };
     }
@@ -138,7 +142,7 @@ export class X2ManyField extends Component {
     }
 
     get list() {
-        return this.props.value;
+        return this.props.record.data[this.props.name];
     }
 
     get nestedKeyOptionalFieldsData() {

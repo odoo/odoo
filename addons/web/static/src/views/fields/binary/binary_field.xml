@@ -3,7 +3,7 @@
 
     <t t-name="web.BinaryField" owl="1">
         <t t-if="!props.readonly">
-            <t t-if="props.value">
+            <t t-if="props.record.data[props.name]">
                 <div class="w-100 d-inline-flex">
                     <FileUploader
                         acceptedFileExtensions="props.acceptedFileExtensions"
@@ -47,7 +47,7 @@
                 </label>
             </t>
         </t>
-        <t t-elif="props.record.resId and props.value">
+        <t t-elif="props.record.resId and props.record.data[props.name]">
             <a class="o_form_uri" href="#" t-on-click.prevent="onFileDownload">
                 <span class="fa fa-download me-2" />
                 <t t-if="state.fileName" t-esc="state.fileName" />

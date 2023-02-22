@@ -44,7 +44,9 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
     }
 
     async checkEmails(props) {
-        const invalidRecords = props.value.records.filter((record) => !record.data.email);
+        const invalidRecords = props.record.data[props.name].records.filter(
+            (record) => !record.data.email
+        );
         // Remove records with invalid data, open form view to edit those and readd them if they are updated correctly.
         const dialogDefs = [];
         for (const record of invalidRecords) {
@@ -59,8 +61,10 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         this.openedDialogs += invalidRecords.length;
         const invalidRecordIds = invalidRecords.map((rec) => rec.resId);
         if (invalidRecordIds.length) {
-            this.props.value.replaceWith(
-                props.value.currentIds.filter((id) => !invalidRecordIds.includes(id))
+            this.props.record.data[this.props.name].replaceWith(
+                props.record.data[props.name].currentIds.filter(
+                    (id) => !invalidRecordIds.includes(id)
+                )
             );
         }
         return Promise.all(dialogDefs).then(() => {
@@ -68,7 +72,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             if (this.openedDialogs || !this.recordsIdsToAdd.length) {
                 return;
             }
-            props.value.add(this.recordsIdsToAdd, { isM2M: true });
+            props.record.data[props.name].add(this.recordsIdsToAdd, { isM2M: true });
             this.recordsIdsToAdd = [];
         });
     }
@@ -76,10 +80,13 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
     get tags() {
         // Add email to our tags
         const tags = super.tags;
-        const emailByResId = this.props.value.records.reduce((acc, record) => {
-            acc[record.resId] = record.data.email;
-            return acc;
-        }, {});
+        const emailByResId = this.props.record.data[this.props.name].records.reduce(
+            (acc, record) => {
+                acc[record.resId] = record.data.email;
+                return acc;
+            },
+            {}
+        );
         tags.forEach((tag) => (tag.email = emailByResId[tag.resId]));
         return tags;
     }

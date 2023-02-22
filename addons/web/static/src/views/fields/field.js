@@ -140,7 +140,6 @@ export class Field extends Component {
         delete props.type;
 
         return {
-            value: this.props.record.data[this.props.name],
             readonly: !record.isInEdition || readonlyFromModifiers || false,
             ...propsFromNode,
             ...props,

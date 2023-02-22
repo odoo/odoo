@@ -40,7 +40,7 @@ export class StateSelectionField extends Component {
                     {
                         category: "smart_action",
                         hotkey: "alt+" + hotkeys[index],
-                        isAvailable: () => this.props.value !== value,
+                        isAvailable: () => this.props.record.data[this.props.name] !== value,
                     }
                 );
             }
@@ -52,11 +52,14 @@ export class StateSelectionField extends Component {
         });
     }
     get currentValue() {
-        return this.props.value || this.options[0][0];
+        return this.props.record.data[this.props.name] || this.options[0][0];
     }
     get label() {
-        if (this.props.value && this.props.record.data[`legend_${this.props.value[0]}`]) {
-            return this.props.record.data[`legend_${this.props.value[0]}`];
+        if (
+            this.props.record.data[this.props.name] &&
+            this.props.record.data[`legend_${this.props.record.data[this.props.name][0]}`]
+        ) {
+            return this.props.record.data[`legend_${this.props.record.data[this.props.name][0]}`];
         }
         return formatSelection(this.currentValue, { selection: this.options });
     }

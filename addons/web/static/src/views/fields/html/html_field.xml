@@ -3,7 +3,7 @@
 
     <t t-name="web.HtmlField" owl="1">
         <t t-if="props.readonly">
-            <span t-out="props.value or ''" />
+            <span t-out="props.record.data[props.name] or ''" />
         </t>
         <t t-else="" t-call="web.TextField" />
     </t>

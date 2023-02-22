@@ -18,7 +18,7 @@ export class PartnerAutoCompleteCharField extends CharField {
         this.partner_autocomplete = usePartnerAutocomplete();
 
         this.inputRef = useChildRef();
-        useInputField({ getValue: () => this.props.value || "", parse: (v) => this.parse(v), ref: this.inputRef});
+        useInputField({ getValue: () => this.props.record.data[this.props.name] || "", parse: (v) => this.parse(v), ref: this.inputRef});
     }
 
     sanitizeVAT(request) {

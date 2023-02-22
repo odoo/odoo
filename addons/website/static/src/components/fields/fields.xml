@@ -3,7 +3,7 @@
 
 <t t-name="website.PageUrlField" owl="1">
     <t t-if="props.readonly">
-        <a class="o_form_uri o_text_overflow" t-att-href="props.value" t-esc="props.value || ''"/>
+        <a class="o_form_uri o_text_overflow" t-att-href="props.record.data[props.name]" t-esc="props.record.data[props.name] || ''"/>
     </t>
     <t t-else="">
         <div class="d-flex">
@@ -46,7 +46,7 @@
     <div class="d-flex">
         <t t-foreach="values" t-as="option" t-key="option">
             <div class="flex-fill text-center">
-                <img t-attf-class="o_image_radio_option w-50 {{option[0] === props.value ? 'active' : ''}}" t-att-src="option[2]" t-on-click="() => this.onSelectValue(option[0])"/>
+                <img t-attf-class="o_image_radio_option w-50 {{option[0] === props.record.data[props.name] ? 'active' : ''}}" t-att-src="option[2]" t-on-click="() => this.onSelectValue(option[0])"/>
             </div>
         </t>
     </div>
