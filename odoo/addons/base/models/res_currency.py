@@ -188,6 +188,17 @@ class Currency(models.Model):
                         )
         return amount_words
 
+    def format(self, amount):
+        """Return ``amount`` formatted according to ``self``'s rounding rules, symbols and positions.
+
+           Also take care of removing the minus sign when 0.0 is negative
+
+           :param float amount: the amount to round
+           :return: formatted str
+        """
+        self.ensure_one()
+        return tools.format_amount(self.env, amount + 0.0, self)
+
     def round(self, amount):
         """Return ``amount`` rounded  according to ``self``'s rounding rules.
 
