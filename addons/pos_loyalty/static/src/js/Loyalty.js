@@ -80,6 +80,7 @@ const PosLoyaltyGlobalState = (PosGlobalState) =>
         //@override
         async _processData(loadedData) {
             this.couponCache = {};
+            this.partnerId2CouponIds = {};
             await super._processData(loadedData);
             this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
             this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
@@ -198,6 +199,7 @@ const PosLoyaltyGlobalState = (PosGlobalState) =>
             });
             if (Object.keys(this.couponCache).length + result.length > COUPON_CACHE_MAX_SIZE) {
                 this.couponCache = {};
+                this.partnerId2CouponIds = {};
                 // Make sure that the current order has no invalid data.
                 if (this.selectedOrder) {
                     this.selectedOrder.invalidCoupons = true;
@@ -213,6 +215,8 @@ const PosLoyaltyGlobalState = (PosGlobalState) =>
                     dbCoupon.points
                 );
                 this.couponCache[coupon.id] = coupon;
+                this.partnerId2CouponIds[coupon.partner_id] = this.partnerId2CouponIds[coupon.partner_id] || new Set();
+                this.partnerId2CouponIds[coupon.partner_id].add(coupon.id);
                 couponList.push(coupon);
             }
             return couponList;
@@ -240,10 +244,8 @@ const PosLoyaltyGlobalState = (PosGlobalState) =>
         }
         getLoyaltyCards(partner) {
             const loyaltyCards = [];
-            for (const coupon of Object.values(this.couponCache)) {
-                if (coupon.partner_id === partner.id) {
-                    loyaltyCards.push(coupon);
-                }
+            if (this.partnerId2CouponIds[partner.id]) {
+                this.partnerId2CouponIds[partner.id].forEach(couponId => loyaltyCards.push(this.couponCache[couponId]));
             }
             return loyaltyCards;
         }
@@ -261,6 +263,8 @@ const PosLoyaltyGlobalState = (PosGlobalState) =>
                         partner.id,
                         points
                     );
+                    this.partnerId2CouponIds[partner.id] = this.partnerId2CouponIds[partner.id] || new Set();
+                    this.partnerId2CouponIds[partner.id].add(couponId);
                 }
             }
             return result;
