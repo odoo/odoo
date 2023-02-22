@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { parseHTML } from '../../src/utils/utils.js';
+import { parseHTML, setCursorEnd } from '../../src/utils/utils.js';
 import { BasicEditor, testEditor, unformat, insertText, deleteBackward } from '../utils.js';
 
 const span = text => {
@@ -11,7 +11,7 @@ const span = text => {
 
 describe('insert HTML', () => {
     describe('collapsed selection', () => {
-        it('should insert html in an empty paragraph', async () => {
+        it('should insert html in an empty paragraph / empty editable', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
@@ -24,6 +24,7 @@ describe('insert HTML', () => {
         });
         it('should insert html after an empty paragraph', async () => {
             await testEditor(BasicEditor, {
+                // This scenario is only possible with the allowInlineAtRoot option.
                 contentBefore: '<p><br></p>[]',
                 stepFunction: async editor => {
                     await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
@@ -31,7 +32,7 @@ describe('insert HTML', () => {
                 contentAfterEdit:
                     '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
                 contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
-            });
+            }, { allowInlineAtRoot: true });
         });
         it('should insert html between two letters', async () => {
             await testEditor(BasicEditor, {
@@ -42,16 +43,6 @@ describe('insert HTML', () => {
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b<br></p>',
                 contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]b<br></p>',
-            });
-        });
-        it('should insert html in an empty editable', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>[]<br></p>',
-                stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
-                },
-                contentAfterEdit: '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
-                contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
             });
         });
         it('should insert html in between naked text in the editable', async () => {
@@ -103,8 +94,9 @@ describe('insert HTML', () => {
         });
         it('should not unwrap single node if the selection anchorNode is the editable', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>content</p>[]',
+                contentBefore: '<p>content</p>',
                 stepFunction: async editor => {
+                    setCursorEnd(editor.editable, false);
                     await editor.execCommand('insert', parseHTML('<p>def</p>'));
                 },
                 contentAfter: '<p>content</p><p>def[]</p>',
@@ -112,8 +104,9 @@ describe('insert HTML', () => {
         });
         it('should not unwrap nodes if the selection anchorNode is the editable', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>content</p>[]',
+                contentBefore: '<p>content</p>',
                 stepFunction: async editor => {
+                    setCursorEnd(editor.editable, false);
                     await editor.execCommand('insert', parseHTML('<div>abc</div><p>def</p>'));
                 },
                 contentAfter: '<p>content</p><div>abc</div><p>def[]</p>',
