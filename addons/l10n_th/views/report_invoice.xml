@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="debit_note_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//div[@name='address_not_same_as_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'TH'">
+                <span t-esc="o.partner_id.l10n_th_branch_name"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'TH'" >
+                <span t-esc="o.partner_id.l10n_th_branch_name" />
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']//span[@t-field='o.partner_id.vat']" position="after">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'TH'" >
+                <span t-esc="o.partner_id.l10n_th_branch_name" />
+            </t>
+        </xpath>
+        <xpath expr="//h2" position="replace">
+            <h2>
+                <span t-if="o.debit_origin_id">Debit Note</span>
+                <span t-else="" t-field="o.name"/>
+            </h2>
+        </xpath>
+        <xpath expr="//t[@t-call='account.document_tax_totals']" position="replace">
+            <t t-if="o.country_code == 'TH' and o.debit_origin_id">
+                <t t-call="l10n_th.document_tax_totals"/>
+            </t>
+            <t t-else="">
+                <t t-call="account.document_tax_totals"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="document_tax_totals">
+        <tr class="border-black o_subtotal">
+            <td><strong>Original Invoiced Amount (1)</strong></td>
+            <td class="text-end">
+                <span
+                    t-att-class="oe_subtotal_footer_separator"
+                    t-field="o.debit_origin_id.amount_untaxed"
+                />
+            </td>
+        </tr>
+        <tr>
+            <td><span class="text-nowrap">Invoice Amount (2)</span></td>
+            <td class="text-end o_price_total">
+                <span class="text-nowrap" t-field="o.amount_untaxed" />
+            </td>
+        </tr>
+        <t t-set="amount_difference" t-value="o.amount_untaxed - o.debit_origin_id.amount_untaxed"/>
+        <tr>
+            <td><span class="text-nowrap">Difference (2)-(1) = (3)</span></td>
+            <td class="text-end o_price_total">
+                <span
+                    class="text-nowrap" t-esc="amount_difference"
+                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                />
+            </td>
+        </tr>
+        <t t-set="vat_tax_sum" t-value="o._l10n_th_get_debit_note_tax_difference()"/>
+        <tr>
+            <td><span class="text-nowrap">VAT 7% (4)</span></td>
+            <td class="text-end o_price_total">
+                <span class="text-nowrap" t-esc="vat_tax_sum" t-options='{"widget": "monetary", "display_currency": o.currency_id}' />
+            </td>
+        </tr>
+        <tr class="border-black o_total">
+            <td><strong>Total (3)+(4) = (5)</strong></td>
+            <td class="text-end">
+                <span
+                    t-esc="amount_difference + vat_tax_sum"
+                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                />
+            </td>
+        </tr>
+    </template>
+
+    <template id="l10n_th_debit_note">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="l10n_th.debit_note_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_l10n_debit_note" model="ir.actions.report">
+        <field name="name">Debit Note</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_th.l10n_th_debit_note</field>
+        <field name="report_file">l10n_th.l10n_th_debit_note</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
