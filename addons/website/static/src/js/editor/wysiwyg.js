@@ -18,7 +18,9 @@ let socialMediaOptions = require('@website/snippets/s_social_media/options')[Sym
  */
 function toggleDropdown($toggles, show) {
     return Promise.all(_.map($toggles, toggle => {
-        const $toggle = $(toggle);
+        // We must select the element via the iframe so that the event handlers
+        // declared on the iframe are triggered.
+        const $toggle = toggle.ownerDocument.defaultView.$(toggle);
         const shown = toggle.classList.contains('show');
         if (shown === show) {
             return;
