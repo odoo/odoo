@@ -2522,7 +2522,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _getInitialHistoryId: function (value) {
-        const matchId = value.match(/data-last-history-steps="([0-9,]*?)"/);
+        const matchId = value.match(/data-last-history-steps="([0-9,]+)"/);
         return matchId && matchId[1];
     },
     /**
