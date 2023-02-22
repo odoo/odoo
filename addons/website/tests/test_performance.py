@@ -48,8 +48,8 @@ class TestStandardPerformance(UtilPerf):
         self.authenticate('demo', 'demo')
         self.env['res.users'].sudo().browse(2).website_published = True
         url = '/web/image/res.users/2/image_256'
-        self.assertEqual(self._get_url_hot_query(url), 8)
-        self.assertEqual(self._get_url_hot_query(url, cache=False), 8)
+        self.assertEqual(self._get_url_hot_query(url), 6)
+        self.assertEqual(self._get_url_hot_query(url, cache=False), 6)
 
     @mute_logger('odoo.http')
     def test_20_perf_sql_img_controller_bis(self):
