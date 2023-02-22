@@ -194,6 +194,15 @@ class Check {
             },
         ];
     }
+    totalDueIs(amount) {
+        return [
+            {
+                content: `total due is ${amount}`,
+                trigger: `.payment-status-total-due:contains("${amount}")`,
+                run: () => {},
+            },
+        ];
+    }
 }
 
 class Execute {

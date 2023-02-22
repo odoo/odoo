@@ -3711,7 +3711,7 @@ export class Order extends PosModel {
                     (this.get_total_with_tax() < 0 && remaining > 0) ||
                     (this.get_total_with_tax() > 0 && remaining < 0)
                 ) {
-                    rounding_method = rounding_method.endsWith("UP") ? "DOWN" : rounding_method;
+                    rounding_method = rounding_method.endsWith("UP") ? "DOWN" : "UP";
                 }
 
                 remaining *= sign;
