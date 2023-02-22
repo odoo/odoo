@@ -46,12 +46,15 @@ class IrBinary(models.AbstractModel):
         if not record:
             raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")
 
-        if record._name == 'ir.attachment':
-            record = record.validate_access(access_token)
-        else:
-            record.check_access_rights('read')
-            record.check_access_rule('read')
+        record = self._find_record_check_access(record, access_token)
+        return record
 
+    def _find_record_check_access(self, record, access_token):
+        if record._name == 'ir.attachment':
+            return record.validate_access(access_token)
+
+        record.check_access_rights('read')
+        record.check_access_rule('read')
         return record
 
     def _record_to_stream(self, record, field_name):
