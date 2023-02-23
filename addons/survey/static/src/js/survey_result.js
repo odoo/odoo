@@ -410,7 +410,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     selector: '.o_survey_result',
     events: {
         'click .o_survey_results_topbar_clear_filters': '_onClearFiltersClick',
-        'click i.filter-add-answer': '_onFilterAddAnswerClick',
+        'click .filter-add-answer': '_onFilterAddAnswerClick',
         'click i.filter-remove-answer': '_onFilterRemoveAnswerClick',
         'click a.filter-finished-or-not': '_onFilterFinishedOrNotClick',
         'click a.filter-finished': '_onFilterFinishedClick',
@@ -575,24 +575,31 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
 
     /**
      * Returns the modified pathname string for filters after adding or removing an
-     * answer filter (from click event). Filters are formatted as `"rowX,ansX", where
-     * the row is used for matrix-type questions and set to 0 otherwise.
+     * answer filter (from click event).
      * @private
-     * @param {String} filters Existing answer filters, formatted as `rowX,ansX|rowY,ansY...`.
+     * @param {String} filters Existing answer filters, formatted as
+     * `modelX,rowX,ansX|modelY,rowY,ansY...` - row is used for matrix-type questions row id, 0 for others
+     * "model" specifying the model to query depending on the question type we filter on.
+       - 'A': 'survey.question.answer' ids: simple_choice, multiple_choice, matrix
+       - 'L': 'survey.user_input.line' ids: char_box, text_box, numerical_box, date, datetime
      * @param {"add" | "remove"} operation Whether to add or remove the filter.
      * @param {Event} ev Event defining the filter.
      * @returns {String} Updated filters.
      */
     _prepareAnswersFilters(filters, operation, ev) {
-        const cell = $(ev.target);
-        const eventFilter = `${cell.data('rowId') || 0},${cell.data('answerId')}`;
+        const cellDataset = ev.currentTarget.dataset;
+        const filter = `${cellDataset.modelShortKey},${cellDataset.rowId || 0},${cellDataset.recordId}`;
 
         if (operation === 'add') {
-            filters = filters ? filters + `|${eventFilter}` : eventFilter;
+            if (filters) {
+                filters = !filters.split("|").includes(filter) ? filters += `|${filter}` : filters;
+            } else {
+                filters = filter;
+            }
         } else if (operation === 'remove') {
             filters = filters
                 .split("|")
-                .filter(filterItem => filterItem !== eventFilter)
+                .filter(filterItem => filterItem !== filter)
                 .join("|");
         } else {
             throw new Error('`operation` parameter for `_prepareAnswersFilters` must be either "add" or "remove".')

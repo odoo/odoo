@@ -707,6 +707,14 @@ class SurveyQuestionAnswer(models.Model):
             if not bool(label.question_id) != bool(label.matrix_question_id):
                 raise ValidationError(_("A label must be attached to only one question."))
 
+    def _get_answer_matching_domain(self, row_id=False):
+        self.ensure_one()
+        if self.question_type == "matrix":
+            return ['&', '&', ('question_id', '=', self.question_id.id), ('matrix_row_id', '=', row_id), ('suggested_answer_id', '=', self.id)]
+        elif self.question_type in ('multiple_choice', 'simple_choice'):
+            return ['&', ('question_id', '=', self.question_id.id), ('suggested_answer_id', '=', self.id)]
+        return []
+
     def unlink(self):
         """ Makes sure no question is left depending on the answer we're deleting."""
         depending_questions = self.env['survey.question'].search([('triggering_answer_id', 'in', self.ids)])
