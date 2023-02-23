@@ -11,15 +11,17 @@ from odoo.tests import common
 
 
 class SurveyCase(common.TransactionCase):
-    def setUp(self):
-        super(SurveyCase, self).setUp()
+
+    @classmethod
+    def setUpClass(cls):
+        super(SurveyCase, cls).setUpClass()
 
         """ Some custom stuff to make the matching between questions and answers
           :param dict _type_match: dict
             key: question type
             value: (answer type, answer field_name)
         """
-        self._type_match = {
+        cls._type_match = {
             'text_box': ('text_box', 'value_text_box'),
             'char_box': ('char_box', 'value_char_box'),
             'numerical_box': ('numerical_box', 'value_numerical_box'),
@@ -314,3 +316,76 @@ class TestSurveyCommon(SurveyCase):
             'sequence': 3,
             'question_type': 'numerical_box',
         })
+
+
+class TestSurveyResultsCommon(SurveyCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestSurveyResultsCommon, cls).setUpClass()
+        cls.survey_manager = mail_new_test_user(
+            cls.env, name='Gustave Doré', login='survey_manager', email='survey.manager@example.com',
+            groups='survey.group_survey_manager,base.group_user'
+        )
+
+        # Create survey with questions
+        cls.survey = cls.env['survey.survey'].create({
+            'title': 'Test Survey Results',
+            'questions_layout': 'one_page'
+        })
+        cls.question_char_box = cls._add_question(
+            cls, None, 'What is your name', 'char_box', survey_id=cls.survey.id, sequence='1')
+        cls.question_numerical_box = cls._add_question(
+            cls, None, 'What is your age', 'numerical_box', survey_id=cls.survey.id, sequence='2')
+        cls.question_sc = cls._add_question(
+            cls, None, 'Are you a cat or a dog person', 'simple_choice', survey_id=cls.survey.id,
+            sequence='3', labels=[{'value': 'Cat'},
+                                    {'value': 'Dog'}])
+        cls.question_mc = cls._add_question(
+            cls, None, 'What do you like most in our tarte al djotte', 'multiple_choice', survey_id=cls.survey.id,
+            sequence='4', labels=[{'value': 'The gras'},
+                                    {'value': 'The bette'},
+                                    {'value': 'The tout'},
+                                    {'value': 'The regime is fucked up'}])
+        cls.question_mx1 = cls._add_question(
+            cls, None, 'When do you harvest those fruits', 'matrix', survey_id=cls.survey.id, sequence='5',
+            labels=[{'value': 'Spring'}, {'value': 'Summer'}],
+            labels_2=[{'value': 'Apples'},
+                        {'value': 'Strawberries'}])
+        cls.question_mx2 = cls._add_question(
+            cls, None, 'How often should you water those plants', 'matrix', survey_id=cls.survey.id, sequence='6',
+            labels=[{'value': 'Once a month'}, {'value': 'Once a week'}],
+            labels_2=[{'value': 'Cactus'},
+                        {'value': 'Ficus'}])
+
+        # Question answers ids
+        [cls.cat_id, cls.dog_id] = cls.question_sc.suggested_answer_ids.ids
+        [cls.gras_id, cls.bette_id, _, _] = cls.question_mc.suggested_answer_ids.ids
+        [cls.apples_row_id, cls.strawberries_row_id] = cls.question_mx1.matrix_row_ids.ids
+        [cls.spring_id, cls.summer_id] = cls.question_mx1.suggested_answer_ids.ids
+        [cls.cactus_row_id, cls.ficus_row_id] = cls.question_mx2.matrix_row_ids.ids
+        [cls.once_a_month_id, cls.once_a_week_id] = cls.question_mx2.suggested_answer_ids.ids
+
+        # Populate survey with answers
+        cls.user_input_1 = cls._add_answer(cls, cls.survey, cls.survey_manager.partner_id)
+        cls.answer_lukas = cls._add_answer_line(cls, cls.question_char_box, cls.user_input_1, 'Lukas')
+        cls.answer_24 = cls._add_answer_line(cls, cls.question_numerical_box, cls.user_input_1, 24)
+        cls.answer_cat = cls._add_answer_line(cls, cls.question_sc, cls.user_input_1, cls.cat_id)
+        cls._add_answer_line(cls, cls.question_mc, cls.user_input_1, cls.gras_id)
+        cls._add_answer_line(cls, cls.question_mx1, cls.user_input_1, cls.summer_id, **{'answer_value_row': cls.apples_row_id})
+        cls._add_answer_line(cls, cls.question_mx1, cls.user_input_1, cls.spring_id, **{'answer_value_row': cls.strawberries_row_id})
+        cls._add_answer_line(cls, cls.question_mx2, cls.user_input_1, cls.once_a_month_id, **{'answer_value_row': cls.cactus_row_id})
+        cls._add_answer_line(cls, cls.question_mx2, cls.user_input_1, cls.once_a_week_id, **{'answer_value_row': cls.ficus_row_id})
+        cls.user_input_1.state = 'done'
+
+        cls.user_input_2 = cls._add_answer(cls, cls.survey, cls.survey_manager.partner_id)
+        cls.answer_pauline = cls._add_answer_line(cls, cls.question_char_box, cls.user_input_2, 'Pauline')
+        cls._add_answer_line(cls, cls.question_numerical_box, cls.user_input_2, 24)
+        cls.answer_dog = cls._add_answer_line(cls, cls.question_sc, cls.user_input_2, cls.dog_id)
+        cls._add_answer_line(cls, cls.question_mc, cls.user_input_2, cls.gras_id)
+        cls._add_answer_line(cls, cls.question_mc, cls.user_input_2, cls.bette_id)
+        cls._add_answer_line(cls, cls.question_mx1, cls.user_input_2, cls.spring_id, **{'answer_value_row': cls.apples_row_id})
+        cls._add_answer_line(cls, cls.question_mx1, cls.user_input_2, cls.spring_id, **{'answer_value_row': cls.strawberries_row_id})
+        cls._add_answer_line(cls, cls.question_mx2, cls.user_input_2, cls.once_a_month_id, **{'answer_value_row': cls.cactus_row_id})
+        cls._add_answer_line(cls, cls.question_mx2, cls.user_input_2, cls.once_a_month_id, **{'answer_value_row': cls.ficus_row_id})
+        cls.user_input_2.state = 'done'

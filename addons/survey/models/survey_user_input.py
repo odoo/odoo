@@ -706,6 +706,27 @@ class SurveyUserInputLine(models.Model):
             res = super(SurveyUserInputLine, line).write(vals_copy) and res
         return res
 
+    def _get_answer_matching_domain(self):
+        self.ensure_one()
+        if self.answer_type in ('char_box', 'text_box', 'numerical_box', 'date', 'datetime'):
+            value_field = {
+                'char_box': 'value_char_box',
+                'text_box': 'value_text_box',
+                'numerical_box': 'value_numerical_box',
+                'date': 'value_date',
+                'datetime': 'value_datetime',
+            }
+            operators = {
+                'char_box': 'ilike',
+                'text_box': 'ilike',
+                'numerical_box': '=',
+                'date': '=',
+                'datetime': '=',
+            }
+            return ['&', ('question_id', '=', self.question_id.id), (value_field[self.answer_type], operators[self.answer_type], self._get_answer_value())]
+        elif self.answer_type == 'suggestion':
+            return self.suggested_answer_id._get_answer_matching_domain(self.matrix_row_id.id if self.matrix_row_id else False)
+
     @api.model
     def _get_answer_score_values(self, vals, compute_speed_score=True):
         """ Get values for: answer_is_correct and associated answer_score.
@@ -782,3 +803,18 @@ class SurveyUserInputLine(models.Model):
             'answer_is_correct': answer_is_correct,
             'answer_score': answer_score
         }
+
+    def _get_answer_value(self):
+        self.ensure_one()
+        if self.answer_type == 'char_box':
+            return self.value_char_box
+        elif self.answer_type == 'text_box':
+            return self.value_text_box
+        elif self.answer_type == 'numerical_box':
+            return self.value_numerical_box
+        elif self.answer_type == 'date':
+            return self.value_date
+        elif self.answer_type == 'datetime':
+            return self.value_datetime
+        elif self.answer_type == 'suggestion':
+            return self.suggested_answer_id.value

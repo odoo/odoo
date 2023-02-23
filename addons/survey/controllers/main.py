@@ -5,6 +5,7 @@ import json
 import logging
 import werkzeug
 
+from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -712,14 +713,8 @@ class Survey(http.Controller):
             ('Content-Disposition', report_content_disposition),
         ])
 
-    def _get_user_input_domain(self, survey, line_filter_domain, **post):
+    def _get_results_page_user_input_domain(self, survey, **post):
         user_input_domain = ['&', ('test_entry', '=', False), ('survey_id', '=', survey.id)]
-        if line_filter_domain:
-            matching_line_ids = request.env['survey.user_input.line'].sudo().search(line_filter_domain).ids
-            user_input_domain = expression.AND([
-                [('user_input_line_ids', 'in', matching_line_ids)],
-                user_input_domain
-            ])
         if post.get('finished'):
             user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
         else:
@@ -732,35 +727,118 @@ class Survey(http.Controller):
         return user_input_domain
 
     def _extract_filters_data(self, survey, post):
-        search_filters = []
-        line_filter_domain, line_choices = [], []
-        for data in post.get('filters', '').split('|'):
-            try:
-                row_id, answer_id = (int(item) for item in data.split(','))
-            except:
-                pass
-            else:
-                if row_id and answer_id:
-                    line_filter_domain = expression.AND([
-                        ['&', ('matrix_row_id', '=', row_id), ('suggested_answer_id', '=', answer_id)],
-                        line_filter_domain
-                    ])
-                    answers = request.env['survey.question.answer'].browse([row_id, answer_id])
-                elif answer_id:
-                    line_choices.append(answer_id)
-                    answers = request.env['survey.question.answer'].browse([answer_id])
-                if answer_id:
-                    question_id = answers[0].matrix_question_id or answers[0].question_id
-                    search_filters.append({
-                        'row_id': row_id,
-                        'answer_id': answer_id,
-                        'question': question_id.title,
-                        'answers': '%s%s' % (answers[0].value, ': %s' % answers[1].value if len(answers) > 1 else '')
-                    })
-        if line_choices:
-            line_filter_domain = expression.AND([[('suggested_answer_id', 'in', line_choices)], line_filter_domain])
+        """ Extracts the filters from the URL to returns the related user_input_lines and
+        the parameters used to render/remove the filters on the results page (search_filters).
 
-        user_input_domain = self._get_user_input_domain(survey, line_filter_domain, **post)
-        user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
+        The matching user_input_lines are all the lines tied to the user inputs which respect
+        the survey base domain and which have lines matching all the filters.
+        For example, with the filter 'Where do you live?|Brussels', we need to display ALL the lines
+        of the survey user inputs which have answered 'Brussels' to this question.
+
+        :return (recordset, List[dict]): all matching user input lines, each search filter data
+        """
+        user_input_line_subdomains = []
+        search_filters = []
+
+        answer_by_column, user_input_lines_ids = self._get_filters_from_post(post)
+
+        # Matrix, Multiple choice, Simple choice filters
+        if answer_by_column:
+            answer_ids, row_ids = [], []
+            for answer_column_id, answer_row_ids in answer_by_column.items():
+                answer_ids.append(answer_column_id)
+                row_ids += answer_row_ids
+
+            answers_and_rows = request.env['survey.question.answer'].browse(answer_ids+row_ids)
+            # For performance, accessing 'a.matrix_question_id' caches all useful fields of the
+            # answers and rows records, avoiding unnecessary queries.
+            answers = answers_and_rows.filtered(lambda a: not a.matrix_question_id)
+
+            for answer in answers:
+                if not answer_by_column[answer.id]:
+                    # Simple/Multiple choice
+                    user_input_line_subdomains.append(answer._get_answer_matching_domain())
+                    search_filters.append(self._prepare_search_filter_answer(answer))
+                else:
+                    # Matrix
+                    for row_id in answer_by_column[answer.id]:
+                        row = answers_and_rows.filtered(lambda answer_or_row: answer_or_row.id == row_id)
+                        user_input_line_subdomains.append(answer._get_answer_matching_domain(row_id))
+                        search_filters.append(self._prepare_search_filter_answer(answer, row))
+
+        # Char_box, Text_box, Numerical_box, Date, Datetime filters
+        if user_input_lines_ids:
+            user_input_lines = request.env['survey.user_input.line'].browse(user_input_lines_ids)
+            for input_line in user_input_lines:
+                user_input_line_subdomains.append(input_line._get_answer_matching_domain())
+                search_filters.append(self._prepare_search_filter_input_line(input_line))
+
+        # Compute base domain
+        user_input_domain = self._get_results_page_user_input_domain(survey, **post)
+
+        # Add filters domain to the base domain
+        if user_input_line_subdomains:
+            all_required_lines_domains = [
+                [('user_input_line_ids', 'in', request.env['survey.user_input.line'].sudo()._search(subdomain))]
+                for subdomain in user_input_line_subdomains
+            ]
+            user_input_domain = expression.AND([user_input_domain, *all_required_lines_domains])
+
+        # Get the matching user input lines
+        user_inputs_query = request.env['survey.user_input'].sudo()._search(user_input_domain)
+        user_input_lines = request.env['survey.user_input.line'].search([('user_input_id', 'in', user_inputs_query)])
 
         return user_input_lines, search_filters
+
+    def _get_filters_from_post(self, post):
+        """ Extract the filters from post depending on the model that needs to be called to retrieve the filtered answer data.
+        Simple choice and multiple choice question types are mapped onto empty row_id.
+        Input/output example with respectively matrix, simple_choice and char_box filters:
+            input: 'A,1,24|A,0,13|L,0,36'
+            output:
+                answer_by_column: {24: [1], 13: []}
+                user_input_lines_ids: [36]
+
+        * Model short key = 'A' : Match a `survey.question.answer` record (simple_choice, multiple_choice, matrix)
+        * Model short key = 'L' : Match a `survey.user_input.line` record (char_box, text_box, numerical_box, date, datetime)
+        :rtype: (collections.defaultdict[int, list[int]], list[int])
+        """
+        answer_by_column = defaultdict(list)
+        user_input_lines_ids = []
+
+        for data in post.get('filters', '').split('|'):
+            if not data:
+                break
+            model_short_key, row_id, answer_id = data.split(',')
+            row_id, answer_id = int(row_id), int(answer_id)
+            if model_short_key == 'A':
+                if row_id:
+                    answer_by_column[answer_id].append(row_id)
+                else:
+                    answer_by_column[answer_id] = []
+            elif model_short_key == 'L' and not row_id:
+                user_input_lines_ids.append(answer_id)
+
+        return answer_by_column, user_input_lines_ids
+
+    def _prepare_search_filter_answer(self, answer, row=False):
+        """ Format parameters used to render/remove this filter on the results page."""
+        return {
+            'question_id': answer.question_id.id,
+            'question': answer.question_id.title,
+            'row_id': row.id if row else 0,
+            'answer': '%s : %s' % (row.value, answer.value) if row else answer.value,
+            'model_short_key': 'A',
+            'record_id': answer.id,
+        }
+
+    def _prepare_search_filter_input_line(self, user_input_line):
+        """ Format parameters used to render/remove this filter on the results page."""
+        return {
+            'question_id': user_input_line.question_id.id,
+            'question': user_input_line.question_id.title,
+            'row_id': 0,
+            'answer': user_input_line._get_answer_value(),
+            'model_short_key': 'L',
+            'record_id': user_input_line.id,
+        }
