@@ -180,8 +180,8 @@
                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
-                            <label for="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
-                            <div id="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}">
+                            <label for="payment_mode"/>
+                            <div id="payment_mode">
                                 <field name="payment_mode" widget="radio"/>
                             </div>
                             <field name="duplicate_expense_ids" invisible="1" />
