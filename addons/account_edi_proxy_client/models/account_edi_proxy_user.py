@@ -49,12 +49,17 @@ class AccountEdiProxyClientUser(models.Model):
     edi_format_code = fields.Char(related='edi_format_id.code', readonly=True)
     edi_identification = fields.Char(required=True, help="The unique id that identifies this user for on the edi format, typically the vat")
     private_key = fields.Binary(required=True, attachment=False, groups="base.group_system", help="The key to encrypt all the user's data")
+    private_key_filename = fields.Char(compute='_compute_private_key_filename')
     refresh_token = fields.Char(groups="base.group_system")
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
         ('unique_edi_identification_per_format', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
     ]
+
+    def _compute_private_key_filename(self):
+        for record in self:
+            record.private_key_filename = f'{record.id_client}_{record.edi_identification}.key'
 
     def _get_demo_state(self):
         demo_state = self.env['ir.config_parameter'].sudo().get_param('account_edi_proxy_client.demo', False)
