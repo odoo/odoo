@@ -251,11 +251,11 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         narration = ""
         note_node = tree.find('./{*}ExchangedDocument/{*}IncludedNote/{*}Content')
-        if note_node is not None:
+        if note_node is not None and note_node.text:
             narration += note_node.text + "\n"
 
         payment_terms_node = tree.find('.//{*}SpecifiedTradePaymentTerms/{*}Description')
-        if payment_terms_node is not None:
+        if payment_terms_node is not None and payment_terms_node.text:
             narration += payment_terms_node.text + "\n"
 
         invoice_form.narration = narration
@@ -269,7 +269,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         # ==== invoice_date ====
 
         invoice_date_node = tree.find('./{*}ExchangedDocument/{*}IssueDateTime/{*}DateTimeString')
-        if invoice_date_node is not None:
+        if invoice_date_node is not None and invoice_date_node.text:
             date_str = invoice_date_node.text
             date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
             invoice_form.invoice_date = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
@@ -277,7 +277,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         # ==== invoice_date_due ====
 
         invoice_date_due_node = tree.find('.//{*}SpecifiedTradePaymentTerms/{*}DueDateDateTime/{*}DateTimeString')
-        if invoice_date_due_node is not None:
+        if invoice_date_due_node is not None and invoice_date_due_node.text:
             date_str = invoice_date_due_node.text
             date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
             invoice_form.invoice_date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)

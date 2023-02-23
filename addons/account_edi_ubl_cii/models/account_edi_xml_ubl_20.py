@@ -510,7 +510,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             narration += note_node.text + "\n"
 
         payment_terms_node = tree.find('./{*}PaymentTerms/{*}Note')  # e.g. 'Payment within 10 days, 2% discount'
-        if payment_terms_node is not None:
+        if payment_terms_node is not None and payment_terms_node.text:
             narration += payment_terms_node.text + "\n"
 
         invoice_form.narration = narration
