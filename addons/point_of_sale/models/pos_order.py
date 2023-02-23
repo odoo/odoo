@@ -103,6 +103,9 @@ class PosOrder(models.Model):
         })
         # bypass opening_control (necessary when using cash control)
         new_session.action_pos_session_open()
+        if new_session.config_id.cash_control and new_session.rescue:
+            last_session = self.env['pos.session'].search([('config_id', '=', new_session.config_id.id), ('id', '!=', new_session.id)], limit=1)
+            new_session.cash_register_balance_start = last_session.cash_register_balance_end_real
 
         return new_session
 
