@@ -128,20 +128,26 @@ export class TranslationDialog extends Component {
                 const oldSource = term.source;
                 const newSource = ev.target.value;
                 // update source and other fallback value
-                const valueToUpdate = [];
+                const titleToUpdate = new Set();
+                const valueToUpdate = new Set();
                 this.terms.forEach((t) => {
                     if (t.source === oldSource) {
                         t.source = newSource;
                         if (!t.translated) {
                             t.value = newSource;
-                            valueToUpdate.push(t.id.toString());
+                            valueToUpdate.add(t.id.toString());
                         }
+                        titleToUpdate.add(t.id.toString());
                     }
                 });
                 // update UI
-                for (const t of document.getElementsByClassName("o_field_translate_fallback")) {
-                    if (valueToUpdate.includes(t.dataset.id)) {
-                        t.value = newSource;
+                for (const t of document.getElementsByClassName("o_field_translate")) {
+                    if (titleToUpdate.has(t.dataset.id)) {
+                        t.title = newSource;
+                        if (valueToUpdate.has(t.dataset.id)) {
+                            t.value = newSource;
+                        }
+                        t.title = newSource;
                     }
                 }
             }
