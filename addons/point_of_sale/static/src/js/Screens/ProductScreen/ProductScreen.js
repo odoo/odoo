@@ -208,22 +208,23 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             const order = this.env.pos.get_order();
             const selectedLine = this.env.pos.get_order().get_selected_orderline();
             const currentQuantity = selectedLine.get_quantity();
-            if (
-                selectedLine.is_last_line() &&
-                currentQuantity === 1 &&
-                newQuantity < currentQuantity
-            ) {
+            if (newQuantity >= currentQuantity) {
                 selectedLine.set_quantity(newQuantity);
-            } else if (newQuantity >= currentQuantity) {
-                selectedLine.set_quantity(newQuantity);
-            } else {
-                const newLine = selectedLine.clone();
-                const decreasedQuantity = currentQuantity - newQuantity;
-                newLine.order = order;
-
-                newLine.set_quantity(-decreasedQuantity, true);
-                order.add_orderline(newLine);
+                return;
             }
+            if (newQuantity >= selectedLine.saved_quantity) {
+                if (newQuantity == 0) {
+                    order.remove_orderline(selectedLine)
+                }
+                selectedLine.set_quantity(newQuantity)
+                return;
+            }
+            const newLine = selectedLine.clone();
+            const decreasedQuantity = selectedLine.saved_quantity - newQuantity;
+            newLine.order = order;
+            newLine.set_quantity(-decreasedQuantity, true);
+            selectedLine.set_quantity(selectedLine.saved_quantity);
+            order.add_orderline(newLine);
         }
     }
     async onClickPay() {

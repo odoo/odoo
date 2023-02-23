@@ -78,19 +78,19 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
     },
     //@override
-    async onDeleteOrder() {
-        await this._super(...arguments);
+    async onDeleteOrder(order) {
+        const _super = this._super;
         if (this.env.pos.config.iface_floorplan) {
+            this.env.pos.setOrderToRemove(order);
             if (!this.env.pos.table) {
-                this.env.pos._removeOrdersFromServer();
-            }
-            const orderList = this.env.pos.table
-                ? this.env.pos.getTableOrders(this.env.pos.table.id)
-                : this.env.pos.orders;
-            if (orderList.length == 0) {
-                this.pos.showScreen("FloorScreen");
+                try {
+                    await this.env.pos._removeOrdersFromServer();
+                } catch (error) {
+                    throw error;
+                }
             }
         }
+        await _super(...arguments);
     },
     async setTip(order, serverId, amount) {
         try {

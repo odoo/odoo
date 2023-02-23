@@ -395,9 +395,12 @@ export class PosGlobalState extends PosModel {
                 this.ordersToUpdateSet.delete(order);
             }
             if (order.server_id && !order.finalized) {
-                this.db.set_order_to_remove_from_server(order);
+                this.setOrderToRemove(order);
             }
         }
+    }
+    setOrderToRemove(order) {
+        this.db.set_order_to_remove_from_server(order);
     }
 
     /**
@@ -438,6 +441,10 @@ export class PosGlobalState extends PosModel {
     add_new_order() {
         if (this.isOpenOrderShareable()) {
             this.sendDraftToServer();
+        }
+        if (this.selectedOrder) {
+            this.selectedOrder.firstDraft = false;
+            this.selectedOrder.updateSavedQuantity();
         }
         const order = this.createReactiveOrder();
         this.orders.add(order);
@@ -629,6 +636,7 @@ export class PosGlobalState extends PosModel {
             }
             // important to throw error here and let the rendering component handle the error
             console.warn("Failed to remove orders:", removedOrdersIds);
+            this._postRemoveFromServer(removedOrdersIds);
             throw error;
         }
     }
@@ -899,6 +907,10 @@ export class PosGlobalState extends PosModel {
 
     // change the current order
     set_order(order, options) {
+        if (this.selectedOrder) {
+            this.selectedOrder.firstDraft = false;
+            this.selectedOrder.updateSavedQuantity();
+        }
         this.selectedOrder = order;
     }
 
@@ -1914,6 +1926,7 @@ export class Orderline extends PosModel {
         this.full_product_name = options.description || "";
         this.id = orderline_id++;
         this.customerNote = this.customerNote || "";
+        this.saved_quantity = 0;
 
         if (options.price) {
             this.set_unit_price(options.price);
@@ -1946,6 +1959,7 @@ export class Orderline extends PosModel {
         this.set_customer_note(json.customer_note);
         this.refunded_qty = json.refunded_qty;
         this.refunded_orderline_id = json.refunded_orderline_id;
+        this.saved_quantity = json.qty;
     }
     clone() {
         var orderline = new Orderline(
@@ -2055,6 +2069,9 @@ export class Orderline extends PosModel {
     }
     get_price_extra() {
         return this.price_extra;
+    }
+    updateSavedQuantity() {
+        this.saved_quantity = this.quantity;
     }
     // sets the quantity of the product. The quantity will be rounded according to the
     // product's unity of measure properties. Quantities greater than zero will not get
@@ -2797,6 +2814,7 @@ export class Order extends PosModel {
         this.cashier = this.pos.get_cashier();
         this.finalized = false; // if true, cannot be modified.
         this.shippingDate = null;
+        this.firstDraft = true;
 
         this.partner = null;
 
@@ -2863,6 +2881,7 @@ export class Order extends PosModel {
         this.validation_date = json.creation_date;
         this.server_id = json.server_id ? json.server_id : false;
         this.user_id = json.user_id;
+        this.firstDraft = false;
 
         if (json.fiscal_position_id) {
             var fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
@@ -3147,6 +3166,9 @@ export class Order extends PosModel {
             zero_pad(this.sequence_number, 4)
         );
     }
+    updateSavedQuantity() {
+        this.orderlines.forEach((line) => line.updateSavedQuantity());
+    }
     get_name() {
         return this.name;
     }
@@ -3301,6 +3323,10 @@ export class Order extends PosModel {
         this.assert_editable();
         this.orderlines.remove(line);
         this.select_orderline(this.get_last_orderline());
+    }
+
+    isFirstDraft(){
+        return this.firstDraft;
     }
 
     fix_tax_included_price(line) {
