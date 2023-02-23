@@ -566,10 +566,12 @@ const Wysiwyg = Widget.extend({
                                 }
                                 historySyncFinished = true;
                             } else {
+                                const currentStep = this.odooEditor._historySteps[this.odooEditor._historySteps.length - 1];
                                 const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
                                 if (remoteSelection) {
                                     this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
                                 }
+                                this.ptp.notifyClient(fromClientId, 'oe_history_step', currentStep, { transport: 'rtc' });
                             }
                             break;
                         }
