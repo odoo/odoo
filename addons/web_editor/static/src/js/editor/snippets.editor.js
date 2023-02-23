@@ -659,6 +659,15 @@ var SnippetEditor = Widget.extend({
         await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUI()));
         await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUIVisibility()));
 
+        // As the 'd-none' class is added to option sections that have no visible
+        // options with 'updateOptionsUIVisibility', if no option section is
+        // visible, we prevent the activation of the options.
+        const optionsSectionVisible = editorUIsToUpdate.some(
+             editor => !editor.$optionsSection[0].classList.contains('d-none')
+        );
+        if (editorUIsToUpdate.length > 0 && !optionsSectionVisible) {
+            return null;
+        }
         return this._customize$Elements;
     },
     /**
@@ -2577,6 +2586,14 @@ var SnippetsMenu = Widget.extend({
                 }
 
                 if (!previewMode) {
+                    // As some options can only be generated using JavaScript
+                    // (e.g. 'SwitchableViews'), it may happen at this point
+                    // that the overlay is activated even though there are no
+                    // options. That's why we disable the overlay if there are
+                    // no options to enable.
+                    if (editorToEnable && !customize$Elements) {
+                        editorToEnable.toggleOverlay(false);
+                    }
                     this._updateRightPanelContent({
                         content: customize$Elements || [],
                         tab: customize$Elements ? this.tabs.OPTIONS : this.tabs.BLOCKS,
