@@ -308,6 +308,16 @@ class AccountEdiCommon(models.AbstractModel):
 
         return invoice
 
+    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat):
+        """ Retrieve the partner, if no matching partner is found, create it
+        """
+        invoice.partner_id = self.env['account.edi.format']._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
+        if not invoice.partner_id and name:
+            invoice.partner_id = self.env['res.partner'].create({'name': name, 'email': mail, 'phone': phone})
+            country_code = invoice.partner_id.commercial_partner_id.country_code
+            if vat and self.env['res.partner']._run_vat_test(vat, country_code, invoice.partner_id.is_company):
+                invoice.partner_id.vat = vat
+
     def _import_fill_invoice_allowance_charge(self, tree, invoice_form, journal, qty_factor):
         logs = []
         if '{urn:oasis:names:specification:ubl:schema:xsd' in tree.tag:
