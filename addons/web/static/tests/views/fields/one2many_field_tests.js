@@ -7440,7 +7440,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="foo"/>
-                    <field name="timmy" context="{'key': parent.foo}">
+                    <field name="timmy" context="{'key': parent.foo, 'key2': 'hello'}">
                         <tree editable="top">
                             <field name="display_name"/>
                         </tree>
@@ -7463,7 +7463,7 @@ QUnit.module("Fields", (hooks) => {
                     assert.deepEqual(
                         args.kwargs.context,
                         {
-                            key: "yop",
+                            key2: "hello",
                             active_field: 2,
                             someKey: "some value",
                             uid: 7,

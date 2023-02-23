@@ -341,7 +341,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("context in many2one and default get", async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         serverData.models.partner.fields.int_field.default = 14;
         serverData.models.partner.fields.trululu.default = 2;
@@ -353,15 +353,16 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="int_field" />
-                    <field name="trululu" context="{'blip': int_field}" options="{'always_reload': 1}" />
+                    <field name="trululu" context="{'blip': int_field, 'blop': 3}" options="{'always_reload': 1}" />
                 </form>`,
             mockRPC(route, { method, kwargs }) {
                 if (method === "name_get") {
                     assert.strictEqual(
                         kwargs.context.blip,
-                        14,
-                        "context should have been properly sent to the nameget rpc"
+                        undefined,
+                        "context should not contain dynamic keys depending on the data"
                     );
+                    assert.strictEqual(kwargs.context.blop, 3);
                 }
             },
         });
