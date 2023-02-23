@@ -18,7 +18,7 @@ patch(Persona.prototype, "website_livechat", {
             : undefined;
     },
 
-    get displayName() {
+    get nameOrDisplayName() {
         if (this.partner) {
             return this.partner.name || this.partner.displayName;
         }

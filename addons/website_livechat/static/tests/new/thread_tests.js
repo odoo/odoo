@@ -43,7 +43,7 @@ QUnit.test("Rendering of visitor banner", async function (assert) {
         target,
         ".o_country_flag[data-src='/base/static/img/country_flags/be.png']"
     );
-    assert.containsOnce(target, "span:contains(Visitor 11)");
+    assert.containsOnce(target, "span:contains(Visitor #11)");
     assert.containsOnce(target, "span:contains(English)");
     assert.containsOnce(target, "span>:contains(General website)");
     assert.containsOnce(target, "span:contains(Home → Contact)");
@@ -100,6 +100,7 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async func
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsOnce(target, ".o-mail-visitor-banner");
+    assert.containsOnce(target, ".o-mail-visitor-banner:contains(Partner Visitor)");
 });
 
 QUnit.test("Livechat without visitor should not show visitor banner", async function (assert) {

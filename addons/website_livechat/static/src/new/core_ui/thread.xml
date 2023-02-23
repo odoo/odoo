@@ -12,7 +12,7 @@
                 </div>
                 <div>
                     <img t-if="visitor.country" class="me-1 o_country_flag" t-att-src="visitor.countryFlagUrl" t-att-alt="visitor.country.code or visitor.country.name"/>
-                    <span class="me-3 fw-bolder" t-esc="visitor.displayName"/>
+                    <span class="me-3 fw-bolder" t-esc="visitor.nameOrDisplayName"/>
                     <span class="me-3">
                         <i class="me-1 fa fa-comment-o" aria-label="Lang"/>
                         <t t-esc="visitor.langName"/>
