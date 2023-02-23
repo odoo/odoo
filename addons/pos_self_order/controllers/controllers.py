@@ -277,9 +277,9 @@ class PosSelfOrder(http.Controller):
         order_sudo.is_trusted = False
         order_id = order_sudo.get("pos_reference")
         response_sudo = {
-            "order_id": order_id,
+            "order_id": order['data']['name'],
             "order_items": [{"product_id": line[2]["product_id"], "qty": line[2]["qty"]} for line in order["data"]["lines"]],
-            "order_total": amount_total,
+            "order_total": order['data']['amount_total'],
             "date": order["data"]["creation_date"],
             "access_token": order["data"]["access_token"],
             "state": "draft",
