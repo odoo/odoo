@@ -12,19 +12,19 @@
             </td>
         </xpath>
         <xpath expr="//t[@name='invoice_status_posted']/span[1]" position="before">
-            <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
+            <t t-set="tx_sudo" t-value="invoice.get_portal_last_transaction()"/>
         </xpath>
         <xpath expr="//span[@name='invoice_status_waiting_for_payment']" position="before">
-            <span t-elif="last_tx.state == 'authorized'"
+            <span t-elif="tx_sudo.state == 'authorized'"
                     class="badge rounded-pill text-bg-primary">
                 <i class="fa fa-fw fa-check"/>
                 <span class="d-none d-md-inline"> Authorized</span>
             </span>
-            <span t-elif="last_tx.state == 'pending' and last_tx.provider_code not in ('none', 'custom')"
+            <span t-elif="tx_sudo.state == 'pending' and tx_sudo.provider_code not in ('none', 'custom')"
                     class="badge rounded-pill text-bg-warning">
                 <span class="d-none d-md-inline"> Pending</span>
             </span>
-            <span t-elif="last_tx.state == 'done'" class="badge rounded-pill text-bg-success">
+            <span t-elif="tx_sudo.state == 'done'" class="badge rounded-pill text-bg-success">
                 <i class="fa fa-fw fa-check"></i>
                 <span class="d-none d-md-inline"> Paid</span>
             </span>
@@ -100,9 +100,9 @@
             </t>
             <t t-elif="error == 'pay_invoice_tx_fail'">
                 There was an error processing your payment: transaction failed.<br />
-                <t t-set="tx_id" t-value="invoice.get_portal_last_transaction()"/>
-                <t t-if="tx_id and tx_id.state_message">
-                    <t t-out="tx_id.state_message"/>
+                <t t-set="tx_sudo" t-value="invoice.get_portal_last_transaction()"/>
+                <t t-if="tx_sudo and tx_sudo.state_message">
+                    <t t-out="tx_sudo.state_message"/>
                 </t>
             </t>
             <t t-elif="error == 'pay_invoice_tx_token'">
@@ -115,9 +115,9 @@
             inherit_id="account.portal_invoice_success">
         <xpath expr="//a[hasclass('close')]" position="after">
             <t t-if="success == 'pay_invoice'">
-                <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
-                <span t-if='payment_tx_id.provider_id.sudo().done_msg' t-out="payment_tx_id.provider_id.sudo().done_msg"/>
-                <div t-if="payment_tx_id.provider_id.sudo().pending_msg and payment_tx_id.provider_code == 'custom' and invoice.ref">
+                <t t-set="tx_sudo" t-value="invoice.get_portal_last_transaction()"/>
+                <span t-if="tx_sudo.provider_id.sudo().done_msg" t-out="tx_sudo.provider_id.sudo().done_msg"/>
+                <div t-if="tx_sudo.provider_id.sudo().pending_msg and tx_sudo.provider_code == 'custom' and invoice.ref">
                     <b>Communication: </b><span t-out='invoice.ref'/>
                 </div>
             </t>

@@ -538,7 +538,7 @@ class SaleOrder(models.Model):
         return self.filtered(
             lambda abandoned_sale_order:
             abandoned_sale_order.partner_id.email
-            and not any(transaction.state == 'error' for transaction in abandoned_sale_order.transaction_ids)
+            and not any(transaction.sudo().state == 'error' for transaction in abandoned_sale_order.transaction_ids)
             and any(not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding) for line in abandoned_sale_order.order_line)
             and not has_later_sale_order.get(abandoned_sale_order.partner_id, False)
         )
