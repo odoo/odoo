@@ -16,6 +16,8 @@ const utils = {
             var cookie = parts.join('=');
 
             if (cookieName && cookieName === name) {
+                if (cookie.startsWith('"'))
+                    cookie = cookie.slice(1, -1);
                 return cookie;
             }
         }
