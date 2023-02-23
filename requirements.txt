@@ -8,14 +8,17 @@ freezegun==0.3.11; python_version < '3.8'
 freezegun==0.3.15; python_version >= '3.8'
 gevent==1.5.0 ; python_version == '3.7'
 gevent==20.9.0 ; python_version > '3.7' and python_version <= '3.9'
-gevent==21.8.0 ; python_version > '3.9'  # (Jammy)
+gevent==21.8.0 ; python_version == '3.10'  # (Jammy)
+gevent==22.10.2 ; python_version > '3.10'  # (Jammy)
 greenlet==0.4.15 ; python_version == '3.7'
 greenlet==0.4.17 ; python_version > '3.7' and python_version <= '3.9'
-greenlet==1.1.2 ; python_version  > '3.9'  # (Jammy)
+greenlet==1.1.2 ; python_version  == '3.10'  # (Jammy)
+greenlet==2.0.2 ; python_version  > '3.10'  # (Jammy)
 idna==2.8
 Jinja2==2.11.3 # min version = 2.10.1 (Focal - with security backports)
 libsass==0.18.0
-lxml==4.6.5 # min version = 4.5.0 (Focal - with security backports)
+lxml==4.6.5 ; python_version  <= '3.10' # min version = 4.5.0 (Focal - with security backports)
+lxml==4.9.0 ; python_version  > '3.10'  # (Jammy)
 MarkupSafe==1.1.0
 num2words==0.5.6
 ofxparse==0.19; python_version <= '3.9'
@@ -37,7 +40,8 @@ python-stdnum==1.13
 pytz==2019.3
 pyusb==1.0.2
 qrcode==6.1
-reportlab==3.5.59 # version < 3.5.54 are not compatible with Pillow 8.1.2 and 3.5.59 is bullseye
+reportlab==3.5.59 ; python_version <= '3.10' # version < 3.5.54 are not compatible with Pillow 8.1.2 and 3.5.59 is bullseye
+reportlab==3.6.9 ; python_version > '3.10'  # (Jammy)
 requests==2.25.1 # versions < 2.25 aren't compatible w/ urllib3 1.26. Bullseye = 2.25.1. min version = 2.22.0 (Focal)
 urllib3==1.26.5 # indirect / min version = 1.25.8 (Focal with security backports)
 vobject==0.9.6.1
