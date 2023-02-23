@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        #  IVA - Imposto sobre o Valor Acrescentado
+        -->
+    <record model="account.tax.template" id="iva_sale_16">
+        <field name="name">16% Sales</field>
+        <field name="description">16%</field>
+        <field name="amount" eval="16"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10nmz_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_iva_16"/>
+    </record>
+    <record model="account.tax.template" id="iva_purch_16">
+        <field name="name">16% Purchases</field>
+        <field name="description">16%</field>
+        <field name="amount" eval="16"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10nmz_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_iva_16"/>
+    </record>
+    <record model="account.tax.template" id="iva_sale_5">
+        <field name="name">5% on Education, medical and health services (Sale)</field>
+        <field name="description">5% Sales</field>
+        <field name="amount" eval="5"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10nmz_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+    </record>
+    <record model="account.tax.template" id="iva_purch_5">
+        <field name="name">5% on Education, medical and health services (Purch.)</field>
+        <field name="description">5% Purchases</field>
+        <field name="amount" eval="5"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10nmz_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_iva_5"/>
+    </record>
+    <record model="account.tax.template" id="iva_export">
+        <field name="name">0% Export</field>
+        <field name="description">0% Export</field>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10nmz_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+    </record>
+    <record model="account.tax.template" id="iva_import">
+        <field name="name">0% Import</field>
+        <field name="description">0% Import</field>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10nmz_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+    </record>
+    <record model="account.tax.template" id="iva_exempt_sale">
+        <field name="name">0% Exempt sale</field>
+        <field name="description">0% Exempt sale</field>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10nmz_chart_template"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+    </record>
+    <record model="account.tax.template" id="iva_exempt_purchase">
+        <field name="name">0% Exempt purchase</field>
+        <field name="description">0% Exempt purchase</field>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="l10nmz_chart_template"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+    </record>
+</odoo>

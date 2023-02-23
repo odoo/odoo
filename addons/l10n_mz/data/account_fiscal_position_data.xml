@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fiscal Position Templates -->
+        <record id="fiscal_position_national_regime" model="account.fiscal.position.template">
+            <field name="name">National regime</field>
+            <field name="chart_template_id" ref="l10nmz_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.mz"/>
+        </record>
+
+        <record id="fiscal_position_import" model="account.fiscal.position.template">
+            <field name="sequence">1</field>
+            <field name="name">Export</field>
+            <field name="chart_template_id" ref="l10nmz_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+        </record>
+
+        <record id="fiscal_position_tax_template_1" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import"  />
+            <field name="tax_src_id" ref="iva_sale_16" />
+            <field name="tax_dest_id" ref="iva_export" />
+        </record>
+
+        <record id="fiscal_position_tax_template_2" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import"  />
+            <field name="tax_src_id" ref="iva_purch_16" />
+            <field name="tax_dest_id" ref="iva_import" />
+        </record>
+
+        <record id="fiscal_position_tax_template_3" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import"  />
+            <field name="tax_src_id" ref="iva_sale_5" />
+            <field name="tax_dest_id" ref="iva_export" />
+        </record>
+
+        <record id="fiscal_position_tax_template_4" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import"  />
+            <field name="tax_src_id" ref="iva_purch_5" />
+            <field name="tax_dest_id" ref="iva_import" />
+        </record>
+    </data>
+</odoo>

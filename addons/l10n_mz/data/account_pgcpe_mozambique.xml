@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="l10nmz_chart_template" model="account.chart.template">
+            <field name="name">Plano General de Contabilidad - Pequenas Empresas</field>
+            <field name="code_digits">7</field>
+            <field name="property_account_receivable_id" ref="mz_coa_411"/>
+            <field name="property_account_payable_id" ref="mz_coa_421"/>
+            <field name="property_account_expense_categ_id" ref="mz_coa_61161"/>
+            <field name="property_account_income_categ_id" ref="mz_coa_711"/>
+            <field name="expense_currency_exchange_account_id" ref="mz_coa_6941"/>
+            <field name="income_currency_exchange_account_id" ref="mz_coa_7841"/>
+            <field name="property_tax_payable_account_id" ref="mz_coa_4437"/>
+            <field name="property_tax_receivable_account_id" ref="mz_coa_4438"/>
+            <field name="default_pos_receivable_account_id" ref="mz_coa_413" />
+            <field name="account_journal_early_pay_discount_loss_account_id" ref="mz_coa_695"/>
+            <field name="account_journal_early_pay_discount_gain_account_id" ref="mz_coa_785"/>
+        </record>
+</odoo>
