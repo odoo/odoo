@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.website.tools import MockRequest
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
 from odoo.tests import tagged
+
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
+from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install')
@@ -64,22 +65,28 @@ class TestWebsiteSaleStockProductWarehouse(TestSaleProductAttributeValueCommon):
         When the user doesn't set any warehouse, the module should still select
         a default one.
         """
+        test_env = self.env['base'].with_context(
+            website_id=self.website.id,
+            website_sale_stock_get_quantity=True,
+        ).env
 
         for wh, qty_a, qty_b in [(self.warehouse_1, 10, 0), (self.warehouse_2, 15, 10), (False, 10, 0)]:
             # set warehouse_id
             self.website.warehouse_id = wh
 
-            product = self.product_A.with_context(website_id=self.website.id)
-            combination_info = product.product_tmpl_id.with_context(website_sale_stock_get_quantity=True)._get_combination_info()
+            combination_info = self.product_A.with_env(test_env)._get_combination_info_variant()
 
             # Check available quantity of product is according to warehouse
-            self.assertEqual(combination_info['free_qty'], qty_a, "%s units of Product A should be available in warehouse %s" % (qty_a, wh))
+            self.assertEqual(
+                combination_info['free_qty'], qty_a,
+                f"{qty_a} units of Product A should be available in warehouse {wh}")
 
-            product = self.product_B.with_context(website_id=self.website.id)
-            combination_info = product.product_tmpl_id.with_context(website_sale_stock_get_quantity=True)._get_combination_info()
+            combination_info = self.product_B.with_env(test_env)._get_combination_info_variant()
 
             # Check available quantity of product is according to warehouse
-            self.assertEqual(combination_info['free_qty'], qty_b, "%s units of Product B should be available in warehouse %s" % (qty_b, wh))
+            self.assertEqual(
+                combination_info['free_qty'], qty_b,
+                f"{qty_b} units of Product B should be available in warehouse {wh}")
 
     def test_02_update_cart_with_multi_warehouses(self):
         """ When the user updates his cart and increases a product quantity, if

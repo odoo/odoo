@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-
 from odoo.http import request
 from odoo.osv import expression
-from odoo.addons.http_routing.models.ir_http import url_for
 
-_logger = logging.getLogger(__name__)
+from odoo.addons.http_routing.models.ir_http import url_for
 
 
 class Website(models.Model):
@@ -471,17 +467,18 @@ class Website(models.Model):
         return self.get_current_pricelist().id \
             or partner_sudo.property_product_pricelist.id
 
-    @api.model
     def _get_current_fiscal_position_id(self, partner_sudo):
         AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
         fpos = AccountFiscalPosition
 
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
-        if request and request.website.partner_id.id == partner_sudo.id:
-            if request.geoip.country_code:
-                country_id = self.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1).id
-                fpos = AccountFiscalPosition._get_fpos_by_region(country_id)
+        if request and request.geoip.country_code and self.partner_id.id == partner_sudo.id:
+            country = self.env['res.country'].search(
+                [('code', '=', request.geoip.country_code)],
+                limit=1,
+            ).id
+            fpos = AccountFiscalPosition._get_fpos_by_region(country.id)
 
         if not fpos:
             fpos = AccountFiscalPosition._get_fiscal_position(partner_sudo)
@@ -567,6 +564,7 @@ class Website(models.Model):
         self.ensure_one()
 
         return self.is_view_active('website_sale.address_b2b')
+
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'
