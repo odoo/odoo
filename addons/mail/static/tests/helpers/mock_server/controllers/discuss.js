@@ -100,7 +100,14 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         if (route === "/mail/message/update_content") {
             this.pyEnv["mail.message"].write([args.message_id], {
                 body: args.body,
-                attachment_ids: args.attachment_id,
+                attachment_ids: args.attachment_ids,
+            });
+            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartnerId, "mail.record/insert", {
+                Message: {
+                    id: args.message_id,
+                    body: args.body,
+                    attachments: args.attachment_ids,
+                },
             });
             return args;
         }

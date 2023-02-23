@@ -508,10 +508,14 @@ export class Messaging {
         }
         const { Message: messageData } = notif.payload;
         if (messageData) {
-            this.messageService.insert({
+            const isStarred = this.store.messages[messageData.id]?.isStarred;
+            const message = this.messageService.insert({
                 ...messageData,
                 body: messageData.body ? markup(messageData.body) : messageData.body,
             });
+            if (isStarred && message.isEmpty) {
+                this.messageService.updateStarred(message, false);
+            }
         }
         const { "res.users.settings": settings } = notif.payload;
         if (settings) {
