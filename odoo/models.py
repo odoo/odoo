@@ -1641,16 +1641,16 @@ class BaseModel(metaclass=MetaModel):
             return False
 
         # compute missing fields
-        missing_defaults = {
+        missing_defaults = [
             name
             for name, field in self._fields.items()
             if name not in values
             if not avoid(field)
-        }
+        ]
 
         if missing_defaults:
             # override defaults with the provided values, never allow the other way around
-            defaults = self.default_get(list(missing_defaults))
+            defaults = self.default_get(missing_defaults)
             for name, value in defaults.items():
                 if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
                     # convert a list of ids into a list of commands
