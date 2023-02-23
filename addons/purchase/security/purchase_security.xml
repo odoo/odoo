@@ -86,12 +86,22 @@
         <field name="model_id" ref="model_purchase_bill_union"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
-
     <record id="purchase_order_report_comp_rule" model="ir.rule">
         <field name="name">Purchase Order Report multi-company</field>
         <field name="model_id" ref="model_purchase_report"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
-
+    <record id="purchase_manager_purchase_order_rule" model="ir.rule">
+        <field name="name">All Purchase Orders</field>
+        <field name="model_id" ref="model_purchase_order"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_manager'))]"/>
+    </record>
+    <record id="purchase_manager_purchase_order_line_rule" model="ir.rule">
+        <field name="name">All Purchase Order Lines</field>
+        <field name="model_id" ref="model_purchase_order_line"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('group_purchase_manager'))]"/>
+    </record>
 </data>
 </odoo>
