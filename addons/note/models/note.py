@@ -128,7 +128,7 @@ class Task(models.Model):
     # --------------------------------------- Fields Declaration ----------------------------------
 
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
-    company_id = fields.Many2one('res.company')
+    company_id = fields.Many2one('res.company', default=_default_company_id)
     description = fields.Html(string='Description')
     sequence = fields.Integer('Sequence', default=10)
     personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_stage_rel', column1='task_id', column2='stage_id',
