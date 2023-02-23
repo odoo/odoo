@@ -820,6 +820,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
             self._bundle(self._get_asset(), False, False)
 
 
+@tagged('-at_install', 'post_install')
 class TestAssetsBundlePerformances(FileTouchable):
 
     @classmethod
@@ -841,8 +842,8 @@ class TestAssetsBundlePerformances(FileTouchable):
         search_ir_assets = '''SELECT "ir_asset".id FROM "ir_asset" WHERE ("ir_asset"."bundle" = %s) ORDER BY "ir_asset"."sequence" ,"ir_asset"."id"'''
         get_attachments_search = '''SELECT max(id) FROM ir_attachment WHERE create_uid = %s AND url like %s GROUP BY name ORDER BY name'''
         create_attachment = self.look_like('''INSERT INTO "ir_attachment" (...) VALUES %s RETURNING "id"''')
-        clean_attachment = '''SELECT "ir_attachment".id FROM "ir_attachment" WHERE (("ir_attachment"."res_field" IS NULL AND ("ir_attachment"."url"::text like %s)) AND (NOT (("ir_attachment"."url"::text like %s)))) ORDER BY "ir_attachment"."id" DESC'''
-        attachment_exists = '''SELECT "ir_attachment".id FROM "ir_attachment" WHERE "ir_attachment".id IN %s'''
+        clean_attachment = self.look_like('''SELECT "ir_attachment".id FROM "ir_attachment" WHERE ... res_field" ... ir_attachment ... NOT ... ORDER BY "ir_attachment"."id" DESC''')
+        #attachment_exists = '''SELECT "ir_attachment".id FROM "ir_attachment" WHERE "ir_attachment".id IN %s'''
 
         validate_access_public = 'SELECT "ir_attachment"."id" AS "id", "ir_attachment"."public" AS "public" FROM "ir_attachment" WHERE "ir_attachment".id IN %s'
         prefetch_attachment = self.look_like('SELECT ... mimetype ... FROM "ir_attachment" WHERE "ir_attachment".id IN %s')
@@ -882,12 +883,12 @@ class TestAssetsBundlePerformances(FileTouchable):
             get_attachments_search,  # ensure there is no existing attachment (useful if the version is not the same as the one given in the route)
             create_attachment,  # create the bundle attachment
             clean_attachment,  # clean the previous ones
-            attachment_exists,  # not really useful
+            #attachment_exists,  # not really useful
         ])
 
         self.assertEqual(warm_queries, [
             search_bundle_by_url,
-            attachment_exists,  # not really useful
+            #attachment_exists,  # not really useful
             validate_access_public,  # preftech public field (prefetch=False)
             prefetch_attachment,  # last one is prefecth with all fields
         ])

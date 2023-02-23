@@ -119,8 +119,8 @@ class Binary(http.Controller):
         if not attachment:
             raise request.not_found()
         with replace_exceptions(UserError, by=request.not_found()):
-            #attachment.validate_access()
-            record = request.env['ir.binary']._find_record(res_id=int(attachment.id))
+            record = attachment.validate_access(None)
+            #record = request.env['ir.binary']._find_record(res_id=int(attachment.id))
             stream = request.env['ir.binary']._get_stream_from(record, 'raw', filename)
 
         send_file_kwargs = {'as_attachment': False}
