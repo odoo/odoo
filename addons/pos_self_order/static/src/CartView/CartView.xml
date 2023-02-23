@@ -18,7 +18,7 @@
                             <p class="fw-bold"><t t-esc="product.name"/></p>
                         </div>
                         <div class="d-flex justify-content-between w-100">
-                            <t t-esc="cartItem.qty + ' x ' + product.list_price+ '€'" />
+                            <t t-esc="cartItem.qty + ' x ' + formatMonetary(product.list_price, {currencyId: selfOrder.config.currency_id})" />
                             <p class="fst-italic fw-bold text-right"><t t-esc="cartItem.qty *  product.list_price+ '€'" /></p>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
             </t>
             <!-- TODO: style this -->
             <p class="ml-auto text-muted">
-                Tax: <t t-esc="props.getTotalTax() + props.currencyType"/>
+                Tax : <t t-esc="formatMonetary(props.getTotalTax(), {currencyId: selfOrder.config.currency_id})" />
             </p>
 <!-- Order Button -->
             <t t-if="selfOrder.config.self_order_allow_order == false">
@@ -40,7 +40,7 @@
                             Order (<t t-esc="props.getTotalCartQty()"/>)
                         </p>
                         <p class="ml-auto">
-                            Total: <t t-esc="props.getTotalCartCost() + props.currencyType"/>
+                            Total : <t t-esc="formatMonetary(props.getTotalCartCost(), {currencyId: selfOrder.config.currency_id})" />
                         </p>
                     <!-- TODO: also show final tax amount -->
                         </div>

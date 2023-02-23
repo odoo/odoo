@@ -62,7 +62,7 @@
                                     </t>
             <!-- Product PRICE -->
                                     <p class="fst-italic">
-                                        <t t-esc="product.list_price + '€'" />
+                                        <t t-esc="formatMonetary(product.list_price, {currencyId: selfOrder.config.currency_id})" />
                                     </p>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                             Review (<t t-esc="props.getTotalCartQty()"/>)
                         </p>
                         <p class="ml-auto">
-                            <t t-esc="props.getTotalCartCost() + props.currencyType"/>
+                            <t t-esc="formatMonetary(props.getTotalCartCost(), {currencyId: selfOrder.config.currency_id})" />
                         </p>
                     </div>
                 </button>

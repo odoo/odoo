@@ -42,12 +42,12 @@
                 </button>
 <!-- Tax Amount -->
                 <p class="fst-italic text-end text-muted">
-                    Tax: <t t-esc="props.order.amount_tax + '€'" />
+                    Tax : <t t-esc="formatMonetary(props.order.amount_tax, {currencyId: selfOrder.config.currency_id})" />
                 </p>
 <!-- Total Amount -->
                 <h6 class="fst-italic text-end">
-                    <!-- Total: <t t-esc="formatMonetary(props.order.amount_total, options={currency_id: selfOrder.config.currency_id})" /> -->
-                    Total: <t t-esc="props.order.amount_total" />
+                    Total: <t t-esc="formatMonetary(props.order.amount_total, {currencyId: selfOrder.config.currency_id})" />
+                    <!-- Total: <t t-esc="props.order.amount_total" /> -->
                 </h6>
             </div>
         </t>
