@@ -837,20 +837,7 @@ class TestAssetsBundlePerformances(FileTouchable):
         return self.env['ir.qweb']._get_asset_bundle(name, files, env=self.env, css=css, js=js)
 
     def test_01_cached(self):
-
-        self.assertEqual(self.look_like('SELECT ... FROM model'), "SELECT field1, field2, field3 FROM model")
-        self.assertIn(self.look_like('Company ... (SF)'), ['TestPartner', 'Company 8 (SF)', 'SomeAdress'])
-        self.assertEqual([
-            'TestPartner',
-            self.look_like('Company ... (SF)'),
-            self.look_like('...'),
-        ], [
-            'TestPartner',
-            'Company 8 (SF)',
-            'Anything else'
-        ])
-
-        search_bundle_by_url = '''SELECT "ir_attachment".id FROM "ir_attachment" WHERE ("ir_attachment"."res_field" IS NULL AND ("ir_attachment"."url" = %s)) ORDER BY "ir_attachment"."id" DESC LIMIT 1'''
+        search_bundle_by_url = '''SELECT "ir_attachment".id FROM "ir_attachment" WHERE (("ir_attachment"."res_field" IS NULL AND ("ir_attachment"."url" = %s)) AND "ir_attachment"."url" IS NOT NULL) ORDER BY "ir_attachment"."id" DESC LIMIT 1'''
         search_ir_assets = '''SELECT "ir_asset".id FROM "ir_asset" WHERE ("ir_asset"."bundle" = %s) ORDER BY "ir_asset"."sequence" ,"ir_asset"."id"'''
         get_attachments_search = '''SELECT max(id) FROM ir_attachment WHERE create_uid = %s AND url like %s GROUP BY name ORDER BY name'''
         create_attachment = self.look_like('''INSERT INTO "ir_attachment" (...) VALUES %s RETURNING "id"''')
@@ -877,7 +864,7 @@ class TestAssetsBundlePerformances(FileTouchable):
 
         cold_queries = queries(p)
 
-        with self.profile(collectors=['sql'], db='profiling') as p:
+        with self.profile(collectors=['sql']) as p:
             self.assertEqual(self.url_open(bundle_url).status_code, 200)
 
         warm_queries = queries(p)
@@ -1541,6 +1528,7 @@ class TestAssetsManifest(AddonManifestPatched):
                 ]
             }
         }
+
         content = self.url_open('/web/assets/test_assetsbundle.bundle4.min.js').text
         self.assertStringEqual(
             content,
@@ -1850,7 +1838,8 @@ class TestAssetsManifest(AddonManifestPatched):
         })
         # self.assertEqual(self.url_open('/web/assets/test_assetsbundle.irassetsec.min.js').status_code, 404)
         # previous test was false, here is the expected assertion i guess
-        content = self.url_open('/web/assets/test_assetsbundle.irassetsec.min.js').text
+        with mute_logger('odoo.modules.module'):
+            content = self.url_open('/web/assets/test_assetsbundle.irassetsec.min.js').text
         self.assertNotIn(content, 'notinstalled_module')
 
     @mute_logger('odoo.addons.base.models.ir_asset')

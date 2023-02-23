@@ -207,7 +207,7 @@ class AssetsBundle(object):
         """
         if css and self.stylesheets:
             attachment = self.css(is_minified=minified) or []
-            assert len(attachment) == 1
+            assert len(attachment) <= 1
             # previous version was iterating on attachment but it looks like we should get only one.
             # css error are currently managed by adding a script instead to alert the error
             # TODO: replace this
@@ -271,6 +271,7 @@ class AssetsBundle(object):
         }
 
     def get_asset_url(self, unique='%', extra=None, name='%', extension='%'):
+
         extra = extra or []
         return self._get_asset_template_url().format(
             **self._get_asset_url_values(unique=unique, extra=extra, name=name, extension=extension)

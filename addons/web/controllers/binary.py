@@ -90,22 +90,6 @@ class Binary(http.Controller):
         '/web/assets/<string:unique>/<path:extra>/<string:filename>'
     ], type='http', auth="public")
     # pylint: disable=redefined-builtin,invalid-name
-<<<<<<< HEAD
-    def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
-        if not id:
-            domain = [('url', '!=', False)]
-            if extra:
-                domain += [('url', '=like', f'/web/assets/%/{extra}/{filename}')]
-            else:
-                domain += [
-                    ('url', '=like', f'/web/assets/%/{filename}'),
-                    ('url', 'not like', f'/web/assets/%/%/{filename}')
-                ]
-            attachment = request.env['ir.attachment'].sudo().search(domain, limit=1)
-            if not attachment:
-                raise request.not_found()
-            id = attachment.id
-=======
     def content_assets(self, filename=None, unique=False, extra=None, nocache=False):
         extra = extra or '-'
         unique_filter = unique or '%'
@@ -114,9 +98,13 @@ class Binary(http.Controller):
             domain = [('url', '=', url)]
         else:
             domain = [('url', '=like', url)]
+        domain += [('url', '!=', False)]
         # domain += [('name', '=', filename), ('public', '=', True)]
         attachment = request.env['ir.attachment'].sudo().search(domain, limit=1, order='id desc')
         if not attachment:
+            # note: right now when generating the page, the last version of a bundle is orm_cached
+            # through _get_asset_nodes, and _generate_asset_nodes_cache. Here we lose this cache if a link is outdated,
+            # or if someones call an invalid asset version. Maybe we could have a ormcached list of (bundle_name, extra) -> version and use it in generate_assets_node_cache
             _logger.info('Generating assets bundle %s', filename)
             attachment = request.env['ir.qweb']._generate_assets_bundle(filename, extra)
             if attachment and unique and unique not in attachment.url:
@@ -130,7 +118,6 @@ class Binary(http.Controller):
                 attachment = None
         if not attachment:
             raise request.not_found()
->>>>>>> wip
         with replace_exceptions(UserError, by=request.not_found()):
             #attachment.validate_access()
             record = request.env['ir.binary']._find_record(res_id=int(attachment.id))

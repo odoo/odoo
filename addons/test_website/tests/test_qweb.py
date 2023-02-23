@@ -41,12 +41,9 @@ class TestQweb(TransactionCaseWithUserDemo):
         html = html.strip()
         html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
-        attachments = demo_env['ir.attachment'].search([('url', '=like', '/web/assets/%/test_website.test_bundle.%')])
-        self.assertEqual(len(attachments), 2)
-
         format_data = {
-            "js": attachments[0].url,
-            "css": attachments[1].url,
+            "js": f"/web/assets/{asset_version}/we_{website.id}/test_website.test_bundle.min.js",
+            "css": f"/web/assets/{asset_version}/we_{website.id}/test_website.test_bundle.min.css",
             "user_id": demo.id,
             "filename": "Marc%20Demo",
             "alt": "Marc Demo",

@@ -23,7 +23,7 @@ class AssetsBundleMultiWebsite(AssetsBundle):
         extra = extra or []
         website_id = self.env.context.get('website_id')
         if website_id:
-            extra += f'website_{website_id}'
+            extra.append(f'we_{website_id}')
         res = super()._get_asset_url_values(unique, extra, name, extension)
         return res
 

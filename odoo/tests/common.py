@@ -805,7 +805,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             self.profile_session = profiler.make_session(test_method)
         return profiler.Profiler(
             description='%s uid:%s %s %s' % (test_method, self.env.user.id, 'warm' if self.warm else 'cold', description),
-            db=kwargs.pop('db', self.env.cr.dbname),
+            db=kwargs.pop('db', os.environ.get('ODOO_PROFILER_DATABASE') or self.env.cr.dbname),
             profile_session=self.profile_session,
             **kwargs)
 
@@ -870,16 +870,19 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         return LookLike(*args)
 
 
-class LookLike():
+class LookLike:
     """
     LookLike allows to define a string like object that will use a regex match instead of an equal when compared to a string.
     """
     def __init__(self, descriptor):
         self.descriptor = descriptor
-        self.regex = '.*' . join([re.escape(part.strip()) for part in self.descriptor.split('...')])
+        self.regex = '.*' . join([re.escape(self.cleanup(part)) for part in self.descriptor.split('...')])
 
     def __eq__(self, other):
-        return re.fullmatch(self.regex, other)
+        return re.fullmatch(self.regex, self.cleanup(other))
+
+    def cleanup(self, string):
+        return string.strip()
 
     def __repr__(self):
         return f'~{self.descriptor}'

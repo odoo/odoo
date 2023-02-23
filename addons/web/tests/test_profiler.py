@@ -24,7 +24,7 @@ class ProfilingHttpCase(HttpCase):
     def profile_rpc(self, params=None):
         params = params or {}
         req = self.url_open(
-            '/web/dataset/call_kw/ir.profile/set_profiling', # use model and method in route has web client does
+            '/web/dataset/call_kw/ir.profile/set_profiling',  # use model and method in route has web client does
             headers={'Content-Type': 'application/json'},
             data=json.dumps({'params':{
                 'model': 'ir.profile',

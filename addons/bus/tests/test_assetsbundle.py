@@ -36,8 +36,11 @@ class BusWebTests(odoo.tests.HttpCase):
 
         self.patch(type(self.env['bus.bus']), '_sendone', patched_sendone)
 
-        self.authenticate('admin', 'admin')
-        self.url_open('/web')
+        #self.authenticate('admin', 'admin')
+        self.url_open('/web/assets/web.assets_common.min.js')
+        self.url_open('/web/assets/web.assets_common.min.css')
+        self.url_open('/web/assets/web.assets_backend.min.js')
+        self.url_open('/web/assets/web.assets_backend.min.css')
 
         # One sendone for each asset bundle and for each CSS / JS
         self.assertEqual(

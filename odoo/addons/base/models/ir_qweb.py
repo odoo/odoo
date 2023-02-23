@@ -2585,6 +2585,8 @@ class IrQWeb(models.AbstractModel):
         for view in views:
             for call_asset in etree.fromstring(view.arch_db).xpath("//*[@t-call-assets]"):
                 asset = call_asset.get('t-call-assets')
+                if asset.split('.')[0] == 'test_assetsbundle':
+                    continue
                 js = str2bool(call_asset.get('t-js', 'True'))
                 css = str2bool(call_asset.get('t-css', 'True'))
                 if js:
@@ -2598,7 +2600,7 @@ class IrQWeb(models.AbstractModel):
         _logger.info('JS Assets bundles generated in %s seconds', time.time() - start)
         start = time.time()
         for bundle in sorted(css_bundles):
-            attachments |=  self._generate_assets_bundle(f'{bundle}.min.css')
+            attachments |= self._generate_assets_bundle(f'{bundle}.min.css')
         _logger.info('CSS Assets bundles generated in %s seconds', time.time() - start)
         return attachments
 
