@@ -310,7 +310,7 @@ class Cursor(BaseCursor):
         start = real_time()
         try:
             params = params or None
-            res = self._obj.execute(query, params)
+            res = self._obj.execute(quer, params)
         except Exception as e:
             if log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
