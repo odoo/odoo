@@ -10,6 +10,7 @@
                     <field name="name"/>
                     <field name="delivery_type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="country_ids" widget="many2many_tags" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -95,15 +96,30 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group name="delivery_details">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="fixed_price"
+                                       widget="monetary"
+                                       class="oe_inline"
+                                       attrs="{'invisible': [('delivery_type', '!=', 'fixed')]}"/>
+                                <field name="margin"
+                                       string="Margin on Rate"
+                                       widget="percentage"
+                                       class="oe_inline"
+                                       attrs="{'invisible': [('delivery_type', '=', 'fixed')]}"/>
+                                <field name="fixed_margin"
+                                       string="Additional margin"
+                                       widget="monetary"
+                                       attrs="{'invisible': [('delivery_type', '=', 'fixed')]}"/>
+                                <label for="free_over" attrs="{'invisible': [('delivery_type', '=', 'base_on_rule')]}"/>
+                                <div name="free_over_amount" attrs="{'invisible': [('delivery_type', '=', 'base_on_rule')]}">
+                                    <field name="free_over"/>
+                                    <field name="amount"
+                                           widget="monetary"
+                                           class="oe_inline"
+                                           attrs="{'required': [('free_over', '!=', False)], 'invisible': [('free_over', '=', False)]}"/>
+                                </div>
                                 <field name="product_id" context="{'default_detailed_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False, 'default_invoice_policy': 'order'}" />
                                 <field name="invoice_policy" widget="radio" attrs="{'invisible': ['|', ('delivery_type', 'in', ('fixed', 'base_on_rule')), ('integration_level', '=', 'rate')]}"/>
-                                <label for="margin" string="Margin on Rate" attrs="{'invisible': [('delivery_type', '=', 'fixed')]}"/>
-                                <div attrs="{'invisible': [('delivery_type', '=', 'fixed')]}">
-                                    <field name="margin" class="oe_inline"/>%
-                                </div>
-                                <field name="fixed_margin" attrs="{'invisible': [('delivery_type', '=', 'fixed')]}"/>
-                                <field name="free_over" attrs="{'invisible': [('delivery_type', '=', ('base_on_rule'))]}"/>
-                                <field name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':['|',('free_over','=', False),('delivery_type', '=', ('base_on_rule'))]}"/>
                                 <field name="supports_shipping_insurance" invisible="1"/>
                                 <label for="shipping_insurance" String="Shipping Insurance" attrs="{'invisible': [('supports_shipping_insurance', '=', False)]}"/>
                                 <div attrs="{'invisible': [('supports_shipping_insurance', '=', False)]}">
@@ -112,28 +128,35 @@
                             </group>
                         </group>
                         <notebook>
-                            <page name="pricing" string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">
-                                <group attrs="{'invisible':[('delivery_type', '!=', 'fixed')]}">
-                                    <group name="fixed_price">
-                                        <field name="fixed_price"/>
-                                    </group>
-                                </group>
-                                <group name="general" attrs="{'invisible':[('delivery_type', '!=', 'base_on_rule')]}">
+                            <page name="pricing" string="Pricing" attrs="{'invisible': [('delivery_type', '!=', 'base_on_rule')]}">
+                                <group name="general">
                                     <field name="price_rule_ids" nolabel="1" colspan="2"/>
                                 </group>
                             </page>
                             <page string="Destination Availability" name="destination">
-                                <group>
-                                    <p colspan="2">
+                                <group col="1">
+                                    <p>
                                         Filling this form allows you to filter delivery carriers according to the delivery address of your customer.
                                     </p>
-                                </group>
-                                <group>
-                                    <group name="country_details">
-                                        <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
-                                        <field name="state_ids" widget="many2many_tags"/>
-                                        <field name="zip_prefix_ids" widget="many2many_tags"/>
+                                    <group name="country_details" class="oe_inline">
+                                        <field name="country_ids"
+                                               widget="many2many_tags"
+                                               options="{'no_open': True, 'no_create': True}"/>
+                                        <field name="state_ids"
+                                               widget="many2many_tags"
+                                               domain="[('country_id', 'in', country_ids)]"
+                                               attrs="{'readonly': [('country_ids', '=', [])]}"
+                                               force_save="1"
+                                               options="{'no_create': True}"/>
+                                        <field name="zip_prefix_ids"
+                                               widget="many2many_tags"
+                                               attrs="{'readonly': [('country_ids', '=', [])]}"
+                                               force_save="1"
+                                               options="{'no_create_edit': True}"/>
                                     </group>
+                                    <p class="fst-italic" attrs="{'invisible': [('country_ids', '!=', [])]}">
+                                        Please select a country before choosing a state or a zip prefix.
+                                    </p>
                                 </group>
                             </page>
                             <page string="Description" name="description">
@@ -196,11 +219,12 @@
                             <field name="operator"/>
                             <field name="max_value"/>
                         </div>
+                        <field name="currency_id" invisible="1"/>
                         <label for="list_base_price" string="Delivery Cost"/>
                         <div>
-                            <field name="list_base_price" class="oe_inline"/>
+                            <field name="list_base_price" widget="monetary" class="oe_inline"/>
                             +
-                            <field name="list_price" class="oe_inline"/>
+                            <field name="list_price" widget="monetary" class="oe_inline"/>
                             *
                             <field name="variable_factor" class="oe_inline"/>
                         </div>
@@ -266,6 +290,9 @@
                     <xpath expr="//field[@name='order_line']/tree" position="attributes">
                         <attribute name="decoration-warning">recompute_delivery_price and is_delivery</attribute>
                     </xpath>
+                    <label for="commitment_date" position="before">
+                        <field name="shipping_weight" readonly="True"/>
+                    </label>
                 </data>
             </field>
         </record>

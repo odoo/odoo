@@ -3,7 +3,7 @@
 import psycopg2
 import re
 
-from odoo import _, api, fields, models, registry, SUPERUSER_ID
+from odoo import _, api, fields, models, registry, Command, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
@@ -48,6 +48,7 @@ class DeliveryCarrier(models.Model):
     debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
     company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, readonly=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
+    currency_id = fields.Many2one(related='product_id.currency_id')
 
     invoice_policy = fields.Selection(
         selection=[('estimated', "Estimated cost")],
@@ -70,7 +71,11 @@ class DeliveryCarrier(models.Model):
     margin = fields.Float(help='This percentage will be added to the shipping price.')
     fixed_margin = fields.Float(help='This fixed amount will be added to the shipping price.')
     free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False)
-    amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
+    amount = fields.Float(
+        string="Amount",
+        default=1000,
+        help="Amount of the order to benefit from a free shipping, expressed in the company currency",
+    )
 
     can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
     return_label_on_delivery = fields.Boolean(string="Generate Return Label", help="The return label is automatically generated at the delivery.")
@@ -88,7 +93,7 @@ class DeliveryCarrier(models.Model):
     )
 
     _sql_constraints = [
-        ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
+        ('margin_not_under_100_percent', 'CHECK (margin >= -1)', 'Margin cannot be lower than -100%'),
         ('shipping_insurance_is_percentage', 'CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)', "The shipping insurance must be a percentage between 0 and 100."),
     ]
 
@@ -153,13 +158,13 @@ class DeliveryCarrier(models.Model):
         if not self.return_label_on_delivery:
             self.get_return_label_from_portal = False
 
-    @api.onchange('state_ids')
-    def onchange_states(self):
-        self.country_ids = [(6, 0, self.country_ids.ids + self.state_ids.mapped('country_id.id'))]
-
     @api.onchange('country_ids')
-    def onchange_countries(self):
-        self.state_ids = [(6, 0, self.state_ids.filtered(lambda state: state.id in self.country_ids.mapped('state_ids').ids).ids)]
+    def _onchange_country_ids(self):
+        self.state_ids -= self.state_ids.filtered(
+            lambda state: state._origin.id not in self.country_ids.state_ids.ids
+        )
+        if not self.country_ids:
+            self.zip_prefix_ids = [Command.clear()]
 
     def _get_delivery_type(self):
         """Return the delivery type.
@@ -199,7 +204,7 @@ class DeliveryCarrier(models.Model):
                 product_currency=company.currency_id
             )
             # apply margin on computed price
-            res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0)) + self.fixed_margin
+            res['price'] = float(res['price']) * (1.0 + self.margin) + self.fixed_margin
             # save the real price in case a free_over rule overide it to 0
             res['carrier_price'] = res['price']
             # free when order is large enough

@@ -129,6 +129,14 @@
                     <setting id="shipping_address_setting" help="Let the customer enter a shipping address">
                         <field name="group_delivery_invoice_address"/>
                     </setting>
+                    <setting id="delivery_method_setting" string="Shipping Costs" help="Compute shipping costs on orders"
+                             documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <button type="action" name="%(delivery.action_delivery_carrier_form)d" string="Shipping Methods" class="btn-link" icon="fa-arrow-right"/>
+                            </div>
+                        </div>
+                    </setting>
                     <setting id="ups_provider_setting" string="UPS" help="Compute shipping costs and ship with UPS"
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                         <field name="module_delivery_ups" widget="upgrade_boolean"/>

@@ -88,19 +88,6 @@
             </field>
         </record>
 
-        <record id="view_order_form_with_carrier" model="ir.ui.view">
-            <field name="name">delivery.sale.order.form.view.with_carrier</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
-            <field name="arch" type="xml">
-                <data>
-                    <field name="picking_policy" position="after">
-                        <field name="shipping_weight" readonly="True"/>
-                    </field>
-                </data>
-            </field>
-        </record>
-
         <record id="delivery_tracking_url_warning_form" model="ir.ui.view">
             <field name="name">delivery.carrier.warning.url.form</field>
             <field name="model">stock.picking</field>

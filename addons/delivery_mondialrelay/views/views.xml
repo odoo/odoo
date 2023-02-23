@@ -18,8 +18,8 @@
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_tree"/>
         <field name="arch" type="xml">
-            <field name="company_id" position="after">
-                <field name="country_ids" widget="many2many_tags" />
+            <field name="country_ids" position="attributes">
+                <attribute name="optional">show</attribute>
             </field>
         </field>
     </record>
