@@ -1,35 +1,31 @@
-odoo.define('point_of_sale.RefundButton', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const ProductScreen = require('point_of_sale.ProductScreen');
-    const Registries = require('point_of_sale.Registries');
-    const { useListener } = require("@web/core/utils/hooks");
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { LegacyComponent } from "@web/legacy/legacy_component";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { useListener } from "@web/core/utils/hooks";
 
-    class RefundButton extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('click', this._onClick);
-        }
-        _onClick() {
-            const partner = this.env.pos.get_order().get_partner();
-            const searchDetails = partner ? { fieldName: 'PARTNER', searchTerm: partner.name } : {};
-            this.showScreen('TicketScreen', {
-                ui: { filter: 'SYNCED', searchDetails },
-                destinationOrder: this.env.pos.get_order(),
-            });
-        }
+export class RefundButton extends LegacyComponent {
+    static template = "point_of_sale.RefundButton";
+
+    setup() {
+        super.setup();
+        this.pos = usePos();
+        useListener("click", this._onClick);
     }
-    RefundButton.template = 'point_of_sale.RefundButton';
+    _onClick() {
+        const partner = this.env.pos.get_order().get_partner();
+        const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
+        this.pos.showScreen("TicketScreen", {
+            ui: { filter: "SYNCED", searchDetails },
+            destinationOrder: this.env.pos.get_order(),
+        });
+    }
+}
 
-    ProductScreen.addControlButton({
-        component: RefundButton,
-        condition: function () {
-            return true;
-        },
-    });
-
-    Registries.Component.add(RefundButton);
-
-    return RefundButton;
+ProductScreen.addControlButton({
+    component: RefundButton,
+    condition: function () {
+        return true;
+    },
 });

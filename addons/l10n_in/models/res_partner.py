@@ -19,6 +19,14 @@ class ResPartner(models.Model):
             ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment")
 
+    l10n_in_pan = fields.Char(
+        string="PAN",
+        help="PAN enables the department to link all transactions of the person with the department.\n"
+             "These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT,"
+             " specified transactions, correspondence, and so on.\n"
+             "Thus, PAN acts as an identifier for the person with the tax department."
+    )
+
     @api.onchange('company_type')
     def onchange_company_type(self):
         res = super().onchange_company_type()
@@ -45,7 +53,7 @@ class ResPartner(models.Model):
     @api.model
     def _commercial_fields(self):
         res = super()._commercial_fields()
-        return res + ['l10n_in_gst_treatment']
+        return res + ['l10n_in_gst_treatment', 'l10n_in_pan']
 
     def check_vat_in(self, vat):
         """

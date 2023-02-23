@@ -43,43 +43,12 @@ QUnit.module("ViewDialogs", (hooks) => {
                         display_name: { string: "Displayed name", type: "char" },
                         foo: { string: "Foo", type: "char" },
                         bar: { string: "Bar", type: "boolean" },
-                        instrument: {
-                            string: "Instruments",
-                            type: "many2one",
-                            relation: "instrument",
-                        },
                     },
                     records: [
                         { id: 1, foo: "blip", display_name: "blipblip", bar: true },
                         { id: 2, foo: "ta tata ta ta", display_name: "macgyver", bar: false },
                         { id: 3, foo: "piou piou", display_name: "Jack O'Neill", bar: true },
                     ],
-                },
-                instrument: {
-                    fields: {
-                        name: { string: "name", type: "char" },
-                        badassery: {
-                            string: "level",
-                            type: "many2many",
-                            relation: "badassery",
-                            domain: [["level", "=", "Awsome"]],
-                        },
-                    },
-                },
-
-                badassery: {
-                    fields: {
-                        level: { string: "level", type: "char" },
-                    },
-                    records: [{ id: 1, level: "Awsome" }],
-                },
-
-                product: {
-                    fields: {
-                        name: { string: "name", type: "char" },
-                        partner: { string: "Doors", type: "one2many", relation: "partner" },
-                    },
-                    records: [{ id: 1, name: "The end" }],
                 },
                 "ir.exports": {
                     fields: {
@@ -164,6 +133,21 @@ QUnit.module("ViewDialogs", (hooks) => {
                     },
                     children: true,
                 },
+                {
+                    id: "activity_ids/mail_template_ids",
+                    string: "Activities/Email templates",
+                    value: "activity_ids/mail_template_ids/id",
+                    children: true,
+                    field_type: "many2many",
+                    required: false,
+                    relation_field: null,
+                    default_export: false,
+                    params: {
+                        model: "mail.template",
+                        prefix: "activity_ids/mail_template_ids",
+                        name: "Activities/Email templates",
+                    },
+                },
             ],
             partner_ids: [
                 {
@@ -209,7 +193,6 @@ QUnit.module("ViewDialogs", (hooks) => {
         });
 
         await openExportDataDialog();
-
         assert.containsOnce(target, ".o_dialog", "the export dialog should be visible");
         assert.containsN(
             target,
@@ -217,6 +200,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             3,
             "There should be only three items visible"
         );
+
         await editInput(target.querySelector(".modal .o_export_search_input"), null, "ac");
         assert.containsOnce(target, ".modal .o_export_tree_item", "Only match item visible");
         // Add field
@@ -247,7 +231,7 @@ QUnit.module("ViewDialogs", (hooks) => {
     });
 
     QUnit.test("Export dialog: interacting with export templates", async function (assert) {
-        assert.expect(25);
+        assert.expect(26);
 
         await makeView({
             serverData,
@@ -259,14 +243,20 @@ QUnit.module("ViewDialogs", (hooks) => {
             mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.strictEqual(args.model, "ir.exports");
+                    const [values] = args.args[0];
                     assert.strictEqual(
-                        args.args[0].name,
+                        values.name,
                         "Export template",
                         "the template name is correctly sent"
                     );
-                    return 2;
+                    return [2];
                 }
-                if (route === "/web/dataset/call_kw") {
+                if (args.method === "search_read") {
+                    assert.deepEqual(
+                        args.kwargs.domain,
+                        [["resource", "=", "partner"]],
+                        "rpc contains the right domain filter to fetch templates"
+                    );
                     return Promise.resolve([{ id: 1, name: "Activities template" }]);
                 }
                 if (route === "/web/export/namelist") {
@@ -590,6 +580,81 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target, ".o_select_button");
     });
 
+    QUnit.test("Export dialog: many2many fields are extendable", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: '<tree><field name="foo"/></tree>',
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([
+                        { tag: "csv", label: "CSV" },
+                        { tag: "xls", label: "Excel" },
+                    ]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+        await click(target, "[data-field_id='activity_ids']");
+        assert.hasClass(
+            target.querySelector("[data-field_id='activity_ids/mail_template_ids'] span"),
+            "o_expand_parent",
+            "many2many element is expandable"
+        );
+    });
+
+    QUnit.test("Export dialog: export list with 'exportable: false'", async function (assert) {
+        serverData.models.partner.fields.not_exportable = {
+            string: "Not exportable",
+            type: "char",
+            exportable: false,
+        };
+        serverData.models.partner.fields.exportable = { string: "Exportable", type: "char" };
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `<tree export_xlsx="1">
+                <field name="foo"/>
+                <field name="not_exportable"/>
+                <field name="exportable"/>
+            </tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    if (args.prefix === "partner_ids") {
+                        assert.step("fetch fields for 'partner_ids'");
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+        assert.containsN(target, ".o_export_field", 2, "only two fields are selected in the list");
+        assert.strictEqual(
+            target.querySelector(".o_fields_list").textContent,
+            "FooExportable",
+            "values are the correct ones"
+        );
+    });
+
     QUnit.test("Export dialog: display on small screen after resize", async function (assert) {
         const { execRegisteredTimeouts } = mockTimeout();
         const ui = {
@@ -665,6 +730,101 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
+    QUnit.test("ExportDialog: export all records of the domain", async function (assert) {
+        assert.expect(2);
+        let isDomainSelected = false;
+
+        mockDownload(({ data }) => {
+            if (isDomainSelected) {
+                assert.deepEqual(
+                    JSON.parse(data.data),
+                    {
+                        context: { lang: "en", uid: 7, tz: "taht" },
+                        model: "partner",
+                        domain: [["bar", "!=", "glou"]],
+                        groupby: [],
+                        ids: false,
+                        import_compat: false,
+                        fields: [
+                            {
+                                name: "foo",
+                                label: "Foo",
+                                type: "char",
+                            },
+                            {
+                                name: "bar",
+                                label: "Bar",
+                                type: "boolean",
+                            },
+                        ],
+                    },
+                    "should be called with correct params when all records are selected"
+                );
+            } else {
+                assert.deepEqual(
+                    JSON.parse(data.data),
+                    {
+                        context: { lang: "en", uid: 7, tz: "taht" },
+                        model: "partner",
+                        domain: [["bar", "!=", "glou"]],
+                        groupby: [],
+                        ids: [1],
+                        import_compat: false,
+                        fields: [
+                            {
+                                name: "foo",
+                                label: "Foo",
+                                type: "char",
+                            },
+                            {
+                                name: "bar",
+                                label: "Bar",
+                                type: "boolean",
+                            },
+                        ],
+                    },
+                    "should be called with correct params when only one record is selected"
+                );
+            }
+            return Promise.resolve();
+        });
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1" limit="1">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+            actionMenus: {},
+            domain: [["bar", "!=", "glou"]],
+            mockRPC(route) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "xls", label: "Excel" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+        await click(target.querySelector(".o_select_button"));
+        await click(target.querySelector(".btn-close"));
+
+        isDomainSelected = true;
+        await click(target.querySelector(".o_list_select_domain"));
+        await click(target.querySelector(".o_control_panel .o_cp_action_menus .dropdown-toggle"));
+        await click(
+            target.querySelector(
+                ".o_control_panel .o_cp_action_menus .dropdown-menu span:first-child"
+            )
+        );
+        await click(target.querySelector(".o_select_button"));
+    });
+
     QUnit.test("Direct export list", async function (assert) {
         assert.expect(2);
 
@@ -692,7 +852,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                         {
                             name: "bar",
                             label: "Bar",
-                            type: "char",
+                            type: "boolean",
                         },
                     ],
                 },
@@ -712,11 +872,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                     <field name="bar"/>
                 </tree>`,
             domain: [["bar", "!=", "glou"]],
-            mockRPC(route) {
-                if (route === "/web/export/get_fields") {
-                    return Promise.resolve(fetchedFields.root);
-                }
-            },
         });
 
         await click(target.querySelector(".o_list_export_xlsx"));
@@ -749,7 +904,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                         {
                             name: "bar",
                             label: "Bar",
-                            type: "char",
+                            type: "boolean",
                         },
                     ],
                 },
@@ -769,13 +924,53 @@ QUnit.module("ViewDialogs", (hooks) => {
                 </tree>`,
             groupBy: ["foo", "bar"],
             domain: [["bar", "!=", "glou"]],
+        });
+
+        await click(target.querySelector(".o_list_export_xlsx"));
+    });
+
+    QUnit.test("Export dialog with duplicated fields", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree>
+                    <field name="foo" string="Foo"/>
+                    <field name="foo" string="duplicate of Foo"/>
+                </tree>`,
+            actionMenus: {},
             mockRPC(route) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
                 if (route === "/web/export/get_fields") {
                     return Promise.resolve(fetchedFields.root);
                 }
             },
         });
 
-        await click(target.querySelector(".o_list_export_xlsx"));
+        assert.strictEqual(
+            target.querySelector(".o_list_table th:nth-child(2)").textContent,
+            "Foo",
+            "first column contains the field"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_table th:nth-child(3)").textContent,
+            "duplicate of Foo",
+            "second column contains the duplicated field"
+        );
+
+        await openExportDataDialog();
+        assert.containsOnce(
+            target,
+            ".modal .o_export_field",
+            "there is only one field in export field list."
+        );
+        assert.strictEqual(
+            target.querySelector(".modal .o_export_field").textContent,
+            "Foo",
+            "the field to export corresponds to the field displayed in the list view"
+        );
     });
 });

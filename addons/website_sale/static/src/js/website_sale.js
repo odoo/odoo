@@ -229,6 +229,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'change oe_advanced_configurator_modal [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
+        'mousedown .o_wsale_filmstip_wrapper': '_onMouseDown',
+        'mouseleave .o_wsale_filmstip_wrapper': '_onMouseLeave',
+        'mouseup .o_wsale_filmstip_wrapper': '_onMouseUp',
+        'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
+        'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
     }),
 
     /**
@@ -241,6 +246,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
+        this.filmStripStartX = 0;
+        this.filmStripIsDown = false;
+        this.filmStripScrollLeft = 0;
+        this.filmStripMoved = false;
 
         delete this.events['change .main_product:not(.in_cart) input.js_quantity'];
         delete this.events['change [data-attribute_exclusions]'];
@@ -301,6 +310,41 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     // Private
     //--------------------------------------------------------------------------
 
+    _onMouseDown: function (ev) {
+        this.filmStripIsDown = true;
+        this.filmStripStartX = ev.pageX - ev.currentTarget.offsetLeft;
+        this.filmStripScrollLeft = ev.currentTarget.scrollLeft;
+        this.formerTarget = ev.target;
+        this.filmStripMoved = false;
+    },
+    _onMouseLeave: function (ev) {
+        if (!this.filmStripIsDown) {
+            return;
+        }
+        ev.currentTarget.classList.remove('activeDrag');
+        this.filmStripIsDown = false
+    },
+    _onMouseUp: function (ev) {
+        this.filmStripIsDown = false;
+        ev.currentTarget.classList.remove('activeDrag');
+    },
+    _onMouseMove: function (ev) {
+        if (!this.filmStripIsDown) {
+            return;
+        }
+        ev.preventDefault();
+        ev.currentTarget.classList.add('activeDrag');
+        this.filmStripMoved = true;
+        const x = ev.pageX - ev.currentTarget.offsetLeft;
+        const walk = (x - this.filmStripStartX) * 2;
+        ev.currentTarget.scrollLeft = this.filmStripScrollLeft - walk;
+    },
+    _onClickHandler: function(ev) {
+        if(this.filmStripMoved) {
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
+    },
     _applyHash: function () {
         var hash = window.location.hash.substring(1);
         if (hash) {
@@ -331,7 +375,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         var attributeIds = _.map($attributes, function (elem) {
             return $(elem).data('value_id');
         });
-        window.location.hash = 'attr=' + attributeIds.join(',');
+        window.location.replace('#attr=' + attributeIds.join(','));
     },
     /**
      * Set the checked values active.
@@ -737,7 +781,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onChangeAttribute: function (ev) {
         if (!ev.isDefaultPrevented()) {
             ev.preventDefault();
-            this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
+            const productGrid = this.el.querySelector(".o_wsale_products_grid_table_wrapper");
+            if (productGrid) {
+                productGrid.classList.add("opacity-50");
+            }
             $(ev.currentTarget).closest("form").submit();
         }
     },
@@ -777,6 +824,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             ev.preventDefault();
             var oldurl = $this.attr('action');
             oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
+            if ($this.find('[name=noFuzzy]').val() === "true") {
+                oldurl += '&noFuzzy=true';
+            }
             var search = $this.find('input.search-query');
             window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
         }
@@ -890,7 +940,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
 
                 if (selectedCombination && selectedCombination.length) {
-                    window.location.hash = `attr=${selectedCombination.join(',')}`;
+                    window.location.replace('#attr=' + selectedCombination.join(','));
                 }
             }
         }
@@ -1037,8 +1087,8 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         await this._super(...arguments);
         this._updateCarouselPosition();
         extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
-        if (this.$target.find('.carousel-indicators').length > 0) {
-            this.$target.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
+        if (this.$el.find('.carousel-indicators').length > 0) {
+            this.$el.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
             $(window).on('resize.carousel_product_slider', _.throttle(this._onSlideCarouselProduct.bind(this), 150));
             this._updateJustifyContent();
         }
@@ -1047,8 +1097,8 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        this.$target.css('top', '');
-        this.$target.off('.carousel_product_slider');
+        this.$el.css('top', '');
+        this.$el.off('.carousel_product_slider');
         this._super(...arguments);
     },
 
@@ -1060,7 +1110,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @private
      */
     _updateCarouselPosition() {
-        this.$target.css('top', dom.scrollFixedOffset() + 5);
+        this.$el.css('top', dom.scrollFixedOffset() + 5);
     },
 
     //--------------------------------------------------------------------------
@@ -1075,11 +1125,11 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onSlideCarouselProduct: function (ev) {
-        const isReversed = this.$target.css('flex-direction') === "column-reverse";
-        const isLeftIndicators = this.$target.hasClass('o_carousel_product_left_indicators');
-        const $indicatorsDiv = isLeftIndicators ? this.$target.find('.o_carousel_product_indicators') : this.$target.find('.carousel-indicators');
+        const isReversed = this.$el.css('flex-direction') === "column-reverse";
+        const isLeftIndicators = this.$el.hasClass('o_carousel_product_left_indicators');
+        const $indicatorsDiv = isLeftIndicators ? this.$el.find('.o_carousel_product_indicators') : this.$el.find('.carousel-indicators');
         let indicatorIndex = $(ev.relatedTarget).index();
-        indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$target.find('li.active').index();
+        indicatorIndex = indicatorIndex > -1 ? indicatorIndex : this.$el.find('li.active').index();
         const $indicator = $indicatorsDiv.find('[data-bs-slide-to=' + indicatorIndex + ']');
         const indicatorsDivSize = isLeftIndicators && !isReversed ? $indicatorsDiv.outerHeight() : $indicatorsDiv.outerWidth();
         const indicatorSize = isLeftIndicators && !isReversed ? $indicator.outerHeight() : $indicator.outerWidth();
@@ -1097,10 +1147,10 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      * @private
      */
      _updateJustifyContent: function () {
-        const $indicatorsDiv = this.$target.find('.carousel-indicators');
+        const $indicatorsDiv = this.$el.find('.carousel-indicators');
         $indicatorsDiv.css('justify-content', 'start');
         if (config.device.size_class <= config.device.SIZES.MD) {
-            if (($indicatorsDiv.children().last().position().left + this.$target.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
+            if (($indicatorsDiv.children().last().position().left + this.$el.find('li').outerWidth()) < $indicatorsDiv.outerWidth()) {
                 $indicatorsDiv.css('justify-content', 'center');
             }
         }
@@ -1112,9 +1162,9 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     _onMouseWheel: function (ev) {
         ev.preventDefault();
         if (ev.originalEvent.deltaY > 0) {
-            this.$target.carousel('next');
+            this.$el.carousel('next');
         } else {
-            this.$target.carousel('prev');
+            this.$el.carousel('prev');
         }
     },
 });
@@ -1135,7 +1185,7 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
      * @override
      */
     destroy() {
-        this.$target.find('.o_portal_chatter_composer').css('top', '');
+        this.$el.find('.o_portal_chatter_composer').css('top', '');
         this._super(...arguments);
     },
 
@@ -1147,7 +1197,7 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
      * @private
      */
     _updateChatterComposerPosition() {
-        this.$target.find('.o_portal_chatter_composer').css('top', dom.scrollFixedOffset() + 20);
+        this.$el.find('.o_portal_chatter_composer').css('top', dom.scrollFixedOffset() + 20);
     },
 });
 
@@ -1191,7 +1241,10 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (parseFloat(range.max) !== range.valueHigh) {
             search['max_price'] = range.valueHigh;
         }
-        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
+        let product_list_div = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
+        if (product_list_div) {
+            product_list_div.classList.add('opacity-50');
+        }
         window.location.search = $.param(search);
     },
 });

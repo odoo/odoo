@@ -1,341 +1,105 @@
-odoo.define('partner.autocomplete.fieldchar', function (require) {
-'use strict';
+/** @odoo-module **/
+/* global checkVATNumber */
 
-var basic_fields = require('web.basic_fields');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var AutocompleteMixin = require('partner.autocomplete.Mixin');
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { useChildRef } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+import { CharField, charField } from "@web/views/fields/char/char_field";
+import { useInputField } from "@web/views/fields/input_field_hook";
+import { loadJS } from "@web/core/assets";
 
-var QWeb = core.qweb;
+import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core"
 
-var FieldChar = basic_fields.FieldChar;
+export class PartnerAutoCompleteCharField extends CharField {
+    setup() {
+        super.setup();
 
-/**
- * FieldChar extension to suggest existing companies when changing the company
- * name on a res.partner view (indeed, it is designed to change the "name",
- * "website" and "image" fields of records of this model).
- */
-var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
-    className: 'o_field_partner_autocomplete',
-    debounceSuggestions: 400,
-    resetOnAnyFieldChange: true,
+        this.partner_autocomplete = usePartnerAutocomplete();
 
-    jsLibs: [
-        '/partner_autocomplete/static/lib/jsvat.js'
-    ],
+        this.inputRef = useChildRef();
+        useInputField({ getValue: () => this.props.value || "", parse: (v) => this.parse(v), ref: this.inputRef});
+    }
 
-    events: _.extend({}, FieldChar.prototype.events, {
-        'keyup': '_onKeyup',
-        'mousedown .o_partner_autocomplete_suggestion': '_onMousedown',
-        'focusout': '_onFocusout',
-        'mouseenter .o_partner_autocomplete_suggestion': '_onHoverDropdown',
-        'click .o_partner_autocomplete_suggestion': '_onSuggestionClicked',
-    }),
+    sanitizeVAT(request) {
+        return request ? request.replace(/[^A-Za-z0-9]/g, '') : '';
+    }
 
-    /**
-     * @constructor
-     * Prepares the basic rendering of edit mode by setting the root to be a
-     * div.dropdown.open.
-     * @see FieldChar.init
-     */
-    init: function () {
-        this._super.apply(this, arguments);
+    isVAT(request) {
+        // checkVATNumber is defined in library jsvat.
+        // It validates that the input has a valid VAT number format
+        return checkVATNumber(this.sanitizeVAT(request));
+    }
 
-        // If the autocomplete is applied to vat field, only search valid vat number
-        this.onlyVAT = this.name === 'vat';
-
-        if (this.mode === 'edit') {
-            this.tagName = 'div';
-            this.className += ' dropdown open w-100';
+    validateSearchTerm(request) {
+        if (this.props.name == 'vat') {
+            return this.isVAT(request);
         }
-
-        if (this.debounceSuggestions > 0) {
-            this._suggestCompanies = _.debounce(this._suggestCompanies.bind(this), this.debounceSuggestions);
+        else {
+            return request && request.length > 2;
         }
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Check if the autocomplete should be active
-     * Active :
-     *  - only when creating new record
-     *  - on model res.partner and is_company=true
-     *  - on model res.company
-     *
-     * @returns {boolean}
-     * @private
-     */
-    _isActive: function () {
-        return this.model === 'res.company' ||
-            (
-                this.model === 'res.partner'
-                && this.record.data.is_company
-                && !(this.record.data && this.record.data.id)
-            );
-    },
-
-    /**
-     *
-     * @private
-     */
-    _removeDropdown: function () {
-        if (this.$dropdown) {
-            this.$dropdown.remove();
-            this.$dropdown = undefined;
-        }
-    },
-
-    /**
-     * Adds the <input/> element and prepares it. Note: the dropdown rendering
-     * is handled outside of the rendering routine (but instead by reacting to
-     * user input).
-     *
-     * @override
-     * @private
-     */
-    _renderEdit: function () {
-        this.$el.empty();
-        // Prepare and add the input
-        this._prepareInput().appendTo(this.$el);
-    },
-
-    /**
-     * Selects the given company suggestions by notifying changes to the view
-     * for the "name", "website" and "image" fields. This is of course intended
-     * to work only with the "res.partner" form view.
-     *
-     * @private
-     * @param {Object} company
-     */
-    _selectCompany: function (company) {
-        var self = this;
-        this._getCreateData(company).then(function (data) {
-            if (data.logo) {
-                var logoField = self.model === 'res.partner' ? 'image_1920' : 'logo';
-                data.company[logoField] = data.logo;
-            }
-
-            // Some fields are unnecessary in res.company
-            if (self.model === 'res.company') {
-                var fields = 'comment,child_ids,bank_ids,additional_info'.split(',');
-                fields.forEach(function (field) {
-                    delete data.company[field];
-                });
-            }
-
-            self._setOne2ManyField('bank_ids', data.company.bank_ids);
-            delete data.company.bank_ids;
-
-            self.trigger_up('field_changed', {
-                dataPointID: self.dataPointID,
-                changes: data.company,
-                onSuccess: function () {
-                    // update the input's value directly
-                    if (self.onlyVAT)
-                        self.$input.val(self._formatValue(company.vat));
-                    else
-                        self.$input.val(self._formatValue(company.name));
+    get sources() {
+        return [
+            {
+                options: async (request) => {
+                    // Lazyload jsvat only if the component is being used.
+                    await loadJS("/partner_autocomplete/static/lib/jsvat.js");
+                    
+                    if (this.validateSearchTerm(request)) {
+                        const suggestions = await this.partner_autocomplete.autocomplete(request, this.isVAT(request));
+                        suggestions.forEach((suggestion) => {
+                            suggestion.classList = "partner_autocomplete_dropdown_char";
+                        });
+                        return suggestions;
+                    }
+                    else {
+                        return [];
+                    }
                 },
+                optionTemplate: "partner_autocomplete.CharFieldDropdownOption",
+                placeholder: _t('Searching Autocomplete...'),
+            },
+        ];
+    }
+
+    async onSelect(option) {
+        const data = await this.partner_autocomplete.getCreateData(Object.getPrototypeOf(option));
+
+        if (data.logo) {
+            const logoField = this.props.record.resModel === 'res.partner' ? 'image_1920' : 'logo';
+            data.company[logoField] = data.logo;
+        }
+
+        // Some fields are unnecessary in res.company
+        if (this.props.record.resModel === 'res.company') {
+            const fields = ['comment', 'child_ids', 'additional_info'];
+            fields.forEach((field) => {
+                delete data.company[field];
             });
+        }
+
+        // Format the many2one fields
+        const many2oneFields = ['country_id', 'state_id'];
+        many2oneFields.forEach((field) => {
+            if (data.company[field]) {
+                data.company[field] = [data.company[field].id, data.company[field].display_name];
+            }
         });
-        this._removeDropdown();
-    },
+        this.props.record.update(data.company);
+    }
+}
 
-    _setOne2ManyField: function (field, list) {
-        var self = this;
-        var viewType = this.record.viewType;
-        if (list && this.record.fieldsInfo[viewType] && this.record.fieldsInfo[viewType][field]) {
-            list.forEach(function (item) {
-                var changes = {};
-                changes[field] = {
-                    operation: 'CREATE',
-                    data: item,
-                };
+PartnerAutoCompleteCharField.template = "partner_autocomplete.PartnerAutoCompleteCharField";
+PartnerAutoCompleteCharField.components = {
+    ...CharField.components,
+    AutoComplete,
+};
 
-                self.trigger_up('field_changed', {
-                    dataPointID: self.dataPointID,
-                    changes: changes,
-                });
-            });
-        }
-    },
+export const partnerAutoCompleteCharField = {
+    ...charField,
+    component: PartnerAutoCompleteCharField,
+};
 
-    /**
-     * Shows the dropdown with the suggestions. If one is
-     * already opened, it removes the old one before rerendering the dropdown.
-     *
-     * @private
-     */
-    _showDropdown: function () {
-        this._removeDropdown();
-        if (this.suggestions.length > 0) {
-            this.$dropdown = $(QWeb.render('partner_autocomplete.dropdown', {
-                suggestions: this.suggestions,
-            }));
-            this.$dropdown.appendTo(this.$el);
-            // We need to make sure that the element containing the dropdown menu doesn't have the
-            // style attribute overflow: hidden, otherwise the dropdown menu will be hidden by it
-            this.$el.removeClass('o_text_overflow');
-            this.$input.addClass('o_text_overflow');
-        }
-    },
-
-    /**
-     * Shows suggestions according to the given value.
-     * Note: this method is debounced (@see init).
-     *
-     * @private
-     * @param {string} value - searched term
-     */
-    _suggestCompanies: function (value) {
-        var self = this;
-        if (this._validateSearchTerm(value, this.onlyVAT) && this._isOnline()) {
-            return this._autocomplete(value).then(function (suggestions) {
-                if (suggestions && suggestions.length) {
-                    self.suggestions = suggestions;
-                    self._showDropdown();
-                } else {
-                    self._removeDropdown();
-                }
-            });
-        } else {
-            this._removeDropdown();
-        }
-    },
-
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called on focusout -> removes the suggestions dropdown.
-     *
-     * @private
-     */
-    _onFocusout: function () {
-        this._removeDropdown();
-    },
-
-    /**
-     * Called when hovering a suggestion in the dropdown -> sets it as active.
-     *
-     * @private
-     * @param {Event} e
-     */
-    _onHoverDropdown: function (e) {
-        this.$dropdown.find('.active').removeClass('active');
-        $(e.currentTarget).parent().addClass('active');
-    },
-
-    /**
-     * @override of FieldChar (called when the user is typing text)
-     * Checks the <input/> value and shows suggestions according to
-     * this value.
-     *
-     * @private
-     */
-    _onInput: function () {
-        this._super.apply(this, arguments);
-        if (this._isActive()) {
-            this._suggestCompanies(this.$input.val());
-        }
-    },
-
-    /**
-     * @override of FieldChar
-     * Changes the "up" and "down" key behavior when the dropdown is opened (to
-     * navigate through dropdown suggestions).
-     * Triggered by keydown to execute the navigation multiple times when the
-     * user keeps the "down" or "up" pressed.
-     *
-     * @private
-     * @param {Event} e
-     */
-    _onKeydown: function (e) {
-        switch (e.which) {
-            case $.ui.keyCode.UP:
-            case $.ui.keyCode.DOWN:
-                if (!this.$dropdown) {
-                    break;
-                }
-                e.preventDefault();
-                var $suggestions = this.$dropdown.children();
-                var $active = $suggestions.filter('.active');
-                var $to;
-                if ($active.length) {
-                    $to = e.which === $.ui.keyCode.DOWN ?
-                        $active.next() :
-                        $active.prev();
-                } else {
-                    $to = $suggestions.first();
-                }
-                if ($to.length) {
-                    $active.removeClass('active');
-                    $to.addClass('active');
-                }
-                return;
-        }
-        this._super.apply(this, arguments);
-    },
-
-    /**
-     * Called on keyup events to:
-     * -> remove the suggestions dropdown when hitting the "escape" key
-     * -> select the highlighted suggestion when hitting the "enter" key
-     *
-     * @private
-     * @param {Event} e
-     */
-    _onKeyup: function (e) {
-        switch (e.which) {
-            case $.ui.keyCode.ESCAPE:
-                e.preventDefault();
-                this._removeDropdown();
-                break;
-            case $.ui.keyCode.ENTER:
-                if (!this.$dropdown) {
-                    break;
-                }
-                e.preventDefault();
-                var $active = this.$dropdown.find('.o_partner_autocomplete_suggestion.active');
-                if (!$active.length) {
-                    return;
-                }
-                this._selectCompany(this.suggestions[$active.data('index')]);
-                break;
-        }
-    },
-
-    /**
-     * Called on mousedown event on a suggestion -> prevent default
-     * action so that the <input/> element does not lose the focus.
-     *
-     * @private
-     * @param {Event} e
-     */
-    _onMousedown: function (e) {
-        e.preventDefault(); // prevent losing focus on suggestion click
-    },
-
-    /**
-     * Called when a dropdown suggestion is clicked -> trigger_up changes for
-     * some fields in the view (not only this <input/> one) with the associated
-     * data (@see _selectCompany).
-     *
-     * @private
-     * @param {Event} e
-     */
-    _onSuggestionClicked: function (e) {
-        e.preventDefault();
-        this._selectCompany(this.suggestions[$(e.currentTarget).data('index')]);
-    },
-});
-
-field_registry.add('field_partner_autocomplete', FieldAutocomplete);
-
-return FieldAutocomplete;
-});
+registry.category("fields").add("field_partner_autocomplete", partnerAutoCompleteCharField);

@@ -65,20 +65,20 @@
                             t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
                             t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
                             t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
-                            t-att-value="condition.displayedValue"
+                            t-model="condition.displayedValue"
                             t-on-change="ev => this.onValueChange(condition, ev)"
                         />
                         <input t-elif="['integer', 'id'].includes(fieldType)"
                             class="o_input"
                             step="1"
                             type="number"
-                            t-att-value="condition.displayedValue"
+                            t-model="condition.displayedValue"
                             t-on-change="ev => this.onValueChange(condition, ev)"
                         />
                         <input t-else=""
                             type="text"
                             class="o_input"
-                            t-att-value="condition.displayedValue"
+                            t-model="condition.displayedValue"
                             t-on-change="ev => this.onValueChange(condition, ev)"
                         />
                     </span>

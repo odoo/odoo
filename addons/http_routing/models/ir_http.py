@@ -23,15 +23,11 @@ from odoo import api, models, exceptions, tools, http
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import QWebException
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
 
 _logger = logging.getLogger(__name__)
-
-# global resolver (GeoIP API is thread-safe, for multithreaded workers)
-# This avoids blowing up open files limit
-odoo._geoip_resolver = None
 
 # ------------------------------------------------------------
 # Slug API
@@ -103,13 +99,14 @@ def slug(value):
     return f"{slugname}-{identifier}"
 
 
-# NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
+# NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
+_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
+_UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
 
 
 def unslug(s):
-    """Extract slug and id from a string.
-        Always return un 2-tuple (str|None, int|None)
+    """ Extract slug and id from a string.
+        Always return a 2-tuple (str|None, int|None)
     """
     m = _UNSLUG_RE.match(s)
     if not m:
@@ -171,6 +168,9 @@ def url_lang(path_or_uri, lang_code=None):
             # Insert the context language or the provided language
             elif lang_url_code != default_lg.url_code or force_lang:
                 ps.insert(1, lang_url_code)
+                # Remove the last empty string to avoid trailing / after joining
+                if ps[-1] == '':
+                    ps.pop(-1)
 
             location = u'/'.join(ps) + sep + qs
     return location
@@ -249,13 +249,13 @@ class ModelConverter(ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):
         super(ModelConverter, self).__init__(url_map, model)
         self.domain = domain
-        self.regex = _UNSLUG_RE.pattern
+        self.regex = _UNSLUG_ROUTE_PATTERN
 
     def to_url(self, value):
         return slug(value)
 
     def to_python(self, value):
-        matching = re.match(self.regex, value)
+        matching = _UNSLUG_RE.match(value)
         _uid = RequestUID(value=value, match=matching, converter=self)
         record_id = int(matching.group(2))
         env = api.Environment(request.cr, _uid, request.context)
@@ -369,13 +369,13 @@ class IrHttp(models.AbstractModel):
         3/ Use the URL as-is saving the requested lang when the user is
            a bot and that the lang is missing from the URL.
 
-        4/ Redirect the browser when the lang is missing from the URL
-           but another lang than the default one has been requested. The
-           requested lang is injected before the original path.
-
-        5) Use the url as-is when the lang is missing from the URL, that
+        4) Use the url as-is when the lang is missing from the URL, that
            another lang than the default one has been requested but that
            it is forbidden to redirect (e.g. POST)
+
+        5/ Redirect the browser when the lang is missing from the URL
+           but another lang than the default one has been requested. The
+           requested lang is injected before the original path.
 
         6/ Redirect the browser when the lang is present in the URL but
            it is the default lang. The lang is removed from the original
@@ -415,7 +415,18 @@ class IrHttp(models.AbstractModel):
         else:
             url_lang_str = ''
             path_no_lang = path
-        allow_redirect = request.httprequest.method != 'POST'
+
+        allow_redirect = (
+            request.httprequest.method != 'POST'
+            and getattr(request, 'is_frontend_multilang', True)
+        )
+
+        # Some URLs in website are concatenated, first url ends with /,
+        # second url starts with /, resulting url contains two following
+        # slashes that must be merged.
+        if allow_redirect and '//' in path:
+            new_url = path.replace('//', '/')
+            werkzeug.exceptions.abort(request.redirect(new_url, code=301, local=True))
 
         # There is no user on the environment yet but the following code
         # requires one to set the lang on the request. Temporary grant
@@ -645,7 +656,7 @@ class IrHttp(models.AbstractModel):
         except Exception:
             code, html = 418, request.env['ir.ui.view']._render_template('http_routing.http_error', values)
 
-        response = werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+        response = Response(html, status=code, content_type='text/html;charset=utf-8')
         cls._post_dispatch(response)
         return response
 

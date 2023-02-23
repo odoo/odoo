@@ -77,12 +77,14 @@
             <form string="Operation Types">
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <label for="name"/>
+                    <h1><field name="name" placeholder="e.g. Receptions"/></h1>
                     <group name="first">
                         <group>
+                            <field name="code"/>
                             <field name="active" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                             <field name="hide_reservation_method" invisible="1"/>
-                            <field name="name"/>
                             <field name="sequence_id" groups="base.group_no_one"/>
                             <field name="sequence_code"/>
                             <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
@@ -95,18 +97,17 @@
                             </div>
                         </group>
                         <group>
-                            <field name="code"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id"/>
+                            <field attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' name="return_picking_type_id" string="Returns Type"/>
                             <field name="create_backorder"/>
                             <field name="show_operations"/>
                             <field name="show_reserved" attrs="{'invisible': [('code', '!=', 'incoming')]}"/>
                         </group>
                     </group>
                     <group name="second">
-                        <group attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' string="Traceability" groups="stock.group_production_lot" name="stock_picking_type_lot">
-                            <field name="use_create_lots"/>
-                            <field name="use_existing_lots"/>
+                        <group attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' string="Lots/Serial Numbers" groups="stock.group_production_lot" name="stock_picking_type_lot">
+                            <field name="use_create_lots" string="Create New"/>
+                            <field name="use_existing_lots" string="Use Existing ones"/>
                         </group>
                         <group attrs='{"invisible": [("code", "not in", ["incoming", "outgoing", "internal"])]}' string="Packages" groups="stock.group_tracking_lot">
                             <field name="show_entire_packs"/>
@@ -136,9 +137,54 @@
                 <field name="count_picking_waiting"/>
                 <field name="count_picking_late"/>
                 <field name="count_picking_backorders"/>
+                <field name="show_picking_type" invisible="1"/>
                 <templates>
+                    <t t-name="kanban-menu" t-if="!selection_mode">
+                        <div class="container" t-if="record.show_picking_type.raw_value">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span t-if="record.code.raw_value == 'internal'">Transfers</span>
+                                        <span t-else="">View</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="get_stock_picking_action_picking_type" type="object">All</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="get_action_picking_tree_ready" type="object">Ready</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="get_action_picking_tree_waiting" type="object">Waiting</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="get_action_picking_type_operations" type="object">Operations</a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>New</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_picking_form)d" type="action" context="{'default_immediate_transfer': True}">Immediate Transfer</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_picking_form)d" type="action">Planned Transfer</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                <div class="col-8" role="menuitem" aria-haspopup="true">
+                                    <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                </div>
+                                <div role="menuitem" class="col-4">
+                                    <a class="dropdown-item" role="menuitem" type="edit">Configuration</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                     <t t-name="kanban-box">
-                        <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking">
+                        <div t-if="record.show_picking_type.raw_value" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking">
                             <div t-attf-class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary" t-if="!selection_mode">
@@ -151,17 +197,12 @@
                                     </div>
                                     <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>
                                 </div>
-                                <div class="o_kanban_manage_button_section" t-if="!selection_mode">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
-                                </div>
                             </div>
                             <div class="container o_kanban_card_content" t-if="!selection_mode">
                                 <div class="row">
                                     <div class="col-6 o_kanban_primary_left">
                                         <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
-                                            <span t-if="record.code.raw_value == 'incoming'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
-                                            <span t-elif="record.code.raw_value == 'outgoing'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
-                                            <span t-elif="record.code.raw_value == 'internal'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
+                                            <span><t t-esc="record.count_picking_ready.value"/> To Process</span>
                                         </button>
                                     </div>
                                     <div class="col-6 o_kanban_primary_right">
@@ -194,48 +235,6 @@
                                                 </a>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                <div class="row">
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span t-if="record.code.raw_value == 'internal'">Transfers</span>
-                                            <span t-else="">View</span>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="get_stock_picking_action_picking_type" type="object">All</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="get_action_picking_tree_ready" type="object">Ready</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="get_action_picking_tree_waiting" type="object">Waiting</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="get_action_picking_type_operations" type="object">Operations</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>New</span>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_picking_form)d" type="action" context="{'default_immediate_transfer': True}">Immediate Transfer</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_picking_form)d" type="action">Planned Transfer</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                    <div class="col-8" role="menuitem" aria-haspopup="true">
-                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
-                                    </div>
-                                    <div role="menuitem" class="col-4">
-                                        <a class="dropdown-item" role="menuitem" type="edit">Configuration</a>
                                     </div>
                                 </div>
                             </div>

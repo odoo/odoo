@@ -9,7 +9,7 @@ from odoo.tests import tagged
 class TestUi(HttpCase, TestProductConfiguratorCommon):
 
     def test_01_admin_shop_custom_attribute_value_tour(self):
-        # fix runbot, sometimes one pricelist is chosen, sometimes the other...
-        pricelists = self.env['website'].get_current_website().get_current_pricelist() | self.env.ref('product.list0')
-        self._create_pricelist(pricelists)
+        # Ensure that no pricelist is available during the test.
+        # This ensures that tours which triggers on the amounts will run properly.
+        self.env['product.pricelist'].search([]).action_archive()
         self.start_tour("/", 'a_shop_custom_attribute_value', login="admin")

@@ -2,11 +2,10 @@
 
 import { browser } from "@web/core/browser/browser";
 import { parseHash, parseSearchQuery, routeToUrl } from "@web/core/browser/router_service";
-import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeRouterService } from "../helpers/mock_services";
 import { nextTick, patchWithCleanup } from "../helpers/utils";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 async function createRouter(params = {}) {
     const env = params.env || {};
@@ -99,37 +98,6 @@ QUnit.test("routeToUrl encodes URI compatible strings", (assert) => {
 
     route.hash = { b: "2", c: "", e: "kloug,gloubi" };
     assert.strictEqual(routeToUrl(route), "/asf?a=11&g=summer%20wine#b=2&c=&e=kloug%2Cgloubi");
-});
-
-QUnit.test("can redirect an URL", async (assert) => {
-    patchWithCleanup(browser, {
-        setTimeout(handler, delay) {
-            handler();
-            assert.step(`timeout: ${delay}`);
-        },
-    });
-    let firstCheckServer = true;
-    const env = await makeTestEnv({
-        async mockRPC(route) {
-            if (route === "/web/webclient/version_info") {
-                if (firstCheckServer) {
-                    firstCheckServer = false;
-                } else {
-                    return true;
-                }
-            }
-        },
-    });
-    const onRedirect = (url) => assert.step(url);
-    const router = await createRouter({ env, onRedirect });
-
-    router.redirect("/my/test/url");
-    await nextTick();
-    assert.verifySteps(["/my/test/url"]);
-
-    router.redirect("/my/test/url/2", true);
-    await nextTick();
-    assert.verifySteps(["timeout: 1000", "timeout: 250", "/my/test/url/2"]);
 });
 
 QUnit.module("Router: Push state");

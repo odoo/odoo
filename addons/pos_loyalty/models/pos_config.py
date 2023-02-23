@@ -50,7 +50,7 @@ class PosConfig(models.Model):
         if invalid_reward_products_msg:
             prefix_error_msg = _("To continue, make the following reward products available in Point of Sale.")
             raise UserError(f"{prefix_error_msg}\n{invalid_reward_products_msg}")
-        if  gift_card_programs:
+        if gift_card_programs:
             for gc_program in gift_card_programs:
                 # Do not allow a gift card program with more than one rule or reward, and check that they make sense
                 if len(gc_program.reward_ids) > 1:
@@ -63,6 +63,12 @@ class PosConfig(models.Model):
                 reward = gc_program.reward_ids
                 if reward.reward_type != 'discount' or reward.discount_mode != 'per_point' or reward.discount != 1:
                     raise UserError(_('Invalid gift card program reward. Use 1 currency per point discount.'))
+                if self.gift_card_settings == "create_set":
+                    if not gc_program.mail_template_id:
+                        raise UserError(_('There is no email template on the gift card program and your pos is set to print them.'))
+                    if not gc_program.pos_report_print_id:
+                        raise UserError(_('There is no print report on the gift card program and your pos is set to print them.'))
+
         return super()._check_before_creating_new_session()
 
     def use_coupon_code(self, code, creation_date, partner_id):
@@ -104,5 +110,6 @@ class PosConfig(models.Model):
                 'coupon_id': coupon.id,
                 'coupon_partner_id': coupon.partner_id.id,
                 'points': coupon.points,
+                'has_source_order': coupon._has_source_order(),
             },
         }

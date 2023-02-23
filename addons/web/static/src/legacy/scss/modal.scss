@@ -36,10 +36,6 @@
                 }
             }
 
-            > :not(.o_view_sample_data) .o_view_nocontent {
-                position: unset;
-            }
-
             .o_modal_changes td {
                 &:first-child {
                     padding-right: 10px;
@@ -86,9 +82,10 @@
                     border: none;
 
                     .modal-header {
-                        background: $o-brand-odoo;
+                        background: $o-navbar-background;
+
                         .modal-title, .o_subtitle, button.close {
-                            color: white;
+                            color: $o-navbar-entry-color;
                         }
                     }
 

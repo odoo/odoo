@@ -1,14 +1,13 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
-import { sprintf } from '@web/core/utils/strings';
+import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from "web.time";
+import { sprintf } from "@web/core/utils/strings";
 
-registerModel({
-    name: 'ActivityView',
+Model({
+    name: "ActivityView",
+    template: "mail.ActivityView",
     recordMethods: {
         /**
          * Handles the click on a link inside the activity.
@@ -16,11 +15,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickActivity(ev) {
-            if (
-                ev.target.tagName === 'A' &&
-                ev.target.dataset.oeId &&
-                ev.target.dataset.oeModel
-            ) {
+            if (ev.target.tagName === "A" && ev.target.dataset.oeId && ev.target.dataset.oeModel) {
                 this.messaging.openProfile({
                     id: Number(ev.target.dataset.oeId),
                     model: ev.target.dataset.oeModel,
@@ -33,7 +28,7 @@ registerModel({
          * Handles the click on the cancel button
          */
         async onClickCancel() {
-            const { chatter } = this.activityBoxView; // save value before deleting activity
+            const chatter = this.chatterOwner; // save value before deleting activity
             await this.activity.deleteServerRecord();
             if (chatter.exists() && chatter.component) {
                 chatter.reloadParentView();
@@ -50,7 +45,7 @@ registerModel({
          * Handles the click on the edit button
          */
         async onClickEdit() {
-            const { chatter } = this.activityBoxView;
+            const chatter = this.chatterOwner;
             await this.activity.edit();
             if (chatter.exists() && chatter.component) {
                 chatter.reloadParentView();
@@ -68,20 +63,11 @@ registerModel({
         },
     },
     fields: {
-        activity: one('Activity', {
-            identifying: true,
-            inverse: 'activityViews',
-        }),
-        activityBoxView: one('ActivityBoxView', {
-            identifying: true,
-            inverse: 'activityViews',
-        }),
+        activity: one("Activity", { identifying: true, inverse: "activityViews" }),
         /**
          * Determines whether the details are visible.
          */
-        areDetailsVisible: attr({
-            default: false,
-        }),
+        areDetailsVisible: attr({ default: false }),
         /**
          * Compute the string for the assigned user.
          */
@@ -93,18 +79,11 @@ registerModel({
                 return sprintf(this.env._t("for %s"), this.activity.assignee.nameOrDisplayName);
             },
         }),
-        clockWatcher: one('ClockWatcher', {
-            default: {
-                clock: {
-                    frequency: 60 * 1000,
-                },
-            },
-            inverse: 'activityViewOwner',
+        chatterOwner: one("Chatter", { identifying: true, inverse: "activityViews" }),
+        clockWatcher: one("ClockWatcher", {
+            default: { clock: { frequency: 60 * 1000 } },
+            inverse: "activityViewOwner",
         }),
-        /**
-         * States the OWL component of this activity view.
-         */
-        component: attr(),
         /**
          * Compute the label for "when" the activity is due.
          */
@@ -116,10 +95,10 @@ registerModel({
                 if (!this.clockWatcher.clock.date) {
                     return clear();
                 }
-                const today = moment(this.clockWatcher.clock.date.getTime()).startOf('day');
+                const today = moment(this.clockWatcher.clock.date.getTime()).startOf("day");
                 const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
                 // true means no rounding
-                const diff = momentDeadlineDate.diff(today, 'days', true);
+                const diff = momentDeadlineDate.diff(today, "days", true);
                 if (diff === 0) {
                     return this.env._t("Today:");
                 } else if (diff === -1) {
@@ -133,11 +112,11 @@ registerModel({
                 }
             },
         }),
-        fileUploader: one('FileUploader', {
+        fileUploader: one("FileUploader", {
+            inverse: "activityView",
             compute() {
-                return this.activity.category === 'upload_file' ? {} : clear();
+                return this.activity.category === "upload_file" ? {} : clear();
             },
-            inverse: 'activityView',
         }),
         /**
          * Format the create date to something human reabable.
@@ -165,16 +144,14 @@ registerModel({
                 return momentDeadlineDate.format(datetimeFormat);
             },
         }),
-        mailTemplateViews: many('MailTemplateView', {
+        mailTemplateViews: many("MailTemplateView", {
+            inverse: "activityViewOwner",
             compute() {
-                return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
+                return this.activity.mailTemplates.map((mailTemplate) => ({ mailTemplate }));
             },
-            inverse: 'activityViewOwner',
         }),
-        markDoneButtonRef: attr(),
-        markDonePopoverView: one('PopoverView', {
-            inverse: 'activityViewOwnerAsMarkDone',
-        }),
+        markDoneButtonRef: attr({ ref: "markDoneButton" }),
+        markDonePopoverView: one("PopoverView", { inverse: "activityViewOwnerAsMarkDone" }),
         /**
          * Label for mark as done. This is just for translations purpose.
          */

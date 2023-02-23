@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { clickDropdown, clickEdit, getFixture } from "@web/../tests/helpers/utils";
+import { clickDropdown, getFixture } from "@web/../tests/helpers/utils";
 
 
 QUnit.module('sale_expense', {
@@ -67,7 +67,6 @@ QUnit.module('sale_expense', {
                 '<form><field name="sale_order_id" widget="sale_order_many2one"/></form>'
         });
 
-        await clickEdit(this.target);
         await clickDropdown(this.target, "sale_order_id");
 
         assert.containsN(this.target, 'li.o-autocomplete--dropdown-item', 9);

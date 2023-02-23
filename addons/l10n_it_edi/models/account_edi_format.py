@@ -96,9 +96,9 @@ class AccountEdiFormat(models.Model):
             errors.append(_("%s must have a country", seller.display_name))
 
         # <1.1.1.2>
-        if not seller.vat:
+        if not invoice.company_id.vat:
             errors.append(_("%s must have a VAT number", seller.display_name))
-        elif len(seller.vat) > 30:
+        if seller.vat and len(seller.vat) > 30:
             errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
 
         # <1.2.1.2>
@@ -134,15 +134,22 @@ class AccountEdiFormat(models.Model):
         if is_self_invoice and not buyer.partner_id.l10n_it_pa_index:
             errors.append(_("Vendor bills sent as self-invoices to the SdI require a valid PA Index (Codice Destinatario) on the company's contact."))
 
-        # <2.2.1>
-        for invoice_line in invoice.invoice_line_ids:
-            if invoice_line.display_type not in ('line_note', 'line_section') and len(invoice_line.tax_ids) != 1:
-                errors.append(_("In line %s, you must select one and only one tax by line.", invoice_line.name))
-
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
 
+        errors += self._l10n_it_edi_check_taxes_configuration(invoice)
+
+        return errors
+
+    def _l10n_it_edi_check_taxes_configuration(self, invoice):
+        """
+            Can be overridden by submodules like l10n_it_edi_withholding, which also allows for withholding and pension_fund taxes.
+        """
+        errors = []
+        for invoice_line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
+            if len(invoice_line.tax_ids) != 1:
+                errors.append(_("In line %s, you must select one and only one tax.", invoice_line.name))
         return errors
 
     def _l10n_it_edi_is_simplified(self, invoice):
@@ -207,9 +214,6 @@ class AccountEdiFormat(models.Model):
         if not buyer.city:
             errors.append(_("%s must have a city.", buyer.display_name))
 
-        if any(line.quantity < 0 for line in invoice.invoice_line_ids):
-            errors.append(_("All quantities should be positive."))
-
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
@@ -231,38 +235,52 @@ class AccountEdiFormat(models.Model):
         return bool(invoice_lines_tags & vj3_lines_tags)
 
     def _l10n_it_document_type_mapping(self):
+        """ Returns a dictionary with the required features for every TDxx FatturaPA document type """
         return {
-            'TD01': dict(move_types=['out_invoice'], import_type='in_invoice'),
-            'TD02': dict(move_types=['out_invoice'], import_type='in_invoice', downpayment=True),
-            'TD04': dict(move_types=['out_refund'], import_type='in_refund'),
-            'TD07': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
-            'TD08': dict(move_types=['out_refund'], import_type='in_refund', simplified=True),
-            'TD09': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
-            'TD17': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="service"),
-            'TD18': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
-            'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
+            'TD01': dict(move_types=['out_invoice'], import_type='in_invoice', self_invoice=False, simplified=False, downpayment=False),
+            'TD02': dict(move_types=['out_invoice'], import_type='in_invoice', self_invoice=False, simplified=False, downpayment=True),
+            'TD04': dict(move_types=['out_refund'], import_type='in_refund', self_invoice=False, simplified=False),
+            'TD07': dict(move_types=['out_invoice'], import_type='in_invoice', self_invoice=False, simplified=True),
+            'TD08': dict(move_types=['out_refund'], import_type='in_refund', self_invoice=False, simplified=True),
+            'TD09': dict(move_types=['out_invoice'], import_type='in_invoice', self_invoice=False, simplified=True),
+            'TD28': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, partner_country_code="SM"),
+            'TD17': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, services_or_goods="service"),
+            'TD18': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, services_or_goods="consu", goods_in_italy=False, partner_in_eu=True),
+            'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, services_or_goods="consu", goods_in_italy=True),
+        }
+
+    def _l10n_it_get_invoice_features_for_document_type_selection(self, invoice):
+        """ Returns a dictionary of features to be compared with the TDxx FatturaPA
+            document type requirements. """
+        services_or_goods = self._l10n_it_edi_services_or_goods(invoice)
+        return {
+            'move_types': invoice.move_type,
+            'partner_in_eu': self._l10n_it_edi_partner_in_eu(invoice.commercial_partner_id),
+            'partner_country_code': invoice.commercial_partner_id.country_id.code,
+            'simplified': self._l10n_it_edi_is_simplified(invoice),
+            'self_invoice': self._l10n_it_edi_is_self_invoice(invoice),
+            'downpayment': invoice._is_downpayment(),
+            'services_or_goods': services_or_goods,
+            'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_goods_in_italy(invoice),
         }
 
     def _l10n_it_get_document_type(self, invoice):
-        is_simplified = self._l10n_it_edi_is_simplified(invoice)
-        is_self_invoice = self._l10n_it_edi_is_self_invoice(invoice)
-        services_or_goods = self._l10n_it_edi_services_or_goods(invoice)
-        goods_in_italy = services_or_goods == 'consu' and self._l10n_it_goods_in_italy(invoice)
-        partner_in_eu = self._l10n_it_edi_partner_in_eu(invoice.commercial_partner_id)
-        for code, infos in self._l10n_it_document_type_mapping().items():
-            info_services_or_goods = infos.get('services_or_goods', "both")
-            info_partner_in_eu = infos.get('partner_in_eu', False)
-            if all([
-                invoice.move_type in infos.get('move_types', False),
-                invoice._is_downpayment() == infos.get('downpayment', False),
-                is_self_invoice == infos.get('self_invoice', False),
-                is_simplified == infos.get('simplified', False),
-                info_services_or_goods in ("both", services_or_goods),
-                info_partner_in_eu in (False, partner_in_eu),
-                goods_in_italy == infos.get('goods_in_italy', False),
-            ]):
+        """ Compare the features of the invoice to the requirements of each TDxx FatturaPA
+            document type until you find a valid one. """
+        invoice_features = self._l10n_it_get_invoice_features_for_document_type_selection(invoice)
+        for code, document_type_features in self._l10n_it_document_type_mapping().items():
+            comparisons = []
+            for key, invoice_feature in invoice_features.items():
+                if key not in document_type_features:
+                    continue
+                document_type_feature = document_type_features.get(key)
+                if isinstance(document_type_feature, (tuple, list)):
+                    comparisons.append(invoice_feature in document_type_feature)
+                else:
+                    comparisons.append(invoice_feature == document_type_feature)
+            if all(comparisons):
                 return code
-        return None
+        return False
 
     def _l10n_it_is_simplified_document_type(self, document_type):
         return self._l10n_it_document_type_mapping().get(document_type, {}).get('simplified', False)
@@ -285,6 +303,7 @@ class AccountEdiFormat(models.Model):
                 res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
                                                params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
             except AccountEdiProxyError as e:
+                res = {}
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
 
             proxy_acks = []
@@ -333,9 +352,9 @@ class AccountEdiFormat(models.Model):
                     _logger.error('Error while receiving file from SdiCoop: %s', e)
 
     def _check_filename_is_fattura_pa(self, filename):
-        return re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", filename)
+        return re.search("[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))", filename)
 
-    def _is_fattura_pa(self, filename, tree):
+    def _is_fattura_pa(self, filename, tree=None):
         return self.code == 'fattura_pa' and self._check_filename_is_fattura_pa(filename)
 
     def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
@@ -375,17 +394,17 @@ class AccountEdiFormat(models.Model):
 
     def _create_invoice_from_binary(self, filename, content, extension):
         self.ensure_one()
-        if extension.lower() == '.xml.p7m':
+        if extension.lower() == '.xml.p7m' and self._is_fattura_pa(filename):
             decoded_content = self._decode_p7m_to_xml(filename, content)
-            if decoded_content is not None and self._is_fattura_pa(filename, decoded_content):
+            if decoded_content is not None:
                 return self._import_fattura_pa(decoded_content, self.env['account.move'])
         return super()._create_invoice_from_binary(filename, content, extension)
 
     def _update_invoice_from_binary(self, filename, content, extension, invoice):
         self.ensure_one()
-        if extension.lower() == '.xml.p7m':
+        if extension.lower() == '.xml.p7m' and self._is_fattura_pa(filename):
             decoded_content = self._decode_p7m_to_xml(filename, content)
-            if decoded_content is not None and self._is_fattura_pa(filename, decoded_content):
+            if decoded_content is not None:
                 return self._import_fattura_pa(decoded_content, invoice)
         return super()._update_invoice_from_binary(filename, content, extension, invoice)
 
@@ -414,6 +433,40 @@ class AccountEdiFormat(models.Model):
                  ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
 
         return partner
+
+    def _convert_date_from_xml(self, xsdate_str):
+        """ Dates in FatturaPA are ISO 8601 date format, pattern '[-]CCYY-MM-DD[Z|(+|-)hh:mm]' """
+        xsdate_str = xsdate_str.strip()
+        xsdate_pattern = r"^-?(?P<date>-?\d{4}-\d{2}-\d{2})(?P<tz>[zZ]|[+-]\d{2}:\d{2})?$"
+        try:
+            match = re.match(xsdate_pattern, xsdate_str)
+            converted_date = datetime.strptime(match.group("date"), DEFAULT_FACTUR_ITALIAN_DATE_FORMAT).date()
+        except Exception:
+            converted_date = False
+        return converted_date
+
+    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None):
+        """ Returns the VAT, Withholding or Pension Fund tax that suits the conditions given
+            and matches the percentage found in the XML for the company. """
+        conditions = [
+            ('company_id', '=', company.id),
+            ('amount', '=', percentage),
+            ('amount_type', '=', 'percent'),
+            ('type_tax_use', '=', 'purchase'),
+        ] + (extra_domain or [])
+
+        # As we're importing vendor bills, we're excluding Reverse Charge Taxes
+        # which have a [100.0, 100.0, -100.0] repartition lines factor_percent distribution.
+        # We only allow for taxes that have all positive repartition lines factor_percent distribution.
+        taxes = self.env['account.tax'].search(conditions).filtered(
+            lambda tax: all([rep_line.factor_percent >= 0 for rep_line in tax.invoice_repartition_line_ids]))
+
+        return taxes[0] if taxes else taxes
+
+    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
+        """ This function is meant to collect other information that has to be inserted on the invoice lines by submodules.
+            :return extra_info, messages_to_log"""
+        return {'simplified': self._l10n_it_is_simplified_document_type(document_type)}, []
 
     def _import_fattura_pa(self, tree, invoice):
         """ Decodes a fattura_pa invoice into an invoice.
@@ -462,18 +515,17 @@ class AccountEdiFormat(models.Model):
                 move_type = "in_invoice"
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
 
-            simplified = self._l10n_it_is_simplified_document_type(document_type)
-
             # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
                                  .with_context(default_move_type=move_type)
 
             # move could be a single record (editing) or be empty (new).
             with invoice_ctx._get_edi_creation() as invoice_form:
-                message_to_log = []
+
+                # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
+                extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, body_tree)
 
                 partner = self._l10n_it_get_partner_invoice(tree, company)
-
                 if partner:
                     invoice_form.partner_id = partner
                 else:
@@ -502,9 +554,14 @@ class AccountEdiFormat(models.Model):
                 # Date. <2.1.1.3>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/Data')
                 if elements:
-                    date_str = elements[0].text
-                    date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
-                    invoice_form.invoice_date = date_obj
+                    document_date = self._convert_date_from_xml(elements[0].text)
+                    if document_date:
+                        invoice_form.invoice_date = document_date
+                    else:
+                        message_to_log.append("%s<br/>%s" % (
+                            _("Document date invalid in XML file:"),
+                            invoice._compose_info_message(elements[0], '.')
+                        ))
 
                 #  Dati Bollo. <2.1.1.6>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
@@ -537,9 +594,16 @@ class AccountEdiFormat(models.Model):
                 # Due date. <2.4.2.5>
                 elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
                 if elements:
-                    date_str = elements[0].text
-                    date_obj = datetime.strptime(date_str, DEFAULT_FACTUR_ITALIAN_DATE_FORMAT)
-                    invoice_form.invoice_date_due = fields.Date.to_string(date_obj)
+                    date_str = elements[0].text.strip()
+                    if date_str:
+                        due_date = self._convert_date_from_xml(date_str)
+                        if due_date:
+                            invoice_form.invoice_date_due = fields.Date.to_string(due_date)
+                        else:
+                            message_to_log.append("%s<br/>%s" % (
+                                _("Payment due date invalid in XML file:"),
+                                invoice._compose_info_message(elements[0], '.')
+                            ))
 
                 # Total amount. <2.4.2.6>
                 elements = body_tree.xpath('.//ImportoPagamento')
@@ -585,139 +649,15 @@ class AccountEdiFormat(models.Model):
                             invoice._compose_info_message(body_tree, './/DatiPagamento')))
 
                 # Invoice lines. <2.2.1>
-                if not simplified:
+                if not extra_info['simplified']:
                     elements = body_tree.xpath('.//DettaglioLinee')
                 else:
                     elements = body_tree.xpath('.//DatiBeniServizi')
 
-                if elements:
-                    for element in elements:
-                        invoice_line_form = invoice_form.invoice_line_ids.create({'move_id': invoice_form.id})
-                        if invoice_line_form:
-
-                            # Sequence.
-                            line_elements = element.xpath('.//NumeroLinea')
-                            if line_elements:
-                                invoice_line_form.sequence = int(line_elements[0].text)
-
-                            # Product.
-                            elements_code = element.xpath('.//CodiceArticolo')
-                            if elements_code:
-                                for element_code in elements_code:
-                                    type_code = element_code.xpath('.//CodiceTipo')[0]
-                                    code = element_code.xpath('.//CodiceValore')[0]
-                                    if type_code.text == 'EAN':
-                                        product = self.env['product.product'].search([('barcode', '=', code.text)])
-                                        if product:
-                                            invoice_line_form.product_id = product
-                                            break
-                                    if partner:
-                                        product_supplier = self.env['product.supplierinfo'].search([('partner_id', '=', partner.id), ('product_code', '=', code.text)], limit=2)
-                                        if product_supplier and len(product_supplier) == 1 and product_supplier.product_id:
-                                            invoice_line_form.product_id = product_supplier.product_id
-                                            break
-                                if not invoice_line_form.product_id:
-                                    for element_code in elements_code:
-                                        code = element_code.xpath('.//CodiceValore')[0]
-                                        product = self.env['product.product'].search([('default_code', '=', code.text)], limit=2)
-                                        if product and len(product) == 1:
-                                            invoice_line_form.product_id = product
-                                            break
-
-                            # Label.
-                            line_elements = element.xpath('.//Descrizione')
-                            if line_elements:
-                                invoice_line_form.name = " ".join(line_elements[0].text.split())
-
-                            # Quantity.
-                            line_elements = element.xpath('.//Quantita')
-                            if line_elements:
-                                invoice_line_form.quantity = float(line_elements[0].text)
-                            else:
-                                invoice_line_form.quantity = 1
-
-                            # Taxes
-                            percentage = None
-                            price_subtotal = 0
-                            if not simplified:
-                                tax_element = element.xpath('.//AliquotaIVA')
-                                if tax_element and tax_element[0].text:
-                                    percentage = float(tax_element[0].text)
-                            else:
-                                amount_element = element.xpath('.//Importo')
-                                if amount_element and amount_element[0].text:
-                                    amount = float(amount_element[0].text)
-                                    tax_element = element.xpath('.//Aliquota')
-                                    if tax_element and tax_element[0].text:
-                                        percentage = float(tax_element[0].text)
-                                        price_subtotal = amount / (1 + percentage / 100)
-                                    else:
-                                        tax_element = element.xpath('.//Imposta')
-                                        if tax_element and tax_element[0].text:
-                                            tax_amount = float(tax_element[0].text)
-                                            price_subtotal = amount - tax_amount
-                                            percentage = round(tax_amount / price_subtotal * 100)
-
-                            natura_element = element.xpath('.//Natura')
-                            invoice_line_form.tax_ids = []
-                            if percentage is not None:
-                                if natura_element and natura_element[0].text:
-                                    l10n_it_kind_exoneration = natura_element[0].text
-                                    tax = self.env['account.tax'].search([
-                                        ('company_id', '=', invoice_form.company_id.id),
-                                        ('amount_type', '=', 'percent'),
-                                        ('type_tax_use', '=', 'purchase'),
-                                        ('amount', '=', percentage),
-                                        ('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration),
-                                    ], limit=1)
-                                else:
-                                    tax = self.env['account.tax'].search([
-                                        ('company_id', '=', invoice_form.company_id.id),
-                                        ('amount_type', '=', 'percent'),
-                                        ('type_tax_use', '=', 'purchase'),
-                                        ('amount', '=', percentage),
-                                    ], limit=1)
-                                    l10n_it_kind_exoneration = ''
-
-                                if tax:
-                                    invoice_line_form.tax_ids += tax
-                                else:
-                                    if l10n_it_kind_exoneration:
-                                        message_to_log.append(_("Tax not found with percentage: %s and exoneration %s for the article: %s") % (
-                                            percentage,
-                                            l10n_it_kind_exoneration,
-                                            invoice_line_form.name))
-                                    else:
-                                        message_to_log.append(_("Tax not found with percentage: %s for the article: %s") % (
-                                            percentage,
-                                            invoice_line_form.name))
-
-                            # Price Unit.
-                            if not simplified:
-                                line_elements = element.xpath('.//PrezzoUnitario')
-                                if line_elements:
-                                    invoice_line_form.price_unit = float(line_elements[0].text)
-                            else:
-                                invoice_line_form.price_unit = price_subtotal
-
-                            # Discounts
-                            discount_elements = element.xpath('.//ScontoMaggiorazione')
-                            if discount_elements:
-                                discount_element = discount_elements[0]
-                                discount_percentage = discount_element.xpath('.//Percentuale')
-                                # Special case of only 1 percentage discount
-                                if discount_percentage and len(discount_elements) == 1:
-                                    discount_type = discount_element.xpath('.//Tipo')
-                                    discount_sign = 1
-                                    if discount_type and discount_type[0].text == 'MG':
-                                        discount_sign = -1
-                                    invoice_line_form.discount = discount_sign * float(discount_percentage[0].text)
-                                # Discounts in cascade summarized in 1 percentage
-                                else:
-                                    total = float(element.xpath('.//PrezzoTotale')[0].text)
-                                    discount = 100 - (100 * total) / (invoice_line_form.quantity * invoice_line_form.price_unit)
-                                    invoice_line_form.discount = discount
-
+                for element in (elements or []):
+                    invoice_line_form = invoice_form.invoice_line_ids.create({'move_id': invoice_form.id})
+                    if invoice_line_form:
+                        message_to_log += self._import_fattura_pa_line(element, invoice_line_form, extra_info)
 
                 # Global discount summarized in 1 amount
                 discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
@@ -761,9 +701,8 @@ class AccountEdiFormat(models.Model):
                         'res_id': new_invoice.id,
                     })
 
-                    # default_res_id is had to context to avoid facturx to import his content
                     # no_new_invoice to prevent from looping on the message_post that would create a new invoice without it
-                    new_invoice.with_context(no_new_invoice=True, default_res_id=new_invoice.id).message_post(
+                    new_invoice.with_context(no_new_invoice=True).message_post(
                         body=(_("Attachment from XML")),
                         attachment_ids=[attachment_64.id]
                     )
@@ -775,6 +714,120 @@ class AccountEdiFormat(models.Model):
 
         return invoices
 
+    def _import_fattura_pa_line(self, element, invoice_line_form, extra_info=None):
+        extra_info = extra_info or {}
+        company = invoice_line_form.company_id
+        partner = invoice_line_form.partner_id
+        message_to_log = []
+
+        # Sequence.
+        line_elements = element.xpath('.//NumeroLinea')
+        if line_elements:
+            invoice_line_form.sequence = int(line_elements[0].text)
+
+        # Product.
+        elements_code = element.xpath('.//CodiceArticolo')
+        if elements_code:
+            for element_code in elements_code:
+                type_code = element_code.xpath('.//CodiceTipo')[0]
+                code = element_code.xpath('.//CodiceValore')[0]
+                if type_code.text == 'EAN':
+                    product = self.env['product.product'].search([('barcode', '=', code.text)])
+                    if product:
+                        invoice_line_form.product_id = product
+                        break
+                if partner:
+                    product_supplier = self.env['product.supplierinfo'].search([('partner_id', '=', partner.id), ('product_code', '=', code.text)], limit=2)
+                    if product_supplier and len(product_supplier) == 1 and product_supplier.product_id:
+                        invoice_line_form.product_id = product_supplier.product_id
+                        break
+            if not invoice_line_form.product_id:
+                for element_code in elements_code:
+                    code = element_code.xpath('.//CodiceValore')[0]
+                    product = self.env['product.product'].search([('default_code', '=', code.text)], limit=2)
+                    if product and len(product) == 1:
+                        invoice_line_form.product_id = product
+                        break
+
+        # Label.
+        line_elements = element.xpath('.//Descrizione')
+        if line_elements:
+            invoice_line_form.name = " ".join(line_elements[0].text.split())
+
+        # Quantity.
+        line_elements = element.xpath('.//Quantita')
+        if line_elements:
+            invoice_line_form.quantity = float(line_elements[0].text)
+        else:
+            invoice_line_form.quantity = 1
+
+        # Taxes
+        percentage = None
+        price_subtotal = 0
+        if not extra_info['simplified']:
+            tax_element = element.xpath('.//AliquotaIVA')
+            if tax_element and tax_element[0].text:
+                percentage = float(tax_element[0].text)
+        else:
+            amount_element = element.xpath('.//Importo')
+            if amount_element and amount_element[0].text:
+                amount = float(amount_element[0].text)
+                tax_element = element.xpath('.//Aliquota')
+                if tax_element and tax_element[0].text:
+                    percentage = float(tax_element[0].text)
+                    price_subtotal = amount / (1 + percentage / 100)
+                else:
+                    tax_element = element.xpath('.//Imposta')
+                    if tax_element and tax_element[0].text:
+                        tax_amount = float(tax_element[0].text)
+                        price_subtotal = amount - tax_amount
+                        percentage = round(tax_amount / price_subtotal * 100)
+
+        natura_element = element.xpath('.//Natura')
+        invoice_line_form.tax_ids = []
+        if percentage is not None:
+            l10n_it_kind_exoneration = bool(natura_element) and natura_element[0].text
+            conditions = (
+                l10n_it_kind_exoneration and [('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration)]
+                or [('l10n_it_has_exoneration', '=', False)]
+            )
+            tax = self._l10n_it_edi_search_tax_for_import(company, percentage, conditions)
+            if tax:
+                invoice_line_form.tax_ids += tax
+            else:
+                message_to_log.append("%s<br/>%s" % (
+                    _("Tax not found for line with description '%s'", invoice_line_form.name),
+                    self.env['account.move']._compose_info_message(element, '.'),
+                ))
+
+        # Price Unit.
+        if not extra_info['simplified']:
+            line_elements = element.xpath('.//PrezzoUnitario')
+            if line_elements:
+                invoice_line_form.price_unit = float(line_elements[0].text)
+        else:
+            invoice_line_form.price_unit = price_subtotal
+
+        # Discounts
+        discount_elements = element.xpath('.//ScontoMaggiorazione')
+        if discount_elements:
+            discount_element = discount_elements[0]
+            discount_percentage = discount_element.xpath('.//Percentuale')
+            # Special case of only 1 percentage discount
+            if discount_percentage and len(discount_elements) == 1:
+                discount_type = discount_element.xpath('.//Tipo')
+                discount_sign = 1
+                if discount_type and discount_type[0].text == 'MG':
+                    discount_sign = -1
+                invoice_line_form.discount = discount_sign * float(discount_percentage[0].text)
+            # Discounts in cascade summarized in 1 percentage
+            else:
+                total = float(element.xpath('.//PrezzoTotale')[0].text)
+                discount = 100 - (100 * total) / (invoice_line_form.quantity * invoice_line_form.price_unit)
+                invoice_line_form.discount = discount
+
+        return message_to_log
+
     # -------------------------------------------------------------------------
     # Export
     # -------------------------------------------------------------------------
@@ -783,8 +836,9 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         if self.code != 'fattura_pa':
             return super()._prepare_invoice_report(pdf_writer, edi_document)
-        if edi_document.attachment_id:
-            pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+        attachment = edi_document.sudo().attachment_id
+        if attachment:
+            pdf_writer.embed_odoo_attachment(attachment)
 
     def _is_compatible_with_journal(self, journal):
         # OVERRIDE
@@ -793,19 +847,20 @@ class AccountEdiFormat(models.Model):
             return super()._is_compatible_with_journal(journal)
         return journal.type in ('sale', 'purchase') and journal.country_code == 'IT'
 
-    def _is_required_for_invoice(self, invoice):
+    def _get_move_applicability(self, move):
         # OVERRIDE
         self.ensure_one()
         if self.code != 'fattura_pa':
-            return super()._is_required_for_invoice(invoice)
+            return super()._get_move_applicability(move)
 
-        is_self_invoice = self._l10n_it_edi_is_self_invoice(invoice)
-        return (
-            (invoice.is_sale_document() or (is_self_invoice and invoice.is_purchase_document()))
-            and invoice.country_code == 'IT'
-        )
+        is_it_purchase_document = self._l10n_it_edi_is_self_invoice(move) and move.is_purchase_document()
+        if move.country_code == 'IT' and (move.is_sale_document() or is_it_purchase_document):
+            return {
+                'post': self._post_fattura_pa,
+                'post_batching': lambda move: (move.move_type, bool(move.l10n_it_edi_transaction)),
+            }
 
-    def _export_as_xml(self, invoice):
+    def _l10n_it_edi_export_invoice_as_xml(self, invoice):
         ''' Create the xml file content.
         :return: The XML content as str.
         '''
@@ -819,12 +874,6 @@ class AccountEdiFormat(models.Model):
                 is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."
             ))
         return content
-
-    def _get_invoice_edi_content(self, move):
-        #OVERRIDE
-        if self.code != 'fattura_pa':
-            return super()._get_invoice_edi_content(move)
-        return self._export_as_xml(move)
 
     def _check_move_configuration(self, move):
         # OVERRIDE
@@ -843,20 +892,6 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return self.code == 'fattura_pa' or super()._needs_web_services()
 
-    def _support_batching(self, move=None, state=None, company=None):
-        # OVERRIDE
-        if self.code == 'fattura_pa':
-            return state == 'to_send' and move.is_invoice()
-
-        return super()._support_batching(move=move, state=state, company=company)
-
-    def _get_batch_key(self, move, state):
-        # OVERRIDE
-        if self.code != 'fattura_pa':
-            return super()._get_batch_key(move, state)
-
-        return move.move_type, bool(move.l10n_it_edi_transaction)
-
     def _l10n_it_post_invoices_step_1(self, invoices):
         ''' Send the invoices to the proxy.
         '''
@@ -864,7 +899,7 @@ class AccountEdiFormat(models.Model):
 
         to_send = {}
         for invoice in invoices:
-            xml = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._export_as_xml(invoice))
+            xml = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._l10n_it_edi_export_invoice_as_xml(invoice))
             filename = self._l10n_it_edi_generate_electronic_invoice_filename(invoice)
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
@@ -1030,12 +1065,11 @@ class AccountEdiFormat(models.Model):
 
         return to_return
 
-    def _post_fattura_pa(self, invoices):
-        # OVERRIDE
-        if not invoices[0].l10n_it_edi_transaction:
-            return self._l10n_it_post_invoices_step_1(invoices)
+    def _post_fattura_pa(self, invoice):
+        if not invoice[0].l10n_it_edi_transaction:
+            return self._l10n_it_post_invoices_step_1(invoice)
         else:
-            return self._l10n_it_post_invoices_step_2(invoices)
+            return self._l10n_it_post_invoices_step_2(invoice)
 
     def _post_invoice_edi(self, invoices):
         # OVERRIDE

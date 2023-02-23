@@ -95,7 +95,7 @@
                         <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
                             <li t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav" class="list-inline-item me-1">
                                 <label t-attf-style="background-color:#{ptav.html_color or ptav.product_attribute_value_id.name if not ptav.is_custom else ''}"
-                                    t-attf-class="css_attribute_color #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''}">
+                                    t-attf-class="css_attribute_color #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}">
                                     <input type="radio"
                                         t-attf-class="js_variant_change  #{ptal.attribute_id.create_variant}"
                                         t-att-checked="ptav in combination"
@@ -132,11 +132,11 @@
             covers the price-included taxes in e-commerce flows.
             (See the override of `_get_combination_info`)
         -->
-        <span class="sign_badge_price_extra" t-esc="combination_info_variant['price_extra'] > 0 and '+' or '-'"/>
-        <span t-esc="abs(combination_info_variant['price_extra'])" class="variant_price_extra text-muted fst-italic" style="white-space: nowrap;"
+        <span class="sign_badge_price_extra" t-out="combination_info_variant['price_extra'] > 0 and '+' or '-'"/>
+        <span t-out="abs(combination_info_variant['price_extra'])" class="variant_price_extra text-muted fst-italic" style="white-space: nowrap;"
             t-options='{
                 "widget": "monetary",
-                "display_currency": (pricelist or product).currency_id
+                "display_currency": (pricelist or product.env.company).currency_id
             }'/>
         </span>
     </template>

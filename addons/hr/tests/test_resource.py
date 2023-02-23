@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
-from pytz import timezone, utc
 
-from odoo.addons.resource.models.resource import Intervals, sum_intervals
+from datetime import datetime
+from pytz import utc
+
+from odoo.addons.resource.models.utils import Intervals
 
 from .common import TestHrCommon
 
@@ -48,39 +49,10 @@ class TestResource(TestHrCommon):
             utc.localize(datetime(2021, 1, 31, 17, 0, 0)),
         )
         interval = Intervals([(
-            utc.localize(datetime(2021, 1, 1, 10, 0, 0)),
+            utc.localize(datetime(2020, 12, 1, 8, 0, 0)),
             utc.localize(datetime(2021, 1, 31, 17, 0, 0)),
             self.env['resource.calendar.attendance']
         )])
         niv_entry = calendars[self.employee_niv.resource_id.id]
         self.assertFalse(niv_entry[self.calendar_40h] - interval, "Interval should cover all calendar's validity")
         self.assertFalse(interval - niv_entry[self.calendar_40h], "Calendar validity should cover all interval")
-
-    def test_calendars_validity_within_period_before_creation(self):
-        calendars = self.employee_niv.resource_id._get_calendars_validity_within_period(
-            utc.localize(datetime(2020, 12, 1, 8, 0, 0)),
-            utc.localize(datetime(2020, 12, 31, 17, 0, 0)),
-        )
-        niv_entry = calendars[self.employee_niv.resource_id.id]
-        self.assertFalse(niv_entry[self.calendar_40h], "Interval should be empty")
-
-    def test_calendars_validity_within_period_before_departure(self):
-        calendars = self.employee_niv.resource_id._get_calendars_validity_within_period(
-            utc.localize(datetime(2022, 5, 1, 8, 0, 0)),
-            utc.localize(datetime(2022, 6, 30, 17, 0, 0)),
-        )
-        interval = Intervals([(
-            utc.localize(datetime(2022, 5, 1, 8, 0, 0)),
-            timezone(self.employee_niv.tz).localize(datetime(2022, 6, 1, 23, 59, 59, 999999)),
-            self.env['resource.calendar.attendance']
-        )])
-        niv_entry = calendars[self.employee_niv.resource_id.id]
-        self.assertFalse(niv_entry[self.calendar_40h] - interval, "Interval should cover all calendar's validity")
-        self.assertFalse(interval - niv_entry[self.calendar_40h], "Calendar validity should cover all interval")
-
-    def test_get_valid_work_intervals(self):
-        start = utc.localize(datetime(2022, 5, 29, 0, 0, 0))
-        end = utc.localize(datetime(2022, 6, 4, 23, 59, 59))
-        work_intervals, _ = self.employee_niv.resource_id._get_valid_work_intervals(start, end)
-        sum_work_intervals = sum_intervals(work_intervals[self.employee_niv.resource_id.id])
-        self.assertEqual(24, sum_work_intervals, "Sum of the work intervals for the resource niv should be 24h as he left his work after wednesday.")

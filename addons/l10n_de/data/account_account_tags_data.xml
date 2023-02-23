@@ -10,30 +10,31 @@
             <record id="tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>
                 <field name="expression_label">balance</field>
+                <field name="figure_type">monetary_without_symbol</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="tax_report_de_tag_01" model="account.report.line">
-                <field name="name">Bemessungsgrundlage</field>
+                <field name="name">Assessment basis</field>
                 <field name="aggregation_formula">I_ANMELDUNG_DER_UMSATZSTEUERVORAUSZAHLUNG_ZEILE_17_GRUNDLAGE.balance</field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_17" model="account.report.line">
-                        <field name="name">I. Anmeldung der Umsatzsteuer-Vorauszahlung (zeile 17)</field>
+                        <field name="name">I. Declaration of the advance payment of turnover tax (line 17)</field>
                         <field name="code">I_ANMELDUNG_DER_UMSATZSTEUERVORAUSZAHLUNG_ZEILE_17_GRUNDLAGE</field>
                         <field name="aggregation_formula">LIEFERUNGEN_UND_SONSTIGE_LEISTUNGEN_ZEILE_18_GRUNDLAGE.balance + INNERGEMEINSCHAFTLICHE_ERWERBE_ZEILE_31_GRUNDLAGE.balance + ERGANZENDE_ANGABEN_ZU_UMSATZEN_ZEILE_37_GRUNDLAGE.balance + LEISTUNGSEMPFANGER_ALS_STEUERSCHULDNER_ZEILE_46_GRUNDLAGE.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_de_tag_18" model="account.report.line">
-                                <field name="name">Lieferungen und sonstige Leistungen (zeile 18)</field>
+                                <field name="name">Goods and services (line 18)</field>
                                 <field name="code">LIEFERUNGEN_UND_SONSTIGE_LEISTUNGEN_ZEILE_18_GRUNDLAGE</field>
                                 <field name="aggregation_formula">STEUERFREIE_UMSATZE_MIT_VORSTEUERABZUG_ZEILE_19.balance + DE_48.balance + STEUERPFLICHTIGE_UMSATZE_ZEILE_25.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_19" model="account.report.line">
-                                        <field name="name">Steuerfreie Umsätze mit Vorsteuerabzug (zeile 19)</field>
+                                        <field name="name">Tax-exempt transactions with input tax deduction (line 19)</field>
                                         <field name="code">STEUERFREIE_UMSATZE_MIT_VORSTEUERABZUG_ZEILE_19</field>
                                         <field name="aggregation_formula">DE_41.balance + DE_44.balance + DE_49.balance + DE_43.balance</field>
                                         <field name="children_ids">
                                             <record id="tax_report_de_tag_41" model="account.report.line">
-                                                <field name="name">41. an Abnehmer mit USt-IdNr (zeile 20)</field>
+                                                <field name="name">41. to customer with VAT number (line 20)</field>
                                                 <field name="code">DE_41</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_41_tag" model="account.report.expression">
@@ -44,7 +45,7 @@
                                                 </field>
                                             </record>
                                             <record id="tax_report_de_tag_44" model="account.report.line">
-                                                <field name="name">44. neuer Fahrzeuge an Abnehmer ohne USt-IdNr (zeile 21)</field>
+                                                <field name="name">44. new vehicles to customers without VAT number (line 21)</field>
                                                 <field name="code">DE_44</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_44_tag" model="account.report.expression">
@@ -55,7 +56,7 @@
                                                 </field>
                                             </record>
                                             <record id="tax_report_de_tag_49" model="account.report.line">
-                                                <field name="name">49. neuer Fahrzeuge außerhalb eines Unternehmens (zeile 22)</field>
+                                                <field name="name">49. new vehicles outside a company (line 22)</field>
                                                 <field name="code">DE_49</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_49_tag" model="account.report.expression">
@@ -66,7 +67,7 @@
                                                 </field>
                                             </record>
                                             <record id="tax_report_de_tag_43" model="account.report.line">
-                                                <field name="name">43. Weitere steuerfreie Umsätze mit Vorsteuerabzug (zeile 23)</field>
+                                                <field name="name">43. other tax-exempt transactions with input tax deduction (line 23)</field>
                                                 <field name="code">DE_43</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_43_tag" model="account.report.expression">
@@ -79,7 +80,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_24" model="account.report.line">
-                                        <field name="name">48. Steuerfreie Umsätze ohne Vorsteuerabzug (zeile 24)</field>
+                                        <field name="name">48. tax-exempt transactions without input tax deduction (line 24)</field>
                                         <field name="code">DE_48</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_24_tag" model="account.report.expression">
@@ -90,12 +91,12 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_25" model="account.report.line">
-                                        <field name="name">Steuerpflichtige Umsätze (zeile 25)</field>
+                                        <field name="name">Taxable turnover (line 25)</field>
                                         <field name="code">STEUERPFLICHTIGE_UMSATZE_ZEILE_25</field>
                                         <field name="aggregation_formula">DE_81_BASE.balance + DE_86_BASE.balance + DE_35.balance + DE_77.balance + DE_76.balance</field>
                                         <field name="children_ids">
                                             <record id="tax_report_de_tag_81" model="account.report.line">
-                                                <field name="name">81. zum Steuersatz von 19 % (zeile 26)</field>
+                                                <field name="name">81. at the tax rate of 19 % (line 26)</field>
                                                 <field name="code">DE_81_BASE</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_81_tag" model="account.report.expression">
@@ -106,7 +107,7 @@
                                                 </field>
                                             </record>
                                             <record id="tax_report_de_tag_86" model="account.report.line">
-                                                <field name="name">86. zum Steuersatz von 7 % (zeile 27)</field>
+                                                <field name="name">86. at the tax rate of 7 % (line 27)</field>
                                                 <field name="code">DE_86_BASE</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_86_tag" model="account.report.expression">
@@ -117,7 +118,7 @@
                                                 </field>
                                             </record>
                                             <record id="tax_report_de_tag_35" model="account.report.line">
-                                                <field name="name">35. zu anderen Steuersätzen (zeile 28)</field>
+                                                <field name="name">35. at other tax rates (line 28)</field>
                                                 <field name="code">DE_35</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_35_tag" model="account.report.expression">
@@ -128,7 +129,7 @@
                                                 </field>
                                             </record>
                                             <record id="tax_report_de_tag_77" model="account.report.line">
-                                                <field name="name">77. Lieferungen land- und forstwirtschaftlicher Betriebe nach § 24 UStG an Abnehmer mit USt-IdNr. (zeile 29)</field>
+                                                <field name="name">77. supplies of agricultural and forestry operations according to § 24 UStG to customers with VAT identification number (line 29)</field>
                                                 <field name="code">DE_77</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_77_tag" model="account.report.expression">
@@ -139,7 +140,7 @@
                                                 </field>
                                             </record>
                                             <record id="tax_report_de_tag_76" model="account.report.line">
-                                                <field name="name">76. Umsätze, für die eine Steuer nach § 24 UStG zu entrichten ist (zeile 30)</field>
+                                                <field name="name">76. transactions for which tax is payable under § 24 UStG (line 30)</field>
                                                 <field name="code">DE_76</field>
                                                 <field name="expression_ids">
                                                     <record id="tax_report_de_tag_76_tag" model="account.report.expression">
@@ -154,12 +155,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tag_31" model="account.report.line">
-                                <field name="name">Innergemeinschaftliche Erwerbe (zeile 31)</field>
+                                <field name="name">Intra-Community acquisitions (line 31)</field>
                                 <field name="code">INNERGEMEINSCHAFTLICHE_ERWERBE_ZEILE_31_GRUNDLAGE</field>
                                 <field name="aggregation_formula">DE_91.balance + DE_89_BASE.balance + DE_93_BASE.balance + DE_95.balance + DE_94.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_91" model="account.report.line">
-                                        <field name="name">91. Steuerfreie innergemeinschaftliche Erwerbe (zeile 32)</field>
+                                        <field name="name">91. tax-free intra-Community acquisitions (line 32)</field>
                                         <field name="code">DE_91</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_91_tag" model="account.report.expression">
@@ -170,7 +171,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_89" model="account.report.line">
-                                        <field name="name">89. Steuerpflichtige innergemeinschaftliche Erwerbe zum Steuersatz von 19 % (zeile 33)</field>
+                                        <field name="name">89. taxable intra-Community acquisitions at the rate of 19 % (line 33)</field>
                                         <field name="code">DE_89_BASE</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_89_tag" model="account.report.expression">
@@ -181,7 +182,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_93" model="account.report.line">
-                                        <field name="name">93. zum Steuersatz von 7 % (zeile 34)</field>
+                                        <field name="name">93. at the tax rate of 7 % (line 34)</field>
                                         <field name="code">DE_93_BASE</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_93_tag" model="account.report.expression">
@@ -192,7 +193,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_95" model="account.report.line">
-                                        <field name="name">95. zu anderen Steuersätzen (zeile 35)</field>
+                                        <field name="name">95. at other tax rates (line 35)</field>
                                         <field name="code">DE_95</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_95_tag" model="account.report.expression">
@@ -203,7 +204,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_94" model="account.report.line">
-                                        <field name="name">94. neuer Fahrzeuge von Lieferern ohne (zeile 36)</field>
+                                        <field name="name">94. new vehicles from suppliers without (line 36)</field>
                                         <field name="code">DE_94</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_94_tag" model="account.report.expression">
@@ -216,12 +217,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tag_37" model="account.report.line">
-                                <field name="name">Ergänzende Angaben zu Umsätzen (zeile 37)</field>
+                                <field name="name">Supplementary information on turnover (line 37)</field>
                                 <field name="code">ERGANZENDE_ANGABEN_ZU_UMSATZEN_ZEILE_37_GRUNDLAGE</field>
                                 <field name="aggregation_formula">DE_42.balance + DE_68.balance + DE_60.balance + DE_21.balance + DE_45_BASE.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_42" model="account.report.line">
-                                        <field name="name">42. Dreiecksgeschäften (zeile 38)</field>
+                                        <field name="name">42. triangular transactions (line 38)</field>
                                         <field name="code">DE_42</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_42_tag" model="account.report.expression">
@@ -232,7 +233,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_68" model="account.report.line">
-                                        <field name="name">68. Steuerpflichtige Umsätze, für die der Leistungsempfänger die Steuer nach § 13b Abs. 5 Satz 1 i.V.m. Abs. 2 Nr. 10 UStG schuldet (zeile 39)</field>
+                                        <field name="name">68. taxable transactions for which the recipient of the service is liable for the tax pursuant to section 13b (5) sentence 1 in conjunction with (2) no. 10 UStG (line 39). Para. 2 No. 10 UStG (line 39)</field>
                                         <field name="code">DE_68</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_68_tag" model="account.report.expression">
@@ -243,7 +244,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_60" model="account.report.line">
-                                        <field name="name">60. Übrige steuerpflichtige Umsätze, für die der Leistungsempfänger die Steuer nach § 13b Abs. 5 UStG schuldet (zeile 40)</field>
+                                        <field name="name">60. other taxable transactions for which the recipient of the service is liable for the tax in accordance with Section 13b (5) UStG (line 40)</field>
                                         <field name="code">DE_60</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_60_tag" model="account.report.expression">
@@ -254,7 +255,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_21" model="account.report.line">
-                                        <field name="name">21. Nicht steuerbare sonstige Leistungen (zeile 41)</field>
+                                        <field name="name">21. non-taxable other services (line 41)</field>
                                         <field name="code">DE_21</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_21_tag" model="account.report.expression">
@@ -265,7 +266,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_45" model="account.report.line">
-                                        <field name="name">45. Übrige nicht steuerbare Umsätze (zeile 42)</field>
+                                        <field name="name">45. other non-taxable transactions (line 42)</field>
                                         <field name="code">DE_45_BASE</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_45_tag" model="account.report.expression">
@@ -278,12 +279,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tag_46" model="account.report.line">
-                                <field name="name">Leistungsempfänger als Steuerschuldner (zeile 46)</field>
+                                <field name="name">The recipient of the service as the person liable to pay tax (line 46)</field>
                                 <field name="code">LEISTUNGSEMPFANGER_ALS_STEUERSCHULDNER_ZEILE_46_GRUNDLAGE</field>
                                 <field name="aggregation_formula">DE_46.balance + DE_52.balance + DE_73.balance + DE_78.balance + DE_84.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_48" model="account.report.line">
-                                        <field name="name">46. Steuerpflichtige sonstige Leistungen eines im übrigen Gemeinschaftsgebiet ansässigen Unternehmers (zeile 48)</field>
+                                        <field name="name">46. other taxable supplies by a trader established in the rest of the Community (line 48)</field>
                                         <field name="code">DE_46</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_48_tag" model="account.report.expression">
@@ -294,7 +295,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_52" model="account.report.line">
-                                        <field name="name">52. Andere Leistungen eines im Ausland ansässigen Unternehmers (zeile 49)</field>
+                                        <field name="name">52. other services provided by a trader established abroad (line 49)</field>
                                         <field name="code">DE_52</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_52_tag" model="account.report.expression">
@@ -305,7 +306,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_73" model="account.report.line">
-                                        <field name="name">73. Lieferungen sicherungsübereigneter Gegenstände und Umsätze, die unter das GrEStG fallen (zeile 50)</field>
+                                        <field name="name">73. supplies of goods transferred by way of security and transactions falling under the GrEStG (line 50)</field>
                                         <field name="code">DE_73</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_73_tag" model="account.report.expression">
@@ -316,7 +317,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_78" model="account.report.line">
-                                        <field name="name">78. Lieferungen von Mobilfunkgeräten, Tablet-Computern, Spielekonsolen und integrierten Schaltkreisen (zeile 51)</field>
+                                        <field name="name">78. supplies of mobile telephones, tablet computers, game consoles and integrated circuits (line 51)</field>
                                         <field name="code">DE_78</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_78_tag" model="account.report.expression">
@@ -327,7 +328,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_84" model="account.report.line">
-                                        <field name="name">84. Andere Leistungen (zeile 52)</field>
+                                        <field name="name">84. other benefits (line 52)</field>
                                         <field name="code">DE_84</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_84_tag" model="account.report.expression">
@@ -344,21 +345,21 @@
                 </field>
             </record>
             <record id="tax_report_de_tag_02" model="account.report.line">
-                <field name="name">Steuer</field>
+                <field name="name">Tax</field>
                 <field name="aggregation_formula">I_ANMELDUNG_DER_UMSATZSTEUERVORAUSZAHLUNG_ZEILE_17_STEUER.balance</field>
                 <field name="children_ids">
                     <record id="tax_report_de_tax_tag_17" model="account.report.line">
-                        <field name="name">I. Anmeldung der Umsatzsteuer-Vorauszahlung (zeile 17)</field>
+                        <field name="name">I. Declaration of the advance payment of turnover tax (line 17)</field>
                         <field name="code">I_ANMELDUNG_DER_UMSATZSTEUERVORAUSZAHLUNG_ZEILE_17_STEUER</field>
                         <field name="aggregation_formula">LIEFERUNGEN_UND_SONSTIGE_LEISTUNGEN_ZEILE_18_STEUER.balance + INNERGEMEINSCHAFTLICHE_ERWERBE_ZEILE_31_STEUER.balance + ERGANZENDE_ANGABEN_ZU_UMSATZEN_ZEILE_37_STEUER.balance + LEISTUNGSEMPFANGER_ALS_STEUERSCHULDNER_ZEILE_46.balance + ABZIEHBARE_VORSTEUERBETRAGE_ZEILE_55.balance + ANDERE_STEUERBETRAGE_ZEILE_64.balance + UMSATZSTEUERVORAUSZAHLUNGUBERSCHUSS_ZEILE_66.balance</field>
                         <field name="children_ids">
                             <record id="tax_report_de_tax_tag_18" model="account.report.line">
-                                <field name="name">Lieferungen und sonstige Leistungen (zeile 18)</field>
+                                <field name="name">Supplies and other services (line 18)</field>
                                 <field name="code">LIEFERUNGEN_UND_SONSTIGE_LEISTUNGEN_ZEILE_18_STEUER</field>
                                 <field name="aggregation_formula">DE_81.balance + DE_86.balance + DE_36.balance + DE_80.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_26" model="account.report.line">
-                                        <field name="name">81. zum Steuersatz von 19 % (zeile 26)</field>
+                                        <field name="name">81. at the tax rate of 19 % (line 26)</field>
                                         <field name="code">DE_81</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_26_tag" model="account.report.expression">
@@ -369,7 +370,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_27" model="account.report.line">
-                                        <field name="name">86. zum Steuersatz von 7 % (zeile 27)</field>
+                                        <field name="name">86. at the tax rate of 7 % (line 27)</field>
                                         <field name="code">DE_86</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_27_tag" model="account.report.expression">
@@ -380,7 +381,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_36" model="account.report.line">
-                                        <field name="name">36. zu anderen Steuersatzen (zeile 28)</field>
+                                        <field name="name">36. at other tax rates (line 28)</field>
                                         <field name="code">DE_36</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_36_tag" model="account.report.expression">
@@ -391,7 +392,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_80" model="account.report.line">
-                                        <field name="name">80. Umsatze, fur die eine Steuer nach § 24 UStG zu entrichten ist (zeile 30)</field>
+                                        <field name="name">80. turnover for which tax is payable under § 24 UStG (line 30)</field>
                                         <field name="code">DE_80</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_80_tag" model="account.report.expression">
@@ -404,12 +405,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tax_tag_31" model="account.report.line">
-                                <field name="name">Innergemeinschaftliche Erwerbe (zeile 31)</field>
+                                <field name="name">Intra-Community acquisitions (line 31)</field>
                                 <field name="code">INNERGEMEINSCHAFTLICHE_ERWERBE_ZEILE_31_STEUER</field>
                                 <field name="aggregation_formula">DE_89.balance + DE_93.balance + DE_98.balance + DE_96.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_33" model="account.report.line">
-                                        <field name="name">89. zum Steuersatz von 19 % (zeile 33)</field>
+                                        <field name="name">89. at the tax rate of 19 % (line 33)</field>
                                         <field name="code">DE_89</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_33_tag" model="account.report.expression">
@@ -420,7 +421,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_34" model="account.report.line">
-                                        <field name="name">93. zum Steuersatz von 7 % (zeile 34)</field>
+                                        <field name="name">93. at the tax rate of 7 % (line 34)</field>
                                         <field name="code">DE_93</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_34_tag" model="account.report.expression">
@@ -431,7 +432,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_98" model="account.report.line">
-                                        <field name="name">98. zu anderen Steuersatzen (zeile 35)</field>
+                                        <field name="name">98. at other tax rates (line 35)</field>
                                         <field name="code">DE_98</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_98_tag" model="account.report.expression">
@@ -442,7 +443,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_96" model="account.report.line">
-                                        <field name="name">96. neuer Fahrzeuge von Lieferern ohne USt-IdNr. zum allgemeinen Steuersatz (zeile 36)</field>
+                                        <field name="name">96. new vehicles from suppliers without VAT number at the general tax rate (line 36)</field>
                                         <field name="code">DE_96</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_96_tag" model="account.report.expression">
@@ -455,12 +456,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tax_tag_37" model="account.report.line">
-                                <field name="name">Erganzende Angaben zu Umsatzen (zeile 37)</field>
+                                <field name="name">Supplementary information on turnover (line 37)</field>
                                 <field name="code">ERGANZENDE_ANGABEN_ZU_UMSATZEN_ZEILE_37_STEUER</field>
                                 <field name="aggregation_formula">DE_45.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tax_tag_45" model="account.report.line">
-                                        <field name="name">45. Ubertrag (zeile 45)</field>
+                                        <field name="name">45. carry over (line 45)</field>
                                         <field name="code">DE_45</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tax_tag_45_tag" model="account.report.expression">
@@ -473,12 +474,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tax_tag_46" model="account.report.line">
-                                <field name="name">Leistungsempfanger als Steuerschuldner (zeile 46)</field>
+                                <field name="name">Recipient of the service as the person liable to pay tax (line 46)</field>
                                 <field name="code">LEISTUNGSEMPFANGER_ALS_STEUERSCHULDNER_ZEILE_46</field>
                                 <field name="aggregation_formula">DE_47.balance + DE_53.balance + DE_74.balance + DE_79.balance + DE_85.balance + DE_65.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_47" model="account.report.line">
-                                        <field name="name">47. Steuerpflichtige sonstige Leistungen eines im übrigen Gemeinschaftsgebietansässigen Unternehmers (zeile 48)</field>
+                                        <field name="name">47. other taxable supplies by a trader established in the rest of the Community (line 48)</field>
                                         <field name="code">DE_47</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_47_tag" model="account.report.expression">
@@ -489,7 +490,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_53" model="account.report.line">
-                                        <field name="name">53. Andere Leistungen eines im Ausland ansässigen Unternehmers (zeile 49)</field>
+                                        <field name="name">53. other services provided by a trader established abroad (line 49)</field>
                                         <field name="code">DE_53</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_53_tag" model="account.report.expression">
@@ -500,7 +501,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_74" model="account.report.line">
-                                        <field name="name">74. Lieferungen sicherungsübereigneter Gegenstände und Umsätze, die unter das GrEStG fallen (zeile 50)</field>
+                                        <field name="name">74. supplies of goods transferred by way of security and transactions falling under the GrEStG (line 50)</field>
                                         <field name="code">DE_74</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_74_tag" model="account.report.expression">
@@ -511,7 +512,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_79" model="account.report.line">
-                                        <field name="name">79. Lieferungen von Mobilfunkgeräten, Tablet-Computern, Spielekonsolen und integrierten Schaltkreisen (zeile 51)</field>
+                                        <field name="name">79. supplies of mobile telephones, tablet computers, game consoles and integrated circuits (line 51)</field>
                                         <field name="code">DE_79</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_79_tag" model="account.report.expression">
@@ -522,7 +523,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_85" model="account.report.line">
-                                        <field name="name">85. Andere Leistungen (zeile 52)</field>
+                                        <field name="name">85. other benefits (line 52)</field>
                                         <field name="code">DE_85</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_85_tag" model="account.report.expression">
@@ -533,7 +534,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_65" model="account.report.line">
-                                        <field name="name">65. Steuer infolge Wechsels der Besteuerungsform sowie Nachsteuer auf versteuerte Anzahlungen u. ä. wegen Steuersatzänderung (zeile 53)</field>
+                                        <field name="name">65. tax due to change in the form of taxation as well as after-tax on taxed advance payments and similar due to change in tax rate (line 53)</field>
                                         <field name="code">DE_65</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_65_tag" model="account.report.expression">
@@ -546,12 +547,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tax_tag_55" model="account.report.line">
-                                <field name="name">Abziehbare Vorsteuerbetrage (zeile 55)</field>
+                                <field name="name">Deductible input tax amounts (line 55)</field>
                                 <field name="code">ABZIEHBARE_VORSTEUERBETRAGE_ZEILE_55</field>
                                 <field name="aggregation_formula">DE_66.balance + DE_61.balance + DE_62.balance + DE_67.balance + DE_63.balance + DE_64.balance + DE_59.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_66" model="account.report.line">
-                                        <field name="name">66. Vorsteuerbeträge aus Rechnungen von anderen Unternehmern (zeile 56)</field>
+                                        <field name="name">66. input tax amounts from invoices from other traders (line 56)</field>
                                         <field name="code">DE_66</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_66_tag" model="account.report.expression">
@@ -562,7 +563,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_61" model="account.report.line">
-                                        <field name="name">61. Vorsteuerbeträge aus dem innergemeinschaftlichen Erwerb von Gegenständen (zeile 57)</field>
+                                        <field name="name">61. input tax amounts from the intra-Community acquisition of goods (line 57)</field>
                                         <field name="code">DE_61</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_61_tag" model="account.report.expression">
@@ -573,7 +574,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_62" model="account.report.line">
-                                        <field name="name">62. Entstandene Einfuhrumsatzsteuer (zeile 58)</field>
+                                        <field name="name">62. import turnover tax incurred (line 58)</field>
                                         <field name="code">DE_62</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_62_tag" model="account.report.expression">
@@ -584,7 +585,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_67" model="account.report.line">
-                                        <field name="name">67. Vorsteuerbeträge aus Leistungen im Sinne des § 13b UStG (zeile 59)</field>
+                                        <field name="name">67. input tax amounts from services within the meaning of § 13b UStG (line 59)</field>
                                         <field name="code">DE_67</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_67_tag" model="account.report.expression">
@@ -595,7 +596,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_63" model="account.report.line">
-                                        <field name="name">63. Vorsteuerbeträge, die nach allgemeinen Durchschnittssätzen berechnet sind (zeile 60)</field>
+                                        <field name="name">63. input tax amounts calculated according to general average rates (line 60)</field>
                                         <field name="code">DE_63</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_63_tag" model="account.report.expression">
@@ -606,7 +607,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_64" model="account.report.line">
-                                        <field name="name">64. Berichtigung des Vorsteuerabzugs (zeile 61)</field>
+                                        <field name="name">64. adjustment of the input tax deduction (line 61)</field>
                                         <field name="code">DE_64</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_64_tag" model="account.report.expression">
@@ -617,7 +618,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_59" model="account.report.line">
-                                        <field name="name">59. Vorsteuerabzug für innergemeinschaftliche Lieferungen neuer Fahrzeuge außerhalb eines Unternehmens (zeile 62)</field>
+                                        <field name="name">59. input tax deduction for intra-Community supplies of new vehicles outside a business (line 62)</field>
                                         <field name="code">DE_59</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_59_tag" model="account.report.expression">
@@ -630,12 +631,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tax_tag_64" model="account.report.line">
-                                <field name="name">Andere Steuerbetrage (zeile 64)</field>
+                                <field name="name">Other tax amounts (line 64)</field>
                                 <field name="code">ANDERE_STEUERBETRAGE_ZEILE_64</field>
                                 <field name="aggregation_formula">DE_69.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_69" model="account.report.line">
-                                        <field name="name">69. In Rechnungen unrichtig oder unberechtigt ausgewiesene Steuerbeträge (zeile 65)</field>
+                                        <field name="name">69. tax amounts shown incorrectly or unjustifiably in invoices (line 65)</field>
                                         <field name="code">DE_69</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_69_tag" model="account.report.expression">
@@ -648,12 +649,12 @@
                                 </field>
                             </record>
                             <record id="tax_report_de_tax_tag_66" model="account.report.line">
-                                <field name="name">Umsatzsteuer-Vorauszahlung/Uberschuss (zeile 66)</field>
+                                <field name="name">Advance payment of VAT/surplus (line 66)</field>
                                 <field name="code">UMSATZSTEUERVORAUSZAHLUNGUBERSCHUSS_ZEILE_66</field>
                                 <field name="aggregation_formula">DE_39.balance + DE_83.balance</field>
                                 <field name="children_ids">
                                     <record id="tax_report_de_tag_39" model="account.report.line">
-                                        <field name="name">39. Abzug der festgesetzten Sondervorauszahlung für Dauerfristverlängerung (zeile 67)</field>
+                                        <field name="name">39. deduction of the special advance payment for the extension of the standing period (line 67)</field>
                                         <field name="code">DE_39</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_39_tag" model="account.report.expression">
@@ -664,7 +665,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_de_tag_83" model="account.report.line">
-                                        <field name="name">83. Verbleibende Umsatzsteuer-Vorauszahlung (zeile 68)</field>
+                                        <field name="name">83. remaining advance payment of sales tax (line 68)</field>
                                         <field name="code">DE_83</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_de_tag_83_tag" model="account.report.expression">
@@ -683,302 +684,302 @@
         </field>
     </record>
     <record id="tag_de_intracom_community_delivery" model="account.account.tag">
-        <field name="name">Innergemeinschaftliche Lieferung</field>
+        <field name="name">Intra-Community supply</field>
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.de"/>
     </record>
     <record id="tag_de_intracom_community_supplies" model="account.account.tag">
-        <field name="name">Sonstige Leistungen</field>
+        <field name="name">Other services</field>
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.de"/>
     </record>
     <record id="tag_de_intracom_ABC" model="account.account.tag">
-        <field name="name">Dreiecksgeschäfte</field>
+        <field name="name">Triangular deals</field>
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.de"/>
     </record>
     <record id="tag_de_pl_01" model="account.account.tag">
-        <field name="name">G&amp;V: 1-Umsatzerlöse</field>
+        <field name="name">G&amp;V: 1-Turnover revenue</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_02" model="account.account.tag">
-        <field name="name">G&amp;V: 2-Erhöhung oder Verminderung des Bestands an fertigen und unfertigen Erzeugnissen</field>
+        <field name="name">G&amp;V: 2-Increase or decrease in inventories of finished goods and work in progress</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_03" model="account.account.tag">
-        <field name="name">G&amp;V: 3-Andere aktivierte Eigenleistungen</field>
+        <field name="name">G&amp;V: 3-Other own work capitalised</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_04" model="account.account.tag">
-        <field name="name">G&amp;V: 4-Sonstige betrieliche Erträge</field>
+        <field name="name">G&amp;V: 4-Other operating income</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_05" model="account.account.tag">
-        <field name="name">G&amp;V: 5-Materialaufwand</field>
+        <field name="name">G&amp;V: 5-Material Effort</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_06" model="account.account.tag">
-        <field name="name">G&amp;V: 6-Personalaufwand</field>
+        <field name="name">G&amp;V: 6-Personnel costs</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_07" model="account.account.tag">
-        <field name="name">G&amp;V: 7-Abschreibungen</field>
+        <field name="name">G&amp;V: 7-Depreciations</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_08_1" model="account.account.tag">
-        <field name="name">G&amp;V: 8.1-Raumkosten</field>
+        <field name="name">G&amp;V: 8.1-Spatial costs</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_08_2" model="account.account.tag">
-        <field name="name">G&amp;V: 8.2-Versicherungen, Beiträge und Abgaben</field>
+        <field name="name">G&amp;V: 8.2-Insurances, contributions and levies</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_08_3" model="account.account.tag">
-        <field name="name">G&amp;V: 8.3-Reparaturen und Instandhaltungen</field>
+        <field name="name">G&amp;V: 8.3-Repairs and maintenance</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_08_4" model="account.account.tag">
-        <field name="name">G&amp;V: 8.4-Fahrzeugkosten</field>
+        <field name="name">G&amp;V: 8.4-Vehicle costs</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_08_5" model="account.account.tag">
-        <field name="name">G&amp;V: 8.5-Werbe- und Reisekosten</field>
+        <field name="name">G&amp;V: 8.5-Advertising and travel expenses</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_08_6" model="account.account.tag">
-        <field name="name">G&amp;V: 8.6-Kosten der Warenabgabe</field>
+        <field name="name">G&amp;V: 8.6-Cost of goods delivery</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_08_7" model="account.account.tag">
-        <field name="name">G&amp;V: 8.7-verschiedene betriebliche Kosten</field>
+        <field name="name">G&amp;V: 8.7-miscellaneous operating costs</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_09" model="account.account.tag">
-        <field name="name">G&amp;V: 9-Erträge aus Beteiligungen</field>
+        <field name="name">G&amp;V: 9-Income from participations</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_10" model="account.account.tag">
-        <field name="name">G&amp;V: 10-Erträge aus anderen Wertpapieren und Ausleihungen des Finanzanlagevermögens</field>
+        <field name="name">G&amp;V: 10-Income from other securities and loans held as financial assets</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_11" model="account.account.tag">
-        <field name="name">G&amp;V: 11-Sonstige Zinsen und ähnliche Erträge</field>
+        <field name="name">G&amp;V: 11-Other interest and similar income</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_12" model="account.account.tag">
-        <field name="name">G&amp;V: 12-Abschreibungen auf Finanzanlagen und auf Wertpapiere des Umlaufvermögens</field>
+        <field name="name">G&amp;V: 12-Depreciations on financial assets and on securities held as current assets</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_13" model="account.account.tag">
-        <field name="name">G&amp;V: 13-Zinsen und ähnliche Aufwendungen</field>
+        <field name="name">G&amp;V: 13-Interest and similar expenses</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_14" model="account.account.tag">
-        <field name="name">G&amp;V: 14-Steuern vom Einkommen und Ertrag</field>
+        <field name="name">G&amp;V: 14-Taxes on income and earnings</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_pl_15" model="account.account.tag">
-        <field name="name">G&amp;V: 15-Sonstige Steuern</field>
+        <field name="name">G&amp;V: 15-Other taxes</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_I_1" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A I 1-Selbst geschaffene gewerbliche Schutzrechte und ähnliche Rechte und Werte</field>
+        <field name="name">Balance sheet active: A I 1-Self-generated industrial property rights and similar rights and active</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_I_2" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A I 2-Konzessionen, Lizenzen und ähnliche Rechte und Werte</field>
+        <field name="name">Balance sheet active: A I 2-Concessions, licences and similar rights and active</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_I_3" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A I 3-Geschäfts- oder Firmenwert</field>
+        <field name="name">Balance sheet active: A I 3-Goodwill</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_I_4" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A I 4-geleistete Anzahlungen</field>
+        <field name="name">Balance sheet active: A I 4-Payments on account</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_II_1" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A II 1-Grundstücke. grundstücksgleiche Rechte und Bauten</field>
+        <field name="name">Balance sheet active: A II 1-Property. rights equivalent to real property and buildings</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_II_2" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A II 2-Technische  Anlagen und Maschinen</field>
+        <field name="name">Balance sheet active: A II 2-Technical equipment and machinery</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_II_3" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A II 3-Andere Anlagen. Betriebs- und Geschäftsausstattung</field>
+        <field name="name">Balance sheet active: A II 3-Other active. Operating and office equipment</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_II_4" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A II 4-Geleistete Anzahlungen und Anlagen im Bau</field>
+        <field name="name">Balance sheet active: A II 4-Payments on account and active under construction</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_III_1" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A III 1-Anteile an verbundenen Unternehmen</field>
+        <field name="name">Balance sheet active: A III 1-Shares in affiliated companies</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_III_2" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A III 2-Ausleihungen an verbundene Unternehmen</field>
+        <field name="name">Balance sheet active: A III 2-Loans to affiliated companies</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_III_3" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A III 3-Beteiligungen</field>
+        <field name="name">Balance sheet active: A III 3-Investments</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_III_4" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A III 4-Ausleihungen an Unternehmen, mit denen ein Beteiligungsverhältnis besteht</field>
+        <field name="name">Balance sheet active: A III 4-Loans to companies in which participations are held</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_III_5" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A III 5-Wertpapiere des Anlagevermögens</field>
+        <field name="name">Balance sheet active: A III 5-Securities held as fixed active</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_A_III_6" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: A III 6-sonstige Ausleihungen</field>
+        <field name="name">Balance sheet active: A III 6-Other loans</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_I_1" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B I 1-Roh-, Hilfs- und Betriebsstoffe</field>
+        <field name="name">Balance sheet active: B I 1-Raw materials and supplies</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_I_2" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B I 2-Unfertige Erzeugnisse, unfertige Leistungen</field>
+        <field name="name">Balance sheet active: B I 2-Finished goods, work in progress</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_I_3" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B I 3-Fertige Erzeugnisse und Waren</field>
+        <field name="name">Balance sheet active: B I 3-Finished goods and merchandise</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_I_4" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B I 4-Geleistete Anzahlungen</field>
+        <field name="name">Balance sheet active: B I 4-Payments on account</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_II_1" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B II 1-Forderungen aus Lieferungen und Leistungen</field>
+        <field name="name">Balance sheet active: B II 1-Trade receivables</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_II_2" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B II 2-Forderungen gegen verbundene Unternehmen</field>
+        <field name="name">Balance sheet active: B II 2-Receivables from affiliated companies</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_II_3" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B II 3-Forderungen gegen Unternehmen, mit denen ein Beteiligungsverhältnis besteht</field>
+        <field name="name">Balance sheet active: B II 3-Receivables from companies in which participations are held</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_II_4" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B II 4-Sonstige Vermögensgegenstände</field>
+        <field name="name">Balance sheet active: B II 4-Other active</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_III_1" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B III 1-Anteile an verbundenen Unternehmen</field>
+        <field name="name">Balance sheet active: B III 1-Shares in affiliated companies</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_III_2" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B III 2-sonstige Wertpapiere</field>
+        <field name="name">Balance sheet active: B III 2-Other securities</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_B_IV" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: B IV-Kassenbestand, Bundesbankguthaben, Guthaben bei Kreditinstituten und Schecks</field>
+        <field name="name">Balance sheet active: B IV cash on hand, Bundesbank balances, bank balances and cheques</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_C" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: C-Rechnungsabgrenzungsposten</field>
+        <field name="name">Balance sheet active: C accruals and deferrals</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_D" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: D-Aktive latente Steuern</field>
+        <field name="name">Balance sheet active: D-Deferred tax active</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_asset_bs_E" model="account.account.tag">
-        <field name="name">Bilanz-Aktiva: E-Aktiver Unterschiedsbetrag aus der Vermögensverrechnung</field>
+        <field name="name">Balance sheet active: E-Active difference from asset offsetting</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_A_I" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: A I-Gezeichnetes Kapital</field>
+        <field name="name">Balance sheet passive: A I-Subscribed capital</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_A_II" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: A II-Kapitalrücklage</field>
+        <field name="name">Balance sheet passive: A II capital reserve</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_A_III_1" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: A III 1-Gesetzliche Rücklage</field>
+        <field name="name">Balance sheet passive: A III 1-Legal reserve</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_A_III_2" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: A III 2-Rücklage für Anteile an einem herrschenden oder mehrheitlich beteiligten Unternehmen</field>
+        <field name="name">Balance sheet passive: A III 2-Reserve for shares in a controlling or majority-owned company</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_A_III_3" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: A III 3-Satzungsmäßige Rücklagen</field>
+        <field name="name">Balance sheet passive: A III 3-Statutory reserves</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_A_III_4" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: A III 4-Andere Gewinnrücklagen</field>
+        <field name="name">Balance sheet passive: A III 4-Other revenue reserves</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_A_IV" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: A IV-Gewinnvortrag/Verlustvortrag</field>
+        <field name="name">Balance sheet passive: A IV profit/loss carried forward</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_A_V" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: A V-Jahresüberschuß/Jahresfehlbetrag</field>
+        <field name="name">Balance sheet passive: A V net profit/loss for the year</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_B" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: B Sonderposten mit Rücklageanteil</field>
+        <field name="name">Balance sheet passive: B Special items with an equity portion</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_C_1" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: C 1-Rückstellungen für Pensionen und ähnliche Verpflichtungen</field>
+        <field name="name">Balance sheet passive: C 1-Provisions for pensions and similar obligations</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_C_2" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: C 2-Steuerrückstellungen</field>
+        <field name="name">Balance sheet passive: C 2 tax provisions</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_C_3" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: C 3-Sonstige Rückstellungen</field>
+        <field name="name">Balance sheet passive: C 3-Other provisions</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_D_1" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 1-Anleihen, davon konvertibeln</field>
+        <field name="name">Balance sheet passive: D 1 bonds, of which convertible</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_D_2" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 2-Verbindlichkeiten gegenüber Kreditinstituten</field>
+        <field name="name">Balance sheet passive: D 2-Payables to credit institutions</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_D_3" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 3-Erhaltene Anzahlungen auf Bestellungen</field>
+        <field name="name">Balance sheet passive: D 3-Payments received on account of orders</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_D_4" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 4-Verbindlichkeiten aus Lieferungen und Leistungen</field>
+        <field name="name">Balance sheet passive: D 4-trade payables</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_D_5" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 5-Verbindlichkeiten aus der Annahme gezogener Wechsel und der Ausstellung eigener Wechsel</field>
+        <field name="name">Balance sheet passive: D 5-passive from the acceptance of bills of exchange drawn and the issue of own bills of exchange</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_D_6" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 6-Verbindlichkeiten gegenüber verbundenen Unternehmen</field>
+        <field name="name">Balance sheet passive: D 6-Payables to affiliated companies</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_D_7" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 7-Verbindlichkeiten gegenüber Unternehmen, mit denen ein Beteiligungsverhältnis besteht</field>
+        <field name="name">Balance sheet passive: D 7 passive to companies in which participations are held</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_D_8" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: D 8-Sonstige Verbindlichkeiten, davon aus Steuern, davon im Rahmen der sozialen Sicherheit</field>
+        <field name="name">Balance sheet passive: D 8-Other passive, of which from taxes, of which in the context of social security</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_E" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: E-Rechnungsabgrenzungsposten</field>
+        <field name="name">Balance sheet passive: e-accruals and deferrals</field>
         <field name="applicability">accounts</field>
     </record>
     <record id="tag_de_liabilities_bs_F" model="account.account.tag">
-        <field name="name">Bilanz-Passiva: F-Passive latente Steuern</field>
+        <field name="name">Balance sheet passive: F-Deferred tax passive</field>
         <field name="applicability">accounts</field>
     </record>
 </odoo>

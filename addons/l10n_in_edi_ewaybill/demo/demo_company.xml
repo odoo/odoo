@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_in_ewaybill" model="res.partner">
+        <field name="name">E-Waybill Company</field>
+        <field name="vat">05AAACH6188F1ZM</field>
+        <field name="street">46B 49B, RAIPUR</field>
+        <field name="street2">BHAGWANPUR, ROORKEE</field>
+        <field name="city">Haridwar</field>
+        <field name="country_id" ref="base.in"/>
+        <field name="state_id" ref="base.state_in_uk"/>
+        <field name="zip">247667</field>
+    </record>
+
+    <record id="demo_company_in_ewaybill" model="res.company">
+        <field name="name">E-Waybill Company</field>
+        <field name="partner_id" ref="partner_demo_company_in_ewaybill"/>
+        <field name="l10n_in_edi_ewaybill_username">05AAACH6188F1ZM</field>
+        <field name="l10n_in_edi_ewaybill_password">abc123@@</field>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_in_ewaybill')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('demo_company_in_ewaybill'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>in</value>
+        <value model="res.company" eval="obj().env.ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill')"/>
+    </function>
+</odoo>

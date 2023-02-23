@@ -3,7 +3,7 @@
 from markupsafe import Markup
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
@@ -122,6 +122,9 @@ class PurchaseOrder(models.Model):
                 for order_line in order.order_line:
                     order_line.move_ids._action_cancel()
                     if order_line.move_dest_ids:
+                        moves_to_unlink = order_line.move_dest_ids.filtered(lambda m: len(m.created_purchase_line_ids.ids) > 1)
+                        if moves_to_unlink:
+                            moves_to_unlink.created_purchase_line_ids = [Command.unlink(order_line.id)]
                         move_dest_ids = order_line.move_dest_ids
                         if order_line.propagate_cancel:
                             move_dest_ids._action_cancel()
@@ -189,7 +192,7 @@ class PurchaseOrder(models.Model):
         filtered_documents = {}
         for (parent, responsible), rendering_context in documents.items():
             if parent._name == 'stock.picking':
-                if parent.state == 'cancel':
+                if parent.state in ['cancel', 'done']:
                     continue
             filtered_documents[(parent, responsible)] = rendering_context
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
@@ -245,10 +248,14 @@ class PurchaseOrder(models.Model):
                     seq += 5
                     move.sequence = seq
                 moves._action_assign()
-                pickings.action_confirm()
-                picking.message_post_with_view('mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                # Get following pickings (created by push rules) to confirm them as well.
+                forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
+                (pickings | forward_pickings).action_confirm()
+                picking.message_post_with_source(
+                    'mail.message_origin_link',
+                    render_values={'self': picking, 'origin': order},
+                    subtype_xmlid='mail.mt_note',
+                )
         return True
 
     def _add_picking_info(self, activity):
@@ -290,7 +297,7 @@ class PurchaseOrderLine(models.Model):
 
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, copy=False)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint', copy=False, index='btree_not_null')
-    move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
+    move_dest_ids = fields.Many2many('stock.move', 'stock_move_created_purchase_line_rel', 'created_purchase_line_id', 'move_id', 'Downstream moves alt')
     product_description_variants = fields.Char('Custom Description')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
@@ -305,7 +312,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         moves = self.move_ids.filtered(lambda m: m.product_id == self.product_id)
         if self._context.get('accrual_entry_date'):
-            moves = moves.filtered(lambda r: fields.Date.to_date(r.date) <= self._context['accrual_entry_date'])
+            moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
     @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
@@ -319,7 +326,7 @@ class PurchaseOrderLine(models.Model):
                 # the PO. Therefore, we can skip them since they will be handled later on.
                 for move in line._get_po_line_moves():
                     if move.state == 'done':
-                        if move.location_dest_id.usage == "supplier":
+                        if move._is_purchase_return():
                             if move.to_refund:
                                 total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
@@ -328,16 +335,6 @@ class PurchaseOrderLine(models.Model):
                             # receive the product physically in our stock. To avoid counting the
                             # quantity twice, we do nothing.
                             pass
-                        elif (
-                            move.location_dest_id.usage == "internal"
-                            and move.location_id.usage != "supplier"
-                            and move.location_dest_id
-                            not in self.env["stock.location"].search(
-                                [("id", "child_of", move.warehouse_id.view_location_id.id)]
-                            )
-                        ):
-                            if move.to_refund:
-                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line._track_qty_received(total)
@@ -393,6 +390,12 @@ class PurchaseOrderLine(models.Model):
 
     def unlink(self):
         self.move_ids._action_cancel()
+
+        # Unlink move_dests that have other created_purchase_line_ids instead of cancelling them
+        for line in self:
+            moves_to_unlink = line.move_dest_ids.filtered(lambda m: len(m.created_purchase_line_ids.ids) > 1)
+            if moves_to_unlink:
+                moves_to_unlink.created_purchase_line_ids = [Command.unlink(line.id)]
 
         ppg_cancel_lines = self.filtered(lambda line: line.propagate_cancel)
         ppg_cancel_lines.move_dest_ids._action_cancel()
@@ -450,13 +453,13 @@ class PurchaseOrderLine(models.Model):
             price_unit = self.taxes_id.with_context(round=False).compute_all(
                 price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id, partner=self.order_id.partner_id
             )['total_void']
-            price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
+            price_unit = price_unit / qty
         if self.product_uom.id != self.product_id.uom_id.id:
             price_unit *= self.product_uom.factor / self.product_id.uom_id.factor
         if order.currency_id != order.company_id.currency_id:
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
-        return price_unit
+        return float_round(price_unit, precision_digits=price_unit_prec)
 
     def _prepare_stock_moves(self, picking):
         """ Prepare the stock moves data for one order line. This function returns a list of
@@ -519,7 +522,7 @@ class PurchaseOrderLine(models.Model):
         return {
             # truncate to 2000 to avoid triggering index limit error
             # TODO: remove index in master?
-            'name': (self.name or '')[:2000],
+            'name': (self.product_id.display_name or '')[:2000],
             'product_id': self.product_id.id,
             'date': date_planned,
             'date_deadline': date_planned,
@@ -568,7 +571,7 @@ class PurchaseOrderLine(models.Model):
         for line in self.filtered(lambda l: not l.display_type):
             for val in line._prepare_stock_moves(picking):
                 values.append(val)
-            line.move_dest_ids.created_purchase_line_id = False
+            line.move_dest_ids.created_purchase_line_ids = [Command.clear()]
 
         return self.env['stock.move'].create(values)
 

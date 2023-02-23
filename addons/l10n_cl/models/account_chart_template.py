@@ -1,15 +1,15 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+# -*- coding: utf-8 -*-
 from odoo import models
-from odoo.http import request
+from odoo.addons.account.models.chart_template import template
 
 
-class AccountChartTemplate(models.Model):
+class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    def _load(self, company):
-        """ Set tax calculation rounding method required in Chilean localization"""
-        res = super()._load(company)
-        if company.account_fiscal_country_id.code == 'CL':
-            company.write({'tax_calculation_rounding_method': 'round_globally'})
-        return res
+    @template('cl', 'res.company')
+    def _get_cl_res_company(self):
+        company_data = super()._get_cl_res_company()
+        company_data[self.env.company.id].update({
+            'tax_calculation_rounding_method': 'round_globally',
+        })
+        return company_data

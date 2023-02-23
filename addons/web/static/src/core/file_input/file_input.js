@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, onMounted, useRef } = owl;
+import { Component, onMounted, useRef } from "@odoo/owl";
 
 /**
  * Custom file input
@@ -34,6 +34,30 @@ export class FileInput extends Component {
         });
     }
 
+    get httpParams() {
+        const { resId, resModel } = this.props;
+        const params = {
+            csrf_token: odoo.csrf_token,
+            ufile: [...this.fileInputRef.el.files],
+        };
+        if (resModel) {
+            params.model = resModel;
+        }
+        if (resId !== undefined) {
+            params.id = resId;
+        }
+        return params;
+    }
+
+    async uploadFiles(params) {
+        const fileData = await this.http.post(this.props.route, params, "text");
+        const parsedFileData = JSON.parse(fileData);
+        if (parsedFileData.error) {
+            throw new Error(parsedFileData.error);
+        }
+        return parsedFileData;
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -46,23 +70,9 @@ export class FileInput extends Component {
      * - resId: the id of the resModel target instance
      */
     async onFileInputChange() {
-        const { resId, resModel, route } = this.props;
-        const params = {
-            csrf_token: odoo.csrf_token,
-            ufile: [...this.fileInputRef.el.files],
-        };
-        if (resModel) {
-            params.model = resModel;
-        }
-        if (resId !== undefined) {
-            params.id = resId;
-        }
-        const fileData = await this.http.post(route, params, "text");
-        const parsedFileData = JSON.parse(fileData);
-        if (parsedFileData.error) {
-            throw new Error(parsedFileData.error);
-        }
-        this.props.onUpload(parsedFileData);
+        const parsedFileData = await this.uploadFiles(this.httpParams);
+        // When calling onUpload, also pass the files to allow to get data like their names
+        this.props.onUpload(parsedFileData, this.fileInputRef.el ? this.fileInputRef.el.files : []);
     }
 
     /**

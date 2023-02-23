@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 
 import { formatDate } from "@web/core/l10n/dates";
 
-import { SkillsX2ManyField } from "./skills_one2many";
+import { SkillsX2ManyField, skillsX2ManyField } from "./skills_one2many";
 import { CommonSkillsListRenderer } from "../views/skills_list_renderer";
 
 export class ResumeListRenderer extends CommonSkillsListRenderer {
@@ -36,5 +36,9 @@ ResumeX2ManyField.components = {
     ListRenderer: ResumeListRenderer,
 };
 
-registry.category("fields")
-    .add("resume_one2many", ResumeX2ManyField);
+export const resumeX2ManyField = {
+    ...skillsX2ManyField,
+    component: ResumeX2ManyField,
+};
+
+registry.category("fields").add("resume_one2many", resumeX2ManyField);

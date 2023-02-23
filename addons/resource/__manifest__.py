@@ -18,7 +18,11 @@ associated to every resource. It also manages the leaves of every resource.
         'data/resource_data.xml',
         'security/ir.model.access.csv',
         'security/resource_security.xml',
-        'views/resource_views.xml',
+        'views/resource_resource_views.xml',
+        'views/resource_calendar_leaves_views.xml',
+        'views/resource_calendar_attendance_views.xml',
+        'views/resource_calendar_views.xml',
+        'views/menuitems.xml',
     ],
     'assets': {
         'web.assets_backend': [

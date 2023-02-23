@@ -29,7 +29,7 @@
                     value="state.redirect_old_url"
                     onChange="(value) => this.onChangeRedirectOldUrl(value)"
                 />
-                <PageDependencies pageId="props.record.resId" mode="'popover'"/>
+                <PageDependencies resIds="[props.record.resId]" resModel="'website.page'" mode="'popover'"/>
             </div>
             <div t-if="state.redirect_old_url" class="d-flex mt-4">
                 <label class="my-0 me-4 fw-bold" for="redirect_type">Type</label>
@@ -38,26 +38,6 @@
                     <option value="302">302 Moved temporarily</option>
                 </select>
             </div>
-        </div>
-    </t>
-</t>
-
-<t t-name="website.PageNameField" owl="1">
-    <t t-if="props.readonly">
-        <span t-esc="formattedPageName"/>
-    </t>
-    <t t-else="">
-        <input
-            class="o_input"
-            type="text"
-            t-att-placeholder="props.placeholder"
-            t-att-required="props.required"
-            t-att-id="props.id"
-            t-model="state.name"
-            t-ref="input"
-        />
-        <div t-if="warnAboutCall" class="mt-4">
-            <PageDependencies pageId="props.record.resId" mode="'popover'" type="'key'"/>
         </div>
     </t>
 </t>

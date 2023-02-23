@@ -6,67 +6,32 @@
             <field name="priority" eval="60"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Email Marketing" string="Email Marketing" data-key="mass_mailing" groups="mass_mailing.group_mass_mailing_user">
-                      <h2>Email Marketing</h2>
-                        <div class="row mt16 o_settings_container" name="managa_mail_campaigns_setting_container">
-                            <div class="col-lg-6 o_setting_box col-12" title="This tool is advised if your marketing campaign is composed of several emails.">
-                                <div class="o_setting_left_pane" title="This is useful if your marketing campaigns are composed of several emails.">
-                                    <field name="group_mass_mailing_campaign"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_mass_mailing_campaign"/>
-                                    <div class="text-muted">
-                                        Manage mass mailing campaigns
+                <xpath expr="//form" position="inside">
+                    <app data-string="Email Marketing" string="Email Marketing" name="mass_mailing" groups="mass_mailing.group_mass_mailing_user">
+                        <block title="Email Marketing" name="managa_mail_campaigns_setting_container">
+                            <setting title="This tool is advised if your marketing campaign is composed of several emails." help="Manage mass mailing campaigns">
+                                <field name="group_mass_mailing_campaign"/>
+                            </setting>
+                            <setting name="dedicated_server_setting_container" title="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails." help="Pick a dedicated outgoing mail server for your mass mailings">
+                                <field name="mass_mailing_outgoing_mail_server"/>
+                                <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
+                                    <div class="mt16">
+                                        <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"
+                                                placeholder="Default Server"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button type="action" name="base.action_ir_mail_server_list" string="Configure Outgoing Mail Servers" icon="fa-arrow-right" class="oe_link"/>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-6 o_setting_box col-12" name="dedicated_server_setting_container">
-                                <div class="o_setting_left_pane" title="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.">
-                                    <field name="mass_mailing_outgoing_mail_server"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="mass_mailing_outgoing_mail_server"/>
-                                    <div class="text-muted">
-                                        Pick a dedicated outgoing mail server for your mass mailings
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
-                                        <div class="mt16">
-                                            <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"
-                                                   placeholder="Default Server"/>
-                                        </div>
-                                        <div class="mt8">
-                                            <button type="action" name="base.action_ir_mail_server_list" string="Configure Outgoing Mail Servers" icon="fa-arrow-right" class="oe_link"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 o_setting_box col-xs-12" name="allow_blacklist_setting_container">
-                                <div class="o_setting_left_pane" title="Allow the recipient to manage themselves their state in the blacklist via the unsubscription page.
-                                If the option is active, the 'Blacklist Me' button is hidden on the unsubscription page.
-                                The 'come Back' button will always be visible in any case to allow leads and partners to re-subscribe.">
-                                    <field name="show_blacklist_buttons"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="show_blacklist_buttons"/>
-                                    <div class="text-muted">
-                                        Allow recipients to blacklist themselves
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 o_setting_box col-xs-12" name="mass_mailing_reports_setting_container">
-                                <div class="o_setting_left_pane" title="Send a report to the mailing responsible one day after the mailing has been sent.">
-                                    <field name="mass_mailing_reports"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="mass_mailing_reports"/>
-                                    <div class="text-muted">
-                                        Check how well your mailing is doing a day after it has been sent
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            </setting>
+                            <setting name="allow_blacklist_setting_container" title="Allow the recipient to manage themselves their state in the blacklist via the unsubscription page. If the option is active, the 'Blacklist Me' button is hidden on the unsubscription page. The 'come Back' button will always be visible in any case to allow leads and partners to re-subscribe." help="Allow recipients to blacklist themselves">
+                                <field name="show_blacklist_buttons"/>
+                            </setting>
+                            <setting name="mass_mailing_reports_setting_container" title="Send a report to the mailing responsible one day after the mailing has been sent." help="Check how well your mailing is doing a day after it has been sent">
+                                <field name="mass_mailing_reports"/>
+                            </setting>
+                        </block>
+                    </app>
                 </xpath>
             </field>
         </record>

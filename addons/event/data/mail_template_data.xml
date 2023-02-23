@@ -8,6 +8,7 @@
             <field name="subject">Your badge for {{ object.event_id.name }}</field>
             <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field>
             <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
+            <field name="description">Sent automatically to someone after they registered to an event</field>
             <field name="body_html" type="html">
 <div>
     Dear <t t-out="object.name or ''">Oscar Morgan</t>,<br/>
@@ -21,18 +22,18 @@
         <t t-out="object.event_id.user_id.signature or ''">--<br/>Mitchell Admin</t>
     </t>
 </div></field>
-            <field name="report_template" ref="action_report_event_registration_foldable_badge"/>
-            <field name="report_name">Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('event.action_report_event_registration_foldable_badge'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
         <record id="event_subscription" model="mail.template">
-            <field name="name">Event: Registration</field>
+            <field name="name">Event: Registration Confirmation</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="subject">Your registration at {{ object.event_id.name }}</field>
             <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field>
             <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
+            <field name="description">Sent to attendees after registering to an event</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <t t-set="date_begin" t-value="format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
@@ -219,11 +220,15 @@
 
                 <tr><td valign="top" style="font-size: 14px;">
                     <!-- GOOGLE MAPS LINK -->
-                    <t t-if="event_address">
+                    <t t-if="event_address and location">
                         <table style="width:100%;"><tr><td>
                             <div>
+                                <i class="fa fa-map-marker"/>
                                 <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
-                                    <img t-attf-src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}" style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                    <img t-if="event_address.static_map_url and event_address.static_map_url_is_valid"
+                                         t-att-src="event_address.static_map_url"
+                                         style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                    <t t-else="">See location on Google Maps</t>
                                 </a>
                             </div>
                         </td></tr></table>
@@ -251,8 +256,7 @@
 </td></tr>
 </table>
             </field>
-            <field name="report_template" ref="action_report_event_registration_full_page_ticket"/>
-            <field name="report_name">Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('event.action_report_event_registration_full_page_ticket'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
         </record>
 
@@ -262,6 +266,7 @@
             <field name="subject">{{ object.event_id.name }}: {{ object.get_date_range_str() }}</field>
             <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field>
             <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
+            <field name="description">Sent automatically to attendees if there is a reminder defined on the event</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <t t-set="date_begin" t-value="format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
@@ -440,10 +445,14 @@
 
                 <tr><td valign="top" style="font-size: 14px;">
                     <!-- GOOGLE MAPS LINK -->
-                    <table t-if="event_address" style="width:100%;"><tr><td>
+                    <table t-if="event_address and location" style="width:100%;"><tr><td>
                         <div>
+                            <i class="fa fa-map-marker"/>
                             <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
-                                <img t-attf-src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}" style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                <img t-if="event_address.static_map_url and event_address.static_map_url_is_valid"
+                                     t-attf-src="{{ event_address.static_map_url }}"
+                                     style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                <span t-else="">See location on Google Maps</span>
                             </a>
                         </div>
                     </td></tr></table>

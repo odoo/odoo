@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editSelect, getFixture } from "@web/../tests/helpers/utils";
+import { editSelect, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -44,10 +44,9 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="program_type" widget="filterable_selection" options="{'whitelisted_values': ['coupon', 'promotion']}"/>
+                    <field name="program_type" widget="filterable_selection" options="{'whitelisted_values': ['coupons', 'promotion']}"/>
                 </form>`,
         });
-        await click(target, ".o_form_button_edit");
 
         assert.containsN(target, "select option", 3);
         assert.containsOnce(
@@ -71,7 +70,6 @@ QUnit.module("Fields", (hooks) => {
                     <field name="program_type" widget="filterable_selection" options="{'blacklisted_values': ['gift_card']}"/>
                 </form>`,
         });
-        await click(target, ".o_form_button_edit");
 
         assert.containsN(target, "select option", 3);
         assert.containsOnce(
@@ -96,7 +94,6 @@ QUnit.module("Fields", (hooks) => {
                     <field name="program_type" widget="filterable_selection" options="{'blacklisted_values': ['gift_card']}"/>
                 </form>`,
         });
-        await click(target, ".o_form_button_edit");
 
         assert.containsN(target, "select option", 4);
         assert.containsOnce(

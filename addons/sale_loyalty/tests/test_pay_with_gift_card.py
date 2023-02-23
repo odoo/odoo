@@ -69,3 +69,85 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self._apply_promo_code(order, gift_card_1.code)
         self._apply_promo_code(order, gift_card_2.code)
         self.assertEqual(order.amount_total, before_gift_card_payment - 200)
+
+    def test_paying_with_gift_card_and_discount(self):
+        # Test that discounts take precedence on payment rewards
+        self.env['loyalty.generate.wizard'].with_context(active_id=self.program_gift_card.id).create({
+            'coupon_qty': 1,
+            'points_granted': 50,
+        }).generate_coupons()
+        gift_card_1 = self.program_gift_card.coupon_ids
+        order = self.empty_order
+        order.write({'order_line': [
+            Command.create({
+                'product_id': self.product_C.id,
+                'name': 'Ordinary Product C',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self.env['loyalty.program'].create({
+            'name': 'Code for 10% on orders',
+            'trigger': 'with_code',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'mode': 'with_code',
+                'code': 'test_10pc',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        self.assertEqual(order.amount_total, 100)
+        self._apply_promo_code(order, gift_card_1.code)
+        self.assertEqual(order.amount_total, 50)
+        self._apply_promo_code(order, "test_10pc")
+        # real flows also have to update the programs and rewards
+        order._update_programs_and_rewards()
+        self.assertEqual(order.amount_total, 40) # 100 - 10% - 50
+
+    def test_paying_with_gift_card_blocking_discount(self):
+        # Test that a payment program making the order total 0 still allows the user to claim discounts
+        self.env['loyalty.generate.wizard'].with_context(active_id=self.program_gift_card.id).create({
+            'coupon_qty': 1,
+            'points_granted': 100,
+        }).generate_coupons()
+        gift_card_1 = self.program_gift_card.coupon_ids
+        order = self.empty_order
+        order.write({'order_line': [
+            Command.create({
+                'product_id': self.product_C.id,
+                'name': 'Ordinary Product C',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self.env['loyalty.program'].create({
+            'name': 'Code for 10% on orders',
+            'trigger': 'with_code',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'mode': 'with_code',
+                'code': 'test_10pc',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        self.assertEqual(order.amount_total, 100)
+        self._apply_promo_code(order, gift_card_1.code)
+        self.assertEqual(order.amount_total, 0)
+        self._apply_promo_code(order, "test_10pc")
+        # real flows also have to update the programs and rewards
+        order._update_programs_and_rewards()
+        self.assertEqual(order.amount_total, 0) # 100 - 10% - 90

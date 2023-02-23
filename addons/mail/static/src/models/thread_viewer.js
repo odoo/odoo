@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ThreadViewer',
-    identifyingMode: 'xor',
+Model({
+    name: "ThreadViewer",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * @param {integer} scrollHeight
@@ -24,9 +22,13 @@ registerModel({
                 return;
             }
             this.update({
-                threadCacheInitialScrollHeights: Object.assign({}, this.threadCacheInitialScrollHeights, {
-                    [threadCache.localId]: scrollHeight,
-                }),
+                threadCacheInitialScrollHeights: Object.assign(
+                    {},
+                    this.threadCacheInitialScrollHeights,
+                    {
+                        [threadCache.localId]: scrollHeight,
+                    }
+                ),
             });
         },
         /**
@@ -45,35 +47,25 @@ registerModel({
                 return;
             }
             this.update({
-                threadCacheInitialScrollPositions: Object.assign({}, this.threadCacheInitialScrollPositions, {
-                    [threadCache.localId]: scrollTop,
-                }),
+                threadCacheInitialScrollPositions: Object.assign(
+                    {},
+                    this.threadCacheInitialScrollPositions,
+                    {
+                        [threadCache.localId]: scrollTop,
+                    }
+                ),
             });
         },
     },
     fields: {
-        chatter: one('Chatter', {
-            identifying: true,
-            inverse: 'threadViewer',
-        }),
-        chatWindow: one('ChatWindow', {
-            identifying: true,
-            inverse: 'threadViewer',
-        }),
+        chatter: one("Chatter", { identifying: true, inverse: "threadViewer" }),
+        chatWindow: one("ChatWindow", { identifying: true, inverse: "threadViewer" }),
         /**
          * true if the viewer is in a compact format, like in a chat window.
          */
-        compact: attr({
-            default: false,
-        }),
-        discuss: one('Discuss', {
-            identifying: true,
-            inverse: 'threadViewer',
-        }),
-        discussPublicView: one('DiscussPublicView', {
-            identifying: true,
-            inverse: 'threadViewer',
-        }),
+        compact: attr({ default: false }),
+        discuss: one("Discuss", { identifying: true, inverse: "threadViewer" }),
+        discussPublicView: one("DiscussPublicView", { identifying: true, inverse: "threadViewer" }),
         /**
          * Determines which extra class this thread view component should have.
          */
@@ -83,47 +75,35 @@ registerModel({
          * Only makes sense if this thread is a channel and if the channel is
          * not a chat.
          */
-        hasMemberList: attr({
-            default: false,
-        }),
+        hasMemberList: attr({ default: false }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
-        hasThreadView: attr({
-            default: false,
-        }),
+        hasThreadView: attr({ default: false }),
         /**
          * Determines whether this thread viewer has a top bar.
          */
-        hasTopbar: attr({
-            default: false,
-        }),
+        hasTopbar: attr({ default: false }),
         /**
          * Determines the order mode of the messages on this thread viewer.
          * Either 'asc', or 'desc'.
          */
-        order: attr({
-            default: 'asc',
-        }),
+        order: attr({ default: "asc" }),
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: one('Thread'),
+        thread: one("Thread"),
         /**
          * States the `ThreadCache` that should be displayed by `this`.
          */
-        threadCache: one('ThreadCache', {
-            related: 'thread.cache',
-        }),
+        threadCache: one("ThreadCache", { related: "thread.cache" }),
         /**
          * Determines the initial scroll height of thread caches, which is the
          * scroll height at the time the last scroll position was saved.
          * Useful to only restore scroll position when the corresponding height
          * is available, otherwise the restore makes no sense.
          */
-        threadCacheInitialScrollHeights: attr({
-            default: {},
-        }),
+        threadCacheInitialScrollHeights: attr({ default: {} }),
         /**
          * Determines the initial scroll positions of thread caches.
          * Useful to restore scroll position on changing back to this
@@ -131,17 +111,15 @@ registerModel({
          * the thread cache, because scroll position may change fast so
          * save is already throttled.
          */
-        threadCacheInitialScrollPositions: attr({
-            default: {},
-        }),
+        threadCacheInitialScrollPositions: attr({ default: {} }),
         /**
          * States the `ThreadView` currently displayed and managed by `this`.
          */
-        threadView: one('ThreadView', {
+        threadView: one("ThreadView", {
+            inverse: "threadViewer",
             compute() {
                 return this.hasThreadView ? {} : clear();
             },
-            inverse: 'threadViewer',
         }),
         threadView_hasComposerThreadTyping: attr({
             compute() {

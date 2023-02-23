@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'pos_epson_printer_restaurant',
+    'name': 'POS Epson Printer Restaurant',
     'version': '1.0',
     'category': 'Sales/Point of Sale',
     'sequence': 6,

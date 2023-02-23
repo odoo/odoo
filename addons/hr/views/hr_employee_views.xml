@@ -8,11 +8,16 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
-                    <field name="category_ids" groups="hr.group_hr_user"/>
-                    <field name="job_id"/>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
                     <field name="parent_id" string="Manager"/>
+                    <field name="job_id"/>
+                    <field name="category_ids" groups="hr.group_hr_user"/>
+                    <field name="private_car_plate" />
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
@@ -31,12 +36,8 @@
                         <filter name="group_job" string="Job" domain="[]" context="{'group_by': 'job_id'}"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                     </group>
-                    <searchpanel>
-                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                        <field name="department_id" icon="fa-users" enable_counters="1"/>
-                    </searchpanel>
                 </search>
-             </field>
+            </field>
         </record>
 
         <record id="view_employee_form" model="ir.ui.view">
@@ -61,28 +62,33 @@
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="avatar_128" invisible="1"/>
-                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
-                        <div class="oe_title">
-                            <h1 class="d-flex">
-                                <field name="name" placeholder="Employee's Name" required="True" style="font-size: min(4vw, 2.6rem);" />
-                                <div class="d-flex align-items-end fs-6" style="height: min(4vw, 2.6rem); padding-bottom: 1px;">
-                                    <div id="hr_presence_status" attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}" class="ms-1">
-                                        <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                        <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_present')]}" aria-label="Present" title="Present"/>
-                                        <!-- Employee is not present and it is normal according to his work schedule -->
-                                        <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'present_absent')]}" aria-label="Absent" title="Absent" name="presence_absent"/>
-                                        <!-- Employee is connected but according to his work schedule, he should not work for now  -->
-                                        <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
-                                        <!-- Employee is not here but according to his work schedule, he should be connected -->
-                                        <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}" aria-label="To define" title="To define" name="presence_to_define"/>
+                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">
+                            <div class="oe_title mw-75 ps-0 pe-2">
+                                <h1 class="d-flex flex-row align-items-center">
+                                    <div attrs="{'invisible':[('user_id', '=', False)]}" class="me-2">
+                                        <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
                                     </div>
-                                    <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments align-middle fs-6"/></a>
+                                    <field name="name" placeholder="Employee's Name"
+                                        required="True" style="font-size: min(4vw, 2.6rem);"/>
+                                </h1>
+                                <h2>
+                                    <field name="job_title" placeholder="Job Position" />
+                                </h2>
+                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_user"/>
+                            </div>
+                            <div class="o_employee_avatar m-0 p-0">
+                                <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                                <div id="hr_presence_status" class="d-flex align-items-end fs-6 o_employee_availability">
+                                    <!-- Employee is present/connected and it is normal according to his work schedule  -->
+                                    <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_present')]}" aria-label="Present" title="Present"/>
+                                    <!-- Employee is not present and it is normal according to his work schedule -->
+                                    <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent')]}" aria-label="Absent" title="Absent" name="presence_absent"/>
+                                    <!-- Employee is connected but according to his work schedule, he should not work for now  -->
+                                    <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
+                                    <!-- Employee is not here but according to his work schedule, he should be connected -->
+                                    <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}" aria-label="To define" title="To define" name="presence_to_define"/>
                                 </div>
-                            </h1>
-                            <h2>
-                                <field name="job_title" placeholder="Job Position" />
-                            </h2>
-                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_user"/>
+                            </div>
                         </div>
                         <group>
                             <group>
@@ -95,6 +101,7 @@
                             </group>
                             <group>
                                 <field name="department_id"/>
+                                <field name="job_id"/>
                                 <field name="parent_id"/>
                                 <field name="coach_id"/>
                             </group>
@@ -102,7 +109,7 @@
                         <notebook>
                             <page name="public" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
-                                    <div id="o_work_employee_main">
+                                    <div id="o_work_employee_main" class="flex-grow-1">
                                         <group string="Location">
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
@@ -118,7 +125,7 @@
                                             <field name="departure_date"/>
                                         </group>
                                         <group string="Schedule">
-                                            <field name="resource_calendar_id" required="1"/>
+                                            <field name="resource_calendar_id"/>
                                             <field name="id" invisible="1"/>
                                             <field name="tz" attrs="{'required': [('id', '!=', False)]}"/>
                                         </group>
@@ -128,76 +135,51 @@
                             <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Private Contact">
-                                        <group colspan="2">
-                                            <field name="address_home_id"
-                                                context="{
-                                                    'show_address': 1,
-                                                    'default_type': 'private',
-                                                    'form_view_ref': 'base.res_partner_view_form_private'}"
-                                                options='{"always_reload": True, "highlight_first_line": True}'/>
-                                            <field name="private_email" string="Email"/>
-                                            <field name="phone" class="o_force_ltr" groups="hr.group_hr_user" string="Phone" readonly="True"/>
-                                            <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
-                                        </group>
-                                        <group col="4" colspan="2">
+                                        <field name="address_home_id"
+                                            context="{
+                                                'show_address': 1,
+                                                'default_type': 'private',
+                                                'form_view_ref': 'base.res_partner_view_form_private'}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="private_email" string="Email"/>
+                                        <field name="phone" class="o_force_ltr" string="Phone" readonly="True"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                         <field name="lang" string="Language"/>
-                                        <label for="km_home_work" />
+                                        <label for="km_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
-                                            <field name="km_home_work" groups="hr.group_hr_user"/>
+                                            <field name="km_home_work" class="o_hr_narrow_field"/>
                                             <span>Km</span>
                                         </div>
-                                        </group>
+                                        <field name="private_car_plate" />
                                     </group>
-                                    <group>
-                                        <group name="family_status" string="Family Status" colspan="2">
-                                            <group colspan="2">
-                                                <field name="marital"/>
-                                                <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
-                                                <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
-                                            </group>
-                                            <group name="children" col="4" colspan="2">
-                                                <field name="children"/>
-                                            </group>
-                                        </group>
-                                        <group string="Emergency" colspan="2">
-                                            <field name="emergency_contact"/>
-                                            <field name="emergency_phone" class="o_force_ltr"/>
-                                        </group>
+                                    <group string="Family Status">
+                                        <field name="marital"/>
+                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
+                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
+                                        <field name="children"/>
+                                        <separator name="emergency" string="Emergency"/>
+                                        <field name="emergency_contact"/>
+                                        <field name="emergency_phone" class="o_force_ltr"/>
                                     </group>
-                                    <group>
-                                        <group string="Education" colspan="2">
-                                            <field name="certificate"/>
-                                            <field name="study_field"/>
-                                            <field name="study_school"/>
-                                        </group>
-                                        <group string="Work Permit" name="has_work_permit" colspan="2">
-                                            <group colspan="2">
-                                                <field name="visa_no"/>
-                                                <field name="permit_no"/>
-                                            </group>
-                                            <group col="4" colspan="2">
-                                                <field name="visa_expire"/>
-                                                <field name="work_permit_expiration_date"/>
-                                            </group>
-                                            <group colspan="2">
-                                                <field name="has_work_permit" widget="work_permit_upload"/>
-                                            </group>
-                                        </group>
+                                    <group string="Education">
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+                                        <field name="study_school"/>
+                                        <separator name="has_work_permit" string="Work Permit"/>
+                                        <field name="visa_no"/>
+                                        <field name="permit_no"/>
+                                        <field name="visa_expire"/>
+                                        <field name="work_permit_expiration_date"/>
+                                        <field name="has_work_permit" widget="work_permit_upload"/>
                                     </group>
                                     <group string="Citizenship">
-                                        <group colspan="2">
-                                            <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                            <field name="identification_id" groups="hr.group_hr_user"/>
-                                            <field name="passport_id" groups="hr.group_hr_user"/>
-                                        </group>
-                                        <group col="4" colspan="2" name="gender_birthday">
-                                            <field name="gender"/>
-                                            <field name="birthday"/>
-                                        </group>
-                                        <group colspan="2">
-                                            <field name="place_of_birth" groups="hr.group_hr_user"/>
-                                            <field name="country_of_birth" groups="hr.group_hr_user"/>
-                                        </group>
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id"/>
+                                        <field name="passport_id"/>
+                                        <field name="gender"/>
+                                        <field name="birthday"/>
+                                        <field name="place_of_birth"/>
+                                        <field name="country_of_birth"/>
                                     </group>
                                 </group>
                             </page>
@@ -216,14 +198,10 @@
                                             <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}"/>
                                         </div>
                                     </group>
-                                    <group string='Payroll' name="payroll_group">
-                                        <field name="job_id"/>
-                                    </group>
                                     <group name="application_group"/>
                                 </group>
                             </page>
                         </notebook>
-
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" groups="base.group_user" options="{'post_refresh': 'recipients'}"/>
@@ -248,7 +226,6 @@
                         class="oe_stat_button"
                         icon="fa-address-card-o"
                         type="object"
-                        help="Related Contacts"
                         attrs="{'invisible': [('related_contacts_count', '=', 0)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="related_contacts_count"/></span>
@@ -277,6 +254,8 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
+                    <field name="address_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -287,38 +266,39 @@
         </record>
 
         <record id="hr_kanban_view_employees" model="ir.ui.view">
-           <field name="name">hr.employee.kanban</field>
-           <field name="model">hr.employee</field>
-           <field name="priority">10</field>
-           <field name="arch" type="xml">
-               <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban" sample="1">
-                   <field name="id"/>
-                   <field name="hr_presence_state"/>
-                   <field name="user_id"/>
-                   <field name="user_partner_id"/>
-                   <field name="hr_icon_display"/>
-                   <field name="show_hr_icon_display"/>
-                   <field name="image_128" />
-                   <templates>
-                       <t t-name="kanban-box">
-                       <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
+            <field name="name">hr.employee.kanban</field>
+            <field name="model">hr.employee</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban" sample="1">
+                    <field name="id"/>
+                    <field name="hr_presence_state"/>
+                    <field name="user_id"/>
+                    <field name="user_partner_id"/>
+                    <field name="hr_icon_display"/>
+                    <field name="show_hr_icon_display"/>
+                    <field name="image_128" />
+                    <templates>
+                        <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
                             <field name="image_1024" class="o_kanban_image_fill_left d-block" preview_image="image_128"
                                 widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
 
                             <div class="oe_kanban_details">
-                               <div class="o_kanban_record_top">
-                                   <div class="o_kanban_record_headings">
-                                       <strong class="o_kanban_record_title">
-                                           <t t-if="record.show_hr_icon_display.raw_value">
-                                                <div class="float-end"
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <t t-if="record.show_hr_icon_display.raw_value">
+                                                <div class="float-end o_employee_availability"
                                                      t-if="record.hr_icon_display.raw_value == 'presence_present'"
                                                      name="presence_present">
                                                     <!-- Employee is present/connected and it is normal according to his work schedule  -->
-                                                    <span class="fa fa-circle text-success" role="img" aria-label="Present"
+                                                    <span class="fa fa-circle text-success"
+                                                          role="img" aria-label="Present"
                                                           title="Present" name="presence_present">
                                                     </span>
                                                 </div>
-                                                <div class="float-end"
+                                                <div class="float-end o_employee_availability"
                                                      t-if="record.hr_icon_display.raw_value == 'presence_absent'"
                                                      name="presence_absent">
                                                     <!-- Employee is not present and it is normal according to his work schedule -->
@@ -326,7 +306,7 @@
                                                           title="Absent" name="presence_absent">
                                                     </span>
                                                 </div>
-                                                <div class="float-end"
+                                                <div class="float-end o_employee_availability"
                                                      t-if="record.hr_icon_display.raw_value == 'presence_absent_active'"
                                                         name="presence_absent_active">
                                                     <!-- Employee is connected but according to his work schedule,
@@ -337,7 +317,7 @@
                                                           name="presence_absent_active">
                                                     </span>
                                                 </div>
-                                                <div class="float-end"
+                                                <div class="float-end o_employee_availability"
                                                      t-if="record.hr_icon_display.raw_value == 'presence_to_define'"
                                                         name="presence_to_define">
                                                     <!-- Employee is not here but according to his work schedule, he should be connected -->
@@ -348,32 +328,32 @@
                                                 </div>
                                             </t>
                                             <field name="name" placeholder="Employee's Name"/>
-                                       </strong>
-                                       <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
-                                   </div>
-                               </div>
-                               <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="hr.group_hr_user"/>
-                               <ul>
-                                   <li id="last_login"/>
-                                   <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
-                                   <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
-                               </ul>
-                           </div>
-                           <div class="oe_kanban_content o_hr_employee_kanban_bottom position-absolute bottom-0 start-0 end-0 me-2 pe-none">
-                               <div class="o_kanban_record_bottom">
-                                   <div class="oe_kanban_bottom_left"/>
-                                   <div class="oe_kanban_bottom_right float-end pe-auto">
-                                        <a title="Chat" icon="fa-comments" href="#" t-on-click.prevent="() => props.record.openChat(props.record.resId)" class="ml8" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
-                                        <div class="hr_activity_container mb-1 me-n1">
+                                        </strong>
+                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
+                                    </div>
+                                </div>
+                                <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="hr.group_hr_user"/>
+                                <ul>
+                                    <li id="last_login"/>
+                                    <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
+                                    <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_content o_hr_employee_kanban_bottom position-absolute bottom-0 start-0 end-0">
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left"/>
+                                    <div class="oe_kanban_bottom_right float-end pe-auto">
+                                        <widget name="hr_employee_chat"/>
+                                        <div class="hr_activity_container mb-1 ms-2 me-n1">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                       </t>
-                   </templates>
-               </kanban>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -405,13 +385,13 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help" type="html">
-             <p class="o_view_nocontent_smiling_face">
-               Add a new employee
-             </p><p>
-               With just a quick glance on the Odoo employee screen, you
-               can easily find all the information you need for each person;
-               contact data, job position, availability, etc.
-             </p>
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new employee
+                </p><p>
+                    With just a quick glance on the Odoo employee screen, you
+                    can easily find all the information you need for each person;
+                    contact data, job position, availability, etc.
+                </p>
             </field>
         </record>
 
@@ -459,7 +439,7 @@
             <field name="groups_id" eval="[(4, ref('base.group_erp_manager'))]"/>
             <field name="state">code</field>
             <field name="code">
-                action = records.action_create_user()
+                action = records.with_context(allow_create_employee=False).action_create_user()
             </field>
         </record>
 
@@ -475,13 +455,13 @@
                 "expand": 1}
             </field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Add a new employee
-              </p><p>
-                With just a quick glance on the Odoo employee screen, you
-                can easily find all the information you need for each person;
-                contact data, job position, availability, etc.
-              </p>
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new employee
+                </p><p>
+                    With just a quick glance on the Odoo employee screen, you
+                    can easily find all the information you need for each person;
+                    contact data, job position, availability, etc.
+                </p>
             </field>
         </record>
 

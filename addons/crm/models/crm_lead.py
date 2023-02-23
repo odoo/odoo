@@ -6,6 +6,7 @@ import pytz
 import threading
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
+from markupsafe import Markup
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
@@ -21,7 +22,7 @@ from odoo.tools.misc import get_lang
 from . import crm_stage
 
 _logger = logging.getLogger(__name__)
-
+_schema = logging.getLogger('odoo.schema')
 
 
 CRM_LEAD_FIELDS_TO_MERGE = [
@@ -114,7 +115,10 @@ class Lead(models.Model):
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        compute='_compute_team_id', ondelete="set null", readonly=False, store=True)
+        compute='_compute_team_id', ondelete="set null", readonly=False, store=True, precompute=True)
+    lead_properties = fields.Properties(
+        'Properties', definition='team_id.lead_properties_definition',
+        copy=True)
     company_id = fields.Many2one(
         'res.company', string='Company', index=True,
         compute='_compute_company_id', readonly=False, store=True)
@@ -151,6 +155,8 @@ class Lead(models.Model):
                                                 compute="_compute_recurring_revenue_monthly")
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
                                                          compute="_compute_recurring_revenue_monthly_prorated")
+    recurring_revenue_prorated = fields.Monetary('Prorated Recurring Revenues', currency_field='company_currency',
+                                                 compute="_compute_recurring_revenue_prorated", store=True)
     company_currency = fields.Many2one("res.currency", string='Currency', compute="_compute_company_currency", compute_sudo=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
@@ -170,10 +176,10 @@ class Lead(models.Model):
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     contact_name = fields.Char(
-        'Contact Name', tracking=30,
+        'Contact Name', index='trigram', tracking=30,
         compute='_compute_contact_name', readonly=False, store=True)
     partner_name = fields.Char(
-        'Company Name', tracking=20,
+        'Company Name', index='trigram', tracking=20,
         compute='_compute_partner_name', readonly=False, store=True,
         help='The name of the future partner company that will be created while converting the lead into opportunity')
     function = fields.Char('Job Position', compute='_compute_function', readonly=False, store=True)
@@ -181,6 +187,7 @@ class Lead(models.Model):
     email_from = fields.Char(
         'Email', tracking=40, index='trigram',
         compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
+    email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
     phone = fields.Char(
         'Phone', tracking=50,
         compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True)
@@ -508,6 +515,11 @@ class Lead(models.Model):
         for lead in self:
             lead.recurring_revenue_monthly_prorated = (lead.recurring_revenue_monthly or 0.0) * (lead.probability or 0) / 100.0
 
+    @api.depends('recurring_revenue', 'probability')
+    def _compute_recurring_revenue_prorated(self):
+        for lead in self:
+            lead.recurring_revenue_prorated = (lead.recurring_revenue or 0.0) * (lead.probability or 0) / 100.0
+
     def _compute_calendar_event_count(self):
         if self.ids:
             meeting_data = self.env['calendar.event'].sudo()._read_group([
@@ -555,7 +567,7 @@ class Lead(models.Model):
 
             if email_search:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    '|', ('email_normalized', 'ilike', email_search), ('email_from', 'ilike', email_search)
+                    ('email_normalized', 'ilike', email_search)
                 ])
             if lead.partner_name and len(lead.partner_name) >= MIN_NAME_LENGTH:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
@@ -695,12 +707,22 @@ class Lead(models.Model):
     # ------------------------------------------------------------
 
     def _auto_init(self):
-        res = super(Lead, self)._auto_init()
+        super()._auto_init()
         tools.create_index(self._cr, 'crm_lead_user_id_team_id_type_index',
                            self._table, ['user_id', 'team_id', 'type'])
         tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',
                            self._table, ['create_date', 'team_id'])
-        return res
+        phone_pattern = r'[\s\\./\(\)\-]'
+        for field_name in ('phone', 'mobile'):
+            index_name = f'crm_lead_{field_name}_partial_tgm'
+            if tools.index_exists(self._cr, index_name):
+                continue
+            regex_expression = "regexp_replace((phone::text), %s::text, ''::text, 'g'::text)"
+            self._cr.execute(
+                f'CREATE INDEX "{index_name}" ON "{self._table}" ({regex_expression}) WHERE {field_name} IS NOT NULL',
+                (phone_pattern,)
+            )
+            _schema.debug("Table %r: created index %r (%s)", self._table, index_name, regex_expression)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -752,7 +774,7 @@ class Lead(models.Model):
         return result
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def search(self, domain, offset=0, limit=None, order=None, count=False):
         """ Override to support ordering on my_activity_date_deadline.
 
         Ordering through web client calls search_read with an order parameter set.
@@ -783,7 +805,7 @@ class Lead(models.Model):
         side effects. Search_count is not affected by this override.
         """
         if count or not order or 'my_activity_date_deadline' not in order:
-            return super(Lead, self).search(args, offset=offset, limit=limit, order=order, count=count)
+            return super(Lead, self).search(domain, offset=offset, limit=limit, order=order, count=count)
         order_items = [order_item.strip().lower() for order_item in (order or self._order).split(',')]
 
         # Perform a read_group on my activities to get a mapping lead_id / deadline
@@ -798,7 +820,7 @@ class Lead(models.Model):
         )
         my_lead_mapping = dict((item['res_id'], item['date_deadline']) for item in my_lead_activities)
         my_lead_ids = list(my_lead_mapping.keys())
-        my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], args])
+        my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], domain])
         my_lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         # Search leads linked to those activities and order them. See docstring
@@ -826,7 +848,7 @@ class Lead(models.Model):
         lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
         other_lead_res = super(Lead, self).search(
-            expression.AND([[('id', 'not in', my_lead_ids_skip)], args]),
+            expression.AND([[('id', 'not in', my_lead_ids_skip)], domain]),
             offset=lead_offset, limit=lead_limit, order=lead_order, count=count
         )
         return self.browse(my_lead_ids_keep) + other_lead_res
@@ -897,18 +919,6 @@ class Lead(models.Model):
                 'res_model_id': False,
             })
         return super(Lead, self).unlink()
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        if self._context.get('opportunity_id'):
-            opportunity = self.browse(self._context['opportunity_id'])
-            action = opportunity.get_formview_action()
-            if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
-                view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type == 'form':
-            arch = self._view_get_address(arch)
-        return arch, view
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -1236,13 +1246,13 @@ class Lead(models.Model):
         }
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         """ This method returns the action helpers for the leads. If help is already provided
             on the action, the same is returned. Otherwise, we build the help message which
             contains the alias responsible for creating the lead (if available) and return it.
         """
-        if not is_html_empty(help):
-            return help
+        if not is_html_empty(help_message):
+            return help_message
 
         help_title, sub_title = "", ""
         if self._context.get('default_type') == 'lead':
@@ -1256,11 +1266,15 @@ class Lead(models.Model):
             ('alias_parent_model_id.model', '=', 'crm.team'),
             ('alias_force_thread_id', '=', False)
         ], limit=1)
+
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
-            email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
-            email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
-            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
-        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
+            email = f'{alias_record.alias_name}@{alias_record.alias_domain}'
+            sub_title = Markup(_('Use the top left <i>Create</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
+                'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (email, email),
+            }
+        return super().get_empty_list_help(
+            f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
+        )
 
     # ------------------------------------------------------------
     # BUSINESS
@@ -1370,15 +1384,7 @@ class Lead(models.Model):
         merged_followers = opportunities_head._merge_followers(opportunities_tail)
 
         # log merge message
-        opportunities_head.message_post_with_view(
-            "crm.crm_lead_merge_summary",
-            values={
-                "merged_followers": merged_followers,
-                "opportunities": opportunities_tail,
-                "is_html_empty": is_html_empty
-            },
-            subtype_id=self.env.ref('mail.mt_note').id
-        )
+        opportunities_head._merge_log_summary(merged_followers, opportunities_tail)
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head._merge_dependences(opportunities_tail)
 
@@ -1552,6 +1558,85 @@ class Lead(models.Model):
         followers_to_update.write({'res_id': self.id})
         return followers_by_old_lead
 
+    def _merge_log_summary(self, merged_followers, opportunities_tail):
+        """Log the merge message on the lead."""
+        self.ensure_one()
+        self.message_post_with_source(
+            "crm.crm_lead_merge_summary",
+            render_values={
+                "merged_followers": merged_followers,
+                "opportunities": opportunities_tail,
+                "is_html_empty": is_html_empty,
+            },
+            subtype_xmlid='mail.mt_note',
+        )
+
+    def _format_properties(self):
+        """Format the properties to build the merge message.
+
+        Return a list of dict containing the label, and a value key if there's only
+        one value, or a "values" key if we have multiple values (e.g. many2many, tags).
+
+        E.G.
+            [{
+                'label': 'My Partner',
+                'value': 'Alice',
+            }, {
+                'label': 'My Partners',
+                'values': [
+                    {'name': 'Alice'},
+                    {'name': 'Bob'},
+                ],
+            }, {
+                'label': 'My Tags',
+                'values': [
+                    {'name': 'A', 'color': 1},
+                    {'name': 'C', 'color': 3},
+                ],
+            }]
+        """
+        self.ensure_one()
+        # read to have the display names already in the value
+        properties = self.read(['lead_properties'])[0]['lead_properties']
+
+        formatted = []
+        for definition in properties:
+            label = definition.get('string')
+            value = definition.get('value')
+            property_type = definition['type']
+            if not value and property_type != 'boolean':
+                continue
+
+            property_dict = {'label': label}
+            if property_type == 'boolean':
+                property_dict['value'] = _('Yes') if value else _('No')
+            elif value and property_type == 'many2one':
+                property_dict['value'] = value[1]
+            elif value and property_type == 'many2many':
+                # show many2many in badge
+                property_dict['values'] = [{'name': rec[1]} for rec in value]
+            elif value and property_type in ['selection', 'tags']:
+                # retrieve the option label from the value
+                options = {
+                    option[0]: option[1:]
+                    for option in (definition.get(property_type) or [])
+                }
+                if property_type == 'selection':
+                    value = options.get(value)
+                    property_dict['value'] = value[0] if value else None
+                else:
+                    property_dict['values'] = [{
+                        'name': options[tag][0],
+                        'color': options[tag][1],
+                        } for tag in value if tag in options
+                    ]
+            else:
+                property_dict['value'] = value
+
+            formatted.append(property_dict)
+
+        return formatted
+
     # CONVERT
     # ----------------------------------------------------------------------
 
@@ -1707,7 +1792,7 @@ class Lead(models.Model):
             # search through the existing partners based on the lead's partner or contact name
             # to be aligned with _create_customer, search on lead's name as last possibility
             for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
-                partner = self.env['res.partner'].search([('name', 'ilike', '%' + customer_potential_name + '%')], limit=1)
+                partner = self.env['res.partner'].search([('name', 'ilike', customer_potential_name)], limit=1)
                 if partner:
                     break
 

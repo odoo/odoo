@@ -1,77 +1,73 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import json
 
-from odoo import models, fields, api, _
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-
-
-
-class StockQuantPackage(models.Model):
-    _inherit = "stock.quant.package"
-
-    @api.depends('quant_ids', 'package_type_id')
-    def _compute_weight(self):
-        for package in self:
-            # set initial weight to package type base weight
-            weight = package.package_type_id.base_weight or 0.0
-            if self.env.context.get('picking_id'):
-                # TODO: potential bottleneck: N packages = N queries, use groupby ?
-                current_picking_move_line_ids = self.env['stock.move.line'].search([
-                    ('result_package_id', '=', package.id),
-                    ('picking_id', '=', self.env.context['picking_id'])
-                ])
-                for ml in current_picking_move_line_ids:
-                    weight += ml.product_uom_id._compute_quantity(
-                        ml.qty_done, ml.product_id.uom_id) * ml.product_id.weight
-            else:
-                for quant in package.quant_ids:
-                    weight += quant.quantity * quant.product_id.weight
-            package.weight = weight
-
-    def _get_default_weight_uom(self):
-        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-
-    def _compute_weight_uom_name(self):
-        for package in self:
-            package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
-
-    def _compute_weight_is_kg(self):
-        self.weight_is_kg = False
-        uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        if uom_id == self.env.ref('uom.product_uom_kgm'):
-            self.weight_is_kg = True
-        self.weight_uom_rounding = uom_id.rounding
-
-    weight = fields.Float(compute='_compute_weight', digits='Stock Weight', help="Total weight of all the products contained in the package.")
-    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
-    weight_is_kg = fields.Boolean("Technical field indicating whether weight uom is kg or not (i.e. lb)", compute="_compute_weight_is_kg")
-    weight_uom_rounding = fields.Float("Technical field indicating weight's number of decimal places", compute="_compute_weight_is_kg")
-    shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "stock_picking", "weight"):
+            # In order to speed up module installation when dealing with hefty data
+            # We create the column weight manually, but the computation will be skipped
+            # Therefore we do the computation in a query by getting weight sum from stock moves
+            create_column(self.env.cr, "stock_picking", "weight", "numeric")
+            self.env.cr.execute("""
+                WITH computed_weight AS (
+                    SELECT SUM(weight) AS weight_sum, picking_id
+                    FROM stock_move
+                    WHERE picking_id IS NOT NULL
+                    GROUP BY picking_id
+                )
+                UPDATE stock_picking
+                SET weight = weight_sum
+                FROM computed_weight
+                WHERE stock_picking.id = computed_weight.picking_id;
+            """)
+        return super()._auto_init()
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
         for package in self:
             packs = set()
-            for move_line in package.move_line_ids:
-                if move_line.result_package_id:
-                    packs.add(move_line.result_package_id.id)
+            if self.env['stock.move.line'].search_count([('picking_id', '=', package.id), ('result_package_id', '!=', False)]):
+                for move_line in package.move_line_ids:
+                    if move_line.result_package_id:
+                        packs.add(move_line.result_package_id.id)
             package.package_ids = list(packs)
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
+        picking_weights = defaultdict(float)
+        # Ordering by qty_done prevents the default ordering by groupby fields that can inject multiple Left Joins in the resulting query.
+        res_groups = self.env['stock.move.line'].read_group(
+            [('picking_id', 'in', self.ids), ('product_id', '!=', False), ('result_package_id', '=', False)],
+            ['id:count'],
+            ['picking_id', 'product_id', 'product_uom_id', 'qty_done'],
+            lazy=False, orderby='qty_done asc'
+        )
+        products_by_id = {
+            product_res['id']: (product_res['uom_id'][0], product_res['weight'])
+            for product_res in
+            self.env['product.product'].with_context(active_test=False).search_read(
+                [('id', 'in', list(set(grp["product_id"][0] for grp in res_groups)))], ['uom_id', 'weight'])
+        }
+        for res_group in res_groups:
+            uom_id, weight = products_by_id[res_group['product_id'][0]]
+            uom = self.env['uom.uom'].browse(uom_id)
+            product_uom_id = self.env['uom.uom'].browse(res_group['product_uom_id'][0])
+            picking_weights[res_group['picking_id'][0]] += (
+                res_group['__count']
+                * product_uom_id._compute_quantity(res_group['qty_done'], uom)
+                * weight
+            )
         for picking in self:
-            weight = 0.0
-            for move_line in picking.move_line_ids:
-                if move_line.product_id and not move_line.result_package_id:
-                    weight += move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id) * move_line.product_id.weight
-            picking.weight_bulk = weight
+            picking.weight_bulk = picking_weights[picking.id]
 
     @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
     def _compute_shipping_weight(self):
@@ -217,15 +213,14 @@ class StockPicking(models.Model):
         sale_order = self.sale_id
         if sale_order and self.carrier_id.invoice_policy == 'real' and self.carrier_price:
             delivery_lines = sale_order.order_line.filtered(lambda l: l.is_delivery and l.currency_id.is_zero(l.price_unit) and l.product_id == self.carrier_id.product_id)
-            carrier_price = self.carrier_price * (1.0 + (float(self.carrier_id.margin) / 100.0))
             if not delivery_lines:
-                sale_order._create_delivery_line(self.carrier_id, carrier_price)
+                sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
             else:
                 delivery_line = delivery_lines[0]
                 delivery_line[0].write({
-                    'price_unit': carrier_price,
+                    'price_unit': self.carrier_price,
                     # remove the estimated price from the description
-                    'name': sale_order.carrier_id.with_context(lang=self.partner_id.lang).name,
+                    'name': self.carrier_id.with_context(lang=self.partner_id.lang).name,
                 })
 
     def open_website_url(self):
@@ -270,16 +265,3 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
-
-
-class StockReturnPicking(models.TransientModel):
-    _inherit = 'stock.return.picking'
-
-    def _create_returns(self):
-        # Prevent copy of the carrier and carrier price when generating return picking
-        # (we have no integration of returns for now)
-        new_picking, pick_type_id = super(StockReturnPicking, self)._create_returns()
-        picking = self.env['stock.picking'].browse(new_picking)
-        picking.write({'carrier_id': False,
-                       'carrier_price': 0.0})
-        return new_picking, pick_type_id

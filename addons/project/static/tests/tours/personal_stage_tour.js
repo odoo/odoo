@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('personal_stage_tour', {
+registry.category("web_tour.tours").add('personal_stage_tour', {
     test: true,
     url: '/web',
-},
-[tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
 }, {
     content: "Open Pig Project",
@@ -60,4 +60,4 @@ tour.register('personal_stage_tour', {
 }, {
     content: "Check that column was updated",
     trigger: '.o_kanban_header:contains("Todo")',
-}]);
+}]});

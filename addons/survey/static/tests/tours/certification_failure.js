@@ -17,7 +17,7 @@ SurveyFormWidget.include({
  * try and fail twice and will no longer be able to take the certification.
  */
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
 var failSteps = [{ // Page-1
     content: "Clicking on Start Certification",
@@ -101,9 +101,9 @@ var lastSteps = [{
     trigger: 'h1.tour_success',
 }];
 
-tour.register('test_certification_failure', {
+registry.category("web_tour.tours").add('test_certification_failure', {
     test: true,
-    url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac'
-}, [].concat(failSteps, retrySteps, failSteps, lastSteps));
+    url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
+    steps: [].concat(failSteps, retrySteps, failSteps, lastSteps) });
 
 });

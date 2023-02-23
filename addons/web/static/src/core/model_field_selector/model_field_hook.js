@@ -6,17 +6,7 @@ export function useModelField() {
     const view = useService("view");
 
     const loadModelFields = (resModel) => {
-        return view.loadFields(resModel, {
-            attributes: [
-                "store",
-                "searchable",
-                "type",
-                "string",
-                "relation",
-                "selection",
-                "related",
-            ],
-        });
+        return view.loadFields(resModel);
     };
 
     const loadChain = async (resModel, fieldName) => {

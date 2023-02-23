@@ -5,8 +5,7 @@ from odoo.tests.common import TransactionCase
 from odoo.tests import Form
 
 
-class TestAnalyticAccount(TransactionCase):
-
+class TestMrpAnalyticAccount(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -48,6 +47,8 @@ class TestAnalyticAccount(TransactionCase):
                 (0, 0, {'name': 'work work', 'workcenter_id': cls.workcenter.id, 'time_cycle': 15, 'sequence': 1}),
             ]})
 
+
+class TestAnalyticAccount(TestMrpAnalyticAccount):
     def test_mo_analytic(self):
         """Test the amount on analytic line will change when consumed qty of the
         component changed.
@@ -218,8 +219,7 @@ class TestAnalyticAccount(TransactionCase):
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 0)
 
         # Mark as done
-        wizard_dict = mo.button_mark_done()
-        Form(self.env[(wizard_dict.get('res_model'))].with_context(wizard_dict['context'])).save().process()
+        mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
 

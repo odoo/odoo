@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.CalendarFilterPanel" t-inherit="web.CalendarFilterPanel" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-foreach='props.model.filterSections']" position="after">
+            <div class="o_calendar_filter">
+                <h5>Legend</h5>
+
+                <div class="d-flex flex-column">
+                    <span><img class="o_calendar_filter_plain" src="/hr/static/src/img/icons/plain.svg"/> Validated</span>
+                    <span><img class="o_calendar_filter_hatched" src="/hr/static/src/img/icons/hatched.svg"/> To Approve</span>
+                    <span><img class="o_calendar_filter_line" src="/hr/static/src/img/icons/line.svg"/> Refused</span>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+
+    <t t-name="hr_holidays.CalendarFilterPanel.filter" t-inherit="web.CalendarFilterPanel.filter" t-inherit-mode="primary" owl="1">
+        <xpath expr="//span[@t-esc='filter.label']" position="replace">
+            <span class="o_cw_filter_title text-truncate flex-grow">
+                <t t-esc="filter.label"/>
+
+                <t t-if="env.isSmall">
+                    <t t-set="holiday" t-value="leaveState.holidays[filter.value]"/>
+                    <TimeOffCardMobile t-if="holiday" name="holiday[0]" id="holiday[3]" data="holiday[1]" requires_allocation="holiday[2] === 'yes'" />
+                </t>
+            </span>
+        </xpath>
+    </t>
+</templates>

@@ -44,9 +44,8 @@ class WebsiteHrRecruitment(http.Controller):
 
         # Default search by user country
         if not (country or department or office_id or contract_type_id or kwargs.get('all_countries')):
-            country_code = request.geoip.get('country_code')
-            if country_code:
-                countries_ = Country.search([('code', '=', country_code)])
+            if request.geoip.country_code:
+                countries_ = Country.search([('code', '=', request.geoip.country_code)])
                 country = countries_[0] if countries_ else None
                 if not any(j for j in jobs if j.address_id and j.address_id.country_id == country):
                     country = False
@@ -85,13 +84,13 @@ class WebsiteHrRecruitment(http.Controller):
             'contract_type_id': contract_type_id,
         })
 
-    @http.route('/jobs/add', type='http', auth="user", website=True)
+    @http.route('/jobs/add', type='json', auth="user", website=True)
     def jobs_add(self, **kwargs):
         # avoid branding of website_description by setting rendering_bundle in context
         job = request.env['hr.job'].with_context(rendering_bundle=True).create({
             'name': _('Job Title'),
         })
-        return request.redirect(request.env["website"].get_client_action_url(f"/jobs/detail/{slug(job)}", True))
+        return f"/jobs/detail/{slug(job)}"
 
     @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def jobs_detail(self, job, **kwargs):

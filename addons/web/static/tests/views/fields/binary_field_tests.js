@@ -4,6 +4,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeMockXHR } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    clickSave,
     editInput,
     getFixture,
     makeDeferred,
@@ -11,6 +12,9 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
+
+const BINARY_FILE =
+    "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
 
 let serverData;
 let target;
@@ -66,8 +70,81 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("BinaryField");
 
+    QUnit.test("BinaryField is correctly rendered (readonly)", async function (assert) {
+        assert.expect(6);
+
+        async function send(data) {
+            assert.ok(data instanceof FormData);
+            assert.strictEqual(
+                data.get("field"),
+                "document",
+                "we should download the field document"
+            );
+            assert.strictEqual(
+                data.get("data"),
+                "coucou==\n",
+                "we should download the correct data"
+            );
+
+            this.status = 200;
+            this.response = new Blob([data.get("data")], { type: "text/plain" });
+        }
+        const MockXHR = makeMockXHR("", send);
+
+        patchWithCleanup(
+            browser,
+            {
+                XMLHttpRequest: MockXHR,
+            },
+            { pure: true }
+        );
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form edit="0">
+                    <field name="document" filename="foo"/>
+                    <field name="foo"/>
+                </form>`,
+            resId: 1,
+        });
+        assert.containsOnce(
+            target,
+            '.o_field_widget[name="document"] a > .fa-download',
+            "the binary field should be rendered as a downloadable link in readonly"
+        );
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="document"]').textContent,
+            "coucou.txt",
+            "the binary field should display the name of the file in the link"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_char").textContent,
+            "coucou.txt",
+            "the filename field should have the file name as value"
+        );
+
+        // Testing the download button in the field
+        // We must avoid the browser to download the file effectively
+        const prom = makeDeferred();
+        const downloadOnClick = (ev) => {
+            const target = ev.target;
+            if (target.tagName === "A" && "download" in target.attributes) {
+                ev.preventDefault();
+                document.removeEventListener("click", downloadOnClick);
+                prom.resolve();
+            }
+        };
+        document.addEventListener("click", downloadOnClick);
+        registerCleanup(() => document.removeEventListener("click", downloadOnClick));
+        await click(target.querySelector('.o_field_widget[name="document"] a'));
+        await prom;
+    });
+
     QUnit.test("BinaryField is correctly rendered", async function (assert) {
-        assert.expect(15);
+        assert.expect(12);
 
         async function send(data) {
             assert.ok(data instanceof FormData);
@@ -106,39 +183,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             resId: 1,
         });
-        assert.containsOnce(
-            target,
-            '.o_field_widget[name="document"] a > .fa-download',
-            "the binary field should be rendered as a downloadable link in readonly"
-        );
-        assert.strictEqual(
-            target.querySelector('.o_field_widget[name="document"]').textContent,
-            "coucou.txt",
-            "the binary field should display the name of the file in the link"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_char").textContent,
-            "coucou.txt",
-            "the filename field should have the file name as value"
-        );
-
-        // Testing the download button in the field
-        // We must avoid the browser to download the file effectively
-        const prom = makeDeferred();
-        const downloadOnClick = (ev) => {
-            const target = ev.target;
-            if (target.tagName === "A" && "download" in target.attributes) {
-                ev.preventDefault();
-                document.removeEventListener("click", downloadOnClick);
-                prom.resolve();
-            }
-        };
-        document.addEventListener("click", downloadOnClick);
-        registerCleanup(() => document.removeEventListener("click", downloadOnClick));
-        await click(target.querySelector('.o_field_widget[name="document"] a'));
-        await prom;
-
-        await click(target, ".o_form_button_edit");
 
         assert.containsNone(
             target,
@@ -161,6 +205,22 @@ QUnit.module("Fields", (hooks) => {
             "the filename field should have the file name as value"
         );
 
+        // Testing the download button in the field
+        // We must avoid the browser to download the file effectively
+        const prom = makeDeferred();
+        const downloadOnClick = (ev) => {
+            const target = ev.target;
+            if (target.tagName === "A" && "download" in target.attributes) {
+                ev.preventDefault();
+                document.removeEventListener("click", downloadOnClick);
+                prom.resolve();
+            }
+        };
+        document.addEventListener("click", downloadOnClick);
+        registerCleanup(() => document.removeEventListener("click", downloadOnClick));
+        await click(target.querySelector(".fa-download"));
+        await prom;
+
         await click(target.querySelector(".o_field_binary .o_clear_file_button"));
 
         assert.isNotVisible(
@@ -178,7 +238,7 @@ QUnit.module("Fields", (hooks) => {
             "the filename field should be empty since we removed the file"
         );
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.containsNone(
             target,
             '.o_field_widget[name="document"] a > .fa-download',
@@ -229,8 +289,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
                 resId: 1,
             });
-
-            await click(target, ".o_form_button_edit");
 
             const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
             await editInput(target, ".o_field_binary .o_input_file", file);
@@ -337,4 +395,39 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps([], "We shouldn't have passed through steps");
         }
     );
+
+    QUnit.test("Binary field in list view", async function (assert) {
+        serverData.models.partner.records[0].document = BINARY_FILE;
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <tree>
+                        <field name="document" filename="yooo"/>
+                    </tree>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_data_row .o_data_cell").textContent,
+            "93.43 Bytes"
+        );
+    });
+
+    QUnit.test("Binary field for new record has no download button", async function (assert) {
+        serverData.models.partner.fields.document.default = BINARY_FILE;
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="document" filename="foo"/>
+                </form>
+            `,
+        });
+        assert.containsNone(target, "button.fa-download");
+    });
 });

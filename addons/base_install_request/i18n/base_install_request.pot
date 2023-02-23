@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
-"PO-Revision-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"PO-Revision-Date: 2022-09-27 15:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello,\n"
 "        <br/><br/>\n"
-"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> has requested to activate the <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/> module. An administrator role is required to activate it.\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> has requested to activate the <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/> module. This module is included in your subscription. It has <span style=\"color: #875A7B; font-weight: bold;\">no extra cost</span>, but an administrator role is required to activate it.\n"
 "        <br/><br/>\n"
 "        <blockquote>\n"
 "            <t t-out=\"object.body_html\"/>\n"
@@ -45,11 +45,6 @@ msgstr ""
 #: code:addons/base_install_request/models/ir_module_module.py:0
 #, python-format
 msgid "Activation Request of \"%s\""
-msgstr ""
-
-#. module: base_install_request
-#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
-msgid "An extra cost could be applied to use this application."
 msgstr ""
 
 #. module: base_install_request
@@ -148,6 +143,11 @@ msgid "Modules Description"
 msgstr ""
 
 #. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
+msgid "No extra cost, this application is free."
+msgstr ""
+
+#. module: base_install_request
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "No module selected."
@@ -183,8 +183,8 @@ msgstr ""
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid ""
-"This app can be installed, but only an administrator can do it. Fill this "
-"form to send an activation request."
+"This app is included in your subscription. It's free to activate, but only "
+"an administrator can do it. Fill this form to send an activation request."
 msgstr ""
 
 #. module: base_install_request

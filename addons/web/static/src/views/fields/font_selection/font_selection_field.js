@@ -5,9 +5,15 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 import { formatSelection } from "../formatters";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FontSelectionField extends Component {
+    static template = "web.FontSelectionField";
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    };
+
     get options() {
         return this.props.record.fields[this.props.name].selection.filter(
             (option) => option[0] !== false && option[1] !== ""
@@ -29,23 +35,18 @@ export class FontSelectionField extends Component {
      */
     onChange(ev) {
         const value = JSON.parse(ev.target.value);
-        this.props.update(value);
+        this.props.record.update({ [this.props.name]: value });
     }
 }
 
-FontSelectionField.template = "web.FontSelectionField";
-FontSelectionField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-
-FontSelectionField.displayName = _lt("Font Selection");
-FontSelectionField.supportedTypes = ["selection"];
-
-FontSelectionField.extractProps = ({ attrs }) => {
-    return {
+export const fontSelectionField = {
+    component: FontSelectionField,
+    displayName: _lt("Font Selection"),
+    supportedTypes: ["selection"],
+    extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,
-    };
+    }),
+    legacySpecialData: "_fetchSpecialRelation",
 };
 
-registry.category("fields").add("font", FontSelectionField);
+registry.category("fields").add("font", fontSelectionField);

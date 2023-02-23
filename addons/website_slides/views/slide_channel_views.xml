@@ -12,12 +12,10 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_slides"
-                                type="object"
+                            <button
                                 icon="fa-eye"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
-                                disabled="1"
                                 attrs="{'invisible': [('total_views', '=', 0)]}">
                                 <field name="total_views" widget="statinfo" string="Visits"/>
                             </button>
@@ -100,7 +98,8 @@
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
                                     <group name="access_rights" string="Access Rights">
-                                        <field name="enroll" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="visibility" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="enroll" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('visibility', '=', 'course_attendees')]}"/>
                                         <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_msg" attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
@@ -116,7 +115,6 @@
                                     </group>
                                     <group name="display" string="Display">
                                         <field string="Type" name="channel_type" widget="radio" options="{'horizontal': true}"/>
-                                        <field name="visibility" widget="radio" options="{'horizontal': true}"/>
                                         <field name="promote_strategy" widget="selection"
                                             attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
                                         <field name="promoted_slide_id"
@@ -162,8 +160,8 @@
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="channel_type" string="Course Type"/>
-                    <field name="visibility" optional="hide"/>
-                    <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'"/>
+                    <field name="visibility"/>
+                    <field name="enroll" widget="badge" decoration-success="enroll == 'public'" decoration-info="enroll == 'invite'" decoration-warning="enroll == 'payment'" optional="hide"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
@@ -243,32 +241,23 @@
                     <field name="enroll"/>
                     <field name="website_published"/>
                     <templates>
+                        <t t-name="kanban-menu">
+                            <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                                <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                            </div>
+                            <div class="o_kanban_slides_card_manage_pane">
+                                <t t-if="widget.deletable">
+                                    <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                </t>
+                                <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                <a role="menuitem" name="action_channel_invite" class="dropdown-item"
+                                    type="object" attrs="{'invisible': [('enroll', '!=', 'invite')]}">
+                                    Invite
+                                </a>
+                            </div>
+                        </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                                <div class="o_dropdown_kanban dropdown">
-                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v" aria-hidden="false"/>
-                                    </a>
-                                    <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                        <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
-                                            <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
-                                        </div>
-                                        <div class="o_kanban_slides_card_manage_pane">
-                                            <t t-if="widget.deletable">
-                                                <div role="menuitem">
-                                                    <a type="delete">Delete</a>
-                                                </div>
-                                            </t>
-                                            <div role="menuitem">
-                                                <a type="edit">Edit</a>
-                                            </div>
-                                            <div role="menuitem" name="action_channel_invite"
-                                                attrs="{'invisible': [('enroll', '!=', 'invite')]}">
-                                                <a name="action_channel_invite" type="object">Invite</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title mb16">
                                         <div class="o_primary">

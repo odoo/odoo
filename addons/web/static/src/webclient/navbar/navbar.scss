@@ -104,7 +104,8 @@
                 padding: ($o-navbar-badge-padding * .5) $o-navbar-badge-padding;
                 background-color: var(--o-navbar-badge-bg, #{$o-navbar-badge-bg});
                 font-size: $o-navbar-badge-size;
-                text-shadow: 1px 1px 0 rgba(#000, .3);
+                color: var(--o-navbar-badge-color, inherit);
+                text-shadow: var(--o-navbar-badge-text-shadow, #{1px 1px 0 rgba($black, .3)});
                 transform: translate(-10%, -30%);
             }
         }

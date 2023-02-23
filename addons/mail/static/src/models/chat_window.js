@@ -1,13 +1,16 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
-import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, clear, one, Model } from "@mail/model";
+import { isEventHandled, markEventHandled } from "@mail/utils/utils";
 
-registerModel({
-    name: 'ChatWindow',
-    identifyingMode: 'xor',
+Model({
+    name: "ChatWindow",
+    identifyingMode: "xor",
+    template: "mail.ChatWindow",
+    componentSetup() {
+        useUpdateToModel({ methodName: "onComponentUpdate" });
+    },
     recordMethods: {
         /**
          * Close this chat window.
@@ -30,7 +33,7 @@ registerModel({
             // server when manually closing the chat window. Delete at destroy
             // or sync from server value for example should not save the value.
             if (this.thread && notifyServer && !this.messaging.currentGuest) {
-                this.thread.notifyFoldStateToServer('closed');
+                this.thread.notifyFoldStateToServer("closed");
             }
             if (this.exists()) {
                 this.delete();
@@ -59,8 +62,9 @@ registerModel({
             }
         },
         focusPreviousVisibleUnfoldedChatWindow() {
-            const previousVisibleUnfoldedChatWindow =
-                this._getNextVisibleUnfoldedChatWindow({ reverse: true });
+            const previousVisibleUnfoldedChatWindow = this._getNextVisibleUnfoldedChatWindow({
+                reverse: true,
+            });
             if (previousVisibleUnfoldedChatWindow) {
                 previousVisibleUnfoldedChatWindow.focus();
             }
@@ -77,7 +81,7 @@ registerModel({
             // Flux specific: manually folding the chat window should save the
             // new state on the server.
             if (this.thread && notifyServer && !this.messaging.currentGuest) {
-                this.thread.notifyFoldStateToServer('folded');
+                this.thread.notifyFoldStateToServer("folded");
             }
         },
         /**
@@ -89,7 +93,11 @@ registerModel({
         makeActive(options) {
             this.makeVisible();
             this.unfold(options);
-            if ((options && options.focus !== undefined) ? options.focus : !this.messaging.device.isMobileDevice) {
+            if (
+                options && options.focus !== undefined
+                    ? options.focus
+                    : !this.messaging.device.isMobileDevice
+            ) {
                 this.focus();
             }
         },
@@ -132,16 +140,16 @@ registerModel({
          * @param {function} res
          */
         onAutocompleteSource(req, res) {
-            this.messaging.models['Partner'].imSearch({
+            this.messaging.models["Partner"].imSearch({
                 callback: (partners) => {
-                    const suggestions = partners.map(partner => {
+                    const suggestions = partners.map((partner) => {
                         return {
                             id: partner.id,
                             value: partner.nameOrDisplayName,
                             label: partner.nameOrDisplayName,
                         };
                     });
-                    res(_.sortBy(suggestions, 'label'));
+                    res(_.sortBy(suggestions, "label"));
                 },
                 keyword: _.escape(req.term),
                 limit: 10,
@@ -201,7 +209,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickHideCallSettingsMenu(ev) {
-            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            markEventHandled(ev, "ChatWindow.onClickCommand");
             this.update({ isCallSettingsMenuOpen: false });
         },
         /**
@@ -210,17 +218,17 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickHideInviteForm(ev) {
-            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            markEventHandled(ev, "ChatWindow.onClickCommand");
             this.update({ channelInvitationForm: clear() });
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickHideMemberList(ev) {
-            markEventHandled(ev, 'ChatWindow.onClickHideMemberList');
+            markEventHandled(ev, "ChatWindow.onClickHideMemberList");
             this.update({ isMemberListOpened: false });
             if (this.threadViewer.threadView) {
-                this.threadViewer.threadView.addComponentHint('member-list-hidden');
+                this.threadViewer.threadView.addComponentHint("member-list-hidden");
             }
         },
         /**
@@ -239,7 +247,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickShowInviteForm(ev) {
-            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            markEventHandled(ev, "ChatWindow.onClickCommand");
             this.update({
                 channelInvitationForm: {
                     doFocusOnSearchInput: true,
@@ -254,7 +262,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickShowCallSettingsMenu(ev) {
-            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            markEventHandled(ev, "ChatWindow.onClickCommand");
             this.update({
                 isCallSettingsMenuOpen: true,
                 isMemberListOpened: false,
@@ -264,12 +272,24 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickShowMemberList(ev) {
-            markEventHandled(ev, 'ChatWindow.onClickShowMemberList');
+            markEventHandled(ev, "ChatWindow.onClickShowMemberList");
             this.update({
                 channelInvitationForm: clear(),
                 isCallSettingsMenuOpen: false,
                 isMemberListOpened: true,
             });
+        },
+        onComponentUpdate() {
+            if (this.isDoFocus) {
+                this.update({ isDoFocus: false });
+                if (
+                    this.newMessageAutocompleteInputView &&
+                    this.newMessageAutocompleteInputView.component &&
+                    this.newMessageAutocompleteInputView.component.root.el
+                ) {
+                    this.newMessageAutocompleteInputView.component.root.el.focus();
+                }
+            }
         },
         /**
          * @param {Event} ev
@@ -297,7 +317,7 @@ registerModel({
                 return;
             }
             switch (ev.key) {
-                case 'Tab':
+                case "Tab":
                     ev.preventDefault();
                     if (ev.shiftKey) {
                         this.focusPreviousVisibleUnfoldedChatWindow();
@@ -305,11 +325,11 @@ registerModel({
                         this.focusNextVisibleUnfoldedChatWindow();
                     }
                     break;
-                case 'Escape':
-                    if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+                case "Escape":
+                    if (isEventHandled(ev, "ComposerTextInput.closeSuggestions")) {
                         break;
                     }
-                    if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                    if (isEventHandled(ev, "Composer.closeEmojisPopover")) {
                         break;
                     }
                     ev.preventDefault();
@@ -360,7 +380,7 @@ registerModel({
             // Flux specific: manually opening the chat window should save the
             // new state on the server.
             if (this.thread && notifyServer && !this.messaging.currentGuest) {
-                this.thread.notifyFoldStateToServer('open');
+                this.thread.notifyFoldStateToServer("open");
             }
         },
         /**
@@ -384,7 +404,7 @@ registerModel({
              * @param {integer} index
              * @returns {integer}
              */
-            const _getNextIndex = index => {
+            const _getNextIndex = (index) => {
                 const directionOffset = reverse ? 1 : -1;
                 let nextIndex = index + directionOffset;
                 if (nextIndex > orderedVisible.length - 1) {
@@ -396,7 +416,7 @@ registerModel({
                 return nextIndex;
             };
 
-            const currentIndex = orderedVisible.findIndex(visible => visible === this);
+            const currentIndex = orderedVisible.findIndex((visible) => visible === this);
             let nextIndex = _getNextIndex(currentIndex);
             let nextToFocus = orderedVisible[nextIndex];
             while (nextToFocus.isFolded) {
@@ -410,40 +430,38 @@ registerModel({
         /**
          * Model for the component with the controls for RTC related settings.
          */
-        callSettingsMenu: one('CallSettingsMenu', {
+        callSettingsMenu: one("CallSettingsMenu", {
+            inverse: "chatWindowOwner",
             compute() {
                 if (this.isCallSettingsMenuOpen) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'chatWindowOwner',
         }),
         /**
          * Determines the channel invitation form displayed by this chat window
          * (if any). Only makes sense if hasInviteFeature is true.
          */
-        channelInvitationForm: one('ChannelInvitationForm', {
-            inverse: 'chatWindow',
-        }),
-        channelMemberListView: one('ChannelMemberListView', {
+        channelInvitationForm: one("ChannelInvitationForm", { inverse: "chatWindow" }),
+        channelMemberListView: one("ChannelMemberListView", {
+            inverse: "chatWindowOwner",
             compute() {
                 if (this.thread && this.thread.hasMemberListFeature && this.isMemberListOpened) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'chatWindowOwner',
         }),
-        chatWindowHeaderView: one('ChatWindowHeaderView', {
+        chatWindowHeaderView: one("ChatWindowHeaderView", {
             default: {},
-            inverse: 'chatWindowOwner',
+            inverse: "chatWindowOwner",
         }),
         componentStyle: attr({
             compute() {
                 const textDirection = this.messaging.locale.textDirection;
-                const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
-                const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
+                const offsetFrom = textDirection === "rtl" ? "left" : "right";
+                const oppositeFrom = offsetFrom === "right" ? "left" : "right";
                 return `${offsetFrom}: ${this.visibleOffset}px; ${oppositeFrom}: auto`;
             },
         }),
@@ -451,22 +469,25 @@ registerModel({
          * Determines whether the buttons to start a RTC call should be displayed.
          */
         hasCallButtons: attr({
+            default: false,
             compute() {
                 if (!this.thread || !this.thread.channel) {
                     return clear();
                 }
-                return this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel.channel_type);
+                return (
+                    this.thread.rtcSessions.length === 0 &&
+                    ["channel", "chat", "group"].includes(this.thread.channel.channel_type)
+                );
             },
-            default: false,
         }),
         hasCloseAsBackButton: attr({
+            default: false,
             compute() {
                 if (this.isVisible && this.messaging.device.isSmall) {
                     return true;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * States whether this chat window has the invite feature.
@@ -474,8 +495,11 @@ registerModel({
         hasInviteFeature: attr({
             compute() {
                 return Boolean(
-                    this.thread && this.thread.hasInviteFeature &&
-                    this.messaging && this.messaging.device && this.messaging.device.isSmall
+                    this.thread &&
+                        this.thread.hasInviteFeature &&
+                        this.messaging &&
+                        this.messaging.device &&
+                        this.messaging.device.isSmall
                 );
             },
         }),
@@ -492,58 +516,55 @@ registerModel({
          */
         hasThreadView: attr({
             compute() {
-                return this.isVisible && !this.isFolded && !!this.thread && !this.isMemberListOpened && !this.channelInvitationForm && !this.isCallSettingsMenuOpen;
+                return (
+                    this.isVisible &&
+                    !this.isFolded &&
+                    !!this.thread &&
+                    !this.isMemberListOpened &&
+                    !this.channelInvitationForm &&
+                    !this.isCallSettingsMenuOpen
+                );
             },
         }),
-        isCallSettingsMenuOpen: attr({
-            default: false,
-        }),
+        isCallSettingsMenuOpen: attr({ default: false }),
         /**
          * Determine whether the chat window should be programmatically
          * focused by observed component of chat window. Those components
          * are responsible to unmark this record afterwards, otherwise
          * any re-render will programmatically set focus again!
          */
-        isDoFocus: attr({
-            default: false,
-        }),
+        isDoFocus: attr({ default: false }),
         isExpandable: attr({
+            default: false,
             compute() {
                 if (this.isVisible && !this.messaging.device.isSmall && this.thread) {
                     return true;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * States whether `this` is focused. Useful for visual clue.
          */
-        isFocused: attr({
-            default: false,
-        }),
+        isFocused: attr({ default: false }),
         /**
          * Determines whether `this` is folded.
          */
-        isFolded: attr({
-            default: false,
-        }),
+        isFolded: attr({ default: false }),
         isFullscreen: attr({
+            default: false,
             compute() {
                 if (this.isVisible && this.messaging.device.isSmall) {
                     return true;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Determines whether the member list of this chat window is opened.
          * Only makes sense if this thread hasMemberListFeature is true.
          */
-        isMemberListOpened: attr({
-            default: false,
-        }),
+        isMemberListOpened: attr({ default: false }),
         /**
          * States whether `this` is visible or not. Should be considered
          * read-only. Setting this value manually will not make it visible.
@@ -557,13 +578,10 @@ registerModel({
                 return this.manager.allOrderedVisible.includes(this);
             },
         }),
-        manager: one('ChatWindowManager', {
-            inverse: 'chatWindows',
-            readonly: true,
-        }),
-        managerAsNewMessage: one('ChatWindowManager', {
+        manager: one("ChatWindowManager", { inverse: "chatWindows", readonly: true }),
+        managerAsNewMessage: one("ChatWindowManager", {
             identifying: true,
-            inverse: 'newMessageChatWindow',
+            inverse: "newMessageChatWindow",
         }),
         name: attr({
             compute() {
@@ -573,14 +591,14 @@ registerModel({
                 return this.env._t("New message");
             },
         }),
-        newMessageAutocompleteInputView: one('AutocompleteInputView', {
+        newMessageAutocompleteInputView: one("AutocompleteInputView", {
+            inverse: "chatWindowOwnerAsNewMessage",
             compute() {
                 if (this.hasNewMessageForm) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'chatWindowOwnerAsNewMessage',
         }),
         /**
          * The content of placeholder for the autocomplete input of
@@ -595,20 +613,17 @@ registerModel({
          * Determines the `Thread` that should be displayed by `this`.
          * If no `Thread` is linked, `this` is considered "new message".
          */
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'chatWindow',
-        }),
+        thread: one("Thread", { identifying: true, inverse: "chatWindow" }),
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
-        threadView: one('ThreadView', {
-            related: 'threadViewer.threadView',
-        }),
+        threadView: one("ThreadView", { related: "threadViewer.threadView" }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
-        threadViewer: one('ThreadViewer', {
+        threadViewer: one("ThreadViewer", {
+            inverse: "chatWindow",
+            required: true,
             compute() {
                 return {
                     compact: true,
@@ -616,8 +631,6 @@ registerModel({
                     thread: this.thread ? this.thread : clear(),
                 };
             },
-            inverse: 'chatWindow',
-            required: true,
         }),
         /**
          * This field handle the "order" (index) of the visible chatWindow inside the UI.
@@ -631,7 +644,7 @@ registerModel({
                     return clear();
                 }
                 const visible = this.manager.visual.visible;
-                const index = visible.findIndex(visible => visible.chatWindow === this);
+                const index = visible.findIndex((visible) => visible.chatWindow === this);
                 if (index === -1) {
                     return clear();
                 }
@@ -644,7 +657,7 @@ registerModel({
                     return 0;
                 }
                 const visible = this.manager.visual.visible;
-                const index = visible.findIndex(visible => visible.chatWindow === this);
+                const index = visible.findIndex((visible) => visible.chatWindow === this);
                 if (index === -1) {
                     return 0;
                 }

@@ -1,59 +1,60 @@
-odoo.define('point_of_sale.SetPricelistButton', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const ProductScreen = require('point_of_sale.ProductScreen');
-    const { useListener } = require("@web/core/utils/hooks");
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { useListener, useService } from "@web/core/utils/hooks";
+import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 
-    class SetPricelistButton extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('click', this.onClick);
+export class SetPricelistButton extends LegacyComponent {
+    static template = "SetPricelistButton";
+
+    setup() {
+        super.setup();
+        this.popup = useService("popup");
+        useListener("click", this.onClick);
+    }
+    get currentOrder() {
+        return this.env.pos.get_order();
+    }
+    get currentPricelistName() {
+        const order = this.currentOrder;
+        return order && order.pricelist ? order.pricelist.display_name : this.env._t("Pricelist");
+    }
+    async onClick() {
+        // Create the list to be passed to the SelectionPopup.
+        // Pricelist object is passed as item in the list because it
+        // is the object that will be returned when the popup is confirmed.
+        const selectionList = this.env.pos.pricelists.map((pricelist) => ({
+            id: pricelist.id,
+            label: pricelist.name,
+            isSelected:
+                this.currentOrder.pricelist && pricelist.id === this.currentOrder.pricelist.id,
+            item: pricelist,
+        }));
+
+        if (!this.env.pos.default_pricelist) {
+            selectionList.push({
+                id: null,
+                label: this.env._t("Default Price"),
+                isSelected: !this.currentOrder.pricelist,
+                item: null,
+            });
         }
-        get currentOrder() {
-            return this.env.pos.get_order();
-        }
-        get currentPricelistName() {
-            const order = this.currentOrder;
-            return order && order.pricelist
-                ? order.pricelist.display_name
-                : this.env._t('Pricelist');
-        }
-        async onClick() {
-            // Create the list to be passed to the SelectionPopup.
-            // Pricelist object is passed as item in the list because it
-            // is the object that will be returned when the popup is confirmed.
-            const selectionList = this.env.pos.pricelists.map(pricelist => ({
-                id: pricelist.id,
-                label: pricelist.name,
-                isSelected: pricelist.id === this.currentOrder.pricelist.id,
-                item: pricelist,
-            }));
 
-            const { confirmed, payload: selectedPricelist } = await this.showPopup(
-                'SelectionPopup',
-                {
-                    title: this.env._t('Select the pricelist'),
-                    list: selectionList,
-                }
-            );
+        const { confirmed, payload: selectedPricelist } = await this.popup.add(SelectionPopup, {
+            title: this.env._t("Select the pricelist"),
+            list: selectionList,
+        });
 
-            if (confirmed) {
-                this.currentOrder.set_pricelist(selectedPricelist);
-            }
+        if (confirmed) {
+            this.currentOrder.set_pricelist(selectedPricelist);
         }
     }
-    SetPricelistButton.template = 'SetPricelistButton';
+}
 
-    ProductScreen.addControlButton({
-        component: SetPricelistButton,
-        condition: function() {
-            return this.env.pos.config.use_pricelist && this.env.pos.pricelists.length > 1;
-        },
-    });
-
-    Registries.Component.add(SetPricelistButton);
-
-    return SetPricelistButton;
+ProductScreen.addControlButton({
+    component: SetPricelistButton,
+    condition: function () {
+        return this.env.pos.config.use_pricelist && this.env.pos.pricelists.length > 0;
+    },
 });

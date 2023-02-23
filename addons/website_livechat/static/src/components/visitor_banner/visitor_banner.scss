@@ -2,19 +2,19 @@
 // Layout
 // -----------------------------------------------------------------------------
 
-.o_VisitorBanner {
+.o_VisitorBannerView {
     display: flex;
     flex: 0 0 auto;
     padding: map-get($spacers, 4) map-get($spacers, 2);
 }
 
-.o_VisitorBanner_avatar {
+.o_VisitorBannerView_avatar {
     height: 100%;
     width: 100%;
     object-fit: cover;
 }
 
-.o_VisitorBanner_avatarContainer {
+.o_VisitorBannerView_avatarContainer {
     height: $o-mail-thread-avatar-size;
     width: $o-mail-thread-avatar-size;
     margin-left: map-get($spacers, 1);
@@ -22,27 +22,27 @@
     position: relative;
 }
 
-.o_VisitorBanner_country {
+.o_VisitorBannerView_country {
     margin-inline-end: map-get($spacers, 1);
 }
 
-.o_VisitorBanner_history {
+.o_VisitorBannerView_history {
     margin-top: map-get($spacers, 1);
 }
 
-.o_VisitorBanner_historyIcon {
+.o_VisitorBannerView_historyIcon {
     margin-inline-end: map-get($spacers, 1);
 }
 
-.o_VisitorBanner_language {
+.o_VisitorBannerView_language {
     margin-inline-end: map-get($spacers, 3);
 }
 
-.o_VisitorBanner_languageIcon {
+.o_VisitorBannerView_languageIcon {
     margin-inline-end: map-get($spacers, 1);
 }
 
-.o_VisitorBanner_onlineStatusIcon {
+.o_VisitorBannerView_onlineStatusIcon {
     @include o-position-absolute($bottom: 0, $right: 0);
     display: flex;
     align-items: center;
@@ -54,7 +54,7 @@
     font-size: x-small;
 }
 
-.o_VisitorBanner_sidebar {
+.o_VisitorBannerView_sidebar {
     display: flex;
     flex: 0 0 $o-mail-message-sidebar-width;
     justify-content: center;
@@ -62,11 +62,11 @@
     max-width: $o-mail-message-sidebar-width;
 }
 
-.o_VisitorBanner_visitor {
+.o_VisitorBannerView_visitor {
     margin-inline-end: map-get($spacers, 3);
 }
 
-.o_VisitorBanner_websiteIcon {
+.o_VisitorBannerView_websiteIcon {
     margin-inline-end: map-get($spacers, 1);
 }
 
@@ -74,14 +74,14 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_VisitorBanner {
-    background: $white;
+.o_VisitorBannerView {
+    background: $o-view-background-color;
 }
 
-.o_VisitorBanner_onlineStatusIcon {
+.o_VisitorBannerView_onlineStatusIcon {
     color: $o-enterprise-primary-color;
 }
 
-.o_VisitorBanner_visitor {
+.o_VisitorBannerView_visitor {
     font-weight: $font-weight-bold;
 }

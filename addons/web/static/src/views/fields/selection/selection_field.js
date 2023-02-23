@@ -4,9 +4,15 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class SelectionField extends Component {
+    static template = "web.SelectionField";
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    };
+
     get options() {
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
@@ -20,7 +26,7 @@ export class SelectionField extends Component {
         }
     }
     get string() {
-        switch (this.props.type) {
+        switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
                 return this.props.value ? this.props.value[1] : "";
             case "selection":
@@ -33,7 +39,9 @@ export class SelectionField extends Component {
     }
     get value() {
         const rawValue = this.props.value;
-        return this.props.type === "many2one" && rawValue ? rawValue[0] : rawValue;
+        return this.props.record.fields[this.props.name].type === "many2one" && rawValue
+            ? rawValue[0]
+            : rawValue;
     }
     get isRequired() {
         return this.props.record.isRequired(this.props.name);
@@ -48,38 +56,35 @@ export class SelectionField extends Component {
      */
     onChange(ev) {
         const value = JSON.parse(ev.target.value);
-        switch (this.props.type) {
+        switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
                 if (value === false) {
-                    this.props.update(false);
+                    this.props.record.update({ [this.props.name]: false });
                 } else {
-                    this.props.update(this.options.find((option) => option[0] === value));
+                    this.props.record.update({
+                        [this.props.name]: this.options.find((option) => option[0] === value),
+                    });
                 }
                 break;
             case "selection":
-                this.props.update(value);
+                this.props.record.update({ [this.props.name]: value });
                 break;
         }
     }
 }
 
-SelectionField.template = "web.SelectionField";
-SelectionField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-
-SelectionField.displayName = _lt("Selection");
-SelectionField.supportedTypes = ["many2one", "selection"];
-
-SelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
-SelectionField.extractProps = ({ attrs }) => {
-    return {
+export const selectionField = {
+    component: SelectionField,
+    displayName: _lt("Selection"),
+    supportedTypes: ["many2one", "selection"],
+    legacySpecialData: "_fetchSpecialRelation",
+    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-registry.category("fields").add("selection", SelectionField);
+registry.category("fields").add("selection", selectionField);
 
 export function preloadSelection(orm, record, fieldName) {
     const field = record.fields[fieldName];

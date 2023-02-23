@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { symmetricalDifference } from "@web/core/utils/arrays";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 export class SwitchCompanyMenu extends Component {
     setup() {
@@ -41,6 +41,7 @@ export class SwitchCompanyMenu extends Component {
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";
 SwitchCompanyMenu.components = { Dropdown, DropdownItem };
 SwitchCompanyMenu.toggleDelay = 1000;
+SwitchCompanyMenu.props = {};
 
 export const systrayItem = {
     Component: SwitchCompanyMenu,

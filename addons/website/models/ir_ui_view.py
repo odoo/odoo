@@ -236,9 +236,31 @@ class View(models.Model):
             })
             page.menu_ids.filtered(lambda m: m.website_id.id == website.id).page_id = new_page.id
 
-    def _get_top_level_view(self):
+    def get_view_hierarchy(self):
         self.ensure_one()
-        return self.inherit_id._get_top_level_view() if self.inherit_id else self
+        top_level_view = self
+        while top_level_view.inherit_id:
+            top_level_view = top_level_view.inherit_id
+        top_level_view = top_level_view.with_context(active_test=False)
+        sibling_views = top_level_view.search_read([('key', '=', top_level_view.key), ('id', '!=', top_level_view.id)])
+        return {
+            'sibling_views': sibling_views,
+            'hierarchy': top_level_view._build_hierarchy_datastructure()
+        }
+
+    def _build_hierarchy_datastructure(self):
+        inherit_children = []
+        for child in self.inherit_children_ids:
+            inherit_children.append(child._build_hierarchy_datastructure())
+        return {
+            'id': self.id,
+            'name': self.name,
+            'inherit_children': inherit_children,
+            'arch_updated': self.arch_updated,
+            'website_name': self.website_id.name if self.website_id else False,
+            'active': self.active,
+            'key': self.key,
+        }
 
     @api.model
     def get_related_views(self, key, bundles=False):
@@ -461,6 +483,14 @@ class View(models.Model):
             if website_specific_view:
                 self = website_specific_view
         super(View, self).save(value, xpath=xpath)
+
+    @api.model
+    def _get_allowed_root_attrs(self):
+        # Related to these options:
+        # background-video, background-shapes, parallax
+        return super()._get_allowed_root_attrs() + [
+            'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
+        ]
 
     # --------------------------------------------------------------------------
     # Snippet saving

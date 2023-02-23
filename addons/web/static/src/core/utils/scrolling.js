@@ -5,8 +5,8 @@
  *
  * @param {HTMLElement} element
  * @param {Object} options
- * @param {HTMLElement} options[scrollable] a scrollable area
- * @param {Boolean} options[isAnchor] states if the scroll is to an anchor
+ * @param {HTMLElement} [options.scrollable] a scrollable area
+ * @param {Boolean} [options.isAnchor] states if the scroll is to an anchor
  */
 export function scrollTo(element, options = { scrollable: null, isAnchor: false }) {
     function _getScrollParent(node) {

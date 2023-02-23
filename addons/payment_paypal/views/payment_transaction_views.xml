@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_transaction_form" model="ir.ui.view">
+        <field name="name">PayPal Transaction Form</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <field name="provider_reference" position="after">
+                <field name="paypal_type"
+                       readonly="1"
+                       attrs="{'invisible': [('provider_code', '!=', 'paypal')]}"
+                       groups="base.group_no_one"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

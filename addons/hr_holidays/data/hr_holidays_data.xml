@@ -260,21 +260,24 @@
             <field name="allocation_validation_type">officer</field>
             <field name="leave_notif_subtype_id" ref="mt_leave"/>
             <field name="allocation_notif_subtype_id" ref="mt_leave_allocation"/>
-            <field name="responsible_id" ref="base.user_admin"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_14"/>
             <field name="color">2</field>
+            <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+            <field name="sequence">1</field>
         </record>
 
         <!-- Sick leave -->
         <record id="holiday_status_sl" model="hr.leave.type">
             <field name="name">Sick Time Off</field>
             <field name="requires_allocation">no</field>
-            <field name="color_name">red</field>
             <field name="leave_notif_subtype_id" ref="mt_leave_sick"/>
-            <field name="responsible_id" ref="base.user_admin"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="support_document">True</field>
-            <field name="icon_id" ref="hr_holidays.icon_21"/>
+            <field name="icon_id" ref="hr_holidays.icon_22"/>
             <field name="color">3</field>
+            <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+            <field name="sequence">2</field>
         </record>
 
         <!-- Compensatory Days -->
@@ -286,12 +289,14 @@
             <field name="allocation_validation_type">officer</field>
             <field name="request_unit">hour</field>
             <field name="leave_notif_subtype_id" ref="mt_leave"/>
-            <field name="responsible_id" ref="base.user_admin"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_4"/>
             <field name="color">4</field>
+            <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+            <field name="sequence">4</field>
         </record>
 
-        <!--Unpaid Leave -->
+        <!--Unpaid Time Off -->
         <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
             <field name="requires_allocation">no</field>
@@ -300,9 +305,11 @@
             <field name="request_unit">hour</field>
             <field name="unpaid" eval="True"/>
             <field name="leave_notif_subtype_id" ref="mt_leave_unpaid"/>
-            <field name="responsible_id" ref="base.user_admin"/>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_28"/>
             <field name="color">5</field>
+            <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+            <field name="sequence">3</field>
         </record>
     </data>
 </odoo>

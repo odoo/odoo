@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="google_calendar.GoogleCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@id='calendar_sync_wrapper']" position="attributes">
+            <attribute name="t-if">true</attribute>
+        </xpath>
+        <xpath expr="//div[@id='google_calendar_sync']" position="replace">
+            <div id="google_calendar_sync" class="o_calendar_sync">
+                <button t-if="!model.googleIsSync" type="button" id="google_sync_pending" class="o_google_sync_button o_google_sync_pending btn btn-secondary btn" t-on-click="onGoogleSyncCalendar">
+                    <b><i class='fa fa-refresh'/> Google</b>
+                </button>
+                <!-- class change on hover -->
+                <button t-else="" type="button" id="google_sync_configured" class="me-1 o_google_sync_button o_google_sync_button_configured btn text-bg-primary" t-on-click="onStopGoogleSynchronization"
+                    t-on-mouseenter="(ev) => {ev.target.classList.remove('text-bg-primary');ev.target.classList.add('text-bg-danger');}"
+                    t-on-mouseleave="(ev) => {ev.target.classList.remove('text-bg-danger');ev.target.classList.add('text-bg-primary');}">
+                    <b>
+                        <i id="google_check" class='fa fa-check'/>
+                        <i id="google_stop" class='fa fa-times'/>
+                        <span class="mx-1">Google</span>
+                    </b>
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

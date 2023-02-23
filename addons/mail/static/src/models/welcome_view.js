@@ -1,16 +1,19 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, clear, one, Model } from "@mail/model";
 
 const getNextGuestNameInputId = (function () {
     let id = 0;
     return () => ++id;
 })();
 
-registerModel({
-    name: 'WelcomeView',
+Model({
+    name: "WelcomeView",
+    template: "mail.WelcomeView",
+    componentSetup() {
+        useUpdateToModel({ methodName: "onComponentUpdate", modelName: "WelcomeView" });
+    },
     recordMethods: {
         /**
          * Updates guest if needed then displays the thread view instead of the
@@ -18,7 +21,7 @@ registerModel({
          */
         async joinChannel() {
             if (this.hasGuestNameChanged) {
-                await this.messaging.models['Guest'].performRpcGuestUpdateName({
+                await this.messaging.models["Guest"].performRpcGuestUpdateName({
                     id: this.messaging.currentGuest.id,
                     name: this.pendingGuestName.trim(),
                 });
@@ -50,7 +53,7 @@ registerModel({
          * @param {KeyboardEvent} ev
          */
         onKeydownGuestNameInput(ev) {
-            if (ev.key === 'Enter') {
+            if (ev.key === "Enter") {
                 this.joinChannel();
             }
         },
@@ -60,7 +63,7 @@ registerModel({
          */
         async performRpcAddGuestAsMember() {
             await this.messaging.rpc({
-                route: '/mail/channel/add_guest_as_member',
+                route: "/mail/channel/add_guest_as_member",
                 params: {
                     channel_id: this.channel.id,
                     channel_uuid: this.channel.uuid,
@@ -78,7 +81,7 @@ registerModel({
                 this.update({ isDoFocusGuestNameInput: false });
                 this.guestNameInputRef.el.focus();
                 // place cursor at end of text
-                const { length } = (this.pendingGuestName || '');
+                const { length } = this.pendingGuestName || "";
                 this.guestNameInputRef.el.setSelectionRange(length, length);
             }
         },
@@ -97,22 +100,16 @@ registerModel({
          * States the channel to redirect to once the user clicks on the
          * 'joinButton'.
          */
-        channel: one('Thread', {
-            readonly: true,
-            required: true,
-        }),
+        channel: one("Thread", { readonly: true, required: true }),
         /**
          * States discuss public view on which this welcome view is displayed.
          */
-        discussPublicView: one('DiscussPublicView', {
-            identifying: true,
-            inverse: 'welcomeView',
-        }),
+        discussPublicView: one("DiscussPublicView", { identifying: true, inverse: "welcomeView" }),
         /**
          * States the OWL ref the to input element containing the
          * 'pendingGuestName'.
          */
-        guestNameInputRef: attr(),
+        guestNameInputRef: attr({ ref: "guestNameInput" }),
         /**
          * States the value to use for `id`, `for`, and `name` attributes of
          * the guest name input and its label.
@@ -132,7 +129,9 @@ registerModel({
          */
         hasGuestNameChanged: attr({
             compute() {
-                return Boolean(this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName);
+                return Boolean(
+                    this.messaging.currentGuest && this.originalGuestName !== this.pendingGuestName
+                );
             },
         }),
         /**
@@ -148,19 +147,19 @@ registerModel({
          */
         isJoinButtonDisabled: attr({
             compute() {
-                return Boolean(this.messaging.currentGuest && this.pendingGuestName.trim() === '');
+                return Boolean(this.messaging.currentGuest && this.pendingGuestName.trim() === "");
             },
         }),
         /**
          * States the media preview embedded in this welcome view.
          */
-        callDemoView: one('CallDemoView', {
+        callDemoView: one("CallDemoView", {
+            inverse: "welcomeView",
             compute() {
-                return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
+                return this.channel && this.channel.defaultDisplayMode === "video_full_screen"
                     ? {}
                     : clear();
             },
-            inverse: 'welcomeView',
         }),
         /**
          * States the name the guest had when landing on the welcome view.
@@ -174,8 +173,6 @@ registerModel({
          * Will be used to update the current guest's name when joining the
          * channel by clicking on the 'joinButton'.
          */
-        pendingGuestName: attr({
-            default: '',
-        }),
+        pendingGuestName: attr({ default: "" }),
     },
 });

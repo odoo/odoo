@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { click, clickEdit, getFixture } from "@web/../tests/helpers/utils";
+import { click, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 QUnit.module("DescriptionPageField", (hooks) => {
@@ -78,7 +78,6 @@ QUnit.module("DescriptionPageField", (hooks) => {
             assert.containsN(target, "td.o_survey_description_page_cell", 2);
             assert.containsNone(target, "button.o_icon_button");
 
-            await clickEdit(target);
             await click(target.querySelector(".o_data_cell"));
             assert.containsOnce(target.querySelector(".o_data_row"), "button.o_icon_button");
             assert.containsNone(target, ".modal .o_form_view");

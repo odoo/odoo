@@ -37,7 +37,7 @@ class AccountMove(models.Model):
         statement_ids = self.line_ids.mapped('statement_id')
         payment_ids = self.line_ids.mapped('payment_id')
         if statement_ids:
-            domains.append([('res_model', '=', 'account.bank.statement'), ('res_id', 'in', statement_ids)])
+            domains.append([('res_model', '=', 'account.bank.statement'), ('res_id', 'in', statement_ids.ids)])
         if payment_ids:
-            domains.append([('res_model', '=', 'account.payment'), ('res_id', 'in', payment_ids)])
+            domains.append([('res_model', '=', 'account.payment'), ('res_id', 'in', payment_ids.ids)])
         return self.env['ir.attachment'].search_count(expression.OR(domains))

@@ -4,6 +4,7 @@
 from datetime import datetime
 from freezegun import freeze_time
 
+from odoo.addons.base.tests.test_format_address_mixin import FormatAddressCase
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
@@ -245,17 +246,19 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_currency_sync(self):
-        lead = self.env['crm.lead'].create({
+        lead_company = self.env['res.company'].sudo().create({
+            'name': 'EUR company',
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+        lead = self.env['crm.lead'].with_company(lead_company).create({
             'name': 'Lead 1',
-            'company_id': self.company_main.id
+            'company_id': lead_company.id
         })
         self.assertEqual(lead.company_currency, self.env.ref('base.EUR'))
 
-        self.company_main.currency_id = self.env.ref('base.CHF')
-        lead.with_company(self.company_main).update({'company_id': False})
+        lead_company.currency_id = self.env.ref('base.CHF')
+        lead.update({'company_id': False})
         self.assertEqual(lead.company_currency, self.env.ref('base.CHF'))
-        #set back original currency
-        self.company_main.currency_id = self.env.ref('base.EUR')
 
     @users('user_sales_manager')
     def test_crm_lead_date_closed(self):
@@ -734,10 +737,14 @@ class TestCRMLead(TestCrmCommon):
             lead_3,
             'Should behave like a text field'
         )
-        self.assertEqual(
+        self.assertFalse(
             self.env['crm.lead'].search([('phone_mobile_search', 'like', 'Hello')]),
+            'Should behave like a text field (case sensitive)'
+        )
+        self.assertEqual(
+            self.env['crm.lead'].search([('phone_mobile_search', 'ilike', 'Hello')]),
             lead_3,
-            'Should behave like a text field'
+            'Should behave like a text field (case insensitive)'
         )
         self.assertEqual(
             self.env['crm.lead'].search([('phone_mobile_search', 'like', 'hello123')]),
@@ -805,3 +812,8 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertEqual(lead.mobile, self.test_phone_data[2])
         self.assertFalse(lead.phone_sanitized)
+
+
+class TestLeadFormatAddress(FormatAddressCase):
+    def test_address_view(self):
+        self.assertAddressView('crm.lead')

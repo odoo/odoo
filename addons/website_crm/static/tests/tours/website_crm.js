@@ -1,7 +1,7 @@
 odoo.define('website_crm.tour', function(require) {
     'use strict';
 
-    const tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
     const wTourUtils = require('website.tour_utils');
 
     wTourUtils.registerWebsitePreviewTour('website_crm_pre_tour', {
@@ -28,10 +28,10 @@ odoo.define('website_crm.tour', function(require) {
         extra_trigger: "iframe body:not(.editor_enable)",
     }]);
 
-    tour.register('website_crm_tour', {
+    registry.category("web_tour.tours").add('website_crm_tour', {
         test: true,
         url: '/contactus',
-    }, [{
+        steps: [{
         content: "Complete name",
         trigger: "input[name=contact_name]",
         run: "text John Smith",
@@ -61,12 +61,12 @@ odoo.define('website_crm.tour', function(require) {
     }, {
         content: "Check we were redirected to the success page",
         trigger: "#wrap:has(h1:contains('Thank You!'))"
-    }]);
+    }]});
 
-    tour.register('website_crm_catch_logged_partner_info_tour', {
+    registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_tour', {
         test: true,
         url: '/contactus',
-    }, [{
+        steps: [{
         content: "Complete Subject",
         trigger: "input[name=name]",
         run: "text Useless subject"
@@ -80,7 +80,7 @@ odoo.define('website_crm.tour', function(require) {
     }, {
         content: "Check we were redirected to the success page",
         trigger: "#wrap:has(h1:contains('Thank You!'))"
-    }]);
+    }]});
 
     return {};
 });

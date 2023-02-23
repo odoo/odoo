@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.PageKanbanRenderer" t-inherit="web.KanbanRenderer" owl="1">
+    <xpath expr="//t[@t-if='groupOrRecord.group']//KanbanRecord" position="attributes">
+        <attribute name="t-if">recordFilter(record, props.list.records)</attribute>
+    </xpath>
+    <xpath expr="//div/t/t[@t-else='']/KanbanRecord" position="attributes">
+        <attribute name="t-if">recordFilter(groupOrRecord.record, props.list.records)</attribute>
+    </xpath>
+</t>
+
+<t t-name="website.PageKanbanView" t-inherit="web.KanbanView" owl="1">
+    <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+        <attribute name="activeWebsite">state.activeWebsite</attribute>
+    </xpath>
+    <xpath expr="//Layout" position="inside">
+        <t t-set-slot="control-panel-website-extra-actions">
+            <t t-call="website.RecordFilter"/>
+        </t>
+    </xpath>
+</t>
+
+</templates>

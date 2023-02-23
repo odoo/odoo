@@ -7,9 +7,7 @@
     "summary": "Spreadsheet",
     "description": "Spreadsheet",
     "depends": ["spreadsheet"],
-    "demo": [],
     "installable": True,
-    "auto_install": False,
     "license": "LGPL-3",
     "data": [
         "security/security.xml",
@@ -21,11 +19,11 @@
     "assets": {
         "spreadsheet.o_spreadsheet": [
             "spreadsheet_dashboard/static/src/bundle/**/*.js",
+            "spreadsheet_dashboard/static/src/bundle/**/*.xml",
         ],
         "web.assets_backend": [
             "spreadsheet_dashboard/static/src/assets/**/*.js",
             "spreadsheet_dashboard/static/src/**/*.scss",
-            "spreadsheet_dashboard/static/src/**/*.xml",
         ],
         "web.qunit_suite_tests": [
             "spreadsheet_dashboard/static/tests/**/*",

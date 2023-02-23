@@ -221,21 +221,19 @@ record['name'] = record.name + 'X'""",
             patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', _patched_send_mail),
         ]
 
-        patchers[0].start()
+        self.startPatcher(patchers[0])
 
         lead = self.create_lead()
         self.assertFalse(lead.priority)
         self.assertFalse(lead.deadline)
 
-        patchers[1].start()
+        self.startPatcher(patchers[1])
 
         lead.write({'priority': True})
 
         self.assertTrue(lead.priority)
         self.assertTrue(lead.deadline)
 
-        for patcher in patchers:
-            patcher.stop()
 
         self.assertEqual(send_mail_count, 1)
 

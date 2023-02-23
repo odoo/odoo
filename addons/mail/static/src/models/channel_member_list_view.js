@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ChannelMemberListView',
-    identifyingMode: 'xor',
+Model({
+    name: "ChannelMemberListView",
+    template: "mail.ChannelMemberListView",
+    identifyingMode: "xor",
     lifecycleHooks: {
         _created() {
             this.channel.fetchChannelMembers();
@@ -21,7 +20,7 @@ registerModel({
         },
     },
     fields: {
-        channel: one('Channel', {
+        channel: one("Channel", {
             compute() {
                 if (this.chatWindowOwner) {
                     return this.chatWindowOwner.thread.channel;
@@ -32,31 +31,25 @@ registerModel({
                 return clear();
             },
         }),
-        chatWindowOwner: one('ChatWindow', {
-            identifying: true,
-            inverse: 'channelMemberListView',
-        }),
-        offlineCategoryView: one('ChannelMemberListCategoryView', {
+        chatWindowOwner: one("ChatWindow", { identifying: true, inverse: "channelMemberListView" }),
+        offlineCategoryView: one("ChannelMemberListCategoryView", {
+            inverse: "channelMemberListViewOwnerAsOffline",
             compute() {
                 if (this.channel && this.channel.orderedOfflineMembers.length > 0) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'channelMemberListViewOwnerAsOffline',
         }),
-        onlineCategoryView: one('ChannelMemberListCategoryView', {
+        onlineCategoryView: one("ChannelMemberListCategoryView", {
+            inverse: "channelMemberListViewOwnerAsOnline",
             compute() {
                 if (this.channel && this.channel.orderedOnlineMembers.length > 0) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'channelMemberListViewOwnerAsOnline',
         }),
-        threadViewOwner: one('ThreadView', {
-            identifying: true,
-            inverse: 'channelMemberListView',
-        }),
+        threadViewOwner: one("ThreadView", { identifying: true, inverse: "channelMemberListView" }),
     },
 });

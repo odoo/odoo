@@ -13,6 +13,8 @@ from odoo.tools import mute_logger
 from odoo.tests.common import Form
 from odoo.tests import tagged
 
+from odoo.exceptions import UserError
+
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 @tagged('leave_requests')
@@ -57,6 +59,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'requires_allocation': 'yes',
             'employee_requests': 'yes',
             'leave_validation_type': 'both',
+        })
+        cls.holidays_support_document = LeaveType.create({
+            'name': 'Time off with support document',
+            'support_document': True,
+            'requires_allocation': 'no',
+            'leave_validation_type': 'no_validation',
         })
 
         cls.set_employee_create_date(cls.employee_emp_id, '2010-02-03 00:00:00')
@@ -195,7 +203,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave = leave_form.save()
         leave.action_approve()
         member_ids = self.hr_dept.member_ids.ids
-        self.assertEqual(self.env['hr.leave'].search_count([('employee_id', 'in', member_ids)]), len(member_ids), "Leave should be created for members of department")
+        self.assertEqual(self.env['hr.leave'].search_count([('employee_id', 'in', member_ids)]), len(member_ids), "Time Off should be created for members of department")
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_allocation_request(self):
@@ -330,12 +338,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'attendance_ids': [
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8.5, 'hour_to': 12.5, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8.5, 'hour_to': 12.5, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12.5, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17.5, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8.5, 'hour_to': 12.5, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12.5, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17.5, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8.5, 'hour_to': 12.5, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12.5, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17.5, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8.5, 'hour_to': 12.5, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12.5, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17.5, 'day_period': 'afternoon'})
             ],
         })
@@ -397,18 +409,23 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'hours_per_day': 8.0,
             'attendance_ids': [
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
             ],
             'global_leave_ids': [(0, 0, {
-                'name': 'Christmas Leave',
+                'name': 'Christmas Time Off',
                 'date_from': fields.Datetime.from_string('2019-12-25 00:00:00'),
                 'date_to': fields.Datetime.from_string('2019-12-26 23:59:59'),
                 'resource_id': False,
@@ -887,7 +904,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             # Virtual remaining leave is equal to 1 because there is only one day remaining in the allocation based on its validity
             self._check_holidays_count(
                 self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 31))[self.employee_emp_id][self.holidays_type_2.id],
-                ml=10, lt=5, rl=5, vrl=1, vlt=5, closest_allocation=allocation_2021,
+                ml=10, lt=5, rl=5, vrl=1, vlt=5, closest_allocation=allocation_2022,
             )
 
             leave_2022 = self.env['hr.leave'].with_user(self.user_employee_id).create({
@@ -912,34 +929,42 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 ml=10, lt=5, rl=5, vrl=5, vlt=5, closest_allocation=allocation_2021,
             )
 
-            allocation_2021.active = False
+            with self.assertRaisesRegex(UserError,
+                r'You cannot archive an allocation which is in confirm or validate state.'):
 
-            # If the allocation is archived, the leaves taken are still counted on this allocation
-            # but the max leaves and remaining leaves are not counted anymore
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
-                ml=0, lt=5, rl=0, vrl=0, vlt=5, closest_allocation=allocation_2021,
-            )
+                # The logic of the test is relevant, so we do not remove it.
+                # However, the behaviour will change.
+                # Indeed, a confirmed or validated allocation cannot be archived
 
-            # The holidays count in 2022 is not affected by the archived allocation in 2021
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                ml=20, lt=4, rl=16, vrl=16, vlt=4, closest_allocation=allocation_2022,
-            )
+                allocation_2021.active = False
 
-            allocation_2021.active = True
+                # If the allocation is archived, the leaves taken are still counted on this allocation
+                # but the max leaves and remaining leaves are not counted anymore
+                # If there are no virtual_remaining_leaves, then there is no upcoming allocation (closest_allocation_to_expire) to expire
+                self._check_holidays_count(
+                    self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
+                    ml=0, lt=5, rl=0, vrl=0, vlt=5, closest_allocation=False,
+                )
 
-            # The holidays count in 2021 is back to what it was when the allocation was active
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
-                ml=10, lt=5, rl=5, vrl=5, vlt=5, closest_allocation=allocation_2021,
-            )
+                # The holidays count in 2022 is not affected by the archived allocation in 2021
+                self._check_holidays_count(
+                    self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
+                    ml=20, lt=4, rl=16, vrl=16, vlt=4, closest_allocation=allocation_2022,
+                )
 
-            # The holidays count in 2022 is still not affected by the allocation in 2021
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                ml=20, lt=4, rl=16, vrl=16, vlt=4, closest_allocation=allocation_2022,
-            )
+                allocation_2021.active = True
+
+                # The holidays count in 2021 is back to what it was when the allocation was active
+                self._check_holidays_count(
+                    self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
+                    ml=10, lt=5, rl=5, vrl=5, vlt=5, closest_allocation=allocation_2021,
+                )
+
+                # The holidays count in 2022 is still not affected by the allocation in 2021
+                self._check_holidays_count(
+                    self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
+                    ml=20, lt=4, rl=16, vrl=16, vlt=4, closest_allocation=allocation_2022,
+                )
 
     def test_cancel_leave(self):
         with freeze_time('2020-09-15'):
@@ -975,3 +1000,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             # The meeting is archived when the leave is cancelled
             leave.with_user(self.user_employee_id)._action_user_cancel('Cancel leave')
             self.assertFalse(leave.meeting_id.active)
+
+    def test_create_support_document_in_the_past(self):
+        with freeze_time('2022-10-19'):
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_support_document.id,
+                'date_from': '2022-10-17',
+                'date_to': '2022-10-17',
+                'number_of_days': 1,
+                'supported_attachment_ids': [(6, 0, [])],  # Sent by webclient
+            })

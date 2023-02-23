@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { ConnectionAbortedError, rpcService } from "@web/core/network/rpc_service";
+import { ConnectionAbortedError, ConnectionLostError, rpcService } from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -18,7 +18,7 @@ import {
 } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let isXHRMocked = false;
 const serviceRegistry = registry.category("services");
@@ -108,7 +108,7 @@ QUnit.test("trigger an error when response has 'error' key", async (assert) => {
     });
     try {
         await env.services.rpc("/test/");
-    } catch (_error) {
+    } catch {
         assert.ok(true);
     }
     unpatch(browser, "mock.xhr");
@@ -234,7 +234,7 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     });
     try {
         await env.services.rpc("/test/");
-    } catch (_e) {
+    } catch {
         assert.ok(true);
     }
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
@@ -247,29 +247,30 @@ QUnit.test("check connection aborted", async (assert) => {
     const MockXHR = makeMockXHR({}, () => {}, def);
     patchWithCleanup(browser, { XMLHttpRequest: MockXHR }, { pure: true });
     const env = await makeTestEnv({ serviceRegistry });
+    env.bus.addEventListener("RPC:REQUEST", () => {
+        assert.step("RPC:REQUEST");
+    });
+    env.bus.addEventListener("RPC:RESPONSE", () => {
+        assert.step("RPC:RESPONSE");
+    });
 
     const connection = env.services.rpc();
     connection.abort();
     assert.rejects(connection, ConnectionAbortedError);
+    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
 });
 
-QUnit.test(
-    "Response with status 404 and invalid JSON response result in a rerror with a readable message",
-    async (assert) => {
-        const env = await makeTestEnv({ serviceRegistry });
+QUnit.test("trigger a ConnectionLostError when response isn't json parsable", async (assert) => {
+    const env = await makeTestEnv({ serviceRegistry });
 
-        const MockXHR = makeMockXHR({}, () => {});
-        const request = new MockXHR();
-        request.response = "<h...";
-        request.status = "404";
+    const MockXHR = makeMockXHR({}, () => {});
+    const request = new MockXHR();
+    request.response = "<h...";
+    request.status = "500";
 
-        try {
-            await env.services.rpc("/test/", null, { xhr: request });
-        } catch (_e) {
-            assert.strictEqual(
-                _e.message,
-                "server responded with invalid JSON response (HTTP404): <h..."
-            );
-        }
+    try {
+        await env.services.rpc("/test/", null, { xhr: request });
+    } catch (e) {
+        assert.ok(e instanceof ConnectionLostError);
     }
-);
+});

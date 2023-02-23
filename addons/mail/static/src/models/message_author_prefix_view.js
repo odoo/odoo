@@ -1,29 +1,29 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'MessageAuthorPrefixView',
-    identifyingMode: 'xor',
+Model({
+    name: "MessageAuthorPrefixView",
+    template: "mail.MessageAuthorPrefixView",
+    identifyingMode: "xor",
     fields: {
-        channelPreviewViewOwner: one('ChannelPreviewView', {
+        channelPreviewViewOwner: one("ChannelPreviewView", {
             identifying: true,
-            inverse: 'messageAuthorPrefixView',
+            inverse: "messageAuthorPrefixView",
         }),
-        message: one('Message', {
+        message: one("Message", {
             compute() {
                 if (this.channelPreviewViewOwner) {
                     return this.channelPreviewViewOwner.thread.lastMessage;
                 }
                 if (this.threadNeedactionPreviewViewOwner) {
-                    return this.threadNeedactionPreviewViewOwner.thread.lastNeedactionMessageAsOriginThread;
+                    return this.threadNeedactionPreviewViewOwner.thread
+                        .lastNeedactionMessageAsOriginThread;
                 }
                 return clear();
             },
         }),
-        thread: one('Thread', {
+        thread: one("Thread", {
             compute() {
                 if (this.channelPreviewViewOwner) {
                     return this.channelPreviewViewOwner.thread;
@@ -34,9 +34,9 @@ registerModel({
                 return clear();
             },
         }),
-        threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
+        threadNeedactionPreviewViewOwner: one("ThreadNeedactionPreviewView", {
             identifying: true,
-            inverse: 'messageAuthorPrefixView',
+            inverse: "messageAuthorPrefixView",
         }),
     },
 });

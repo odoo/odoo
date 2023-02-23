@@ -6,9 +6,8 @@
         <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
         <field name="state">code</field>
         <field name="code">
-stripe = env.ref('payment.payment_provider_stripe')
 menu_id = env.ref('website.menu_website_website_settings').id
-action = stripe.action_stripe_connect_account(menu_id=menu_id)
+action = env.company._run_payment_onboarding_step(menu_id=menu_id)
         </field>
     </record>
 </odoo>

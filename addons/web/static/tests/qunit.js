@@ -62,7 +62,7 @@ export function setupQUnit() {
             }
             $el = $(target.el);
         } else {
-            $el = target instanceof HTMLElement ? $(target) : target;
+            $el = target instanceof Element ? $(target) : target;
         }
         msg = msg || `Selector '${selector}' should have exactly ${n} matches inside the target`;
         QUnit.assert.strictEqual($el.find(selector).length, n, msg);
@@ -71,7 +71,7 @@ export function setupQUnit() {
     /**
      * Checks that the target contains exactly 0 match for the selector.
      *
-     * @param {HTMLElement} el
+     * @param {Element} el
      * @param {string} selector
      * @param {string} [msg]
      */
@@ -82,7 +82,7 @@ export function setupQUnit() {
     /**
      * Checks that the target contains exactly 1 match for the selector.
      *
-     * @param {HTMLElement} el
+     * @param {Element} el
      * @param {string} selector
      * @param {string} [msg]
      */
@@ -94,7 +94,7 @@ export function setupQUnit() {
      * Helper function, to check if a given element has (or has not) classnames.
      *
      * @private
-     * @param {HTMLElement|jQuery|Widget} el
+     * @param {Element | jQuery | Widget} el
      * @param {string} classNames
      * @param {boolean} shouldHaveClass
      * @param {string} [msg]
@@ -103,7 +103,7 @@ export function setupQUnit() {
         if (el) {
             if (el._widgetRenderAndInsert) {
                 el = el.el; // legacy widget
-            } else if (!(el instanceof HTMLElement)) {
+            } else if (!(el instanceof Element)) {
                 el = el[0];
             }
         }
@@ -120,7 +120,7 @@ export function setupQUnit() {
     /**
      * Checks that the target element has the given classnames.
      *
-     * @param {HTMLElement} el
+     * @param {Element} el
      * @param {string} classNames
      * @param {string} [msg]
      */
@@ -131,7 +131,7 @@ export function setupQUnit() {
     /**
      * Checks that the target element does not have the given classnames.
      *
-     * @param {HTMLElement} el
+     * @param {Element} el
      * @param {string} classNames
      * @param {string} [msg]
      */
@@ -145,7 +145,7 @@ export function setupQUnit() {
      * - is unique
      * - has the given attribute with the proper value
      *
-     * @param {Widget|jQuery|HTMLElement|Component} w
+     * @param {Component | Element | Widget | jQuery} w
      * @param {string} attr
      * @param {string} value
      * @param {string} [msg]
@@ -162,7 +162,7 @@ export function setupQUnit() {
             }
             $el = $(target.el);
         } else {
-            $el = target instanceof HTMLElement ? $(target) : target;
+            $el = target instanceof Element ? $(target) : target;
         }
 
         if ($el.length !== 1) {
@@ -183,7 +183,7 @@ export function setupQUnit() {
      * - is (or not) visible
      *
      * @private
-     * @param {HTMLElement|jQuery|Widget} el
+     * @param {Element | jQuery | Widget} el
      * @param {boolean} shouldBeVisible
      * @param {string} [msg]
      */
@@ -191,7 +191,7 @@ export function setupQUnit() {
         if (el) {
             if (el._widgetRenderAndInsert) {
                 el = el.el; // legacy widget
-            } else if (!(el instanceof HTMLElement)) {
+            } else if (!(el instanceof Element)) {
                 el = el[0];
             }
         }
@@ -559,8 +559,8 @@ export function setupQUnit() {
         if (originalError instanceof Error) {
             originalError.errorEvent = ev;
             await completeUncaughtError(uncaughtError, originalError);
+            originalError.stacktrace = uncaughtError.traceback;
         }
-        originalError.stacktrace = uncaughtError.traceback;
         onError(originalError);
     });
 
@@ -577,8 +577,8 @@ export function setupQUnit() {
         if (originalError instanceof Error) {
             originalError.errorEvent = ev;
             await completeUncaughtError(uncaughtError, originalError);
+            originalError.stack = uncaughtError.traceback;
         }
-        originalError.stack = uncaughtError.traceback;
         onUnhandledRejection(originalError);
     });
 }

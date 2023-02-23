@@ -18,16 +18,8 @@ class SaleOrderLine(models.Model):
             else:
                 product_cost = line.expense_id.untaxed_amount
 
-            from_currency = line.expense_id.currency_id
-            to_currency = line.currency_id or line.order_id.currency_id
+            line.purchase_price = line._convert_to_sol_currency(
+                product_cost,
+                line.expense_id.currency_id)
 
-            if to_currency and product_cost and from_currency != to_currency:
-                line.purchase_price = from_currency._convert(
-                    from_amount=product_cost,
-                    to_currency=to_currency,
-                    company=line.company_id or self.env.company,
-                    date=line.order_id.date_order or date_today,
-                    round=False)
-            else:
-                line.purchase_price = product_cost
         return super(SaleOrderLine, self - expense_lines)._compute_purchase_price()

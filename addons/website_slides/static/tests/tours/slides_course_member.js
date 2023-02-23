@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
 /**
  * Global use case:
@@ -11,10 +11,10 @@ import tour from 'web_tour.tour';
  * they use fullscreen player to complete the course;
  * they rate the course;
  */
-tour.register('course_member', {
+registry.category("web_tour.tours").add('course_member', {
     url: '/slides',
-    test: true
-}, [
+    test: true,
+    steps: [
 // eLearning: go on free course and join it
 {
     trigger: 'a:contains("Basics of Gardening - Test")'
@@ -142,4 +142,4 @@ tour.register('course_member', {
     trigger: '.o_portal_chatter_message:contains("This is a great course. Top !")',
     run: function () {}, // check review is correctly added
 }
-]);
+]});

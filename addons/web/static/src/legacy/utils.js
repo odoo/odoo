@@ -11,7 +11,7 @@ import {
 import { ErrorDialog } from "../core/errors/error_dialogs";
 import { useService } from "@web/core/utils/hooks";
 
-const { useComponent } = owl;
+import { useComponent } from "@odoo/owl";
 
 export const wowlServicesSymbol = Symbol("wowlServices");
 
@@ -156,8 +156,9 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
             // Add user context in kwargs if there are kwargs
             if (params && params.kwargs) {
                 params.kwargs.context = Object.assign(
-                    params.kwargs.context || {},
-                    legacyEnv.session.user_context
+                    {},
+                    legacyEnv.session.user_context,
+                    params.kwargs.context,
                 );
             }
             const jsonrpc = wowlEnv.services.rpc(route, params, {

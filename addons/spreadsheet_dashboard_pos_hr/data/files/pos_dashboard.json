@@ -66,7 +66,7 @@
                 },
                 "A20": {
                     "style": 2,
-                    "content": "Order",
+                    "content": "=_t(\"Order\")",
                     "border": 2
                 },
                 "A21": {
@@ -116,7 +116,7 @@
                 },
                 "A33": {
                     "style": 2,
-                    "content": "Session",
+                    "content": "=_t(\"Session\")",
                     "border": 2
                 },
                 "A34": {
@@ -166,7 +166,7 @@
                 },
                 "A46": {
                     "style": 2,
-                    "content": "Responsible",
+                    "content": "=_t(\"Responsible\")",
                     "border": 2
                 },
                 "A47": {
@@ -211,7 +211,7 @@
                 },
                 "B20": {
                     "style": 2,
-                    "content": "Sessions",
+                    "content": "=_t(\"Sessions\")",
                     "border": 2
                 },
                 "B21": {
@@ -255,7 +255,7 @@
                 },
                 "B33": {
                     "style": 9,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "B34": {
@@ -299,7 +299,7 @@
                 },
                 "B46": {
                     "style": 9,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "B47": {
@@ -339,7 +339,7 @@
                 },
                 "C20": {
                     "style": 2,
-                    "content": "Point of Sale",
+                    "content": "=_t(\"Point of Sale\")",
                     "border": 2
                 },
                 "C21": {
@@ -384,7 +384,7 @@
                 },
                 "C33": {
                     "style": 9,
-                    "content": "Revenue",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "C34": {
@@ -438,7 +438,7 @@
                 },
                 "C46": {
                     "style": 9,
-                    "content": "Revenue",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "C47": {
@@ -488,7 +488,7 @@
                 },
                 "D20": {
                     "style": 10,
-                    "content": "Date",
+                    "content": "=_t(\"Date\")",
                     "border": 2
                 },
                 "D21": {
@@ -543,7 +543,7 @@
                 },
                 "E20": {
                     "style": 2,
-                    "content": "Customer",
+                    "content": "=_t(\"Customer\")",
                     "border": 2
                 },
                 "E21": {
@@ -588,7 +588,7 @@
                 },
                 "E33": {
                     "style": 2,
-                    "content": "Point of Sale",
+                    "content": "=_t(\"Point of Sale\")",
                     "border": 2
                 },
                 "E34": {
@@ -638,7 +638,7 @@
                 },
                 "E46": {
                     "style": 2,
-                    "content": "Product",
+                    "content": "=_t(\"Product\")",
                     "border": 2
                 },
                 "E47": {
@@ -683,7 +683,7 @@
                 },
                 "F20": {
                     "style": 2,
-                    "content": "Employee",
+                    "content": "=_t(\"Employee\")",
                     "border": 2
                 },
                 "F21": {
@@ -727,7 +727,7 @@
                 },
                 "F33": {
                     "style": 9,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "F34": {
@@ -771,7 +771,7 @@
                 },
                 "F46": {
                     "style": 9,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "F47": {
@@ -811,7 +811,7 @@
                 },
                 "G20": {
                     "style": 9,
-                    "content": "Total",
+                    "content": "=_t(\"Total\")",
                     "border": 2
                 },
                 "G21": {
@@ -855,7 +855,7 @@
                 },
                 "G33": {
                     "style": 9,
-                    "content": "Revenue",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "G34": {
@@ -909,7 +909,7 @@
                 },
                 "G46": {
                     "style": 9,
-                    "content": "Revenue",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "G47": {
@@ -1083,7 +1083,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "e012bf45-55dc-4c46-b069-bc090a467d73",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -1100,7 +1099,7 @@
                                 "group_by_no_leaf": 1,
                                 "group_by": []
                             },
-                            "domain": [],
+                            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
                             "groupBy": [
                                 "date:month"
                             ],
@@ -1125,23 +1124,23 @@
             "cells": {
                 "A1": {
                     "style": 13,
-                    "content": "KPI"
+                    "content": "=_t(\"KPI\")"
                 },
                 "A2": {
                     "style": 7,
-                    "content": "Orders"
+                    "content": "=_t(\"Orders\")"
                 },
                 "A3": {
                     "style": 7,
-                    "content": "Revenue"
+                    "content": "=_t(\"Revenue\")"
                 },
                 "A4": {
                     "style": 7,
-                    "content": "Average order"
+                    "content": "=_t(\"Average order\")"
                 },
                 "B1": {
                     "style": 13,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "B2": {
                     "style": 7,
@@ -1157,7 +1156,7 @@
                 },
                 "C1": {
                     "style": 13,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "C2": {
                     "style": 7,
@@ -1173,7 +1172,7 @@
                 },
                 "D1": {
                     "style": 13,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "D2": {
                     "style": 7,
@@ -1189,7 +1188,7 @@
                 },
                 "E1": {
                     "style": 13,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "E2": {
                     "style": 7,
@@ -1281,9 +1280,38 @@
     },
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
-        "e012bf45-55dc-4c46-b069-bc090a467d73": "point_of_sale.menu_point_root"
+        "e012bf45-55dc-4c46-b069-bc090a467d73": "point_of_sale.menu_point_root",
+        "cfee1ef1-ac54-4e9f-bdde-0162652de2cf": "point_of_sale.menu_point_ofsale",
+        "d141cc35-0b60-4e91-b736-5c1453fea925": "point_of_sale.menu_report_pos_order_all",
+        "615fb94e-8098-456e-9f71-7799b82f04c4": "point_of_sale.menu_report_pos_order_all"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {
+        "1": {
+            "columns": [
+                "name",
+                "session_id",
+                "date_order",
+                "pos_reference",
+                "partner_id",
+                "employee_id",
+                "amount_total",
+                "state"
+            ],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
+            "model": "pos.order",
+            "context": {},
+            "orderBy": [
+                {
+                    "name": "amount_total",
+                    "desc": true
+                }
+            ],
+            "id": "1",
+            "name": "Orders by Total"
+        }
+    },
+    "listNextId": 2,
     "pivots": {
         "1": {
             "colGroupBys": [],
@@ -1291,7 +1319,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "1",
             "measures": [
                 {
@@ -1321,7 +1349,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "2",
             "measures": [
                 {
@@ -1352,6 +1380,7 @@
                 "group_by": []
             },
             "domain": [
+                ["state", "in", ["paid", "done", "invoiced"]],
                 [
                     "user_id",
                     "!=",
@@ -1388,6 +1417,7 @@
                 "group_by": []
             },
             "domain": [
+                ["state", "in", ["paid", "done", "invoiced"]],
                 [
                     "product_id",
                     "!=",
@@ -1423,7 +1453,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "5",
             "measures": [
                 {
@@ -1444,7 +1474,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "6",
             "measures": [
                 {
@@ -1461,38 +1491,12 @@
         }
     },
     "pivotNextId": 7,
-    "lists": {
-        "1": {
-            "columns": [
-                "name",
-                "session_id",
-                "date_order",
-                "pos_reference",
-                "partner_id",
-                "employee_id",
-                "amount_total",
-                "state"
-            ],
-            "domain": [],
-            "model": "pos.order",
-            "context": {},
-            "orderBy": [
-                {
-                    "name": "amount_total",
-                    "asc": true
-                }
-            ],
-            "id": "1",
-            "name": "Orders by Total"
-        }
-    },
-    "listNextId": 2,
     "globalFilters": [
         {
             "id": "ff0e1a26-3d4c-48b6-85a6-2777b522bb52",
             "type": "date",
             "label": "Period",
-            "defaultValue": "last_month",
+            "defaultValue": "last_three_months",
             "rangeType": "relative",
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
@@ -1721,10 +1725,15 @@
                     "type": "many2one"
                 }
             },
-            "listFields": {},
+            "listFields": {
+                "1": {
+                    "field": "lines.product_id",
+                    "type": "many2one"
+                }
+            },
             "graphFields": {
                 "e012bf45-55dc-4c46-b069-bc090a467d73": {
-                    "field": "product_id",
+                    "field": "product_tmpl_id",
                     "type": "many2one"
                 }
             }

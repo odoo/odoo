@@ -5,9 +5,7 @@
 import { WebsocketWorker } from "./websocket_worker";
 
 (function () {
-    const websocketWorker = new WebsocketWorker(
-        `${self.location.protocol === 'https:' ? 'wss' : 'ws'}://${self.location.host}/websocket`
-    );
+    const websocketWorker = new WebsocketWorker();
 
     if (self.name.includes('shared')) {
         // The script is running in a shared worker: let's register every

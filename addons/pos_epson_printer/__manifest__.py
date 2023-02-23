@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'pos_epson_printer',
+    'name': 'POS Epson Printer',
     'version': '1.0',
     'category': 'Sales/Point of Sale',
     'sequence': 6,

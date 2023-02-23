@@ -28,7 +28,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Click on 'Link' to open Link Dialog",
-        trigger: '.o_edit_menu_popover a.js_edit_menu',
+        trigger: 'iframe .o_edit_menu_popover a.js_edit_menu',
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
@@ -52,6 +52,19 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     // Edit a menu item
     wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}, true),
     toggleMegaMenu({extra_trigger: 'iframe #top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")'}),
+    {
+        content: "Select the last menu link of the first column",
+        trigger: 'iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(6)', // 6th is the last one
+    },
+    {
+        content: "Hit the delete button to remove the menu link",
+        trigger: 'iframe .oe_overlay .oe_snippet_remove',
+    },
+    {
+        content: "Check that the last menu link was deleted",
+        trigger: 'iframe .s_mega_menu_odoo_menu .row > div:first-child .nav:not(:has(> :nth-child(6)))',
+        run: () => null,
+    },
     {
         content: "Clicks on the first title item.",
         trigger: 'iframe .o_mega_menu h4',

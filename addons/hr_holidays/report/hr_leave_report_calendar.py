@@ -33,6 +33,8 @@ class LeaveReportCalendar(models.Model):
     is_hatched = fields.Boolean('Hatched', readonly=True)
     is_striked = fields.Boolean('Striked', readonly=True)
 
+    is_absent = fields.Boolean(related='employee_id.is_absent')
+
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report_calendar')
         self._cr.execute("""CREATE OR REPLACE VIEW hr_leave_report_calendar AS

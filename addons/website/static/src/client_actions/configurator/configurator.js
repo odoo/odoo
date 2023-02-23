@@ -4,7 +4,7 @@ import concurrency from 'web.concurrency';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
 import {ColorpickerWidget} from 'web.Colorpicker';
-import {_t, _lt} from 'web.core';
+import {_lt} from 'web.core';
 import {svgToPNG} from 'website.utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -89,6 +89,7 @@ class DescriptionScreen extends Component {
         this.state = useStore();
         this.labelToId = {};
         this.autocompleteHasResults = true;
+        this.orm = useService('orm');
 
         onMounted(() => this.onMounted());
     }
@@ -101,10 +102,8 @@ class DescriptionScreen extends Component {
             minLength: 1,
             source: this._autocompleteSearch.bind(this),
             select: this._selectIndustry.bind(this),
-            open: this._customizeNoResultMenuStyle.bind(this),
-            focus: this._disableKeyboardNav.bind(this),
             classes: {
-                'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast',
+                'ui-autocomplete': 'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown',
             },
         });
         if (this.state.selectedIndustry) {
@@ -112,17 +111,6 @@ class DescriptionScreen extends Component {
             this.industrySelection.el.parentNode.dataset.value = this.state.selectedIndustry.label;
             this.labelToId[this.state.selectedIndustry.label] = this.state.selectedIndustry.id;
         }
-    }
-
-    /**
-     * Clear the input and its parent label and set the selected industry to undefined.
-     *
-     * @private
-     */
-    _clearIndustrySelection() {
-        this.industrySelection.el.value = '';
-        this.industrySelection.el.parentNode.dataset.value = '';
-        this.state.selectIndustry();
     }
 
     /**
@@ -134,35 +122,15 @@ class DescriptionScreen extends Component {
      */
     _setSelectedIndustry(label) {
         this.industrySelection.el.parentNode.dataset.value = label;
-        const id = this.labelToId[label];
-        this.state.selectIndustry(label, id);
+        if (!this.autocompleteHasResults) {
+            // If no industry has been found, the first one is chosen by
+            // default to continue the website configuration.
+            this.state.selectIndustry(label, 1);
+        } else {
+            const id = this.labelToId[label];
+            this.state.selectIndustry(label, id);
+        }
         this.checkDescriptionCompletion();
-    }
-
-    /**
-     * Called each time the suggestion menu is opened or updated. If there are no
-     * results to display the style of the "No result found" message is customized.
-     *
-     * @private
-     */
-    _customizeNoResultMenuStyle() {
-        if (!this.autocompleteHasResults) {
-            const noResultLinkEl = this.industrySelection.el.parentElement.getElementsByTagName('a')[0];
-            noResultLinkEl.classList.add('o_no_result');
-        }
-    }
-
-    /**
-     * Disables keyboard navigation when there are no results to avoid selecting the
-     * "No result found" message by pressing the down arrow key.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _disableKeyboardNav(ev) {
-        if (!this.autocompleteHasResults) {
-            ev.preventDefault();
-        }
     }
 
     /**
@@ -172,7 +140,7 @@ class DescriptionScreen extends Component {
      * The order received from IAP is kept (expected to be on descending hit
      * count) unless there are 7 or less matches in which case the results are
      * sorted alphabetically.
-     * The result size is limited to 15.
+     * The result size is limited to 30.
      *
      * @param {Object} request object with a single 'term' property which is the
      *      input current value
@@ -181,7 +149,7 @@ class DescriptionScreen extends Component {
      */
     _autocompleteSearch(request, response) {
         const terms = request.term.toLowerCase().split(/[|,\n]+/);
-        const limit = 15;
+        const limit = 30;
         const sortLimit = 7;
         // `this.state.industries` is already sorted by hit count (from IAP).
         // That order should be kept after manipulating the recordset.
@@ -196,7 +164,7 @@ class DescriptionScreen extends Component {
         });
         if (matches.length > limit) {
             // Keep matches with the least number of words so that e.g.
-            // "restaurant" remains available even if there are 15 specific
+            // "restaurant" remains available even if there are 30 specific
             // sub-types that have a higher hit count.
             matches = matches.sort((x, y) => x.wordCount - y.wordCount)
                              .slice(0, limit)
@@ -215,14 +183,13 @@ class DescriptionScreen extends Component {
                 this.labelToId[r.label] = r.id;
             });
         } else {
-            labels = [_t("No result found, broaden your search.")];
+            labels = [request.term];
         }
         response(labels);
     }
 
     /**
-     * Called when a menu option is selected. Update the selected industry or
-     * clear the input if the option is the "No result found" message.
+     * Called when a menu option is selected. Update the selected industry.
      *
      * @private
      * @param {Event} ev
@@ -230,27 +197,19 @@ class DescriptionScreen extends Component {
      *      the selected option.
      */
     _selectIndustry(ev, ui) {
-        if (this.autocompleteHasResults) {
-            this._setSelectedIndustry(ui.item.label);
-        } else {
-            this._clearIndustrySelection();
-            ev.preventDefault();
-        }
+        this._setSelectedIndustry(ui.item.label);
     }
 
     /**
-     * Called on industrySelection input blur. Updates the selected industry or
-     * clears the input if its current value is not a valid industry.
+     * Called on industrySelection input blur. Updates the selected industry.
      *
      * @private
      * @param {Event} ev
      */
     _blurIndustrySelection(ev) {
-        if (this.labelToId[ev.target.value] !== undefined) {
-            this._setSelectedIndustry(ev.target.value);
-        } else {
-            this._clearIndustrySelection();
-        }
+        // Check if the input is known by the server.
+        this.autocompleteHasResults = !!this.labelToId[ev.target.value];
+        this._setSelectedIndustry(ev.target.value);
     }
 
     selectWebsiteType(id) {
@@ -269,6 +228,13 @@ class DescriptionScreen extends Component {
     checkDescriptionCompletion() {
         const {selectedType, selectedPurpose, selectedIndustry} = this.state;
         if (selectedType && selectedPurpose && selectedIndustry) {
+            // If the industry name is not known by the server, send it to the
+            // IAP server.
+            if (!this.autocompleteHasResults) {
+                this.orm.call('website', 'configurator_missing_industry', [], {
+                    'unknown_industry': selectedIndustry.label,
+                });
+            }
             this.props.navigate(ROUTES.paletteSelectionScreen);
         }
     }
@@ -411,7 +377,7 @@ class ApplyConfiguratorScreen extends Component {
     }
 }
 
-class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
+export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
     setup() {
         super.setup();
 
@@ -451,13 +417,35 @@ class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     setup() {
         super.setup();
 
+        this.uiService = useService('ui');
         this.orm = useService('orm');
         this.state = useStore();
         this.themeSVGPreviews = [useRef('ThemePreview1'), useRef('ThemePreview2'), useRef('ThemePreview3')];
+        const proms = [];
 
-        onMounted(() => {
+        onMounted(async () => {
+            // Add a loading effect during the loading of the images inside the
+            // svgs.
+            this.uiService.block();
             this.state.themes.forEach((theme, idx) => {
-                $(this.themeSVGPreviews[idx].el).append(theme.svg);
+                // Transform the text svg into a svg element.
+                const svgEl = new DOMParser().parseFromString(theme.svg, 'image/svg+xml').documentElement;
+                for (const imgEl of svgEl.querySelectorAll('image')) {
+                    proms.push(new Promise((resolve, reject) => {
+                        imgEl.addEventListener('load', () => {
+                            resolve(imgEl);
+                        }, {once: true});
+                        imgEl.addEventListener('error', () => {
+                            reject(imgEl);
+                        }, {once: true});
+                    }));
+                }
+                $(this.themeSVGPreviews[idx].el).append(svgEl);
+            });
+            // When all the images inside the svgs are loaded then remove the
+            // loading effect.
+            Promise.allSettled(proms).then(() => {
+                this.uiService.unblock();
             });
         });
     }
@@ -601,7 +589,7 @@ function useStore() {
     return useState(env.store);
 }
 
-class Configurator extends Component {
+export class Configurator extends Component {
     setup() {
         this.orm = useService('orm');
         this.action = useService('action');

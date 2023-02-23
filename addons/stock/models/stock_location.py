@@ -242,6 +242,13 @@ class Location(models.Model):
         self.invalidate_model(['warehouse_id'])
         return res
 
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        default = dict(default or {})
+        if 'name' not in default:
+            default['name'] = _("%s (copy)") % self.name
+        return super().copy(default=default)
+
     def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None, additional_qty=None):
         """Returns the location where the product has to be put, if any compliant
         putaway strategy is found. Otherwise returns self.
@@ -249,6 +256,8 @@ class Location(models.Model):
         no package is specified.
         """
         self = self._check_access_putaway()
+        products = self.env.context.get('products', self.env['product.product'])
+        products |= product
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -256,14 +265,22 @@ class Location(models.Model):
         elif packaging:
             package_type = packaging.package_type_id
 
-        putaway_rules = self.env['stock.putaway.rule']
-        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
-        categ = product.categ_id
-        while categ:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
-            categ = categ.sudo().parent_id
-        if package_type:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: not x.product_id and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+        categ = products.categ_id if len(products.categ_id) == 1 else self.env['product.category']
+        categs = categ
+        while categ.parent_id:
+            categ = categ.parent_id
+            categs |= categ
+
+        putaway_rules = self.putaway_rule_ids.filtered(lambda rule:
+                                                       (not rule.product_id or rule.product_id in products) and
+                                                       (not rule.category_id or rule.category_id in categs) and
+                                                       (not rule.package_type_ids or package_type in rule.package_type_ids))
+
+        putaway_rules = putaway_rules.sorted(lambda rule: (rule.package_type_ids,
+                                                           rule.product_id,
+                                                           rule.category_id == categs[:1],  # same categ, not a parent
+                                                           rule.category_id),
+                                             reverse=True)
 
         putaway_location = None
         locations = self.child_internal_location_ids

@@ -1,8 +1,37 @@
 .o_dashboards {
-    background-color: #ececec;
+    background-color: $o-view-background-color;
+
+    &:has(iframe[src*='plausible']) {
+        background-color: #f9fafb; // Copied from iframe.
+    }
 
     .o_website_dashboard {
-        background-color: #ececec;
+        background-color: $o-view-background-color;
+
+        &:has(iframe[src*='plausible']) {
+            background-color: #f9fafb; // Copied from iframe.
+
+            iframe {
+                // TODO: Find another way to set the height, not robust enough,
+                // especially if plausible change those values later.
+                height: 2350px; // Copied from iframe.
+                top: 2px; // Do not cover eCommerce dashboard border.
+
+                @include media-breakpoint-only(md) {
+                    height: 2500px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(lg) {
+                    height: 1600px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xl) {
+                    height: 1570px; // Copied from iframe.
+                }
+                @include media-breakpoint-only(xxl) {
+                    height: 1650px; // Copied from iframe.
+                }
+            }
+        }
+
         div.o_box {
             @include clearfix;
             color: $o-main-color-muted;
@@ -127,7 +156,7 @@
                 margin-top: 16px;
                 height: 300px;
                 background-size: 100% !important;
-                background: url("/website/static/src/img/website_dashboard_visit_demo.png") no-repeat;
+                background: var(--Dashboard__demoBackground, url("/website/static/src/img/website_dashboard_visit_demo.png")) no-repeat;
                 position: relative;
 
                 .o_buttons {
@@ -135,7 +164,7 @@
                 }
 
                 .o_layer {
-                    background-color: rgba(255,255,255,.3);
+                    background-color: rgba($o-view-background-color,.3);
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -168,7 +197,6 @@
 
 .o_kanban_renderer.o_theme_kanban {
     $o-theme-kanban-gray: #fcfcfc;
-    background-color: $o-theme-kanban-gray;
 
     /// Un-grouped Layout (default)
     &.o_kanban_ungrouped {
@@ -202,7 +230,6 @@
 
         .o_theme_preview_top {
             position: relative;
-            border: 1px solid darken($o-theme-kanban-gray, 20%);
             border-radius: 2px;
             transform-origin: center bottom;
             transition: all .1s ease 0s;

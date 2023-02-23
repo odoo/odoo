@@ -165,8 +165,10 @@ class Digest(models.Model):
                 'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consume_tips),
                 'preferences': self._compute_preferences(user.company_id, user),
             },
-            post_process=True,
-            options={'preserve_comments': True}
+            options={
+                'preserve_comments': True,
+                'post_process': True,
+            },
         )[self.id]
         full_mail = self.env['mail.render.mixin']._render_encapsulate(
             'digest.digest_mail_layout',
@@ -288,7 +290,15 @@ class Digest(models.Model):
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
         ], limit=tips_count)
         tip_descriptions = [
-            tools.html_sanitize(self.env['mail.render.mixin'].sudo()._render_template(tip.tip_description, 'digest.tip', tip.ids, post_process=True, engine="qweb")[tip.id])
+            tools.html_sanitize(
+                self.env['mail.render.mixin'].sudo()._render_template(
+                    tip.tip_description,
+                    'digest.tip',
+                    tip.ids,
+                    engine="qweb",
+                    options={'post_process': True},
+                )[tip.id]
+            )
             for tip in tips
         ]
         if consumed:

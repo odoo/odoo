@@ -173,8 +173,17 @@ class AssetsBundle(object):
                 ])
                 response.append(("link", attr, None))
             if self.css_errors:
-                msg = '\n'.join(self.css_errors)
-                response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_node())
+                msg = '\n'.join(self.css_errors).replace('"', '\\"').replace('\n', '\\n')
+                js_error = """
+                    window.__odooScssCompilationError = "%s";
+                    console.error("SCSS compilation failure:", window.__odooScssCompilationError);
+                    window.addEventListener("DOMContentLoaded", () => {
+                        if (!odoo || !odoo.define) {
+                            alert(window.__odooScssCompilationError);
+                        }
+                    });
+                """ % msg
+                response.append(JavascriptAsset(self, inline=js_error).to_node())
                 response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/dist/css/bootstrap.css").to_node())
 
         if js and self.javascripts:
@@ -248,7 +257,9 @@ class AssetsBundle(object):
         Such a view would be website.layout when main_object is an ir.ui.view.
         """
         to_delete = set(attach.store_fname for attach in attachments if attach.store_fname)
-        self.env.cr.execute(f"DELETE FROM {attachments._table} WHERE id IN %s", [tuple(attachments.ids)])
+        self.env.cr.execute(f"""DELETE FROM {attachments._table} WHERE id IN (
+            SELECT id FROM {attachments._table} WHERE id in %s FOR NO KEY UPDATE SKIP LOCKED
+        )""", [tuple(attachments.ids)])
         for file_path in to_delete:
             attachments._file_delete(file_path)
 
@@ -429,7 +440,7 @@ class AssetsBundle(object):
         )
         content_bundle_list = []
         content_line_count = 0
-        line_header = 6  # number of lines added by with_header()
+        line_header = 5  # number of lines added by with_header()
         for asset in self.javascripts:
             if asset.is_transpiled:
                 # '+ 3' corresponds to the 3 lines added at the beginning of the file during transpilation.
@@ -651,111 +662,6 @@ class AssetsBundle(object):
 
         return css_attachment
 
-    def dialog_message(self, message):
-        """
-        Returns a JS script which shows a warning to the user on page load.
-        TODO: should be refactored to be a base js file whose code is extended
-              by related apps (web/website).
-        """
-        return """
-            (function (message) {
-                'use strict';
-
-                if (window.__assetsBundleErrorSeen) {
-                    return;
-                }
-                window.__assetsBundleErrorSeen = true;
-
-                if (document.readyState !== 'loading') {
-                    onDOMContentLoaded();
-                } else {
-                    window.addEventListener('DOMContentLoaded', () => onDOMContentLoaded());
-                }
-
-                async function onDOMContentLoaded() {
-                    var odoo = window.top.odoo;
-                    if (!odoo || !odoo.define) {
-                        useAlert();
-                        return;
-                    }
-
-                    // Wait for potential JS loading
-                    await new Promise(resolve => {
-                        const noLazyTimeout = setTimeout(() => resolve(), 10); // 10 since need to wait for promise resolutions of odoo.define
-                        odoo.define('AssetsBundle.PotentialLazyLoading', function (require) {
-                            'use strict';
-
-                            const lazyloader = require('web.public.lazyloader');
-
-                            clearTimeout(noLazyTimeout);
-                            lazyloader.allScriptsLoaded.then(() => resolve());
-                        });
-                    });
-
-                    var alertTimeout = setTimeout(useAlert, 10); // 10 since need to wait for promise resolutions of odoo.define
-                    odoo.define('AssetsBundle.ErrorMessage', function (require) {
-                        'use strict';
-
-                        require('web.dom_ready');
-                        var core = require('web.core');
-                        var Dialog = require('web.Dialog');
-
-                        var _t = core._t;
-
-                        clearTimeout(alertTimeout);
-                        new Dialog(null, {
-                            title: _t("Style error"),
-                            $content: $('<div/>')
-                                .append($('<p/>', {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
-                                .append($('<pre/>', {html: message})),
-                        }).open();
-                    });
-                }
-
-                function useAlert() {
-                    window.alert(message);
-                }
-            })("%s");
-        """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
-
-    def _get_assets_domain_for_already_processed_css(self, assets):
-        """ Method to compute the attachments' domain to search the already process assets (css).
-        This method was created to be overridden.
-        """
-        return [('url', 'in', list(assets.keys()))]
-
-    def is_css_preprocessed(self):
-        preprocessed = True
-        old_attachments = self.env['ir.attachment'].sudo()
-        asset_types = [SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset]
-        if self.user_direction == 'rtl':
-            asset_types.append(StylesheetAsset)
-
-        for atype in asset_types:
-            outdated = False
-            assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
-            if assets:
-                assets_domain = self._get_assets_domain_for_already_processed_css(assets)
-                attachments = self.env['ir.attachment'].sudo().search(assets_domain)
-                old_attachments += attachments
-                for attachment in attachments:
-                    asset = assets[attachment.url]
-                    if asset.last_modified > attachment['__last_update']:
-                        outdated = True
-                        break
-                    if asset._content is None:
-                        asset._content = (attachment.raw or b'').decode('utf8')
-                        if not asset._content and attachment.file_size > 0:
-                            asset._content = None # file missing, force recompile
-
-                if any(asset._content is None for asset in assets.values()):
-                    outdated = True
-
-                if outdated:
-                    preprocessed = False
-
-        return preprocessed, old_attachments
-
     def preprocess_css(self, debug=False, old_attachments=None):
         """
             Checks if the bundle contains any sass/less content, then compiles it to css.
@@ -916,8 +822,7 @@ class WebAsset(object):
 
     @func.lazy_property
     def name(self):
-        name = '<inline asset>' if self.inline else self.url
-        return "%s defined in bundle '%s'" % (name, self.bundle.name)
+        return '<inline asset>' if self.inline else self.url
 
     @property
     def html_url(self):
@@ -946,7 +851,7 @@ class WebAsset(object):
             if self._filename:
                 return datetime.fromtimestamp(os.path.getmtime(self._filename))
             elif self._ir_attach:
-                return self._ir_attach['__last_update']
+                return self._ir_attach.write_date
         except Exception:
             pass
         return datetime(1970, 1, 1)
@@ -1030,13 +935,11 @@ class JavascriptAsset(WebAsset):
         # format the header like
         #   /**************************
         #   *  Filepath: <asset_url>  *
-        #   *  Bundle: <name>         *
         #   *  Lines: 42              *
         #   **************************/
         line_count = content.count('\n')
         lines = [
             f"Filepath: {self.url}",
-            f"Bundle: {self.bundle.name}",
             f"Lines: {line_count}",
         ]
         length = max(map(len, lines))
@@ -1086,7 +989,6 @@ class XMLAsset(WebAsset):
         line_count = content.count('\n')
         lines = [
             f"Filepath: {self.url}",
-            f"Bundle: {self.bundle.name}",
             f"Lines: {line_count}",
         ]
         length = max(map(len, lines))

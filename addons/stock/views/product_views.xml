@@ -54,8 +54,9 @@
             <field name="inherit_id" ref="product.product_template_tree_view"/>
             <field name="arch" type="xml">
                 <field name="uom_id" position="before">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="qty_available &lt; 0"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1"/>
+                    <field name="show_on_hand_qty_status_button" invisible="1"/>
+                    <field name="qty_available" attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}" optional="show" decoration-danger="qty_available &lt; 0"/>
+                    <field name="virtual_available" attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1"/>
                 </field>
                 <field name="default_code" position="after">
                     <field name="responsible_id" widget="many2one_avatar_user"/>
@@ -134,13 +135,13 @@
                 <page name="inventory" position="inside">
                     <group>
                         <group string="Description for Receipts">
-                            <field name="description_pickingin" nolabel="1" placeholder="This note is added to receipt orders (e.g. where to store the product in the warehouse)."/>
+                            <field name="description_pickingin" colspan="2" nolabel="1" placeholder="This note is added to receipt orders (e.g. where to store the product in the warehouse)."/>
                         </group>
                         <group string="Description for Delivery Orders">
-                            <field name="description_pickingout" nolabel="1" placeholder="This note is added to delivery orders."/>
+                            <field name="description_pickingout" colspan="2" nolabel="1" placeholder="This note is added to delivery orders."/>
                         </group>
                         <group string="Description for Internal Transfers" groups="stock.group_stock_multi_locations">
-                            <field name="description_picking" placeholder="This note is added to internal transfer orders (e.g. where to pick the product in the warehouse)." nolabel="1"/>
+                            <field name="description_picking" colspan="2" placeholder="This note is added to internal transfer orders (e.g. where to pick the product in the warehouse)." nolabel="1"/>
                         </group>
                     </group>
                 </page>
@@ -157,9 +158,10 @@
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="inside">
                     <field name="type"/>
+                    <field name="show_on_hand_qty_status_button"/>
                 </xpath>
                 <xpath expr="//div[@name='product_lst_price']" position="after">
-                    <div t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
+                    <div t-if="record.show_on_hand_qty_status_button.raw_value">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
                 </xpath>
             </field>
         </record>
@@ -211,7 +213,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
             <field name="arch" type="xml">
-                <header position="inside">
+                <xpath expr="//header/button" position="before">
                     <button string="Update Quantity" type="object"
                         groups="stock.group_stock_manager"
                         name="action_update_quantity_on_hand"
@@ -221,7 +223,7 @@
                         context="{'default_product_id': id}"
                         groups="stock.group_stock_user"
                         attrs="{'invisible': [('type', 'not in', ['consu', 'product'])]}"/>
-                </header>
+                </xpath>
                 <div name="button_box" position="inside">
                     <button string="Putaway Rules" type="object"
                         name="action_view_related_putaway_rules"
@@ -239,7 +241,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <header position="inside">
+                    <xpath expr="//header/button" position="before">
                         <button string="Update Quantity" type="object"
                             groups="stock.group_stock_manager"
                             name="action_update_quantity_on_hand"
@@ -249,14 +251,14 @@
                             context="{'default_product_id': id}"
                             groups="stock.group_stock_user"
                             attrs="{'invisible': [('type', 'not in', ['consu', 'product'])]}"/>
-                    </header>
+                    </xpath>
                     <div name="button_box" position="inside">
                         <t groups="stock.group_stock_user">
                             <field name="tracking" invisible="1"/>
                             <field name="show_on_hand_qty_status_button" invisible="1"/>
                             <field name="show_forecasted_qty_status_button" invisible="1"/>
                             <button class="oe_stat_button"
-                                name="action_open_quants"
+                                name="action_update_quantity_on_hand"
                                 icon="fa-cubes"
                                 type="object"
                                 attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}">
@@ -271,7 +273,7 @@
                             <button type="object"
                                 name="action_product_forecast_report"
                                 attrs="{'invisible':[('show_forecasted_qty_status_button', '=', False)]}"
-                                context="{'default_product_id': id}"
+                                context="{'default_product_id': id, 'active_model': 'product.template'}"
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value">
@@ -347,7 +349,7 @@
             <field name="priority" eval="15"/>
             <field name="arch" type="xml">
                 <data>
-                    <header position="inside" >
+                    <xpath expr="//header/button" position="before">
                         <button string="Update Quantity" type="object"
                             groups="stock.group_stock_manager"
                             name="action_update_quantity_on_hand"
@@ -357,14 +359,14 @@
                             context="{'default_product_tmpl_id': id}"
                             groups="stock.group_stock_user"
                             attrs="{'invisible': [('type', 'not in', ['consu', 'product'])]}"/>
-                    </header>
+                    </xpath>
                     <div name="button_box" position="inside">
                         <t groups="stock.group_stock_user">
                             <field name="tracking" invisible="1"/>
                             <field name="show_on_hand_qty_status_button" invisible="1"/>
                             <field name="show_forecasted_qty_status_button" invisible="1"/>
                             <button type="object"
-                                name="action_open_quants"
+                                name="action_update_quantity_on_hand"
                                 attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}"
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">

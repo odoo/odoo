@@ -9,7 +9,7 @@ class IrWebsocket(models.AbstractModel):
     def _get_im_status(self, data):
         im_status = super()._get_im_status(data)
         if 'mail.guest' in data:
-            im_status['guests'] = self.env['mail.guest'].sudo().with_context(active_test=False).search_read(
+            im_status['Guest'] = self.env['mail.guest'].sudo().with_context(active_test=False).search_read(
                 [('id', 'in', data['mail.guest'])],
                 ['im_status']
             )
@@ -46,4 +46,4 @@ class IrWebsocket(models.AbstractModel):
             guest_sudo = self.env['mail.guest']._get_guest_from_request(req).sudo()
             if not guest_sudo:
                 return
-            guest_sudo.env['bus.presence'].update(inactivity_period, identity_field='guest_id', identity_value=guest_sudo.id)
+            guest_sudo.env['bus.presence'].update_presence(inactivity_period, identity_field='guest_id', identity_value=guest_sudo.id)

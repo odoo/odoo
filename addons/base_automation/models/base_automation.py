@@ -498,7 +498,9 @@ class BaseAutomation(models.Model):
             """ Patch method `name` on `model`, unless it has been patched already. """
             if model not in patched_models[name]:
                 patched_models[name].add(model)
-                model._patch_method(name, method)
+                ModelClass = type(model)
+                method.origin = getattr(ModelClass, name)
+                setattr(ModelClass, name, method)
 
         # retrieve all actions, and patch their corresponding model
         for action_rule in self.with_context({}).search([]):

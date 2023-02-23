@@ -3,7 +3,7 @@ import { makeView } from "../helpers";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { registry } from "@web/core/registry";
-import { click, getFixture, patchWithCleanup } from "../../helpers/utils";
+import { getFixture, patchWithCleanup } from "../../helpers/utils";
 import { createElement } from "@web/core/utils/xml";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 
@@ -38,7 +38,7 @@ QUnit.module("Form Compiler", (hooks) => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div>lol</div>
                 </div>
             </t>`;
@@ -52,9 +52,9 @@ QUnit.module("Form Compiler", (hooks) => {
             const arch = /*xml*/ `<form><field name="test"/><label for="test" string=""/></form>`;
             const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
-                    <Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" />
-                    <FormLabel t-props="{id:'test',fieldName:'test',record:props.record,fieldInfo:props.archInfo.fieldNodes['test'],className:&quot;&quot;}" string="\`\`" />
+                <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
+                    <Field id="'test'" name="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" setDirty="__comp__.props.setFieldAsDirty"/>
+                    <FormLabel id="'test'" fieldName="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" className="&quot;&quot;" string="\`\`" />
                 </div>
             </t>`;
             assert.areEquivalent(compileTemplate(arch), expected);
@@ -65,10 +65,10 @@ QUnit.module("Form Compiler", (hooks) => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
-                        <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
+                        <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" setDirty="__comp__.props.setFieldAsDirty"/>
                     </div>
                 </div>
             </t>`;
@@ -86,23 +86,57 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
         const expected = /*xml*/ `
             <OuterGroup>
-               <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" itemSpan="1">
+               <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
-                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'display_name',fieldName:'display_name',record:props.record,string:props.record.fields.display_name.string,fieldInfo:props.archInfo.fieldNodes['display_name']}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
-                        <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" class="scope &amp;&amp; scope.className" />
+                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'display_name',fieldName:'display_name',record:__comp__.props.record,string:__comp__.props.record.fields.display_name.string,fieldInfo:__comp__.props.archInfo.fieldNodes['display_name']}" Component="__comp__.constructor.components.FormLabel" subType="'item_component'" isVisible="true" itemSpan="2">
+                        <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" setDirty="__comp__.props.setFieldAsDirty" class="scope &amp;&amp; scope.className" />
                      </t>
                   </InnerGroup>
                </t>
-               <t t-set-slot="item_1" type="'item'" sequence="1" t-slot-scope="scope" itemSpan="1">
+               <t t-set-slot="item_1" type="'item'" sequence="1" t-slot-scope="scope" isVisible="true" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
-                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'charfield',fieldName:'charfield',record:props.record,string:props.record.fields.charfield.string,fieldInfo:props.archInfo.fieldNodes['charfield']}" Component="constructor.components.FormLabel" subType="'item_component'" itemSpan="2">
-                        <Field id="'charfield'" name="'charfield'" record="props.record" fieldInfo="props.archInfo.fieldNodes['charfield']" class="scope &amp;&amp; scope.className" />
+                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'charfield',fieldName:'charfield',record:__comp__.props.record,string:__comp__.props.record.fields.charfield.string,fieldInfo:__comp__.props.archInfo.fieldNodes['charfield']}" Component="__comp__.constructor.components.FormLabel" subType="'item_component'" isVisible="true" itemSpan="2">
+                        <Field id="'charfield'" name="'charfield'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['charfield']" setDirty="__comp__.props.setFieldAsDirty" class="scope &amp;&amp; scope.className" />
                      </t>
                   </InnerGroup>
                </t>
             </OuterGroup>`;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("properly compile attributes with nested forms", async (assert) => {
+        const arch = /*xml*/ `
+            <form>
+                <group>
+                    <group>
+                        <form>
+                            <div>
+                                <field name="test"/>
+                            </div>
+                        </form>
+                    </group>
+                </group>
+            </form>`;
+        const expected = /*xml*/ `
+            <t>
+                <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
+                    <OuterGroup>
+                        <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
+                            <InnerGroup class="scope &amp;&amp; scope.className">
+                                <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
+                                    <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isVirtual ? 'o_form_saved' : '' }} {{scope &amp;&amp; scope.className || &quot;&quot; }}" class="o_form_nosheet">
+                                        <div><Field id="'test'" name="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" setDirty="__comp__.props.setFieldAsDirty"/></div>
+                                    </div>
+                                </t>
+                            </InnerGroup>
+                        </t>
+                    </OuterGroup>
+                </div>
+            </t>
+        `;
+
+        assert.areEquivalent(compileTemplate(arch), expected);
     });
 
     QUnit.test("properly compile notebook", async (assert) => {
@@ -115,12 +149,12 @@ QUnit.module("Form Compiler", (hooks) => {
                 </form>`;
 
         const expected = /*xml*/ `
-            <Notebook>
+            <Notebook defaultPage="__comp__.props.record.isNew ? undefined : __comp__.props.activeNotebookPages[0]" onPageUpdate="(page) =&gt; __comp__.props.onNotebookPageChange(0, page)">
                 <t t-set-slot="page_1" title="\`Page1\`" name="\`p1\`" isVisible="true">
-                    <Field id="'charfield'" name="'charfield'" record="props.record" fieldInfo="props.archInfo.fieldNodes['charfield']"/>
+                    <Field id="'charfield'" name="'charfield'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['charfield']" setDirty="__comp__.props.setFieldAsDirty"/>
                 </t>
                 <t t-set-slot="page_2" title="\`Page2\`" name="\`p2\`" isVisible="true">
-                    <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
+                    <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" setDirty="__comp__.props.setFieldAsDirty"/>
                </t>
            </Notebook>`;
 
@@ -134,7 +168,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
+            <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" setDirty="__comp__.props.setFieldAsDirty"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
@@ -149,8 +183,8 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <t>
-            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
-                <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
+            <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons/></div>
                 <div>someDiv</div>
             </div>
             </t>`;
@@ -171,11 +205,11 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <t>
-            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" t-ref="compiled_view_root">
+            <div t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isVirtual ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
-                    <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
+                    <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons/></div>
                     <div>someDiv</div>
-                    <div class="o_form_sheet position-relative">
+                    <div class="o_form_sheet position-relative clearfix">
                         <div>inside sheet</div>
                     </div>
                 </div>
@@ -205,7 +239,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class="visible3" />
-            <div t-if="!evalDomainFromRecord(props.record,[[&quot;display_name&quot;,&quot;=&quot;,&quot;take&quot;]])" />
+            <div t-if="!__comp__.evalDomainFromRecord(__comp__.props.record,[[&quot;display_name&quot;,&quot;=&quot;,&quot;take&quot;]])" />
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
@@ -221,7 +255,7 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class="visible3" />
-            <div t-if="!evalDomainFromRecord(props.record,&quot;[['display_name','=','take']]&quot;)" />
+            <div t-if="!__comp__.evalDomainFromRecord(__comp__.props.record,&quot;[['display_name','=','take']]&quot;)" />
         `;
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
@@ -234,8 +268,8 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
-               <StatusBarButtons readonly="!props.record.isInEdition">
-                  <t t-set-slot="button_0" isVisible="true" displayInReadOnly="false">
+               <StatusBarButtons>
+                  <t t-set-slot="button_0" isVisible="true">
                      <div>someDiv</div>
                   </t>
                </StatusBarButtons>
@@ -252,8 +286,44 @@ QUnit.module("Form Compiler", (hooks) => {
 
         const expected = /*xml*/ `
             <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
-               <StatusBarButtons readonly="!props.record.isInEdition"/>
+               <StatusBarButtons/>
             </div>`;
+
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
+
+    QUnit.test("properly compile settings", (assert) => {
+        const arch = /*xml*/ `
+            <form>
+                <setting
+                         help="this is bar"
+                         documentation="/applications/technical/web/settings/this_is_a_test.html"
+                         company_dependent="1">
+                    <field name="bar"/>
+                    <label>label with content</label>
+                </setting>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <Setting title="\`\`"
+                     help="\`this is bar\`"
+                     companyDependent="true"
+                     documentation="\`/applications/technical/web/settings/this_is_a_test.html\`"
+                     record="__comp__.props.record"
+                     fieldInfo="__comp__.props.archInfo.fieldNodes['bar']"
+                     fieldName="\`bar\`"
+                     fieldId="\`bar\`"
+                     string="\`\`"
+                     addLabel="true">
+                <t t-set-slot="fieldSlot">
+                    <Field id="'bar'"
+                        name="'bar'"
+                        record="__comp__.props.record"
+                        fieldInfo="__comp__.props.archInfo.fieldNodes['bar']"
+                        setDirty="__comp__.props.setFieldAsDirty"/>
+                </t>
+                <label>label with content</label>
+            </Setting>`;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
@@ -298,7 +368,6 @@ QUnit.module("Form Renderer", (hooks) => {
             resId: 1,
         });
 
-        await click(target.querySelector(".o_form_button_edit"));
         assert.containsN(target, ".o_form_editable input", 2);
     });
 
@@ -348,15 +417,19 @@ QUnit.module("Form Renderer", (hooks) => {
     QUnit.test("render field with placeholder", async (assert) => {
         assert.expect(1);
 
-        class CharField extends owl.Component {
-            setup() {
-                assert.strictEqual(this.props.placeholder, "e.g. Contact's Name or //someinfo...");
-            }
-        }
-        CharField.template = owl.xml`<div/>`;
-        CharField.extractProps = ({ attrs }) => ({ placeholder: attrs.placeholder });
-
-        registry.category("fields").add("char", CharField, { force: true });
+        const charField = {
+            component: class CharField extends owl.Component {
+                static template = owl.xml`<div/>`;
+                setup() {
+                    assert.strictEqual(
+                        this.props.placeholder,
+                        "e.g. Contact's Name or //someinfo..."
+                    );
+                }
+            },
+            extractProps: ({ attrs }) => ({ placeholder: attrs.placeholder }),
+        };
+        registry.category("fields").add("char", charField, { force: true });
 
         serverData.views = {
             "partner,1,form": /*xml*/ `
@@ -411,7 +484,7 @@ QUnit.module("Form Renderer", (hooks) => {
 
         const arch = `<myNode modifiers="{&quot;invisible&quot;: [[&quot;field&quot;, &quot;=&quot;, &quot;value&quot;]]}" />`;
 
-        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !evalDomainFromRecord(props.record,[[&quot;field&quot;,&quot;=&quot;,&quot;value&quot;]])" t-ref="compiled_view_root"/></t>`;
+        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !__comp__.evalDomainFromRecord(__comp__.props.record,[[&quot;field&quot;,&quot;=&quot;,&quot;value&quot;]])" t-ref="compiled_view_root"/></t>`;
         assert.areEquivalent(compileTemplate(arch), expected);
     });
 });

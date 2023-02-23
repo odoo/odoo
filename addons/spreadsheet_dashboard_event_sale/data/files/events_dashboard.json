@@ -50,17 +50,17 @@
             "cells": {
                 "A7": {
                     "style": 1,
-                    "content": "[Events Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"gantt\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "content": "[Events Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
                     "border": 1
                 },
                 "A19": {
                     "style": 1,
-                    "content": "[Top Venues](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"address_id\",\"!=\",false]],\"context\":{\"group_by\":[\"address_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"address_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"gantt\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "content": "[Top Venues](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"address_id\",\"!=\",false]],\"context\":{\"group_by\":[\"address_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"address_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
                     "border": 1
                 },
                 "A20": {
                     "style": 2,
-                    "content": "Venue",
+                    "content": "=_t(\"Venue\")",
                     "border": 2
                 },
                 "A21": {
@@ -105,12 +105,12 @@
                 },
                 "A32": {
                     "style": 1,
-                    "content": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"gantt\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "content": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
                     "border": 1
                 },
                 "A33": {
                     "style": 2,
-                    "content": "Tag",
+                    "content": "=_t(\"Tag\")",
                     "border": 2
                 },
                 "A34": {
@@ -201,7 +201,7 @@
                 },
                 "C20": {
                     "style": 7,
-                    "content": "Events",
+                    "content": "=_t(\"Events\")",
                     "border": 2
                 },
                 "C21": {
@@ -241,7 +241,7 @@
                 },
                 "C33": {
                     "style": 7,
-                    "content": "Events",
+                    "content": "=_t(\"Events\")",
                     "border": 2
                 },
                 "C34": {
@@ -300,17 +300,17 @@
                 },
                 "E7": {
                     "style": 1,
-                    "content": "[Registration Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"event.registration\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"kanban\"],[false,\"list\"],[false,\"form\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Attendees\"})",
+                    "content": "[Registration Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"event.registration\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"kanban\"],[false,\"list\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Attendees\"})",
                     "border": 1
                 },
                 "E19": {
                     "style": 1,
-                    "content": "[Top Templates](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"event_type_id\",\"!=\",false]],\"context\":{\"group_by\":[\"event_type_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"event_type_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"gantt\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "content": "[Top Templates](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"event_type_id\",\"!=\",false]],\"context\":{\"group_by\":[\"event_type_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"event_type_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
                     "border": 1
                 },
                 "E20": {
                     "style": 2,
-                    "content": "Template",
+                    "content": "=_t(\"Template\")",
                     "border": 2
                 },
                 "E21": {
@@ -355,12 +355,12 @@
                 },
                 "E32": {
                     "style": 1,
-                    "content": "[Top Organizers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"organizer_id\",\"!=\",false]],\"context\":{\"group_by\":[\"organizer_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"organizer_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"gantt\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"map\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "content": "[Top Organizers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"organizer_id\",\"!=\",false]],\"context\":{\"group_by\":[\"organizer_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"organizer_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
                     "border": 1
                 },
                 "E33": {
                     "style": 2,
-                    "content": "Organizer",
+                    "content": "=_t(\"Organizer\")",
                     "border": 2
                 },
                 "E34": {
@@ -451,7 +451,7 @@
                 },
                 "G20": {
                     "style": 7,
-                    "content": "Events",
+                    "content": "=_t(\"Events\")",
                     "border": 2
                 },
                 "G21": {
@@ -503,7 +503,7 @@
                 },
                 "G33": {
                     "style": 7,
-                    "content": "Events",
+                    "content": "=_t(\"Events\")",
                     "border": 2
                 },
                 "G34": {
@@ -607,7 +607,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "d9898682-9b91-4fe2-9900-a4b2583eb459",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -643,7 +642,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "092dd971-dc10-41c5-96c4-d760820e9cf2",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -670,10 +668,10 @@
                 },
                 {
                     "id": "18361546-49c2-4212-88eb-b2ee50127d41",
-                    "x": 1,
+                    "x": 0,
                     "y": 0,
-                    "width": 169,
-                    "height": 113,
+                    "width": 200,
+                    "height": 120,
                     "tag": "chart",
                     "data": {
                         "baselineColorDown": "#DC6965",
@@ -689,10 +687,10 @@
                 },
                 {
                     "id": "98d2b15d-9117-4ecf-9732-dc62df949dc1",
-                    "x": 178,
+                    "x": 210,
                     "y": 0,
-                    "width": 169,
-                    "height": 113,
+                    "width": 200,
+                    "height": 120,
                     "tag": "chart",
                     "data": {
                         "baselineColorDown": "#DC6965",
@@ -708,10 +706,10 @@
                 },
                 {
                     "id": "6510bff8-7b28-42c6-af4b-c750bed2205c",
-                    "x": 353,
+                    "x": 420,
                     "y": 0,
-                    "width": 169,
-                    "height": 113,
+                    "width": 200,
+                    "height": 120,
                     "tag": "chart",
                     "data": {
                         "baselineColorDown": "#DC6965",
@@ -753,20 +751,20 @@
             "cells": {
                 "A1": {
                     "style": 2,
-                    "content": "KPI"
+                    "content": "=_t(\"KPI\")"
                 },
                 "A2": {
-                    "content": "Attendees"
+                    "content": "=_t(\"Attendees\")"
                 },
                 "A3": {
-                    "content": "Events"
+                    "content": "=_t(\"Events\")"
                 },
                 "A4": {
-                    "content": "Revenue"
+                    "content": "=_t(\"Revenue\")"
                 },
                 "B1": {
                     "style": 2,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "B2": {
                     "content": "=ODOO.PIVOT(5,\"__count\")"
@@ -779,7 +777,7 @@
                 },
                 "C1": {
                     "style": 2,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "C2": {
                     "content": "=ODOO.PIVOT(6,\"__count\")"
@@ -792,7 +790,7 @@
                 },
                 "D1": {
                     "style": 10,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "D2": {
                     "style": 6,
@@ -808,7 +806,7 @@
                 },
                 "E1": {
                     "style": 10,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "E2": {
                     "style": 6,
@@ -948,12 +946,17 @@
             ]
         }
     },
-    "revisionId": "START_REVISION",
+    "revisionId": "88ae2f03-e72d-4c89-b5d3-60e1fe051f1f",
     "chartOdooMenusReferences": {
         "d9898682-9b91-4fe2-9900-a4b2583eb459": "event.event_main_menu",
-        "092dd971-dc10-41c5-96c4-d760820e9cf2": "event.event_main_menu"
+        "092dd971-dc10-41c5-96c4-d760820e9cf2": "event.event_main_menu",
+        "18361546-49c2-4212-88eb-b2ee50127d41": "event.menu_event_event",
+        "98d2b15d-9117-4ecf-9732-dc62df949dc1": "event_sale.menu_action_show_revenues",
+        "6510bff8-7b28-42c6-af4b-c750bed2205c": "event.menu_action_registration"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
     "pivots": {
         "1": {
             "colGroupBys": [],
@@ -1189,8 +1192,6 @@
         }
     },
     "pivotNextId": 11,
-    "lists": {},
-    "listNextId": 1,
     "globalFilters": [
         {
             "id": "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae",
@@ -1291,6 +1292,22 @@
                     "field": "address_id",
                     "type": "many2one"
                 },
+                "5": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "7": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "8": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
                 "9": {
                     "field": "address_id",
                     "type": "many2one"
@@ -1301,7 +1318,16 @@
                 }
             },
             "listFields": {},
-            "graphFields": {}
+            "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                    "field": "address_id",
+                    "type": "many2one"
+                }
+            }
         },
         {
             "id": "d9cfb0b0-01a0-45be-996e-723f4283000b",
@@ -1329,6 +1355,14 @@
                     "field": "event_type_id",
                     "type": "many2one"
                 },
+                "5": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
                 "7": {
                     "field": "event_type_id",
                     "type": "many2one"
@@ -1348,6 +1382,10 @@
             },
             "listFields": {},
             "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
                 "092dd971-dc10-41c5-96c4-d760820e9cf2": {
                     "field": "event_type_id",
                     "type": "many2one"
@@ -1380,6 +1418,22 @@
                     "field": "tag_ids",
                     "type": "many2many"
                 },
+                "5": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "6": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "7": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "8": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
                 "9": {
                     "field": "tag_ids",
                     "type": "many2many"
@@ -1391,6 +1445,10 @@
             },
             "listFields": {},
             "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
                 "092dd971-dc10-41c5-96c4-d760820e9cf2": {
                     "field": "tag_ids",
                     "type": "many2many"
@@ -1429,6 +1487,14 @@
                 },
                 "6": {
                     "field": "event_organizer_id",
+                    "type": "many2one"
+                },
+                "7": {
+                    "field": "event_id.organizer_id",
+                    "type": "many2one"
+                },
+                "8": {
+                    "field": "event_id.organizer_id",
                     "type": "many2one"
                 },
                 "9": {

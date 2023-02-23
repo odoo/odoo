@@ -164,9 +164,62 @@ export const luxonToMomentFormat = memoize(function luxonToMomentFormat(format) 
     });
 });
 
+/**
+ * Converts a luxon's DateTime object into a moment.js object.
+ * NB: the passed object's values will be utilized as is, regardless of its corresponding timezone.
+ * So passing a luxon's DateTime having 8 as hours value will result in a moment.js object having
+ * also 8 as hours value. But the moment.js object will be in the browser's timezone.
+ *
+ * @param {DateTime} dt a luxon's DateTime object
+ * @returns {moment} a moment.js object in the browser's timezone
+ */
+export function luxonToMoment(dt) {
+    if (dt.isValid) {
+        const o = dt.toObject();
+        // Note: the month is 0-based in moment.js, but 1-based in luxon.js
+        return moment({ ...o, month: o.month - 1 });
+    } else {
+        return moment.invalid();
+    }
+}
+
+/**
+ * Converts a moment.js object into a luxon's DateTime object.
+ * NB: the passed object's values will be utilized as is, regardless of its corresponding timezone.
+ * So passing a moment.js object having 8 as hours value will result in a luxon's DateTime object
+ * having also 8 as hours value. But the luxon's DateTime object will be in the user's timezone.
+ *
+ * @param {moment} dt a moment.js object
+ * @returns {DateTime} a luxon's DateTime object in the user's timezone
+ */
+export function momentToLuxon(dt) {
+    const o = dt.toObject();
+    // Note: the month is 0-based in moment.js, but 1-based in luxon.js
+    return DateTime.fromObject({
+        year: o.years,
+        month: o.months + 1,
+        day: o.date,
+        hour: o.hours,
+        minute: o.minutes,
+        second: o.seconds,
+        millisecond: o.milliseconds,
+    });
+}
+
 // -----------------------------------------------------------------------------
 // Formatting
 // -----------------------------------------------------------------------------
+
+/**
+ * Returns true if the given format is a 24-hour format.
+ * Returns false otherwise.
+ *
+ * @param {string} [format=localization.timeFormat]
+ * @returns true if the format contains a 24 hour format
+ */
+export function is24HourFormat(format) {
+    return (format || localization.timeFormat).indexOf("H") !== -1;
+}
 
 /**
  * Formats a DateTime object to a date string
@@ -225,7 +278,7 @@ export function parseDate(value, options = {}) {
     if (!value) {
         return false;
     }
-    return parseDateTime(value, options).startOf("day");
+    return parseDateTime(value, { format: localization.dateFormat, ...options }).startOf("day");
 }
 
 /**
@@ -360,20 +413,31 @@ export function deserializeDateTime(value) {
     return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" }).setZone("default");
 }
 
+const dateCache = new WeakMap();
 /**
  * Returns a serialized string representing the given date.
  * @param {DateTime} value DateTime object, its timezone does not matter
  * @returns {string} serialized date, ready to be sent to the server
  */
 export function serializeDate(value) {
-    return value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" });
+    if (!dateCache.has(value)) {
+        dateCache.set(value, value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" }));
+    }
+    return dateCache.get(value);
 }
 
+const dateTimeCache = new WeakMap();
 /**
  * Returns a serialized string representing the given datetime.
  * @param {DateTime} value DateTime object, its timezone does not matter
  * @returns {string} serialized datetime, ready to be sent to the server
  */
 export function serializeDateTime(value) {
-    return value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" });
+    if (!dateTimeCache.has(value)) {
+        dateTimeCache.set(
+            value,
+            value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" })
+        );
+    }
+    return dateTimeCache.get(value);
 }

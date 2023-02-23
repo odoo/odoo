@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -92,7 +92,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(target, "input:checked", "one of the input should be checked");
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.hasAttrValue(
             target.querySelector("input.o_radio_input:checked"),
@@ -116,7 +116,7 @@ QUnit.module("Fields", (hooks) => {
             "none of the input should be checked"
         );
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_notification_title").textContent,
             "Invalid fields: "
@@ -195,7 +195,7 @@ QUnit.module("Fields", (hooks) => {
         // click on 2nd option
         await click(target.querySelectorAll("input.o_radio_input")[1]);
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.hasAttrValue(
             target.querySelector("input.o_radio_input:checked"),
@@ -244,7 +244,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("fieldradio widget with numerical keys encoded as strings", async function (assert) {
-        assert.expect(7);
+        assert.expect(5);
 
         serverData.models.partner.fields.selection = {
             type: "selection",
@@ -273,25 +273,13 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsNone(target, ".o_radio_input:checked", "no value should be checked");
 
-        await click(target, ".o_form_button_edit");
-
-        assert.containsNone(target, ".o_radio_input:checked", "no value should be checked");
-
         await click(target.querySelectorAll("input.o_radio_input")[1]);
-
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
         assert.strictEqual(
             target.querySelector(".o_field_widget").textContent.replace(/\s+/g, ""),
             "RedBlack"
         );
-        assert.containsOnce(
-            target,
-            ".o_radio_input[data-index='1']:checked",
-            "'Black' should be checked"
-        );
-
-        await click(target, ".o_form_button_edit");
 
         assert.containsOnce(
             target,
@@ -338,7 +326,6 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(target, ".o_form_button_edit");
             assert.containsN(
                 target,
                 ".o_field_widget[name='trululu'] .o_radio_item",
@@ -363,7 +350,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 2,
             serverData,
             arch: `
-                <form>
+                <form edit="0">
                     <field name="trululu" widget="radio" />
                 </form>`,
         });

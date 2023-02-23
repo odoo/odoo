@@ -3,7 +3,7 @@
 
     <t t-name="web.StateSelectionField" owl="1">
         <t t-if="isReadonly">
-            <button class="d-flex align-items-center btn btn-link disabled">
+            <button class="d-flex align-items-center btn fw-normal p-0">
                 <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
                 <span t-if="showLabel" class="o_status_label ms-1" t-esc="label"/>
             </button>
@@ -17,7 +17,7 @@
                     </div>
                 </t>
                 <t t-foreach="availableOptions" t-as="option" t-key="option[0]">
-                    <DropdownItem onSelected="() => props.update(option[0])">
+                    <DropdownItem onSelected="() => this.updateRecord(option[0])">
                         <div class="d-flex align-items-center">
                             <span t-attf-class="o_status {{ statusColor(option[0]) }} "/>
                             <span class="ms-2" t-esc="option[1]"/>

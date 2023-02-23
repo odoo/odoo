@@ -68,7 +68,7 @@ QUnit.test("displays figures in first sheet", async (assert) => {
             id: 789,
             name: "Spreadsheet with chart figure",
             json_data: JSON.stringify(spreadsheetData),
-            raw: JSON.stringify(spreadsheetData),
+            spreadsheet_data: JSON.stringify(spreadsheetData),
             dashboard_group_id: 1,
         },
     ];

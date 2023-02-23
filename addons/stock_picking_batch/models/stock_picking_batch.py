@@ -175,6 +175,8 @@ class StockPickingBatch(models.Model):
             if batch_without_picking_type:
                 picking = self.picking_ids and self.picking_ids[0]
                 batch_without_picking_type.picking_type_id = picking.picking_type_id.id
+        if vals.get('user_id'):
+            self.picking_ids.assign_batch_user(vals['user_id'])
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -222,15 +224,19 @@ class StockPickingBatch(models.Model):
         self.picking_ids.filtered("show_clear_qty_button").action_clear_quantities_to_zero()
 
     def action_done(self):
+        def has_no_qty_done(picking):
+            return all(float_is_zero(line.qty_done, precision_rounding=line.product_uom_id.rounding) for line in picking.move_line_ids if line.state not in ('done', 'cancel'))
+
         self.ensure_one()
         self._check_company()
+        # Empty 'waiting for another operation' pickings will be removed from the batch when it is validated.
         pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
-        if any(picking.state not in ('assigned', 'confirmed') for picking in pickings):
-            raise UserError(_('Some transfers are still waiting for goods. Please check or force their availability before setting this batch to done.'))
+        empty_waiting_pickings = self.mapped('picking_ids').filtered(lambda p: p.state == 'waiting' and has_no_qty_done(p))
+        pickings = pickings - empty_waiting_pickings
 
         empty_pickings = set()
         for picking in pickings:
-            if all(float_is_zero(line.qty_done, precision_rounding=line.product_uom_id.rounding) for line in picking.move_line_ids if line.state not in ('done', 'cancel')):
+            if has_no_qty_done(picking):
                 empty_pickings.add(picking.id)
             picking.message_post(
                 body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>" % (
@@ -239,14 +245,17 @@ class StockPickingBatch(models.Model):
                     picking.batch_id.id,
                     picking.batch_id.name))
 
+        # Run sanity_check as a batch and ignore the one in button_validate() since it is done here.
+        pickings._sanity_check(separate_pickings=False)
+        # Skip sanity_check in pickings button_validate() & remove 'waiting' pickings from the batch
+        context = {'skip_sanity_check': True, 'pickings_to_detach': empty_waiting_pickings.ids}
         if len(empty_pickings) == len(pickings):
-            return pickings.button_validate()
+            return pickings.with_context(**context).button_validate()
         else:
-            res = pickings.with_context(skip_immediate=True).button_validate()
-            if empty_pickings and res.get('context'):
-                res['context']['pickings_to_detach'] = list(empty_pickings)
-            return res
-
+            # If some pickings are at least partially done, other pickings (empty & waiting) will be removed from batch without being cancelled in case of no backorder
+            pickings = pickings - self.env['stock.picking'].browse(empty_pickings)
+            context['pickings_to_detach'] = context['pickings_to_detach'] + list(empty_pickings)
+            return pickings.with_context(skip_immediate=True, **context).button_validate()
 
     def action_assign(self):
         self.ensure_one()
@@ -269,9 +278,9 @@ class StockPickingBatch(models.Model):
                                      precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) == 0)
             if move_line_ids:
-                res = self.picking_ids[0]._pre_put_in_pack_hook(move_line_ids)
+                res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:
-                    res = self.picking_ids[0]._put_in_pack(move_line_ids, False)
+                    res = move_line_ids.picking_id[0]._put_in_pack(move_line_ids, False)
                 return res
             else:
                 raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))

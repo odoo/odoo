@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { clickSave, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -64,7 +64,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.hasClass(target.querySelector(".o_field_widget"), "o_field_pdf_viewer");
-        assert.containsNone(target, ".o_select_file_button", "there should be no 'Upload' button");
+        assert.containsOnce(target, ".o_select_file_button", "there should be an 'Upload' button");
         assert.containsOnce(
             target,
             ".o_field_widget iframe.o_pdfview_iframe",
@@ -75,7 +75,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("PdfViewerField: upload rendering", async function (assert) {
-        assert.expect(6);
+        assert.expect(5);
 
         await makeView({
             type: "form",
@@ -97,9 +97,8 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_pdfview_iframe", "there is a PDF Viewer");
         assert.strictEqual(getIframeProtocol(), "blob");
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
 
-        assert.strictEqual(getIframeProtocol(), "http");
-        assert.strictEqual(getIframeViewerParams(), "model=partner&field=document&id=2");
+        assert.strictEqual(getIframeProtocol(), "blob");
     });
 });

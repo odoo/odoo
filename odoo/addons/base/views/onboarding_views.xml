@@ -28,7 +28,7 @@
                  t-att-style="'background-image:url(' + bg_image + ')'">
 
                 <div class="o_onboarding_wrap py-5">
-                    <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="o_onboarding_btn_close position-absolute top-0 end-0 py-2 px-3 h2 text-white" title="Close the onboarding panel"><i class="oi oi-close"/></a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="o_onboarding_btn_close position-absolute top-0 end-0 py-2 px-3 h2" title="Close the onboarding panel"><i class="oi oi-close"/></a>
 
                     <div class="o_onboarding_steps d-flex" t-out="0"/>
 
@@ -55,24 +55,24 @@
 
             <div class="o_onboarding_step_side d-flex pt-0 flex-grow-1">
                 <div class="o_onboarding_progress position-absolute"/>
-                <span t-attf-class="o_onboarding_dot fa fa-check d-inline-block rounded-circle small {{state != 'not_done' and 'text-white' or ''}}"/>
+                <span t-attf-class="o_onboarding_dot fa fa-check d-inline-block rounded-circle small {{state != 'not_done' and 'o_onboarding_dot_isChecked' or ''}}"/>
             </div>
 
             <div class="o_onboarding_step_content py-3 flex-grow-1 d-flex flex-column align-items-center justify-content-around">
                 <div class="o_onboarding_step_content_info mb-3">
                     <a type="action" data-reload-on-close="true" role="button" t-att-data-method="method" t-att-data-model="model">
-                        <h4 class="o_onboarding_step_title text-white" t-out="title"/>
+                        <h4 class="o_onboarding_step_title" t-out="title"/>
                     </a>
                     <p class="text-white-75 m-0" t-out="description"/>
                 </div>
-                <a t-if="state == 'not_done'" class="o_onboarding_step_action btn px-4 border border-white" type="action" data-reload-on-close="true" role="button" t-att-data-method="method" t-att-data-model="model">
-                    <span class="text-white">
+                <a t-if="state == 'not_done'" class="o_onboarding_step_action btn px-4" type="action" data-reload-on-close="true" role="button" t-att-data-method="method" t-att-data-model="model">
+                    <span>
                         <t t-if="btn_text" t-out="btn_text" />
                         <t t-else="">Let's do it</t>
                     </span>
                 </a>
-                <a t-else="" class="o_onboarding_step_action__done btn text-white" type="action" data-reload-on-close="true" role="button" t-att-data-method="method" t-att-data-model="model">
-                    <span class="text-white">
+                <a t-else="" class="o_onboarding_step_action__done btn" type="action" data-reload-on-close="true" role="button" t-att-data-method="method" t-att-data-model="model">
+                    <span>
                         <i t-attf-class="me-2 fa #{done_icon if done_icon else 'fa-check'}" />
                         <t t-if="done_text" t-out="done_text" />
                         <t t-else="">All done!</t>

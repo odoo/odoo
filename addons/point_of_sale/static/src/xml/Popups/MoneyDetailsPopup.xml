@@ -21,9 +21,9 @@
                     <CurrencyAmount currency="currency" amount="env.pos.format_currency_no_symbol(state.total)"/>
                 </div>
             </main>
-            <footer class="footer">
-                <div class="button" t-on-click="discard">Discard</div>
-                <div class="button" t-on-click="confirm">Confirm</div>
+            <footer class="footer footer-flex">
+                <div class="button highlight" t-on-click="confirm">Confirm</div>
+                <div class="button" t-on-click="cancel">Discard</div>
             </footer>
         </div>
     </t>

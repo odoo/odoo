@@ -62,13 +62,15 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
                 }
             },
         });
-        const env = model.config.evalContext.env;
+        const env = model.config.custom.env;
         env.model = model;
         setCellContent(model, "A1", `=ODOO.BALANCE("100", 2020)`);
         setCellContent(model, "A2", `=ODOO.BALANCE("100", 0)`);
         await waitForDataSourcesLoaded(model);
         selectCell(model, "A1");
-        const root = cellMenuRegistry.getAll().find((item) => item.id === "move_lines_see_records");
+        const root = cellMenuRegistry
+            .getMenuItems()
+            .find((item) => item.id === "move_lines_see_records");
         assert.equal(root.isVisible(env), true);
         await root.action(env);
         assert.verifySteps(["drill down action"]);

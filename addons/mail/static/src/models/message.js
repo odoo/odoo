@@ -1,18 +1,16 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
-import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
+import { attr, clear, insert, many, one, Model } from "@mail/model";
+import { addLink, htmlToTextContentInline, parseAndTransform } from "@mail/js/utils";
 
-import { session } from '@web/session';
+import { session } from "@web/session";
 
-import { getLangDatetimeFormat, str_to_datetime } from 'web.time';
+import { getLangDatetimeFormat, str_to_datetime } from "web.time";
 
-const { markup } = owl;
+import { markup } from "@odoo/owl";
 
-registerModel({
-    name: 'Message',
+Model({
+    name: "Message",
     modelMethods: {
         /**
          * @param {Object} data
@@ -21,90 +19,104 @@ registerModel({
         convertData(data) {
             const data2 = {};
             data2.attachments = data.attachment_ids;
-            if ('author' in data) {
+            if ("author" in data) {
                 data2.author = data.author;
             }
-            if ('body' in data) {
+            if ("body" in data) {
                 data2.body = data.body;
             }
-            if ('date' in data && data.date) {
-                data2.date = moment(str_to_datetime(data.date));
+            if ("date" in data && data.date) {
+                data2.date = data.date;
             }
-            if ('email_from' in data) {
+            if ("email_from" in data) {
                 data2.email_from = data.email_from;
             }
-            if ('guestAuthor' in data) {
+            if ("guestAuthor" in data) {
                 data2.guestAuthor = data.guestAuthor;
             }
-            if ('history_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isHistory = data.history_partner_ids.includes(this.messaging.currentPartner.id);
+            if ("history_partner_ids" in data && this.messaging.currentPartner) {
+                data2.isHistory = data.history_partner_ids.includes(
+                    this.messaging.currentPartner.id
+                );
             }
-            if ('id' in data) {
+            if ("id" in data) {
                 data2.id = data.id;
             }
-            if ('is_discussion' in data) {
+            if ("default_subject" in data) {
+                data2.defaultSubject = data.default_subject;
+            }
+            if ("is_discussion" in data) {
                 data2.is_discussion = data.is_discussion;
             }
-            if ('is_note' in data) {
+            if ("is_note" in data) {
                 data2.is_note = data.is_note;
             }
-            if ('is_notification' in data) {
+            if ("is_notification" in data) {
                 data2.is_notification = data.is_notification;
             }
             data2.linkPreviews = data.linkPreviews;
-            if ('messageReactionGroups' in data) {
+            if ("messageReactionGroups" in data) {
                 data2.messageReactionGroups = data.messageReactionGroups;
             }
-            if ('message_type' in data) {
+            if ("message_type" in data) {
                 data2.message_type = data.message_type;
             }
-            if ('model' in data && 'res_id' in data && data.model && data.res_id) {
+            if ("model" in data && "res_id" in data && data.model && data.res_id) {
                 const originThreadData = {
                     id: data.res_id,
                     model: data.model,
                 };
-                if ('record_name' in data && data.record_name) {
+                if ("record_name" in data && data.record_name) {
                     originThreadData.name = data.record_name;
                 }
-                if ('res_model_name' in data && data.res_model_name) {
+                if ("res_model_name" in data && data.res_model_name) {
                     originThreadData.model_name = data.res_model_name;
                 }
-                if ('module_icon' in data) {
+                if ("module_icon" in data) {
                     originThreadData.moduleIcon = data.module_icon;
                 }
                 data2.originThread = originThreadData;
             }
-            if ('needaction_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isNeedaction = data.needaction_partner_ids.includes(this.messaging.currentPartner.id);
+            if ("needaction_partner_ids" in data && this.messaging.currentPartner) {
+                data2.isNeedaction = data.needaction_partner_ids.includes(
+                    this.messaging.currentPartner.id
+                );
             }
-            if ('notifications' in data) {
-                data2.notifications = insert(data.notifications.map(notificationData =>
-                    this.messaging.models['Notification'].convertData(notificationData)
-                ));
+            if ("notifications" in data) {
+                data2.notifications = insert(
+                    data.notifications.map((notificationData) =>
+                        this.messaging.models["Notification"].convertData(notificationData)
+                    )
+                );
             }
-            if ('parentMessage' in data) {
+            if ("parentMessage" in data) {
                 if (!data.parentMessage) {
                     data2.parentMessage = clear();
                 } else {
                     data2.parentMessage = this.convertData(data.parentMessage);
                 }
             }
-            if ('recipients' in data) {
+            if ("recipients" in data) {
                 data2.recipients = data.recipients;
             }
-            if ('starred_partner_ids' in data && this.messaging.currentPartner) {
-                data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
+            if ("scheduledDatetime" in data) {
+                data2.scheduledDatetime = data.scheduledDatetime;
             }
-            if ('subject' in data) {
+            if ("starred_partner_ids" in data && this.messaging.currentPartner) {
+                data2.isStarred = data.starred_partner_ids.includes(
+                    this.messaging.currentPartner.id
+                );
+            }
+            if ("subject" in data) {
                 data2.subject = data.subject;
             }
-            if ('subtype_description' in data) {
+            if ("subtype_description" in data) {
                 data2.subtype_description = data.subtype_description;
             }
-            if ('subtype_id' in data) {
+            if ("subtype_id" in data) {
                 data2.subtype_id = data.subtype_id;
             }
-            if ('trackingValues' in data) {
+            if ("trackingValues" in data) {
                 data2.trackingValues = data.trackingValues;
             }
 
@@ -116,11 +128,14 @@ registerModel({
          * @param {Array[]} domain
          */
         async markAllAsRead(domain) {
-            await this.messaging.rpc({
-                model: 'mail.message',
-                method: 'mark_all_as_read',
-                kwargs: { domain },
-            }, { shadow: true });
+            await this.messaging.rpc(
+                {
+                    model: "mail.message",
+                    method: "mark_all_as_read",
+                    kwargs: { domain },
+                },
+                { shadow: true }
+            );
         },
         /**
          * Mark provided messages as read. Messages that have been marked as
@@ -135,9 +150,9 @@ registerModel({
          */
         async markAsRead(messages) {
             await this.messaging.rpc({
-                model: 'mail.message',
-                method: 'set_message_done',
-                args: [messages.map(message => message.id)]
+                model: "mail.message",
+                method: "set_message_done",
+                args: [messages.map((message) => message.id)],
             });
         },
         /**
@@ -152,18 +167,20 @@ registerModel({
             if (!this.messaging) {
                 return;
             }
-            const messages = this.messaging.models['Message'].insert(messagesData.map(
-                messageData => this.messaging.models['Message'].convertData(messageData)
-            ));
+            const messages = this.messaging.models["Message"].insert(
+                messagesData.map((messageData) =>
+                    this.messaging.models["Message"].convertData(messageData)
+                )
+            );
             // compute seen indicators (if applicable)
             for (const message of messages) {
                 for (const thread of message.threads) {
-                    if (!thread.channel || thread.channel.channel_type === 'channel') {
+                    if (!thread.channel || thread.channel.channel_type === "channel") {
                         // disabled on non-channel threads and
                         // on `channel` channels for performance reasons
                         continue;
                     }
-                    this.messaging.models['MessageSeenIndicator'].insert({
+                    this.messaging.models["MessageSeenIndicator"].insert({
                         thread,
                         message,
                     });
@@ -176,8 +193,8 @@ registerModel({
          */
         async unstarAll() {
             await this.messaging.rpc({
-                model: 'mail.message',
-                method: 'unstar_all',
+                model: "mail.message",
+                method: "unstar_all",
             });
         },
     },
@@ -189,7 +206,7 @@ registerModel({
          */
         async addReaction(content) {
             const messageData = await this.messaging.rpc({
-                route: '/mail/message/add_reaction',
+                route: "/mail/message/add_reaction",
                 params: { content, message_id: this.id },
             });
             if (!this.exists()) {
@@ -203,23 +220,20 @@ registerModel({
          */
         async markAsRead() {
             await this.messaging.rpc({
-                model: 'mail.message',
-                method: 'set_message_done',
-                args: [[this.id]]
+                model: "mail.message",
+                method: "set_message_done",
+                args: [[this.id]],
             });
         },
         /**
          * Opens the view that allows to resend the message in case of failure.
          */
         openResendAction() {
-            this.env.services.action.doAction(
-                'mail.mail_resend_message_action',
-                {
-                    additionalContext: {
-                        mail_message_to_resend: this.id,
-                    },
-                }
-            );
+            this.env.services.action.doAction("mail.mail_resend_message_action", {
+                additionalContext: {
+                    mail_message_to_resend: this.id,
+                },
+            });
         },
         /**
          * Removes the given reaction from this message.
@@ -228,7 +242,7 @@ registerModel({
          */
         async removeReaction(content) {
             const messageData = await this.messaging.rpc({
-                route: '/mail/message/remove_reaction',
+                route: "/mail/message/remove_reaction",
                 params: { content, message_id: this.id },
             });
             if (!this.exists()) {
@@ -241,9 +255,9 @@ registerModel({
          */
         async toggleStar() {
             await this.messaging.rpc({
-                model: 'mail.message',
-                method: 'toggle_message_starred',
-                args: [[this.id]]
+                model: "mail.message",
+                method: "toggle_message_starred",
+                args: [[this.id]],
             });
         },
         /**
@@ -254,7 +268,7 @@ registerModel({
          */
         async updateContent({ body, attachment_ids }) {
             const messageData = await this.messaging.rpc({
-                route: '/mail/message/update_content',
+                route: "/mail/message/update_content",
                 params: {
                     body,
                     attachment_ids,
@@ -264,7 +278,7 @@ registerModel({
             if (!this.messaging) {
                 return;
             }
-            this.messaging.models['Message'].insert(messageData);
+            this.messaging.models["Message"].insert(messageData);
         },
     },
     fields: {
@@ -282,27 +296,39 @@ registerModel({
                 return this.env._t("Anonymous");
             },
         }),
-        attachments: many('Attachment', {
-            inverse: 'messages',
-        }),
-        author: one('Partner'),
+        attachments: many("Attachment", { inverse: "messages" }),
+        author: one("Partner"),
         avatarUrl: attr({
             compute() {
-                if (this.author && (!this.originThread || this.originThread.model !== 'mail.channel')) {
+                if (
+                    this.author &&
+                    (!this.originThread || this.originThread.model !== "mail.channel")
+                ) {
                     // TODO FIXME for public user this might not be accessible. task-2223236
                     // we should probably use the correspondig attachment id + access token
                     // or create a dedicated route to get message image, checking the access right of the message
                     return this.author.avatarUrl;
-                } else if (this.author && this.originThread && this.originThread.model === 'mail.channel') {
+                } else if (
+                    this.author &&
+                    this.originThread &&
+                    this.originThread.model === "mail.channel"
+                ) {
                     return `/mail/channel/${this.originThread.id}/partner/${this.author.id}/avatar_128`;
-                } else if (this.guestAuthor && (!this.originThread || this.originThread.model !== 'mail.channel')) {
+                } else if (
+                    this.guestAuthor &&
+                    (!this.originThread || this.originThread.model !== "mail.channel")
+                ) {
                     return this.guestAuthor.avatarUrl;
-                } else if (this.guestAuthor && this.originThread && this.originThread.model === 'mail.channel') {
+                } else if (
+                    this.guestAuthor &&
+                    this.originThread &&
+                    this.originThread.model === "mail.channel"
+                ) {
                     return `/mail/channel/${this.originThread.id}/guest/${this.guestAuthor.id}/avatar_128?unique=${this.guestAuthor.name}`;
-                } else if (this.message_type === 'email') {
-                    return '/mail/static/src/img/email_icon.png';
+                } else if (this.message_type === "email") {
+                    return "/mail/static/src/img/email_icon.png";
                 }
-                return '/mail/static/src/img/smiley/avatar.jpg';
+                return "/mail/static/src/img/smiley/avatar.jpg";
             },
         }),
         /**
@@ -311,9 +337,7 @@ registerModel({
          * Do not use this value in a 't-raw' if the message has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        body: attr({
-            default: "",
-        }),
+        body: attr({ default: "" }),
         /**
          * Whether this message can be deleted.
          */
@@ -328,10 +352,10 @@ registerModel({
                 if (this.trackingValues.length > 0) {
                     return false;
                 }
-                if (this.message_type !== 'comment') {
+                if (this.message_type !== "comment") {
                     return false;
                 }
-                if (this.originThread.model === 'mail.channel') {
+                if (this.originThread.model === "mail.channel") {
                     return true;
                 }
                 return this.is_note;
@@ -346,9 +370,24 @@ registerModel({
             },
         }),
         /**
+         * The subject the message would have received by default
+         */
+        defaultSubject: attr(),
+        date: attr(),
+        /**
          * Determines the date of the message as a moment object.
          */
-        date: attr(),
+        momentDate: attr({
+            compute() {
+                if (!this.date) {
+                    return clear();
+                }
+                if (!moment.isMoment(this.date)) {
+                    return moment(str_to_datetime(this.date));
+                }
+                return this.date;
+            },
+        }),
         /**
          * States the date of this message as a string (either a relative period
          * in the near past or an actual date for older dates).
@@ -360,17 +399,13 @@ registerModel({
                     // mainly done to avoid flicker inside the UI.
                     return this.env._t("Today");
                 }
-                const date = this.date.format('YYYY-MM-DD');
-                if (date === moment().format('YYYY-MM-DD')) {
+                const date = this.momentDate.format("YYYY-MM-DD");
+                if (date === moment().format("YYYY-MM-DD")) {
                     return this.env._t("Today");
-                } else if (
-                    date === moment()
-                        .subtract(1, 'days')
-                        .format('YYYY-MM-DD')
-                ) {
+                } else if (date === moment().subtract(1, "days").format("YYYY-MM-DD")) {
                     return this.env._t("Yesterday");
                 }
-                return this.date.format('LL');
+                return this.momentDate.format("LL");
             },
         }),
         /**
@@ -378,21 +413,19 @@ registerModel({
          */
         datetime: attr({
             compute() {
-                if (!this.date) {
+                if (!this.momentDate) {
                     return clear();
                 }
-                return this.date.format(getLangDatetimeFormat());
+                return this.momentDate.format(getLangDatetimeFormat());
             },
         }),
         email_from: attr(),
-        failureNotifications: many('Notification', {
+        failureNotifications: many("Notification", {
             compute() {
-                return this.notifications.filter(notifications => notifications.isFailure);
+                return this.notifications.filter((notifications) => notifications.isFailure);
             },
         }),
-        guestAuthor: one('Guest', {
-            inverse: 'authoredMessages',
-        }),
+        guestAuthor: one("Guest", { inverse: "authoredMessages" }),
         /**
          * States whether the message has some attachments.
          */
@@ -409,22 +442,23 @@ registerModel({
                 return !this.isTemporary && !this.isTransient;
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         isCurrentUserOrGuestAuthor: attr({
+            default: false,
             compute() {
-                return !!(
-                    this.author &&
-                    this.messaging.currentPartner &&
-                    this.messaging.currentPartner === this.author
-                ) || !!(
-                    this.guestAuthor &&
-                    this.messaging.currentGuest &&
-                    this.messaging.currentGuest === this.guestAuthor
+                return (
+                    !!(
+                        this.author &&
+                        this.messaging.currentPartner &&
+                        this.messaging.currentPartner === this.author
+                    ) ||
+                    !!(
+                        this.guestAuthor &&
+                        this.messaging.currentGuest &&
+                        this.messaging.currentGuest === this.guestAuthor
+                    )
                 );
             },
-            default: false,
         }),
         /**
          * States if the body field is empty, regardless of editor default
@@ -435,12 +469,9 @@ registerModel({
             compute() {
                 return (
                     !this.body ||
-                    [
-                        '',
-                        '<p></p>',
-                        '<p><br></p>',
-                        '<p><br/></p>',
-                    ].includes(this.body.replace(/\s/g, ''))
+                    ["", "<p></p>", "<p><br></p>", "<p><br/></p>"].includes(
+                        this.body.replace(/\s/g, "")
+                    )
                 );
             },
         }),
@@ -465,6 +496,7 @@ registerModel({
          * - Their content might be mostly but not exactly the same.
          */
         isBodyEqualSubtypeDescription: attr({
+            default: false,
             compute() {
                 if (!this.body || !this.subtype_description) {
                     return false;
@@ -472,16 +504,15 @@ registerModel({
                 const inlineBody = htmlToTextContentInline(this.body);
                 return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
             },
-            default: false,
         }),
         isDiscussionOrNotification: attr({
+            default: false,
             compute() {
                 if (this.is_discussion || this.is_notification) {
                     return true;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Determine whether the message has to be considered empty or not.
@@ -513,34 +544,34 @@ registerModel({
             },
         }),
         /**
-         * States whether `originThread.name` and `subject` contain similar
-         * values except it contains the extra prefix at the start
-         * of the subject.
+         * States whether `originThread.name` or `defaultSubject` contain
+         * similar values to `subject` with prefixes.
          *
          * This is necessary to avoid displaying the subject, if
-         * the subject is same as threadname.
+         * the subject is same as threadname or the default subject for that thread.
          */
-        isSubjectSimilarToOriginThreadName: attr({
+        isSubjectSimilarToOriginThreadNameOrDefaultSubject: attr({
             compute() {
-                if (
-                    !this.subject ||
-                    !this.originThread ||
-                    !this.originThread.name
-                ) {
+                if (!this.subject || ((!this.originThread || !this.originThread.name) && !this.defaultSubject)) {
                     return false;
                 }
                 const threadName = this.originThread.name.toLowerCase().trim();
-                const prefixList = ['re:', 'fw:', 'fwd:'];
+                const defaultSubject = this.defaultSubject.toLowerCase();
+                const hiddenSubjects = [defaultSubject];
+                if (defaultSubject !== threadName) {
+                    hiddenSubjects.push(threadName);
+                }
+                const prefixList = ["re:", "fw:", "fwd:"];
                 let cleanedSubject = this.subject.toLowerCase();
                 let wasSubjectCleaned = true;
                 while (wasSubjectCleaned) {
                     wasSubjectCleaned = false;
-                    if (threadName === cleanedSubject) {
+                    if (hiddenSubjects.includes(cleanedSubject)) {
                         return true;
                     }
                     for (const prefix of prefixList) {
                         if (cleanedSubject.startsWith(prefix)) {
-                            cleanedSubject = cleanedSubject.replace(prefix, '').trim();
+                            cleanedSubject = cleanedSubject.replace(prefix, "").trim();
                             wasSubjectCleaned = true;
                             break;
                         }
@@ -549,43 +580,29 @@ registerModel({
                 return false;
             },
         }),
-        isTemporary: attr({
-            default: false,
-        }),
-        isTransient: attr({
-            default: false,
-        }),
-        is_discussion: attr({
-            default: false,
-        }),
+        isTemporary: attr({ default: false }),
+        isTransient: attr({ default: false }),
+        is_discussion: attr({ default: false }),
         /**
          * Determine whether the message was a needaction. Useful to make it
          * present in history mailbox.
          */
-        isHistory: attr({
-            default: false,
-        }),
+        isHistory: attr({ default: false }),
         /**
          * Determine whether the message is needaction. Useful to make it
          * present in inbox mailbox and messaging menu.
          */
-        isNeedaction: attr({
-            default: false,
-        }),
-        is_note: attr({
-            default: false,
-        }),
-        is_notification: attr({
-            default: false,
-        }),
+        isNeedaction: attr({ default: false }),
+        is_note: attr({ default: false }),
+        is_notification: attr({ default: false }),
         /**
          * Determine whether the current partner is mentioned.
          */
         isCurrentPartnerMentioned: attr({
+            default: false,
             compute() {
                 return this.recipients.includes(this.messaging.currentPartner);
             },
-            default: false,
         }),
         /**
          * Determine whether the message is highlighted.
@@ -595,7 +612,7 @@ registerModel({
                 return (
                     this.isCurrentPartnerMentioned &&
                     this.originThread &&
-                    this.originThread.model === 'mail.channel'
+                    this.originThread.model === "mail.channel"
                 );
             },
         }),
@@ -603,37 +620,28 @@ registerModel({
          * Determine whether the message is starred. Useful to make it present
          * in starred mailbox.
          */
-        isStarred: attr({
-            default: false,
-        }),
+        isStarred: attr({ default: false }),
         /**
          * Last tracking value of the message.
          */
-        lastTrackingValue: one('TrackingValue', {
+        lastTrackingValue: one("TrackingValue", {
             compute() {
-                const {
-                    length: l,
-                    [l - 1]: lastTrackingValue,
-                } = this.trackingValues;
+                const { length: l, [l - 1]: lastTrackingValue } = this.trackingValues;
                 if (lastTrackingValue) {
                     return lastTrackingValue;
                 }
                 return clear();
             },
         }),
-        linkPreviews: many('LinkPreview', {
-            inverse: 'message',
-        }),
+        linkPreviews: many("LinkPreview", { inverse: "message" }),
         /**
          * Groups of reactions per content allowing to know the number of
          * reactions for each.
          */
-        messageReactionGroups: many('MessageReactionGroup', {
-            inverse: 'message',
-        }),
+        messageReactionGroups: many("MessageReactionGroup", { inverse: "message" }),
         messageTypeText: attr({
             compute() {
-                if (this.message_type === 'notification') {
+                if (this.message_type === "notification") {
                     return this.env._t("System notification");
                 }
                 if (!this.is_discussion && !this.is_notification) {
@@ -643,37 +651,27 @@ registerModel({
             },
         }),
         message_type: attr(),
-        notificationMessageViews: many('NotificationMessageView', {
-            inverse: 'message',
+        notificationMessageViews: many("NotificationMessageView", {
+            inverse: "message",
             isCausal: true,
         }),
         /**
          * States the views that are displaying this message.
          */
-        messageViews: many('MessageView', {
-            inverse: 'message',
-            isCausal: true,
-        }),
-        messageListViewItems: many('MessageListViewItem', {
-            inverse: 'message',
-        }),
-        notifications: many('Notification', {
-            inverse: 'message',
-            isCausal: true,
-        }),
+        messageViews: many("MessageView", { inverse: "message", isCausal: true }),
+        messageListViewItems: many("MessageListViewItem", { inverse: "message" }),
+        notifications: many("Notification", { inverse: "message", isCausal: true }),
         /**
          * Origin thread of this message (if any).
          */
-        originThread: one('Thread', {
-            inverse: 'messagesAsOriginThread',
-        }),
+        originThread: one("Thread", { inverse: "messagesAsOriginThread" }),
         /**
          * States the message that this message replies to (if any). Only makes
          * sense on channels. Other types of threads might have a parent message
          * (parent_id in python) that should be ignored for the purpose of this
          * feature.
          */
-        parentMessage: one('Message'),
+        parentMessage: one("Message"),
         /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
@@ -681,6 +679,7 @@ registerModel({
          * directly from user input and not from server data as it's not escaped.
          */
         prettyBody: attr({
+            default: "",
             /**
              * This value is meant to be based on field body which is
              * returned by the server (and has been sanitized before stored into db).
@@ -695,20 +694,36 @@ registerModel({
                 // add anchor tags to urls
                 return parseAndTransform(this.body, addLink);
             },
-            default: "",
         }),
         prettyBodyAsMarkup: attr({
             compute() {
                 return markup(this.prettyBody);
             },
         }),
-        recipients: many('Partner'),
-        shortTime: attr({
+        recipients: many("Partner"),
+        /**
+         * In case of delayed notification, a scheduled datetime linked to the
+         * message scheduler is given in order to display it new to the post
+         * datetime.
+         */
+        scheduledDatetime: attr(),
+        scheduledMomentDate: attr({
             compute() {
-                if (!this.date) {
+                if (!this.scheduledDatetime) {
                     return clear();
                 }
-                return this.date.format('hh:mm');
+                if (!moment.isMoment(this.scheduledDatetime)) {
+                    return moment(str_to_datetime(this.scheduledDatetime));
+                }
+                return this.scheduledDatetime;
+            },
+        }),
+        shortTime: attr({
+            compute() {
+                if (!this.momentDate) {
+                    return clear();
+                }
+                return this.momentDate.format("hh:mm");
             },
         }),
         subject: attr(),
@@ -717,7 +732,8 @@ registerModel({
         /**
          * All threads that this message is linked to. This field is read-only.
          */
-        threads: many('Thread', {
+        threads: many("Thread", {
+            inverse: "messages",
             compute() {
                 const threads = [];
                 if (this.isHistory && this.messaging.history) {
@@ -734,16 +750,11 @@ registerModel({
                 }
                 return threads;
             },
-            inverse: 'messages',
         }),
-        trackingValues: many('TrackingValue', {
-            inverse: 'messageOwner',
+        trackingValues: many("TrackingValue", {
+            inverse: "messageOwner",
             isCausal: true,
-            sort() {
-                return [
-                    ['smaller-first', 'id'],
-                ];
-            },
+            sort: [["smaller-first", "id"]],
         }),
     },
 });

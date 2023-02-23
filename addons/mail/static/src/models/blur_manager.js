@@ -1,33 +1,37 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { clear } from '@mail/model/model_field_command';
-import { attr, one } from '@mail/model/model_field';
+import { attr, clear, one, Model } from "@mail/model";
 
 function drawAndBlurImageOnCanvas(image, blurAmount, canvas) {
     canvas.width = image.width;
     canvas.height = image.height;
     if (blurAmount === 0) {
-        canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height);
+        canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
         return;
     }
-    canvas.getContext('2d').clearRect(0, 0, image.width, image.height);
-    canvas.getContext('2d').save();
+    canvas.getContext("2d").clearRect(0, 0, image.width, image.height);
+    canvas.getContext("2d").save();
     // FIXME : Does not work on safari https://bugs.webkit.org/show_bug.cgi?id=198416
-    canvas.getContext('2d').filter = `blur(${blurAmount}px)`;
-    canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height);
-    canvas.getContext('2d').restore();
+    canvas.getContext("2d").filter = `blur(${blurAmount}px)`;
+    canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
+    canvas.getContext("2d").restore();
 }
 
-registerModel({
-    name: 'BlurManager',
+Model({
+    name: "BlurManager",
     lifecycleHooks: {
         _willDelete() {
-            this.video.removeEventListener('loadeddata', this._onVideoPlay);
+            this.video.removeEventListener("loadeddata", this._onVideoPlay);
             this.selfieSegmentation.reset();
             this.video.srcObject = null;
             if (this.rejectStreamPromise) {
-                this.rejectStreamPromise(new Error(this.env._t('The blur manager was removed before the beginning of the blur process')));
+                this.rejectStreamPromise(
+                    new Error(
+                        this.env._t(
+                            "The blur manager was removed before the beginning of the blur process"
+                        )
+                    )
+                );
             }
         },
     },
@@ -39,8 +43,8 @@ registerModel({
          * @private
          */
         _drawWithCompositing(image, compositeOperation) {
-            this.canvas.getContext('2d').globalCompositeOperation = compositeOperation;
-            this.canvas.getContext('2d').drawImage(image, 0, 0);
+            this.canvas.getContext("2d").globalCompositeOperation = compositeOperation;
+            this.canvas.getContext("2d").drawImage(image, 0, 0);
         },
         /**
          * @private
@@ -65,7 +69,13 @@ registerModel({
             this.video.srcObject = null;
             this.selfieSegmentation.reset();
             if (this.rejectStreamPromise) {
-                this.rejectStreamPromise(new Error(this.env._t('The source stream was removed before the beginning of the blur process')));
+                this.rejectStreamPromise(
+                    new Error(
+                        this.env._t(
+                            "The source stream was removed before the beginning of the blur process"
+                        )
+                    )
+                );
             }
             if (!this.srcStream) {
                 return;
@@ -90,9 +100,9 @@ registerModel({
                 modelSelection: 1,
             });
             this.selfieSegmentation.onResults(this._onSelfieSegmentationResults);
-            this.video.addEventListener('loadeddata', this._onVideoPlay);
+            this.video.addEventListener("loadeddata", this._onVideoPlay);
             this.video.autoplay = true;
-            Promise.resolve(this.video.play()).catch(()=>{});
+            Promise.resolve(this.video.play()).catch(() => {});
         },
         /**
          * @private
@@ -123,32 +133,22 @@ registerModel({
             drawAndBlurImageOnCanvas(
                 results.image,
                 this.userSetting.backgroundBlurAmount,
-                this.canvasBlur,
+                this.canvasBlur
             );
             this.canvas.width = this.canvasBlur.width;
             this.canvas.height = this.canvasBlur.height;
             drawAndBlurImageOnCanvas(
                 results.segmentationMask,
                 this.userSetting.edgeBlurAmount,
-                this.canvasMask,
+                this.canvasMask
             );
-            this.canvas.getContext('2d').save();
-            this.canvas.getContext('2d').drawImage(
-                results.image,
-                0,
-                0,
-                this.canvas.width,
-                this.canvas.height,
-            );
-            this._drawWithCompositing(
-                this.canvasMask,
-                'destination-in',
-            );
-            this._drawWithCompositing(
-                this.canvasBlur,
-                'destination-over',
-            );
-            this.canvas.getContext('2d').restore();
+            this.canvas.getContext("2d").save();
+            this.canvas
+                .getContext("2d")
+                .drawImage(results.image, 0, 0, this.canvas.width, this.canvas.height);
+            this._drawWithCompositing(this.canvasMask, "destination-in");
+            this._drawWithCompositing(this.canvasBlur, "destination-over");
+            this.canvas.getContext("2d").restore();
         },
         /**
          * @private
@@ -173,32 +173,22 @@ registerModel({
         },
     },
     fields: {
-        canvas: attr({
-            default: document.createElement('canvas'),
-        }),
-        canvasBlur: attr({
-            default: document.createElement('canvas'),
-        }),
-        canvasMask: attr({
-            default: document.createElement('canvas'),
-        }),
-        canvasStream: one('MediaStream', {
+        canvas: attr({ default: document.createElement("canvas") }),
+        canvasBlur: attr({ default: document.createElement("canvas") }),
+        canvasMask: attr({ default: document.createElement("canvas") }),
+        canvasStream: one("MediaStream", {
+            isCausal: true,
             compute() {
                 if (this.srcStream) {
-                    this.canvas.getContext('2d'); // canvas.captureStream() doesn't work on firefox before getContext() is called.
+                    this.canvas.getContext("2d"); // canvas.captureStream() doesn't work on firefox before getContext() is called.
                     const webMediaStream = this.canvas.captureStream();
                     return { webMediaStream, id: webMediaStream.id };
                 }
                 return clear();
             },
-            isCausal: true,
         }),
-        frameRequestTimer: one('Timer', {
-            inverse: 'blurManagerOwnerAsFrameRequest',
-        }),
-        isVideoDataLoaded: attr({
-            default: false,
-        }),
+        frameRequestTimer: one("Timer", { inverse: "blurManagerOwnerAsFrameRequest" }),
+        isVideoDataLoaded: attr({ default: false }),
         /**
          * promise reject function of this.stream promise
          */
@@ -207,10 +197,7 @@ registerModel({
          * promise resolve function of this.stream promise
          */
         resolveStreamPromise: attr(),
-        rtc: one('Rtc', {
-            identifying: true,
-            inverse: 'blurManager',
-        }),
+        rtc: one("Rtc", { identifying: true, inverse: "blurManager" }),
         selfieSegmentation: attr({
             default: new window.SelfieSegmentation({
                 locateFile: (file) => {
@@ -221,33 +208,27 @@ registerModel({
         /**
          * mail.MediaStream, source stream for which the blur effect is computed.
          */
-        srcStream: one('MediaStream', {
-            isCausal: true,
-        }),
+        srcStream: one("MediaStream", { isCausal: true }),
         /**
          * Promise or undefined, based on this.srcStream, resolved when selfieSegmentation has started painting on the canvas,
          * resolves into a web.MediaStream that is the blurred version of this.srcStream.
          */
         stream: attr(),
-        userSetting: one('UserSetting', {
-            related: 'messaging.userSetting',
-        }),
-        video: attr({
-            default: document.createElement('video'),
-        }),
+        userSetting: one("UserSetting", { related: "messaging.userSetting" }),
+        video: attr({ default: document.createElement("video") }),
     },
     onChanges: [
         {
-            dependencies: ['userSetting.edgeBlurAmount'],
-            methodName: '_onChangeEdgeBlurAmountSetting',
+            dependencies: ["userSetting.edgeBlurAmount"],
+            methodName: "_onChangeEdgeBlurAmountSetting",
         },
         {
-            dependencies: ['userSetting.backgroundBlurAmount'],
-            methodName: '_onChangeBackgroundBlurAmountSetting',
+            dependencies: ["userSetting.backgroundBlurAmount"],
+            methodName: "_onChangeBackgroundBlurAmountSetting",
         },
         {
-            dependencies: ['srcStream'],
-            methodName: '_onChangeSrcStream',
+            dependencies: ["srcStream"],
+            methodName: "_onChangeSrcStream",
         },
     ],
 });

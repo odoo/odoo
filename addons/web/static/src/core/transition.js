@@ -1,7 +1,7 @@
 /** @odoo-module */
 import { browser } from "./browser/browser";
 
-const { Component, useState, useEffect, xml, onWillUpdateProps, useComponent } = owl;
+import { Component, useState, useEffect, xml, onWillUpdateProps, useComponent } from "@odoo/owl";
 
 // Allows to disable transitions globally, useful for testing (and maybe for
 // a reduced motion setting in the future?)

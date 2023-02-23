@@ -3,7 +3,18 @@
 import { registry } from "../registry";
 import { PopoverContainer } from "./popover_container";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
+
+/**
+ * @typedef {{
+ *   closeOnClickAway?: boolean;
+ *   onClose?: () => void;
+ *   popoverClass?: string;
+ *   position?: import("@web/core/position_hook").Direction;
+ *   onPositioned?: import("@web/core/position_hook").PositionEventHandler;
+ *   preventClose?: () => void;
+ * }} PopoverServiceAddOptions
+ */
 
 export const popoverService = {
     start() {
@@ -18,15 +29,11 @@ export const popoverService = {
         /**
          * Signals the manager to add a popover.
          *
-         * @param {string | HTMLElement}    target
-         * @param {any}                     Component
-         * @param {Object}                  props
-         * @param {Object}                  [options]
-         * @param {boolean}                 [options.closeOnClickAway=true]
-         * @param {function(): void}        [options.onClose]
-         * @param {string}                  [options.popoverClass]
-         * @param {string}                  [options.position]
-         * @returns {function(): void}
+         * @param {string | HTMLElement} target
+         * @param {typeof import("@odoo/owl").Component} Component
+         * @param {object} props
+         * @param {PopoverServiceAddOptions} [options]
+         * @returns {() => void}
          */
         function add(target, Component, props, options = {}) {
             const id = ++nextId;
@@ -39,6 +46,7 @@ export const popoverService = {
                 close: closeFn,
                 onClose: options.onClose,
                 position: options.position,
+                onPositioned: options.onPositioned,
                 popoverClass: options.popoverClass,
                 closeOnClickAway: options.closeOnClickAway,
                 preventClose: options.preventClose,

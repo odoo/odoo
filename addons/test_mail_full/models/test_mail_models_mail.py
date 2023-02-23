@@ -5,22 +5,40 @@ from odoo import api, fields, models
 
 
 class MailTestPortal(models.Model):
-    """ A model intheriting from mail.thread with some fields used for portal
-    sharing, like a partner, ..."""
+    """ A model inheriting from mail.thread and portal.mixin with some fields
+    used for portal sharing, like a partner, ..."""
     _description = 'Chatter Model for Portal'
     _name = 'mail.test.portal'
+    _inherit = [
+        'portal.mixin',
+        'mail.thread',
+    ]
+
+    name = fields.Char()
+    partner_id = fields.Many2one('res.partner', 'Customer')
+    user_id = fields.Many2one(comodel_name='res.users', string="Salesperson")
+
+    def _compute_access_url(self):
+        super()._compute_access_url()
+        for record in self.filtered('id'):
+            record.access_url = '/my/test_portal/%s' % self.id
+
+
+class MailTestPortalNoPartner(models.Model):
+    """ A model inheriting from portal, but without any partner field """
+    _description = 'Chatter Model for Portal (no partner field)'
+    _name = 'mail.test.portal.no.partner'
     _inherit = [
         'mail.thread',
         'portal.mixin',
     ]
 
     name = fields.Char()
-    partner_id = fields.Many2one('res.partner', 'Customer')
 
     def _compute_access_url(self):
         self.access_url = False
         for record in self.filtered('id'):
-            record.access_url = '/my/test_portal/%s' % self.id
+            record.access_url = '/my/test_portal_no_partner/%s' % self.id
 
 
 class MailTestRating(models.Model):
@@ -69,6 +87,9 @@ class MailTestRating(models.Model):
                 rating.phone_nbr = rating.customer_id.phone
             elif not rating.phone_nbr:
                 rating.phone_nbr = False
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _rating_apply_get_default_subtype_id(self):
         return self.env['ir.model.data']._xmlid_to_res_id("test_mail_full.mt_mail_test_rating_rating_done")

@@ -7,6 +7,17 @@ export const X2M_TYPES = ["one2many", "many2many"];
 const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
 
+/** @typedef {import("./relational_model").OrderTerm} OrderTerm */
+
+/**
+ * @typedef ViewActiveActions {
+ * @property {"view"} type
+ * @property {boolean} edit
+ * @property {boolean} create
+ * @property {boolean} delete
+ * @property {boolean} duplicate
+ */
+
 /**
  * Add dependencies to activeFields
  *
@@ -45,15 +56,9 @@ export function archParseBoolean(str, trueIfEmpty = false) {
  * @param {Object} fields
  * @param {Object} fieldAttrs
  * @param {string[]} activeMeasures
- * @param {string[]} [additionalMeasures=[]]
  * @returns {Object}
  */
-export const computeReportMeasures = (
-    fields,
-    fieldAttrs,
-    activeMeasures,
-    additionalMeasures = []
-) => {
+export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
     const measures = {
         __count: { name: "__count", string: _t("Count"), type: "integer" },
     };
@@ -62,13 +67,10 @@ export const computeReportMeasures = (
             continue;
         }
         const { isInvisible } = fieldAttrs[fieldName] || {};
-        if (isInvisible && !additionalMeasures.includes(fieldName)) {
+        if (isInvisible) {
             continue;
         }
-        if (
-            ["integer", "float", "monetary"].includes(field.type) ||
-            additionalMeasures.includes(fieldName)
-        ) {
+        if (["integer", "float", "monetary"].includes(field.type)) {
             measures[fieldName] = field;
         }
     }
@@ -114,8 +116,13 @@ export function evalDomain(modifier, evalContext) {
     return Boolean(modifier);
 }
 
+/**
+ * @param {Element} rootNode
+ * @returns {ViewActiveActions}
+ */
 export function getActiveActions(rootNode) {
     return {
+        type: "view",
         edit: archParseBoolean(rootNode.getAttribute("edit"), true),
         create: archParseBoolean(rootNode.getAttribute("create"), true),
         delete: archParseBoolean(rootNode.getAttribute("delete"), true),
@@ -187,15 +194,26 @@ export function isNumeric(field) {
     return NUMERIC_TYPES.includes(field.type);
 }
 
+/**
+ * @param {any} value
+ * @returns {boolean}
+ */
+export function isNull(value) {
+    return [null, undefined].includes(value);
+}
+
 export function processButton(node) {
     return {
         className: node.getAttribute("class") || "",
+        disabled: !!node.getAttribute("disabled") || false,
         icon: node.getAttribute("icon") || false,
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
         options: JSON.parse(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
+        display: node.getAttribute("display") || "selection",
         clickParams: {
+            close: archParseBoolean(node.getAttribute("close"), false),
             context: node.getAttribute("context") || "{}",
             name: node.getAttribute("name"),
             type: node.getAttribute("type"),
@@ -223,6 +241,20 @@ export function processMeasure(measure) {
         return measure.map(processMeasure);
     }
     return measure === "__count__" ? "__count" : measure;
+}
+
+/**
+ * @typedef {Object} OrderTerm ?
+ * @property {string} name
+ * @property {boolean} asc
+ */
+
+/**
+ * @param {OrderTerm[]} orderBy
+ * @returns {string}
+ */
+export function orderByToString(orderBy) {
+    return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
 }
 
 /**
@@ -266,12 +298,12 @@ export function toStringExpression(str) {
 }
 
 /**
- * Generate a unique identifier.
+ * Generate a unique identifier (64 bits) in hexadecimal.
  *
  * @returns {string}
  */
 export function uuid() {
-    const array = new Uint8Array(16);
+    const array = new Uint8Array(8);
     window.crypto.getRandomValues(array);
     // Uint8Array to hex
     return [...array].map((b) => b.toString(16).padStart(2, "0")).join("");

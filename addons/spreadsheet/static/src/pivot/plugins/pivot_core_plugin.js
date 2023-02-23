@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 /**
+ *
  * @typedef {Object} PivotDefinition
  * @property {Array<string>} colGroupBys
  * @property {Array<string>} rowGroupBys
@@ -13,10 +14,14 @@
  * @property {Object | null} sortedColumn
  *
  * @typedef {Object} Pivot
- * @property {number} id
+ * @property {string} id
  * @property {string} dataSourceId
  * @property {PivotDefinition} definition
+ * @property {Object} fieldMatching
+ *
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  */
+
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import { makePivotFormula } from "../pivot_helpers";
 import { getMaxObjectId } from "@spreadsheet/helpers/helpers";
@@ -24,17 +29,30 @@ import { HEADER_STYLE, TOP_LEVEL_STYLE, MEASURE_STYLE } from "@spreadsheet/helpe
 import PivotDataSource from "../pivot_data_source";
 import { SpreadsheetPivotTable } from "../pivot_table";
 import CommandResult from "../../o_spreadsheet/cancelled_reason";
+import { _t } from "@web/core/l10n/translation";
+import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
+import { sprintf } from "@web/core/utils/strings";
+import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 
 const { CorePlugin } = spreadsheet;
 
 export default class PivotCorePlugin extends CorePlugin {
-    constructor(getters, history, range, dispatch, config, uuidGenerator) {
-        super(getters, history, range, dispatch, config, uuidGenerator);
-        this.dataSources = config.dataSources;
+    constructor(config) {
+        super(config);
+        this.dataSources = config.custom.dataSources;
 
         this.nextId = 1;
-        /** @type {Object.<number, Pivot>} */
+        /** @type {Object.<string, Pivot>} */
         this.pivots = {};
+        globalFiltersFieldMatchers["pivot"] = {
+            geIds: () => this.getters.getPivotIds(),
+            getDisplayName: (pivotId) => this.getters.getPivotName(pivotId),
+            getTag: (pivotId) => sprintf(_t("Pivot #%s"), pivotId),
+            getFieldMatching: (pivotId, filterId) => this.getPivotFieldMatching(pivotId, filterId),
+            waitForReady: () => this.getPivotsWaitForReady(),
+            getModel: (pivotId) => this.getPivotDefinition(pivotId).model,
+            getFields: (pivotId) => this.getPivotDataSource(pivotId).getFields(),
+        };
     }
 
     allowDispatch(cmd) {
@@ -52,6 +70,11 @@ export default class PivotCorePlugin extends CorePlugin {
                     return CommandResult.InvalidNextId;
                 }
                 break;
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+                if (cmd.pivot) {
+                    return checkFilterFieldMatching(cmd.pivot);
+                }
         }
         return CommandResult.Success;
     }
@@ -67,19 +90,19 @@ export default class PivotCorePlugin extends CorePlugin {
                 const { sheetId, col, row, id, definition, dataSourceId } = cmd;
                 /** @type [number,number] */
                 const anchor = [col, row];
-                const { cols, rows, measures } = cmd.table;
-                const table = new SpreadsheetPivotTable(cols, rows, measures);
+                const { cols, rows, measures, rowTitle } = cmd.table;
+                const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
                 this._addPivot(id, definition, dataSourceId);
                 this._insertPivot(sheetId, anchor, id, table);
-                this.nextId = parseInt(id, 10) + 1;
+                this.history.update("nextId", parseInt(id, 10) + 1);
                 break;
             }
             case "RE_INSERT_PIVOT": {
                 const { sheetId, col, row, id } = cmd;
                 /** @type [number,number] */
                 const anchor = [col, row];
-                const { cols, rows, measures } = cmd.table;
-                const table = new SpreadsheetPivotTable(cols, rows, measures);
+                const { cols, rows, measures, rowTitle } = cmd.table;
+                const table = new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
                 this._insertPivot(sheetId, anchor, id, table);
                 break;
             }
@@ -117,6 +140,15 @@ export default class PivotCorePlugin extends CorePlugin {
                 }
                 break;
             }
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+                if (cmd.pivot) {
+                    this._setPivotFieldMatching(cmd.filter.id, cmd.pivot);
+                }
+                break;
+            case "REMOVE_GLOBAL_FILTER":
+                this._onFilterDeletion(cmd.id);
+                break;
         }
     }
 
@@ -125,7 +157,7 @@ export default class PivotCorePlugin extends CorePlugin {
     // -------------------------------------------------------------------------
 
     /**
-     * @param {number} id
+     * @param {string} id
      * @returns {PivotDataSource|undefined}
      */
     getPivotDataSource(id) {
@@ -134,7 +166,7 @@ export default class PivotCorePlugin extends CorePlugin {
     }
 
     /**
-     * @param {number} id
+     * @param {string} id
      * @returns {string}
      */
     getPivotDisplayName(id) {
@@ -142,15 +174,23 @@ export default class PivotCorePlugin extends CorePlugin {
     }
 
     /**
-     * @param {number} id
+     * @param {string} id
      * @returns {string}
      */
     getPivotName(id) {
-        return this.pivots[id].definition.name;
+        return _t(this.pivots[id].definition.name);
     }
 
     /**
-     * @param {number} id
+     * @param {string} id
+     * @returns {string}
+     */
+    getPivotFieldMatch(id) {
+        return this.pivots[id].fieldMatching;
+    }
+
+    /**
+     * @param {string} id
      * @returns {Promise<PivotDataSource>}
      */
     async getAsyncPivotDataSource(id) {
@@ -169,7 +209,7 @@ export default class PivotCorePlugin extends CorePlugin {
     }
 
     /**
-     * @param {number} id Id of the pivot
+     * @param {string} id Id of the pivot
      *
      * @returns {PivotDefinition}
      */
@@ -191,7 +231,7 @@ export default class PivotCorePlugin extends CorePlugin {
     /**
      * Retrieve all the pivot ids
      *
-     * @returns {Array<number>}
+     * @returns {Array<string>}
      */
     getPivotIds() {
         return Object.keys(this.pivots);
@@ -208,21 +248,61 @@ export default class PivotCorePlugin extends CorePlugin {
         return pivotId in this.pivots;
     }
 
+    /**
+     * Get the current pivotFieldMatching on a pivot
+     *
+     * @param {string} pivotId
+     * @param {string} filterId
+     */
+    getPivotFieldMatching(pivotId, filterId) {
+        return this.pivots[pivotId].fieldMatching[filterId];
+    }
+
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
 
     /**
-     * @param {number} id
+     *
+     * @return {Promise[]}
+     */
+    getPivotsWaitForReady() {
+        return this.getPivotIds().map((pivotId) => this.getPivotDataSource(pivotId).loadMetadata());
+    }
+
+    /**
+     * Sets the current pivotFieldMatching on a pivot
+     *
+     * @param {string} filterId
+     * @param {Record<string,FieldMatching>} pivotFieldMatches
+     */
+    _setPivotFieldMatching(filterId, pivotFieldMatches) {
+        const pivots = { ...this.pivots };
+        for (const [pivotId, fieldMatch] of Object.entries(pivotFieldMatches)) {
+            pivots[pivotId].fieldMatching[filterId] = fieldMatch;
+        }
+        this.history.update("pivots", pivots);
+    }
+
+    _onFilterDeletion(filterId) {
+        const pivots = { ...this.pivots };
+        for (const pivotId in pivots) {
+            this.history.update("pivots", pivotId, "fieldMatching", filterId, undefined);
+        }
+    }
+
+    /**
+     * @param {string} id
      * @param {PivotDefinition} definition
      * @param {string} dataSourceId
      */
-    _addPivot(id, definition, dataSourceId) {
+    _addPivot(id, definition, dataSourceId, fieldMatching = {}) {
         const pivots = { ...this.pivots };
         pivots[id] = {
             id,
             definition,
             dataSourceId,
+            fieldMatching,
         };
 
         if (!this.dataSources.contains(dataSourceId)) {
@@ -234,7 +314,7 @@ export default class PivotCorePlugin extends CorePlugin {
     /**
      * @param {string} sheetId
      * @param {[number, number]} anchor
-     * @param {number} id
+     * @param {string} id
      * @param {SpreadsheetPivotTable} table
      */
     _insertPivot(sheetId, anchor, id, table) {
@@ -247,7 +327,7 @@ export default class PivotCorePlugin extends CorePlugin {
     /**
      * @param {string} sheetId
      * @param {[number, number]} anchor
-     * @param {number} id
+     * @param {string} id
      * @param {SpreadsheetPivotTable} table
      */
     _insertColumns(sheetId, anchor, id, table) {
@@ -345,12 +425,19 @@ export default class PivotCorePlugin extends CorePlugin {
     /**
      * @param {string} sheetId
      * @param {[number, number]} anchor
-     * @param {number} id
+     * @param {string} id
      * @param {SpreadsheetPivotTable} table
      */
     _insertRows(sheetId, anchor, id, table) {
-        let y = anchor[1] + table.getColHeight();
+        let y = anchor[1] + table.getColHeight() - 1;
         const x = anchor[0];
+        this.dispatch("UPDATE_CELL", {
+            col: x,
+            row: y,
+            sheetId,
+            content: table.getRowTitle(),
+        });
+        y++;
         for (const row of table.getRowHeaders()) {
             const args = [id];
             for (let i = 0; i < row.fields.length; i++) {
@@ -370,7 +457,7 @@ export default class PivotCorePlugin extends CorePlugin {
     /**
      * @param {string} sheetId
      * @param {[number, number]} anchor
-     * @param {number} id
+     * @param {string} id
      * @param {SpreadsheetPivotTable} table
      */
     _insertBody(sheetId, anchor, id, table) {
@@ -445,7 +532,7 @@ export default class PivotCorePlugin extends CorePlugin {
                     },
                     name: pivot.name,
                 };
-                this._addPivot(id, definition, this.uuidGenerator.uuidv4());
+                this._addPivot(id, definition, this.uuidGenerator.uuidv4(), pivot.fieldMatching);
             }
         }
         this.nextId = data.pivotNextId || getMaxObjectId(this.pivots) + 1;
@@ -460,6 +547,7 @@ export default class PivotCorePlugin extends CorePlugin {
         for (const id in this.pivots) {
             data.pivots[id] = JSON.parse(JSON.stringify(this.getPivotDefinition(id)));
             data.pivots[id].measures = data.pivots[id].measures.map((elt) => ({ field: elt }));
+            data.pivots[id].fieldMatching = this.pivots[id].fieldMatching;
         }
         data.pivotNextId = this.nextId;
     }
@@ -474,4 +562,6 @@ PivotCorePlugin.getters = [
     "getAsyncPivotDataSource",
     "isExistingPivot",
     "getPivotDataSource",
+    "getPivotFieldMatch",
+    "getPivotFieldMatching",
 ];

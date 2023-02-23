@@ -183,10 +183,10 @@ class Warehouse(models.Model):
                 for warehouse in self:
                     warehouse._update_partner_data(vals['partner_id'], warehouse.company_id.id)
 
-        res = super(Warehouse, self).write(vals)
-
         if vals.get('code') or vals.get('name'):
             warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
+
+        res = super().write(vals)
 
         for warehouse in warehouses:
             # check if we need to delete and recreate route
@@ -290,11 +290,16 @@ class Warehouse(models.Model):
             max_cnt = max(cnt_by_company, key=lambda k: k['company_id_count'])
             group_user = self.env.ref('base.group_user')
             group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
+            group_stock_multi_locations = self.env.ref('stock.group_stock_multi_locations')
             if max_cnt['company_id_count'] <= 1 and group_stock_multi_warehouses in group_user.implied_ids:
                 group_user.write({'implied_ids': [(3, group_stock_multi_warehouses.id)]})
                 group_stock_multi_warehouses.write({'users': [(3, user.id) for user in group_user.users]})
             if max_cnt['company_id_count'] > 1 and group_stock_multi_warehouses not in group_user.implied_ids:
-                group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, self.env.ref('stock.group_stock_multi_locations').id)]})
+                if group_stock_multi_locations not in group_user.implied_ids:
+                    self.env['res.config.settings'].create({
+                        'group_stock_multi_locations': True,
+                    }).execute()
+                group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, group_stock_multi_locations.id)]})
 
     @api.model
     def _update_partner_data(self, partner_id, company_id):
@@ -336,7 +341,7 @@ class Warehouse(models.Model):
 
         for picking_type, values in data.items():
             if self[picking_type]:
-                self[picking_type].update(values)
+                self[picking_type].write(values)
             else:
                 data[picking_type].update(create_data[picking_type])
                 sequence = IrSequenceSudo.create(sequence_data[picking_type])
@@ -402,6 +407,7 @@ class Warehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
+                    'propagate_carrier': True,
                     'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
                 },
                 'update_values': {
@@ -881,7 +887,7 @@ class Warehouse(models.Model):
                 if warehouse.mto_pull_id:
                     warehouse.mto_pull_id.write({'name': warehouse.mto_pull_id.name.replace(warehouse.name, new_name, 1)})
         for warehouse in self:
-            sequence_data = warehouse._get_sequence_values()
+            sequence_data = warehouse._get_sequence_values(name=new_name, code=new_code)
             # `ir.sequence` write access is limited to system user
             if self.user_has_groups('stock.group_stock_manager'):
                 warehouse = warehouse.sudo()
@@ -1008,39 +1014,41 @@ class Warehouse(models.Model):
             },
         }, max_sequence + 6
 
-    def _get_sequence_values(self):
+    def _get_sequence_values(self, name=False, code=False):
         """ Each picking type is created with a sequence. This method returns
         the sequence values associated to each picking type.
         """
+        name = name if name else self.name
+        code = code if code else self.code
         return {
             'in_type_id': {
-                'name': self.name + ' ' + _('Sequence in'),
-                'prefix': self.code + '/IN/', 'padding': 5,
+                'name': name + ' ' + _('Sequence in'),
+                'prefix': code + '/IN/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'out_type_id': {
-                'name': self.name + ' ' + _('Sequence out'),
-                'prefix': self.code + '/OUT/', 'padding': 5,
+                'name': name + ' ' + _('Sequence out'),
+                'prefix': code + '/OUT/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pack_type_id': {
-                'name': self.name + ' ' + _('Sequence packing'),
-                'prefix': self.code + '/PACK/', 'padding': 5,
+                'name': name + ' ' + _('Sequence packing'),
+                'prefix': code + '/PACK/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pick_type_id': {
-                'name': self.name + ' ' + _('Sequence picking'),
-                'prefix': self.code + '/PICK/', 'padding': 5,
+                'name': name + ' ' + _('Sequence picking'),
+                'prefix': code + '/PICK/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'int_type_id': {
-                'name': self.name + ' ' + _('Sequence internal'),
-                'prefix': self.code + '/INT/', 'padding': 5,
+                'name': name + ' ' + _('Sequence internal'),
+                'prefix': code + '/INT/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'return_type_id': {
-                'name': self.name + ' ' + _('Sequence return'),
-                'prefix': self.code + '/RET/', 'padding': 5,
+                'name': name + ' ' + _('Sequence return'),
+                'prefix': code + '/RET/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
         }

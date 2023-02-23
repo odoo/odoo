@@ -5,9 +5,8 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { getFixture } from "@web/../tests/helpers/utils";
 import { loadJS, templates } from "@web/core/assets";
 
-const { App } = owl;
+import { App } from "@odoo/owl";
 const { Spreadsheet } = spreadsheet;
-const { getMenuChildren } = spreadsheet.helpers;
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
@@ -21,7 +20,7 @@ export async function mountSpreadsheet(model) {
     const app = new App(Spreadsheet, {
         props: { model },
         templates: templates,
-        env: model.config.evalContext.env,
+        env: model.config.custom.env,
         test: true,
     });
     registerCleanup(() => app.destroy());
@@ -31,14 +30,22 @@ export async function mountSpreadsheet(model) {
 }
 
 export async function doMenuAction(registry, path, env) {
-    const root = path[0];
-    let node = registry.get(root);
-    for (const p of path.slice(1)) {
-        const children = getMenuChildren(node, env);
-        node = children.find((child) => child.id === p);
+    await getMenuItem(registry, path, env).action(env);
+}
+
+function getMenuItem(registry, _path, env) {
+    const path = [..._path];
+    let items = registry.getMenuItems();
+    while (items.length && path.length) {
+        const id = path.shift();
+        const item = items.find((item) => item.id === id);
+        if (!item) {
+            throw new Error(`Menu item ${id} not found`);
+        }
+        if (path.length === 0) {
+            return item;
+        }
+        items = item.children(env);
     }
-    if (!node) {
-        throw new Error(`Cannot find menu with path "${path.join("/")}"`);
-    }
-    await node.action(env);
+    throw new Error(`Menu item not found`);
 }

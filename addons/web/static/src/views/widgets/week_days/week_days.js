@@ -3,12 +3,16 @@
 import { registry } from "@web/core/registry";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { localization } from "@web/core/l10n/localization";
+import { _lt } from "@web/core/l10n/translation";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
 export class WeekDays extends Component {
+    static template = "web.WeekDays";
+    static components = { CheckBox };
+
     get weekdays() {
         return [
             ...WEEKDAYS.slice(localization.weekStart % WEEKDAYS.length, WEEKDAYS.length),
@@ -24,17 +28,17 @@ export class WeekDays extends Component {
     }
 }
 
-WeekDays.template = "web.WeekDays";
-WeekDays.components = { CheckBox };
-
-WeekDays.fieldDependencies = {
-    sun: { type: "boolean" },
-    mon: { type: "boolean" },
-    tue: { type: "boolean" },
-    wed: { type: "boolean" },
-    thu: { type: "boolean" },
-    fri: { type: "boolean" },
-    sat: { type: "boolean" },
+export const weekDays = {
+    component: WeekDays,
+    fieldDependencies: {
+        sun: { type: "boolean", string: _lt("Sun") },
+        mon: { type: "boolean", string: _lt("Mon") },
+        tue: { type: "boolean", string: _lt("Tue") },
+        wed: { type: "boolean", string: _lt("Wed") },
+        thu: { type: "boolean", string: _lt("Thu") },
+        fri: { type: "boolean", string: _lt("Fri") },
+        sat: { type: "boolean", string: _lt("Sat") },
+    },
 };
 
-registry.category("view_widgets").add("week_days", WeekDays);
+registry.category("view_widgets").add("week_days", weekDays);

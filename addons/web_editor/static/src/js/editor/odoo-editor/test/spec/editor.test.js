@@ -1,5 +1,8 @@
 import { OdooEditor } from '../../src/OdooEditor.js';
-import { getTraversedNodes } from '../../src/utils/utils.js';
+import {
+    getTraversedNodes,
+    setSelection,
+} from '../../src/utils/utils.js';
 import {
     BasicEditor,
     deleteBackward,
@@ -12,6 +15,7 @@ import {
     undo,
     unformat,
     triggerEvent,
+    nextTickFrame,
 } from '../utils.js';
 
 async function twoDeleteForward(editor) {
@@ -81,6 +85,28 @@ describe('Editor', () => {
                     contentBefore: '<p>ab</p><i class="fa fa-beer"></i><p>c</p>',
                     contentAfter: '<p>ab</p><p style="margin-bottom: 0px;"><i class="fa fa-beer"></i></p><p>c</p>',
                 });
+            });
+        });
+        describe('allowInlineAtRoot options', () => {
+            it('should wrap inline node inside a p by default', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+                });
+            });
+            it('should wrap inline node inside a p if value is false', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+                }, { allowInlineAtRoot: false }
+                );
+            });
+            it('should keep inline nodes unchanged if value is true', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: 'abc',
+                    contentAfter: 'abc',
+                }, { allowInlineAtRoot: true, }
+                );
             });
         });
     });
@@ -1164,12 +1190,244 @@ X[]
                     // JW cAfter: '<p>[]def</p>',
                     contentAfter: '<h1>[]<br></h1><p>def</p>',
                 });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>[abc</h1><p>]<br></p><p>def</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<h1>[]<br></h1><p><br></p><p>def</p>',
+                });
+            });
+            it('should delete last character of paragraph, ignoring the selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p>]def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>ab[]</p><p>def</p>',
+                });
+            });
+            it('should delete first character of paragraph, as well as selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc[</p><p>d]ef</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>abc[]ef</p>',
+                });
+            });
+            it('should delete last character of paragraph, ignoring the selected paragraph break leading to an unbreakable', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p t="unbreak">]def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>ab[]</p><p t="unbreak">def</p>',
+                });
+            });
+            it('should delete first character of unbreakable, ignoring selected paragraph break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc[</p><p t="unbreak">d]ef</p>',
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>abc[]</p><p t="unbreak">ef</p>',
+                });
+            });
+            it('should remove a fully selected table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>a[b</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: '<p>a[]l</p>',
+                });
+            });
+            it('should only remove the text content of cells in a partly selected table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td class="o_selected_td">e[f</td><td>gh</td></tr>
+                            <tr><td>ij</td><td class="o_selected_td">k]l</td><td>mn</td></tr>
+                            <tr><td>op</td><td>qr</td><td>st</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td>[]<br></td><td>gh</td></tr>
+                            <tr><td>ij</td><td><br></td><td>mn</td></tr>
+                            <tr><td>op</td><td>qr</td><td>st</td></tr>
+                        </tbody></table>`,
+                    ),
+                });
+            });
+            it('should remove some text and a table (even if the table is partly selected)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>a[b</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>g]h</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>kl</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: unformat(
+                        `<p>a[]</p>
+                        <p>kl</p>`,
+                    ),
+                });
+            });
+            it('should remove a table and some text (even if the table is partly selected)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>ab</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>i[j</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: unformat(
+                        `<p>ab</p>
+                        <p>[]l</p>`,
+                    ),
+                });
+            });
+            it('should remove some text, a table and some more text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>a[b</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: `<p>a[]l</p>`,
+                });
+            });
+            it('should remove a selection of several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td>e[f</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <table><tbody>
+                            <tr><td>cd</td><td>e]f</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
+            });
+            it('should remove a selection including several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>0[1</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>23</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>45</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>67]</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: `<p>0[]</p>`,
+                });
+            });
+            it('should remove everything, including several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>[01</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>23</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>45</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>67]</p>`,
+                    ),
+                    stepFunction: deleteForward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
             });
             it('should empty an inline unremovable but remain in it', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
                     stepFunction: deleteForward,
                     contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
+                });
+            });it('should remove element which is contenteditable=true even if their parent is contenteditable=false', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before[o</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>intruder</p></div>
+                        </div>
+                        <p>o]after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]after</p>`),
+                });
+            });
+            it('should extend the range to fully include contenteditable=false that are partially selected at the end of the range', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before[o</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>intruder]</p></div>
+                        </div>
+                        <p>after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]</p><p>after</p>`),
+                });
+            });
+            it('should extend the range to fully include contenteditable=false that are partially selected at the start of the range', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <p>before</p>
+                        <div contenteditable="false">
+                            <div contenteditable="true"><p>[intruder</p></div>
+                        </div>
+                        <p>o]after</p>`),
+                    stepFunction: async editor => {
+                        await deleteForward(editor);
+                    },
+                    contentAfter: unformat(`
+                        <p>before[]after</p>`),
                 });
             });
         });
@@ -2415,6 +2673,11 @@ X[]
                     // JW cAfter: '<p>[]def</p>',
                     contentAfter: '<h1>[]<br></h1><p>def</p>',
                 });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>[abc</h1><p>]<br></p><p>def</p>',
+                    stepFunction: deleteBackward,
+                    contentAfter: '<h1>[]<br></h1><p><br></p><p>def</p>',
+                });
             });
             it('should delete last character of paragraph, ignoring the selected paragraph break', async () => {
                 await testEditor(BasicEditor, {
@@ -2424,6 +2687,14 @@ X[]
                     // doesn't remove a paragraph break.
                     stepFunction: deleteBackward,
                     contentAfter: '<p>ab[]</p><p>def</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p>]<br></p><p>def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>ab[]</p><p><br></p><p>def</p>',
                 });
             });
             it('should delete first character of paragraph, as well as selected paragraph break', async () => {
@@ -2441,6 +2712,22 @@ X[]
                     // doesn't remove a paragraph break.
                     stepFunction: deleteBackward,
                     contentAfter: '<p>ab[]</p><p t="unbreak">def</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p t="unbreak">]<br></p><p>def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>ab[]</p><p t="unbreak"><br></p><p>def</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[c</p><p>]<br></p><p t="unbreak">def</p>',
+                    // This type of selection (typically done with a triple
+                    // click) is "corrected" before remove so triple clicking
+                    // doesn't remove a paragraph break.
+                    stepFunction: deleteBackward,
+                    contentAfter: '<p>ab[]</p><p><br></p><p t="unbreak">def</p>',
                 });
             });
             it('should delete first character of unbreakable, ignoring selected paragraph break', async () => {
@@ -2464,7 +2751,26 @@ X[]
                     contentAfter: '<p>a[]l</p>',
                 });
             });
-            it('should only remove the text content and full rows a partly selected table', async () => {
+            it('should only remove the text content of cells in a partly selected table', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td class="o_selected_td">e[f</td><td>gh</td></tr>
+                            <tr><td>ij</td><td class="o_selected_td">k]l</td><td>mn</td></tr>
+                            <tr><td>op</td><td>qr</td><td>st</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td>[]<br></td><td>gh</td></tr>
+                            <tr><td>ij</td><td><br></td><td>mn</td></tr>
+                            <tr><td>op</td><td>qr</td><td>st</td></tr>
+                        </tbody></table>`,
+                    ),
+                });
+            });
+            it('should remove some text and a table (even if the table is partly selected)', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: unformat(
                         `<p>a[b</p>
@@ -2477,11 +2783,107 @@ X[]
                     stepFunction: deleteBackward,
                     contentAfter: unformat(
                         `<p>a[]</p>
-                        <table><tbody>
-                            <tr><td>h</td><td>ij</td></tr>
-                        </tbody></table>
                         <p>kl</p>`,
                     ),
+                });
+            });
+            it('should remove a table and some text (even if the table is partly selected)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>ab</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>i[j</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: unformat(
+                        `<p>ab</p>
+                        <p>[]l</p>`,
+                    ),
+                });
+            });
+            it('should remove some text, a table and some more text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>a[b</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>k]l</p>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>a[]l</p>`,
+                });
+            });
+            it('should remove a selection of several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                            <tr><td>cd</td><td>e[f</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <table><tbody>
+                            <tr><td>cd</td><td>e]f</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]<br></p>`,
+                });
+            });
+            it('should remove a selection including several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>0[1</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>23</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>45</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>67]</p>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>0[]</p>`,
+                });
+            });
+            it('should remove everything, including several tables', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>[01</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>23</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>45</p>
+                        <table><tbody>
+                            <tr><td>cd</td><td>ef</td></tr>
+                            <tr><td>gh</td><td>ij</td></tr>
+                        </tbody></table>
+                        <p>67]</p>`,
+                    ),
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>[]<br></p>`,
                 });
             });
             it('should empty an inline unremovable but remain in it', async () => {
@@ -2492,9 +2894,6 @@ X[]
                 });
             });
         });
-    });
-
-    describe('deleterange', () => {
         it('should remove element which is contenteditable=true even if their parent is contenteditable=false', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: unformat(`
@@ -3127,18 +3526,15 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab []cd</p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's before a
-                        // <br>).
-                        // JW cAfter: '<p>ab&nbsp;<br>[]cd</p>',
-                        contentAfter: '<p>ab <br>[]cd</p>', // Note: JW seems just wrong here...
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p>ab&nbsp;<br>[]cd</p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab[] cd</p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's after a
-                        // <br>).
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's after a <br>).
                         contentAfter: '<p>ab<br>[]&nbsp;cd</p>',
                     });
                 });
@@ -3235,16 +3631,15 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc <b>[]def</b></p>',
                         stepFunction: insertLineBreak,
-                        // JW cAfter: '<p>abc&nbsp;<br><b>[]def</b></p>',
-                        contentAfter: '<p>abc <b><br>[]def</b></p>', // Note: JW seems just wrong here
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p>abc&nbsp;<b><br>[]def</b></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc<b>[] def </b></p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible (because it's before a
-                        // <br>).
-                        // JW cAfter: '<p>abc<br><b>[]&nbsp;def</b></p>',
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
                         contentAfter: '<p>abc<b><br>[]&nbsp;def </b></p>',
                     });
                 });
@@ -3275,8 +3670,9 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>abc []</b>def</p>',
                         stepFunction: insertLineBreak,
-                        // JW cAfter: '<p><b>abc&nbsp;[]<br></b>def</p>',
-                        contentAfter: '<p><b>abc <br>[]</b>def</p>', // Note: JW seems wrong here
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p><b>abc&nbsp;<br>[]</b>def</p>',
                     });
                 });
                 it('should insert a <br> at the beginning of a format node', async () => {
@@ -3308,10 +3704,9 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>ab []cd</b></p>',
                         stepFunction: insertLineBreak,
-                        // The space is converted to a non-breaking
-                        // space so it is visible.
-                        // JW cAfter: '<p><b>ab&nbsp;<br>[]cd</b></p>',
-                        contentAfter: '<p><b>ab <br>[]cd</b></p>', // Note: JW seems just wrong here...
+                        // The space is converted to a non-breaking space so it
+                        // is visible (because it's before a <br>).
+                        contentAfter: '<p><b>ab&nbsp;<br>[]cd</b></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>ab[] cd</b></p>',
@@ -3471,6 +3866,27 @@ X[]
                             ),
                         )
                         .to.eql(['abc', 'DIV', 'def']);
+                },
+            });
+        });
+        it('should return an image in a parent selection', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div id="parent-element-to-select"><img/></div>',
+                stepFunction: editor => {
+                    const sel = editor.document.getSelection();
+                    const range = editor.document.createRange();
+                    const parent = editor.document.querySelector('div#parent-element-to-select');
+                    range.setStart(parent, 0);
+                    range.setEnd(parent, 1);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    window.chai
+                        .expect(
+                            getTraversedNodes(editor.editable).map(node =>
+                                node.nodeType === Node.TEXT_NODE ? node.textContent : node.nodeName,
+                            ),
+                        )
+                        .to.eql(['DIV', 'IMG']);
                 },
             });
         });
@@ -3671,6 +4087,56 @@ X[]
                         editor.historyStep();
                     },
                     contentAfter: `<div contenteditable="false"><div contenteditable="true">abc</div></div>`,
+                });
+            });
+        });
+        describe('prevent renderingClasses to be set from history', () => {
+            it('should prevent renderingClasses to be added', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        p.className = 'x';
+                        editor.observerFlush();
+                        editor.historyStep();
+                        window.chai.expect(editor._historySteps.length).to.eql(1);
+                    },
+                }, {
+                    renderingClasses: ['x']
+                });
+            });
+            it('should prevent renderingClasses to be added when adding 2 classes', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        p.className = 'x y';
+                        editor.observerFlush();
+                        editor.historyStep();
+                        editor.historyUndo();
+                        editor.historyRedo();
+                    },
+                    contentAfter: `<p class="y">a</p>`,
+                }, {
+                    renderingClasses: ['x']
+                });
+            });
+            it('should prevent renderingClasses to be added in historyApply', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a</p>`,
+                    stepFunction: async editor => {
+                        const p = editor.editable.querySelector('p');
+                        editor.historyApply([{
+                            attributeName:"class",
+                            id: p.oid,
+                            oldValue: null,
+                            type:"attributes",
+                            value: "x y",
+                        }]);
+                    },
+                    contentAfter: `<p class="y">a</p>`,
+                }, {
+                    renderingClasses: ['x']
                 });
             });
         });
@@ -4876,6 +5342,98 @@ X[]
                 });
             });
         });
+        describe('table ui', () => {
+            describe('contenteditable', () => {
+                const tableUiMenuTest = async (editor) => {
+                    const column = editor.editable.querySelector('td');
+                    triggerEvent(column, 'mousemove', {});
+                    await nextTickFrame();
+                    if (editor._rowUi.style.visibility === 'visible') {
+                        const paragraph = editor.editable.querySelector('p');
+                        const text = document.createTextNode('table ui');
+                        paragraph.replaceChildren(text);
+                    }
+                };
+                it('should display the table ui menu if the table element isContentEditable=true', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `
+                        <p>no table ui</p>
+                        <table><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                        stepFunction: tableUiMenuTest,
+                        contentAfter: `
+                        <p>table ui</p>
+                        <table><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                    });
+                });
+                it('should not display the table ui menu if the table element isContentEditable=false', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `
+                        <p>no table ui</p>
+                        <table contenteditable="false"><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                        stepFunction: tableUiMenuTest,
+                        contentAfter: `
+                        <p>no table ui</p>
+                        <table contenteditable="false"><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                    });
+                });
+                const resizeTest = async (editor) => {
+                    const column = editor.editable.querySelector('td');
+                    triggerEvent(column, 'mousemove', {});
+                    await nextTickFrame();
+                    if (['o_row_resize', 'o_col_resize'].filter(resize => editor.editable.classList.contains(resize)).length) {
+                        const paragraph = editor.editable.querySelector('p');
+                        const text = document.createTextNode('resizeCursor');
+                        paragraph.replaceChildren(text);
+                    }
+                };
+                it('should display the resizeCursor if the table element isContentEditable=true', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `
+                        <p>no resizeCursor</p>
+                        <table><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                        stepFunction: resizeTest,
+                        contentAfter: `
+                        <p>resizeCursor</p>
+                        <table><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                    });
+                });
+                it('should not display the resizeCursor if the table element isContentEditable=false', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `
+                        <p>no resizeCursor</p>
+                        <table contenteditable="false"><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                        stepFunction: resizeTest,
+                        contentAfter: `
+                        <p>no resizeCursor</p>
+                        <table contenteditable="false"><tbody><tr>
+                            <td>11[]</td>
+                        </tr></tbody></table>
+                        `,
+                    });
+                });
+            });
+        });
     });
 
     // Note that arrow keys test have a contentAfter that is not reflective of
@@ -5134,6 +5692,22 @@ X[]
                 });
             });
         });
+        it('should apply a color to a slice of text containing a span', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[b<span>c</span>d]e</p>',
+                stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'color'),
+                contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b<span>c</span>d]</font>e</p>',
+            });
+        });
+        it('should distribute color to texts and to button separately', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[b<a class="btn">c</a>d]e</p>',
+                stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'color'),
+                contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b</font>' +
+                    '<a class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
+                    '<font style="color: rgb(255, 0, 0);">d]</font>e</p>',
+            });
+        });
     });
 
     describe('markdown', () => {
@@ -5144,12 +5718,24 @@ X[]
                     stepFunction: async editor => insertText(editor, '`'),
                     contentAfter: '<p>\u200B<code class="o_inline_code">ab</code>\u200B[]cd</p>',
                 });
+                // BACKWARDS
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]ab`cd</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>\u200B<code class="o_inline_code">[]ab</code>cd</p>',
+                });
             });
             it('should convert text into inline code (middle)', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>ab`cd[]ef</p>',
                     stepFunction: async editor => insertText(editor, '`'),
                     contentAfter: '<p>ab<code class="o_inline_code">cd</code>\u200B[]ef</p>',
+                });
+                // BACKWARDS
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd`ef</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>ab<code class="o_inline_code">[]cd</code>ef</p>',
                 });
             });
             it('should convert text into inline code (end)', async () => {
@@ -5158,12 +5744,25 @@ X[]
                     stepFunction: async editor => insertText(editor, '`'),
                     contentAfter: '<p>ab<code class="o_inline_code">cd</code>\u200B[]</p>',
                 });
+                // BACKWARDS
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd`</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    contentAfter: '<p>ab<code class="o_inline_code">[]cd</code></p>',
+                });
             });
-            it('should convert text into inline code and leave an earlier and a later backtick alone', async () => {
+            it('should convert text into inline code, with parasite backticks', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a`b`cd[]e`f</p>',
                     stepFunction: async editor => insertText(editor, '`'),
+                    // The closest PREVIOUS backtick is prioritary
                     contentAfter: '<p>a`b<code class="o_inline_code">cd</code>\u200B[]e`f</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]cd`e`f</p>',
+                    stepFunction: async editor => insertText(editor, '`'),
+                    // If there is no previous backtick, use the closest NEXT backtick.
+                    contentAfter: '<p>ab<code class="o_inline_code">[]cd</code>e`f</p>',
                 });
             });
             it('should not convert text into inline code when traversing HTMLElements', async () => {
@@ -5186,6 +5785,109 @@ X[]
                     stepFunction: async editor => insertText(editor, '`'),
                     contentAfter: '<p>a<code class="o_inline_code">b`cd`[]e</code>f</p>',
                 });
+            });
+            it('should convert text into inline code even when text nodes are split', async () => {
+                // BEFORE
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>b`c[]d</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.before(document.createTextNode('a'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>ab<code class="o_inline_code">c</code>\u200B[]d</p>',
+                });
+                // AFTER
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a`b[]c</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.after(document.createTextNode('d'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>a<code class="o_inline_code">b</code>\u200B[]cd</p>',
+                });
+                // BOTH
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>b`c[]d</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.before(document.createTextNode('a'));
+                        editor.document.getSelection().anchorNode.after(document.createTextNode('e'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>ab<code class="o_inline_code">c</code>\u200B[]de</p>',
+                });
+            });
+            it('should convert text into inline code even when the other backtick is in a separate text node', async () => {
+                // BACKTICK IS PREVIOUS SIBLING
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]c</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.before(document.createTextNode('`'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>\u200B<code class="o_inline_code">ab</code>\u200B[]c</p>',
+                });
+                // BACKTICK IS NEXT SIBLING
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>ab[]c</p>',
+                    stepFunction: async editor => {
+                        editor.document.getSelection().anchorNode.after(document.createTextNode('`'));
+                        insertText(editor, '`');
+                    },
+                    contentAfter: '<p>ab<code class="o_inline_code">[]c</code></p>',
+                });
+            });
+        });
+    });
+
+    describe('oe-protected', () => {
+        it('should ignore protected elements children mutations', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                <div><p>a[]</p></div>
+                <div data-oe-protected="true"><p>a</p></div>
+                `),
+                stepFunction: async editor => {
+                    await insertText(editor, 'bc');
+                    const protectedParagraph = editor.editable.querySelector('[data-oe-protected="true"] > p');
+                    setSelection(protectedParagraph, 1);
+                    await insertText(editor, 'b');
+                    editor.historyUndo();
+                },
+                contentAfterEdit: unformat(`
+                <div><p>ab[]</p></div>
+                <div data-oe-protected="true"><p>ab</p></div>
+                `),
+            });
+        });
+        it('should not sanitize protected elements children', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                <div>
+                    <p><i class="fa"></i></p>
+                    <ul><li><p><br></p></li></ul>
+                </div>
+                <div data-oe-protected="true">
+                    <p><i class="fa"></i></p>
+                    <ul><li><p><br></p></li></ul>
+                </div>
+                `),
+                stepFunction: async editor => editor.sanitize(),
+                contentAfterEdit: unformat(`
+                <div>
+                    <p><i class="fa" contenteditable="false">\u200B</i></p>
+                    <ul><li><br></li></ul>
+                </div>
+                <div data-oe-protected="true">
+                    <p><i class="fa"></i></p>
+                    <ul><li><p><br></p></li></ul>
+                </div>
+                `),
+            });
+        });
+        it('should remove protected elements children during cleaning', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><p>a[]</p></div><div data-oe-protected="true"><p>a</p></div>',
+                contentAfter: '<div><p>a[]</p></div><div data-oe-protected="true"></div>',
             });
         });
     });

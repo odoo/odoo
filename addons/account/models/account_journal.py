@@ -4,6 +4,7 @@ from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import remove_accents
+from collections import defaultdict
 import logging
 import re
 
@@ -62,8 +63,15 @@ class AccountJournal(models.Model):
                     return model
         return 'odoo'
 
-    name = fields.Char(string='Journal Name', required=True)
-    code = fields.Char(string='Short Code', size=5, required=True, help="Shorter name used for display. The journal entries of this journal will also be named using this prefix by default.")
+    name = fields.Char(string='Journal Name', required=True, translate=True)
+    code = fields.Char(
+        string='Short Code',
+        size=5,
+        compute='_compute_code', readonly=False, store=True,
+        required=True, precompute=True,
+        help="Shorter name used for display. "
+             "The journal entries of this journal will also be named using this prefix by default."
+    )
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
     type = fields.Selection([
             ('sale', 'Sales'),
@@ -79,20 +87,19 @@ class AccountJournal(models.Model):
         "Select 'General' for miscellaneous operations journals.")
     account_control_ids = fields.Many2many('account.account', 'journal_account_control_rel', 'journal_id', 'account_id', string='Allowed accounts',
         check_company=True,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]")
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '!=', 'off_balance')]")
     default_account_type = fields.Char(string='Default Account Type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),"
-               "'|', ('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
+               "('account_type', '=', default_account_type), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]")
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
                 ('account_type', '=', 'asset_current')]")
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
@@ -149,14 +156,12 @@ class AccountJournal(models.Model):
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
                 ('account_type', 'in', ('income', 'income_other'))]")
     loss_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'not in', ('asset_receivable', 'liability_payable')), \
                 ('account_type', '=', 'expense')]")
 
     # Bank journals fields
@@ -205,6 +210,18 @@ class AccountJournal(models.Model):
     _sql_constraints = [
         ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
     ]
+
+    @api.depends('type', 'company_id')
+    def _compute_code(self):
+        cache = defaultdict(list)
+        for record in self:
+            if not record.code and record.type in ('bank', 'cash'):
+                record.code = self.get_next_bank_cash_default_code(
+                    record.type,
+                    record.company_id,
+                    cache.get(record.company_id)
+                )
+                cache[record.company_id].append(record.code)
 
     @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')
     def _compute_available_payment_method_ids(self):
@@ -263,14 +280,18 @@ class AccountJournal(models.Model):
                     if vals['mode'] == 'unique' and (already_used or is_protected):
                         continue
 
-                    # Only the manual payment method can be used multiple time on a single journal.
-                    if payment_method.code != "manual" and already_used:
+                    # Some payment methods can be used multiple times on a single journal.
+                    if payment_method.code not in self._get_reusable_payment_methods() and already_used:
                         continue
 
                     pay_method_ids_commands_x_journal[journal].append(Command.link(payment_method.id))
 
         for journal, pay_method_ids_commands in pay_method_ids_commands_x_journal.items():
             journal.available_payment_method_ids = pay_method_ids_commands
+
+    @api.model
+    def _get_reusable_payment_methods(self):
+        return {'manual'}
 
     @api.depends('type')
     def _compute_default_account_type(self):
@@ -549,8 +570,8 @@ class AccountJournal(models.Model):
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
-                journal_entry = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
-                if len(journal_entry) > 0:
+                journal_entry = self.env['account.move'].sudo().search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
+                if journal_entry:
                     field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
         result = super(AccountJournal, self).write(vals)
@@ -571,13 +592,16 @@ class AccountJournal(models.Model):
         return result
 
     @api.model
-    def get_next_bank_cash_default_code(self, journal_type, company):
+    def get_next_bank_cash_default_code(self, journal_type, company, cache=None):
         journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
-        journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company.id)])
+        existing_codes = set(self.env['account.journal'].search([
+            ('code', 'like', journal_code_base + '%'),
+            ('company_id', '=', company.id),
+        ]).mapped('code') + (cache or []))
         for num in range(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = journal_code_base + str(num)
-            if journal_code not in journals.mapped('code'):
+            if journal_code not in existing_codes:
                 return journal_code
 
     @api.model
@@ -606,7 +630,7 @@ class AccountJournal(models.Model):
         company = self.env['res.company'].browse(vals['company_id']) if vals.get('company_id') else self.env.company
         vals['company_id'] = company.id
 
-        # Don't get the digits on 'chart_template_id' since the chart template could be a custom one.
+        # Don't get the digits on 'chart_template' since the chart template could be a custom one.
         random_account = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
         digits = len(random_account.code) if random_account else 6
 
@@ -622,12 +646,6 @@ class AccountJournal(models.Model):
 
             # === Fill missing name ===
             vals['name'] = vals.get('name') or vals.get('bank_acc_number')
-
-            # === Fill missing code ===
-            if 'code' not in vals:
-                vals['code'] = self.get_next_bank_cash_default_code(journal_type, company)
-                if not vals['code']:
-                    raise UserError(_("Cannot generate an unused journal code. Please fill the 'Shortcode' field."))
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
@@ -691,10 +709,19 @@ class AccountJournal(models.Model):
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
 
-    def create_document_from_attachment(self, attachment_ids=None):
-        ''' Create the invoices from files.
-         :return: A action redirecting to account.move tree/form view.
-        '''
+    def _create_document_from_attachment(self, attachment_ids=None):
+        """ Create the invoices from files."""
+        context_move_type = self._context.get("default_move_type", "entry")
+        if not self:
+            if context_move_type in self.env['account.move'].get_sale_types():
+                journal_type = "sale"
+            elif context_move_type in self.env['account.move'].get_purchase_types():
+                journal_type = "purchase"
+            else:
+                raise UserError(_("The journal in which to upload the invoice is not specified. "))
+            self = self.env['account.journal'].search([
+                ('company_id', '=', self.env.company.id), ('type', '=', journal_type)
+            ], limit=1)
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             raise UserError(_("No attachment was provided"))
@@ -702,18 +729,24 @@ class AccountJournal(models.Model):
         invoices = self.env['account.move']
         with invoices._disable_discount_precision():
             for attachment in attachments:
-                attachment.write({'res_model': 'mail.compose.message'})
                 decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
                 invoice = False
                 for decoder in sorted(decoders, key=lambda d: d[0]):
-                    invoice = decoder[1](attachment)
+                    invoice = decoder[1](attachment, journal=self)
                     if invoice:
                         break
                 if not invoice:
-                    invoice = self.env['account.move'].create({})
+                    invoice = self.env['account.move'].create({'journal_id': self.id})
                 invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
+                attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
                 invoices += invoice
+        return invoices
 
+    def create_document_from_attachment(self, attachment_ids=None):
+        """ Create the invoices from files.
+         :return: A action redirecting to account.move tree/form view.
+        """
+        invoices = self._create_document_from_attachment(attachment_ids=attachment_ids)
         action_vals = {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],

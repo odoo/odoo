@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.GreetingMessage" owl="1">
+    <CardLayout>
+        <t t-if="attendance">
+            <t t-call="hr_attendance.UserBadge">
+                <t t-set="userId" t-value="attendance.employee_id[0]"/>
+                <t t-set="userName" t-value="employee_name"/>
+            </t>
+
+            <div t-if="attendance.check_out" class="flex-grow-1">
+                <h1 class="mt-5">Goodbye <t t-esc="employee_name"/>!</h1>
+                <h2 class="o_hr_attendance_message_message mt4 mb24" t-esc="state.message"/>
+                <div class="alert alert-info fs-2 mx-3" role="status">
+                    Checked out at <b><t t-esc="attendance.check_out_time"/></b>
+                    <br/><b><t t-esc="hours_today"/></b>
+                </div>
+                <div t-att-class="'alert ' + (today_overtime_float &gt;= 0 ? 'alert-success' : 'alert-danger') + ' h3 mx-3'" role="status">
+                    Extra hours today:
+                    <span t-esc="today_overtime"/>
+                </div>
+                <t t-if="total_overtime_float &gt; 0">
+                    Total extra hours: <span t-esc="total_overtime"/>
+                </t>
+                <h3 class="o_hr_attendance_random_message fst-italic mb24" t-esc="state.randomMessage"/>
+                <div t-if="showWarningMessage" class="o_hr_attendance_warning_message mt24 alert alert-warning" role="alert">
+                    <b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't right, please contact Human Resource staff
+                </div>
+            </div>
+            <div t-else="" class="flex-grow-1">
+                <h1 class="mt-5 mb0">Welcome <t t-esc="employee_name"/>!</h1>
+                <h2 class="o_hr_attendance_message_message mt4 mb24" t-esc="state.message"/>
+                <div class="alert alert-info fs-2 mx-3" role="status">
+                    Checked in at <b><t t-esc="attendance.check_in_time"/></b>
+                </div>
+                <h3 class="o_hr_attendance_random_message mb24" t-esc="state.randomMessage"/>
+                <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
+            </div>
+            <div class="flex-grow-1">
+                <button class="o_hr_attendance_button_dismiss align-self-center btn btn-primary btn-lg px-5 py-3" t-on-click="() => this.onClickDismiss()">
+                    <span class="fs-2" t-if="attendance.check_out">Goodbye</span>
+                    <span class="fs-2" t-else="">OK</span>
+                </button>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="flex-grow-1">
+                <div class="alert alert-warning mt-5 mx-3" role="alert">
+                    <h4 class="alert-heading">Invalid request</h4>
+                    <p>Please return to the main menu.</p>
+                </div>
+            </div>
+            <div class="flex-grow-1">
+                <button class="o_hr_attendance_button_dismiss btn btn-primary btn-lg fs-2 px-5 py-3" t-on-click="() => this.onClickDismiss()">
+                    <i class="fa fa-chevron-left me-2"/>
+                    <span class="fs-2">Go back</span>
+                </button>
+            </div>
+        </t>
+    </CardLayout>
+
+</templates>

@@ -1,10 +1,5 @@
 /** @odoo-module */
 
-import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
-
-const { LinkCell } = spreadsheet.cellTypes;
-const { isMarkdownLink, parseMarkdownLink } = spreadsheet.helpers;
-
 const VIEW_PREFIX = "odoo://view/";
 const IR_MENU_ID_PREFIX = "odoo://ir_menu_id/";
 const IR_MENU_XML_ID_PREFIX = "odoo://ir_menu_xml_id/";
@@ -15,7 +10,7 @@ const IR_MENU_XML_ID_PREFIX = "odoo://ir_menu_xml_id/";
  * @property {Object} context
  * @property {string} modelName
  * @property {string} orderBy
- * @property {Array<[boolean, string]} views
+ * @property {Array<[boolean, string]>} views
  *
  * @typedef ViewLinkDescription
  * @property {string} name Action name
@@ -25,14 +20,10 @@ const IR_MENU_XML_ID_PREFIX = "odoo://ir_menu_xml_id/";
 
 /**
  *
- * @param {string} str
+ * @param {string} url
  * @returns {boolean}
  */
-export function isMarkdownViewLink(str) {
-    if (!isMarkdownLink(str)) {
-        return false;
-    }
-    const { url } = parseMarkdownLink(str);
+export function isMarkdownViewUrl(url) {
     return url.startsWith(VIEW_PREFIX);
 }
 
@@ -58,14 +49,10 @@ export function buildViewLink(viewDescription) {
 
 /**
  *
- * @param {string} str
- * @returns
+ * @param {string} url
+ * @returns {boolean}
  */
-export function isMarkdownIrMenuIdLink(str) {
-    if (!isMarkdownLink(str)) {
-        return false;
-    }
-    const { url } = parseMarkdownLink(str);
+export function isMarkdownIrMenuIdUrl(url) {
     return url.startsWith(IR_MENU_ID_PREFIX);
 }
 
@@ -91,27 +78,23 @@ export function buildIrMenuIdLink(menuId) {
 
 /**
  *
- * @param {string} str
- * @returns
+ * @param {string} url
+ * @returns {boolean}
  */
-export function isMarkdownIrMenuXmlLink(str) {
-    if (!isMarkdownLink(str)) {
-        return false;
-    }
-    const { url } = parseMarkdownLink(str);
+export function isIrMenuXmlUrl(url) {
     return url.startsWith(IR_MENU_XML_ID_PREFIX);
 }
 
 /**
  *
- * @param {string} irMenuLink
- * @returns ir.ui.menu record id
+ * @param {string} irMenuUrl
+ * @returns {string} ir.ui.menu record id
  */
-export function parseIrMenuXmlLink(irMenuLink) {
-    if (irMenuLink.startsWith(IR_MENU_XML_ID_PREFIX)) {
-        return irMenuLink.substr(IR_MENU_XML_ID_PREFIX.length);
+export function parseIrMenuXmlUrl(irMenuUrl) {
+    if (irMenuUrl.startsWith(IR_MENU_XML_ID_PREFIX)) {
+        return irMenuUrl.substr(IR_MENU_XML_ID_PREFIX.length);
     }
-    throw new Error(`${irMenuLink} is not a valid menu xml link`);
+    throw new Error(`${irMenuUrl} is not a valid menu xml link`);
 }
 /**
  * @param {number} menuXmlId
@@ -119,53 +102,4 @@ export function parseIrMenuXmlLink(irMenuLink) {
  */
 export function buildIrMenuXmlLink(menuXmlId) {
     return `${IR_MENU_XML_ID_PREFIX}${menuXmlId}`;
-}
-
-export class OdooMenuLinkCell extends LinkCell {
-    constructor(id, content, menuId, menuName, properties = {}) {
-        super(id, content, properties);
-        this.urlRepresentation = menuName;
-        this.isUrlEditable = false;
-        this._irMenuId = menuId;
-    }
-
-    action(env) {
-        const menu = env.services.menu.getMenu(this._irMenuId);
-        env.services.action.doAction(menu.actionID);
-    }
-}
-
-export class OdooViewLinkCell extends LinkCell {
-    /**
-     *
-     * @param {string} id
-     * @param {string} content
-     * @param {ViewLinkDescription} actionDescription
-     * @param {Object} properties
-     */
-    constructor(id, content, actionDescription, properties = {}) {
-        super(id, content, properties);
-        this.urlRepresentation = actionDescription.name;
-        this.isUrlEditable = false;
-        this._viewType = actionDescription.viewType;
-        /** @type {Action} */
-        this._action = actionDescription.action;
-    }
-
-    action(env) {
-        env.services.action.doAction(
-            {
-                type: "ir.actions.act_window",
-                name: this.urlRepresentation,
-                res_model: this._action.modelName,
-                views: this._action.views,
-                target: "current",
-                domain: this._action.domain,
-                context: this._action.context,
-            },
-            {
-                viewType: this._viewType,
-            }
-        );
-    }
 }

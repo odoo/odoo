@@ -12,3 +12,4 @@ class ResCurrency(models.Model):
         super()._activate_group_multi_currency()
         group_user = self.env.ref('base.group_user').sudo()
         group_user._apply_group(self.env.ref('product.group_product_pricelist'))
+        self.env['res.company']._activate_or_create_pricelists()

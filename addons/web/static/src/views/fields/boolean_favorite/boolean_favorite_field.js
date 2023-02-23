@@ -5,27 +5,31 @@ import { registry } from "@web/core/registry";
 import { archParseBoolean } from "@web/views/utils";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
-export class BooleanFavoriteField extends Component {}
-
-BooleanFavoriteField.template = "web.BooleanFavoriteField";
-BooleanFavoriteField.props = {
-    ...standardFieldProps,
-    noLabel: { type: Boolean, optional: true },
-};
-BooleanFavoriteField.defaultProps = {
-    noLabel: false,
-};
-
-BooleanFavoriteField.displayName = _lt("Favorite");
-BooleanFavoriteField.supportedTypes = ["boolean"];
-
-BooleanFavoriteField.isEmpty = () => false;
-BooleanFavoriteField.extractProps = ({ attrs }) => {
-    return {
-        noLabel: archParseBoolean(attrs.nolabel),
+export class BooleanFavoriteField extends Component {
+    static template = "web.BooleanFavoriteField";
+    static props = {
+        ...standardFieldProps,
+        noLabel: { type: Boolean, optional: true },
     };
+    static defaultProps = {
+        noLabel: false,
+    };
+
+    update() {
+        this.props.record.update({ [this.props.name]: !this.props.value });
+    }
+}
+
+export const booleanFavoriteField = {
+    component: BooleanFavoriteField,
+    displayName: _lt("Favorite"),
+    supportedTypes: ["boolean"],
+    isEmpty: () => false,
+    extractProps: ({ attrs }) => ({
+        noLabel: archParseBoolean(attrs.nolabel),
+    }),
 };
 
-registry.category("fields").add("boolean_favorite", BooleanFavoriteField);
+registry.category("fields").add("boolean_favorite", booleanFavoriteField);

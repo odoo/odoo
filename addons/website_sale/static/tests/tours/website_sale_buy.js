@@ -1,14 +1,13 @@
 odoo.define('website_sale.tour', function (require) {
 'use strict';
 
-var tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 const tourUtils = require('website_sale.tour_utils');
 
-tour.register('shop_buy_product', {
+registry.category("web_tour.tours").add('shop_buy_product', {
     test: true,
     url: '/shop',
-},
-    [
+    steps: [
         {
             content: "search conference chair",
             trigger: 'form input[name="search"]',
@@ -91,6 +90,6 @@ tour.register('shop_buy_product', {
             run: function () {}, // it's a check
         },
     ]
-);
+});
 
 });

@@ -1,19 +1,18 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
-import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { attr, clear, one, Model } from "@mail/model";
+import { isEventHandled, markEventHandled } from "@mail/utils/utils";
 
-registerModel({
-    name: 'CallParticipantCard',
-    identifyingMode: 'xor',
+Model({
+    name: "CallParticipantCard",
+    template: "mail.CallParticipantCard",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
          */
         async onClick(ev) {
-            if (isEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor')) {
+            if (isEventHandled(ev, "CallParticipantCard.clickVolumeAnchor")) {
                 return;
             }
             if (this.rtcSession) {
@@ -25,13 +24,13 @@ registerModel({
                 return;
             }
             const channel = this.channelMember.channel.thread;
-            const channelData = await this.messaging.rpc(({
-                route: '/mail/rtc/channel/cancel_call_invitation',
+            const channelData = await this.messaging.rpc({
+                route: "/mail/rtc/channel/cancel_call_invitation",
                 params: {
                     channel_id: channel.id,
                     member_ids: [this.channelMember.id],
                 },
-            }));
+            });
             if (!channel.exists()) {
                 return;
             }
@@ -43,8 +42,10 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickVolumeAnchor(ev) {
-            markEventHandled(ev, 'CallParticipantCard.clickVolumeAnchor');
-            this.update({ callParticipantCardPopoverView: this.callParticipantCardPopoverView ? clear() : {} });
+            markEventHandled(ev, "CallParticipantCard.clickVolumeAnchor");
+            this.update({
+                callParticipantCardPopoverView: this.callParticipantCardPopoverView ? clear() : {},
+            });
         },
         /**
          * This listens to the right click event, and used to redirect the event
@@ -61,69 +62,69 @@ registerModel({
         },
     },
     fields: {
-        callParticipantCardPopoverView: one('PopoverView', {
-            inverse: 'callParticipantCardOwner',
-        }),
-        channelMember: one('ChannelMember', {
+        callParticipantCardPopoverView: one("PopoverView", { inverse: "callParticipantCardOwner" }),
+        channelMember: one("ChannelMember", {
+            inverse: "callParticipantCards",
             compute() {
                 if (this.sidebarViewTileOwner) {
                     return this.sidebarViewTileOwner.channelMember;
                 }
                 return this.mainViewTileOwner.channelMember;
             },
-            inverse: 'callParticipantCards',
         }),
-        mainViewTileOwner: one('CallMainViewTile', {
+        mainViewTileOwner: one("CallMainViewTile", {
             identifying: true,
-            inverse: 'participantCard',
+            inverse: "participantCard",
         }),
         /**
          * Determines if this card has to be displayed in a minimized form.
          */
         isMinimized: attr({
+            default: false,
             compute() {
                 return Boolean(this.callView && this.callView.isMinimized);
             },
-            default: false,
         }),
         /**
          * Determines if the rtcSession is in a valid "talking" state.
          */
         isTalking: attr({
-            compute() {
-                return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute);
-            },
             default: false,
+            compute() {
+                return Boolean(
+                    this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute
+                );
+            },
         }),
         /**
          * The callView that displays this card.
          */
-        callView: one('CallView', {
+        callView: one("CallView", {
+            inverse: "participantCards",
             compute() {
                 if (this.sidebarViewTileOwner) {
                     return this.sidebarViewTileOwner.callSidebarViewOwner.callView;
                 }
                 return this.mainViewTileOwner.callMainViewOwner.callView;
             },
-            inverse: 'participantCards',
         }),
-        rtcSession: one('RtcSession', {
-            related: 'channelMember.rtcSession',
-            inverse: 'callParticipantCards',
+        rtcSession: one("RtcSession", {
+            inverse: "callParticipantCards",
+            related: "channelMember.rtcSession",
         }),
-        sidebarViewTileOwner: one('CallSidebarViewTile', {
+        sidebarViewTileOwner: one("CallSidebarViewTile", {
             identifying: true,
-            inverse: 'participantCard',
+            inverse: "participantCard",
         }),
-        callParticipantVideoView: one('CallParticipantVideoView', {
+        callParticipantVideoView: one("CallParticipantVideoView", {
+            inverse: "callParticipantCardOwner",
             compute() {
                 if (this.rtcSession && this.rtcSession.videoStream) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'callParticipantCardOwner',
         }),
-        volumeMenuAnchorRef: attr(),
+        volumeMenuAnchorRef: attr({ ref: "volumeMenuAnchor" }),
     },
 });

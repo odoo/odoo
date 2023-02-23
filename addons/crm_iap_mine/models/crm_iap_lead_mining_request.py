@@ -6,6 +6,7 @@ import logging
 from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError
+from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -185,10 +186,15 @@ class CRMLeadMiningRequest(models.Model):
             self.company_size_max = self.company_size_min
 
     @api.model
-    def get_empty_list_help(self, help_string):
+    def get_empty_list_help(self, help_message):
+        if not is_html_empty(help_message):
+            return help_message
+
         help_title = _('Create a Lead Mining Request')
         sub_title = _('Generate new leads based on their country, industry, size, etc.')
-        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
+        return super().get_empty_list_help(
+            f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
+        )
 
     def _prepare_iap_payload(self):
         """
@@ -272,7 +278,11 @@ class CRMLeadMiningRequest(models.Model):
         leads = self.env['crm.lead'].create(lead_vals_list)
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
-                lead.message_post_with_view('iap_mail.enrich_company', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
+                lead.message_post_with_source(
+                    'iap_mail.enrich_company',
+                    render_values=messages_to_post[lead.reveal_id],
+                    subtype_xmlid='mail.mt_note',
+                )
 
     # Methods responsible for format response data into valid odoo lead data
     @api.model

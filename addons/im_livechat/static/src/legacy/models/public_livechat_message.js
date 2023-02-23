@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import * as mailUtils from '@mail/js/utils';
+import * as mailUtils from "@mail/js/utils";
 
-import Class from 'web.Class';
-import { _t } from 'web.core';
-import session from 'web.session';
-import time from 'web.time';
+import Class from "web.Class";
+import { _t } from "web.core";
+import session from "web.session";
+import time from "web.time";
 
 /**
  * This is a message that is handled by im_livechat, without making use of the
@@ -15,7 +15,6 @@ import time from 'web.time';
  * @see @im_livechat/legacy/models/public_livechat_message for more information.
  */
 const PublicLivechatMessage = Class.extend({
-
     /**
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
      * @param {Messaging} messaging
@@ -73,10 +72,12 @@ const PublicLivechatMessage = Class.extend({
      */
     getAvatarSource() {
         let source = this._serverURL;
-        if (this.hasAuthor()) {
+        if (this.isOperatorTheAuthor()) {
             source += `/im_livechat/operator/${this.getAuthorID()}/avatar`;
+        } else if (this.hasAuthor() && session.user_id) {
+            source += `/web/image/res.partner/${this.getAuthorID()}/avatar_128`;
         } else {
-            source += '/mail/static/src/img/smiley/avatar.jpg';
+            source += "/mail/static/src/img/smiley/avatar.jpg";
         }
         return source;
     },
@@ -118,13 +119,13 @@ const PublicLivechatMessage = Class.extend({
      * @return {string}
      */
     getDateDay() {
-        const date = this.getDate().format('YYYY-MM-DD');
-        if (date === moment().format('YYYY-MM-DD')) {
+        const date = this.getDate().format("YYYY-MM-DD");
+        if (date === moment().format("YYYY-MM-DD")) {
             return _t("Today");
-        } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
+        } else if (date === moment().subtract(1, "days").format("YYYY-MM-DD")) {
             return _t("Yesterday");
         }
-        return this.getDate().format('LL');
+        return this.getDate().format("LL");
     },
     /**
      * Get the text to display for the author of the message
@@ -258,9 +259,11 @@ const PublicLivechatMessage = Class.extend({
      * @return {boolean}
      */
     _isMyselfAuthor() {
-        return this.hasAuthor() && (this.getAuthorID() === session.partner_id);
+        return (
+            this.hasAuthor() &&
+            this.getAuthorID() === this.messaging.publicLivechatGlobal.options.current_partner_id
+        );
     },
-
 });
 
 export default PublicLivechatMessage;

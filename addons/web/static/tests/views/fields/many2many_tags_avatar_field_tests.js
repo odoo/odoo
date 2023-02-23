@@ -1,13 +1,8 @@
 /** @odoo-module **/
 
-import {
-    click,
-    clickEdit,
-    clickSave,
-    getFixture,
-    selectDropdownItem,
-} from "@web/../tests/helpers/utils";
+import { click, clickSave, getFixture, selectDropdownItem } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { triggerHotkey } from "../../helpers/utils";
 
 let serverData;
 let target;
@@ -204,8 +199,14 @@ QUnit.module("Fields", (hooks) => {
             ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
         );
         assert.strictEqual(
-            tag.dataset["tooltip"],
-            "record 6<br/>record 7",
+            tag.dataset["tooltipTemplate"],
+            "web.TagsList.Tooltip",
+            "uses the proper tooltip template"
+        );
+        const tooltipInfo = JSON.parse(tag.dataset["tooltipInfo"]);
+        assert.strictEqual(
+            tooltipInfo.tags.map((tag) => tag.text).join(" "),
+            "record 6 record 7",
             "shows a tooltip on hover"
         );
 
@@ -225,10 +226,54 @@ QUnit.module("Fields", (hooks) => {
             2,
             "should have 2 records"
         );
+
+        // Select the first row and enter edit mode on the x2many field.
+        await click(target, ".o_data_row:nth-child(1) .o_list_record_selector input");
+        await click(target, ".o_data_row:nth-child(1) .o_data_cell");
+
+        // Only the first row should have tags with delete buttons.
+        assert.containsN(target, ".o_data_row:nth-child(1) .o_field_tags span .o_delete", 2);
+        assert.containsNone(target, ".o_data_row:nth-child(2) .o_field_tags span .o_delete");
+        assert.containsNone(target, ".o_data_row:nth-child(3) .o_field_tags span .o_delete");
+        assert.containsNone(target, ".o_data_row:nth-child(4) .o_field_tags span .o_delete");
     });
 
+    QUnit.test(
+        "widget many2many_tags_avatar list view - don't crash on keyboard navigation",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "turtle",
+                serverData,
+                arch: /*xml*/ `
+                    <tree editable="bottom">
+                        <field name="partner_ids" widget="many2many_tags_avatar"/>
+                    </tree>
+                `,
+            });
+
+            // Select the 2nd row and enter edit mode on the x2many field.
+            await click(target, ".o_data_row:nth-child(2) .o_list_record_selector input");
+            await click(target, ".o_data_row:nth-child(2) .o_data_cell");
+
+            // Pressing left arrow should focus on the right-most (second) tag.
+            await triggerHotkey("arrowleft");
+            assert.strictEqual(
+                target.querySelector(".o_data_row:nth-child(2) .o_field_tags span:nth-child(2)"),
+                document.activeElement
+            );
+
+            // Pressing left arrow again should not crash and should focus on the first tag.
+            await triggerHotkey("arrowleft");
+            assert.strictEqual(
+                target.querySelector(".o_data_row:nth-child(2) .o_field_tags span:nth-child(1)"),
+                document.activeElement
+            );
+        }
+    );
+
     QUnit.test("widget many2many_tags_avatar in kanban view", async function (assert) {
-        assert.expect(12);
+        assert.expect(13);
 
         const records = [];
         for (let id = 5; id <= 15; id++) {
@@ -355,9 +400,15 @@ QUnit.module("Fields", (hooks) => {
             ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
         );
         assert.strictEqual(
-            tag.dataset["tooltip"],
-            "aaa<br/>record 5",
-            "shows a tooltip on hover with the right text"
+            tag.dataset["tooltipTemplate"],
+            "web.TagsList.Tooltip",
+            "uses the proper tooltip template"
+        );
+        const tooltipInfo = JSON.parse(tag.dataset["tooltipInfo"]);
+        assert.strictEqual(
+            tooltipInfo.tags.map((tag) => tag.text).join(" "),
+            "aaa record 5",
+            "shows a tooltip on hover"
         );
 
         await click(
@@ -379,7 +430,6 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        await clickEdit(target);
         assert.containsN(
             target,
             ".o_field_many2many_tags_avatar.o_field_widget .badge",

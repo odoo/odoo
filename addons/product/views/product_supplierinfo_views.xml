@@ -28,10 +28,10 @@
                             </div>
                             <label for="price" string="Unit Price"/>
                             <div class="o_row">
-                                <field name="price"/><field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="price" class="oe_inline" /><field name="currency_id" groups="base.group_multi_currency"/>
                             </div>
                             <label for="date_start" string="Validity"/>
-                            <div class="o_row"><field name="date_start"/> to <field name="date_end"/></div>
+                            <div class="o_row"><field name="date_start" class="oe_inline"/> to <field name="date_end" class="oe_inline"/></div>
                             <field name="company_id" options="{'no_create': True}"/>
                         </group>
                     </group>
@@ -107,13 +107,13 @@
                     invisible="context.get('visible_product_tmpl_id', True)"/>
                 <field name="product_name" optional="hide"/>
                 <field name="product_code" optional="hide"/>
-                <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="date_start" optional="hide"/>
                 <field name="date_end" optional="hide"/>
                 <field name="company_id" readonly="1" groups="base.group_multi_company"/>
-                <field name="min_qty"/>
-                <field name="product_uom" groups="uom.group_uom"/>
+                <field name="min_qty" optional="hide"/>
+                <field name="product_uom" groups="uom.group_uom" optional="hide"/>
                 <field name="price" string="Price"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="delay" optional="hide"/>
             </tree>
         </field>

@@ -26,7 +26,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
         groups="purchase.group_warning_purchase")
     copy_products = fields.Boolean(
         "Copy Products", default=True,
-        help="If this is checked, the product quantites of the original PO will be copied")
+        help="If this is checked, the product quantities of the original PO will be copied")
 
     @api.depends('partner_id', 'copy_products')
     def _compute_purchase_warn(self):
@@ -78,5 +78,9 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             'dest_address_id': self.origin_po_id.dest_address_id.id,
         }
         if self.copy_products and self.origin_po_id:
-            vals['order_line'] = [Command.create({'product_id': line.product_id.id, 'product_qty': line.product_qty}) for line in self.origin_po_id.order_line]
+            vals['order_line'] = [Command.create(self._get_alternative_line_value(line)) for line in self.origin_po_id.order_line]
         return vals
+
+    @api.model
+    def _get_alternative_line_value(self, order_line):
+        return {'product_id': order_line.product_id.id, 'product_qty': order_line.product_qty}

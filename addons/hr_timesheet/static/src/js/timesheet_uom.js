@@ -7,10 +7,6 @@ const fieldUtils = require('web.field_utils');
 
 const fieldRegistry = require('web.field_registry');
 
-// We need the field registry to be populated, as we bind the
-// timesheet_uom widget on existing field widgets.
-require('web._field_registry');
-
 const session = require('web.session');
 
 const TimesheetUOMMultiCompanyMixin = {
@@ -178,7 +174,7 @@ const timesheetUomService = {
         return timesheetUomInfo;
     },
 };
-registry.category("services").add("legacy_timesheet_uom", timesheetUomService);
+registry.category("services").add("timesheet_uom", timesheetUomService);
 
 return {
     FieldTimesheetFactor,

@@ -6,7 +6,7 @@ import pprint
 import requests
 from werkzeug import urls
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_mercado_pago.const import SUPPORTED_CURRENCIES
@@ -15,7 +15,7 @@ from odoo.addons.payment_mercado_pago.const import SUPPORTED_CURRENCIES
 _logger = logging.getLogger(__name__)
 
 
-class Paymentprovider(models.Model):
+class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     code = fields.Selection(
@@ -29,16 +29,14 @@ class Paymentprovider(models.Model):
 
     # === BUSINESS METHODS === #
 
-    @api.model
-    def _get_compatible_providers(self, *args, currency_id=None, **kwargs):
-        """ Override of `payment` to unlist Mercado Pago providers for unsupported currencies. """
-        providers = super()._get_compatible_providers(*args, currency_id=currency_id, **kwargs)
-
-        currency = self.env['res.currency'].browse(currency_id).exists()
-        if currency and currency.name not in SUPPORTED_CURRENCIES:
-            providers = providers.filtered(lambda p: p.code != 'mercado_pago')
-
-        return providers
+    def _get_supported_currencies(self):
+        """ Override of `payment` to return the supported currencies. """
+        supported_currencies = super()._get_supported_currencies()
+        if self.code == 'mercado_pago':
+            supported_currencies = supported_currencies.filtered(
+                lambda c: c.name in SUPPORTED_CURRENCIES
+            )
+        return supported_currencies
 
     def _mercado_pago_make_request(self, endpoint, payload=None, method='POST'):
         """ Make a request to Mercado Pago API at the specified endpoint.
@@ -80,10 +78,3 @@ class Paymentprovider(models.Model):
                 "Mercado Pago: " + _("Could not establish the connection to the API.")
             )
         return response.json()
-
-    def _neutralize(self):
-        super()._neutralize()
-
-        self._neutralize_fields('mercado_pago', [
-            'mercado_pago_access_token',
-        ])

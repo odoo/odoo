@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
-import { htmlToTextContentInline } from '@mail/js/utils';
+import { attr, clear, one, Model } from "@mail/model";
+import { htmlToTextContentInline } from "@mail/js/utils";
 
-registerModel({
-    name: 'ThreadNeedactionPreviewView',
+Model({
+    name: "ThreadNeedactionPreviewView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -30,28 +28,32 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickMarkAsRead(ev) {
-            this.messaging.models['Message'].markAllAsRead([
-                ['model', '=', this.thread.model],
-                ['res_id', '=', this.thread.id],
+            this.messaging.models["Message"].markAllAsRead([
+                ["model", "=", this.thread.model],
+                ["res_id", "=", this.thread.id],
             ]);
         },
     },
     fields: {
         inlineLastNeedactionMessageAsOriginThreadBody: attr({
+            default: "",
             compute() {
                 if (!this.thread.lastNeedactionMessageAsOriginThread) {
                     return clear();
                 }
-                return htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
+                return htmlToTextContentInline(
+                    this.thread.lastNeedactionMessageAsOriginThread.prettyBody
+                );
             },
-            default: "",
         }),
         isEmpty: attr({
             compute() {
-                return !this.inlineLastNeedactionMessageAsOriginThreadBody && !this.lastTrackingValue;
+                return (
+                    !this.inlineLastNeedactionMessageAsOriginThreadBody && !this.lastTrackingValue
+                );
             },
         }),
-        lastTrackingValue: one('TrackingValue', {
+        lastTrackingValue: one("TrackingValue", {
             compute() {
                 if (this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
                     return this.thread.lastMessage.lastTrackingValue;
@@ -64,7 +66,8 @@ registerModel({
          * top-level click handler when clicking on this specific button.
          */
         markAsReadRef: attr(),
-        messageAuthorPrefixView: one('MessageAuthorPrefixView', {
+        messageAuthorPrefixView: one("MessageAuthorPrefixView", {
+            inverse: "threadNeedactionPreviewViewOwner",
             compute() {
                 if (
                     this.thread.lastNeedactionMessageAsOriginThread &&
@@ -74,13 +77,13 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'threadNeedactionPreviewViewOwner',
         }),
-        notificationListViewOwner: one('NotificationListView', {
+        notificationListViewOwner: one("NotificationListView", {
             identifying: true,
-            inverse: 'threadNeedactionPreviewViews',
+            inverse: "threadNeedactionPreviewViews",
         }),
-        personaImStatusIconView: one('PersonaImStatusIconView', {
+        personaImStatusIconView: one("PersonaImStatusIconView", {
+            inverse: "threadNeedactionPreviewViewOwner",
             compute() {
                 if (
                     this.thread.channel &&
@@ -91,11 +94,7 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'threadNeedactionPreviewViewOwner',
         }),
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'threadNeedactionPreviewViews',
-        }),
+        thread: one("Thread", { identifying: true, inverse: "threadNeedactionPreviewViews" }),
     },
 });

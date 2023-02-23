@@ -1,13 +1,12 @@
 odoo.define('website_event_sale.tour', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
-tour.register('event_buy_tickets', {
+registry.category("web_tour.tours").add('event_buy_tickets', {
     test: true,
     url: '/event',
-},
-    [
+    steps: [
         {
             content: "Go to the `Events` page",
             trigger: 'a[href*="/event"]:contains("Conference for Architects TEST"):first',
@@ -84,6 +83,6 @@ tour.register('event_buy_tickets', {
             timeout: 30000,
         }
     ]
-);
+});
 
 });

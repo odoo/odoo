@@ -5,26 +5,38 @@ import { _lt } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class EmailField extends Component {
+    static template = "web.EmailField";
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    };
+
     setup() {
         useInputField({ getValue: () => this.props.value || "" });
     }
 }
 
-EmailField.template = "web.EmailField";
-EmailField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-EmailField.extractProps = ({ attrs }) => {
-    return {
+export const emailField = {
+    component: EmailField,
+    displayName: _lt("Email"),
+    supportedTypes: ["char"],
+    extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-EmailField.displayName = _lt("Email");
-EmailField.supportedTypes = ["char"];
+registry.category("fields").add("email", emailField);
 
-registry.category("fields").add("email", EmailField);
+class FormEmailField extends EmailField {
+    static template = "web.FormEmailField";
+}
+
+export const formEmailField = {
+    ...emailField,
+    component: FormEmailField,
+};
+
+registry.category("fields").add("form.email", formEmailField);

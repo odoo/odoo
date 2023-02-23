@@ -45,4 +45,8 @@ export class JournalDashboardActivity extends Component {
 }
 JournalDashboardActivity.template = "account.JournalDashboardActivity";
 
-registry.category("fields").add("kanban_vat_activity", JournalDashboardActivity);
+export const journalDashboardActivity = {
+    component: JournalDashboardActivity,
+};
+
+registry.category("fields").add("kanban_vat_activity", journalDashboardActivity);

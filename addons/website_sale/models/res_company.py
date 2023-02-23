@@ -15,3 +15,16 @@ class ResCompany(models.Model):
         self.env.company.payment_onboarding_payment_method = 'stripe'
         menu_id = self.env.ref('website.menu_website_dashboard').id
         return self._run_payment_onboarding_step(menu_id)
+
+    def _get_default_pricelist_vals(self):
+        """ Override of product. Called at company creation or activation of the pricelist setting.
+
+        We don't want the default website from the current company to be applied on every company
+
+        Note: self.ensure_one()
+
+        :rtype: dict
+        """
+        values = super()._get_default_pricelist_vals()
+        values['website_id'] = False
+        return values

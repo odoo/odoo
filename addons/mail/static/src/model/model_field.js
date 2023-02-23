@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { clear, FieldCommand, link, unlink, unlinkAll } from '@mail/model/model_field_command';
-import { IS_RECORD } from '@mail/model/model_core';
+import { clear, FieldCommand, link, unlink, unlinkAll } from "@mail/model/model_field_command";
+import { IS_RECORD } from "@mail/model/model_core";
 
 /**
  * Class whose instances represent field on a model.
@@ -9,7 +9,6 @@ import { IS_RECORD } from '@mail/model/model_core';
  * `fields` on the model.
  */
 export class ModelField {
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -103,7 +102,7 @@ export class ModelField {
          *
          * Empty value is systematically undefined.
          * null or empty string are NOT considered empty value, meaning these values meet the requirement.
-        */
+         */
         this.required = required;
         /**
          * Determines the name of the function on record that returns the
@@ -124,7 +123,15 @@ export class ModelField {
          * the first operation that is able to determine an order for the two
          * records.
          */
-        this.sort = sort;
+        this.sort;
+        /**
+         * Sorted fields define sorting rules that can depend on related fields.
+         * The path to a related field is defined by a period-separated sequence
+         * of the relations to follow. To avoid wasting performances splitting
+         * the path each time a relation must be followed, it is spllited at
+         * field instantiation and stored here.
+         */
+        this.sortedFieldSplittedPaths;
         /**
          * Determines whether and how elements of this field should be summed
          * into a counter field (only makes sense for relational x2many).
@@ -146,19 +153,30 @@ export class ModelField {
          */
         if (this.identifying) {
             this.readonly = true;
-            if (this.model.identifyingMode === 'and') {
+            if (this.model.identifyingMode === "and") {
                 this.required = true;
             }
         }
-        /**
-         * Automatically make relateds readonly.
-         */
         if (this.related) {
+            // Automatically make relateds readonly.
             this.readonly = true;
         }
         if (this.compute) {
             // Automatically make computes readonly.
             this.readonly = true;
+        }
+        if (sort) {
+            this.sort = [];
+            // Only keep unique paths, as they will be used to create listeners,
+            // and we do not want to create useless duplicate listeners.
+            const relatedPathSet = new Set();
+            for (const [compareRule, pathAsString] of sort) {
+                relatedPathSet.add(pathAsString);
+                this.sort.push([compareRule, pathAsString.split(".")]);
+            }
+            this.sortedFieldSplittedPaths = [...relatedPathSet].map((pathAsString) =>
+                pathAsString.split(".")
+            );
         }
     }
 
@@ -169,7 +187,7 @@ export class ModelField {
      * @returns {Object}
      */
     static attr(options) {
-        return Object.assign({ fieldType: 'attribute' }, options);
+        return Object.assign({ fieldType: "attribute" }, options);
     }
 
     /**
@@ -180,7 +198,10 @@ export class ModelField {
      * @returns {Object}
      */
     static many(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'many' }));
+        return ModelField._relation(
+            modelName,
+            Object.assign({}, options, { relationType: "many" })
+        );
     }
 
     /**
@@ -191,7 +212,7 @@ export class ModelField {
      * @returns {Object}
      */
     static one(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'one' }));
+        return ModelField._relation(modelName, Object.assign({}, options, { relationType: "one" }));
     }
 
     /**
@@ -207,7 +228,7 @@ export class ModelField {
      */
     clear(record, options) {
         let hasChanged = false;
-        if (this.fieldType === 'relation') {
+        if (this.fieldType === "relation") {
             if (this.parseAndExecuteCommands(record, unlinkAll(), options)) {
                 hasChanged = true;
             }
@@ -228,9 +249,9 @@ export class ModelField {
      * @param {Record} record
      */
     computeRelated(record) {
-        const [relationName, relatedFieldName] = this.related.split('.');
+        const [relationName, relatedFieldName] = this.related.split(".");
         const relationField = this.model.__fieldMap.get(relationName);
-        if (relationField.relationType === 'many') {
+        if (relationField.relationType === "many") {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
                 const otherValue = otherRecord[relatedFieldName];
@@ -244,7 +265,7 @@ export class ModelField {
                     }
                 }
             }
-            if (this.fieldType === 'relation') {
+            if (this.fieldType === "relation") {
                 return newVal;
             }
             return newVal;
@@ -255,7 +276,7 @@ export class ModelField {
             if (newVal === undefined) {
                 return clear();
             }
-            if (this.fieldType === 'relation') {
+            if (this.fieldType === "relation") {
                 return newVal;
             }
             return newVal;
@@ -274,25 +295,38 @@ export class ModelField {
             return [newVal];
         } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             return newVal;
-        } else if (this.fieldType === 'relation') {
-            if (newVal instanceof Array && newVal[0] instanceof Array && ['clear', 'insert', 'insert-and-replace', 'insert-and-unlink', 'link', 'replace', 'unlink', 'unlink-all'].includes(newVal[0][0])) {
+        } else if (this.fieldType === "relation") {
+            if (
+                newVal instanceof Array &&
+                newVal[0] instanceof Array &&
+                [
+                    "clear",
+                    "insert",
+                    "insert-and-replace",
+                    "insert-and-unlink",
+                    "link",
+                    "replace",
+                    "unlink",
+                    "unlink-all",
+                ].includes(newVal[0][0])
+            ) {
                 // newVal: [['insert', ...], ...]
                 return newVal.map(([name, value]) => new FieldCommand(name, value));
             } else if (newVal instanceof Array && newVal[0] && !newVal[0][IS_RECORD]) {
                 // newVal: [data, ...]
-                return [new FieldCommand('insert-and-replace', newVal)];
+                return [new FieldCommand("insert-and-replace", newVal)];
             } else if (newVal instanceof Array && newVal[0]) {
                 // newVal: [record, ...]
-                return [new FieldCommand('replace', newVal)];
+                return [new FieldCommand("replace", newVal)];
             } else if (!newVal[IS_RECORD]) {
                 // newVal: data
-                return [new FieldCommand('insert-and-replace', newVal)];
+                return [new FieldCommand("insert-and-replace", newVal)];
             } else {
                 // newVal: record
-                return [new FieldCommand('replace', newVal)];
+                return [new FieldCommand("replace", newVal)];
             }
         } else {
-            return [new FieldCommand('set', newVal)];
+            return [new FieldCommand("set", newVal)];
         }
     }
 
@@ -316,11 +350,11 @@ export class ModelField {
      * @returns {any}
      */
     get(record) {
-        if (this.fieldType === 'attribute') {
+        if (this.fieldType === "attribute") {
             return this.read(record);
         }
-        if (this.fieldType === 'relation') {
-            if (this.relationType === 'one') {
+        if (this.fieldType === "relation") {
+            if (this.relationType === "one") {
                 return this.read(record);
             }
             return [...this.read(record)];
@@ -358,75 +392,79 @@ export class ModelField {
         for (const command of commandList) {
             const commandName = command.name;
             const newVal = command.value;
-            if (this.fieldType === 'attribute') {
+            if (this.fieldType === "attribute") {
                 switch (commandName) {
-                    case 'clear':
+                    case "clear":
                         if (this.clear(record, options)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'decrement':
+                    case "decrement":
                         if (this.decrement(record, newVal)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'increment':
+                    case "increment":
                         if (this.increment(record, newVal)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'set':
+                    case "set":
                         if (this._setAttribute(record, newVal)) {
                             hasChanged = true;
                         }
                         break;
                     default:
-                        throw new Error(`Field "${this.model.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(
+                            `Field "${this}" (${this.fieldType} type) does not support command "${commandName}"`
+                        );
                 }
-            } else if (this.fieldType === 'relation') {
+            } else if (this.fieldType === "relation") {
                 switch (commandName) {
-                    case 'clear':
+                    case "clear":
                         if (this.clear(record, options)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'insert':
+                    case "insert":
                         if (this._setRelationInsert(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'insert-and-replace':
+                    case "insert-and-replace":
                         if (this._setRelationInsertAndReplace(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'insert-and-unlink':
+                    case "insert-and-unlink":
                         if (this._setRelationInsertAndUnlink(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'link':
+                    case "link":
                         if (this._setRelationLink(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'replace':
+                    case "replace":
                         if (this._setRelationReplace(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'unlink':
+                    case "unlink":
                         if (this._setRelationUnlink(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
-                    case 'unlink-all':
+                    case "unlink-all":
                         if (this._setRelationUnlink(record, this.get(record), options)) {
                             hasChanged = true;
                         }
                         break;
                     default:
-                        throw new Error(`Field "${this.model.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(
+                            `Field "${this}" (${this.fieldType} type) does not support command "${commandName}"`
+                        );
                 }
             }
         }
@@ -448,7 +486,7 @@ export class ModelField {
      * @returns {string}
      */
     toString() {
-        return `field(${this.fieldName})`;
+        return `${this.model}/${this.fieldName}`;
     }
 
     //--------------------------------------------------------------------------
@@ -461,10 +499,13 @@ export class ModelField {
      * @param {Object} [options]
      */
     static _relation(modelName, options) {
-        return Object.assign({
-            fieldType: 'relation',
-            to: modelName,
-        }, options);
+        return Object.assign(
+            {
+                fieldType: "relation",
+                to: modelName,
+            },
+            options
+        );
     }
 
     /**
@@ -479,7 +520,7 @@ export class ModelField {
      * @returns {Record[]}
      */
     _convertX2ManyValue(newValue, { hasToVerify = true } = {}) {
-        if (typeof newValue[Symbol.iterator] === 'function') {
+        if (typeof newValue[Symbol.iterator] === "function") {
             if (hasToVerify) {
                 for (const value of newValue) {
                     this._verifyRelationalValue(value);
@@ -506,10 +547,10 @@ export class ModelField {
     _insertOtherRecord(record, data, options) {
         const otherModel = record.models[this.to];
         const otherField = otherModel.__fieldMap.get(this.inverse);
-        const isMulti = typeof data[Symbol.iterator] === 'function';
+        const isMulti = typeof data[Symbol.iterator] === "function";
         const dataList = isMulti ? data : [data];
         for (const recordData of dataList) {
-            if (otherField.relationType === 'one') {
+            if (otherField.relationType === "one") {
                 recordData[this.inverse] = record;
             } else {
                 recordData[this.inverse] = link(record);
@@ -595,9 +636,9 @@ export class ModelField {
      */
     _setRelationLink(record, newValue, options) {
         switch (this.relationType) {
-            case 'many':
+            case "many":
                 return this._setRelationLinkX2Many(record, newValue, options);
-            case 'one':
+            case "one":
                 return this._setRelationLinkX2One(record, newValue, options);
         }
     }
@@ -688,7 +729,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationReplace(record, newValue, options) {
-        if (this.relationType === 'one') {
+        if (this.relationType === "one") {
             // for x2one replace is just link
             return this._setRelationLinkX2One(record, newValue, options);
         }
@@ -754,9 +795,9 @@ export class ModelField {
      */
     _setRelationUnlink(record, newValue, options) {
         switch (this.relationType) {
-            case 'many':
+            case "many":
                 return this._setRelationUnlinkX2Many(record, newValue, options);
-            case 'one':
+            case "one":
                 return this._setRelationUnlinkX2One(record, options);
         }
     }
@@ -775,10 +816,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationUnlinkX2Many(record, newValue, { hasToUpdateInverse = true } = {}) {
-        const recordsToUnlink = this._convertX2ManyValue(
-            newValue,
-            { hasToVerify: false }
-        );
+        const recordsToUnlink = this._convertX2ManyValue(newValue, { hasToVerify: false });
         const otherRecords = this.read(record);
 
         let hasChanged = false;
@@ -867,10 +905,14 @@ export class ModelField {
      */
     _verifyRelationalValue(record) {
         if (!record) {
-            throw Error(`record is undefined. Did you try to link() or insert() empty value? Considering clear() instead.`);
+            throw Error(
+                `record is undefined. Did you try to link() or insert() empty value? Considering clear() instead.`
+            );
         }
         if (!record[IS_RECORD]) {
-            throw Error(`${record} is not a record. Did you try to use link() instead of insert() with data?`);
+            throw Error(
+                `${record} is not a record. Did you try to use link() instead of insert() with data?`
+            );
         }
         const otherModel = record.modelManager.models[this.to];
         if (otherModel.__records.has(record)) {
@@ -887,7 +929,6 @@ export class ModelField {
         }
         throw Error(`Record ${record} is not valid for relational field ${this.fieldName}.`);
     }
-
 }
 
 export const attr = ModelField.attr;

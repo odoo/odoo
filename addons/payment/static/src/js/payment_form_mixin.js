@@ -395,6 +395,8 @@ odoo.define('payment.payment_form_mixin', require => {
             const $redirectForm = $(processingValues.redirect_form_html).attr(
                 'id', 'o_payment_redirect_form'
             );
+            // Ensures external redirections when in an iframe.
+            $redirectForm[0].setAttribute('target', '_top');
             $(document.getElementsByTagName('body')[0]).append($redirectForm);
 
             // Submit the form
@@ -433,7 +435,7 @@ odoo.define('payment.payment_form_mixin', require => {
         _setPaymentFlow: function (flow = 'redirect') {
             if (flow !== 'redirect' && flow !== 'direct' && flow !== 'token') {
                 console.warn(
-                    `payment_form_mixin: method '_setPaymentFlow' was called with invalid flow: 
+                    `payment_form_mixin: method '_setPaymentFlow' was called with invalid flow:
                     ${flow}. Falling back to 'redirect'.`
                 );
                 this.txContext.flow = 'redirect';
@@ -460,7 +462,7 @@ odoo.define('payment.payment_form_mixin', require => {
         //--------------------------------------------------------------------------
 
         /**
-         * Hide all extra payment icons of the provider linked to the clicked button.
+         * Hide all extra payment method icons of the provider linked to the clicked button.
          *
          * Called when clicking on the "show less" button.
          *
@@ -473,14 +475,14 @@ odoo.define('payment.payment_form_mixin', require => {
             ev.stopPropagation();
             // Hide the extra payment icons, and the "show less" button
             const $itemList = $(ev.currentTarget).parents('ul');
-            const maxIconNumber = $itemList.data('max-icons');
+            const maxIconNumber = $itemList.data('max-icons-displayed');
             $itemList.children('li').slice(maxIconNumber).addClass('d-none');
             // Show the "show more" button
             $itemList.find('a[name="o_payment_icon_more"]').parents('li').removeClass('d-none');
         },
 
         /**
-         * Display all the payment icons of the provider linked to the clicked button.
+         * Display all the payment methods icons of the provider linked to the clicked button.
          *
          * Called when clicking on the "show more" button.
          *
@@ -491,7 +493,7 @@ odoo.define('payment.payment_form_mixin', require => {
         _onClickMorePaymentIcons: ev => {
             ev.preventDefault();
             ev.stopPropagation();
-            // Display all the payment icons, and the "show less" button
+            // Display all the payment methods icons, and the "show less" button
             $(ev.currentTarget).parents('ul').children('li').removeClass('d-none');
             // Hide the "show more" button
             $(ev.currentTarget).parents('li').addClass('d-none');

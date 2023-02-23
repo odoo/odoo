@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'NotificationListView',
-    identifyingMode: 'xor',
+Model({
+    name: "NotificationListView",
+    template: "mail.NotificationListView",
+    identifyingMode: "xor",
     lifecycleHooks: {
         _created() {
             this._loadPreviews();
@@ -20,20 +19,28 @@ registerModel({
          * @private
          */
         async _loadPreviews() {
-            const threads = this.channelPreviewViews
-                .map(channelPreviewView => channelPreviewView.thread);
-            this.messaging.models['Thread'].loadPreviews(threads);
+            const threads = this.channelPreviewViews.map(
+                (channelPreviewView) => channelPreviewView.thread
+            );
+            this.messaging.models["Thread"].loadPreviews(threads);
         },
     },
     fields: {
-        channelPreviewViews: many('ChannelPreviewView', {
+        channelPreviewViews: many("ChannelPreviewView", {
+            inverse: "notificationListViewOwner",
             compute() {
                 return this.filteredChannels
                     .sort((c1, c2) => {
-                        if (c1.localMessageUnreadCounter > 0 && c2.localMessageUnreadCounter === 0) {
+                        if (
+                            c1.localMessageUnreadCounter > 0 &&
+                            c2.localMessageUnreadCounter === 0
+                        ) {
                             return -1;
                         }
-                        if (c1.localMessageUnreadCounter === 0 && c2.localMessageUnreadCounter > 0) {
+                        if (
+                            c1.localMessageUnreadCounter === 0 &&
+                            c2.localMessageUnreadCounter > 0
+                        ) {
                             return 1;
                         }
                         if (c1.thread.lastMessage && c2.thread.lastMessage) {
@@ -47,14 +54,10 @@ registerModel({
                         }
                         return c1.id < c2.id ? -1 : 1;
                     })
-                    .map(channel => ({ channel }));
+                    .map((channel) => ({ channel }));
             },
-            inverse: 'notificationListViewOwner',
         }),
-        discussOwner: one('Discuss', {
-            identifying: true,
-            inverse: 'notificationListView',
-        }),
+        discussOwner: one("Discuss", { identifying: true, inverse: "notificationListView" }),
         filter: attr({
             compute() {
                 if (this.discussOwner) {
@@ -66,58 +69,60 @@ registerModel({
                 return clear();
             },
         }),
-        filteredChannels: many('Channel', {
+        filteredChannels: many("Channel", {
             compute() {
                 switch (this.filter) {
-                    case 'channel': {
-                        return this.messaging.models['Channel']
-                            .all(channel =>
-                                channel.channel_type === 'channel' &&
-                                channel.thread.isPinned
+                    case "channel": {
+                        return this.messaging.models["Channel"]
+                            .all(
+                                (channel) =>
+                                    channel.channel_type === "channel" && channel.thread.isPinned
                             )
-                            .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
+                            .sort((c1, c2) => (c1.displayName < c2.displayName ? -1 : 1));
                     }
-                    case 'chat': {
-                        return this.messaging.models['Channel']
-                            .all(channel =>
-                                channel.thread.isChatChannel &&
-                                channel.thread.isPinned
+                    case "chat": {
+                        return this.messaging.models["Channel"]
+                            .all(
+                                (channel) => channel.thread.isChatChannel && channel.thread.isPinned
                             )
-                            .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
+                            .sort((c1, c2) => (c1.displayName < c2.displayName ? -1 : 1));
                     }
-                    case 'all': {
+                    case "all": {
                         // "All" filter is for channels and chats
-                        return this.messaging.models['Channel']
-                            .all(channel => channel.thread.isPinned)
-                            .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
+                        return this.messaging.models["Channel"]
+                            .all((channel) => channel.thread.isPinned)
+                            .sort((c1, c2) => (c1.displayName < c2.displayName ? -1 : 1));
                     }
                 }
                 return clear();
             },
         }),
-        messagingMenuOwner: one('MessagingMenu', {
+        messagingMenuOwner: one("MessagingMenu", {
             identifying: true,
-            inverse: 'notificationListView',
+            inverse: "notificationListView",
         }),
-        notificationGroupViews: many('NotificationGroupView', {
+        notificationGroupViews: many("NotificationGroupView", {
+            inverse: "notificationListViewOwner",
             compute() {
-                if (this.filter !== 'all') {
+                if (this.filter !== "all") {
                     return clear();
                 }
-                return this.models['NotificationGroup']
+                return this.models["NotificationGroup"]
                     .all()
                     .sort((group1, group2) => group1.sequence - group2.sequence)
-                    .map(notificationGroup => ({ notificationGroup }));
+                    .map((notificationGroup) => ({ notificationGroup }));
             },
-            inverse: 'notificationListViewOwner',
         }),
-        notificationRequestView: one('NotificationRequestView', {
+        notificationRequestView: one("NotificationRequestView", {
+            inverse: "notificationListViewOwner",
             compute() {
-                return (this.filter === 'all' && this.messaging.isNotificationPermissionDefault) ? {} : clear();
+                return this.filter === "all" && this.messaging.isNotificationPermissionDefault
+                    ? {}
+                    : clear();
             },
-            inverse: 'notificationListViewOwner',
         }),
-        notificationViews: many('Record', {
+        notificationViews: many("Record", {
+            isCausal: true,
             compute() {
                 const notifications = [];
                 if (this.notificationRequestView) {
@@ -128,24 +133,36 @@ registerModel({
                 notifications.push(...this.channelPreviewViews);
                 return notifications;
             },
-            isCausal: true,
         }),
-        threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
+        threadNeedactionPreviewViews: many("ThreadNeedactionPreviewView", {
+            inverse: "notificationListViewOwner",
             compute() {
-                if (this.filter !== 'all') {
+                if (this.filter !== "all") {
                     return clear();
                 }
-                return this.messaging.models['Thread']
-                    .all(t => !t.mailbox && t.needactionMessagesAsOriginThread.length > 0)
+                return this.messaging.models["Thread"]
+                    .all((t) => !t.mailbox && t.needactionMessagesAsOriginThread.length > 0)
                     .sort((t1, t2) => {
-                        if (t1.needactionMessagesAsOriginThread.length > 0 && t2.needactionMessagesAsOriginThread.length === 0) {
+                        if (
+                            t1.needactionMessagesAsOriginThread.length > 0 &&
+                            t2.needactionMessagesAsOriginThread.length === 0
+                        ) {
                             return -1;
                         }
-                        if (t1.needactionMessagesAsOriginThread.length === 0 && t2.needactionMessagesAsOriginThread.length > 0) {
+                        if (
+                            t1.needactionMessagesAsOriginThread.length === 0 &&
+                            t2.needactionMessagesAsOriginThread.length > 0
+                        ) {
                             return 1;
                         }
-                        if (t1.lastNeedactionMessageAsOriginThread && t2.lastNeedactionMessageAsOriginThread) {
-                            return t1.lastNeedactionMessageAsOriginThread.id < t2.lastNeedactionMessageAsOriginThread.id ? 1 : -1;
+                        if (
+                            t1.lastNeedactionMessageAsOriginThread &&
+                            t2.lastNeedactionMessageAsOriginThread
+                        ) {
+                            return t1.lastNeedactionMessageAsOriginThread.id <
+                                t2.lastNeedactionMessageAsOriginThread.id
+                                ? 1
+                                : -1;
                         }
                         if (t1.lastNeedactionMessageAsOriginThread) {
                             return -1;
@@ -155,9 +172,8 @@ registerModel({
                         }
                         return t1.id < t2.id ? -1 : 1;
                     })
-                    .map(thread => ({ thread }));
+                    .map((thread) => ({ thread }));
             },
-            inverse: 'notificationListViewOwner',
         }),
     },
 });

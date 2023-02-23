@@ -126,6 +126,8 @@ class ProductProduct(models.Model):
             domain.append(('create_date', '<=', to_date))
         groups = self.env['stock.valuation.layer']._read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
         products = self.browse()
+        # Browse all products and compute products' quantities_dict in batch.
+        self.env['product.product'].browse([group['product_id'][0] for group in groups]).sudo(False).mapped('qty_available')
         for group in groups:
             product = self.browse(group['product_id'][0])
             value_svl = company_id.currency_id.round(group['value'])
@@ -203,7 +205,7 @@ class ProductProduct(models.Model):
         fifo_vals = self._run_fifo(abs(quantity), company)
         vals['remaining_qty'] = fifo_vals.get('remaining_qty')
         # In case of AVCO, fix rounding issue of standard price when needed.
-        if self.cost_method == 'average':
+        if self.product_tmpl_id.cost_method == 'average':
             rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
             if rounding_error:
                 # If it is bigger than the (smallest number of the currency * quantity) / 2,
@@ -215,7 +217,7 @@ class ProductProduct(models.Model):
                         float_repr(rounding_error, precision_digits=currency.decimal_places),
                         currency.symbol
                     )
-        if self.cost_method == 'fifo':
+        if self.product_tmpl_id.cost_method == 'fifo':
             vals.update(fifo_vals)
         return vals
 
@@ -353,9 +355,16 @@ class ProductProduct(models.Model):
                     new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
                 break
 
-        # Update the standard price with the price of the last used candidate, if any.
-        if new_standard_price and self.cost_method == 'fifo':
-            self.sudo().with_company(company.id).with_context(disable_auto_svl=True).standard_price = new_standard_price
+        # Fifo out will change the AVCO value of the product. So in case of out,
+        # we recompute it base on the remaining value and quantities.
+        if self.cost_method == 'fifo':
+            quantity_svl = sum(candidates.mapped('remaining_qty'))
+            value_svl = sum(candidates.mapped('remaining_value'))
+            product = self.sudo().with_company(company.id).with_context(disable_auto_svl=True)
+            if float_compare(quantity_svl, 0.0, precision_rounding=self.uom_id.rounding) > 0:
+                product.standard_price = value_svl / quantity_svl
+            elif candidates and not float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                product.standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -474,7 +483,7 @@ class ProductProduct(models.Model):
 
         # If some negative stock were fixed, we need to recompute the standard price.
         product = self.with_company(company.id)
-        if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+        if product.cost_method in ['average', 'fifo'] and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
             product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
         self.env['stock.valuation.layer'].browse(x[0].id for x in as_svls)._validate_accounting_entries()
@@ -563,7 +572,10 @@ class ProductProduct(models.Model):
             if float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                 # FIXME: create an empty layer to track the change?
                 continue
-            svsl_vals = product._prepare_out_svl_vals(product.quantity_svl, self.env.company)
+            if float_compare(product.quantity_svl, 0, precision_rounding=product.uom_id.rounding) > 0:
+                svsl_vals = product._prepare_out_svl_vals(product.quantity_svl, self.env.company)
+            else:
+                svsl_vals = product._prepare_in_svl_vals(abs(product.quantity_svl), product.value_svl / product.quantity_svl)
             svsl_vals['description'] = description + svsl_vals.pop('rounding_adjustment', '')
             svsl_vals['company_id'] = self.env.company.id
             empty_stock_svl_list.append(svsl_vals)
@@ -574,7 +586,10 @@ class ProductProduct(models.Model):
         for product in self:
             quantity_svl = products_orig_quantity_svl[product.id]
             if quantity_svl:
-                svl_vals = product._prepare_in_svl_vals(quantity_svl, product.standard_price)
+                if float_compare(quantity_svl, 0, precision_rounding=product.uom_id.rounding) > 0:
+                    svl_vals = product._prepare_in_svl_vals(quantity_svl, product.standard_price)
+                else:
+                    svl_vals = product._prepare_out_svl_vals(abs(quantity_svl), self.env.company)
                 svl_vals['description'] = description
                 svl_vals['company_id'] = self.env.company.id
                 refill_stock_svl_list.append(svl_vals)
@@ -679,50 +694,29 @@ class ProductProduct(models.Model):
         if not qty_to_invoice:
             return 0
 
-        returned_quantities = defaultdict(float)
-        for move in stock_moves:
-            if move.origin_returned_move_id:
-                returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.sudo().stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
             .sudo()\
             .filtered(lambda m: is_returned == bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
-        qty_to_take_on_candidates = qty_to_invoice
-        tmp_value = 0  # to accumulate the value taken on the candidates
-        for candidate in candidates:
-            if not candidate.quantity:
-                continue
-            candidate_quantity = abs(candidate.quantity)
-            if candidate.stock_move_id.id in returned_quantities:
-                candidate_quantity -= returned_quantities[candidate.stock_move_id.id]
-            if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
-                continue  # correction entries
-            if not float_is_zero(qty_invoiced, precision_rounding=candidate.uom_id.rounding):
-                qty_ignored = min(qty_invoiced, candidate_quantity)
-                qty_invoiced -= qty_ignored
-                candidate_quantity -= qty_ignored
-                if float_is_zero(candidate_quantity, precision_rounding=candidate.uom_id.rounding):
-                    continue
-            qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate_quantity)
 
-            qty_to_take_on_candidates -= qty_taken_on_candidate
-            tmp_value += qty_taken_on_candidate * \
-                ((candidate.value + sum(candidate.stock_valuation_layer_ids.mapped('value'))) / candidate.quantity)
-            if float_is_zero(qty_to_take_on_candidates, precision_rounding=candidate.uom_id.rounding):
-                break
+        value_invoiced = self.env.context.get('value_invoiced', 0)
+        if 'value_invoiced' in self.env.context:
+            qty_valued, valuation = candidates._consume_all(qty_invoiced, value_invoiced, qty_to_invoice)
+        else:
+            qty_valued, valuation = candidates._consume_specific_qty(qty_invoiced, qty_to_invoice)
 
         # If there's still quantity to invoice but we're out of candidates, we chose the standard
         # price to estimate the anglo saxon price unit.
+        missing = qty_to_invoice - qty_valued
         for sml in stock_moves.move_line_ids:
             if not sml.owner_id or sml.owner_id == sml.company_id.partner_id:
                 continue
-            qty_to_take_on_candidates -= sml.product_uom_id._compute_quantity(sml.qty_done, self.uom_id, rounding_method='HALF-UP')
-        if float_compare(qty_to_take_on_candidates, 0, precision_rounding=self.uom_id.rounding) > 0:
-            negative_stock_value = self.standard_price * qty_to_take_on_candidates
-            tmp_value += negative_stock_value
+            missing -= sml.product_uom_id._compute_quantity(sml.qty_done, self.uom_id, rounding_method='HALF-UP')
+        if float_compare(missing, 0, precision_rounding=self.uom_id.rounding) > 0:
+            valuation += self.standard_price * missing
 
-        return tmp_value / qty_to_invoice
+        return valuation / qty_to_invoice
 
 
 class ProductCategory(models.Model):
@@ -766,8 +760,22 @@ class ProductCategory(models.Model):
 
     @api.constrains('property_stock_valuation_account_id', 'property_stock_account_output_categ_id', 'property_stock_account_input_categ_id')
     def _check_valuation_accouts(self):
-        # Prevent to set the valuation account as the input or output account.
         for category in self:
+            # "compute" properties in constraint because ORM doesn't support computed properties
+            category.property_stock_account_input_categ_id = category.property_valuation == 'real_time' and (
+                category.property_stock_account_input_categ_id
+                or self.env['ir.property']._get('property_stock_account_input_categ_id', 'product.category')
+            )
+            category.property_stock_account_output_categ_id = category.property_valuation == 'real_time' and (
+                category.property_stock_account_output_categ_id
+                or self.env['ir.property']._get('property_stock_account_output_categ_id', 'product.category')
+            )
+            category.property_stock_valuation_account_id = category.property_valuation == 'real_time' and (
+                category.property_stock_valuation_account_id
+                or self.env['ir.property']._get('property_stock_valuation_account_id', 'product.category')
+            )
+
+            # Prevent to set the valuation account as the input or output account.
             valuation_account = category.property_stock_valuation_account_id
             input_and_output_accounts = category.property_stock_account_input_categ_id | category.property_stock_account_output_categ_id
             if valuation_account and valuation_account in input_and_output_accounts:
@@ -796,7 +804,6 @@ class ProductCategory(models.Model):
             # out and replenish the stock for each impacted products.
             new_cost_method = vals.get('property_cost_method')
             new_valuation = vals.get('property_valuation')
-
 
             for product_category in self:
                 valuation_impacted = False
@@ -842,12 +849,4 @@ class ProductCategory(models.Model):
     @api.onchange('property_valuation')
     def onchange_property_valuation(self):
         # Remove or set the account stock properties if necessary
-        if self.property_valuation == 'manual_periodic':
-            self.property_stock_account_input_categ_id = False
-            self.property_stock_account_output_categ_id = False
-            self.property_stock_valuation_account_id = False
-        if self.property_valuation == 'real_time':
-            company_id = self.env.company
-            self.property_stock_account_input_categ_id = company_id.property_stock_account_input_categ_id
-            self.property_stock_account_output_categ_id = company_id.property_stock_account_output_categ_id
-            self.property_stock_valuation_account_id = company_id.property_stock_valuation_account_id
+        self._check_valuation_accouts()

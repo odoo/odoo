@@ -26,6 +26,52 @@
                 <field name="user_id"/>
                 <field name="application_count"/>
                 <templates>
+                    <t t-name="kanban-menu" groups="hr_recruitment.group_hr_recruitment_user">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>View</span>
+                                    </div>
+                                    <div role="menuitem" name="menu_view_applications">
+                                        <a name="%(action_hr_job_applications)d" type="action">Applications</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="action_open_activities" type="object">Activities</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': active_id}">Trackers</a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>New</span>
+                                    </div>
+                                    <div role="menuitem" name="menu_new_applications">
+                                        <a name="%(hr_recruitment.action_hr_applicant_new)d" type="action">Application</a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Reporting</span>
+                                    </div>
+                                    <div role="menuitem" name="o_kanban_job_reporting">
+                                        <a name="%(hr_recruitment.action_hr_recruitment_report_filtered_job)d" type="action">Analysis</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_manage_settings row">
+                                <div class="col-6" role="menuitem" aria-haspopup="true">
+                                    <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                </div>
+                                <div class="col-6" role="menuitem">
+                                    <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
+                                    <a class="dropdown-item" t-if="record.active.raw_value" name="toggle_active" type="object">Archive</a>
+                                    <a class="dropdown-item" t-if="!record.active.raw_value" name="toggle_active" type="object">Unarchive</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <div class="o_kanban_card_header">
@@ -43,9 +89,6 @@
                                     <div t-if="record.alias_name.value and record.alias_domain.value" class="ps-3 o_secondary o_job_alias">
                                         <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/></small>
                                     </div>
-                                </div>
-                                <div class="o_kanban_manage_button_section" groups="hr_recruitment.group_hr_recruitment_user">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_recruitment_job_container o_kanban_card_content mt-0 mt-sm-3">
@@ -77,54 +120,121 @@
                                 </div>
                                 <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"></div>
                             </div>
-                            <div class="container o_recruitment_job_container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                <div class="row">
-                                    <div class="col-6 o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>View</span>
-                                        </div>
-                                        <div role="menuitem" name="menu_view_applications">
-                                            <a name="%(action_hr_job_applications)d" type="action">Applications</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="action_open_activities" type="object">Activities</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': active_id}">Trackers</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>New</span>
-                                        </div>
-                                        <div role="menuitem" name="menu_new_applications">
-                                            <a name="%(hr_recruitment.action_hr_applicant_new)d" type="action">Application</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 o_kanban_card_manage_section">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>Reporting</span>
-                                        </div>
-                                        <div role="menuitem" name="o_kanban_job_reporting">
-                                            <a name="%(hr_recruitment.action_hr_recruitment_report_filtered_job)d" type="action">Analysis</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_card_manage_settings row">
-                                    <div class="col-6" role="menuitem" aria-haspopup="true">
-                                        <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
-                                    </div>
-                                    <div class="col-6" role="menuitem">
-                                        <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
-                                        <a class="dropdown-item" t-if="record.active" name="toggle_active" type="object">Archive</a>
-                                        <a class="dropdown-item" t-if="!record.active" name="toggle_active" type="object">Unarchive</a>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+    <record id="view_job_filter_recruitment" model="ir.ui.view">
+        <field name="name">Job</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_job_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department_id']" position="after">
+                <filter string="My Favorites" name="my_favorite_jobs" domain="[('favorite_user_ids', 'in', uid)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_job_simple_form" model="ir.ui.view">
+        <field name="name">hr.job.simple.form</field>
+        <field name="model">hr.job</field>
+        <field name="priority">200</field>
+        <field name="arch" type="xml">
+            <form string="Create a Job Position" class="o_hr_job_simple_form" >
+                <group>
+                    <field name="name" class="o_job_name oe_inline" placeholder="e.g. Sales Manager"/>
+                    <label for="alias_name" string="Application email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                    <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
+                        <div class="oe_edit_only" name="edit_alias">
+                            <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                        </div>
+                        <div class="text-muted" attrs="{'invisible': [('alias_domain', '=', False)]}">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
+                    </div>
+                </group>
+                <footer>
+                    <button string="Create" type="object" name="close_dialog" class="btn-primary o_create_job" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="create_job_simple" model="ir.actions.act_window">
+        <field name="name">Create a Job Position</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_job_simple_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="hr_job_survey" model="ir.ui.view">
+        <field name="name">hr.job.form1</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <div name="recruitment_target" position="after">
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="interviewer_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}" />
+            </div>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <label for="address_id"/>
+                <div class="o_row">
+                    <span attrs="{'invisible': [('address_id', '!=', False)]}" class="oe_read_only">Remote</span>
+                    <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}" placeholder="Remote"/>
+                </div>
+                <label for="alias_name" string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
+                    <div class="oe_edit_only" name="edit_alias">
+                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                    </div>
+                </div>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                    icon="fa-pencil"
+                    name="%(action_hr_job_applications)d"
+                    context="{'default_user_id': user_id, 'active_test': False}"
+                    type="action">
+                    <field name="all_application_count" widget="statinfo" string="Job Applications"/>
+                </button>
+                <button class="oe_stat_button"
+                    icon="fa-file-text-o"
+                    name="action_open_attachments"
+                    type="object">
+                    <field name="documents_count" widget="statinfo" string="Documents"/>
+                </button>
+                <button class="oe_stat_button" type="action"
+                    name="%(action_hr_job_sources)d" icon="fa-bar-chart-o"
+                    context="{'default_job_id': active_id}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Trackers</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- hr related job position menu action -->
+    <record model="ir.actions.act_window" id="action_hr_job_config">
+        <field name="name">Job Positions</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('hr.view_hr_job_tree')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr.hr_job_view_kanban')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hr.view_hr_job_form')})]"/>
+        <field name="context">{'search_default_in_recruitment': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Ready to recruit more efficiently?
+            </p><p>
+                Let's create a job position.
+            </p>
         </field>
     </record>
 
@@ -132,6 +242,7 @@
         <field name="name">hr.job.search</field>
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_job_filter" />
+        <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_favorite_jobs']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>

@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
+import { useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 
 export class AutoComplete extends Component {
     setup() {
@@ -21,7 +21,7 @@ export class AutoComplete extends Component {
             value: this.props.value,
         });
 
-        this.inputRef = useRef("input");
+        this.inputRef = useForwardRefToParent("input");
         this.root = useRef("root");
         this.debouncedOnInput = useDebounced(this.onInput, this.constructor.timeout);
         useExternalListener(window, "scroll", this.onWindowScroll, true);
@@ -49,6 +49,15 @@ export class AutoComplete extends Component {
         return this.state.open;
     }
 
+    get hasOptions() {
+        for (const source of this.sources) {
+            if (source.isLoading || source.options.length) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     open(useInput = false) {
         this.state.open = true;
         this.loadSources(useInput);
@@ -60,11 +69,12 @@ export class AutoComplete extends Component {
     }
 
     loadSources(useInput) {
-        const sources = [];
+        this.sources = [];
+        this.state.activeSourceOption = null;
         const proms = [];
         for (const pSource of this.props.sources) {
             const source = this.makeSource(pSource);
-            sources.push(source);
+            this.sources.push(source);
 
             const options = this.loadOptions(
                 pSource.options,
@@ -82,7 +92,7 @@ export class AutoComplete extends Component {
                 source.options = options.map((option) => this.makeOption(option));
             }
         }
-        this.sources = sources;
+
         Promise.all(proms).then(() => {
             this.navigate(0);
         });
@@ -122,6 +132,10 @@ export class AutoComplete extends Component {
             this.inputRef.el.value = "";
             this.close();
             return;
+        }
+
+        if (this.props.resetOnSelect) {
+            this.inputRef.el.value = "";
         }
 
         this.forceValFromProp = true;
@@ -172,7 +186,9 @@ export class AutoComplete extends Component {
 
             if (source) {
                 const optionIndex = step < 0 ? source.options.length - 1 : 0;
-                this.state.activeSourceOption = [sourceIndex, optionIndex];
+                if (optionIndex < source.options.length) {
+                    this.state.activeSourceOption = [sourceIndex, optionIndex];
+                }
             }
         }
     }
@@ -210,6 +226,11 @@ export class AutoComplete extends Component {
             inputValue: this.inputRef.el.value,
         });
         this.open(true);
+    }
+
+    onInputFocus(ev) {
+        this.inputRef.el.setSelectionRange(0, this.inputRef.el.value.length);
+        this.props.onFocus(ev);
     }
 
     onInputKeydown(ev) {
@@ -295,9 +316,12 @@ Object.assign(AutoComplete, {
         },
         placeholder: { type: String, optional: true },
         autoSelect: { type: Boolean, optional: true },
+        resetOnSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onChange: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
+        onFocus: { type: Function, optional: true },
+        input: { type: Function, optional: true },
     },
     defaultProps: {
         placeholder: "",
@@ -305,6 +329,7 @@ Object.assign(AutoComplete, {
         onInput: () => {},
         onChange: () => {},
         onBlur: () => {},
+        onFocus: () => {},
     },
     timeout: 250,
 });

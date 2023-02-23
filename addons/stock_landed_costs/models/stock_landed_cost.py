@@ -146,9 +146,9 @@ class StockLandedCost(models.Model):
                     })
                     linked_layer.remaining_value += cost_to_add
                     valuation_layer_ids.append(valuation_layer.id)
-                # Update the AVCO
+                # Update the AVCO/FIFO
                 product = line.move_id.product_id
-                if product.cost_method == 'average':
+                if product.cost_method in ['average', 'fifo']:
                     cost_to_add_byproduct[product] += cost_to_add
                 # Products with manual inventory valuation are ignored because they do not need to create journal entries.
                 if product.valuation != "real_time":

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//HeaderButton" position="replace">
+            <HeaderLockButton t-if="env.pos.config.module_pos_hr" />
+            <HeaderButton t-if="!env.pos.config.module_pos_hr || env.pos.get_cashier().role === 'manager' || env.pos.get_cashier_user_id() === env.pos.user.id" />
+        </xpath>
+    </t>
+
+</templates>

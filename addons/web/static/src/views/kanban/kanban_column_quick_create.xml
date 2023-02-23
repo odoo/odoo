@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanColumnQuickCreate" owl="1">
-        <div class="o_column_quick_create" t-ref="root">
+        <div class="o_column_quick_create flex-shrink-0 flex-grow-1 flex-md-grow-0" t-ref="root">
             <div t-if="props.folded" class="o_quick_create_folded m-3 text-nowrap fw-bold opacity-75 opacity-100-hover" t-on-click="unfold">
                 <button class="o_kanban_add_column btn btn-outline-secondary w-100">
                     <i class="fa fa-plus me-2" role="img" aria-label="Add column" title="Add column"/><t t-out="props.groupByFieldString"/>

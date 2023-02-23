@@ -50,9 +50,9 @@ class StockLot(models.Model):
                 if lot.product_id != lot._origin.product_id or\
                    (not lot.use_date and not lot.removal_date and not lot.alert_date):
                     product_tmpl = lot.product_id.product_tmpl_id
-                    lot.use_date = product_tmpl.use_time and lot.expiration_date - datetime.timedelta(days=product_tmpl.use_time)
-                    lot.removal_date = product_tmpl.removal_time and lot.expiration_date - datetime.timedelta(days=product_tmpl.removal_time)
-                    lot.alert_date = product_tmpl.alert_time and lot.expiration_date - datetime.timedelta(days=product_tmpl.alert_time)
+                    lot.use_date = lot.expiration_date - datetime.timedelta(days=product_tmpl.use_time)
+                    lot.removal_date = lot.expiration_date - datetime.timedelta(days=product_tmpl.removal_time)
+                    lot.alert_date = lot.expiration_date - datetime.timedelta(days=product_tmpl.alert_time)
                 # when change
                 elif lot._origin.expiration_date:
                     time_delta = lot.expiration_date - lot._origin.expiration_date

@@ -57,7 +57,7 @@ class ResCompany(models.Model):
     transfer_account_id = fields.Many2one('account.account',
         domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('deprecated', '=', False)]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liqity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
-    chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
+    chart_template = fields.Selection(selection='_chart_template_selection')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts')
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
     default_cash_difference_income_account_id = fields.Many2one('account.account', string="Cash Difference Income Account")
@@ -71,7 +71,7 @@ class ResCompany(models.Model):
         ('included', 'On early payment'),
         ('excluded', 'Never'),
         ('mixed', 'Always (upon invoice)')
-    ], string='Cash Discount Tax Reduction', default='included', readonly=False)
+    ], string='Cash Discount Tax Reduction', readonly=False, store=True, compute='_compute_early_pay_discount_computation')
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
@@ -83,17 +83,14 @@ class ResCompany(models.Model):
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Gain Exchange Rate Account",
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+        domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash', 'liability_credit_card')), ('deprecated', '=', False), ('company_id', '=', id), \
+        domain="[('deprecated', '=', False), ('company_id', '=', id), \
                 ('account_type', '=', 'expense')]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
-    property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
-    property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
-    property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
@@ -102,6 +99,7 @@ class ResCompany(models.Model):
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)
+    display_invoice_amount_total_words = fields.Boolean(string='Total amount of invoice in letters')
     account_use_credit_limit = fields.Boolean(
         string='Sales Credit Limit', help='Enable the use of credit limit on partners.')
 
@@ -273,11 +271,15 @@ class ResCompany(models.Model):
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code):
-        accounts = self.env['account.account'].search([('code', 'like', old_code), ('account_type', 'in', ('asset_cash', 'liability_credit_card')),
-            ('company_id', '=', self.id)], order='code asc')
+        if not old_code:
+            return
+        accounts = self.env['account.account'].search([
+            ('code', '=like', old_code + '%'),
+            ('account_type', 'in', ('asset_cash', 'liability_credit_card')),
+            ('company_id', '=', self.id)
+        ], order='code asc')
         for account in accounts:
-            if account.code.startswith(old_code):
-                account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
+            account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
 
     def _get_fiscalyear_lock_statement_lines_redirect_action(self, unreconciled_statement_lines):
         """ Get the action redirecting to the statement lines that are not already reconciled when setting a fiscal
@@ -316,7 +318,7 @@ class ResCompany(models.Model):
                 error_msg = _('There are still unposted entries in the period you want to lock. You should either post or delete them.')
                 action_error = {
                     'view_mode': 'tree',
-                    'name': 'Unposted Entries',
+                    'name': _('Unposted Entries'),
                     'res_model': 'account.move',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', draft_entries.ids)],
@@ -580,6 +582,14 @@ class ResCompany(models.Model):
             raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
         return account
 
+    def _existing_accounting(self) -> bool:
+        """Return True iff some accounting entries have already been made for the current company."""
+        self.ensure_one()
+        return bool(self.env['account.move.line'].search([('company_id', '=', self.id)], order="id", limit=1))
+
+    def _chart_template_selection(self):
+        return self.env['account.chart.template']._select_chart_template(self.country_id)
+
     @api.model
     def _action_check_hash_integrity(self):
         return self.env.ref('account.action_report_account_hash_integrity').report_action(self.id)
@@ -588,6 +598,9 @@ class ResCompany(models.Model):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """
+        if not self.env.user.has_group('account.group_account_user'):
+            raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
+
         def build_move_info(move):
             return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
 
@@ -615,8 +628,11 @@ class ResCompany(models.Model):
                 results_by_journal['results'].append(rslt)
                 continue
 
-            all_moves_count = self.env['account.move'].search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
-            moves = self.env['account.move'].search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
+            # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
+            # This is required in order to generate consistent hashs.
+            # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
+            all_moves_count = self.env['account.move'].sudo().search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
+            moves = self.env['account.move'].sudo().search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
                                             ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
             if not moves:
                 rslt.update({
@@ -671,3 +687,13 @@ class ResCompany(models.Model):
 
         return {'date_from': datetime(year=current_date.year, month=1, day=1).date(),
                 'date_to': datetime(year=current_date.year, month=12, day=31).date()}
+
+    @api.depends('country_code')
+    def _compute_early_pay_discount_computation(self):
+        for company in self:
+            if company.country_code == 'BE':
+                company.early_pay_discount_computation = 'mixed'
+            elif company.country_code == 'NL':
+                company.early_pay_discount_computation = 'excluded'
+            else:
+                company.early_pay_discount_computation = 'included'

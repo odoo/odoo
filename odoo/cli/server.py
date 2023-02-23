@@ -118,9 +118,9 @@ def import_translation():
 
     registry = odoo.modules.registry.Registry.new(dbname)
     with registry.cursor() as cr:
-        odoo.tools.trans_load(
-            cr, config["translate_in"], config["language"], overwrite=overwrite,
-        )
+        translation_importer = odoo.tools.translate.TranslationImporter(cr)
+        translation_importer.load_file(config["translate_in"], config["language"])
+        translation_importer.save(overwrite=overwrite)
 
 def main(args):
     check_root_user()

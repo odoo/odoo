@@ -3,7 +3,7 @@
     <div t-name="hr_holidays.LeaveStatsComponent" owl="1" class="o_leave_stats">
         <div t-if="employee" id="o_leave_stats_employee">
             <div class="o_hr_leave_subtitle">
-                <t t-esc="employee.display_name"/> in <t t-esc="thisYear"/>
+                <t t-esc="employee[1]"/> in <t t-esc="thisYear"/>
             </div>
             <div t-if="state.leaves.length === 0">
                 None
@@ -16,7 +16,7 @@
 
         <div t-if="department" id="o_leave_stats_department">
             <div class="o_horizontal_separator o_hr_leave_subtitle">
-                <t t-esc="department.display_name"/>
+                <t t-esc="department[1]"/>
             </div>
             <div t-if="state.departmentLeaves.length === 0">
                 None

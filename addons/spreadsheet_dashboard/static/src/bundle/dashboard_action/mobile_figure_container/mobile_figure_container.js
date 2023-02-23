@@ -2,7 +2,7 @@
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 
-const { Component, useSubEnv } = owl;
+import { Component, useSubEnv } from "@odoo/owl";
 const { registries } = spreadsheet;
 const { figureRegistry } = registries;
 
@@ -37,3 +37,7 @@ export class MobileFigureContainer extends Component {
 }
 
 MobileFigureContainer.template = "documents_spreadsheet.MobileFigureContainer";
+
+MobileFigureContainer.props = {
+    spreadsheetModel: Object,
+};

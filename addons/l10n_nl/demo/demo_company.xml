@@ -2,11 +2,11 @@
 <odoo>
     <record id="partner_demo_company_nl" model="res.partner">
         <field name="name">NL Company</field>
-        <field name="vat">NL43603B11</field>
+        <field name="vat">NL219987701B73</field>
         <field name="street">Bloemstraat 42</field>
         <field name="city">Groningen</field>
         <field name="country_id" ref="base.nl"/>
-        <field name="state_id" ref="base.state_nl_bq3"/>
+        <field name="state_id" ref="base.state_nl_gr"/>
         <field name="zip">9700</field>
         <field name="phone">+31 6 12345678</field>
         <field name="email">info@company.nlexample.com</field>
@@ -29,7 +29,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_nl.l10nnl_chart_template')]"/>
+        <value eval="[]"/>
+        <value>nl</value>
         <value model="res.company" eval="obj().env.ref('l10n_nl.demo_company_nl')"/>
     </function>
 </odoo>

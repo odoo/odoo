@@ -8,11 +8,6 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.addons.http_routing.models.ir_http import url_for
-from odoo.addons.website.models.website import SEARCH_TYPE_MODELS
-
-SEARCH_TYPE_MODELS['products'] |= 'product.public.category', 'product.template'
-SEARCH_TYPE_MODELS['product_categories_only'] |= 'product.public.category',
-SEARCH_TYPE_MODELS['products_only'] |= 'product.template',
 
 _logger = logging.getLogger(__name__)
 
@@ -33,12 +28,9 @@ class Website(models.Model):
         default=_default_salesteam_id)
 
     pricelist_id = fields.Many2one(
-        'product.pricelist',
-        compute='_compute_pricelist_id',
-        string='Default Pricelist')
+        'product.pricelist', compute='_compute_pricelist_id', string="Default Pricelist if any")
     currency_id = fields.Many2one(
-        related='pricelist_id.currency_id', depends=(), related_sudo=False,
-        string='Default Currency', readonly=False)
+        'res.currency', compute='_compute_currency_id', string="Default Currency")
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
     # Technical: Used to recompute pricelist_ids
@@ -129,6 +121,11 @@ class Website(models.Model):
     # NOTE VFE: moving this computation doesn't change much
     # Because most of it must still be computed for the pricelist choice template (`pricelist_list`)
     # Therefore, avoiding all pricelist computation is impossible in fact...
+
+    @api.depends('all_pricelist_ids', 'pricelist_id', 'company_id')
+    def _compute_currency_id(self):
+        for website in self:
+            website.currency_id = website.pricelist_id.currency_id or website.company_id.currency_id
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache(
@@ -235,7 +232,7 @@ class Website(models.Model):
         return pl_id in self.get_pricelist_available(show_visible=False).ids
 
     def _get_geoip_country_code(self):
-        return request and request.geoip.get('country_code') or False
+        return request and request.geoip.country_code or False
 
     def _get_cached_pricelist_id(self):
         return request and request.session.get('website_sale_current_pl') or None
@@ -281,11 +278,6 @@ class Website(models.Model):
                 # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
                 pricelist = available_pricelists[0]
 
-            if not pricelist:
-                _logger.error(
-                    'Failed to find pricelist for partner "%s" (id %s)',
-                    partner_sudo.name, partner_sudo.id,
-                )
         return pricelist
 
     def sale_product_domain(self):
@@ -311,11 +303,12 @@ class Website(models.Model):
 
         if sale_order_id:
             sale_order_sudo = SaleOrder.browse(sale_order_id).exists()
-        elif not self.env.user._is_public():
+        elif self.env.user and not self.env.user._is_public():
             sale_order_sudo = self.env.user.partner_id.last_website_so_id
             if sale_order_sudo:
                 available_pricelists = self.get_pricelist_available()
-                if sale_order_sudo.pricelist_id not in available_pricelists:
+                so_pricelist_sudo = sale_order_sudo.pricelist_id
+                if so_pricelist_sudo and so_pricelist_sudo not in available_pricelists:
                     # Do not reload the cart of this user last visit
                     # if the cart uses a pricelist no longer available.
                     sale_order_sudo = SaleOrder
@@ -332,6 +325,13 @@ class Website(models.Model):
                         sale_order_sudo = SaleOrder
         else:
             sale_order_sudo = SaleOrder
+
+        # Ignore the current order if a payment has been initiated. We don't want to retrieve the
+        # cart and allow the user to update it when the payment is about to confirm it.
+        if sale_order_sudo and sale_order_sudo.get_portal_last_transaction().state in (
+            'pending', 'authorized', 'done'
+        ):
+            sale_order_sudo = None
 
         if not (sale_order_sudo or force_create):
             # Do not create a SO record unless needed
@@ -460,10 +460,9 @@ class Website(models.Model):
 
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
-        if request.website.partner_id.id == partner_sudo.id:
-            country_code = request.geoip.get('country_code')
-            if country_code:
-                country_id = self.env['res.country'].search([('code', '=', country_code)], limit=1).id
+        if request and request.website.partner_id.id == partner_sudo.id:
+            if request.geoip.country_code:
+                country_id = self.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1).id
                 fpos = AccountFiscalPosition._get_fpos_by_region(country_id)
 
         if not fpos:
@@ -486,6 +485,14 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
         return suggested_controllers
+
+    def _search_get_details(self, search_type, order, options):
+        result = super()._search_get_details(search_type, order, options)
+        if search_type in ['products', 'product_categories_only', 'all']:
+            result.append(self.env['product.public.category']._search_get_detail(self, order, options))
+        if search_type in ['products', 'products_only', 'all']:
+            result.append(self.env['product.template']._search_get_detail(self, order, options))
+        return result
 
     def _get_product_page_proportions(self):
         """
@@ -535,6 +542,13 @@ class Website(models.Model):
                 template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
                 template.send_mail(sale_order.id, email_values=dict(email_to=sale_order.partner_id.email))
                 sale_order.cart_recovery_email_sent = True
+
+    def _display_partner_b2b_fields(self):
+        """ This method is to be inherited by localizations and return
+        True if localization should always displayed b2b fields """
+        self.ensure_one()
+
+        return self.is_view_active('website_sale.address_b2b')
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'

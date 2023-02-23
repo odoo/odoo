@@ -6,6 +6,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import AccessError, UserError
+from odoo.osv import expression
 
 
 class PhoneMixin(models.AbstractModel):
@@ -47,47 +48,73 @@ class PhoneMixin(models.AbstractModel):
     phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
 
     def _search_phone_mobile_search(self, operator, value):
-        value = value.strip()
+        value = value.strip() if isinstance(value, str) else value
+        phone_fields = [
+            fname for fname in self._phone_get_number_fields()
+            if fname in self._fields and self._fields[fname].store
+        ]
+        if not phone_fields:
+            raise UserError(_('Missing definition of phone fields.'))
+
+        # search if phone/mobile is set or not
+        if (value is True or not value) and operator in ('=', '!='):
+            if value:
+                # inverse the operator
+                operator = '=' if operator == '!=' else '!='
+            op = expression.AND if operator == '=' else expression.OR
+            return op([[(phone_field, operator, False)] for phone_field in phone_fields])
+
         if len(value) < 3:
             raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
 
         pattern = r'[\s\\./\(\)\-]'
+        sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
+
         if value.startswith('+') or value.startswith('00'):
-            # searching on +32485112233 should also finds 0032485112233 (and vice versa)
-            # we therefore remove it from input value and search for both of them in db
-            query = f"""
-                SELECT model.id
-                FROM {self._table} model
-                WHERE
-                    model.phone IS NOT NULL AND (
-                        REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
-                        REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s
-                    ) OR
-                    model.mobile IS NOT NULL AND (
-                        REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s OR
-                        REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s
-                    );
-            """
-            term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:]) + '%'
-            self._cr.execute(query, (
-                pattern, '00' + term,
-                pattern, '+' + term,
-                pattern, '00' + term,
-                pattern, '+' + term
-            ))
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+                # we therefore remove it from input value and search for both of them in db
+                where_str = ' AND '.join(
+                    f"""model.{phone_field} IS NULL OR (
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s OR
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s
+                    )"""
+                    for phone_field in phone_fields
+                )
+            else:
+                # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+                # we therefore remove it from input value and search for both of them in db
+                where_str = ' OR '.join(
+                    f"""model.{phone_field} IS NOT NULL AND (
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s OR
+                            REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s
+                    )"""
+                    for phone_field in phone_fields
+                )
+            query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
+
+            term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:])
+            if operator not in ('=', '!='):  # for like operators
+                term = f'{term}%'
+            self._cr.execute(
+                query, (pattern, '00' + term, pattern, '+' + term) * len(phone_fields)
+            )
         else:
-            query = f"""
-                SELECT model.id
-                FROM {self._table} model
-                WHERE
-                    REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
-                    REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s;
-            """
-            term = '%' + re.sub(pattern, '', value) + '%'
-            self._cr.execute(query, (
-                pattern, term,
-                pattern, term
-            ))
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                where_str = ' AND '.join(
+                    f"(model.{phone_field} IS NULL OR REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
+                    for phone_field in phone_fields
+                )
+            else:
+                where_str = ' OR '.join(
+                    f"(model.{phone_field} IS NOT NULL AND REGEXP_REPLACE(model.{phone_field}, %s, '', 'g') {sql_operator} %s)"
+                    for phone_field in phone_fields
+                )
+            query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
+            term = re.sub(pattern, '', value)
+            if operator not in ('=', '!='):  # for like operators
+                term = f'%{term}%'
+            self._cr.execute(query, (pattern, term) * len(phone_fields))
         res = self._cr.fetchall()
         if not res:
             return [(0, '=', 1)]

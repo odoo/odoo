@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -23,30 +24,16 @@ class HRLeave(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        today = fields.Date.today()
-        for leave in res:
-            if not leave.overtime_deductible:
-                continue
-            employee = leave.employee_id.sudo()
-            duration = leave.number_of_hours_display
-            if duration > employee.total_overtime:
-                if employee.user_id == self.env.user:
-                    raise ValidationError(_('You do not have enough extra hours to request this leave'))
-                raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
-            if not leave.overtime_id:
-                leave.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
-                    'employee_id': employee.id,
-                    'date': today,
-                    'adjustment': True,
-                    'duration': -1 * duration,
-                })
+        self._check_overtime_deductible(res)
         return res
 
     def write(self, vals):
         res = super().write(vals)
-        fields_to_check = {'number_of_days', 'date_from', 'date_to', 'state', 'employee_id'}
+        fields_to_check = {'number_of_days', 'date_from', 'date_to', 'state', 'employee_id', 'holiday_status_id'}
         if not any(field for field in fields_to_check if field in vals):
             return res
+        if vals.get('holiday_status_id'):
+            self._check_overtime_deductible(self)
         #User may not have access to overtime_id field
         for leave in self.sudo().filtered('overtime_id'):
             employee = leave.employee_id
@@ -57,6 +44,25 @@ class HRLeave(models.Model):
                     raise ValidationError(_('The employee does not have enough extra hours to extend this leave.'))
                 leave.overtime_id.sudo().duration = -1 * duration
         return res
+
+    def _check_overtime_deductible(self, leaves):
+        # If the type of leave is overtime deductible, we have to check that the employee has enough extra hours
+        for leave in leaves:
+            if not leave.overtime_deductible:
+                continue
+            employee = leave.employee_id.sudo()
+            duration = leave.number_of_hours_display
+            if duration > employee.total_overtime:
+                if employee.user_id == self.env.user:
+                    raise ValidationError(_('You do not have enough extra hours to request this leave'))
+                raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
+            if not leave.sudo().overtime_id:
+                leave.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
+                    'employee_id': employee.id,
+                    'date': fields.Date.today(),
+                    'adjustment': True,
+                    'duration': -1 * duration,
+                })
 
     def action_draft(self):
         overtime_leaves = self.filtered('overtime_deductible')
@@ -95,6 +101,16 @@ class HRLeave(models.Model):
         employee_dates = defaultdict(set)
         for leave in self:
             if leave.employee_id and leave.employee_company_id.hr_attendance_overtime:
-                employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id, leave.date_from))
+                for d in range((leave.date_to - leave.date_from).days + 1):
+                    employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id, leave.date_from + timedelta(days=d)))
         if employee_dates:
             self.env['hr.attendance']._update_overtime(employee_dates)
+
+    def unlink(self):
+        # TODO master change to ondelete
+        self.sudo().overtime_id.unlink()
+        return super().unlink()
+
+    def _force_cancel(self, *args, **kwargs):
+        super()._force_cancel(*args, **kwargs)
+        self.sudo().overtime_id.unlink()

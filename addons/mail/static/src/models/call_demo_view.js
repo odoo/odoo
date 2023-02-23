@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { attr, one } from '@mail/model/model_field';
-import { registerModel } from '@mail/model/model_core';
+import { attr, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'CallDemoView',
+Model({
+    name: "CallDemoView",
+    template: "mail.CallDemoView",
     recordMethods: {
         /**
          * Stops recording user's microphone.
@@ -102,16 +102,14 @@ registerModel({
         /**
          * Ref to the audio element used for the audio feedback.
          */
-        audioRef: attr(),
+        audioRef: attr({ ref: "audio" }),
         /**
          * The MediaStream from the microphone.
          *
          * Default set to null to be consistent with the default value of
          * `HTMLMediaElement.srcObject`.
          */
-        audioStream: attr({
-            default: null,
-        }),
+        audioStream: attr({ default: null }),
         /**
          * States whether the browser has the required APIs for
          * microphone/camera recording.
@@ -120,8 +118,8 @@ registerModel({
             compute() {
                 return Boolean(
                     navigator.mediaDevices &&
-                    navigator.mediaDevices.getUserMedia &&
-                    window.MediaStream
+                        navigator.mediaDevices.getUserMedia &&
+                        window.MediaStream
                 );
             },
         }),
@@ -144,22 +142,17 @@ registerModel({
         /**
          * Ref to the video element used for the video feedback.
          */
-        videoRef: attr(),
+        videoRef: attr({ ref: "video" }),
         /**
          * The MediaStream from the camera.
          *
          * Default set to null to be consistent with the default value of
          * `HTMLMediaElement.srcObject`.
          */
-        videoStream: attr({
-            default: null,
-        }),
+        videoStream: attr({ default: null }),
         /**
          * States the welcome view containing this media preview.
          */
-        welcomeView: one('WelcomeView', {
-            identifying: true,
-            inverse: 'callDemoView',
-        }),
+        welcomeView: one("WelcomeView", { identifying: true, inverse: "callDemoView" }),
     },
 });

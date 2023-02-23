@@ -134,6 +134,11 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
+        reference = (f'{self.reference} - '
+                     f'{self.partner_id.display_name or ""} - '
+                     f'{self.provider_reference or ""}'
+                    )
+
         payment_method_line = self.provider_id.journal_id.inbound_payment_method_line_ids\
             .filtered(lambda l: l.code == self.provider_code)
         payment_values = {
@@ -147,7 +152,7 @@ class PaymentTransaction(models.Model):
             'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
-            'ref': self.reference,
+            'ref': reference,
             **extra_create_values,
         }
         payment = self.env['account.payment'].create(payment_values)
@@ -188,19 +193,18 @@ class PaymentTransaction(models.Model):
         for invoice in self.invoice_ids:
             invoice.message_post(body=message)
 
-    #=== BUSINESS METHODS - GETTERS ===#
+    #=== BUSINESS METHODS - POST-PROCESSING ===#
 
-    def _get_received_message(self):
-        """ Return the message stating that the transaction has been received by the provider.
+    def _finalize_post_processing(self):
+        """ Override of `payment` to write a message in the chatter with the payment and transaction
+        references.
 
-        Note: self.ensure_one()
+        :return: None
         """
-        message = super()._get_received_message()
-
-        if self.state == 'done' and self.payment_id:
-            message += "<br />" + _(
-                "The related payment is posted: %s",
-                self.payment_id._get_html_link()
+        super()._finalize_post_processing()
+        for tx in self.filtered('payment_id'):
+            message = _(
+                "The payment related to the transaction with reference %(ref)s has been posted: "
+                "%(link)s", ref=tx.reference, link=tx.payment_id._get_html_link()
             )
-
-        return message
+            tx._log_message_on_linked_documents(message)

@@ -179,14 +179,14 @@ class TestEdiJson(TestEGEdiCommon):
                         'price_unit': 120.99,
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_standard_sale_14').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
                     },
                     {
                         'product_id': self.product_a.id,
                         'price_unit': 999.99,
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_standard_sale_14').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
                     },
                 ],
             )
@@ -276,7 +276,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'discount': 10.0,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_standard_sale_14').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
                     },
                     {
                         'product_id': self.product_a.id,
@@ -284,7 +284,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'discount': 10.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_standard_sale_14').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
                     },
                 ],
             )
@@ -376,7 +376,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'discount': 10.0,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_standard_sale_14').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
                     },
                     {
                         'product_id': self.product_a.id,
@@ -384,7 +384,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'discount': 10.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_standard_sale_14').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
                     },
                 ],
             )
@@ -475,7 +475,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'discount': 10.0,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_exempt_sale').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale').ids)],
                     },
                     {
                         'product_id': self.product_b.id,
@@ -483,7 +483,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 5.0,
                         'discount': 13.0,
                         'product_uom_id': self.env.ref('uom.product_uom_cm').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_exempt_sale').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale').ids)],
                     },
                 ],
             )
@@ -575,7 +575,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'discount': 10.0,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_exempt_sale').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale').ids)],
                     },
                     {
                         'product_id': self.product_b.id,
@@ -583,7 +583,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 5.0,
                         'discount': 13.0,
                         'product_uom_id': self.env.ref('uom.product_uom_cm').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_exempt_sale').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale').ids)],
                     },
                 ],
             )
@@ -685,7 +685,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'discount': 10.0,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_exempt_sale').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale').ids)],
                     },
                     {
                         'product_id': self.product_b.id,
@@ -693,7 +693,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 5.0,
                         'discount': 13.0,
                         'product_uom_id': self.env.ref('uom.product_uom_cm').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_exempt_sale').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale').ids)],
                     },
                 ],
             )
@@ -795,7 +795,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 1.0,
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'discount': 10.0,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_exempt_sale').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale').ids)],
                     },
                     {
                         'product_id': self.product_b.id,
@@ -803,7 +803,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'quantity': 5.0,
                         'discount': 13.0,
                         'product_uom_id': self.env.ref('uom.product_uom_cm').id,
-                        'tax_ids': [(6, 0, self.env.ref(f'l10n_eg.{self.env.company.id}_eg_exempt_sale').ids)],
+                        'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_exempt_sale').ids)],
                     },
                 ],
             )

@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
+
 from collections import defaultdict
 from datetime import datetime, timedelta
 from operator import itemgetter
+from pytz import timezone
 
-import pytz
 from odoo import models, fields, api, exceptions, _
+from odoo.addons.resource.models.utils import Intervals
 from odoo.tools import format_datetime
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
@@ -43,12 +46,24 @@ class HrAttendance(models.Model):
                 }))
         return result
 
+    def _get_employee_calendar(self):
+        self.ensure_one()
+        return self.employee_id.resource_calendar_id or self.employee_id.company_id.resource_calendar_id
+
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
         for attendance in self:
             if attendance.check_out and attendance.check_in:
-                delta = attendance.check_out - attendance.check_in
-                attendance.worked_hours = delta.total_seconds() / 3600.0
+                calendar = attendance._get_employee_calendar()
+                resource = attendance.employee_id.resource_id
+                tz = timezone(calendar.tz)
+                check_in_tz = attendance.check_in.astimezone(tz)
+                check_out_tz = attendance.check_out.astimezone(tz)
+                lunch_intervals = calendar._attendance_intervals_batch(
+                    check_in_tz, check_out_tz, resource, lunch=True)
+                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals[resource.id]
+                delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
+                attendance.worked_hours = delta / 3600.0
             else:
                 attendance.worked_hours = False
 
@@ -159,11 +174,12 @@ class HrAttendance(models.Model):
             stop = pytz.utc.localize(max(attendance_dates, key=itemgetter(0))[0] + timedelta(hours=24))
 
             # Retrieve expected attendance intervals
-            expected_attendances = emp.resource_calendar_id._attendance_intervals_batch(
+            calendar = emp.resource_calendar_id or emp.company_id.resource_calendar_id
+            expected_attendances = calendar._attendance_intervals_batch(
                 start, stop, emp.resource_id
             )[emp.resource_id.id]
             # Substract Global Leaves and Employee's Leaves
-            leave_intervals = emp.resource_calendar_id._leave_intervals_batch(start, stop, emp.resource_id)
+            leave_intervals = calendar._leave_intervals_batch(start, stop, emp.resource_id, domain=[])
             expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
 
             # working_times = {date: [(start, stop)]}
@@ -279,13 +295,14 @@ class HrAttendance(models.Model):
 
     def write(self, vals):
         attendances_dates = self._get_attendances_dates()
-        super(HrAttendance, self).write(vals)
+        result = super(HrAttendance, self).write(vals)
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
             # Merge attendance dates before and after write to recompute the
             # overtime if the attendances have been moved to another day
             for emp, dates in self._get_attendances_dates().items():
                 attendances_dates[emp] |= dates
             self._update_overtime(attendances_dates)
+        return result
 
     def unlink(self):
         attendances_dates = self._get_attendances_dates()
@@ -293,5 +310,5 @@ class HrAttendance(models.Model):
         self._update_overtime(attendances_dates)
 
     @api.returns('self', lambda value: value.id)
-    def copy(self):
+    def copy(self, default=None):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))

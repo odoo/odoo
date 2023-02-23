@@ -26,7 +26,7 @@ class AccountReconcileModel(models.Model):
             return 'model_%s' % counter
 
         company_ids = self.env['res.company'].search([
-            ('chart_template_id', '!=', False),
+            ('chart_template', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
         return [

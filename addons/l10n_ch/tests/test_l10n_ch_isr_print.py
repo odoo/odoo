@@ -9,7 +9,7 @@ from odoo.exceptions import ValidationError
 class ISRTest(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_ch.l10nch_chart_template'):
+    def setUpClass(cls, chart_template_ref='ch'):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
     def print_isr(self, invoice):

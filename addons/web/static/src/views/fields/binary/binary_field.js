@@ -2,18 +2,27 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { isBinarySize } from "@web/core/utils/binary";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 import { _lt } from "@web/core/l10n/translation";
 
-const { Component, onWillUpdateProps, useState } = owl;
-
-function isBinarySize(value) {
-    return /^\d+(\.\d*)? [^0-9]+$/.test(value);
-}
-
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 export class BinaryField extends Component {
+    static template = "web.BinaryField";
+    static components = {
+        FileUploader,
+    };
+    static props = {
+        ...standardFieldProps,
+        acceptedFileExtensions: { type: String, optional: true },
+        fileNameField: { type: String, optional: true },
+    };
+    static defaultProps = {
+        acceptedFileExtensions: "*",
+    };
+
     setup() {
         this.notification = useService("notification");
         this.state = useState({
@@ -56,27 +65,14 @@ export class BinaryField extends Component {
     }
 }
 
-BinaryField.template = "web.BinaryField";
-BinaryField.components = {
-    FileUploader,
-};
-BinaryField.props = {
-    ...standardFieldProps,
-    acceptedFileExtensions: { type: String, optional: true },
-    fileNameField: { type: String, optional: true },
-};
-BinaryField.defaultProps = {
-    acceptedFileExtensions: "*",
-};
-
-BinaryField.displayName = _lt("File");
-BinaryField.supportedTypes = ["binary"];
-
-BinaryField.extractProps = ({ attrs }) => {
-    return {
+export const binaryField = {
+    component: BinaryField,
+    displayName: _lt("File"),
+    supportedTypes: ["binary"],
+    extractProps: ({ attrs }) => ({
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         fileNameField: attrs.filename,
-    };
+    }),
 };
 
-registry.category("fields").add("binary", BinaryField);
+registry.category("fields").add("binary", binaryField);

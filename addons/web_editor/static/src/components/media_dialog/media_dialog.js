@@ -9,7 +9,7 @@ import { DocumentSelector } from './document_selector';
 import { IconSelector } from './icon_selector';
 import { VideoSelector } from './video_selector';
 
-const { Component, useState, onRendered, xml } = owl;
+import { Component, useState, onRendered, xml } from "@odoo/owl";
 
 export const TABS = {
     IMAGES: {
@@ -83,6 +83,7 @@ export class MediaDialog extends Component {
                 selectedMedia: this.selectedMedia,
                 selectMedia: (...args) => this.selectMedia(...args, tab.id, additionalProps.multiSelect),
                 save: this.save.bind(this),
+                onAttachmentChange: this.props.onAttachmentChange,
             },
         });
     }

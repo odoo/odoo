@@ -103,6 +103,7 @@ class Product(models.Model):
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     valid_ean = fields.Boolean('Barcode is valid EAN', compute='_compute_valid_ean')
 
+    @api.depends('product_tmpl_id')
     def _compute_show_qty_status_button(self):
         for product in self:
             product.show_on_hand_qty_status_button = product.product_tmpl_id.show_on_hand_qty_status_button
@@ -554,7 +555,7 @@ class Product(models.Model):
 
     def action_product_forecast_report(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_replenishment_product_product_action")
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_forecasted_product_product_action")
         return action
 
     def write(self, values):
@@ -570,16 +571,28 @@ class Product(models.Model):
     def _get_rules_from_location(self, location, route_ids=False, seen_rules=False):
         if not seen_rules:
             seen_rules = self.env['stock.rule']
+        warehouse = location.warehouse_id
+        if not warehouse and seen_rules:
+            warehouse = seen_rules[-1].propagate_warehouse_id
         rule = self.env['procurement.group']._get_rule(self, location, {
             'route_ids': route_ids,
-            'warehouse_id': location.warehouse_id
+            'warehouse_id': warehouse,
         })
+        if rule in seen_rules:
+            raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
         if not rule:
             return seen_rules
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
             return seen_rules | rule
         else:
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
+
+    def _get_date_with_security_lead_days(self, date, location):
+        rules = self._get_rules_from_location(location)
+        for action, days in location.company_id._get_security_by_rule_action().items():
+            if action in rules.mapped('action'):
+                date -= relativedelta(days=days)
+        return date
 
     def _get_only_qty_available(self):
         """ Get only quantities available, it is equivalent to read qty_available
@@ -677,6 +690,7 @@ class ProductTemplate(models.Model):
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
 
+    @api.depends('type')
     def _compute_show_qty_status_button(self):
         for template in self:
             template.show_on_hand_qty_status_button = template.type == 'product'
@@ -702,7 +716,7 @@ class ProductTemplate(models.Model):
 
     def _compute_quantities_dict(self):
         variants_available = {
-            p['id']: p for p in self.product_variant_ids.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
+            p['id']: p for p in self.product_variant_ids._origin.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
         }
         prod_available = {}
         for template in self:
@@ -710,7 +724,7 @@ class ProductTemplate(models.Model):
             virtual_available = 0
             incoming_qty = 0
             outgoing_qty = 0
-            for p in template.product_variant_ids:
+            for p in template.product_variant_ids._origin:
                 qty_available += variants_available[p.id]["qty_available"]
                 virtual_available += variants_available[p.id]["virtual_available"]
                 incoming_qty += variants_available[p.id]["incoming_qty"]
@@ -835,6 +849,18 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         self._sanitize_vals(vals)
+        if 'company_id' in vals and vals['company_id']:
+            products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
+            if products_changing_company:
+                # Forbid changing a product's company when quant(s) exist in another company.
+                quant = self.env['stock.quant'].sudo().search([
+                    ('product_id', 'in', products_changing_company.product_variant_ids.ids),
+                    ('company_id', 'not in', [vals['company_id'], False]),
+                    ('quantity', '!=', 0),
+                ], order=None, limit=1)
+                if quant:
+                    raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
+
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
@@ -844,11 +870,17 @@ class ProductTemplate(models.Model):
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
-            existing_move_lines = self.env['stock.move.line'].search([
+            existing_done_move_lines = self.env['stock.move.line'].sudo().search([
+                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('state', '=', 'done'),
+            ], limit=1)
+            if existing_done_move_lines:
+                raise UserError(_("You can not change the type of a product that was already used."))
+            existing_reserved_move_lines = self.env['stock.move.line'].search([
                 ('product_id', 'in', self.mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ])
-            if existing_move_lines:
+            if existing_reserved_move_lines:
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         if 'type' in vals and vals['type'] != 'product' and any(p.type == 'product' and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing type"))
@@ -877,11 +909,10 @@ class ProductTemplate(models.Model):
     def action_update_quantity_on_hand(self):
         advanced_option_groups = [
             'stock.group_stock_multi_locations',
-            'stock.group_production_lot',
             'stock.group_tracking_owner',
-            'product.group_tracking_lot'
+            'stock.group_tracking_lot'
         ]
-        if (self.env.user.user_has_groups(','.join(advanced_option_groups))):
+        if (self.env.user.user_has_groups(','.join(advanced_option_groups))) or self.tracking != 'none':
             return self.action_open_quants()
         else:
             default_product_id = self.env.context.get('default_product_id', len(self.product_variant_ids) == 1 and self.product_variant_id.id)
@@ -948,7 +979,7 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_product_action')
+        action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_forecasted_product_template_action')
         return action
 
 

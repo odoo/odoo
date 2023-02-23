@@ -7,6 +7,7 @@ import json
 import time
 import base64
 from lxml import etree
+from unittest import SkipTest
 
 
 class AccountTestInvoicingCommon(TransactionCase):
@@ -32,13 +33,10 @@ class AccountTestInvoicingCommon(TransactionCase):
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
 
         if chart_template_ref:
-            chart_template = cls.env.ref(chart_template_ref)
-        else:
-            chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
-        if not chart_template:
-            cls.tearDownClass()
-            # skipTest raises exception
-            cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
+            template_vals = cls.env['account.chart.template']._get_chart_template_mapping()[chart_template_ref]
+            template_module = cls.env.ref(f"base.module_{template_vals['module']}")
+            if template_module.state != 'installed':
+                raise SkipTest(f"Module required for the test is not installed ({template_module.name})")
 
         # Create user.
         user = cls.env['res.users'].create({
@@ -58,8 +56,8 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.env = cls.env(user=user)
         cls.cr = cls.env.cr
 
-        cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template)
-        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
+        cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template_ref)
+        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template_ref)
 
         user.write({
             'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
@@ -176,7 +174,6 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         # ==== Payment methods ====
         bank_journal = cls.company_data['default_journal_bank']
-
         cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
         cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
 
@@ -190,26 +187,18 @@ class AccountTestInvoicingCommon(TransactionCase):
         :param company_name: The name of the company.
         :return: A dictionary will be returned containing all relevant accounting data for testing.
         '''
-        def search_account(company, chart_template, field_name, domain):
-            template_code = chart_template[field_name].code
-            domain = [('company_id', '=', company.id)] + domain
 
-            account = None
-            if template_code:
-                account = cls.env['account.account'].search(domain + [('code', '=like', template_code + '%')], limit=1)
-
-            if not account:
-                account = cls.env['account.account'].search(domain, limit=1)
-            return account
-
-        chart_template = chart_template or cls.env.company.chart_template_id
         company = cls.env['res.company'].create({
             'name': company_name,
             **kwargs,
         })
         cls.env.user.company_ids |= company
 
-        chart_template.try_loading(company=company, install_demo=False)
+        # Install the chart template
+        chart_template = chart_template or cls.env['account.chart.template']._guess_chart_template(company.country_id)
+        cls.env['account.chart.template'].try_loading(chart_template, company=company, install_demo=False)
+        if not company.account_fiscal_country_id:
+            company.account_fiscal_country_id = cls.env.ref('base.us')
 
         # The currency could be different after the installation of the chart template.
         if kwargs.get('currency_id'):
@@ -220,15 +209,17 @@ class AccountTestInvoicingCommon(TransactionCase):
             'currency': company.currency_id,
             'default_account_revenue': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
-                    ('account_type', '=', 'income')
+                    ('account_type', '=', 'income'),
+                    ('id', '!=', company.account_journal_early_pay_discount_gain_account_id.id)
                 ], limit=1),
             'default_account_expense': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
-                    ('account_type', '=', 'expense')
+                    ('account_type', '=', 'expense'),
+                    ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id)
                 ], limit=1),
-            'default_account_receivable': search_account(company, chart_template, 'property_account_receivable_id', [
-                ('account_type', '=', 'asset_receivable')
-            ]),
+            'default_account_receivable': cls.env['ir.property'].with_company(company)._get(
+                'property_account_receivable_id', 'res.partner'
+            ),
             'default_account_payable': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'liability_payable')
@@ -373,7 +364,7 @@ class AccountTestInvoicingCommon(TransactionCase):
     def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, company=False):
         move_form = Form(cls.env['account.move'] \
                     .with_company(company or cls.env.company) \
-                    .with_context(default_move_type=move_type, account_predictive_bills_disable_prediction=True))
+                    .with_context(default_move_type=move_type))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
         # According to the state or type of the invoice, the date field is sometimes visible or not
         # Besides, the date field can be put multiple times in the view
@@ -390,13 +381,12 @@ class AccountTestInvoicingCommon(TransactionCase):
                 line_form.product_id = product
                 if taxes:
                     line_form.tax_ids.clear()
-                    line_form.tax_ids.add(taxes)
+                    for tax in taxes:
+                        line_form.tax_ids.add(tax)
 
         for amount in (amounts or []):
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.name = "test line"
-                # We use account_predictive_bills_disable_prediction context key so that
-                # this doesn't trigger prediction in case enterprise (hence account_predictive_bills) is installed
                 line_form.price_unit = amount
                 if taxes:
                     line_form.tax_ids.clear()
@@ -686,7 +676,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         if currency_id:
             invoice_vals['currency_id'] = currency_id
 
-        invoice = self.env['account.move'].with_context(default_move_type=type).create(invoice_vals)
+        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
         if auto_validate:
             invoice.action_post()
         return invoice

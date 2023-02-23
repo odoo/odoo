@@ -62,7 +62,7 @@
 </template>
 
 <template id="s_image_gallery_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-call='web_editor.snippet_options_background_options']" position="before">
+    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
         <div data-js="gallery" data-selector=".s_image_gallery">
             <we-row string="Images">
                 <we-button class="o_we_bg_success" data-add-images="true" data-no-preview="true">Add</we-button>
@@ -147,6 +147,12 @@
     <field name="name">Image gallery 001 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_image_gallery/001.scss</field>
+</record>
+
+<record id="website.s_image_gallery_000_xml" model="ir.asset">
+    <field name="name">Image gallery 000 XML</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_image_gallery/000.xml</field>
 </record>
 
 </odoo>

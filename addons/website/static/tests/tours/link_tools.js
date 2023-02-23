@@ -34,9 +34,32 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     clickOnImgStep,
     // 2. Edit the link with the link tools.
     {
-        content: "Click on the newly created link, change content to odoo website",
+        content: "Click on the newly created link",
         trigger: 'iframe .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+    },
+    {
+        content: "Change content (editing the label input) to odoo website_2",
+        trigger: '#o_link_dialog_label_input[value="odoo.com"]',
+        run: 'text odoo website_2',
+    },
+    {
+        content: "Click again on the link",
+        trigger: 'iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
+    },
+    {
+        content: "Change content (editing the DOM) to odoo website",
+        trigger: 'iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
         run: 'text odoo website',
+    },
+    clickOnImgStep,
+    {
+        content: "Click again on the link",
+        trigger: 'iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website")',
+    },
+    {
+        content: "Check that the label input contains the new content",
+        trigger: '#o_link_dialog_label_input[value="odoo website"]',
+        run: () => null, // it's a check
     },
     {
         content: "Link tools, should be open, change the url",
@@ -55,7 +78,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "The new link content should be odoo website and url odoo.be",
-        trigger: '#toolbar button[data-bs-original-title="Link Style"]',
+        trigger: '#toolbar .dropdown:has([name="link_style_color"]) > button',
     },
     {
         // When doing automated testing, the link popover takes time to
@@ -64,7 +87,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         // scenario, the popover has plenty of time to be hidden and the
         // obsever would be re-activated in time. As this problem arise only
         // in test, we make sure the popover is hidden
-        trigger: '.o_website_preview:not(:has(.popover))',
+        trigger: 'iframe html:not(:has(.popover))',
         run: () => null, // it's a check
     },
     {
@@ -103,13 +126,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check that link tools appear.",
-        trigger: '.popover div a:contains("http://odoo.com")',
+        trigger: 'iframe .popover div a:contains("http://odoo.com")',
         run: () => {}, // It's a check.
     },
     // 5. Remove link from image.
     {
         content: "Remove link.",
-        trigger: '.popover:contains("http://odoo.com") a .fa-chain-broken',
+        trigger: 'iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
     },
     {
         content: "Check that image is not within a link anymore.",

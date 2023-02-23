@@ -1,29 +1,25 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-import { sprintf } from '@web/core/utils/strings';
+import { sprintf } from "@web/core/utils/strings";
 
-registerModel({
-    name: 'CallSystrayMenu',
+Model({
+    name: "CallSystrayMenu",
+    template: "mail.CallSystrayMenu",
     fields: {
         buttonTitle: attr({
+            default: "",
             compute() {
                 if (!this.messaging.rtc.channel) {
                     return clear();
                 }
                 return sprintf(
                     this.env._t("Open conference: %s"),
-                    this.messaging.rtc.channel.displayName,
+                    this.messaging.rtc.channel.displayName
                 );
             },
-            default: '',
         }),
-        rtc: one('Rtc', {
-            identifying: true,
-            inverse: 'callSystrayMenu',
-        }),
+        rtc: one("Rtc", { identifying: true, inverse: "callSystrayMenu" }),
     },
 });

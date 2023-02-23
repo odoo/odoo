@@ -130,26 +130,3 @@ class IapAccount(models.Model):
                 credit = -1
 
         return credit
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.env.flush_all()
-        self.env.invalidate_all()
-
-        self.env.cr.execute("""
-            INSERT INTO ir_config_parameter(key, value)
-            VALUES ('iap.endpoint', 'https://iap-sandbox.odoo.com')
-            ON CONFLICT (key) DO UPDATE SET value = 'https://iap-sandbox.odoo.com'
-        """)
-
-        iap_service_endpoints = self._get_iap_config_parameters()
-        if iap_service_endpoints:
-            self.env.cr.execute("""
-                UPDATE ir_config_parameter
-                SET value = 'https://iap-services-test.odoo.com'
-                WHERE key IN %s
-            """, [tuple(iap_service_endpoints)])
-
-    def _get_iap_config_parameters(self):
-        """override this method to extend the list with each parameter"""
-        return []

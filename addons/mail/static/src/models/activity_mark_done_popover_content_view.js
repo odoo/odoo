@@ -1,11 +1,16 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ActivityMarkDonePopoverContentView',
+import { onMounted } from "@odoo/owl";
+
+Model({
+    name: "ActivityMarkDonePopoverContentView",
+    template: "mail.ActivityMarkDonePopoverContentView",
+    componentSetup() {
+        onMounted(this.onMounted);
+    },
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * Handles blur on this feedback textarea.
@@ -15,6 +20,12 @@ registerModel({
                 return;
             }
             this._backupFeedback();
+        },
+        onMounted() {
+            this.feedbackTextareaRef.el.focus();
+            if (this.activity.feedbackBackup) {
+                this.feedbackTextareaRef.el.value = this.activity.feedbackBackup;
+            }
         },
         /**
          * Handles click on this "Discard" button.
@@ -26,33 +37,55 @@ registerModel({
          * Handles click on this "Done" button.
          */
         async onClickDone() {
-            const { chatter } = this.activityViewOwner.activityBoxView;
-            await this.activityViewOwner.activity.markAsDone({
+            const chatter = this.activityViewOwner && this.activityViewOwner.chatterOwner;
+            const reloadFunc = this.reloadFunc;
+            const webRecord = this.webRecord;
+            const thread = this.activity.thread;
+            await this.activity.markAsDone({
                 feedback: this.feedbackTextareaRef.el.value,
             });
-            if (!chatter.exists() || !chatter.component) {
-                return;
+            if (chatter && chatter.exists() && chatter.component) {
+                chatter.reloadParentView();
             }
-            chatter.reloadParentView();
+            if (reloadFunc) {
+                reloadFunc();
+            }
+            if (webRecord) {
+                webRecord.model.load({ resId: thread.id });
+            }
         },
         /**
          * Handles click on this "Done & Schedule Next" button.
          */
         async onClickDoneAndScheduleNext() {
-            const { chatter } = this.activityViewOwner.activityBoxView;
-            await this.activityViewOwner.activity.markAsDoneAndScheduleNext({
-                feedback: this.feedbackTextareaRef.el.value,
-            });
-            if (!chatter.exists() || !chatter.component) {
-                return;
+            const chatter = this.activityViewOwner && this.activityViewOwner.chatterOwner;
+            const reloadFunc = this.reloadFunc;
+            const webRecord = this.webRecord;
+            const thread = this.activity.thread;
+            const activityListViewOwner =
+                this.activityListViewItemOwner &&
+                this.activityListViewItemOwner.activityListViewOwner;
+            const activity = this.activity;
+            const feedback = this.feedbackTextareaRef.el.value;
+            if (activityListViewOwner && activityListViewOwner.exists()) {
+                activityListViewOwner.popoverViewOwner.delete();
             }
-            chatter.reloadParentView();
+            await activity.markAsDoneAndScheduleNext({ feedback });
+            if (chatter && chatter.exists() && chatter.component) {
+                chatter.reloadParentView();
+            }
+            if (reloadFunc) {
+                reloadFunc();
+            }
+            if (webRecord) {
+                webRecord.model.load({ resId: thread.id });
+            }
         },
         /**
          * Handles keydown on this activity mark done.
          */
         onKeydown(ev) {
-            if (ev.key === 'Escape') {
+            if (ev.key === "Escape") {
                 this._close();
             }
         },
@@ -60,7 +93,7 @@ registerModel({
          * @private
          */
         _backupFeedback() {
-            this.activityViewOwner.activity.update({
+            this.activity.update({
                 feedbackBackup: this.feedbackTextareaRef.el.value,
             });
         },
@@ -69,32 +102,74 @@ registerModel({
          */
         _close() {
             this._backupFeedback();
-            this.activityViewOwner.update({ markDonePopoverView: clear() });
+            if (this.activityViewOwner) {
+                this.activityViewOwner.update({ markDonePopoverView: clear() });
+                return;
+            }
+            if (this.activityListViewItemOwner) {
+                this.activityListViewItemOwner.update({ markDoneView: clear() });
+                return;
+            }
         },
     },
     fields: {
-        activityViewOwner: one('ActivityView', {
+        activity: one("Activity", {
+            required: true,
             compute() {
-                if (this.popoverViewOwner.activityViewOwnerAsMarkDone) {
+                if (this.activityListViewItemOwner) {
+                    return this.activityListViewItemOwner.activity;
+                }
+                if (this.activityViewOwner) {
+                    return this.activityViewOwner.activity;
+                }
+                return clear();
+            },
+        }),
+        activityListViewItemOwner: one("ActivityListViewItem", {
+            identifying: true,
+            inverse: "markDoneView",
+        }),
+        activityViewOwner: one("ActivityView", {
+            compute() {
+                if (this.popoverViewOwner && this.popoverViewOwner.activityViewOwnerAsMarkDone) {
                     return this.popoverViewOwner.activityViewOwnerAsMarkDone;
                 }
                 return clear();
             },
         }),
-        component: attr(),
-        feedbackTextareaRef: attr(),
+        feedbackTextareaRef: attr({ ref: "feedbackTextarea" }),
+        hasHeader: attr({
+            compute() {
+                return Boolean(this.popoverViewOwner);
+            },
+        }),
         headerText: attr({
             compute() {
                 if (this.activityViewOwner) {
                     return this.activityViewOwner.markDoneText;
                 }
+                return this.env._t("Mark Done");
+            },
+        }),
+        popoverViewOwner: one("PopoverView", {
+            identifying: true,
+            inverse: "activityMarkDonePopoverContentView",
+        }),
+        reloadFunc: attr({
+            compute() {
+                if (this.activityListViewItemOwner) {
+                    return this.activityListViewItemOwner.reloadFunc;
+                }
                 return clear();
             },
-            default: '',
         }),
-        popoverViewOwner: one('PopoverView', {
-            identifying: true,
-            inverse: 'activityMarkDonePopoverContentView',
+        webRecord: attr({
+            compute() {
+                if (this.activityListViewItemOwner) {
+                    return this.activityListViewItemOwner.webRecord;
+                }
+                return clear();
+            },
         }),
     },
 });

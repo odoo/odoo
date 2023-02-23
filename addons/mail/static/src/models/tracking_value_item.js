@@ -1,18 +1,17 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, one, Model } from "@mail/model";
 
-import { format } from 'web.field_utils';
-import { session } from '@web/session';
-import { registry } from '@web/core/registry';
-import { deserializeDateTime } from '@web/core/l10n/dates';
+import { format } from "web.field_utils";
+import { session } from "@web/session";
+import { registry } from "@web/core/registry";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
 const formatters = registry.category("formatters");
 
-registerModel({
-    name: 'TrackingValueItem',
-    identifyingMode: 'xor',
+Model({
+    name: "TrackingValueItem",
+    identifyingMode: "xor",
     fields: {
         /**
          * Used when the currency changes as the tracking value. This only makes sense for field of type monetary.
@@ -32,7 +31,7 @@ registerModel({
                  * tracking in Python. Also see `create_tracking_values` in Python.
                  */
                 switch (this.fieldType) {
-                    case 'boolean':
+                    case "boolean":
                         return this.value ? this.env._t("Yes") : this.env._t("No");
                     /**
                      * many2one formatter exists but is expecting id/name_get or data
@@ -41,33 +40,33 @@ registerModel({
                      * Selection formatter exists but requires knowing all
                      * possibilities and they are not given in this context.
                      */
-                    case 'char':
-                    case 'many2one':
-                    case 'selection':
+                    case "char":
+                    case "many2one":
+                    case "selection":
                         return format.char(this.value);
-                    case 'date':
+                    case "date":
                         if (this.value) {
                             return format.date(moment.utc(this.value));
                         }
                         return format.date(this.value);
-                    case 'datetime': {
+                    case "datetime": {
                         const value = this.value ? deserializeDateTime(this.value) : this.value;
                         return formatters.get("datetime")(value);
                     }
-                    case 'float':
+                    case "float":
                         return format.float(this.value);
-                    case 'integer':
+                    case "integer":
                         return format.integer(this.value);
-                    case 'text':
+                    case "text":
                         return format.text(this.value);
-                    case 'monetary':
+                    case "monetary":
                         return format.monetary(this.value, undefined, {
                             currency: this.currencyId
                                 ? session.currencies[this.currencyId]
                                 : undefined,
                             forceString: true,
                         });
-                    default :
+                    default:
                         return this.value;
                 }
             },
@@ -77,14 +76,8 @@ registerModel({
                 return this.formattedValue || this.env._t("None");
             },
         }),
-        trackingValueAsNewValue: one('TrackingValue', {
-            identifying: true,
-            inverse: 'newValue',
-        }),
-        trackingValueAsOldValue: one('TrackingValue', {
-            identifying: true,
-            inverse: 'oldValue',
-        }),
+        trackingValueAsNewValue: one("TrackingValue", { identifying: true, inverse: "newValue" }),
+        trackingValueAsOldValue: one("TrackingValue", { identifying: true, inverse: "oldValue" }),
         /**
          * The original value of the tracking value item.
          */

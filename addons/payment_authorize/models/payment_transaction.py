@@ -82,23 +82,19 @@ class PaymentTransaction(models.Model):
             )
         self._handle_notification_data('authorize', {'response': res_content})
 
-    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None):
         """ Override of payment to send a refund request to Authorize.
 
         Note: self.ensure_one()
 
         :param float amount_to_refund: The amount to refund
-        :param bool create_refund_transaction: Whether a refund transaction should be created or not
-        :return: The refund transaction if any
+        :return: The refund transaction created to process the refund request.
         :rtype: recordset of `payment.transaction`
         """
         self.ensure_one()
 
         if self.provider_code != 'authorize':
-            return super()._send_refund_request(
-                amount_to_refund=amount_to_refund,
-                create_refund_transaction=create_refund_transaction,
-            )
+            return super()._send_refund_request(amount_to_refund=amount_to_refund)
 
         authorize_api = AuthorizeAPI(self.provider_id)
         tx_details = authorize_api.get_transaction_details(self.provider_reference)
@@ -116,10 +112,7 @@ class PaymentTransaction(models.Model):
         elif tx_status in TRANSACTION_STATUS_MAPPING['refunded']:
             # The payment has been refunded from Authorize.net side before we could refund it. We
             # create a refund tx on Odoo to reflect the move of the funds.
-            refund_tx = super()._send_refund_request(
-                amount_to_refund=amount_to_refund,
-                create_refund_transaction=True,
-            )
+            refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
             refund_tx._set_done()
             # Immediately post-process the transaction as the post-processing will not be
             # triggered by a customer browsing the transaction from the portal.
@@ -132,10 +125,7 @@ class PaymentTransaction(models.Model):
                 tx_to_process = self
             else:
                 # The payment has been settled on Authorize.net side. We can refund it.
-                refund_tx = super()._send_refund_request(
-                    amount_to_refund=amount_to_refund,
-                    create_refund_transaction=True,
-                )
+                refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
                 rounded_amount = round(amount_to_refund, self.currency_id.decimal_places)
                 res_content = authorize_api.refund(
                     self.provider_reference, rounded_amount, tx_details

@@ -36,7 +36,7 @@
 
                 <li role="menuitem" t-attf-class="list-group-item list-group-item list-group-item-light d-flex justify-content-between align-items-center o_activity_color_{{key}} {{!key_first ? 'mt-2' : ''}}">
                     <strong><t t-esc="widget.selection[key]"/></strong>
-                    <span t-attf-class="badge rounded-pill bg-{{contextual_class}} border-0 me-0"><t t-esc="logs.length"/></span>
+                    <span t-attf-class="badge rounded-pill bg-{{contextual_class}} me-0"><t t-esc="logs.length"/></span>
                 </li>
                 <t t-foreach="logs" t-as="log">
                     <t t-set="edit_class" t-value="'o_edit_activity'"/>

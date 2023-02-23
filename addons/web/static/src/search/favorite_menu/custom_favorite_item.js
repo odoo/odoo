@@ -5,7 +5,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -92,6 +92,7 @@ export class CustomFavoriteItem extends Component {
 
 CustomFavoriteItem.template = "web.CustomFavoriteItem";
 CustomFavoriteItem.components = { CheckBox, Dropdown };
+CustomFavoriteItem.props = {};
 favoriteMenuRegistry.add(
     "custom-favorite-item",
     { Component: CustomFavoriteItem, groupNumber: 3 },

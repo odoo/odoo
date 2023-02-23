@@ -2,19 +2,17 @@
 <templates>
 
     <t t-name="mail.WebClientViewAttachmentView" owl="1">
-        <t t-if="webClientViewAttachmentView.thread.mainAttachment">
-            <t t-if="!webClientViewAttachmentView.thread.mainAttachment.isPdf">
-                <h3 class="mt0 mb8 ps-2 text-muted float-end"><t t-esc="webClientViewAttachmentView.thread.mainAttachment.filename"/></h3>
-            </t>
-            <div t-if="webClientViewAttachmentView.thread.mainAttachment.isImage" class="o_attachment_preview_img">
-                <img id="attachment_img" class="img img-fluid d-block" t-attf-src="/web/image/#{webClientViewAttachmentView.thread.mainAttachment.id}?unique=1"/>
+        <t t-if="thread.mainAttachment">
+            <h3 t-if="!thread.mainAttachment.isPdf" class="mt0 mb8 ps-2 text-muted float-end"><t t-esc="thread.mainAttachment.filename"/></h3>
+            <div t-if="thread.mainAttachment.isImage" class="o_attachment_preview_img">
+                <img id="attachment_img" class="img img-fluid d-block" t-attf-src="/web/image/#{thread.mainAttachment.id}?unique=1"/>
             </div>
-            <iframe t-if="webClientViewAttachmentView.thread.mainAttachment.isPdf" class="mb48" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{webClientViewAttachmentView.thread.mainAttachment.id}?filename%3D#{window.encodeURIComponent(webClientViewAttachmentView.thread.mainAttachment.name)}" t-ref="iframeViewerPdf"/>
-            <t t-if="webClientViewAttachmentView.thread.attachmentsInWebClientView.length > 1">
-                <a class="arrow o_move_previous text-center" href="#" t-on-click="webClientViewAttachmentView.onClickPrevious">
+            <iframe t-if="thread.mainAttachment.isPdf" class="mb48" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{thread.mainAttachment.id}?filename%3D#{window.encodeURIComponent(thread.mainAttachment.name)}" t-ref="iframeViewerPdf"/>
+            <t t-if="thread.attachmentsInWebClientView.length > 1">
+                <a class="arrow o_move_previous text-center" href="#" t-on-click="onClickPrevious">
                     <span class="fa fa-chevron-left"/>
                 </a>
-                <a class="arrow o_move_next text-center" href="#" t-on-click="webClientViewAttachmentView.onClickNext">
+                <a class="arrow o_move_next text-center" href="#" t-on-click="onClickNext">
                     <span class="fa fa-chevron-right"/>
                 </a>
             </t>

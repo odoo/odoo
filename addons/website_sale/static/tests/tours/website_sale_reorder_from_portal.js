@@ -1,14 +1,13 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 import wsTourUtils from 'website_sale.tour_utils';
 import wTourUtils from 'website.tour_utils';
 
-tour.register('website_sale_reorder_from_portal', {
+registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         test: true,
         url: '/my/orders',
-    },
-    [
+        steps: [
         // Initial reorder, nothing in cart
         {
             content: 'Select first order',
@@ -65,4 +64,4 @@ tour.register('website_sale_reorder_from_portal', {
             trigger: ".js_quantity[value='1']",
         },
     ]
-);
+});

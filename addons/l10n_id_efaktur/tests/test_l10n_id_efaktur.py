@@ -18,6 +18,10 @@ class TestIndonesianEfaktur(common.TransactionCase):
         self.env.company.phone = "12345"
 
         self.partner_id = self.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345"})
+        self.env['account.tax.group'].create({
+            'name': 'tax_group',
+            'country_id': self.env.ref('base.id').id,
+        })
         self.tax_id = self.env['account.tax'].create({"name": "test tax", "type_tax_use": "sale", "amount": 10.0, "price_include": True})
 
         self.efaktur = self.env['l10n_id_efaktur.efaktur.range'].create({'min': '0000000000001', 'max': '0000000000010'})

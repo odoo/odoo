@@ -6,7 +6,7 @@ from odoo.tests.common import Form
 from odoo.tools.float_utils import float_round, float_compare
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
-from odoo.addons.mrp_account.tests.test_bom_price import TestBomPrice
+from odoo.addons.mrp_account.tests.test_bom_price import TestBomPriceCommon
 
 class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
@@ -212,7 +212,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         ])
 
 
-class TestBomPriceSubcontracting(TestBomPrice):
+class TestBomPriceSubcontracting(TestBomPriceCommon):
 
     def test_01_compute_price_subcontracting_cost(self):
         """Test calculation of bom cost with subcontracting."""

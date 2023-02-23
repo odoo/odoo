@@ -1,12 +1,51 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'AutocompleteInputView',
-    identifyingMode: 'xor',
+import { onMounted, onWillUnmount } from "@odoo/owl";
+
+Model({
+    name: "AutocompleteInputView",
+    template: "mail.AutocompleteInputView",
+    componentSetup() {
+        useComponentToModel({ fieldName: "component" });
+        onMounted(() => {
+            if (!this.root.el) {
+                return;
+            }
+            if (this.isFocusOnMount) {
+                this.root.el.focus();
+            }
+            const args = {
+                autoFocus: true,
+                select: (ev, ui) => {
+                    this.onSelect(ev, ui);
+                },
+                source: (req, res) => {
+                    this.onSource(req, res);
+                },
+                html: this.isHtml,
+            };
+            if (this.customClass) {
+                args.classes = { "ui-autocomplete": this.customClass };
+            }
+            const autoCompleteElem = $(this.root.el).autocomplete(args);
+            // Resize the autocomplete dropdown options to handle the long strings
+            // By setting the width of dropdown based on the width of the input element.
+            autoCompleteElem.data("ui-autocomplete")._resizeMenu = function () {
+                const ul = this.menu.element;
+                ul.outerWidth(this.element.outerWidth());
+            };
+        });
+        onWillUnmount(() => {
+            if (!this.root.el) {
+                return;
+            }
+            $(this.root.el).autocomplete("destroy");
+        });
+    },
+    identifyingMode: "xor",
     recordMethods: {
         onBlur() {
             if (!this.exists()) {
@@ -44,7 +83,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (ev.key === 'Escape') {
+            if (ev.key === "Escape") {
                 this.onBlur();
             }
         },
@@ -68,7 +107,10 @@ registerModel({
                 return;
             }
             if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSelect(ev, ui);
+                this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSelect(
+                    ev,
+                    ui
+                );
                 return;
             }
         },
@@ -89,44 +131,57 @@ registerModel({
                 return;
             }
             if (this.discussViewOwnerAsMobileAddItemHeader) {
-                this.discussViewOwnerAsMobileAddItemHeader.onMobileAddItemHeaderInputSource(req, res);
+                this.discussViewOwnerAsMobileAddItemHeader.onMobileAddItemHeaderInputSource(
+                    req,
+                    res
+                );
                 return;
             }
             if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSource(req, res);
+                this.messagingMenuOwnerAsMobileNewMessageInput.onMobileNewMessageInputSource(
+                    req,
+                    res
+                );
                 return;
             }
         },
     },
     fields: {
-        chatWindowOwnerAsNewMessage: one('ChatWindow', {
+        chatWindowOwnerAsNewMessage: one("ChatWindow", {
             identifying: true,
-            inverse: 'newMessageAutocompleteInputView',
+            inverse: "newMessageAutocompleteInputView",
         }),
         component: attr(),
         customClass: attr({
+            default: "",
             compute() {
                 if (this.discussSidebarCategoryOwnerAsAddingItem) {
-                    if (this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel) {
-                        return 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions';
+                    if (
+                        this.discussSidebarCategoryOwnerAsAddingItem ===
+                        this.messaging.discuss.categoryChannel
+                    ) {
+                        return "o_DiscussSidebarCategory_newChannelAutocompleteSuggestions";
                     }
                 }
                 if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                    return this.messagingMenuOwnerAsMobileNewMessageInput.viewId + '_mobileNewMessageInputAutocomplete';
+                    return (
+                        this.messagingMenuOwnerAsMobileNewMessageInput.viewId +
+                        "_mobileNewMessageInputAutocomplete"
+                    );
                 }
                 return clear();
             },
-            default: '',
         }),
-        discussSidebarCategoryOwnerAsAddingItem: one('DiscussSidebarCategory', {
+        discussSidebarCategoryOwnerAsAddingItem: one("DiscussSidebarCategory", {
             identifying: true,
-            inverse: 'addingItemAutocompleteInputView',
+            inverse: "addingItemAutocompleteInputView",
         }),
-        discussViewOwnerAsMobileAddItemHeader: one('DiscussView', {
+        discussViewOwnerAsMobileAddItemHeader: one("DiscussView", {
             identifying: true,
-            inverse: 'mobileAddItemHeaderAutocompleteInputView',
+            inverse: "mobileAddItemHeaderAutocompleteInputView",
         }),
         isFocusOnMount: attr({
+            default: false,
             compute() {
                 if (this.discussViewOwnerAsMobileAddItemHeader) {
                     return true;
@@ -139,23 +194,25 @@ registerModel({
                 }
                 return clear();
             },
-            default: false,
         }),
         isHtml: attr({
+            default: false,
             compute() {
                 if (this.discussViewOwnerAsMobileAddItemHeader) {
                     return this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel;
                 }
                 if (this.discussSidebarCategoryOwnerAsAddingItem) {
-                    return this.discussSidebarCategoryOwnerAsAddingItem === this.messaging.discuss.categoryChannel;
+                    return (
+                        this.discussSidebarCategoryOwnerAsAddingItem ===
+                        this.messaging.discuss.categoryChannel
+                    );
                 }
                 return clear();
             },
-            default: false,
         }),
-        messagingMenuOwnerAsMobileNewMessageInput: one('MessagingMenu', {
+        messagingMenuOwnerAsMobileNewMessageInput: one("MessagingMenu", {
             identifying: true,
-            inverse: 'mobileNewMessageAutocompleteInputView',
+            inverse: "mobileNewMessageAutocompleteInputView",
         }),
         placeholder: attr({
             compute() {
@@ -164,16 +221,19 @@ registerModel({
                 }
                 if (this.discussViewOwnerAsMobileAddItemHeader) {
                     if (this.discussViewOwnerAsMobileAddItemHeader.isAddingChannel) {
-                        return this.discussViewOwnerAsMobileAddItemHeader.discuss.addChannelInputPlaceholder;
+                        return this.discussViewOwnerAsMobileAddItemHeader.discuss
+                            .addChannelInputPlaceholder;
                     } else {
-                        return this.discussViewOwnerAsMobileAddItemHeader.discuss.addChatInputPlaceholder;
+                        return this.discussViewOwnerAsMobileAddItemHeader.discuss
+                            .addChatInputPlaceholder;
                     }
                 }
                 if (this.discussSidebarCategoryOwnerAsAddingItem) {
                     return this.discussSidebarCategoryOwnerAsAddingItem.newItemPlaceholderText;
                 }
                 if (this.messagingMenuOwnerAsMobileNewMessageInput) {
-                    return this.messagingMenuOwnerAsMobileNewMessageInput.mobileNewMessageInputPlaceholder;
+                    return this.messagingMenuOwnerAsMobileNewMessageInput
+                        .mobileNewMessageInputPlaceholder;
                 }
                 return clear();
             },

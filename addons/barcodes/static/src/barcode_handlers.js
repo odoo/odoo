@@ -67,7 +67,7 @@ export const barcodeGenericHandlers = {
                     // the scanned barcode could be anything, and could crash the queryselectorall
                     // function
                     targets = getVisibleElements(ui.activeElement, `[barcode_trigger=${barcode.slice(6)}]`);
-                } catch (_e) {
+                } catch {
                     console.warn(`Barcode '${barcode}' is not valid`);
                 }
                 for (let elem of targets) {

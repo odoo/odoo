@@ -17,7 +17,7 @@ from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import lazy_property, osutil, pycompat
-from odoo.tools.misc import xlsxwriter, get_lang
+from odoo.tools.misc import xlsxwriter
 from odoo.tools.translate import _
 
 
@@ -183,11 +183,10 @@ class ExportXlsxWriter:
         self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
         self.worksheet = self.workbook.add_worksheet()
         self.value = False
-        decimal_separator = get_lang(request.env).decimal_point
-        self.float_format = f'0{decimal_separator}00'
+        self.float_format = '#,##0.00'
         decimal_places = [res['decimal_places'] for res in
                           request.env['res.currency'].search_read([], ['decimal_places'])]
-        self.monetary_format = f'0{decimal_separator}{max(decimal_places or [2]) * "0"}'
+        self.monetary_format = f'#,##0.{max(decimal_places or [2]) * "0"}'
 
         if row_count > self.worksheet.xls_rowmax:
             raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (row_count, self.worksheet.xls_rowmax))
@@ -470,7 +469,7 @@ class ExportFormat(object):
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
-        Model = request.env[model].with_context(**params.get('context', {}))
+        Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         if not Model._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
 
@@ -494,7 +493,6 @@ class ExportFormat(object):
 
             response_data = self.from_group_data(fields, tree)
         else:
-            Model = Model.with_context(import_compat=import_compat)
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
             export_data = records.export_data(field_names).get('datas', [])
@@ -511,7 +509,7 @@ class ExportFormat(object):
 class CSVExport(ExportFormat, http.Controller):
 
     @http.route('/web/export/csv', type='http', auth="user")
-    def index(self, data):
+    def web_export_csv(self, data):
         try:
             return self.base(data)
         except Exception as exc:
@@ -555,7 +553,7 @@ class CSVExport(ExportFormat, http.Controller):
 class ExcelExport(ExportFormat, http.Controller):
 
     @http.route('/web/export/xlsx', type='http', auth="user")
-    def index(self, data):
+    def web_export_xlsx(self, data):
         try:
             return self.base(data)
         except Exception as exc:

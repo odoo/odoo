@@ -18,7 +18,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
     async start() {
         await this._super(...arguments);
         this.$rangeSlider = this.$('#s_donation_range_slider');
-        this.defaultAmount = this.$target[0].dataset.defaultAmount;
+        this.defaultAmount = this.el.dataset.defaultAmount;
         if (this.$rangeSlider.length) {
             this.$rangeSlider.val(this.defaultAmount);
             this._setBubble(this.$rangeSlider);
@@ -29,7 +29,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        this.$target.find('.s_donation_currency').remove();
+        this.$el.find('.s_donation_currency').remove();
         this._deselectPrefilledButtons();
         this.$('.alert-danger').remove();
         this._super(...arguments);
@@ -114,13 +114,13 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
         const $buttons = this.$('.s_donation_btn');
         const $selectedButton = $buttons.filter('.active');
         let amount = $selectedButton.length ? $selectedButton[0].dataset.donationValue : 0;
-        if (this.$target[0].dataset.displayOptions && !amount) {
+        if (this.el.dataset.displayOptions && !amount) {
             if (this.$rangeSlider.length) {
                 amount = this.$rangeSlider.val();
             } else if ($buttons.length) {
                 amount = parseFloat(this.$('#s_donation_amount_input').val());
                 let errorMessage = '';
-                const minAmount = this.$target[0].dataset.minimumAmount;
+                const minAmount = this.el.dataset.minimumAmount;
                 if (!amount) {
                     errorMessage = _t("Please select or enter an amount");
                 } else if (amount < parseFloat(minAmount)) {

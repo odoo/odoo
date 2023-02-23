@@ -9,10 +9,26 @@ import { escape, sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
-
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class StatusBarField extends Component {
+    static template = "web.StatusBarField";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
+    static props = {
+        ...standardFieldProps,
+        canCreate: { type: Boolean, optional: true },
+        canWrite: { type: Boolean, optional: true },
+        displayName: { type: String, optional: true },
+        isDisabled: { type: Boolean, optional: true },
+        visibleSelection: { type: Array, optional: true },
+    };
+    static defaultProps = {
+        visibleSelection: [],
+    };
+
     setup() {
         if (this.props.record.activeFields[this.props.name].viewType === "form") {
             const commandName = sprintf(
@@ -27,7 +43,7 @@ export class StatusBarField extends Component {
                         providers: [
                             {
                                 provide: () =>
-                                    this.computeItems().unfolded.map((value) => ({
+                                    this.computeItems(false).map((value) => ({
                                         name: value.name,
                                         action: () => {
                                             this.selectItem(value);
@@ -37,16 +53,52 @@ export class StatusBarField extends Component {
                         ],
                     };
                 },
-                { category: "smart_action", hotkey: "alt+shift+x" }
+                {
+                    category: "smart_action",
+                    hotkey: "alt+shift+x",
+                    isAvailable: () => !this.props.readonly && !this.props.isDisabled,
+                }
+            );
+            useCommand(
+                sprintf(this.env._t(`Move to next %s`), this.props.displayName),
+                () => {
+                    const options = this.computeItems(false);
+                    const nextOption =
+                        options[
+                            options.findIndex(
+                                (option) =>
+                                    option.id ===
+                                    (this.type === "many2one"
+                                        ? this.props.value[0]
+                                        : this.props.value)
+                            ) + 1
+                        ];
+                    this.selectItem(nextOption);
+                },
+                {
+                    category: "smart_action",
+                    hotkey: "alt+x",
+                    isAvailable: () => {
+                        const options = this.computeItems(false);
+                        return (
+                            !this.props.readonly &&
+                            !this.props.isDisabled &&
+                            options[options.length - 1].id !==
+                                (this.type === "many2one" ? this.props.value[0] : this.props.value)
+                        );
+                    },
+                }
             );
         }
     }
 
     get currentName() {
-        switch (this.props.record.fields[this.props.name].type) {
+        switch (this.type) {
             case "many2one": {
-                const item = this.options.find((item) => item.isSelected);
-                return item ? item.name : "";
+                const item = this.options.find(
+                    (item) => this.props.value && item.id === this.props.value[0]
+                );
+                return item ? item.display_name : "";
             }
             case "selection": {
                 const item = this.options.find((item) => item[0] === this.props.value);
@@ -56,7 +108,7 @@ export class StatusBarField extends Component {
         throw new Error("Unsupported field type for StatusBarField");
     }
     get options() {
-        switch (this.props.record.fields[this.props.name].type) {
+        switch (this.type) {
             case "many2one":
                 return this.props.record.preloadedData[this.props.name];
             case "selection":
@@ -64,6 +116,10 @@ export class StatusBarField extends Component {
             default:
                 return [];
         }
+    }
+
+    get type() {
+        return this.props.record.fields[this.props.name].type;
     }
 
     getDropdownItemClassNames(item) {
@@ -110,12 +166,15 @@ export class StatusBarField extends Component {
         }));
     }
 
-    computeItems() {
+    computeItems(grouped = true) {
         let items = null;
-        if (this.props.type === "many2one") {
+        if (this.props.record.fields[this.props.name].type === "many2one") {
             items = this.getVisibleMany2Ones();
         } else {
             items = this.getVisibleSelection();
+        }
+        if (!grouped) {
+            return items;
         }
 
         if (this.env.isSmall) {
@@ -133,12 +192,24 @@ export class StatusBarField extends Component {
     }
 
     selectItem(item) {
-        switch (this.props.type) {
+        const rootRecord =
+            this.props.record.model.root instanceof this.props.record.constructor &&
+            this.props.record.model.root;
+        const isInEdition = rootRecord ? rootRecord.isInEdition : this.props.record.isInEdition;
+        switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
-                this.props.update([item.id, item.name]);
+                this.props.record.update({ [this.props.name]: [item.id, item.name] });
+                // We save only if we're on view mode readonly and no readonly field modifier
+                if (!isInEdition) {
+                    return this.props.record.save();
+                }
                 break;
             case "selection":
-                this.props.update(item.id);
+                this.props.record.update({ [this.props.name]: item.id });
+                // We save only if we're on view mode readonly and no readonly field modifier
+                if (!isInEdition) {
+                    return this.props.record.save();
+                }
                 break;
         }
     }
@@ -148,41 +219,24 @@ export class StatusBarField extends Component {
     }
 }
 
-StatusBarField.template = "web.StatusBarField";
-StatusBarField.defaultProps = {
-    visibleSelection: [],
-};
-StatusBarField.props = {
-    ...standardFieldProps,
-    canCreate: { type: Boolean, optional: true },
-    canWrite: { type: Boolean, optional: true },
-    displayName: { type: String, optional: true },
-    isDisabled: { type: Boolean, optional: true },
-    visibleSelection: { type: Array, optional: true },
-};
-StatusBarField.components = {
-    Dropdown,
-    DropdownItem,
-};
-
-StatusBarField.displayName = _lt("Status");
-StatusBarField.supportedTypes = ["many2one", "selection"];
-
-StatusBarField.isEmpty = (record, fieldName) => {
-    return record.model.env.isSmall ? !record.data[fieldName] : false;
-};
-StatusBarField.extractProps = ({ attrs, field }) => {
-    return {
+export const statusBarField = {
+    component: StatusBarField,
+    displayName: _lt("Status"),
+    supportedTypes: ["many2one", "selection"],
+    isEmpty: (record, fieldName) => record.model.env.isSmall && !record.data[fieldName],
+    legacySpecialData: "_fetchSpecialStatus",
+    extractProps: ({ attrs, field }) => ({
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
-        displayName: field.string,
         isDisabled: !attrs.options.clickable,
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
-    };
+
+        displayName: field.string,
+    }),
 };
 
-registry.category("fields").add("statusbar", StatusBarField);
+registry.category("fields").add("statusbar", statusBarField);
 
 export async function preloadStatusBar(orm, record, fieldName) {
     const fieldNames = ["id", "display_name"];

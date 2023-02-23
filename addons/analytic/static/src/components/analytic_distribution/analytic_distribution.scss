@@ -1,4 +1,39 @@
-.analytic_distribution {
+.o_field_analytic_distribution {
+
+    .analytic_distribution_placeholder {
+        height: 1.5em;
+        width: 20px;
+    }
+
+    .o_input_dropdown {
+        flex: 1 0 20px;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            .o_dropdown_button {
+                display: unset;
+            }
+        }
+
+        .o_dropdown_button {
+            display: none;
+        }
+    }
+
+    .badge {
+        margin: 1px 2px 1px 0;
+        border: none;
+        padding-left: 0.6em;
+        padding-right: 0.6em;
+        min-width: unset;
+
+        .o_delete {
+            padding-left: 4px;
+        }
+    }
 
     .analytic_distribution_popup {
         width: 400px;
@@ -14,58 +49,20 @@
         .o_analytic_percentage {
             width: 45px !important;
         }
-        .o_analytic_status_red {
+        .o_analytic_status_invalid {
             background-color: $o-danger;
             margin-left:8px;
         }
-        .o_analytic_status_green {
+        .o_analytic_status_ok {
             background-color: $o-success;
             margin-left:8px;
         }
-        .o_analytic_status_orange {
+        .o_analytic_status_editing {
             background-color: $o-warning;
-            margin-left:8px;
-        }
-        .o_analytic_status_gray {
-            background-color: $gray-200;
             margin-left:8px;
         }
         tr:hover {
             outline: none !important;
         }
-    }
-
-    .tag-list {
-        .badge {
-            margin: 1px 2px 1px 0;
-            border: none;
-
-            .o_delete {
-                padding-left: 4px;
-            }
-        }
-    }
-
-    .hidden-focus {
-        // focus to this element is required but we want to hide the blue outline
-        &:focus {
-            // z-index: -10;
-            outline: none;
-        }
-    }
-
-}
-.o_field_analytic_distribution {
-    &.o_field_invalid {
-        .o_tag {
-            border: 1px solid $o-danger !important;
-            background-color: white;
-            color: $o-danger;
-        }
-    }
-}
-.o_analytic_distribution_cell {
-    &.o_invalid_cell {
-        border: 1px solid $o-danger !important;
     }
 }

@@ -1,33 +1,36 @@
 /** @odoo-module **/
 
-import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
-import { luxonToMomentFormat } from "@web/core/l10n/dates";
+import { luxonToMoment, momentToLuxon } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillStart, useExternalListener, useRef, useEffect } = owl;
+import { Component, onWillStart, useExternalListener, useRef, useEffect } from "@odoo/owl";
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
 export class DateRangeField extends Component {
+    static template = "web.DateRangeField";
+    static props = {
+        ...standardFieldProps,
+        relatedEndDateField: { type: String, optional: true },
+        relatedStartDateField: { type: String, optional: true },
+        formatType: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+
     setup() {
         this.notification = useService("notification");
         this.root = useRef("root");
         this.isPickerShown = false;
         this.pickerContainer;
-        this.momentFormat = luxonToMomentFormat(
-            this.isDateTime ? localization.dateTimeFormat : localization.dateFormat
-        );
 
         useExternalListener(window, "scroll", this.onWindowScroll, { capture: true });
         onWillStart(() => loadJS("/web/static/lib/daterangepicker/daterangepicker.js"));
         useEffect(
             (el) => {
                 if (el) {
-                    const start = this.formattedStartDate;
-                    const end = this.formattedEndDate;
                     window.$(el).daterangepicker({
                         timePicker: this.isDateTime,
                         timePicker24Hour: true,
@@ -37,8 +40,8 @@ export class DateRangeField extends Component {
                             applyLabel: this.env._t("Apply"),
                             cancelLabel: this.env._t("Cancel"),
                         },
-                        startDate: start ? window.moment(start, this.momentFormat) : window.moment(),
-                        endDate: end ? window.moment(end, this.momentFormat) : window.moment(),
+                        startDate: this.startDate ? luxonToMoment(this.startDate) : window.moment(),
+                        endDate: this.endDate ? luxonToMoment(this.endDate) : window.moment(),
                         drops: "auto",
                     });
                     this.pickerContainer = window.$(el).data("daterangepicker").container[0];
@@ -56,7 +59,7 @@ export class DateRangeField extends Component {
                     }
                 };
             },
-            () => [this.root.el]
+            () => [this.root.el, this.props.value]
         );
     }
 
@@ -111,7 +114,7 @@ export class DateRangeField extends Component {
             this.props.record.setInvalidField(this.props.name);
             return;
         }
-        this.props.update(value);
+        this.props.record.update({ [this.props.name]: value });
     }
 
     onWindowScroll(ev) {
@@ -128,10 +131,7 @@ export class DateRangeField extends Component {
     async onPickerApply(ev, picker) {
         const start = this.isDateTime ? picker.startDate : picker.startDate.startOf("day");
         const end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
-        const parser = parsers.get(this.props.formatType);
-        const dates = [start, end].map((date) => {
-            return parser(date.format(this.momentFormat));
-        });
+        const dates = [start, end].map(momentToLuxon);
         await this.updateRange(dates[0], dates[1]);
         const input = document.querySelector(
             `.o_field_daterange[name='${this.relatedDateRangeField}'] input`
@@ -147,24 +147,17 @@ export class DateRangeField extends Component {
         this.isPickerShown = false;
     }
 }
-DateRangeField.template = "web.DateRangeField";
-DateRangeField.props = {
-    ...standardFieldProps,
-    relatedEndDateField: { type: String, optional: true },
-    relatedStartDateField: { type: String, optional: true },
-    formatType: { type: String, optional: true },
-    placeholder: { type: String, optional: true },
-};
 
-DateRangeField.supportedTypes = ["date", "datetime"];
-
-DateRangeField.extractProps = ({ attrs, field }) => {
-    return {
+export const dateRangeField = {
+    component: DateRangeField,
+    supportedTypes: ["date", "datetime"],
+    extractProps: ({ attrs, field }) => ({
         relatedEndDateField: attrs.options.related_end_date,
         relatedStartDateField: attrs.options.related_start_date,
-        formatType: attrs.options.format_type || field.type,
         placeholder: attrs.placeholder,
-    };
+
+        formatType: attrs.options.format_type || field.type,
+    }),
 };
 
-registry.category("fields").add("daterange", DateRangeField);
+registry.category("fields").add("daterange", dateRangeField);

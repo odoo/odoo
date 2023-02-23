@@ -1,195 +1,29 @@
 /** @odoo-module **/
 
-import { Domain } from "@web/core/domain";
-import { DomainSelectorRootNode } from "./domain_selector_root_node";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-const { Component } = owl;
+import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { Domain } from "@web/core/domain";
+import { DomainTreeBuilder } from "@web/core/domain_selector/domain_tree_builder";
+import {
+    getDefaultFieldValue,
+    getEditorInfo,
+    getOperatorsInfo,
+} from "@web/core/domain_selector/domain_selector_fields";
+import { BranchDomainNode } from "@web/core/domain_selector/domain_selector_nodes";
+import { findOperator } from "@web/core/domain_selector/domain_selector_operators";
+import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { useService } from "@web/core/utils/hooks";
 
 export class DomainSelector extends Component {
-    setup() {
-        this.nextNodeId = 0;
-    }
-
-    buildTree() {
-        try {
-            const domain = new Domain(this.props.value);
-            const ctx = {
-                parent: null,
-                index: 0,
-                domain: domain.toList(),
-                get currentElement() {
-                    return ctx.domain[ctx.index];
-                },
-                next() {
-                    ctx.index++;
-                },
-                getFullDomain() {
-                    return rootNode.computeDomain().toString();
-                },
-            };
-
-            const rootNode = this.makeRootNode(ctx);
-            ctx.parent = rootNode;
-            this.traverseNode(ctx);
-
-            return ctx.parent;
-        } catch (_e) {
-            // WOWL TODO: rethrow error when not the expected type
-            return false;
-        }
-    }
-
-    traverseNode(ctx) {
-        if (ctx.index < ctx.domain.length) {
-            if (typeof ctx.currentElement === "string" && ["&", "|"].includes(ctx.currentElement)) {
-                this.traverseBranchNode(ctx);
-            } else {
-                this.traverseLeafNode(ctx);
-            }
-        }
-    }
-    traverseBranchNode(ctx) {
-        if (ctx.parent.type !== "branch" || ctx.parent.operator !== ctx.currentElement) {
-            const node = this.makeBranchNode(ctx, ctx.currentElement, []);
-            ctx.parent.operands.push(node);
-            ctx = Object.assign(Object.create(ctx), { parent: node });
-        }
-        ctx.next();
-        this.traverseNode(ctx);
-        ctx.next();
-        this.traverseNode(ctx);
-    }
-    traverseLeafNode(ctx) {
-        const condition = ctx.currentElement;
-        const [leftOperand, operator, rightOperand] = condition;
-        const node = this.makeLeafNode(ctx, operator, [leftOperand, rightOperand]);
-        ctx.parent.operands.push(node);
-    }
-
-    makeBranchNode(ctx, operator, operands) {
-        const updateDomain = () => this.props.update(ctx.getFullDomain());
-        const makeFakeNode = this.makeFakeNode.bind(this);
-
-        return {
-            type: "branch",
-            id: this.nextNodeId++,
-            operator,
-            operands,
-            computeDomain() {
-                return Domain.combine(
-                    this.operands.map((operand) => operand.computeDomain()),
-                    this.operator === "&" ? "AND" : "OR"
-                );
-            },
-            update(operator) {
-                this.operator = operator;
-                updateDomain();
-            },
-            insert(newNodeType) {
-                const newNode = makeFakeNode(ctx, newNodeType);
-                const operands = ctx.parent.operands;
-                operands.splice(operands.indexOf(this) + 1, 0, newNode);
-                updateDomain();
-            },
-            delete() {
-                const operands = ctx.parent.operands;
-                operands.splice(operands.indexOf(this), 1);
-                updateDomain();
-            },
-        };
-    }
-    makeLeafNode(ctx, operator, operands) {
-        const updateDomain = () => this.props.update(ctx.getFullDomain());
-        const makeFakeNode = this.makeFakeNode.bind(this);
-
-        return {
-            type: "leaf",
-            id: this.nextNodeId++,
-            operator,
-            operands,
-            computeDomain() {
-                return new Domain([[this.operands[0], this.operator, this.operands[1]]]);
-            },
-            update(changes) {
-                if ("fieldName" in changes) {
-                    this.operands[0] = changes.fieldName;
-                }
-                if ("operator" in changes) {
-                    this.operator = changes.operator;
-                }
-                if ("value" in changes) {
-                    this.operands[1] = changes.value;
-                }
-                updateDomain();
-            },
-            insert(newNodeType) {
-                const newNode = makeFakeNode(ctx, newNodeType);
-                const operands = ctx.parent.operands;
-                operands.splice(operands.indexOf(this) + 1, 0, newNode);
-                updateDomain();
-            },
-            delete() {
-                const operands = ctx.parent.operands;
-                operands.splice(operands.indexOf(this), 1);
-                updateDomain();
-            },
-        };
-    }
-    makeRootNode(ctx) {
-        const updateDomain = (...args) => this.props.update(...args);
-        const makeFakeNode = this.makeFakeNode.bind(this);
-
-        return {
-            type: "root",
-            id: this.nextNodeId++,
-            operator: "&",
-            operands: [],
-            computeDomain() {
-                return Domain.combine(
-                    this.operands.map((operand) => operand.computeDomain()),
-                    "AND"
-                );
-            },
-            update(newValue, fromDebug) {
-                if (typeof newValue === "string") {
-                    updateDomain(newValue, fromDebug);
-                } else if (this.operands.length) {
-                    this.operands[0].update(newValue);
-                }
-            },
-            insert(newNodeType) {
-                const newNode = makeFakeNode(ctx, newNodeType);
-                if (ctx.parent) {
-                    const operands = ctx.parent.operands;
-                    operands.splice(operands.indexOf(this) + 1, 0, newNode);
-                } else {
-                    this.operands.push(newNode);
-                }
-                updateDomain(ctx.getFullDomain());
-            },
-            delete() {},
-        };
-    }
-
-    makeFakeNode(ctx, type) {
-        const [field, op, value] = this.props.defaultLeafValue;
-        if (type === "branch") {
-            return this.makeBranchNode(ctx, ctx.parent.operator === "&" ? "|" : "&", [
-                this.makeLeafNode(ctx, op, [field, value]),
-                this.makeLeafNode(ctx, op, [field, value]),
-            ]);
-        } else {
-            return this.makeLeafNode(ctx, op, [field, value]);
-        }
-    }
-}
-
-Object.assign(DomainSelector, {
-    template: "web._DomainSelector",
-    components: {
-        DomainSelectorRootNode,
-    },
-    props: {
+    static template = "web._DomainSelector";
+    static components = {
+        Dropdown,
+        DropdownItem,
+        ModelFieldSelector,
+    };
+    static props = {
         className: { type: String, optional: true },
         resModel: String,
         value: String,
@@ -198,11 +32,186 @@ Object.assign(DomainSelector, {
         update: { type: Function, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         defaultLeafValue: { type: Array, optional: true },
-    },
-    defaultProps: {
+    };
+    static defaultProps = {
         readonly: true,
         update: () => {},
         isDebugMode: false,
         defaultLeafValue: ["id", "=", 1],
-    },
-});
+    };
+
+    setup() {
+        this.view = useService("view");
+        this.treeBuilder = new DomainTreeBuilder();
+        this.tree = useState({
+            isSupported: false,
+            root: null,
+        });
+        onWillStart(() => this.onPropsUpdated(this.props));
+        onWillUpdateProps((np) => this.onPropsUpdated(np));
+    }
+
+    async onPropsUpdated(p) {
+        try {
+            // try to parse and execute the domain, if it fails then the domain is not supported.
+            const domain = new Domain(p.value);
+            domain.toList();
+            this.tree.root = this.treeBuilder.build(
+                domain,
+                await this.loadFieldDefs(p.resModel, this.extractFieldsFromDomain(domain))
+            );
+            this.defaultLeaf = this.treeBuilder.build(
+                new Domain([p.defaultLeafValue]),
+                await this.loadFieldDefs(p.resModel, [p.defaultLeafValue[0]])
+            ).children[0];
+            this.tree.isSupported = true;
+        } catch {
+            this.tree.isSupported = false;
+            this.tree.root = null;
+        }
+    }
+
+    extractFieldsFromDomain(domain) {
+        const fields = [];
+        for (const node of domain.ast.value) {
+            if ([4, 10].includes(node.type)) {
+                if (node.value[0].type === 1 || [0, 1].includes(node.value[0].value)) {
+                    fields.push(node.value[0].value);
+                }
+            }
+        }
+        return fields;
+    }
+
+    notifyChanges() {
+        this.props.update(this.tree.root.toDomain().toString());
+    }
+
+    async loadFieldDefs(resModel, fields) {
+        const promises = [];
+        const fieldDefs = {};
+
+        for (const field of fields) {
+            promises.push(
+                this.loadFieldDef(resModel, field).then((info) => {
+                    fieldDefs[field] = info;
+                })
+            );
+        }
+
+        await Promise.all(promises);
+        return fieldDefs;
+    }
+
+    async loadFieldDef(resModel, field) {
+        if ("01".includes(field.toString())) {
+            return { type: "integer" };
+        }
+
+        const names = field.length ? field.split(".") : [];
+        let currentModel = resModel;
+        let fieldDef = null;
+        for (const name of names) {
+            const model = await this.view.loadFields(currentModel);
+            fieldDef = model[name];
+            currentModel = fieldDef.relation;
+        }
+        return fieldDef;
+    }
+
+    createNewLeaf() {
+        return this.defaultLeaf.clone();
+    }
+
+    createNewBranch(operator) {
+        return new BranchDomainNode(operator, [this.createNewLeaf(), this.createNewLeaf()]);
+    }
+
+    insertRootLeaf(parent) {
+        parent.add(this.createNewLeaf());
+        this.notifyChanges();
+    }
+
+    insertLeaf(parent, node) {
+        parent.insertAfter(node.id, this.createNewLeaf());
+        this.notifyChanges();
+    }
+
+    insertBranch(parent, node) {
+        const nextOperator = parent.operator === "AND" ? "OR" : "AND";
+        parent.insertAfter(node.id, this.createNewBranch(nextOperator));
+        this.notifyChanges();
+    }
+
+    delete(parent, node) {
+        parent.delete(node.id);
+        this.notifyChanges();
+    }
+
+    updateBranchOperator(node, operator) {
+        node.operator = operator;
+        this.notifyChanges();
+    }
+
+    async updateField(node, field) {
+        const fieldDef = await this.loadFieldDef(this.props.resModel, field);
+        node.field = { ...fieldDef, name: field };
+        node.operator = getOperatorsInfo(fieldDef.type)[0];
+        node.value = getDefaultFieldValue(fieldDef);
+        this.notifyChanges();
+    }
+
+    updateLeafOperator(node, operator) {
+        const previousOperator = node.operator;
+        node.operator = findOperator(operator);
+        if (previousOperator.valueMode !== node.operator.valueMode) {
+            switch (node.operator.valueMode) {
+                case "none": {
+                    node.value = false;
+                    break;
+                }
+                case "multiple": {
+                    node.value = previousOperator.valueMode === "none" ? [] : [node.value];
+                    break;
+                }
+                default: {
+                    if (previousOperator.valueMode === "none") {
+                        node.value = getDefaultFieldValue(node.field);
+                    } else {
+                        node.value = node.value[0];
+                    }
+                    break;
+                }
+            }
+        }
+        this.notifyChanges();
+    }
+
+    updateLeafValue(node, value) {
+        node.value = value;
+        this.notifyChanges();
+    }
+
+    onDebugValueChange(value) {
+        return this.props.update(value, true);
+    }
+
+    getEditorInfo(node) {
+        return getEditorInfo(node.field.type, node.operator.key);
+    }
+
+    getOperatorsInfo(node) {
+        const operators = getOperatorsInfo(node.field.type);
+        if (!operators.some((op) => op.key === node.operator.key)) {
+            operators.push(node.operator);
+        }
+        return operators;
+    }
+
+    highlightNode(target, toggle, classNames) {
+        const nodeEl = target.closest(".o_domain_node");
+        for (const className of classNames.split(/\s+/i)) {
+            nodeEl.classList.toggle(className, toggle);
+        }
+    }
+}

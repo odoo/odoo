@@ -1,5 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+API_URLS = {
+    'production': {
+        'pesopay': 'https://www.pesopay.com/b2c2/eng/payment/payForm.jsp',
+        'siampay': 'https://www.siampay.com/b2c2/eng/payment/payForm.jsp',
+        'bimopay': 'https://www.bimopay.com/b2c2/eng/payment/payForm.jsp',
+        'paydollar': 'https://www.paydollar.com/b2c2/eng/payment/payForm.jsp',
+    },
+    'test': {
+        'pesopay': 'https://test.pesopay.com/b2cDemo/eng/payment/payForm.jsp',
+        'siampay': 'https://test.siampay.com/b2cDemo/eng/payment/payForm.jsp',
+        'paydollar': 'https://test.paydollar.com/b2cDemo/eng/payment/payForm.jsp',
+    }
+}
+
 # Mapping of currency ISO 4217 codes AsiaPay's currency codes.
 # See https://www.paydollar.com/pdf/op/enpdintguide.pdf for the list of currency codes.
 CURRENCY_MAPPING = {
@@ -23,7 +37,7 @@ CURRENCY_MAPPING = {
     'SGD': '702',
     'THB': '764',
     'TWD': '901',
-    'USD': '702',
+    'USD': '840',
     'VND': '704',
 }
 

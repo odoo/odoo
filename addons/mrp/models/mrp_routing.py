@@ -23,7 +23,7 @@ class MrpRoutingWorkcenter(models.Model):
     company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
     worksheet_type = fields.Selection([
         ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
-        string="Work Sheet", default="text"
+        string="Worksheet", default="text"
     )
     note = fields.Html('Description')
     worksheet = fields.Binary('PDF')

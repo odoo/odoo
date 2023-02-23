@@ -186,7 +186,7 @@
     </xpath>
 </template>
 
-<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options">
+<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options" primary="True">
     <xpath expr="//we-button[@data-toggle-bg-image]" position="after">
         <t t-if="with_videos">
             <we-button title="Video" class="fa fa-fw fa-film"
@@ -268,7 +268,7 @@
             <we-button title="Solid" data-select-style="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
             <we-button title="Dashed" data-select-style="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
             <we-button title="Dotted" data-select-style="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/></we-button>
+            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
         </we-select>
         <we-colorpicker data-dependencies="border_width_opt"
                         t-att-data-apply-to="apply_to"
@@ -335,10 +335,20 @@
         data-allow-delete="true" data-fakem2m="true"/>
 </template>
 
-<template id="snippet_options">
-    <t t-call="web_editor.snippet_options">
-        <t t-set="image_transform_dependencies" t-valuef="no_animation_opt"/>
-    </t>
+<template id="snippet_options" inherit_id="web_editor.snippet_options" primary="True">
+    <!-- =================================================================== -->
+    <!-- Modify generic snippet options                                      -->
+    <!-- =================================================================== -->
+
+    <xpath expr="//we-button[@data-name='image_transform_opt']" position="attributes">
+        <attribute name="data-dependencies">no_animation_opt</attribute>
+    </xpath>
+
+    <!-- =================================================================== -->
+    <!-- Adding website specific snippet options                             -->
+    <!-- =================================================================== -->
+
+    <xpath expr="." position="inside">
 
     <!-- COLOR, BORDER, SHADOW | .s_three_columns | .s_comparisons -->
     <div data-js="Box"
@@ -412,7 +422,7 @@
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
     <!-- Dedicated colorpicker so that there is not 3 level of
          o_colored_level. Use inline-style color for the same reason. -->
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="'section'"/>
         <t t-set="target" t-value="'> .carousel'"/>
         <t t-set="with_colors" t-value="True"/>
@@ -447,10 +457,10 @@
 
     <div data-js="CarouselItem"
          data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button class="fa fa-fw fa-angle-left" data-switch-to-slide="left" data-no-preview="true" data-tooltip="Move Backward"/>
-        <we-button class="fa fa-fw fa-angle-right me-2" data-switch-to-slide="right" data-no-preview="true" data-tooltip="Move Forward"/>
-        <we-button class="fa fa-fw fa-plus o_we_bg_success" data-add-slide-item="true" data-no-preview="true" data-tooltip="Add Slide"/>
-        <we-button class="fa fa-fw fa-minus o_we_bg_danger" data-remove-slide="true" data-no-preview="true" data-tooltip="Remove Slide"/>
+        <we-button class="fa fa-fw fa-angle-left" data-switch-to-slide="left" data-no-preview="true" title="Move Backward"/>
+        <we-button class="fa fa-fw fa-angle-right me-2" data-switch-to-slide="right" data-no-preview="true" title="Move Forward"/>
+        <we-button class="fa fa-fw fa-plus o_we_bg_success" data-add-slide-item="true" data-no-preview="true" title="Add Slide"/>
+        <we-button class="fa fa-fw fa-minus o_we_bg_danger" data-remove-slide="true" data-no-preview="true" title="Remove Slide"/>
     </div>
 
     <!-- Accordion -->
@@ -466,9 +476,10 @@
         </we-row>
     </div>
 
+    <!-- Columns only -->
     <div data-js="layout_column"
-        data-selector="section.s_features_grid, section.s_color_blocks_2"
-        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns">
+        data-selector="section.s_features_grid, section.s_process_steps"
+        data-target="> *:has(> .row), > .s_allow_columns">
         <we-select string="Columns" data-no-preview="true">
             <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
             <we-button data-select-count="1">1</we-button>
@@ -480,10 +491,26 @@
         </we-select>
     </div>
 
+    <!-- Grid only -->
     <div data-js="layout_column"
-        data-selector="section"
-        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns"
-        data-exclude=".s_masonry_block, .s_features_grid, .s_color_blocks_2">
+        data-selector="section.s_masonry_block"
+        data-target="> *:has(> .row)">
+        <we-button-group class="o_grid" string="Add Elements" data-no-preview="true" data-dependencies="grid_mode">
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="image" title="Image" data-name="image">Image</we-button>
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="text" title="Text" data-name="text">Text</we-button>
+            <we-button class="o_we_bg_brand_primary o_grid" data-add-element="button" title="Button" data-name="button">Button</we-button>
+        </we-button-group>
+        <we-row string="Padding (Y, X)">
+            <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="--grid-item-padding-y" data-unit="px" data-apply-to=".row"/>
+            <we-input data-dependencies="grid_mode" data-select-style="" data-css-property="--grid-item-padding-x" data-unit="px" data-apply-to=".row"/>
+        </we-row>
+    </div>
+
+    <!-- Grid and columns -->
+    <div data-js="layout_column"
+        data-selector="section, section.s_carousel_wrapper .carousel-item"
+        data-target="> *:has(> .row), > .s_allow_columns"
+        data-exclude=".s_masonry_block, .s_features_grid, .s_media_list, .s_showcase, .s_table_of_content, .s_process_steps">
         <we-row>
             <we-button-group string="Layout" data-no-preview="true">
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
@@ -511,7 +538,7 @@
     </div>
 
     <!--  Vertical Alignment -->
-    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+    <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
         <we-button-group class="o_we_sublevel_1" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
             <we-button title="Align Top"
                        data-select-class="align-items-start"
@@ -550,9 +577,9 @@
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
     <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax'"/>
-    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block, .s_masonry_block .s_col_no_resize'"/>
+    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize'"/>
 
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="both_bg_color_image_selector"/>
         <t t-set="exclude" t-value="both_bg_color_image_exclude"/>
         <t t-set="with_colors" t-value="True"/>
@@ -563,7 +590,7 @@
         <t t-set="with_gradients" t-value="True"/>
     </t>
 
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="only_bg_color_selector"/>
         <t t-set="exclude" t-value="only_bg_color_exclude"/>
         <t t-set="with_colors" t-value="True"/>
@@ -572,7 +599,7 @@
         <t t-set="with_gradients" t-value="True"/>
     </t>
 
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="only_bg_image_selector"/>
         <t t-set="exclude" t-value="only_bg_image_exclude"/>
         <t t-set="with_colors" t-value="False"/>
@@ -587,14 +614,6 @@
          data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize">
         <t t-call="website.snippet_options_border_widgets"/>
         <t t-call="website.snippet_options_shadow_widgets"/>
-    </div>
-
-    <!-- Mobile display options -->
-    <div data-js="MobileVisibility" data-selector="section, section .row > div"
-         data-exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize">
-        <we-button class="o_we_link o_we_mobile" data-show-on-mobile="true" data-no-preview="true"
-                   data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
-                   data-active-img="/website/static/src/img/snippets_options/mobile_visible.svg"/>
     </div>
 
     <div data-js="sizing_y"
@@ -618,14 +637,14 @@
         <!-- /!\ drop-in here is partly duplicated for s_popup (see dedicated options) -->
         <!-- TODO should be improved -->
 
-    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code, .s_donation, .s_add_to_cart</t>
+    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
-        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
-        data-drop-in=".content, nav"/>
+        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div:not(.o_grid_item_image) > img, #{so_content_addition_selector}"
+        data-drop-in="nav"/>
 
     <div data-js="SnippetSave"
-        t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}, .s_popup"
+        data-selector="[data-snippet]"
         data-exclude=".o_no_save">
         <we-button class="fa fa-fw fa-save o_we_link o_we_hover_warning"
                    title="Save the block to use it elsewhere"
@@ -1177,6 +1196,26 @@
             <we-button data-select-class="o_full_screen_height" title="Full screen" data-name="full_height_opt" data-show-scroll-button="true">100%</we-button>
         </we-button-group>
 
+        <we-input string="Height" class="o_we_sublevel_1"
+            data-name="fixed_height_opt"
+            data-dependencies="minheight_auto_opt"
+            data-select-style=""
+            data-unit="px"
+            data-css-property="height"
+            data-force-style=""/>
+            <!--    ↑ ↑ ↑
+            For this setting, we need to always force the style (= if the block
+            is naturally 800px tall and the user enters 800px for this setting,
+            we set 800px as inline style anyway). Indeed, this snippet's style
+            is based on the height that is forced but once the related public
+            widgets are started, the inner carousel items receive a min-height
+            which makes it so the snippet "natural" height is equal to the
+            initially forced height... so if the style is not forced, it would
+            ultimately be removed by mistake thinking it is not necessary.
+            Note: this is forced as not important as we still need the height to
+            be reset to 'auto' in mobile (generic css rules).
+            -->
+
         <we-checkbox string="Scroll down button"
                      data-toggle-button="true"
                      data-no-preview="true"
@@ -1208,15 +1247,28 @@
         </we-select>
     </div>
 
+    <t t-set="_device_visibility_widgets">
+        <we-button class="o_we_device" data-toggle-device-visibility="no_desktop" title="Show/Hide on Desktop"
+            data-no-preview="true"
+            data-img="/website/static/src/img/snippets_options/desktop_invisible.svg"
+        />
+        <we-button class="o_we_device" data-toggle-device-visibility="no_mobile" title="Show/Hide on Mobile"
+            data-no-preview="true"
+            data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
+        />
+    </t>
     <div data-js="ConditionalVisibility" data-selector="section">
         <t t-set="current_website" t-value="request.env['website'].get_current_website()"/>
         <we-collapse>
-            <we-select string="Visibility" data-attribute-name="visibility" data-no-preview="true">
-                <we-button data-select-data-attribute="">Always visible</we-button>
-                <we-button data-select-data-attribute="conditional" data-select-class="o_snippet_invisible" data-name="visibility_conditional">Conditionally</we-button>
-            </we-select>
+            <we-row string="Visibility">
+                <t t-out="_device_visibility_widgets"/>
+                <we-select data-attribute-name="visibility" data-no-preview="true">
+                    <we-button data-select-data-attribute="">No condition</we-button>
+                    <we-button data-select-data-attribute="conditional" data-select-class="o_snippet_invisible" data-name="visibility_conditional">Conditionally</we-button>
+                </we-select>
+            </we-row>
 
-            <t t-if="request.geoip.get('country_code')">
+            <t t-if="request.geoip.country_code">
                 <t t-call="website.snippet_options_conditional_visibility">
                     <t t-set="option_name">Country</t>
                     <t t-set="attribute_rule" t-valuef="visibilityValueCountryRule"/>
@@ -1277,12 +1329,28 @@
         </we-collapse>
     </div>
 
+    <!-- Mobile/Desktop display options -->
+    <div data-js="DeviceVisibility" data-selector="section .row > div"
+            data-exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize">
+        <we-row string="Visibility">
+            <t t-out="_device_visibility_widgets"/>
+        </we-row>
+    </div>
+
     <!-- Cookies Bar -->
     <div data-selector="#website_cookies_bar" data-js="CookiesBar" data-target=".modal">
         <we-select string="Layout" class="o_we_inline">
             <we-button data-select-class="o_cookies_discrete" data-select-layout="discrete" data-trigger="position_bottom,s_popup_size_full">Discrete</we-button>
             <we-button data-select-class="o_cookies_classic" data-select-layout="classic" data-trigger="position_bottom,s_popup_size_full">Classic</we-button>
             <we-button data-name="layout_popup_opt" data-select-class="o_cookies_popup" data-select-layout="popup" data-trigger="position_middle,s_popup_size_md">Popup</we-button>
+        </we-select>
+    </div>
+
+    <!-- Image position in grid -->
+    <div data-js="GridImage" data-selector="img">
+        <we-select string="Position">
+            <we-button data-change-grid-image-mode="cover">Cover</we-button>
+            <we-button data-change-grid-image-mode="contain">Contain</we-button>
         </we-select>
     </div>
 
@@ -1575,14 +1643,16 @@
         </we-row>
     </div>
     <!-- Info page ('/website/info') -->
-    <div data-selector="main:has(.o_website_info)" data-page-options="true" data-no-check="true" string="Info Page">
+    <div data-selector="main:has(.o_website_info)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Info Page">
         <we-checkbox string="Odoo Information"
                         data-customize-website-views="website.show_website_info"
                         data-no-preview="true"
                         data-reload="/"/>
     </div>
-    <div data-selector="#wrapwrap > main" data-no-check="true" data-js="SwitchableViews">
+    <div data-js="SwitchableViews" data-selector="#wrapwrap > main" data-no-check="true" groups="website.group_website_designer">
             <!-- Options will be populated by JS -->
     </div>
+
+    </xpath>
 </template>
 </odoo>

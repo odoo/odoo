@@ -1,67 +1,63 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
-import { insert } from '@mail/model/model_field_command';
-import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
+import { attr, insert, many, Model } from "@mail/model";
+import { getBundle, loadBundle } from "@web/core/assets";
 
-registerModel({
-    name: 'EmojiRegistry',
-    lifecycleHooks: {
-        _created() {
-            this._populateFromEmojiData(emojiCategoriesData, emojisData);
-        },
-    },
+Model({
+    name: "EmojiRegistry",
     recordMethods: {
-        async _populateFromEmojiData(dataCategories, dataEmojis) {
-            await this.messaging.executeGracefully(dataCategories.map(category => () => {
-                if (!this.exists()) {
-                    return;
-                }
-                const emojiCount = dataEmojis.reduce((acc, emoji) => emoji.category === category.name ? acc + 1 : acc, 0);
-                this.update({
-                    dataCategories: insert({
-                        name: category.name,
-                        title: category.title,
-                        sortId: category.sortId,
-                        emojiCount,
-                    }),
-                });
-            }));
+        async loadEmojiData() {
+            this.update({ isLoading: true });
+            await getBundle("mail.assets_model_data").then(loadBundle);
+            const { emojiCategoriesData, emojisData } = await odoo.runtimeImport(
+                "@mail/models_data/emoji_data"
+            );
             if (!this.exists()) {
                 return;
             }
-            await this.messaging.executeGracefully(dataEmojis.map(emojiData => () => {
-                if (!this.exists()) {
-                    return;
-                }
-                this.models['Emoji'].insert({
+            this._populateFromEmojiData(emojiCategoriesData, emojisData);
+        },
+        async _populateFromEmojiData(dataCategories, dataEmojis) {
+            dataCategories.map((category) => {
+                this.update({
+                    dataCategories: insert({
+                        name: category.name,
+                        displayName: category.displayName,
+                        title: category.title,
+                        sortId: category.sortId,
+                    }),
+                });
+            });
+            this.models["Emoji"].insert(
+                dataEmojis.map((emojiData) => ({
                     codepoints: emojiData.codepoints,
                     shortcodes: emojiData.shortcodes,
                     emoticons: emojiData.emoticons,
                     name: emojiData.name,
                     keywords: emojiData.keywords,
                     emojiDataCategory: { name: emojiData.category },
-                });
-            }));
+                }))
+            );
+            this.update({
+                isLoaded: true,
+                isLoading: false,
+            });
         },
     },
     fields: {
-        allCategories: many('EmojiCategory', {
+        allCategories: many("EmojiCategory", {
+            inverse: "emojiRegistry",
             compute() {
                 return this.dataCategories;
             },
-            inverse: 'emojiRegistry',
-            sort() {
-                return [['smaller-first', 'sortId']];
-            },
+            sort: [["smaller-first", "sortId"]],
         }),
-        allEmojis: many('Emoji', {
-            inverse: 'emojiRegistry',
-            sort() {
-                return [['smaller-first', 'codepoints']];
-            }
+        allEmojis: many("Emoji", {
+            inverse: "emojiRegistry",
+            sort: [["smaller-first", "codepoints"]],
         }),
-        dataCategories: many('EmojiCategory'),
+        dataCategories: many("EmojiCategory"),
+        isLoaded: attr({ default: false }),
+        isLoading: attr({ default: false }),
     },
 });

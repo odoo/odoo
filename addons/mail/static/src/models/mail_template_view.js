@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { one, Model } from "@mail/model";
 
-registerModel({
-    name: 'MailTemplateView',
+Model({
+    name: "MailTemplateView",
+    template: "mail.MailTemplateView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -12,7 +12,10 @@ registerModel({
         onClickPreview(ev) {
             ev.stopPropagation();
             ev.preventDefault();
-            this.mailTemplate.preview(this.activityViewOwner.activity);
+            this.mailTemplate.preview(this.activity);
+            if (this.activityListViewItemOwner) {
+                this.activityListViewItemOwner.activityListViewOwner.popoverViewOwner.delete();
+            }
         },
         /**
          * @param {MouseEvent} ev
@@ -20,16 +23,25 @@ registerModel({
         onClickSend(ev) {
             ev.stopPropagation();
             ev.preventDefault();
-            this.mailTemplate.send(this.activityViewOwner.activity);
+            this.mailTemplate.send(this.activity);
+            if (this.activityListViewItemOwner) {
+                this.activityListViewItemOwner.activityListViewOwner.popoverViewOwner.delete();
+            }
         },
     },
     fields: {
-        activityViewOwner: one('ActivityView', {
-            identifying: true,
-            inverse: 'mailTemplateViews',
+        activity: one("Activity", {
+            compute() {
+                if (this.activityViewOwner) {
+                    return this.activityViewOwner.activity;
+                }
+                if (this.activityListViewItemOwner) {
+                    return this.activityListViewItemOwner.activity;
+                }
+            },
         }),
-        mailTemplate: one('MailTemplate', {
-            identifying: true,
-        }),
+        activityListViewItemOwner: one("ActivityListViewItem", { inverse: "mailTemplateViews" }),
+        activityViewOwner: one("ActivityView", { inverse: "mailTemplateViews" }),
+        mailTemplate: one("MailTemplate", { identifying: true }),
     },
 });

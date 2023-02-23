@@ -131,7 +131,7 @@ class TestSlidesManagement(slides_common.SlidesCase):
 
         self.assertEqual(
             slide_created_mails.mapped('subject'),
-            ['Congratulation! You completed %s' % self.channel.name, 'ATestSubject']
+            ['Congratulations! You completed %s' % self.channel.name, 'ATestSubject']
         )
 
     def test_unlink_slide_channel(self):
@@ -220,3 +220,20 @@ class TestSequencing(slides_common.SlidesCase):
         self.assertEqual(self.category.sequence, 4)
         self.assertEqual(self.slide_2.sequence, 5)
         self.assertEqual([s.id for s in self.channel.slide_ids], [self.slide.id, new_category.id, self.slide_3.id, self.category.id, self.slide_2.id])
+
+    @users('user_officer')
+    def test_channel_enroll_policy(self):
+        channel = self.env['slide.channel'].create({
+            'name': 'Test Course 2',
+            'slide_ids': [(0, 0, {
+                'name': 'Test Slide 1'
+            })],
+        })
+
+        self.assertEqual(channel.visibility, 'public')
+        self.assertEqual(channel.enroll, 'public')
+
+        channel.write({'visibility': 'members'})
+
+        self.assertEqual(channel.visibility, 'members')
+        self.assertEqual(channel.enroll, 'invite')

@@ -234,10 +234,6 @@
                 'xml_id': 'product.product_product_4c',
                 'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_1')),
                 'noupdate': True,
-            }, {
-                'xml_id': 'product.product_product_4d',
-                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_2')),
-                'noupdate': True,
             },]"/>
         </function>
 
@@ -258,12 +254,6 @@
             <field name="weight">0.01</field>
             <field name="standard_price">500.0</field>
             <field name="image_1920" type="base64" file="product/static/img/table03.jpg"/>
-        </record>
-        <record id="product_product_4d" model="product.product">
-            <field name="default_code">DESK0004</field>
-            <field name="weight">0.01</field>
-            <field name="standard_price">500.0</field>
-            <field name="image_1920" type="base64" file="product/static/img/table01.jpg"/>
         </record>
 
         <record id="product_product_5" model="product.product">
@@ -403,6 +393,35 @@
 
         <record id="product.product_11_attribute_1_value_2" model="product.template.attribute.value">
             <field name="price_extra">6.40</field>
+        </record>
+
+        <record id="product_template_attribute_exclusion_1" model="product.template.attribute.exclusion">
+            <field name="product_tmpl_id" ref="product.product_product_4_product_template" />
+            <field name="value_ids" eval="[(6, 0, [ref('product.product_4_attribute_2_value_2')])]"/>
+        </record>
+        <record id="product_template_attribute_exclusion_2" model="product.template.attribute.exclusion">
+            <field name="product_tmpl_id" ref="product.product_product_11_product_template" />
+            <field name="value_ids" eval="[(6, 0, [ref('product.product_11_attribute_1_value_1')])]"/>
+        </record>
+        <record id="product_template_attribute_exclusion_3" model="product.template.attribute.exclusion">
+            <field name="product_tmpl_id" ref="product.product_product_11_product_template" />
+            <field name="value_ids" eval="[(6, 0, [ref('product.product_11_attribute_1_value_2')])]"/>
+        </record>
+
+        <!--
+        The "Customizable Desk's Aluminium" attribute value will excude:
+        - The "Customizable Desk's Black" attribute
+        - The "Office Chair's Steel" attribute
+         -->
+        <record id="product_4_attribute_1_value_2" model="product.template.attribute.value">
+            <field name="exclude_for" eval="[(6, 0, [ref('product.product_template_attribute_exclusion_1'), ref('product.product_template_attribute_exclusion_2')])]" />
+        </record>
+        <!--
+        The "Customizable Desk's Steel" attribute value will excude:
+        - The "Office Chair's Aluminium" attribute
+        -->
+        <record id="product_4_attribute_1_value_1" model="product.template.attribute.value">
+            <field name="exclude_for" eval="[(6, 0, [ref('product.product_template_attribute_exclusion_3')])]" />
         </record>
 
         <!-- MRP Demo Data-->
@@ -789,14 +808,6 @@
             <field name="min_qty">0</field>
             <field name="price">145</field>
             <field name="currency_id" ref="base.USD"/>
-        </record>
-
-        <record forcecreate="True" id="property_product_pricelist_demo" model="ir.property">
-            <field name="name">property_product_pricelist</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
-            <field name="value" eval="'product.pricelist,'+str(ref('list0'))"/>
-            <field name="res_id" eval="'res.partner,'+str(ref('base.partner_demo'))"/>
-            <field name="company_id" ref="base.main_company"/>
         </record>
 
     </data>

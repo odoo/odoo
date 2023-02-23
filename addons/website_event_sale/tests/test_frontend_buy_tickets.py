@@ -6,11 +6,12 @@ import odoo.tests
 from datetime import timedelta
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.fields import Datetime
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
     def setUp(self):
         super().setUp()
@@ -88,6 +89,7 @@ class TestUi(HttpCaseWithUserDemo):
         # - that this test awaits for hardcoded USDs amount
         # we have to force company currency as USDs only for this test
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.ref('base.main_company').id])
+        self.env['product.pricelist'].create({'name': "Public Pricelist"})
 
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
         transfer_provider.write({
@@ -109,6 +111,9 @@ class TestUi(HttpCaseWithUserDemo):
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
+        #  Ensure the use of USD (company currency)
+        self.env['product.pricelist'].create({'name': "Public Pricelist"})
+
         self.start_tour("/", 'event_buy_tickets', login="demo")
 
     def test_buy_last_ticket(self):
@@ -124,4 +129,6 @@ class TestUi(HttpCaseWithUserDemo):
 
         self.start_tour("/", 'event_buy_last_ticket')
 
+    def test_pricelists_different_currencies(self):
+        self.start_tour("/", 'event_sale_pricelists_different_currencies', login='admin')
     # TO DO - add public test with new address when convert to web.tour format.

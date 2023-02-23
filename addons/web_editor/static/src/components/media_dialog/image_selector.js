@@ -3,8 +3,9 @@
 import { useService } from '@web/core/utils/hooks';
 import { getCSSVariableValue, DEFAULT_PALETTE } from 'web_editor.utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
+import { KeepLast } from "@web/core/utils/concurrency";
 
-const { useRef, useState, useEffect } = owl;
+import { useRef, useState, useEffect } from "@odoo/owl";
 
 export class AutoResizeImage extends Attachment {
     setup() {
@@ -24,6 +25,10 @@ export class AutoResizeImage extends Attachment {
     }
 
     async onImageLoaded() {
+        if (!this.image.el) {
+            // Do not fail if already removed.
+            return;
+        }
         if (this.props.onLoaded) {
             await this.props.onLoaded(this.image.el);
         }
@@ -41,6 +46,7 @@ export class ImageSelector extends FileSelector {
         super.setup();
 
         this.rpc = useService('rpc');
+        this.keepLastLibraryMedia = new KeepLast();
 
         this.state.libraryMedia = [];
         this.state.libraryResults = null;
@@ -177,8 +183,10 @@ export class ImageSelector extends FileSelector {
         if (!this.props.useMediaLibrary) {
             return;
         }
-        const { media } = await this.fetchLibraryMedia(this.state.libraryMedia.length);
-        this.state.libraryMedia.push(...media);
+        return this.keepLastLibraryMedia.add(this.fetchLibraryMedia(this.state.libraryMedia.length)).then(({ media }) => {
+            // This is never reached if another search or loadMore occurred.
+            this.state.libraryMedia.push(...media);
+        });
     }
 
     async search(...args) {
@@ -189,9 +197,13 @@ export class ImageSelector extends FileSelector {
         if (!this.state.needle) {
             this.state.searchService = 'all';
         }
-        const { media, results } = await this.fetchLibraryMedia(0);
-        this.state.libraryMedia = media;
-        this.state.libraryResults = results;
+        this.state.libraryMedia = [];
+        this.state.libraryResults = 0;
+        return this.keepLastLibraryMedia.add(this.fetchLibraryMedia(0)).then(({ media, results }) => {
+            // This is never reached if a new search occurred.
+            this.state.libraryMedia = media;
+            this.state.libraryResults = results;
+        });
     }
 
     async onClickAttachment(attachment) {
@@ -284,7 +296,7 @@ export class ImageSelector extends FileSelector {
                     media.dynamicColors = dynamicColors;
                 }
             }
-        } catch (_e) {
+        } catch {
             console.error('CORS is misconfigured on the API server, image will be treated as non-dynamic.');
         }
     }

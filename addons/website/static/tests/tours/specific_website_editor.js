@@ -1,11 +1,11 @@
 odoo.define('website.tour.specific_website_editor', function (require) {
 'use strict';
 
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
-tour.register('generic_website_editor', {
+registry.category("web_tour.tours").add('generic_website_editor', {
     test: true,
-}, [{
+    steps: [{
     content: 'Click edit button',
     trigger: '.o_edit_website_container > a',
 },
@@ -14,11 +14,11 @@ tour.register('generic_website_editor', {
     extra_trigger: '#oe_snippets.o_loaded',
     content: 'Check that the editor DOM matches its website-generic features',
     run: function () {}, // Simple check
-}]);
+}]});
 
-tour.register('specific_website_editor', {
+registry.category("web_tour.tours").add('specific_website_editor', {
     test: true,
-}, [{
+    steps: [{
     content: 'Click edit button',
     trigger: '.o_edit_website_container > a',
 },
@@ -27,5 +27,5 @@ tour.register('specific_website_editor', {
     extra_trigger: '#oe_snippets.o_loaded',
     content: 'Check that the editor DOM matches its website-specific features',
     run: function () {}, // Simple check
-}]);
+}]});
 });

@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'CallActionListView',
+Model({
+    name: "CallActionListView",
+    template: "mail.CallActionListView",
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -82,6 +81,7 @@ registerModel({
     },
     fields: {
         callButtonTitle: attr({
+            default: "",
             compute() {
                 if (!this.thread) {
                     return clear();
@@ -92,17 +92,11 @@ registerModel({
                     return this.env._t("Join Call");
                 }
             },
-            default: '',
         }),
-        callMainView: one('CallMainView', {
-            identifying: true,
-            inverse: 'callActionListView',
-        }),
-        callView: one('CallView', {
-            related: 'callMainView.callView',
-            required: true,
-        }),
+        callMainView: one("CallMainView", { identifying: true, inverse: "callActionListView" }),
+        callView: one("CallView", { related: "callMainView.callView", required: true }),
         cameraButtonTitle: attr({
+            default: "",
             compute() {
                 if (this.messaging.rtc.sendUserVideo) {
                     return this.env._t("Stop camera");
@@ -110,9 +104,9 @@ registerModel({
                     return this.env._t("Turn camera on");
                 }
             },
-            default: '',
         }),
         headphoneButtonTitle: attr({
+            default: "",
             compute() {
                 if (!this.messaging.rtc.currentRtcSession) {
                     return clear();
@@ -123,11 +117,12 @@ registerModel({
                     return this.env._t("Deafen");
                 }
             },
-            default: '',
         }),
         isSmall: attr({
             compute() {
-                return Boolean(this.callView && this.callView.threadView.compact && !this.callView.isFullScreen);
+                return Boolean(
+                    this.callView && this.callView.threadView.compact && !this.callView.isFullScreen
+                );
             },
         }),
         microphoneButtonTitle: attr({
@@ -142,11 +137,10 @@ registerModel({
                 }
             },
         }),
-        moreButtonRef: attr(),
-        moreMenuPopoverView: one('PopoverView', {
-            inverse: 'callActionListViewOwnerAsMoreMenu',
-        }),
+        moreButtonRef: attr({ ref: "moreButton" }),
+        moreMenuPopoverView: one("PopoverView", { inverse: "callActionListViewOwnerAsMoreMenu" }),
         screenSharingButtonTitle: attr({
+            default: "",
             compute() {
                 if (this.messaging.rtc.sendDisplay) {
                     return this.env._t("Stop screen sharing");
@@ -154,11 +148,7 @@ registerModel({
                     return this.env._t("Share screen");
                 }
             },
-            default: '',
         }),
-        thread: one('Thread', {
-            related: 'callMainView.thread',
-            required: true,
-        }),
+        thread: one("Thread", { related: "callMainView.thread", required: true }),
     },
 });

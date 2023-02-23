@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
-import { addFieldDependencies, archParseBoolean, getActiveActions } from "@web/views/utils";
-import { Field } from "@web/views/fields/field";
+import { registry } from "@web/core/registry";
 import { XMLParser } from "@web/core/utils/xml";
-import { Widget } from "@web/views/widgets/widget";
+import { Field } from "@web/views/fields/field";
+import { addFieldDependencies, archParseBoolean, getActiveActions } from "@web/views/utils";
+
+const viewWidgetRegistry = registry.category("view_widgets");
 
 export class FormArchParser extends XMLParser {
     parse(arch, models, modelName) {
@@ -32,24 +34,31 @@ export class FormArchParser extends XMLParser {
                 addFieldDependencies(
                     activeFields,
                     models[modelName],
-                    fieldInfo.FieldComponent.fieldDependencies
+                    fieldInfo.field.fieldDependencies
                 );
                 return false;
             } else if (node.tagName === "div" && node.classList.contains("oe_chatter")) {
                 // remove this when chatter fields are declared as attributes on the root node
                 return false;
             } else if (node.tagName === "widget") {
-                const { WidgetComponent } = Widget.parseWidgetNode(node);
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    WidgetComponent.fieldDependencies
-                );
+                const { fieldDependencies } = viewWidgetRegistry.get(node.getAttribute("name"));
+                addFieldDependencies(activeFields, models[modelName], fieldDependencies);
             }
         });
         // TODO: generate activeFields for the model based on fieldNodes (merge duplicated fields)
         for (const fieldNode of Object.values(fieldNodes)) {
-            activeFields[fieldNode.name] = fieldNode;
+            const fieldName = fieldNode.name;
+            if (activeFields[fieldName]) {
+                const { alwaysInvisible } = fieldNode;
+                activeFields[fieldName] = {
+                    ...fieldNode,
+                    // a field can only be considered to be always invisible
+                    // if all its nodes are always invisible
+                    alwaysInvisible: activeFields[fieldName].alwaysInvisible && alwaysInvisible,
+                };
+            } else {
+                activeFields[fieldName] = fieldNode;
+            }
             // const { onChange, modifiers } = fieldNode;
             // let readonly = modifiers.readonly || [];
             // let required = modifiers.required || [];

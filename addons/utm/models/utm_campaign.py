@@ -44,7 +44,8 @@ class UtmCampaign(models.Model):
                 vals['title'] = vals['name']
         new_names = self.env['utm.mixin']._get_unique_names(self._name, [vals.get('name') for vals in vals_list])
         for vals, new_name in zip(vals_list, new_names):
-            vals['name'] = new_name
+            if new_name:
+                vals['name'] = new_name
         return super().create(vals_list)
 
     @api.model

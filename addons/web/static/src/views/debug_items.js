@@ -3,14 +3,14 @@
 import { _lt } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { editModelDebug } from "@web/core/debug/debug_utils";
-import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
+import { formatDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { formatMany2one } from "@web/views/fields/formatters";
 import { evalDomain } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-const { Component, onWillStart, useState, xml } = owl;
+import { Component, onWillStart, useState, xml } from "@odoo/owl";
 
 const debugRegistry = registry.category("debug");
 
@@ -159,8 +159,8 @@ class GetMetadataDialog extends Component {
         this.state.noupdate = metadata.noupdate;
         this.state.creator = formatMany2one(metadata.create_uid);
         this.state.lastModifiedBy = formatMany2one(metadata.write_uid);
-        this.state.createDate = formatDateTime(parseDateTime(metadata.create_date));
-        this.state.writeDate = formatDateTime(parseDateTime(metadata.write_date));
+        this.state.createDate = formatDateTime(deserializeDateTime(metadata.create_date));
+        this.state.writeDate = formatDateTime(deserializeDateTime(metadata.write_date));
     }
 }
 GetMetadataDialog.template = "web.DebugMenu.GetMetadataDialog";
@@ -236,9 +236,7 @@ class SetDefaultDialog extends Component {
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
-                    this.fieldsInfo[fieldName].options.isPassword ||
-                    fieldInfo.depends === undefined ||
-                    fieldInfo.depends.length !== 0
+                    this.fieldsInfo[fieldName].options.isPassword
                 ) {
                     return false;
                 }
@@ -306,6 +304,11 @@ class SetDefaultDialog extends Component {
 }
 SetDefaultDialog.template = "web.DebugMenu.SetDefaultDialog";
 SetDefaultDialog.components = { Dialog };
+SetDefaultDialog.props = {
+    resModel: { type: String },
+    component: { type: Component },
+    close: { type: Function },
+};
 
 export function setDefaults({ component, env }) {
     return {

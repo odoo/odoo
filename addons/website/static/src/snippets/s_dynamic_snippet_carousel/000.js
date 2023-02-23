@@ -3,6 +3,7 @@ odoo.define('website.s_dynamic_snippet_carousel', function (require) {
 
 const publicWidget = require('web.public.widget');
 const DynamicSnippet = require('website.s_dynamic_snippet');
+const config = require('web.config');
 
 const DynamicSnippetCarousel = DynamicSnippet.extend({
     selector: '.s_dynamic_snippet_carousel',
@@ -25,7 +26,9 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
         return Object.assign(
             this._super.apply(this, arguments),
             {
-                interval: parseInt(this.$target[0].dataset.carouselInterval),
+                interval: parseInt(this.el.dataset.carouselInterval),
+                rowPerSlide: parseInt(config.device.isMobile ? 1 : this.el.dataset.rowPerSlide || 1),
+                arrowPosition: this.el.dataset.arrowPosition || '',
             },
         );
     },

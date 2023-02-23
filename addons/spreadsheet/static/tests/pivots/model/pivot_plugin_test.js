@@ -5,16 +5,18 @@ import {
     getCellContent,
     getCellFormula,
     getCellValue,
+    getEvaluatedCell,
 } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import { setCellContent } from "@spreadsheet/../tests/utils/commands";
+import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/utils/commands";
 import {
     createModelWithDataSource,
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
+import { RPCError } from "@web/core/network/rpc_service";
 
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can select a Pivot from cell formula", async function (assert) {
@@ -27,7 +29,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 </pivot>`,
         });
         const sheetId = model.getters.getActiveSheetId();
-        const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+        const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
         model.dispatch("SELECT_PIVOT", { pivotId });
         const selectedPivotId = model.getters.getSelectedPivotId();
         assert.strictEqual(selectedPivotId, "1");
@@ -49,7 +51,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 text: `=-PIVOT("1","probability","bar","false","foo","2")`,
             });
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -72,7 +74,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 text: `=3*PIVOT("1","probability","bar","false","foo","2")+2`,
             });
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -95,7 +97,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 text: `=SUM(PIVOT("1","probability","bar","false","foo","2"),PIVOT("1","probability","bar","false","foo","2"))`,
             });
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -109,7 +111,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             setCellContent(model, "C3", `=ODOO.PIVOT(G10,"probability","bar","false","foo","2")+2`);
             setCellContent(model, "G10", "1");
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -132,7 +134,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                 text: `=3*SUM(PIVOT("1","probability","bar","false","foo","2"),PIVOT("1","probability","bar","false","foo","2"))+2*PIVOT("1","probability","bar","false","foo","2")`,
             });
             const sheetId = model.getters.getActiveSheetId();
-            const pivotId = model.getters.getPivotIdFromPosition(sheetId, 2, 2);
+            const pivotId = model.getters.getPivotIdFromPosition({ sheetId, col: 2, row: 2 });
             model.dispatch("SELECT_PIVOT", { pivotId });
             const selectedPivotId = model.getters.getSelectedPivotId();
             assert.strictEqual(selectedPivotId, "1");
@@ -185,25 +187,25 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         const { model } = await createSpreadsheetWithPivot();
         model.dispatch("REMOVE_PIVOT", { pivotId: "1" });
         assert.strictEqual(model.getters.getPivotIds().length, 0);
-        const B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error.message, `There is no pivot with id "1"`);
-        assert.equal(B4.evaluated.value, `#ERROR`);
+        const B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error.message, `There is no pivot with id "1"`);
+        assert.equal(B4.value, `#ERROR`);
     });
 
     QUnit.test("Can undo/redo a delete pivot", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
-        const value = getCell(model, "B4").evaluated.value;
+        const value = getEvaluatedCell(model, "B4").value;
         model.dispatch("REMOVE_PIVOT", { pivotId: "1" });
         model.dispatch("REQUEST_UNDO");
         assert.strictEqual(model.getters.getPivotIds().length, 1);
-        let B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error, undefined);
-        assert.equal(B4.evaluated.value, value);
+        let B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error, undefined);
+        assert.equal(B4.value, value);
         model.dispatch("REQUEST_REDO");
         assert.strictEqual(model.getters.getPivotIds().length, 0);
-        B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error.message, `There is no pivot with id "1"`);
-        assert.equal(B4.evaluated.value, `#ERROR`);
+        B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error.message, `There is no pivot with id "1"`);
+        assert.equal(B4.value, `#ERROR`);
     });
 
     QUnit.test("Format header displays an error for non-existing field", async function (assert) {
@@ -214,11 +216,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.equal(getCellValue(model, "G10"), "#ERROR");
         assert.equal(getCellValue(model, "G11"), "#ERROR");
         assert.equal(
-            getCell(model, "G10").evaluated.error.message,
+            getEvaluatedCell(model, "G10").error.message,
             "Field non-existing does not exist"
         );
         assert.equal(
-            getCell(model, "G11").evaluated.error.message,
+            getEvaluatedCell(model, "G11").error.message,
             "Field non-existing does not exist"
         );
     });
@@ -228,8 +230,6 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         async function (assert) {
             const context = {
                 allowed_company_ids: [15],
-                default_stage_id: 5,
-                search_default_stage_id: 5,
                 tz: "bx",
                 lang: "FR",
                 uid: 4,
@@ -397,7 +397,6 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("display loading while data is not fully available", async function (assert) {
         const metadataPromise = makeDeferred();
         const dataPromise = makeDeferred();
-        const namePromise = makeDeferred();
         const spreadsheetData = {
             sheets: [
                 {
@@ -438,8 +437,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     await dataPromise;
                 }
                 if (model === "product" && method === "name_get") {
-                    assert.step(`${model}/${method}`);
-                    await namePromise;
+                    assert.ok(false, "should not be called because data is put in cache");
                 }
                 return result;
             },
@@ -457,15 +455,9 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         await nextTick();
         setCellContent(model, "A10", "2");
         assert.strictEqual(getCellValue(model, "A1"), "Probability");
-        assert.strictEqual(getCellValue(model, "A2"), "Loading...");
-        assert.strictEqual(getCellValue(model, "A3"), 131);
-        namePromise.resolve();
-        await nextTick();
-        setCellContent(model, "A10", "3");
-        assert.strictEqual(getCellValue(model, "A1"), "Probability");
         assert.strictEqual(getCellValue(model, "A2"), "xphone");
         assert.strictEqual(getCellValue(model, "A3"), 131);
-        assert.verifySteps(["partner/fields_get", "partner/read_group", "product/name_get"]);
+        assert.verifySteps(["partner/fields_get", "partner/read_group"]);
     });
 
     QUnit.test("relational PIVOT.HEADER with missing id", async function (assert) {
@@ -488,7 +480,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         });
         await waitForDataSourcesLoaded(model);
         assert.equal(
-            getCell(model, "E10").evaluated.error.message,
+            getEvaluatedCell(model, "E10").error.message,
             "Unable to fetch the label of 1111111 of model product"
         );
     });
@@ -537,6 +529,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     },
                     name: "A pivot",
                     context: {},
+                    fieldMatching: {},
                 },
             },
         };
@@ -609,8 +602,8 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     <field name="probability" type="measure"/>
                 </pivot>`,
         });
-        assert.strictEqual(getCell(model, "B3").evaluated.format, "0");
-        assert.strictEqual(getCell(model, "C3").evaluated.format, "#,##0.00");
+        assert.strictEqual(getEvaluatedCell(model, "B3").format, "0");
+        assert.strictEqual(getEvaluatedCell(model, "C3").format, "#,##0.00");
     });
 
     QUnit.test(
@@ -624,7 +617,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     <field name="pognon" type="measure"/>
                 </pivot>`,
             });
-            assert.strictEqual(getCell(model, "B3").evaluated.format, "#,##0.00[$€]");
+            assert.strictEqual(getEvaluatedCell(model, "B3").format, "#,##0.00[$€]");
         }
     );
 
@@ -639,9 +632,9 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     <field name="foo" type="measure"/>
                 </pivot>`,
             });
-            assert.strictEqual(getCell(model, "A3").evaluated.format, "#,##0.00");
-            assert.strictEqual(getCell(model, "B1").evaluated.format, "mm/dd/yyyy");
-            assert.strictEqual(getCell(model, "B2").evaluated.format, undefined);
+            assert.strictEqual(getEvaluatedCell(model, "A3").format, "#,##0.00");
+            assert.strictEqual(getEvaluatedCell(model, "B1").format, "mm/dd/yyyy");
+            assert.strictEqual(getEvaluatedCell(model, "B2").format, undefined);
         }
     );
 
@@ -677,4 +670,111 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         });
         assert.deepEqual(model.exportData().pivots["1"].domain, [["foo", "in", [55]]]);
     });
+
+    QUnit.test("field matching is removed when filter is deleted", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        await addGlobalFilter(
+            model,
+            {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    label: "test",
+                    defaultValue: [41],
+                    modelName: undefined,
+                    rangeType: undefined,
+                },
+            },
+            {
+                pivot: { 1: { chain: "product_id", type: "many2one" } },
+            }
+        );
+        const [filter] = model.getters.getGlobalFilters();
+        const matching = {
+            chain: "product_id",
+            type: "many2one",
+        };
+        assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), matching);
+        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), [
+            ["product_id", "in", [41]],
+        ]);
+        model.dispatch("REMOVE_GLOBAL_FILTER", {
+            id: filter.id,
+        });
+        assert.deepEqual(
+            model.getters.getPivotFieldMatching("1", filter.id),
+            undefined,
+            "it should have removed the pivot and its fieldMatching and datasource altogether"
+        );
+        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), []);
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), matching);
+        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), [
+            ["product_id", "in", [41]],
+        ]);
+        model.dispatch("REQUEST_REDO");
+        assert.deepEqual(model.getters.getPivotFieldMatching("1", filter.id), undefined);
+        assert.deepEqual(model.getters.getPivotDataSource("1").getComputedDomain(), []);
+    });
+
+    QUnit.test(
+        "Load pivot spreadsheet with models that cannot be accessed",
+        async function (assert) {
+            let hasAccessRights = true;
+            const { model } = await createSpreadsheetWithPivot({
+                mockRPC: async function (route, args) {
+                    if (
+                        args.model === "partner" &&
+                        args.method === "read_group" &&
+                        !hasAccessRights
+                    ) {
+                        const error = new RPCError();
+                        error.data = { message: "ya done!" };
+                        throw error;
+                    }
+                },
+            });
+            let headerCell;
+            let cell;
+            
+            await waitForDataSourcesLoaded(model);
+            headerCell = getEvaluatedCell(model, "A3");
+            cell = getEvaluatedCell(model, "C3");
+            assert.equal(headerCell.value, "No");
+            assert.equal(cell.value, 15);
+
+            hasAccessRights = false;
+            model.dispatch("REFRESH_PIVOT", { id: "1" });
+            await waitForDataSourcesLoaded(model);
+            headerCell = getEvaluatedCell(model, "A3");
+            cell = getEvaluatedCell(model, "C3");
+            assert.equal(headerCell.value, "#ERROR");
+            assert.equal(headerCell.error.message, "ya done!");
+            assert.equal(cell.value, "#ERROR");
+            assert.equal(cell.error.message, "ya done!");
+        }
+    );
+
+    QUnit.test("Title of the first row is inserted as row title", async (assert) => {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="bar" type="row"/>
+                </pivot>`,
+        });
+        assert.strictEqual(getCellContent(model, "A2"), "Bar");
+    });
+
+    QUnit.test(
+        "Title of the first row is not inserted if there is no row group bys",
+        async (assert) => {
+            const { model } = await createSpreadsheetWithPivot({
+                arch: /*xml*/ `
+                <pivot>
+                    <field name="bar" type="col"/>
+                </pivot>`,
+            });
+            assert.strictEqual(getCellContent(model, "A2"), "");
+        }
+    );
 });

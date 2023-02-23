@@ -25,7 +25,7 @@ class PosPaymentMethod(models.Model):
     is_cash_count = fields.Boolean(string='Cash', compute="_compute_is_cash_count", store=True)
     journal_id = fields.Many2one('account.journal',
         string='Journal',
-        domain=[('type', 'in', ('cash', 'bank'))],
+        domain=['|', '&', ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False), ('type', '=', 'bank')],
         ondelete='restrict',
         help='Leave empty to use the receivable account of customer.\n'
              'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
@@ -44,6 +44,7 @@ class PosPaymentMethod(models.Model):
     hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal')
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
+    image = fields.Image("Image", max_width=50, max_height=50)
 
     @api.depends('type')
     def _compute_hide_use_payment_terminal(self):
@@ -84,6 +85,6 @@ class PosPaymentMethod(models.Model):
 
     def write(self, vals):
         if self._is_write_forbidden(set(vals.keys())):
-            raise UserError('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
-                            'Open sessions: %s' % (' '.join(self.open_session_ids.mapped('name')),))
+            raise UserError(_('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
+                            'Open sessions: %s', (' '.join(self.open_session_ids.mapped('name')),)))
         return super(PosPaymentMethod, self).write(vals)

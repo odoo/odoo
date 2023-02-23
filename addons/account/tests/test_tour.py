@@ -17,6 +17,7 @@ class TestUi(odoo.tests.HttpCase):
             'account_sale_tax_id': None,
             'account_purchase_tax_id': None,
         })
+
         account_with_taxes = self.env['account.account'].search([('tax_ids', '!=', False), ('company_id', '=', self.env.company.id)])
         account_with_taxes.write({
             'tax_ids': [Command.clear()],
@@ -25,4 +26,11 @@ class TestUi(odoo.tests.HttpCase):
         all_moves = self.env['account.move'].search([('move_type', '!=', 'entry')])
         all_moves.button_draft()
         all_moves.with_context(force_delete=True).unlink()
+
+        # In case of latam impacting multiple countries, disable the required fields manually.
+        if 'l10n_latam_use_documents' in self.env['account.journal']._fields:
+            self.env['account.journal']\
+                .search([('company_id', '=', self.env.company.id), ('type', '=', 'sale')])\
+                .write({'l10n_latam_use_documents': False})
+
         self.start_tour("/web", 'account_tour', login="admin")

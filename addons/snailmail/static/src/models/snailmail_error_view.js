@@ -1,10 +1,14 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
+import { attr, one, Model } from '@mail/model';
 
-registerModel({
+Model({
     name: 'SnailmailErrorView',
+    template: 'snailmail.SnailmailErrorView',
+    componentSetup() {
+        useComponentToModel({ fieldName: 'component' });
+    },
     recordMethods: {
         /**
          * Returns whether the given html element is inside this snailmail error view.

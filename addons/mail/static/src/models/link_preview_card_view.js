@@ -1,34 +1,34 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'LinkPreviewCardView',
+Model({
+    name: "LinkPreviewCardView",
+    template: "mail.LinkPreviewCardView",
     recordMethods: {
         /**
          * Handles mouse enter event for the container of this element.
          */
         onMouseEnter() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: true });
         },
         /**
          * Handles mouse leave event for the container of this element.
          */
         onMouseLeave() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: false });
         },
     },
     fields: {
-        isHovered: attr({
-            default: false,
-        }),
-        linkPreview: one('LinkPreview', {
-            identifying: true,
-            inverse: 'linkPreviewCardView',
-        }),
-        linkPreviewAsideView: one('LinkPreviewAsideView', {
+        isHovered: attr({ default: false }),
+        linkPreview: one("LinkPreview", { identifying: true, inverse: "linkPreviewCardView" }),
+        linkPreviewAsideView: one("LinkPreviewAsideView", {
             compute() {
                 if (!this.linkPreview.isDeletable) {
                     return clear();
@@ -36,16 +36,20 @@ registerModel({
                 if (this.messaging.device.isMobileDevice) {
                     return {};
                 }
-                if (this.isHovered || (this.linkPreviewAsideView && this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)) {
+                if (
+                    this.isHovered ||
+                    (this.linkPreviewAsideView &&
+                        this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)
+                ) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'linkPreviewCardView',
+            inverse: "linkPreviewCardView",
         }),
-        linkPreviewListViewOwner: one('LinkPreviewListView', {
+        linkPreviewListViewOwner: one("LinkPreviewListView", {
             identifying: true,
-            inverse: 'linkPreviewAsCardViews',
+            inverse: "linkPreviewAsCardViews",
         }),
     },
 });

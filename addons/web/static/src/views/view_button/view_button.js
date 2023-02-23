@@ -4,7 +4,7 @@ import { DROPDOWN } from "@web/core/dropdown/dropdown";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 const explicitRankClasses = [
     "btn-primary",
@@ -92,6 +92,8 @@ export class ViewButton extends Component {
                     this.env[DROPDOWN].close();
                 }
             },
+            disableAction: this.props.disable,
+            enableAction: this.props.enable,
         });
     }
 
@@ -127,13 +129,15 @@ ViewButton.props = [
     "id?",
     "tag?",
     "record?",
+    "attrs?",
     "className?",
     "context?",
     "clickParams?",
-    "hotkey?",
     "icon?",
     "defaultRank?",
+    "disable?",
     "disabled?",
+    "enable?",
     "size?",
     "tabindex?",
     "title?",
@@ -145,4 +149,6 @@ ViewButton.defaultProps = {
     tag: "button",
     className: "",
     clickParams: {},
+    disable: () => {},
+    enable: () => {},
 };

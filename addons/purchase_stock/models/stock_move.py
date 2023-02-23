@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_round, float_is_zero
+from odoo import api, Command, fields, models, _
+from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
 
@@ -12,24 +12,29 @@ class StockMove(models.Model):
     purchase_line_id = fields.Many2one(
         'purchase.order.line', 'Purchase Order Line',
         ondelete='set null', index='btree_not_null', readonly=True)
-    created_purchase_line_id = fields.Many2one(
-        'purchase.order.line', 'Created Purchase Order Line',
-        ondelete='set null', index='btree_not_null', readonly=True, copy=False)
+    created_purchase_line_ids = fields.Many2many(
+        'purchase.order.line', 'stock_move_created_purchase_line_rel',
+        'move_id', 'created_purchase_line_id', 'Created Purchase Order Lines', copy=False)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
-        distinct_fields += ['purchase_line_id', 'created_purchase_line_id']
+        distinct_fields += ['purchase_line_id', 'created_purchase_line_ids']
         return distinct_fields
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
+        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_ids']
+
+    def _compute_partner_id(self):
+        # dropshipped moves should have their partner_ids directly set
+        not_dropshipped_moves = self.filtered(lambda m: not m._is_dropshipped())
+        super(StockMove, not_dropshipped_moves)._compute_partner_id()
 
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
-        if not self.purchase_line_id or not self.product_id.id:
+        if self.origin_returned_move_id or not self.purchase_line_id or not self.product_id.id:
             return super(StockMove, self)._get_price_unit()
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         line = self.purchase_line_id
@@ -37,7 +42,7 @@ class StockMove(models.Model):
         received_qty = line.qty_received
         if self.state == 'done':
             received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom)
-        if line.qty_invoiced > received_qty:
+        if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
             move_layer = line.move_ids.stock_valuation_layer_ids
             invoiced_layer = line.invoice_lines.stock_valuation_layer_ids
             receipt_value = sum(move_layer.mapped('value')) + sum(invoiced_layer.mapped('value'))
@@ -83,13 +88,22 @@ class StockMove(models.Model):
             return rslt
         svl = self.env['stock.valuation.layer'].browse(svl_id)
         if not svl.account_move_line_id:
-            # Do not use price_unit since we want the price tax excluded. And by the way, qty
-            # is in the UOM of the product, not the UOM of the PO line.
-            purchase_price_unit = (
-                self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
-                if self.purchase_line_id.product_uom_qty
-                else self.purchase_line_id.price_unit
-            )
+            if(self.purchase_line_id.product_id.cost_method == 'standard'):
+                purchase_price_unit = self.purchase_line_id.product_id.cost_currency_id._convert(
+                    self.purchase_line_id.product_id.standard_price,
+                    purchase_currency,
+                    self.company_id,
+                    self.date,
+                    round=False,
+                )
+            else:
+                # Do not use price_unit since we want the price tax excluded. And by the way, qty
+                # is in the UOM of the product, not the UOM of the PO line.
+                purchase_price_unit = (
+                    self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
+                    if self.purchase_line_id.product_uom_qty
+                    else self.purchase_line_id.price_unit
+                )
             currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
             rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['balance'] < 0 and -currency_move_valuation or currency_move_valuation
             rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['balance'] < 0 and -currency_move_valuation or currency_move_valuation
@@ -146,12 +160,12 @@ class StockMove(models.Model):
 
     def _clean_merged(self):
         super(StockMove, self)._clean_merged()
-        self.write({'created_purchase_line_id': False})
+        self.write({'created_purchase_line_ids': [Command.clear()]})
 
     def _get_upstream_documents_and_responsibles(self, visited):
-        if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel') \
-                and (self.created_purchase_line_id.state != 'draft' or self._context.get('include_draft_documents')):
-            return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
+        created_pl = self.created_purchase_line_ids.filtered(lambda cpl: cpl.state not in ('done', 'cancel') and (cpl.state != 'draft' or self._context.get('include_draft_documents')))
+        if created_pl:
+            return [(pl.order_id, pl.order_id.user_id, visited) for pl in created_pl]
         elif self.purchase_line_id and self.purchase_line_id.state not in ('done', 'cancel'):
             return[(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
         else:
@@ -187,3 +201,15 @@ class StockMove(models.Model):
             raise UserError(
                 _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % related_aml.product_id.display_name)
         return valuation_price_unit_total, valuation_total_qty
+
+    def _is_purchase_return(self):
+        self.ensure_one()
+        return self.location_dest_id.usage == "supplier" or (
+                self.location_dest_id.usage == "internal"
+                and self.location_id.usage != "supplier"
+                and self.warehouse_id
+                and self.location_dest_id not in self.env["stock.location"].search([("id", "child_of", self.warehouse_id.view_location_id.id)])
+        )
+
+    def _get_all_related_aml(self):
+        return super()._get_all_related_aml() | self.purchase_line_id.invoice_lines.move_id.line_ids

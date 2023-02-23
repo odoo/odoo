@@ -47,19 +47,20 @@
                                 <field name="include_archived" attrs="{'invisible': [('recycle_action', '!=', 'unlink')]}"/>
 
                                 <!-- Manual cleaning -->
-                                <field name="notify_user_ids" widget="many2many_tags" attrs="{'invisible': [('recycle_mode', '=', 'automatic')]}" options="{'no_create': True, 'no_edit': True}" domain="[('share', '=', False)]" />
-
-                                <label for="notify_frequency" invisible="1" />
-                                <div class="o_row" attrs="{'invisible': ['|', ('recycle_mode', '=', 'automatic'), ('notify_user_ids', '=', [])]}">
-                                    <span class="me-1">Every</span>
-                                    <field name="notify_frequency" attrs="{'required': [('notify_user_ids', '!=', [])]}" />
-                                    <field name="notify_frequency_period" attrs="{'required': [('notify_user_ids', '!=', [])]}" />
+                                <label for="notify_user_ids" attrs="{'invisible': [('recycle_mode', '=', 'automatic')]}" />
+                                <div attrs="{'invisible': [('recycle_mode', '=', 'automatic')]}">
+                                    <field name="notify_user_ids" widget="many2many_tags"  options="{'no_create': True, 'no_edit': True}" domain="[('share', '=', False)]" nolabel="1"/>
+                                    <div class="d-flex w-25" attrs="{'invisible': [('notify_user_ids', '=', [])]}">
+                                        <span class="me-1">Every</span>
+                                        <field name="notify_frequency" attrs="{'required': [('notify_user_ids', '!=', [])]}" />
+                                        <field name="notify_frequency_period" attrs="{'required': [('notify_user_ids', '!=', [])]}" />
+                                    </div>
                                 </div>
                             </group>
                         </group>
                         <group attrs="{'invisible': [('res_model_id', '!=', False)]}">
                             <group>
-                                <div class="alert alert-info" role="alert">
+                                <div class="alert alert-info" role="alert" colspan="2">
                                     Select a model to configure recycling actions
                                 </div>
                             </group>

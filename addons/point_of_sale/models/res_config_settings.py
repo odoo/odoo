@@ -24,6 +24,9 @@ class ResConfigSettings(models.TransientModel):
 
     def _default_pos_config(self):
         # Default to the last modified pos.config.
+        active_model = self.env.context.get('active_model', '')
+        if active_model == 'pos.config':
+            return self.env.context.get('active_id')
         return self.env['pos.config'].search([('company_id', '=', self.env.company.id)], order='write_date desc', limit=1)
 
     pos_config_id = fields.Many2one('pos.config', string="Point of Sale", default=lambda self: self._default_pos_config())
@@ -100,6 +103,7 @@ class ResConfigSettings(models.TransientModel):
     pos_use_pricelist = fields.Boolean(related='pos_config_id.use_pricelist', readonly=False)
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
+    pos_auto_validate_terminal_payment = fields.Boolean(related='pos_config_id.auto_validate_terminal_payment', readonly=False, string="Automatically validates orders paid with a payment terminal.")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -173,7 +177,7 @@ class ResConfigSettings(models.TransientModel):
 
     def pos_open_ui(self):
         if self._context.get('pos_config_id'):
-            pos_config_id = self._context['pos_config_id'][0]
+            pos_config_id = self._context['pos_config_id']
             pos_config = self.env['pos.config'].browse(pos_config_id)
             return pos_config.open_ui()
 

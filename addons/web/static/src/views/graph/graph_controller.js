@@ -9,7 +9,7 @@ import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
 
-const { Component, useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 export class GraphController extends Component {
     setup() {
@@ -31,11 +31,19 @@ export class GraphController extends Component {
     getContext() {
         // expand context object? change keys?
         const { measure, groupBy, mode } = this.model.metaData;
-        return {
+        const context = {
             graph_measure: measure,
             graph_mode: mode,
             graph_groupbys: groupBy.map((gb) => gb.spec),
         };
+        if (mode !== "pie") {
+            context.graph_order = this.model.metaData.order;
+            context.graph_stacked = this.model.metaData.stacked;
+            if (mode === "line") {
+                context.graph_cumulated = this.model.metaData.cumulated;
+            }
+        }
+        return context;
     }
 
     /**
@@ -122,17 +130,8 @@ export class GraphController extends Component {
 GraphController.template = "web.GraphView";
 GraphController.components = { Dropdown, DropdownItem, GroupByMenu, Layout };
 
-GraphController.defaultProps = {
-    additionalMeasures: [],
-    displayGroupByMenu: false,
-    displayScaleLabels: true,
-};
-
 GraphController.props = {
     ...standardViewProps,
-    additionalMeasures: { type: Array, elements: String, optional: true },
-    displayGroupByMenu: { type: Boolean, optional: true },
-    displayScaleLabels: { type: Boolean, optional: true },
     Model: Function,
     modelParams: Object,
     Renderer: Function,

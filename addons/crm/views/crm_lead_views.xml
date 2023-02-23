@@ -17,7 +17,7 @@
                             attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <button name="action_set_lost" string="Lost" type="object" data-hotkey="l" title="Mark as lost"
                             attrs="{'invisible': ['|', ('type', '=', 'opportunity'), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
-                        <field name="stage_id" widget="crm_statusbar" class="o_field_statusbar"
+                        <field name="stage_id" widget="statusbar" class="o_field_statusbar"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
@@ -50,42 +50,42 @@
                         <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
                             <h1><field class="text-break" name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <h2 class="o_row g-0 align-items-end">
-                                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
-                                    <label for="expected_revenue" class="oe_edit_only" />
-                                    <div class="o_row">
+                            <h2 class="d-flex gap-2 g-0 align-items-end pb-3">
+                                <div attrs="{'invisible': [('type', '=', 'lead')]}">
+                                    <label for="expected_revenue" class="oe_edit_only pb-1" />
+                                    <div class="d-flex align-items-end">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="expected_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <field name="expected_revenue" class="oe_inline o_input_8ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
                                         <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
                                     </div>
                                 </div>
-                                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
-                                    <div class="o_row">
-                                        <field name="recurring_revenue" class="pe-2 oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                    </div>
+                                <div attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
+                                    <field name="recurring_revenue" class="oe_inline o_input_10ch" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                 </div>
-                                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
-                                    <div class="o_row">
-                                        <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
+                                <div attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
+                                    <div class="d-flex align-items-end ps-2">
+                                        <field name="recurring_plan" class="oe_inline o_input_12ch" placeholder="E.g. Monthly"
                                                attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
                                         <span class="oe_grey p-2"> at </span>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="oe_edit_only d-flex align-items-center">
+                                <div>
+                                    <div class="oe_edit_only d-md-flex align-items-center">
                                         <label for="probability"/>
-                                        <button class="btn btn-link" name="action_set_automated_probability" type="object"
-                                                attrs="{'invisible': [('is_automated_probability', '=', True)]}">
-                                            <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
-                                        </button>
-                                        <small class="oe_grey h6 mb0" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
-                                            <field class="mb0" name="automated_probability" force_save="1"/> %
-                                        </small>
+                                        <div class="d-flex align-items-center">
+                                            <button class="ps-0 ps-md-2 btn btn-link" name="action_set_automated_probability" type="object"
+                                                    attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                                <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
+                                            </button>
+                                            <small class="oe_grey h6 mb0 d-flex" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                                <field class="mb0" name="automated_probability" force_save="1"/> %
+                                            </small>
+                                        </div>
                                     </div>
-                                    <div id="probability" class="o_row d-flex">
+                                    <div id="probability" class="d-inline-block">
                                         <field name="is_automated_probability" invisible="1"/>
-                                        <field name="probability" widget="float" class="oe_inline"/>
+                                        <field name="probability" widget="float" class="oe_inline o_input_6ch"/>
                                         <span class="oe_grey"> %</span>
                                     </div>
                                 </div>
@@ -258,7 +258,8 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
                         </group>
-
+                        <field attrs="{'invisible': [('team_id', '=', False)]}"
+                            name="lead_properties" nolabel="1" columns="2" hideKanbanOption="1"/>
                         <notebook>
                             <page string="Internal Notes" name="internal_notes">
                                 <field name="description" placeholder="Add a description..." options="{'collaborative': true}" />
@@ -272,7 +273,7 @@
                                         <field name="company_id"
                                             groups="base.group_multi_company"
                                             options="{'no_create': True}"/>
-                                        <field name="campaign_id" />
+                                        <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
                                         <field name="medium_id"/>
                                         <field name="source_id"/>
                                         <field name="referred"/>
@@ -318,7 +319,7 @@
                                         </div>
                                     </group>
                                     <group string="Marketing">
-                                        <field name="campaign_id" />
+                                        <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
                                         <field name="medium_id" />
                                         <field name="source_id" />
                                         <field name="referred"/>
@@ -361,14 +362,16 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Leads" sample="1" multi_edit="1">
+                    <field name="company_id" invisible="1"/>
+                    <field name="user_company_ids" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead" readonly="1"/>
                     <field name="contact_name" optional="hide"/>
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
-                    <field name="phone" optional="show" class="o_force_ltr"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="phone" optional="hide" class="o_force_ltr"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show" options="{'no_open': True, 'no_create': True}"/>
@@ -470,14 +473,16 @@
                         <field name="email_from" string="Email" />
                         <field name="phone" string="Phone" />
                         <label for="expected_revenue"/>
-                        <div class="o_row">
-                            <field name="expected_revenue" class="oe_inline me-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                            <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
-                        </div>
-                        <div class="o_row" groups="crm.group_use_recurring_revenues">
-                            <field name="recurring_revenue" class="oe_inline pe-4" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                            <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
-                                   attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
+                        <div>
+                            <div class="o_row">
+                                <field name="expected_revenue" class="oe_inline me-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
+                            </div>
+                            <div class="o_row" groups="crm.group_use_recurring_revenues">
+                                <field name="recurring_revenue" class="oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
+                                    attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
                         </div>
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
@@ -549,6 +554,11 @@
                         sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"
                         help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
+                        <t t-name="kanban-menu">
+                            <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                            <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                        </t>
                         <t t-name="kanban-box">
                             <t t-set="lost_ribbon" t-value="!record.active.raw_value and record.probability and record.probability.raw_value == 0"/>
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} #{lost_ribbon ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click oe_kanban_card d-flex flex-column">
@@ -557,16 +567,6 @@
                                     <span class="bg-danger">Lost</span>
                                 </div>
 
-                                <div class="o_dropdown_kanban dropdown">
-                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                        <span class="fa fa-ellipsis-v"/>
-                                    </a>
-                                    <div class="dropdown-menu" role="menu">
-                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
-                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                    </div>
-                                </div>
                                 <div class="oe_kanban_content flex-grow-1">
                                     <div class="o_kanban_record_title oe_kanban_details">
                                         <strong><field name="name"/></strong>
@@ -577,7 +577,7 @@
                                             <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
                                         </t>
                                         <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
-                                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                                            <field class="me-1" name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
                                             <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                                         </t>
                                     </div>
@@ -623,9 +623,14 @@
                 </xpath>
                 <xpath expr="//field[@name='expected_revenue']" position="replace">
                     <field name="prorated_revenue"/>
+                    <field name="recurring_revenue"/>
+                </xpath>
+                <xpath expr="//field[@name='recurring_revenue_monthly']" position="replace">
+                    <field name="recurring_revenue_monthly_prorated"/>
                 </xpath>
                 <xpath expr="//progressbar" position="attributes">
                     <attribute name="sum_field">prorated_revenue</attribute>
+                    <attribute name="recurring_revenue_sum_field">recurring_revenue_monthly_prorated</attribute>
                 </xpath>
                 <xpath expr="//t[@t-set='lost_ribbon']" position="after">
                     <t t-set="won_ribbon" t-value="record.active.raw_value and record.probability and record.probability.raw_value == 100"/>
@@ -652,7 +657,7 @@
                             <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value" groups="crm.group_use_recurring_revenues"> + </span>
                         </t>
                         <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
-                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                            <field class="me-1" name="recurring_revenue_prorated" widget="monetary" options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
                             <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                         </t>
                     </div>
@@ -730,7 +735,6 @@
             <field name="target">new</field>
             <field name="context" eval="{
     'default_composition_mode': 'comment',
-    'default_use_template': False,
                 }"/>
             <field name="binding_model_id" ref="model_crm_lead"/>
             <field name="binding_view_types">form</field>
@@ -743,7 +747,6 @@
             <field name="target">new</field>
             <field name="context" eval="{
     'default_composition_mode': 'mass_mail',
-    'default_use_template': False,
                 }"/>
             <field name="binding_model_id" ref="model_crm_lead"/>
             <field name="binding_view_types">list</field>
@@ -762,14 +765,16 @@
                     <header>
                         <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
                     </header>
+                    <field name="company_id" invisible="1"/>
+                    <field name="user_company_ids" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="contact_name" optional="show"/>
                     <field name="email_from"/>
-                    <field name="phone" class="o_force_ltr"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                    <field name="phone" optional="hide" class="o_force_ltr"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="hide" options="{'no_open': True, 'no_create': True}"/>
@@ -987,7 +992,7 @@
                         domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
                         help="Open Opportunities"/>
                     <separator/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
                     <filter string="Creation Date" name="creation_date" date="create_date"/>
                     <filter string="Closed Date" name="close_date" date="date_closed"/>

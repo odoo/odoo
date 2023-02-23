@@ -315,6 +315,17 @@ describe('List', () => {
                                     </li>
                                 </ul>`),
                             stepFunction: toggleCheckList,
+                            contentAfterEdit: unformat(`
+                                <ul class="o_checklist">
+                                    <li class="o_checked" id="checkId-1">abc</li>
+                                    <li class="oe-nested">
+                                        <ul class="o_checklist">
+                                            <li class="o_checked" id="checkId-2">def</li>
+                                            <li id="checkId-4">g[]hi</li>
+                                            <li class="o_checked" id="checkId-3">jkl</li>
+                                        </ul>
+                                    </li>
+                                </ul>`),
                             contentAfter: unformat(`
                                 <ul class="o_checklist">
                                     <li class="o_checked">abc</li>

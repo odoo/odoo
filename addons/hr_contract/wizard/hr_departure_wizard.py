@@ -20,6 +20,6 @@ class HrDepartureWizard(models.TransientModel):
 
         super(HrDepartureWizard, self).action_register_departure()
         if self.set_date_end:
-            self.employee_id.contract_ids.filtered(lambda c: c.state == 'draft').write({'state': 'cancel'})
+            self.sudo().employee_id.contract_ids.filtered(lambda c: c.state == 'draft').write({'state': 'cancel'})
             if current_contract:
                 self.sudo().employee_id.contract_id.write({'date_end': self.departure_date})

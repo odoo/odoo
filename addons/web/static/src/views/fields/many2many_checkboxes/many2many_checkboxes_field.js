@@ -5,9 +5,15 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class Many2ManyCheckboxesField extends Component {
+    static template = "web.Many2ManyCheckboxesField";
+    static components = { CheckBox };
+    static props = {
+        ...standardFieldProps,
+    };
+
     get items() {
         return this.props.record.preloadedData[this.props.name];
     }
@@ -30,18 +36,15 @@ export class Many2ManyCheckboxesField extends Component {
     }
 }
 
-Many2ManyCheckboxesField.template = "web.Many2ManyCheckboxesField";
-Many2ManyCheckboxesField.components = { CheckBox };
-Many2ManyCheckboxesField.props = {
-    ...standardFieldProps,
+export const many2ManyCheckboxesField = {
+    component: Many2ManyCheckboxesField,
+    displayName: _lt("Checkboxes"),
+    supportedTypes: ["many2many"],
+    isEmpty: () => false,
+    legacySpecialData: "_fetchSpecialRelation",
 };
 
-Many2ManyCheckboxesField.displayName = _lt("Checkboxes");
-Many2ManyCheckboxesField.supportedTypes = ["many2many"];
-
-Many2ManyCheckboxesField.isEmpty = () => false;
-
-registry.category("fields").add("many2many_checkboxes", Many2ManyCheckboxesField);
+registry.category("fields").add("many2many_checkboxes", many2ManyCheckboxesField);
 
 export function preloadMany2ManyCheckboxes(orm, record, fieldName) {
     const field = record.fields[fieldName];

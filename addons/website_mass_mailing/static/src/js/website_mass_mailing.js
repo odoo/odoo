@@ -40,7 +40,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             return def;
         }
         const always = this._updateView.bind(this);
-        const inputName = this.$target[0].querySelector('input').name;
+        const inputName = this.el.querySelector('input').name;
         return Promise.all([def, this._rpc({
             route: '/website_mass_mailing/is_subscriber',
             params: {
@@ -68,22 +68,22 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      */
     _updateView(data) {
         const isSubscriber = data.is_subscriber;
-        const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
-        const thanksBtnEl = this.$target[0].querySelector('.js_subscribed_btn');
-        const valueInputEl = this.$target[0].querySelector('input.js_subscribe_value');
+        const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
+        const thanksBtnEl = this.el.querySelector('.js_subscribed_btn');
+        const valueInputEl = this.el.querySelector('input.js_subscribe_value');
 
         subscribeBtnEl.disabled = isSubscriber;
         valueInputEl.value = data.value || '';
         valueInputEl.disabled = isSubscriber;
         // Compat: remove d-none for DBs that have the button saved with it.
-        this.$target[0].classList.remove('d-none');
+        this.el.classList.remove('d-none');
 
         subscribeBtnEl.classList.toggle('d-none', !!isSubscriber);
         thanksBtnEl.classList.toggle('d-none', !isSubscriber);
     },
 
     _getListId: function () {
-        return this.$target.closest('[data-snippet=s_newsletter_block').data('list-id') || this.$target.data('list-id');
+        return this.$el.closest('[data-snippet=s_newsletter_block').data('list-id') || this.$el.data('list-id');
     },
 
     //--------------------------------------------------------------------------
@@ -98,10 +98,10 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         const inputName = this.$('input').attr('name');
         const $input = this.$(".js_subscribe_value:visible");
         if (inputName === 'email' && $input.length && !$input.val().match(/.+@.+/)) {
-            this.$target.addClass('o_has_error').find('.form-control').addClass('is-invalid');
+            this.$el.addClass('o_has_error').find('.form-control').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
+        this.$el.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
         const tokenObj = await this._recaptcha.getToken('website_mass_mailing_subscribe');
         if (tokenObj.error) {
             self.displayNotification({
@@ -126,7 +126,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
                 self.$(".js_subscribe_btn").addClass('d-none');
                 self.$(".js_subscribed_btn").removeClass('d-none');
                 self.$('input.js_subscribe_value').prop('disabled', !!result);
-                const $popup = self.$target.closest('.o_newsletter_modal');
+                const $popup = self.$el.closest('.o_newsletter_modal');
                 if ($popup.length) {
                     $popup.modal('hide');
                 }

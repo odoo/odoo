@@ -5,6 +5,7 @@ import json
 from odoo import models, fields, api, _, Command
 from odoo.tools import format_date
 from odoo.exceptions import UserError
+from odoo.tools import date_utils
 from odoo.tools.misc import formatLang
 
 class AccruedExpenseRevenue(models.TransientModel):
@@ -23,17 +24,19 @@ class AccruedExpenseRevenue(models.TransientModel):
         orders = self.env[self._context['active_model']].browse(self._context['active_ids'])
         return orders and orders[0].company_id.id
 
+    def _get_default_date(self):
+        return date_utils.get_month(fields.Date.context_today(self))[0] - relativedelta(days=1)
+
     company_id = fields.Many2one('res.company', default=_get_default_company)
     journal_id = fields.Many2one(
         comodel_name='account.journal',
-        compute='_compute_journal_id',
+        compute='_compute_journal_id', store=True, readonly=False, precompute=True,
         domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
-        readonly=False,
         required=True,
         check_company=True,
         string='Journal',
     )
-    date = fields.Date(default=fields.Date.today, required=True)
+    date = fields.Date(default=_get_default_date, required=True)
     reversal_date = fields.Date(
         compute="_compute_reversal_date",
         required=True,
@@ -90,8 +93,8 @@ class AccruedExpenseRevenue(models.TransientModel):
             preview_columns = [
                 {'field': 'account_id', 'label': _('Account')},
                 {'field': 'name', 'label': _('Label')},
-                {'field': 'debit', 'label': _('Debit'), 'class': 'text-right text-nowrap'},
-                {'field': 'credit', 'label': _('Credit'), 'class': 'text-right text-nowrap'},
+                {'field': 'debit', 'label': _('Debit'), 'class': 'text-end text-nowrap'},
+                {'field': 'credit', 'label': _('Credit'), 'class': 'text-end text-nowrap'},
             ]
             record.preview_data = json.dumps({
                 'groups_vals': preview_vals,
@@ -135,7 +138,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         fnames = []
         total_balance = 0.0
         for order in orders:
-            if len(orders) == 1 and self.amount:
+            if len(orders) == 1 and self.amount and order.order_line:
                 total_balance = self.amount
                 order_line = order.order_line[0]
                 if is_purchase:

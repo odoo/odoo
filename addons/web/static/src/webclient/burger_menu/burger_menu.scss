@@ -14,13 +14,11 @@
         transform: translateX(0);
     }
 
-    // Scoped variables
-    $-base-bg: $o-brand-odoo; // change to get variations on the fly (eg. 'dark mode')
-    $-base-color: color-contrast($-base-bg);
-
     // ====== Top-Bar
     .o_burger_menu_topbar {
         min-height: $o-navbar-height-xs;
+        background-color: $o-burger-topbar-bg;
+        color: $o-burger-topbar-color;
         line-height: $o-navbar-height-xs;
 
         .dropdown-toggle, .o_burger_menu_close {
@@ -31,13 +29,13 @@
     // ====== Menu content container (both App's and User's entries)
     .o_burger_menu_content {
         &.o_burger_menu_dark {
-            background-color: darken($-base-bg, 5%);
+            background-color: darken($o-burger-base-bg, 5%);
         }
 
         // Menu entries size and layout
         ul {
-            background-color: rgba(invert($-base-color), .1);
-            box-shadow: inset 0 -1px 0 rgba($-base-color, .1);
+            background-color: rgba(invert($o-burger-base-color), .1);
+            box-shadow: inset 0 -1px 0 rgba($o-burger-base-color, .1);
 
             li > div, li {
                 padding-left: $o-horizontal-padding;
@@ -59,7 +57,7 @@
         }
 
         li, button {
-            @include o-hover-text-color(rgba($-base-color, .8), $-base-color);
+            @include o-hover-text-color(rgba($o-burger-base-color, .8), $o-burger-base-color);
         }
 
         // ====== 'User Menu' spefic design rules

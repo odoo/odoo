@@ -2,11 +2,12 @@
 <odoo>
     <data noupdate="1">
         <record id="email_template_edi_sale" model="mail.template">
-            <field name="name">Sales Order: Send by email</field>
+            <field name="name">Sales: Send Quotation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Used by salespeople when they send quotations or proforma to prospects</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -19,14 +20,14 @@
             <t t-if="object.origin">
                 (with reference: <t t-out="object.origin or ''"></t> )
             </t>
-            amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''">$ 10.00</span> is available.
+            amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
         </t>
         <t t-else="">
             <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''"></span>
             <t t-if="object.origin">
                 (with reference: <t t-out="object.origin or ''">S00052</t> )
             </t>
-            amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''">$ 10.00</span> is ready for review.
+            amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
         </t>
         <br/><br/>
         Do not hesitate to contact us if you have any questions.
@@ -38,18 +39,18 @@
     </p>
 </div>
             </field>
-            <field name="report_template" ref="action_report_saleorder"/>
-            <field name="report_name">{{ (object.name or '').replace('/','_') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
         <record id="mail_template_sale_confirmation" model="mail.template">
-            <field name="name">Sales Order: Confirmation Email</field>
+            <field name="name">Sales: Order Confirmation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent to customers on order confirmation</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 12px;">
@@ -232,18 +233,18 @@
     </div>
 </t>
 </div></field>
-            <field name="report_template" ref="action_report_saleorder"/>
-            <field name="report_name">{{ (object.name or '').replace('/','_') }}</field>
+            <field name="report_template_ids" eval="[(4, ref('sale.action_report_saleorder'))]"/>
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
         <record id="sale.mail_template_sale_cancellation" model="mail.template">
-            <field name="name">Sales Order: Cancellation email</field>
+            <field name="name">Sales: Order Cancellation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ object.name or 'n/a' }})</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent automatically to customers when you cancel an order</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">

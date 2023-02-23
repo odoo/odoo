@@ -3,11 +3,11 @@
 
 import json
 import lxml.html
-import odoo
+from urllib.parse import urlparse
+
 from odoo.addons.http_routing.models.ir_http import url_lang
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import HttpCase, tagged
-from odoo.tests.common import HOST
 
 
 @tagged('-at_install', 'post_install')
@@ -119,14 +119,15 @@ class TestControllerRedirect(TestLangUrl):
         """
 
         def assertUrlRedirect(url, expected_url, msg="", code=301):
-            if expected_url.startswith('/'):
-                expected_url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], expected_url)
             if not msg:
                 msg = 'Url <%s> differ from <%s>.' % (url, expected_url)
 
             r = self.url_open(url, head=True)
             self.assertEqual(r.status_code, code)
-            self.assertEqual(r.headers.get('Location'), expected_url, msg)
+            parsed_location = urlparse(r.headers.get('Location', ''))
+            parsed_expected_url = urlparse(expected_url)
+            self.assertEqual(parsed_location.path, parsed_expected_url.path, msg)
+            self.assertEqual(parsed_location.query, parsed_expected_url.query, msg)
 
         self.authenticate('admin', 'admin')
 

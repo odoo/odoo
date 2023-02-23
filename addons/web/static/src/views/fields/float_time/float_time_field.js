@@ -8,9 +8,15 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class FloatTimeField extends Component {
+    static template = "web.FloatTimeField";
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    };
+
     setup() {
         useInputField({
             getValue: () => this.formattedValue,
@@ -25,20 +31,14 @@ export class FloatTimeField extends Component {
     }
 }
 
-FloatTimeField.template = "web.FloatTimeField";
-FloatTimeField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-
-FloatTimeField.displayName = _lt("Time");
-FloatTimeField.supportedTypes = ["float"];
-
-FloatTimeField.isEmpty = () => false;
-FloatTimeField.extractProps = ({ attrs }) => {
-    return {
+export const floatTimeField = {
+    component: FloatTimeField,
+    displayName: _lt("Time"),
+    supportedTypes: ["float"],
+    isEmpty: () => false,
+    extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-registry.category("fields").add("float_time", FloatTimeField);
+registry.category("fields").add("float_time", floatTimeField);

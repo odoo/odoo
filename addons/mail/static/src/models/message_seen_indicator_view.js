@@ -1,22 +1,26 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'MessageSeenIndicatorView',
+Model({
+    name: "MessageSeenIndicatorView",
+    template: "mail.MessageSeenIndicatorView",
     fields: {
-        messageViewOwner: one('MessageView', {
+        messageViewOwner: one("MessageView", {
             identifying: true,
-            inverse: 'messageSeenIndicatorView',
+            inverse: "messageSeenIndicatorView",
         }),
-        messageSeenIndicator: one('MessageSeenIndicator', {
+        messageSeenIndicator: one("MessageSeenIndicator", {
             compute() {
-                if (this.messageViewOwner.messageListViewItemOwner && this.messageViewOwner.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread) {
+                if (
+                    this.messageViewOwner.messageListViewItemOwner &&
+                    this.messageViewOwner.messageListViewItemOwner.messageListViewOwner
+                        .threadViewOwner.thread
+                ) {
                     return {
                         message: this.messageViewOwner.message,
-                        thread: this.messageViewOwner.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread,
+                        thread: this.messageViewOwner.messageListViewItemOwner.messageListViewOwner
+                            .threadViewOwner.thread,
                     };
                 }
                 return clear();

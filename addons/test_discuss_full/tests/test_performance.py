@@ -998,4 +998,4 @@ class TestDiscussFullPerformance(TransactionCase):
             Returns the expected query count.
             The point of having a separate getter is to allow it to be overriden.
         """
-        return 81
+        return 75

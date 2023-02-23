@@ -24,7 +24,7 @@
             <field name="model">change.password.wizard</field>
             <field name="arch" type="xml">
                 <form string="Change Password">
-                    <field name="user_ids"/>
+                    <field mode="tree" name="user_ids"/>
                     <footer>
                         <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
@@ -39,28 +39,57 @@
                 <!-- the user list is editable, but one cannot add or delete rows -->
                 <tree string="Users" editable="bottom" create="false" delete="false">
                     <field name="user_id" invisible="1"/>
-                    <field name="user_login"/>
+                    <field name="user_login" force_save="1"/>
                     <field name="new_passwd" required="True" password="True"/>
                 </tree>
             </field>
         </record>
-        <record id="change_password_wizard_action" model="ir.actions.act_window">
+
+        <record id="change_password_user_form_view" model="ir.ui.view">
+            <field name="name">Change Password User</field>
+            <field name="model">change.password.user</field>
+            <field name="arch" type="xml">
+                <form string="Change Password">
+                    <field name="user_id" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="user_login"/>
+                        </group>
+                        <group>
+                            <field name="new_passwd" required="True" password="True" force_save="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="change_password_action_server" model="ir.actions.server">
             <field name="name">Change Password</field>
-            <field name="res_model">change.password.wizard</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="base.model_res_users"/>
             <field name="binding_model_id" ref="base.model_res_users"/>
+            <field name="groups_id" eval="[(4,ref('base.group_erp_manager'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    action = records.action_change_password()
+            </field>
         </record>
 
         <record id="identity_check_wizard" model="ir.ui.view">
             <field name="model">res.users.identitycheck</field>
             <field name="arch" type="xml">
                 <form string="Password Confirmation">
-                    <sheet clas="bg-primary">
+                    <sheet class="bg-primary">
                         <h3><strong>Please enter your password to confirm you own this account</strong></h3>
                         <br/>
                         <div>
-                            <field class="col-10 col-md-6 px-0" name="password" autocomplete="current-password" required="True" password="True"/>
+                            <field class="o_field_highlight col-10 col-md-6 px-0" name="password" autocomplete="current-password"
+                                required="True" password="True" placeholder="************"/>
                         </div>
                         <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
                     </sheet>
@@ -320,8 +349,13 @@
                                         <li class="mb4">
                                             <strong><field name="name"/></strong>
                                         </li>
-                                        <li class="badge rounded-pill float-end mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
-                                        <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="fa fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
+                                        <li class="d-flex flex-wrap">
+                                            <span class="mb4 text-truncate" title="Login">
+                                                <i class="fa fa-envelope me-1" role="img" aria-label="Login"/>
+                                                <field name="login"/>
+                                            </span>
+                                            <field class="badge rounded-pill mb4 ms-auto" name="lang"/>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -444,7 +478,8 @@
             <field name="model">res.users</field>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Users">
+                <form string="Users" edit="1">
+                    <widget name="notification_alert"/>
                     <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" readonly="0" widget='image' class="oe_right oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <h1>
@@ -485,14 +520,16 @@
                         </page>
                         <page string="Account Security">
                             <group name="auth" string="Password Management">
-                                <div>
+                                <div colspan="2">
                                     <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
                                 </div>
                             </group>
-                            <group groups="base.group_no_one">
-                                <div class="o_horizontal_separator">Developer API Keys
+                            <group string="API Keys">
+                                <div class="text-muted" colspan="2">
+                                    API Keys are used to connect to Odoo from external tools without the need for a password or Two-factor Authentication.
                                     <a href="https://www.odoo.com/documentation/master/developer/misc/api/external_api.html#api-keys" target="_blank">
                                         <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                                        Learn more
                                     </a>
                                 </div>
                                 <div colspan="2" attrs="{'invisible': [('api_key_ids', '=', [])]}">

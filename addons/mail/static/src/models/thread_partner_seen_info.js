@@ -1,25 +1,19 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ThreadPartnerSeenInfo',
+Model({
+    name: "ThreadPartnerSeenInfo",
     fields: {
-        lastFetchedMessage: one('Message'),
-        lastSeenMessage: one('Message'),
+        lastFetchedMessage: one("Message"),
+        lastSeenMessage: one("Message"),
         /**
          * Partner that this seen info is related to.
          */
-        partner: one('Partner', {
-            identifying: true,
-        }),
+        partner: one("Partner", { identifying: true }),
         /**
          * Thread (channel) that this seen info is related to.
          */
-        thread: one('Thread', {
-            inverse: 'partnerSeenInfos',
-            identifying: true,
-        }),
+        thread: one("Thread", { inverse: "partnerSeenInfos", identifying: true }),
     },
 });

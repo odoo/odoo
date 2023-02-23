@@ -11,7 +11,6 @@
     'data': [
         'views/res_config_settings_views.xml'
     ],
-    'application': True,
     'auto_install': True,
     'license': 'LGPL-3',
 }

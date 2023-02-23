@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import * as mailUtils from '@mail/js/utils';
+import * as mailUtils from "@mail/js/utils";
 
-import core from 'web.core';
-import time from 'web.time';
-import Widget from 'web.Widget';
+import core from "web.core";
+import time from "web.time";
+import Widget from "web.Widget";
 
 const QWeb = core.qweb;
 const _lt = core._lt;
@@ -23,20 +23,20 @@ const READ_LESS = _lt("read less");
  * widget.
  */
 const PublicLivechatView = Widget.extend({
-    className: 'o_mail_thread',
+    className: "o_mail_thread",
 
     events: {
-        'click a': '_onClickRedirect',
-        'click img': '_onClickRedirect',
-        'click strong': '_onClickRedirect',
-        'click .o_thread_show_more': '_onClickShowMore',
-        'click .o_thread_message_needaction': '_onClickMessageNeedaction',
-        'click .o_thread_message_star': '_onClickMessageStar',
-        'click .o_thread_message_reply': '_onClickMessageReply',
-        'click .oe_mail_expand': '_onClickMailExpand',
-        'click .o_thread_message': '_onClickMessage',
-        'click': '_onClick',
-        'click .o_thread_message_notification_error': '_onClickMessageNotificationError',
+        "click a": "_onClickRedirect",
+        "click img": "_onClickRedirect",
+        "click strong": "_onClickRedirect",
+        "click .o_thread_show_more": "_onClickShowMore",
+        "click .o_thread_message_needaction": "_onClickMessageNeedaction",
+        "click .o_thread_message_star": "_onClickMessageStar",
+        "click .o_thread_message_reply": "_onClickMessageReply",
+        "click .oe_mail_expand": "_onClickMailExpand",
+        "click .o_thread_message": "_onClickMessage",
+        click: "_onClick",
+        "click .o_thread_message_notification_error": "_onClickMessageNotificationError",
     },
 
     /**
@@ -85,13 +85,18 @@ const PublicLivechatView = Widget.extend({
      */
     render(options) {
         let shouldScrollToBottomAfterRendering = false;
-        if (this._currentThreadID === this.messaging.publicLivechatGlobal.publicLivechat.id && this.isAtBottom()) {
+        if (
+            this._currentThreadID === this.messaging.publicLivechatGlobal.publicLivechat.id &&
+            this.isAtBottom()
+        ) {
             shouldScrollToBottomAfterRendering = true;
         }
         this._currentThreadID = this.messaging.publicLivechatGlobal.publicLivechat.id;
 
         // copy so that reverse do not alter order in the thread object
-        const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages());
+        const messages = _.clone(
+            this.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages()
+        );
 
         const modeOptions = this._enabledOptions;
 
@@ -108,14 +113,14 @@ const PublicLivechatView = Widget.extend({
         // and in the same document (users can now post message in documents
         // directly from a channel that follows it)
         let prevMessage;
-        for (let message of messages) {
+        for (const message of messages) {
             if (
                 // is first message of thread
                 !prevMessage ||
                 // more than 1 min. elasped
-                (Math.abs(message.getDate().diff(prevMessage.getDate())) > 60000) ||
-                prevMessage.getType() !== 'comment' ||
-                message.getType() !== 'comment' ||
+                Math.abs(message.getDate().diff(prevMessage.getDate())) > 60000 ||
+                prevMessage.getType() !== "comment" ||
+                message.getType() !== "comment" ||
                 // from a different author
                 prevMessage.getAuthorID() !== message.getAuthorID()
             ) {
@@ -130,17 +135,19 @@ const PublicLivechatView = Widget.extend({
             messages.reverse();
         }
 
-        this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.Thread', {
-            displayAuthorMessages,
-            options,
-            ORDER,
-            dateFormat: time.getLangDatetimeFormat(),
-            widget: this,
-        }));
+        this.$el.html(
+            QWeb.render("im_livechat.legacy.mail.widget.Thread", {
+                displayAuthorMessages,
+                options,
+                ORDER,
+                dateFormat: time.getLangDatetimeFormat(),
+                widget: this,
+            })
+        );
 
-        for (let message of messages) {
+        for (const message of messages) {
             const $message = this.$('.o_thread_message[data-message-id="' + message.getID() + '"]');
-            $message.find('.o_mail_timestamp').data('date', message.getDate());
+            $message.find(".o_mail_timestamp").data("date", message.getDate());
 
             this._insertReadMore($message);
         }
@@ -161,7 +168,7 @@ const PublicLivechatView = Widget.extend({
      * @see /mail/init_messaging
      */
     renderLoading() {
-        this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.ThreadLoading'));
+        this.$el.html(QWeb.render("im_livechat.legacy.mail.widget.ThreadLoading"));
     },
 
     //--------------------------------------------------------------------------
@@ -177,7 +184,7 @@ const PublicLivechatView = Widget.extend({
      *
      * @return {boolean}
      */
-     isAtBottom() {
+    isAtBottom() {
         const fullHeight = this.el.scrollHeight;
         const topHiddenHeight = this.$el.scrollTop();
         const visibleHeight = this.$el.outerHeight();
@@ -197,14 +204,15 @@ const PublicLivechatView = Widget.extend({
      * @param {integer} [options.duration]
      * @param {boolean} [options.onlyIfNecessary]
      */
-     scrollToMessage(options) {
+    scrollToMessage(options) {
         const $target = this.$('.o_thread_message[data-message-id="' + options.messageID + '"]');
         if (options.onlyIfNecessary) {
             const delta = $target.parent().height() - $target.height();
-            let offset = delta < 0 ?
-                            0 :
-                            delta - ($target.offset().top - $target.offsetParent().offset().top);
-            offset = - Math.min(offset, 0);
+            let offset =
+                delta < 0
+                    ? 0
+                    : delta - ($target.offset().top - $target.offsetParent().offset().top);
+            offset = -Math.min(offset, 0);
             this.$el.scrollTo("+=" + offset + "px", options.duration);
         } else if ($target.length) {
             this.$el.scrollTo($target);
@@ -229,7 +237,7 @@ const PublicLivechatView = Widget.extend({
      * Unselect the selected message
      */
     unselectMessage() {
-        this.$('.o_thread_message').removeClass('o_thread_selected_message');
+        this.$(".o_thread_message").removeClass("o_thread_selected_message");
         this._selectedMessageID = null;
     },
 
@@ -247,43 +255,34 @@ const PublicLivechatView = Widget.extend({
      * @private
      * @param {jQuery} $element
      */
-     _insertReadMore($element) {
-
+    _insertReadMore($element) {
         const groups = [];
         let readMoreNodes;
 
         // nodeType 1: element_node
         // nodeType 3: text_node
-        const $children = $element.contents()
-            .filter(function () {
-                return this.nodeType === 1 ||
-                        this.nodeType === 3 &&
-                        this.nodeValue.trim();
-            });
+        const $children = $element.contents().filter(function () {
+            return this.nodeType === 1 || (this.nodeType === 3 && this.nodeValue.trim());
+        });
 
-            for (let child of $children) {
+        for (const child of $children) {
             let $child = $(child);
 
             // Hide Text nodes if "stopSpelling"
-            if (
-                child.nodeType === 3 &&
-                $child.prevAll('[id*="stopSpelling"]').length > 0
-            ) {
+            if (child.nodeType === 3 && $child.prevAll('[id*="stopSpelling"]').length > 0) {
                 // Convert Text nodes to Element nodes
-                $child = $('<span>', {
+                $child = $("<span>", {
                     text: child.textContent,
-                    'data-o-mail-quote': '1',
+                    "data-o-mail-quote": "1",
                 });
                 child.parentNode.replaceChild($child[0], child);
             }
 
             // Create array for each 'read more' with nodes to toggle
             if (
-                $child.attr('data-o-mail-quote') ||
-                (
-                    $child.get(0).nodeName === 'BR' &&
-                    $child.prev('[data-o-mail-quote="1"]').length > 0
-                )
+                $child.attr("data-o-mail-quote") ||
+                ($child.get(0).nodeName === "BR" &&
+                    $child.prev('[data-o-mail-quote="1"]').length > 0)
             ) {
                 if (!readMoreNodes) {
                     readMoreNodes = [];
@@ -297,11 +296,11 @@ const PublicLivechatView = Widget.extend({
             }
         }
 
-        for (let group of groups) {
+        for (const group of groups) {
             // Insert link just before the first node
-            const $readMore = $('<a>', {
-                class: 'o_mail_read_more',
-                href: '#',
+            const $readMore = $("<a>", {
+                class: "o_mail_read_more",
+                href: "#",
                 text: READ_MORE,
             }).insertBefore(group[0]);
 
@@ -310,7 +309,7 @@ const PublicLivechatView = Widget.extend({
             $readMore.click(function (e) {
                 e.preventDefault();
                 isReadMore = !isReadMore;
-                for (let $child of group) {
+                for (const $child of group) {
                     $child.hide();
                     $child.toggle(!isReadMore);
                 }
@@ -325,20 +324,24 @@ const PublicLivechatView = Widget.extend({
      * @param {string} options.model
      * @param {integer} options.id
      */
-    _redirect: _.debounce(function (options) {
-        if ('channelID' in options) {
-            this.trigger('redirect_to_channel', options.channelID);
-        } else {
-            this.trigger('redirect', options.model, options.id);
-        }
-    }, 500, true),
+    _redirect: _.debounce(
+        function (options) {
+            if ("channelID" in options) {
+                this.trigger("redirect_to_channel", options.channelID);
+            } else {
+                this.trigger("redirect", options.model, options.id);
+            }
+        },
+        500,
+        true
+    ),
     /**
      * @private
      */
-     _updateTimestamps() {
+    _updateTimestamps() {
         const isAtBottom = this.isAtBottom();
-        this.$('.o_mail_timestamp').each(function () {
-            const date = $(this).data('date');
+        this.$(".o_mail_timestamp").each(function () {
+            const date = $(this).data("date");
             $(this).text(mailUtils.timeFromNow(date));
         });
         if (isAtBottom && !this.isAtBottom()) {
@@ -356,7 +359,7 @@ const PublicLivechatView = Widget.extend({
     _onClick() {
         if (this._selectedMessageID) {
             this.unselectMessage();
-            this.trigger('unselect_message');
+            this.trigger("unselect_message");
         }
     },
     /**
@@ -371,26 +374,26 @@ const PublicLivechatView = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onClickMessage(ev) {
-        $(ev.currentTarget).toggleClass('o_thread_selected_message');
+        $(ev.currentTarget).toggleClass("o_thread_selected_message");
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
-     _onClickMessageNeedaction(ev) {
-        const messageID = $(ev.currentTarget).data('message-id');
-        this.trigger('mark_as_read', messageID);
+    _onClickMessageNeedaction(ev) {
+        const messageID = $(ev.currentTarget).data("message-id");
+        this.trigger("mark_as_read", messageID);
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
     _onClickMessageNotificationError(ev) {
-        const messageID = $(ev.currentTarget).data('message-id');
-        this.do_action('mail.mail_resend_message_action', {
+        const messageID = $(ev.currentTarget).data("message-id");
+        this.do_action("mail.mail_resend_message_action", {
             additional_context: {
                 mail_message_to_resend: messageID,
-            }
+            },
         });
     },
     /**
@@ -398,20 +401,21 @@ const PublicLivechatView = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onClickMessageReply(ev) {
-        this._selectedMessageID = $(ev.currentTarget).data('message-id');
-        this.$('.o_thread_message').removeClass('o_thread_selected_message');
-        this.$('.o_thread_message[data-message-id="' + this._selectedMessageID + '"]')
-            .addClass('o_thread_selected_message');
-        this.trigger('select_message', this._selectedMessageID);
+        this._selectedMessageID = $(ev.currentTarget).data("message-id");
+        this.$(".o_thread_message").removeClass("o_thread_selected_message");
+        this.$('.o_thread_message[data-message-id="' + this._selectedMessageID + '"]').addClass(
+            "o_thread_selected_message"
+        );
+        this.trigger("select_message", this._selectedMessageID);
         ev.stopPropagation();
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
-     _onClickMessageStar(ev) {
-        const messageID = $(ev.currentTarget).data('message-id');
-        this.trigger('toggle_star_status', messageID);
+    _onClickMessageStar(ev) {
+        const messageID = $(ev.currentTarget).data("message-id");
+        this.trigger("toggle_star_status", messageID);
     },
     /**
      * @private
@@ -419,18 +423,18 @@ const PublicLivechatView = Widget.extend({
      */
     _onClickRedirect(ev) {
         // ignore inherited branding
-        if ($(ev.target).data('oe-field') !== undefined) {
+        if ($(ev.target).data("oe-field") !== undefined) {
             return;
         }
-        const id = $(ev.target).data('oe-id');
+        const id = $(ev.target).data("oe-id");
         if (id) {
             ev.preventDefault();
-            const model = $(ev.target).data('oe-model');
+            const model = $(ev.target).data("oe-model");
             let options;
-            if (model && (model !== 'mail.channel')) {
+            if (model && model !== "mail.channel") {
                 options = {
                     model,
-                    id
+                    id,
                 };
             } else {
                 options = { channelID: id };
@@ -442,7 +446,7 @@ const PublicLivechatView = Widget.extend({
      * @private
      */
     _onClickShowMore() {
-        this.trigger('load_more_messages');
+        this.trigger("load_more_messages");
     },
 });
 

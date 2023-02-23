@@ -6,7 +6,7 @@ import {
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
 import { parseAccountingDate } from "../../src/accounting_functions";
-import { getCellValue, getCell } from "@spreadsheet/../tests/utils/getters";
+import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/utils/getters";
 import { getAccountingData } from "../accounting_test_data";
 import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 import { sprintf } from "@web/core/utils/strings";
@@ -44,9 +44,9 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022")`);
         setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022")`);
         await waitForDataSourcesLoaded(model);
-        assert.strictEqual(getCell(model, "A1").evaluated.format, "#,##0.00[$€]");
-        assert.strictEqual(getCell(model, "A2").evaluated.format, "#,##0.00[$€]");
-        assert.strictEqual(getCell(model, "A3").evaluated.format, "#,##0.00[$€]");
+        assert.strictEqual(getEvaluatedCell(model, "A1").format, "#,##0.00[$€]");
+        assert.strictEqual(getEvaluatedCell(model, "A2").format, "#,##0.00[$€]");
+        assert.strictEqual(getEvaluatedCell(model, "A3").format, "#,##0.00[$€]");
     });
 
     QUnit.test("Functions with a wrong company id is correctly in error", async (assert) => {
@@ -60,7 +60,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", 0, 123456)`);
         await waitForDataSourcesLoaded(model);
         assert.strictEqual(
-            getCell(model, "A1").evaluated.error.message,
+            getEvaluatedCell(model, "A1").error.message,
             "Currency not available for this company."
         );
     });
@@ -76,16 +76,16 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         setCellContent(model, "A7", `=ODOO.DEBIT("100", 1899)`);
         await waitForDataSourcesLoaded(model);
         const errorMessage = `'%s' is not a valid period. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`;
-        assert.equal(getCell(model, "A1").evaluated.error.message, "0 is not a valid year.");
-        assert.equal(getCell(model, "A2").evaluated.error.message, "0 is not a valid year.");
-        assert.equal(getCell(model, "A3").evaluated.error.message, "-1 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A1").error.message, "0 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A2").error.message, "0 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A3").error.message, "-1 is not a valid year.");
         assert.equal(
-            getCell(model, "A4").evaluated.error.message,
+            getEvaluatedCell(model, "A4").error.message,
             sprintf(errorMessage, "not a valid period")
         );
-        assert.equal(getCell(model, "A5").evaluated.value, 0);
-        assert.equal(getCell(model, "A6").evaluated.error.message, "1899 is not a valid year.");
-        assert.equal(getCell(model, "A7").evaluated.error.message, "1899 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A5").value, 0);
+        assert.equal(getEvaluatedCell(model, "A6").error.message, "1899 is not a valid year.");
+        assert.equal(getEvaluatedCell(model, "A7").error.message, "1899 is not a valid year.");
     });
 
     QUnit.test("Evaluation with multiple account codes", async (assert) => {
@@ -93,10 +93,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             mockRPC: async function (route, args) {
                 if (args.method === "spreadsheet_fetch_debit_credit") {
                     assert.step("spreadsheet_fetch_debit_credit");
-                    return [
-                        { debit: 42, credit: 16 },
-                        { debit: 100, credit: 10 },
-                    ];
+                    return [{ debit: 142, credit: 26 }];
                 }
             },
         });
@@ -120,9 +117,9 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         });
         setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022")`);
         await waitForDataSourcesLoaded(model);
-        const cell = getCell(model, "A1");
-        assert.equal(cell.evaluated.value, "#ERROR");
-        assert.equal(cell.evaluated.error.message, "a nasty error");
+        const cell = getEvaluatedCell(model, "A1");
+        assert.equal(cell.value, "#ERROR");
+        assert.equal(cell.error.message, "a nasty error");
     });
 
     QUnit.test("Server requests", async (assert) => {
@@ -152,7 +149,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("2022"),
-                    code: "100",
+                    codes: ["100"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -160,7 +157,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("01/2022"),
-                    code: "100",
+                    codes: ["100"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -168,7 +165,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("Q2/2022"),
-                    code: "100",
+                    codes: ["100"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -176,7 +173,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("2021"),
-                    code: "10",
+                    codes: ["10"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -184,7 +181,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("2021"),
-                    code: "5",
+                    codes: ["5"],
                     companyId: 2,
                     includeUnposted: true,
                 })
@@ -192,7 +189,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("05/04/2022"),
-                    code: "5",
+                    codes: ["5"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -200,7 +197,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("2022"),
-                    code: "5",
+                    codes: ["5"],
                     companyId: null,
                     includeUnposted: false,
                 })
@@ -208,7 +205,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("05/05/2022"),
-                    code: "100",
+                    codes: ["100"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -238,15 +235,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("2022"),
-                    code: "100",
-                    companyId: null,
-                    includeUnposted: true,
-                })
-            ),
-            JSON.stringify(
-                camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022"),
-                    code: "200",
+                    codes: ["100", "200"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -279,15 +268,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("2022"),
-                    code: "100104",
-                    companyId: null,
-                    includeUnposted: true,
-                })
-            ),
-            JSON.stringify(
-                camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022"),
-                    code: "200104",
+                    codes: ["100104", "200104"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -327,7 +308,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("2022"),
-                    code: "100",
+                    codes: ["100"],
                     companyId: null,
                     includeUnposted: true,
                 })
@@ -336,15 +317,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             JSON.stringify(
                 camelToSnakeObject({
                     dateRange: parseAccountingDate("2022"),
-                    code: "100104",
-                    companyId: null,
-                    includeUnposted: true,
-                })
-            ),
-            JSON.stringify(
-                camelToSnakeObject({
-                    dateRange: parseAccountingDate("2022"),
-                    code: "200104",
+                    codes: ["100104", "200104"],
                     companyId: null,
                     includeUnposted: true,
                 })

@@ -35,7 +35,7 @@ _DEFAULT_MANIFEST = {
     'demo_xml': [],
     'depends': [],
     'description': '',
-    'external_dependencies': [],
+    'external_dependencies': {},
     #icon: f'/{module}/static/description/icon.png',  # automatic
     'init_xml': [],
     'installable': True,
@@ -59,71 +59,6 @@ _DEFAULT_MANIFEST = {
 }
 
 _logger = logging.getLogger(__name__)
-
-# addons path as a list
-# ad_paths is a deprecated alias, please use odoo.addons.__path__
-@tools.lazy
-def ad_paths():
-    warnings.warn(
-        '"odoo.modules.module.ad_paths" is a deprecated proxy to '
-        '"odoo.addons.__path__".', DeprecationWarning, stacklevel=2)
-    return odoo.addons.__path__
-
-# Modules already loaded
-loaded = []
-
-class AddonsHook(object):
-    """ Makes modules accessible through openerp.addons.* """
-
-    def find_module(self, name, path=None):
-        if name.startswith('openerp.addons.') and name.count('.') == 2:
-            warnings.warn(
-                '"openerp.addons" is a deprecated alias to "odoo.addons".',
-                DeprecationWarning, stacklevel=2)
-            return self
-
-    def load_module(self, name):
-        assert name not in sys.modules
-
-        odoo_name = re.sub(r'^openerp.addons.(\w+)$', r'odoo.addons.\g<1>', name)
-
-        odoo_module = sys.modules.get(odoo_name)
-        if not odoo_module:
-            odoo_module = importlib.import_module(odoo_name)
-
-        sys.modules[name] = odoo_module
-
-        return odoo_module
-
-class OdooHook(object):
-    """ Makes odoo package also available as openerp """
-
-    def find_module(self, name, path=None):
-        # openerp.addons.<identifier> should already be matched by AddonsHook,
-        # only framework and subdirectories of modules should match
-        if re.match(r'^openerp\b', name):
-            warnings.warn(
-                'openerp is a deprecated alias to odoo.',
-                DeprecationWarning, stacklevel=2)
-            return self
-
-    def load_module(self, name):
-        assert name not in sys.modules
-
-        canonical = re.sub(r'^openerp(.*)', r'odoo\g<1>', name)
-
-        if canonical in sys.modules:
-            mod = sys.modules[canonical]
-        else:
-            # probable failure: canonical execution calling old naming -> corecursion
-            mod = importlib.import_module(canonical)
-
-        # just set the original module at the new location. Don't proxy,
-        # it breaks *-import (unless you can find how `from a import *` lists
-        # what's supposed to be imported by `*`, and manage to override it)
-        sys.modules[name] = mod
-
-        return sys.modules[name]
 
 
 class UpgradeHook(object):
@@ -191,8 +126,6 @@ def initialize_sys_path():
     # hook deprecated module alias from openerp to odoo and "crm"-like to odoo.addons
     if not getattr(initialize_sys_path, 'called', False): # only initialize once
         sys.meta_path.insert(0, UpgradeHook())
-        sys.meta_path.insert(0, OdooHook())
-        sys.meta_path.insert(0, AddonsHook())
         initialize_sys_path.called = True
 
 
@@ -316,8 +249,16 @@ def module_manifest(path):
     if not path:
         return None
     for manifest_name in MANIFEST_NAMES:
-        if os.path.isfile(opj(path, manifest_name)):
-            return opj(path, manifest_name)
+        candidate = opj(path, manifest_name)
+        if os.path.isfile(candidate):
+            if manifest_name == '__openerp__.py':
+                warnings.warn(
+                    "__openerp__.py manifests are deprecated since 17.0, "
+                    f"rename {candidate!r} to __manifest__.py "
+                    "(valid since 10.0)",
+                    category=DeprecationWarning
+                )
+            return candidate
 
 def get_module_root(path):
     """
@@ -424,27 +365,24 @@ def load_openerp_module(module_name):
     This is also used to load server-wide module (i.e. it is also used
     when there is no model to register).
     """
-    global loaded
-    if module_name in loaded:
+
+    qualname = f'odoo.addons.{module_name}'
+    if qualname in sys.modules:
         return
 
     try:
-        __import__('odoo.addons.' + module_name)
+        __import__(qualname)
 
         # Call the module's post-load hook. This can done before any model or
         # data has been initialized. This is ok as the post-load hook is for
         # server-wide (instead of registry-specific) functionalities.
         info = get_manifest(module_name)
         if info['post_load']:
-            getattr(sys.modules['odoo.addons.' + module_name], info['post_load'])()
+            getattr(sys.modules[qualname], info['post_load'])()
 
-    except Exception as e:
-        msg = "Couldn't load module %s" % (module_name)
-        _logger.critical(msg)
-        _logger.critical(e)
+    except Exception:
+        _logger.critical("Couldn't load module %s", module_name)
         raise
-    else:
-        loaded.append(module_name)
 
 def get_modules():
     """Returns the list of module names
@@ -468,6 +406,9 @@ def get_modules():
 
     plist = []
     for ad in odoo.addons.__path__:
+        if not os.path.exists(ad):
+            _logger.warning("addons path does not exist: %s", ad)
+            continue
         plist.extend(listdir(ad))
     return list(set(plist))
 

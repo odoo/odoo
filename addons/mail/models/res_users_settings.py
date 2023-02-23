@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class ResUsersSettings(models.Model):
     _name = 'res.users.settings'
     _description = 'User Settings'
+    _rec_name = 'user_id'
 
     user_id = fields.Many2one('res.users', string="User", required=True, readonly=True, ondelete='cascade')
     is_discuss_sidebar_category_channel_open = fields.Boolean(string="Is discuss sidebar category channel open?", default=True)
@@ -48,7 +49,7 @@ class ResUsersSettings(models.Model):
             if setting in self._fields and new_settings[setting] != self[setting]:
                 changed_settings[setting] = new_settings[setting]
         self.write(changed_settings)
-        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings/insert', self._res_users_settings_format([*changed_settings.keys(), 'id']))
+        self.env['bus.bus']._sendone(self.user_id.partner_id, 'mail.record/insert', {'res.users.settings': self._res_users_settings_format([*changed_settings.keys(), 'id'])})
 
     def set_volume_setting(self, partner_id, volume, guest_id=None):
         """
@@ -71,4 +72,4 @@ class ResUsersSettings(models.Model):
                 'partner_id': partner_id,
                 'guest_id': guest_id,
             })
-        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings.volumes/insert', volume_setting._discuss_users_settings_volume_format())
+        self.env['bus.bus']._sendone(self.user_id.partner_id, 'mail.record/insert', {'res.users.settings.volumes': volume_setting._discuss_users_settings_volume_format()})

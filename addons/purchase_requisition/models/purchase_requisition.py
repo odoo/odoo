@@ -107,7 +107,7 @@ class PurchaseRequisition(models.Model):
         # try to set all associated quotations to cancel state
         for requisition in self:
             for requisition_line in requisition.line_ids:
-                requisition_line.supplier_info_ids.unlink()
+                requisition_line.supplier_info_ids.sudo().unlink()
             requisition.purchase_ids.button_cancel()
             for po in requisition.purchase_ids:
                 po.message_post(body=_('Cancelled by the agreement associated to this quotation.'))
@@ -136,7 +136,6 @@ class PurchaseRequisition(models.Model):
 
     def action_draft(self):
         self.ensure_one()
-        self.name = 'New'
         self.write({'state': 'draft'})
 
     def action_done(self):
@@ -147,13 +146,13 @@ class PurchaseRequisition(models.Model):
             raise UserError(_('You have to cancel or validate every RfQ before closing the purchase requisition.'))
         for requisition in self:
             for requisition_line in requisition.line_ids:
-                requisition_line.supplier_info_ids.unlink()
+                requisition_line.supplier_info_ids.sudo().unlink()
         self.write({'state': 'done'})
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
-            raise UserError(_('You can only delete draft requisitions.'))
+            raise UserError(_('You can only delete draft or cancelled requisitions.'))
 
     def unlink(self):
         # Draft requisitions could have some requisition lines.
@@ -168,7 +167,10 @@ class PurchaseRequisitionLine(models.Model):
     _rec_name = 'product_id'
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Product Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom_id = fields.Many2one(
+        'uom.uom', 'Product Unit of Measure',
+        compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
+        domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(string='Quantity', digits='Product Unit of Measure')
     product_description_variants = fields.Char('Custom Description')
@@ -214,7 +216,7 @@ class PurchaseRequisitionLine(models.Model):
         purchase_requisition = self.requisition_id
         if purchase_requisition.type_id.quantity_copy == 'none' and purchase_requisition.vendor_id:
             # create a supplier_info only in case of blanket order
-            self.env['product.supplierinfo'].create({
+            self.env['product.supplierinfo'].sudo().create({
                 'partner_id': purchase_requisition.vendor_id.id,
                 'product_id': self.product_id.id,
                 'product_tmpl_id': self.product_id.product_tmpl_id.id,
@@ -239,6 +241,11 @@ class PurchaseRequisitionLine(models.Model):
                 line_found.add(line.product_id)
             else:
                 line.qty_ordered = 0
+
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        for line in self:
+            line.product_uom_id = line.product_id.uom_id
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

@@ -4,7 +4,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { SearchModel } from "@web/search/search_model";
 import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_hook";
 
-const { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } = owl;
+import { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } from "@odoo/owl";
 
 export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "orderBy"];
 
@@ -73,7 +73,7 @@ WithSearch.props = {
     context: { type: Object, optional: true },
     domain: { type: Array, element: [String, Array], optional: true },
     groupBy: { type: Array, element: String, optional: true },
-    orderBy: { type: Array, element: String, optional: true },
+    orderBy: { type: Array, element: Object, optional: true },
 
     // search view description
     searchViewArch: { type: String, optional: true },

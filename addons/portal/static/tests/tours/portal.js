@@ -1,13 +1,12 @@
 odoo.define('portal.tour', function (require) {
 'use strict';
 
-var tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 
-tour.register('portal_load_homepage', {
+registry.category("web_tour.tours").add('portal_load_homepage', {
     test: true,
     url: '/my',
-},
-    [
+    steps: [
         {
             content: "Check portal is loaded",
             trigger: 'a[href*="/my/account"]:contains("Edit"):first',
@@ -17,6 +16,6 @@ tour.register('portal_load_homepage', {
             trigger: 'input[value="Joel Willis"]'
         }
     ]
-);
+});
 
 });

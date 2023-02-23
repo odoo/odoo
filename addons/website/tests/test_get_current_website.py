@@ -8,18 +8,10 @@ from odoo.tests.common import TransactionCase
 @tagged('post_install', '-at_install')
 class TestGetCurrentWebsite(TransactionCase):
 
-    def setUp(self):
-        # Unlink unused website(s) to avoid messing with the expected results
-        self.website = self.env.ref('website.default_website')
-        for w in self.env['website'].search([('id', '!=', self.website.id)]):
-            try:
-                # Website are impossible to delete most often than not, as if
-                # there is critical business data linked to it, it will prevent
-                # the unlink. Could easily happen with a bridge module adding
-                # some custom data.
-                w.unlink()
-            except Exception:
-                pass
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('website.default_website')
 
     def test_01_get_current_website_id(self):
         """Make sure `_get_current_website_id works`."""

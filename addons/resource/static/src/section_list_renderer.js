@@ -40,7 +40,7 @@ export class SectionListRenderer extends ListRenderer {
     getSectionColumns(columns) {
         const sectionColumns = columns.filter((col) => col.widget === "handle");
         let colspan = columns.length - sectionColumns.length;
-        if (this.props.activeActions.onDelete) {
+        if (this.activeActions.onDelete) {
             colspan++;
         }
         const titleCol = columns.find(

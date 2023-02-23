@@ -24,6 +24,6 @@ class HrEmployee(models.Model):
             contracts_by_company[contract.company_id] |= contract
 
         for company, contracts in contracts_by_company.items():
-            new_work_entries = bool(contracts.with_company(company)._generate_work_entries(
+            new_work_entries = bool(contracts.with_company(company).sudo()._generate_work_entries(
                 date_start, date_stop, force)) or new_work_entries
         return new_work_entries

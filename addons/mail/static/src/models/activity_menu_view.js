@@ -1,19 +1,18 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many } from '@mail/model/model_field';
+import { attr, many, Model } from "@mail/model";
 
-import session from 'web.session';
+import session from "web.session";
 
-registerModel({
-    name: 'ActivityMenuView',
+Model({
+    name: "ActivityMenuView",
     lifecycleHooks: {
         _created() {
             this.fetchData();
-            document.addEventListener('click', this._onClickCaptureGlobal, true);
+            document.addEventListener("click", this._onClickCaptureGlobal, true);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+            document.removeEventListener("click", this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -22,13 +21,15 @@ registerModel({
         },
         async fetchData() {
             const data = await this.messaging.rpc({
-                model: 'res.users',
-                method: 'systray_get_activities',
+                model: "res.users",
+                method: "systray_get_activities",
                 args: [],
                 kwargs: { context: session.user_context },
             });
             this.update({
-                activityGroups: data.map(vals => this.messaging.models['ActivityGroup'].convertData(vals)),
+                activityGroups: data.map((vals) =>
+                    this.messaging.models["ActivityGroup"].convertData(vals)
+                ),
                 extraCount: 0,
             });
         },
@@ -64,25 +65,26 @@ registerModel({
         },
     },
     fields: {
-        activityGroups: many('ActivityGroup', {
-            sort() {
-                return [['smaller-first', 'irModel.id']];
-            }
+        activityGroups: many("ActivityGroup", {
+            sort: [["smaller-first", "irModel.id"]],
         }),
-        activityGroupViews: many('ActivityGroupView', {
+        activityGroupViews: many("ActivityGroupView", {
+            inverse: "activityMenuViewOwner",
             compute() {
-                return this.activityGroups.map(activityGroup => {
+                return this.activityGroups.map((activityGroup) => {
                     return {
                         activityGroup,
                     };
                 });
             },
-            inverse: 'activityMenuViewOwner',
         }),
         component: attr(),
         counter: attr({
             compute() {
-                return this.activityGroups.reduce((total, group) => total + group.total_count, this.extraCount);
+                return this.activityGroups.reduce(
+                    (total, group) => total + group.total_count,
+                    this.extraCount
+                );
             },
         }),
         /**
@@ -93,8 +95,6 @@ registerModel({
          * counter of each group.
          */
         extraCount: attr(),
-        isOpen: attr({
-            default: false,
-        }),
+        isOpen: attr({ default: false }),
     },
 });

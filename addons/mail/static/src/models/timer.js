@@ -1,26 +1,14 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { one, Patch } from "@mail/model";
 
-registerModel({
-    name: 'Timer',
-    identifyingMode: 'xor',
-    lifecycleHooks: {
-        _created() {
-            this.update({ timeoutId: this.messaging.browser.setTimeout(this._onTimeout, this.duration) });
-        },
-        _willDelete() {
-            this.messaging.browser.clearTimeout(this.timeoutId);
-        },
-    },
+Patch({
+    name: "Timer",
     recordMethods: {
         /**
-         * @private
+         * @override
          */
-        _onTimeout() {
-            this.update({ timeoutId: clear() });
+        onTimeout() {
             if (this.blurManagerOwnerAsFrameRequest) {
                 this.blurManagerOwnerAsFrameRequest.onRequestFrameTimerTimeout();
                 return;
@@ -57,39 +45,23 @@ registerModel({
                 this.throttleOwner.onTimeout();
                 return;
             }
-        },
-        _onChangeDoReset() {
-            if (!this.doReset) {
-                return;
-            }
-            this.messaging.browser.clearTimeout(this.timeoutId);
-            this.update({
-                doReset: clear(),
-                timeoutId: this.messaging.browser.setTimeout(this._onTimeout, this.duration),
-            });
+            return this._super();
         },
     },
     fields: {
-        blurManagerOwnerAsFrameRequest: one('BlurManager', {
+        blurManagerOwnerAsFrameRequest: one("BlurManager", {
             identifying: true,
-            inverse: 'frameRequestTimer',
+            inverse: "frameRequestTimer",
         }),
-        callMainViewAsShowOverlay: one('CallMainView', {
+        callMainViewAsShowOverlay: one("CallMainView", {
             identifying: true,
-            inverse: 'showOverlayTimer',
+            inverse: "showOverlayTimer",
         }),
-        chatterOwnerAsAttachmentsLoader: one('Chatter', {
+        chatterOwnerAsAttachmentsLoader: one("Chatter", {
             identifying: true,
-            inverse: 'attachmentsLoaderTimer',
+            inverse: "attachmentsLoaderTimer",
         }),
-        doReset: attr({
-            default: false,
-        }),
-        /**
-         * Duration, in milliseconds, until timer times out and calls the
-         * timeout function.
-         */
-        duration: attr({
+        duration: {
             compute() {
                 if (this.blurManagerOwnerAsFrameRequest) {
                     return Math.floor(1000 / 30); // 30 fps
@@ -118,45 +90,30 @@ registerModel({
                 if (this.throttleOwner) {
                     return this.throttleOwner.duration;
                 }
-                return clear();
+                return this._super();
             },
-            required: true,
-        }),
-        messageViewOwnerAsHighlight: one('MessageView', {
+        },
+        messageViewOwnerAsHighlight: one("MessageView", {
             identifying: true,
-            inverse: 'highlightTimer',
+            inverse: "highlightTimer",
         }),
-        otherMemberLongTypingInThreadTimerOwner: one('OtherMemberLongTypingInThreadTimer', {
+        otherMemberLongTypingInThreadTimerOwner: one("OtherMemberLongTypingInThreadTimer", {
             identifying: true,
-            inverse: 'timer',
+            inverse: "timer",
             isCausal: true,
         }),
-        rtcSessionOwnerAsBroadcast: one('RtcSession', {
+        rtcSessionOwnerAsBroadcast: one("RtcSession", {
             identifying: true,
-            inverse: 'broadcastTimer',
+            inverse: "broadcastTimer",
         }),
-        threadAsCurrentPartnerInactiveTypingTimerOwner: one('Thread', {
+        threadAsCurrentPartnerInactiveTypingTimerOwner: one("Thread", {
             identifying: true,
-            inverse: 'currentPartnerInactiveTypingTimer',
+            inverse: "currentPartnerInactiveTypingTimer",
         }),
-        threadAsCurrentPartnerLongTypingTimerOwner: one('Thread', {
+        threadAsCurrentPartnerLongTypingTimerOwner: one("Thread", {
             identifying: true,
-            inverse: 'currentPartnerLongTypingTimer',
+            inverse: "currentPartnerLongTypingTimer",
         }),
-        throttleOwner: one('Throttle', {
-            identifying: true,
-            inverse: 'cooldownTimer',
-        }),
-        /**
-         * Internal reference of `setTimeout()` that is used to invoke function
-         * when timer times out. Useful to clear it when timer is cleared/reset.
-         */
-        timeoutId: attr(),
+        throttleOwner: one("Throttle", { identifying: true, inverse: "cooldownTimer" }),
     },
-    onChanges: [
-        {
-            dependencies: ["doReset"],
-            methodName: '_onChangeDoReset',
-        },
-    ],
 });

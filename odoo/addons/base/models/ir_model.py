@@ -11,7 +11,8 @@ from collections.abc import Mapping
 from operator import itemgetter
 
 from psycopg2 import sql
-from psycopg2.extras import Json
+from psycopg2.extras import Json, execute_values
+from psycopg2.sql import Identifier, SQL, Placeholder
 
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -65,8 +66,8 @@ def selection_xmlid(module, model_name, field_name, value):
 
 
 # generic INSERT and UPDATE queries
-INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES {rows} RETURNING id"
-UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
+INSERT_QUERY = SQL("INSERT INTO {table} ({cols}) VALUES %s RETURNING id")
+UPDATE_QUERY = SQL("UPDATE {table} SET {assignment} WHERE {condition} RETURNING id")
 
 quote = '"{}"'.format
 
@@ -79,12 +80,11 @@ def query_insert(cr, table, rows):
         rows = [rows]
     cols = list(rows[0])
     query = INSERT_QUERY.format(
-        table='"{}"'.format(table),
-        cols=",".join(['"{}"'.format(col) for col in cols]),
-        rows=",".join("%s" for row in rows),
+        table=Identifier(table),
+        cols=SQL(",").join(map(Identifier, cols)),
     )
     params = [tuple(row[col] for col in cols) for row in rows]
-    cr.execute(query, params)
+    execute_values(cr._obj, query, params)
     return [row[0] for row in cr.fetchall()]
 
 
@@ -94,9 +94,15 @@ def query_update(cr, table, values, selectors):
     """
     setters = set(values) - set(selectors)
     query = UPDATE_QUERY.format(
-        table='"{}"'.format(table),
-        assignment=",".join('"{0}"=%({0})s'.format(s) for s in setters),
-        condition=" AND ".join('"{0}"=%({0})s'.format(s) for s in selectors),
+        table=Identifier(table),
+        assignment=SQL(",").join(
+            SQL("{} = {}").format(Identifier(s), Placeholder(s))
+            for s in setters
+        ),
+        condition=SQL(" AND ").join(
+            SQL("{} = {}").format(Identifier(s), Placeholder(s))
+            for s in selectors
+        ),
     )
     cr.execute(query, values)
     return [row[0] for row in cr.fetchall()]
@@ -769,7 +775,7 @@ class IrModelFields(models.Model):
                 else:
                     # field hasn't been loaded (yet?)
                     continue
-                for dep in model._dependent_fields(field):
+                for dep in self.pool.get_dependent_fields(field):
                     if dep.manual:
                         failed_dependencies.append((field, dep))
                 for inverse in model.pool.field_inverses[field]:
@@ -840,23 +846,7 @@ class IrModelFields(models.Model):
 
         # clean the registry from the fields to remove
         self.pool.registry_invalidated = True
-
-        # discard the removed fields from field triggers
-        def discard_fields(tree):
-            # discard fields from the tree's root node
-            tree.get(None, set()).difference_update(fields)
-            # discard subtrees labelled with any of the fields
-            for field in fields:
-                tree.pop(field, None)
-            # discard fields from remaining subtrees
-            for field, subtree in tree.items():
-                if field is not None:
-                    discard_fields(subtree)
-
-        discard_fields(self.pool.field_triggers)
-
-        # discard the removed fields from field inverses
-        self.pool.field_inverses.discard_keys_and_values(fields)
+        self.pool._discard_fields(fields)
 
         # discard the removed fields from fields to compute
         for field in fields:
@@ -1749,40 +1739,6 @@ class IrModelAccess(models.Model):
     perm_unlink = fields.Boolean(string='Delete Access')
 
     @api.model
-    def check_groups(self, group):
-        """ Check whether the current user has the given group. """
-        grouparr = group.split('.')
-        if not grouparr:
-            return False
-        self._cr.execute("""SELECT 1 FROM res_groups_users_rel
-                            WHERE uid=%s AND gid IN (
-                                SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
-                         (self._uid, grouparr[0], grouparr[1],))
-        return bool(self._cr.fetchone())
-
-    @api.model
-    def check_group(self, model, mode, group_ids):
-        """ Check if a specific group has the access mode to the specified model"""
-        assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
-
-        if isinstance(model, models.BaseModel):
-            assert model._name == 'ir.model', 'Invalid model object'
-            model_name = model.name
-        else:
-            model_name = model
-
-        if isinstance(group_ids, int):
-            group_ids = [group_ids]
-
-        query = """ SELECT 1 FROM ir_model_access a
-                    JOIN ir_model m ON (m.id = a.model_id)
-                    WHERE a.active AND a.perm_{mode} AND
-                        m.model=%s AND (a.group_id IN %s OR a.group_id IS NULL)
-                """.format(mode=mode)
-        self._cr.execute(query, (model_name, tuple(group_ids)))
-        return bool(self._cr.rowcount)
-
-    @api.model
     def group_names_with_access(self, model_name, access_mode):
         """ Return the names of visible groups which have been granted
             ``access_mode`` on the model ``model_name``.
@@ -1999,7 +1955,7 @@ class IrModelData(models.Model):
     # NEW V8 API
     @api.model
     @tools.ormcache('xmlid')
-    def _xmlid_lookup(self, xmlid):
+    def _xmlid_lookup(self, xmlid: str) -> tuple:
         """Low level xmlid lookup
         Return (id, res_model, res_id) or raise ValueError if not found
         """

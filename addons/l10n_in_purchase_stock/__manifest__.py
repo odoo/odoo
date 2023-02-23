@@ -6,25 +6,20 @@
     'icon': '/l10n_in/static/description/icon.png',
 
     'summary': """
-        Define default purchase journal on the warehouse""",
+        Get warehouse address if the bill is created from Purchase Order""",
 
     'description': """
-        Define default purchase journal on the warehouse,
-        help you to choose correct purchase journal on the purchase order when
-        you change the picking operation.
-        useful when you setup the multiple GSTIN units.
+        Get the warehouse address if the bill is created from the Purchase Order
+
+        So this module is to get the warehouse address if the bill is created from Purchase Order
     """,
 
-    'author': "Odoo",
     'website': "https://www.odoo.com",
     'category': 'Accounting/Localizations/Purchase',
     'version': '1.0',
 
     'depends': ['l10n_in_purchase', 'l10n_in_stock'],
 
-    'data': [
-        'views/stock_warehouse_views.xml',
-    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }

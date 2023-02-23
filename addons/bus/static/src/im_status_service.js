@@ -17,23 +17,28 @@ export const imStatusService = {
     start(env, { bus_service, multi_tab, presence }) {
         const imStatusModelToIds = {};
         let updateBusPresenceTimeout;
+        const throttledUpdateBusPresence = _.throttle(
+            function updateBusPresence() {
+                clearTimeout(updateBusPresenceTimeout);
+                if (!multi_tab.isOnMainTab()) {
+                    return;
+                }
+                const now = new Date().getTime();
+                bus_service.send("update_presence", {
+                    inactivity_period: now - presence.getLastPresence(),
+                    im_status_ids_by_model: { ...imStatusModelToIds },
+                });
+                updateBusPresenceTimeout = browser.setTimeout(throttledUpdateBusPresence, UPDATE_BUS_PRESENCE_DELAY);
+            },
+            UPDATE_BUS_PRESENCE_DELAY
+        );
 
-        function updateBusPresence() {
-            clearTimeout(updateBusPresenceTimeout);
-            if (!multi_tab.isOnMainTab()) {
-                return;
-            }
-            const now = new Date().getTime();
-            bus_service.send("update_presence", {
-                inactivity_period: now - presence.getLastPresence(),
-                im_status_ids_by_model: { ...imStatusModelToIds },
-            });
-            updateBusPresenceTimeout = browser.setTimeout(updateBusPresence, UPDATE_BUS_PRESENCE_DELAY);
-        }
-        // wait for im_status model/ids to be registered before starting.
-        browser.setTimeout(updateBusPresence, 250);
-        multi_tab.bus.addEventListener('become_main_tab', updateBusPresence);
-        bus_service.addEventListener('reconnect', updateBusPresence);
+        bus_service.addEventListener('connect', () => {
+            // wait for im_status model/ids to be registered before starting.
+            browser.setTimeout(throttledUpdateBusPresence, 250);
+        });
+        multi_tab.bus.addEventListener('become_main_tab', throttledUpdateBusPresence);
+        bus_service.addEventListener('reconnect', throttledUpdateBusPresence);
         multi_tab.bus.addEventListener('no_longer_main_tab', () => clearTimeout(updateBusPresenceTimeout));
         bus_service.addEventListener('disconnect', () => clearTimeout(updateBusPresenceTimeout));
 

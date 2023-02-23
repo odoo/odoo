@@ -33,6 +33,7 @@
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
                 <tree string="Work Center" multi_edit="1">
+                    <field name="company_id" invisible="1"/>
                     <field name="sequence" widget="handle"/>
                     <field name="name" optional="show"/>
                     <field name="code" optional="show"/>
@@ -160,6 +161,43 @@
                     <field name="working_state"/>
                     <field name="oee_target"/>
                     <templates>
+                        <t t-name="kanban-menu">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Actions</span>
+                                    </div>
+                                    <div role="menuitem" name="plan_order">
+                                        <a name="action_work_order" type="object">Plan Orders</a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Reporting</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(mrp_workcenter_productivity_report_oee)d" type="action">OEE</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(mrp_workorder_workcenter_report)d" type="action" context="{'search_default_thisyear':True}">
+                                            Performance
+                                        </a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="action_work_order" type="object" context="{'search_default_waiting': 1}">Waiting Availability</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                <div role="menuitem" aria-haspopup="true" class="col-8">
+                                    <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                                <div role="menuitem" class="col-4">
+                                    <a type="edit">Settings</a>
+                                </div>
+                            </div>
+                        </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                                 <div t-attf-class="o_kanban_card_header o_kanban_record_top">
@@ -167,9 +205,6 @@
                                         <span class="o_primary ml8" style="display: inline-block">
                                             <field name="name"/>
                                         </span>
-                                    </div>
-                                    <div class="o_kanban_manage_button_section">
-                                        <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                     </div>
                                 </div>
                                 <div class="container o_kanban_card_content">
@@ -251,42 +286,6 @@
                                                 attrs="{'invisible': [('working_state','in',('normal','blocked'))]}"/>
                                         </div>
                                     </div>
-                                </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                    <div class="row">
-                                        <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                            <div role="menuitem" class="o_kanban_card_manage_title">
-                                                <span>Actions</span>
-                                            </div>
-                                            <div role="menuitem" name="plan_order">
-                                                <a name="action_work_order" type="object">Plan Orders</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                            <div role="menuitem" class="o_kanban_card_manage_title">
-                                                <span>Reporting</span>
-                                            </div>
-                                            <div role="menuitem">
-                                                <a name="%(mrp_workcenter_productivity_report_oee)d" type="action">OEE</a>
-                                            </div>
-                                            <div role="menuitem">
-                                                <a name="%(mrp_workorder_workcenter_report)d" type="action" context="{'search_default_thisyear':True}">
-                                                    Performance
-                                                </a>
-                                            </div>
-                                            <div role="menuitem">
-                                                <a name="action_work_order" type="object" context="{'search_default_waiting': 1}">Waiting Availability</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                        <div role="menuitem" aria-haspopup="true" class="col-8">
-                                            <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
-                                        </div>
-                                        <div role="menuitem" class="text-end">
-                                            <a type="edit">Settings</a>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -302,10 +301,10 @@
                 <form string="Work Center">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <field name="routing_line_ids" invisible="1"/>
+                            <field name="has_routing_lines" invisible="1"/>
                             <button string="Operations" type="object"
                                 name="action_show_operations"
-                                attrs="{'invisible': [('routing_line_ids', '=', [])]}"
+                                attrs="{'invisible': [('has_routing_lines', '=', False)]}"
                                 context="{'default_workcenter_id': active_id}"
                                 class="oe_stat_button" icon="fa-cog"/>
                             <button name="%(mrp_workcenter_productivity_report_oee)d" type="action" class="oe_stat_button" icon="fa-pie-chart">
@@ -373,7 +372,7 @@
                                     <group string="Costing Information" name="costing">
                                         <label for="costs_hour"/>
                                         <div id="costs_hour">
-                                            <field name="costs_hour" class="oe_inline"/> per workcenter
+                                            <field name="costs_hour" widget="monetary" class="oe_inline"/> per workcenter
                                         </div>
                                     </group>
                                     <group>

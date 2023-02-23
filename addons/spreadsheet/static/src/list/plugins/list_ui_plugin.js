@@ -2,6 +2,7 @@
 
 import spreadsheet from "../../o_spreadsheet/o_spreadsheet_extended";
 import { getFirstListFunction } from "../list_helpers";
+import { Domain } from "@web/core/domain";
 
 const { astToFormula } = spreadsheet;
 
@@ -10,47 +11,19 @@ const { astToFormula } = spreadsheet;
  */
 
 export default class ListUIPlugin extends spreadsheet.UIPlugin {
-    constructor(getters, history, dispatch, config, selection) {
-        super(getters, history, dispatch, config, selection);
+    constructor(config) {
+        super(config);
         /** @type {string} */
         this.selectedListId = undefined;
-        this.selection.observe(this, {
-            handleEvent: this.handleEvent.bind(this),
-        });
-        this.env = config.evalContext.env;
+        this.env = config.custom.env;
     }
 
-    handleEvent(event) {
-        switch (event.type) {
-            case "ZonesSelected":
-                if (this.getters.isDashboard()) {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const { col, row } = event.anchor.cell;
-                    const cell = this.getters.getCell(sheetId, col, row);
-                    if (cell && cell.content.startsWith("=ODOO.LIST(")) {
-                        const { args } = getFirstListFunction(cell.content);
-                        const evaluatedArgs = args
-                            .map(astToFormula)
-                            .map((arg) => this.getters.evaluateFormula(arg));
-                        if (evaluatedArgs.length < 3) {
-                            return;
-                        }
-                        const listId = this.getters.getListIdFromPosition(sheetId, col, row);
-                        const { model } = this.getters.getListDefinition(listId);
-                        const dataSource = this.getters.getListDataSource(listId);
-                        const recordId = dataSource.getIdFromPosition(evaluatedArgs[1] - 1);
-                        if (!recordId) {
-                            return;
-                        }
-                        this.env.services.action.doAction({
-                            type: "ir.actions.act_window",
-                            res_model: model,
-                            res_id: recordId,
-                            views: [[false, "form"]],
-                            view_mode: "form",
-                        });
-                    }
-                }
+    beforeHandle(cmd) {
+        switch (cmd.type) {
+            case "START":
+                // make sure the domains are correctly set before
+                // any evaluation
+                this._addDomains();
                 break;
         }
     }
@@ -64,14 +37,32 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
             case "SELECT_ODOO_LIST":
                 this._selectList(cmd.listId);
                 break;
-            case "ADD_LIST_DOMAIN":
-                this._addDomain(cmd.id, cmd.domain);
-                break;
             case "REFRESH_ODOO_LIST":
                 this._refreshOdooList(cmd.listId);
                 break;
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooLists();
+                break;
+            case "ADD_GLOBAL_FILTER":
+            case "EDIT_GLOBAL_FILTER":
+            case "REMOVE_GLOBAL_FILTER":
+            case "SET_GLOBAL_FILTER_VALUE":
+            case "CLEAR_GLOBAL_FILTER_VALUE":
+                this._addDomains();
+                break;
+            case "UNDO":
+            case "REDO":
+                if (
+                    cmd.commands.find((command) =>
+                        [
+                            "ADD_GLOBAL_FILTER",
+                            "EDIT_GLOBAL_FILTER",
+                            "REMOVE_GLOBAL_FILTER",
+                        ].includes(command.type)
+                    )
+                ) {
+                    this._addDomains();
+                }
                 break;
         }
     }
@@ -85,11 +76,30 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
      *
      * @private
      *
-     * @param {string} listId pivot id
-     * @param {Array<Array<any>>} domain
+     * @param {string} listId list id
+     *
      */
-    _addDomain(listId, domain) {
+    _addDomain(listId) {
+        const domainList = [];
+        for (const [filterId, fieldMatch] of Object.entries(
+            this.getters.getListFieldMatch(listId)
+        )) {
+            domainList.push(this.getters.getGlobalFilterDomain(filterId, fieldMatch));
+        }
+        const domain = Domain.combine(domainList, "AND").toString();
         this.getters.getListDataSource(listId).addDomain(domain);
+    }
+
+    /**
+     * Add an additional domain to all lists
+     *
+     * @private
+     *
+     */
+    _addDomains() {
+        for (const listId of this.getters.getListIds()) {
+            this._addDomain(listId);
+        }
     }
 
     /**
@@ -136,15 +146,13 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
      * Get the id of the list at the given position. Returns undefined if there
      * is no list at this position
      *
-     * @param {string} sheetId Id of the sheet
-     * @param {number} col Index of the col
-     * @param {number} row Index of the row
+     * @param {{ sheetId: string; col: number; row: number}} position
      *
      * @returns {string|undefined}
      */
-    getListIdFromPosition(sheetId, col, row) {
-        const cell = this.getters.getCell(sheetId, col, row);
-        if (cell && cell.isFormula()) {
+    getListIdFromPosition(position) {
+        const cell = this.getters.getCell(position);
+        if (cell && cell.isFormula) {
             const listFunction = getFirstListFunction(cell.content);
             if (listFunction) {
                 const content = astToFormula(listFunction.args[0]);

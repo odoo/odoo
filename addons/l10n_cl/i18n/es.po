@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server 16.2alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-14 12:35+0000\n"
-"PO-Revision-Date: 2021-01-14 12:35+0000\n"
+"POT-Creation-Date: 2023-02-08 13:14+0000\n"
+"PO-Revision-Date: 2023-02-08 13:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,10 +24,15 @@ msgid ""
 "3 - End consumer (only receipts)\n"
 "4 - Foreigner"
 msgstr ""
-"1 - IVA Afecto (la mayoría de los casos)\n"
-"2 - Emisor Boletas (aplica solo para proveedores emisores de boleta)\n"
-"3 - Consumidor Final (se le emitirán siempre boletas)\n"
+"1 - Afectado por IVA (1ª Categoría) (Mayoría de los casos)\n"
+"2 - Emisor de recibos de honorarios (Se aplica a proveedores que emiten recibos de honorarios)\n"
+"3 - Consumidor final (sólo recibos)\n"
 "4 - Extranjero"
+
+#. module: l10n_cl
+#: model:res.currency,l10n_cl_currency_code:l10n_cl.OTR
+msgid "900"
+msgstr "900"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.informations
@@ -39,6 +44,17 @@ msgstr ""
 "<br/>\n"
 "\n"
 "                <strong>Cliente:</strong>"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid ""
+"<br/>\n"
+"\n"
+"                <strong>Payment Terms:</strong>"
+msgstr ""
+"<br/>\n"
+"\n"
+"                <strong>Condiciones de pago:</strong>"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
@@ -58,6 +74,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_cl.informations
 msgid ""
 "<br/>\n"
+"                    <strong>Delivery Address:</strong>"
+msgstr ""
+"<br/>\n"
+"                    <strong>Dirección de entrega:</strong>"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid ""
+"<br/>\n"
 "                    <strong>Incoterm:</strong>"
 msgstr ""
 
@@ -65,15 +90,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_cl.informations
 msgid ""
 "<br/>\n"
-"                <strong>Address:</strong>"
+"                <strong>GIRO:</strong>"
 msgstr ""
-"<br/>\n"
-"                <strong>Dirección:</strong>"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.report_invoice_document
-msgid "<span>Taxes</span>"
-msgstr "<span>Impuestos</span>"
+msgid ""
+"<span "
+"groups=\"account.group_show_line_subtotals_tax_included\">Amount</span>"
+msgstr ""
+"<span "
+"groups=\"account.group_show_line_subtotals_tax_included\">Importe</span>"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "<strong>Address:</strong>"
+msgstr "<strong>Dirección:</strong>"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.informations
@@ -81,14 +113,14 @@ msgid "<strong>Due Date:</strong>"
 msgstr "<strong>Fecha de vencimiento:</strong>"
 
 #. module: l10n_cl
-#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
-msgid "<strong>GIRO:</strong>"
-msgstr ""
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_awb
+msgid "AWB"
+msgstr "AWB"
 
 #. module: l10n_cl
-#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
-msgid "<strong>Payment Terms:</strong>"
-msgstr "<strong>Plazos de pago:</strong>"
+#: model:l10n_latam.document.type,name:l10n_cl.dc_awb
+msgid "AWB Airway Bill"
+msgstr "AWB Guía aérea"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_account_chart_template
@@ -101,20 +133,37 @@ msgid "Accounting Date"
 msgstr "Fecha contable"
 
 #. module: l10n_cl
-#: model:product.product,name:l10n_cl.product_product_ad_valorem
+#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__l10n_cl_active
+msgid "Active in localization"
+msgstr "Activo en localización"
+
+#. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_res_partner__l10n_cl_activity_description
+#: model:ir.model.fields,field_description:l10n_cl.field_res_users__l10n_cl_activity_description
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_company_l10n_cl_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
+msgid "Activity Description"
+msgstr "Descripción de la actividad"
+
+#. module: l10n_cl
 #: model:product.template,name:l10n_cl.product_product_ad_valorem_product_template
 msgid "Ad-Valorem"
 msgstr "Ad-Valorem"
 
 #. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
+msgid "Additional data address and city"
+msgstr "Datos adic. dirección y Ciudad"
+
+#. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
 msgid "Amount Due"
-msgstr "Monto adeudado"
+msgstr "Importe debido"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
 msgid "Amount Untaxed"
-msgstr "Monto sin impuestos"
+msgstr "Importe no tributado"
 
 #. module: l10n_cl
 #: model:ir.model.fields,help:l10n_cl.field_account_bank_statement_line__l10n_latam_internal_type
@@ -132,9 +181,59 @@ msgstr ""
 " por ejemplo stock.picking)"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_bl_cemb
+msgid "B/L"
+msgstr "B/L"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_bl_cemb
+msgid "B/L (Bill of Lading)"
+msgstr "B/L (Conocimiento de embarque)"
+
+#. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_bar
 msgid "BAR"
 msgstr "BAR"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_b_f_dte
+msgid "BEL"
+msgstr "BEL"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_b_e_dtn
+msgid "BEX"
+msgstr "BEX"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_m_d_dtn
+msgid "BHE"
+msgstr "BHE"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_m_f_dtn
+msgid "BHO"
+msgstr "BHO"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_b_f_dtn
+msgid "BOL"
+msgstr "BOL"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_bzf_f_dtn
+msgid "BOLETA ZF"
+msgstr "BOLETA ZF"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_b_e_dte
+msgid "BXE"
+msgstr "BXE"
+
+#. module: l10n_cl
+#: model:account.report.column,name:l10n_cl.tax_report_balance
+msgid "Balance"
+msgstr "Saldo"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_res_bank
@@ -142,37 +241,95 @@ msgid "Bank"
 msgstr "Banco"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_cpor
+msgid "Bill of Lading"
+msgstr "Carta de Porte"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_cem_ma
+msgid "Bill of Lading (Sea or Air)"
+msgstr "Conocimiento de Embarque (Marítimo o aéreo)"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_b_f_dtn
+msgid "Bill of Sale"
+msgstr "Boleta de Venta"
+
+#. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_carton
 msgid "CARTON"
 msgstr "CARTON"
 
 #. module: l10n_cl
-#: model:product.product,description:l10n_cl.product_product_ad_valorem
-#: model:product.template,description:l10n_cl.product_product_ad_valorem_product_template
-msgid "Cargo para calculo de Ad-Valorem en DIN"
-msgstr ""
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_cem_ma
+msgid "CEM"
+msgstr "CEM"
 
 #. module: l10n_cl
-#: model:ir.ui.menu,name:l10n_cl.account_reports_cl_statements_menu
-msgid "Chile"
-msgstr ""
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_chq
+msgid "CHQ"
+msgstr "CHQ"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_cont
+msgid "CONT"
+msgstr "CONT"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_cpor
+msgid "CPR"
+msgstr "CPR"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_nc_f_dte
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_nc_f_dtn
+msgid "CREDIT NOTE"
+msgstr "NOTA DE CREDITO"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_cd_bol
+msgid "CRTD"
+msgstr "CRTD"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_cd_bol
+msgid "Certificate of Deposit Bolsa Prod. Chile."
+msgstr "Certificado de Depósito Bolsa Prod. Chile."
+
+#. module: l10n_cl
+#: model_terms:product.template,description:l10n_cl.product_product_ad_valorem_product_template
+msgid "Charge for Ad-Valorem calculation in DIN"
+msgstr "Cargo para calculo de Ad-Valorem en DIN"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_chq
+msgid "Cheque"
+msgstr "Cheque"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_fichc
+msgid "Chile Purchase Form"
+msgstr "Ficha Chile Compra"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_prchc
+msgid "Chile Purchase Process"
+msgstr "Proceso ChileCompra"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.res_config_settings_view_form
 msgid "Chilean Localization"
-msgstr "Localización Chilena"
+msgstr "Localización en Chile"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_res_bank__l10n_cl_sbif_code
 msgid "Cod. SBIF"
-msgstr ""
+msgstr "Cod. SBIF"
 
 #. module: l10n_cl
-#: model:ir.model.fields,help:l10n_cl.field_account_bank_statement_line__l10n_latam_document_type_id_code
-#: model:ir.model.fields,help:l10n_cl.field_account_move__l10n_latam_document_type_id_code
-#: model:ir.model.fields,help:l10n_cl.field_account_payment__l10n_latam_document_type_id_code
-msgid "Code used by different localizations"
-msgstr "Código usado por diferentes localizaciones"
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
+msgid "Commune"
+msgstr "Comuna"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_res_company
@@ -180,14 +337,29 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_res_company__l10n_cl_activity_description
+msgid "Company Activity Description"
+msgstr "Descripción de la actividad de la empresa"
+
+#. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_cont
+msgid "Contract"
+msgstr "Contrato"
+
+#. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_res_country
 msgid "Country"
 msgstr "País"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_nc_f_dtn
+msgid "Credit Note"
+msgstr "Nota de Crédito"
 
 #. module: l10n_cl
 #: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__credit_note
@@ -207,32 +379,44 @@ msgstr "Código de moneda"
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_res_country__l10n_cl_customs_abbreviation
 msgid "Customs Abbreviation"
-msgstr "Abreviatura de aduana"
+msgstr "Abreviatura aduanera"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_res_country__l10n_cl_customs_code
 msgid "Customs Code"
-msgstr "Código de aduana"
+msgstr "Código aduanero"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_res_country__l10n_cl_customs_name
 msgid "Customs Name"
-msgstr "Nombre de aduana"
+msgstr "Nombre de la aduana"
 
 #. module: l10n_cl
-#: model:l10n_latam.identification.type,name:l10n_cl.it_DNI
-msgid "DNI"
-msgstr ""
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_nd_f_dte
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_nd_f_dtn
+msgid "DEBIT NOTE"
+msgstr "NOTA DE DEBITO"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_din_f_dtn
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_dizf_f_dtn
+msgid "DEC ING"
+msgstr "DEC ING"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_dus
+msgid "DUS"
+msgstr "DUS"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.informations
 msgid "Date:"
-msgstr "Fecha:"
+msgstr "Date:"
 
 #. module: l10n_cl
-#: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
-msgid "Datos adic. dirección y Ciudad"
-msgstr ""
+#: model:l10n_latam.document.type,name:l10n_cl.dc_nd_f_dtn
+msgid "Debit Note"
+msgstr "Nota de Débito"
 
 #. module: l10n_cl
 #: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__debit_note
@@ -240,41 +424,95 @@ msgid "Debit Notes"
 msgstr "Notas de Débito"
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_account_chart_template__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_account_journal__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_account_move__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_account_tax__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_account_tax_template__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_ir_sequence__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_res_bank__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_res_company__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_res_country__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_res_currency__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_res_partner__display_name
-#: model:ir.model.fields,field_description:l10n_cl.field_uom_uom__display_name
-msgid "Display Name"
-msgstr "Nombre mostrado"
+#: model:l10n_latam.document.type,name:l10n_cl.dc_dizf_f_dtn
+msgid "Declaration of Entry to Primary Free Trade Zone"
+msgstr "Declaración de Ingreso a Zona Franca Primaria"
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_account_bank_statement_line__l10n_latam_document_type_id_code
-#: model:ir.model.fields,field_description:l10n_cl.field_account_move__l10n_latam_document_type_id_code
-#: model:ir.model.fields,field_description:l10n_cl.field_account_payment__l10n_latam_document_type_id_code
-msgid "Doc Type"
-msgstr "T.doc"
+#: model:res.currency,l10n_cl_short_name:l10n_cl.UF
+msgid "Development Unit"
+msgstr "Unidad de Fomento"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_gd
+msgid "Dispatch Guide"
+msgstr "Guía de Despacho"
+
+#. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
 "Document types for foreign customers must be export type (codes 110, 111 or "
-"112) or you                             should define the customer as an end"
-" consumer and use receipts (codes 39 or 41)"
-msgstr "Los tipos de documento para clientes extranjeros deben ser de exportación. "
-"(Códigos 110, 111 o 112) o debe definir al cliente como consumidor final y utilizar "
-"recibos (códigos 39 o 41)"
+"112) or you should define the customer as an end consumer and use receipts "
+"(codes 39 or 41)"
+msgstr ""
+"Las clases de documentos para clientes extranjeros deben ser de tipo "
+"exportación (códigos 110, 111 o 112) o debe definir al cliente como "
+"consumidor final y utilizar recibos  (códigos 39 o 41)"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_b_f_dte
+msgid "Electronic Ballot"
+msgstr "Boleta Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_nc_f_dte
+msgid "Electronic Credit Note"
+msgstr "Nota de Crédito Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_nd_f_dte
+msgid "Electronic Debit Note"
+msgstr "Nota de Débito Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_gd_dte
+msgid "Electronic Dispatch Guide"
+msgstr "Guía de Despacho Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_ncex_dte
+msgid "Electronic Export Credit Note"
+msgstr "Nota de Crédito de Exportación Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_ndex_dte
+msgid "Electronic Export Debit Note"
+msgstr "Nota de Débito de Exportación Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_fe_dte
+msgid "Electronic Export Invoice"
+msgstr "Factura de Exportación Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_m_d_dtn
+msgid "Electronic Fee Slips"
+msgstr "Boleta de Honorarios Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_a_f_dte
+msgid "Electronic Invoice"
+msgstr "Factura Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_l_f_dte
+msgid "Electronic Invoice Settlement"
+msgstr "Liquidación Factura Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_fc_f_dte
+msgid "Electronic Purchase Invoice"
+msgstr "Factura de Compra Electrónica"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_b_e_dte
+msgid "Electronic Tax Receipt"
+msgstr "Boleta Exenta Electrónica"
+
+#. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/res_partner.py:0
 #: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__3
 #, python-format
@@ -283,17 +521,108 @@ msgstr "Consumidor final"
 
 #. module: l10n_cl
 #: model:uom.category,name:l10n_cl.uom_categ_energy
-msgid "Energía"
-msgstr ""
+msgid "Energy"
+msgstr "Energía"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_tcd_f_dtn
+msgid "Exchange Rate Decrease Adjustment (code 501)"
+msgstr "Ajuste disminución Tipo de Cambio (código 501)"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_tca_f_dtn
+msgid "Exchange Rate Increase Adjustment (code 500)"
+msgstr "Ajuste aumento Tipo de Cambio (código 500)"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_ventas_exentas
+msgid "Exempt Sales"
+msgstr "Ventas Exentas"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_b_e_dtn
+msgid "Exempt ballot"
+msgstr "Boleta exenta"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_y_f_dte
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_y_f_dtn
+msgid "F-EXENTA"
+msgstr "F-EXENTA"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_frr_f_dtn
+msgid "FACT RX"
+msgstr "FACT RX"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_ftt_f_dtn
+msgid "FACT TR"
+msgstr "FACT TR"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_a_f_dtn
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fc_f_dte
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fc_f_dtn
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_ftf_f_dtn
+msgid "FACTURA"
+msgstr "FACTURA"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fzf_f_dtn
+msgid "FACTURA ZF"
+msgstr "FACTURA ZF"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_I_f_dtn
+msgid "FAI"
+msgstr "FAI"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fichc
+msgid "FCHC"
+msgstr "FCHC"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_fe_dte
+msgid "FCXE"
+msgstr "FCXE"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_m_f_dtn
+msgid "Fee Slips"
+msgstr "Boleta de Honorarios"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_fees_amount
+msgid "Fees - Amounts Subject to 2 Category Income Tax Withholding"
+msgstr "Honorarios -  Montos Sujetos a Retención Renta 2 Categoría"
+
+#. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/res_partner.py:0
 #: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__2
 #, python-format
 msgid "Fees Receipt Issuer (2nd category)"
-msgstr "Emisor de boleta 2da categoría"
+msgstr "Emisor de recibos de tasas (2ª categoría)"
 
 #. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_impuestos_renta
+msgid "First Category Income Taxes Payable"
+msgstr "Impuesto a la Renta Primera Categoría a Pagar"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
+msgid "Folio"
+msgstr "Folio"
+
+#. module: l10n_cl
+#: model:l10n_latam.identification.type,description:l10n_cl.it_DNI
+msgid "Foreign ID"
+msgstr "DNI Extranjero"
+
+#. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/res_partner.py:0
 #: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__4
 #, python-format
@@ -301,53 +630,99 @@ msgid "Foreigner"
 msgstr "Extranjero"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_gd
+msgid "GD"
+msgstr "GD"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_gd_dte
+msgid "GDE"
+msgstr "GDE"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_hem
+msgid "HEM"
+msgstr "HEM"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_hes
+msgid "HES"
+msgstr "HES"
+
+#. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_hl
 msgid "HL"
-msgstr ""
+msgstr "HL"
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_account_chart_template__id
-#: model:ir.model.fields,field_description:l10n_cl.field_account_journal__id
-#: model:ir.model.fields,field_description:l10n_cl.field_account_move__id
-#: model:ir.model.fields,field_description:l10n_cl.field_account_tax__id
-#: model:ir.model.fields,field_description:l10n_cl.field_account_tax_template__id
-#: model:ir.model.fields,field_description:l10n_cl.field_ir_sequence__id
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__id
-#: model:ir.model.fields,field_description:l10n_cl.field_res_bank__id
-#: model:ir.model.fields,field_description:l10n_cl.field_res_company__id
-#: model:ir.model.fields,field_description:l10n_cl.field_res_country__id
-#: model:ir.model.fields,field_description:l10n_cl.field_res_currency__id
-#: model:ir.model.fields,field_description:l10n_cl.field_res_partner__id
-#: model:ir.model.fields,field_description:l10n_cl.field_uom_uom__id
-msgid "ID"
-msgstr "ID (identificación)"
+#: model:l10n_latam.identification.type,name:l10n_cl.it_DNI
+msgid "ID CARD"
+msgstr "DNI"
 
 #. module: l10n_cl
-#: model:account.tax.group,name:l10n_cl.tax_group_ila
-msgid "ILA"
-msgstr ""
+#: model:account.report.line,name:l10n_cl.tax_report_tax_ila_ventas
+msgid "ILA Tax Ret Practiced (sales)"
+msgstr "Impuesto Ret Practicadas ILA (ventas)"
 
 #. module: l10n_cl
-#: model:account.tax.group,name:l10n_cl.tax_group_iva_19
-msgid "IVA 19%"
-msgstr ""
+#: model:account.report.line,name:l10n_cl.tax_report_base_ila_compras
+msgid "ILA Withholding Base (purchases)"
+msgstr "Base Retenciones ILA (compras)"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_base_ila_ventas
+msgid "ILA Withholding Base (sales)"
+msgstr "Base Retenciones ILA (ventas)"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_a_f_dte
+msgid "INVOICE"
+msgstr "FACTURA"
 
 #. module: l10n_cl
 #: model:ir.model.fields,help:l10n_cl.field_account_bank_statement_line__partner_id_vat
 #: model:ir.model.fields,help:l10n_cl.field_account_move__partner_id_vat
 #: model:ir.model.fields,help:l10n_cl.field_account_payment__partner_id_vat
 msgid "Identification Number for selected type"
-msgstr "Número de identificación para el tipo seleccionado"
+msgstr "Número de identificación del tipo seleccionado"
 
 #. module: l10n_cl
-#: model:account.tax.group,name:l10n_cl.tax_group_impuestos_especificos
-msgid "Impuestos Específicos"
-msgstr ""
+#: model:l10n_latam.document.type,name:l10n_cl.dc_din_f_dtn
+msgid "Income Statement (DIN)"
+msgstr "Declaración de Ingreso (DIN)"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__internal_type
 msgid "Internal Type"
 msgstr "Tipo interno"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_a_f_dtn
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_l_f_dtn
+msgid "Invoice Settlement"
+msgstr "Liquidación Factura"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_ftf_f_dtn
+msgid ""
+"Invoice for sales to companies in the preferential territory ( Ex. Res. No. "
+"1057"
+msgstr ""
+"Factura de ventas a empresas del territorio preferencial ( Res. Ex. N° 1057"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_I_f_dtn
+msgid "Invoice of Initiation"
+msgstr "Factura de Inicio"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_y_f_dtn
+msgid "Invoice of Sales and Services not Affected or Exempt from VAT"
+msgstr "Factura de Ventas y Servicios no Afectos o Exentos de IVA"
 
 #. module: l10n_cl
 #: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__invoice
@@ -357,12 +732,7 @@ msgstr "Facturas"
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
 msgid "Invoices and Refunds"
-msgstr "Facturas y notas de crédito"
-
-#. module: l10n_cl
-#: model:ir.model,name:l10n_cl.model_account_journal
-msgid "Journal"
-msgstr "Diario"
+msgstr "Facturas y devoluciones"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_account_move
@@ -370,83 +740,202 @@ msgid "Journal Entry"
 msgstr "Asiento contable"
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_ir_sequence__l10n_cl_journal_ids
-msgid "Journals"
-msgstr "Diarios"
+#: model:ir.model,name:l10n_cl.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_knfc
 msgid "KNFC"
-msgstr ""
+msgstr "KNFC"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_kwh
 msgid "KWH"
-msgstr ""
+msgstr "KWH"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_l_f_dte
+msgid "L-FACTURAE"
+msgstr "L-FACTURAE"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_l_f_dtn
+msgid "L-FACTURAM"
+msgstr "L-FACTURAM"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_account_bank_statement_line__l10n_latam_internal_type
 #: model:ir.model.fields,field_description:l10n_cl.field_account_move__l10n_latam_internal_type
 #: model:ir.model.fields,field_description:l10n_cl.field_account_payment__l10n_latam_internal_type
 msgid "L10n Latam Internal Type"
-msgstr "L10n Tipo Interno (Latam)"
+msgstr "L10n Latam Tipo interno"
 
 #. module: l10n_cl
-#: model:ir.model.fields,field_description:l10n_cl.field_account_chart_template____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_account_journal____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_account_move____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_account_tax____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_account_tax_template____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_ir_sequence____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_res_bank____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_res_company____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_res_country____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_res_currency____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_res_partner____last_update
-#: model:ir.model.fields,field_description:l10n_cl.field_uom_uom____last_update
-msgid "Last Modified on"
-msgstr "Última modificación en"
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_li
+msgid "LIQ"
+msgstr "LIQ"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_l10n_latam_document_type
 msgid "Latam Document Type"
-msgstr "Tipo Documento (LA)"
+msgstr "Tipo de Documento Latam"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_li
+msgid "Liquidation"
+msgstr "Liquidación"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
 msgid "Logo"
-msgstr ""
+msgstr "Logotipo"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_mm
 msgid "M2/1MM"
-msgstr ""
+msgstr "M2/1MM"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_mcub
 msgid "MCUB"
-msgstr ""
+msgstr "MCUB"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_mic_dta
+msgid "MDT"
+msgstr "MDT"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_mic_dta
+msgid "MIC/DTA"
+msgstr "MIC/DTA"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_migo
+msgid "MIGO"
+msgstr "MIGO"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_mkwh
 msgid "MKWH"
-msgstr ""
+msgstr "MKWH"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_mt2
 msgid "MT2"
-msgstr ""
+msgstr "MT2"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_hem
+msgid "Material Entry Sheet (HEM)"
+msgstr "Hoja de Entrada de Materiales (HEM)"
+
+#. module: l10n_cl
+#: model:res.currency,l10n_cl_short_name:l10n_cl.UTM
+msgid "Monthly Tax Unit"
+msgstr "Unidad Tributaria Mensual"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_migo
+msgid "Movement of Goods (MIGO)"
+msgstr "Movimiento de Mercancías (MIGO)"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_ncex_dte
+msgid "NCXE"
+msgstr "NCXE"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_ndex_dte
+msgid "NDXE"
+msgstr "NDXE"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_ndp
+msgid "NP"
+msgstr "NP"
+
+#. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_cl
+#: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__report_name
+msgid "Name that will be printed in reports, for example \"CREDIT NOTE\""
+msgstr "Nombre que será impreso en los reportes, por ejemplo \"NOTA DE CREDITO\""
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_netas_gr_iva_recup
+msgid "Net Purchases Taxed with VAT (recoverable)"
+msgstr "Compras Netas Gravadas Con IVA (recuperable)"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_ventas_netas_gravadas_c_iva
+msgid "Net Sales Taxed with VAT"
+msgstr "Ventas Netas Gravadas con IVA"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_oc
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_odc
+msgid "OC"
+msgstr "OC"
+
+#. module: l10n_cl
+#: model:res.currency,l10n_cl_short_name:l10n_cl.OTR
+msgid "OTR"
+msgstr "OTR"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_ndp
+msgid "Order Note"
+msgstr "Nota de pedido"
 
 #. module: l10n_cl
 #: model:uom.category,name:l10n_cl.uom_categ_others
-msgid "Otros"
-msgstr ""
+msgid "Others"
+msgstr "Otros"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_pag
+msgid "PAG"
+msgstr "PAG"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_par
 msgid "PAR"
-msgstr ""
+msgstr "PAR"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_res_vn_sf
+msgid "PASJ"
+msgstr "PASJ"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_prchc
+msgid "PCHC"
+msgstr "PCHC"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_ppm
+msgid "PPM"
+msgstr "PPM"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_pasap
+msgid "PSP"
+msgstr "PSP"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_pasap
+msgid "Passport"
+msgstr "Pasaporte"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_vp_pren
+msgid "Pledge Voucher Bolsa Prod. Chile"
+msgstr "Vale de Prenda Bolsa Prod. Chile"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_uom_uom
@@ -454,26 +943,195 @@ msgid "Product Unit of Measure"
 msgstr "Unidad de medida del producto"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_pag
+msgid "Promissory note"
+msgstr "Pagaré"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_netas_gr_iva_uso_comun
+msgid "Purchase Engraved Nets With VAT Communal Use"
+msgstr "Compra Netas Gravadas Con IVA Uso Comun"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_fc_f_dtn
+msgid "Purchase Invoice"
+msgstr "Factura de Compra"
+
+#. module: l10n_cl
 #: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__invoice_in
 msgid "Purchase Invoices"
-msgstr "Facturas de proveedores"
+msgstr "Facturas de compra"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_oc
+#: model:l10n_latam.document.type,name:l10n_cl.dc_odc
+msgid "Purchase Order"
+msgstr "Orden de Compra"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_otros_imp
+msgid "Purchases - Amount Other Taxes"
+msgstr "Compras - Monto Otros Impuestos"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_uso_comun
+msgid "Purchases - Amount VAT Commun Use"
+msgstr "Compras - Monto IVA Uso Comun"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_actf_no_recup
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_actf_uso_comun
+msgid "Purchases - Amount of Active Fixed VAT (Common Use)"
+msgstr "Compras - Monto IVA Activo Fijo (Uso Común)"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva
+msgid "Purchases - Amount of Recoverable VAT"
+msgstr "Compras - Monto IVA Recuperable"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_imp_42
+msgid "Purchases - Credit Imp Art 42"
+msgstr "Compras - Credito Imp Art 42"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_actf
+msgid "Purchases - Fixed VAT Amount"
+msgstr "Compras - Monto IVA Activo Fijo"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_imp_vehic
+msgid "Purchases - Motor Vehicle Tax"
+msgstr "Compras - Impuesto a Vehículos Automotores"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_no_rec
+msgid "Purchases - Non Recoverable VAT Amount"
+msgstr "Compras - Monto IVA No Recuperable"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_imp_sin_cred
+msgid "Purchases - Tax No Credit"
+msgstr "Compras - Impuesto Sin Credito"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_imp_sin_credito
+msgid "Purchases - Taxes Without Credit"
+msgstr "Compras - Impuestos Sin Crédito"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_tab_puros
+msgid "Purchases - Total Manufactured Cigars"
+msgstr "Compras - Total Tabacos Manufacturados Puros"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_tab_cigar
+msgid "Purchases - Total Manufactured Tobacco Cigarettes"
+msgstr "Compras - Total Tabacos Manufacturados Cigarrillos"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_tab_elab
+msgid "Purchases - Total Manufactured Tobacco Products"
+msgstr "Compras - Total Tabacos Manufacturados Elaborados"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_neto
+msgid "Purchases - Total Net Amount"
+msgstr "Compras - Total Monto Neto"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_neto_uso_comun
+msgid "Purchases - Total Net Amount Common Use"
+msgstr "Compras - Total Monto Neto Uso Común"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_neto_supermercado
+msgid "Purchases - Total Net Amount Supermarket Purchases"
+msgstr "Compras - Total Monto Neto Compras de Supermercado"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_neto_no_recup
+msgid "Purchases - Total Net Amount not Recoverable"
+msgstr "Compras - Total Monto Neto No Recuperable"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_neto_actf
+msgid "Purchases - Total Nets Amount Fixed Assets"
+msgstr "Compras - Total Monto Neto Activo Fijo"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_iva_no_reten
+msgid "Purchases - VAT Not Withheld"
+msgstr "Compras - IVA No Retenido"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_iva_no_ret
+msgid "Purchases - VAT Not Withheld Purchasing fac"
+msgstr "Compras - IVA No Retenido Fac de compra"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_iva_activo_fijo
+msgid "Purchases Fixed Assets"
+msgstr "Compras Activo Fijo"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_netas_gr_iva_no_recuperable
+msgid "Purchases Non-recoverable VAT"
+msgstr "Compras IVA No Recuperable"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_no_gravadas_iva
+msgid "Purchases Not Taxed With VAT"
+msgstr "Compras No Gravadas Con IVA"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_activo_fijo_uso_comun
+#: model:account.report.line,name:l10n_cl.tax_report_compras_iva_activo_fijo_uso_comun
+msgid "Purchases of Fixed Assets Common Use"
+msgstr "Compras de Activo Fijo Uso Común"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_iva_activo_fijo_no_recup
+msgid "Purchases of Non Recoverable Fixed Assets"
+msgstr "Compras Activo Fijo No Recuperables"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_activo_fijo
+msgid "Purchases of fixed assets"
+msgstr "Compras de Activo Fijo"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_activo_fijo_no_recup
+msgid "Purchases of non-recoverable fixed assets"
+msgstr "Compras de Activo Fijo No Recuperable"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_qmb
 msgid "QMB"
-msgstr ""
+msgstr "QMB"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_qnt
 msgid "QNT"
-msgstr ""
+msgstr "QNT"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_resol
+msgid "RES"
+msgstr "RES"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_res_sna
+msgid "RSN"
+msgstr "RSN"
 
 #. module: l10n_cl
 #: model:l10n_latam.identification.type,name:l10n_cl.it_RUN
 msgid "RUN"
-msgstr ""
+msgstr "RUN"
 
 #. module: l10n_cl
+#: model:l10n_latam.identification.type,description:l10n_cl.it_RUT
 #: model:l10n_latam.identification.type,name:l10n_cl.it_RUT
 msgid "RUT"
 msgstr "RUT"
@@ -481,45 +1139,155 @@ msgstr "RUT"
 #. module: l10n_cl
 #: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__receipt_invoice
 msgid "Receipt Invoice"
-msgstr ""
+msgstr "Recibo Factura"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
-msgid "Región"
-msgstr ""
+msgid "Region"
+msgstr "Región"
 
 #. module: l10n_cl
-#: model:account.tax.group,name:l10n_cl.tax_group_retenciones
-msgid "Retenciones"
-msgstr ""
+#: model:l10n_latam.identification.type,description:l10n_cl.it_RUN
+msgid "Registration"
+msgstr "Cédula"
 
 #. module: l10n_cl
-#: model:account.tax.group,name:l10n_cl.tax_group_2da_categ
-msgid "Retención de 2da Categoría"
-msgstr ""
+#: model:l10n_latam.document.type,name:l10n_cl.dc_frr_f_dtn
+msgid "Reissue Invoice"
+msgstr "Factura de Reexpedición"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_remanente_cf
+msgid "Remaining Tax Credit"
+msgstr "Remanente Crédito Fiscal"
+
+#. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__report_name
+msgid "Report name"
+msgstr "Nombre en Reportes"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_resol
+msgid "Resolution"
+msgstr "Resolución"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_res_sna
+msgid "Resolution of the SNA where it qualifies Export Services"
+msgstr "Resolución del SNA donde califica Servicios de Exportación"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_tax_ila_compras
+msgid "Ret Suffered Tax ILA (purchases)"
+msgstr "Impuesto Ret Sufrida ILA (compras)"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_sum
 #: model:uom.uom,name:l10n_cl.product_uom_sum_99
 msgid "S.U.M"
-msgstr ""
+msgstr "S.U.M"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_account_tax__l10n_cl_sii_code
 #: model:ir.model.fields,field_description:l10n_cl.field_account_tax_template__l10n_cl_sii_code
 #: model:ir.model.fields,field_description:l10n_cl.field_uom_uom__l10n_cl_sii_code
 msgid "SII Code"
-msgstr "Código SII"
+msgstr "SII Code"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_s_f_dtn
+msgid "SOL REGISTRO"
+msgstr "SOL REGISTRO"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_s_f_dtn
+msgid "SRF Invoice Registration Request"
+msgstr "SRF Solicitud de Registro de Factura"
 
 #. module: l10n_cl
 #: model:ir.actions.act_window,name:l10n_cl.sale_invoices_credit_notes
 msgid "Sale Invoices and Credit Notes"
-msgstr "Facturas de Venta y Notas de Crédito"
+msgstr "Facturas de venta y notas de crédito"
 
 #. module: l10n_cl
 #: model:ir.ui.menu,name:l10n_cl.menu_sale_invoices_credit_notes
 msgid "Sale Invoices and Credit Notes (CL)"
-msgstr "Facturas de Vta y Notas de Crédito (CL)"
+msgstr "Facturas de venta y notas de crédito (CL)"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_dep_env
+msgid "Sales - Container Depot"
+msgstr "Ventas - Depósito de Envases"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_exento_vta_pasajes_nacional
+msgid "Sales - Exempt Domestic Ticket Sales"
+msgstr "Ventas - Exento Ventas de Pasajes Nacional"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_exento_vta_pasajes_internacional
+msgid "Sales - Exempt Sales of International Tickets"
+msgstr "Ventas - Exento Ventas de Pasajes Internacional"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_otros_imp
+msgid "Sales - Other Taxes"
+msgstr "Ventas - Otros Impuestos"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_iva_propio
+msgid "Sales - Own VAT"
+msgstr "Ventas - IVA Propio"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_cred_ec
+msgid "Sales - Special Credit 65% Construction Companies"
+msgstr "Ventas - Credito Especial 65% Empresas Constructoras"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_mnt_exe
+msgid "Sales - Total Amount Exempt or Unrecorded"
+msgstr "Ventas - Total Monto Exento o No Gravado"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_mnt_neto
+msgid "Sales - Total Net Amount"
+msgstr "Ventas - Total Monto Neto"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_valor_neto_comis
+msgid "Sales - Total Net Value Commissions and Other Charges"
+msgstr "Ventas - Total Valor Neto Comisiones y Otros Cargos"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_valor_comisiones_no_afecto
+msgid "Sales - Total Net Value Commissions and Other Unaffected Charges"
+msgstr "Ventas - Total Valor Neto Comisiones y Otros Cargos No Afectos"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_monto_no_facturable
+msgid "Sales - Total Non-Billable Amount"
+msgstr "Ventas - Total Monto No Facturable"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_iva_comisiones
+msgid "Sales - VAT Commissions and Other Charges"
+msgstr "Ventas - IVA Comisiones y Otros Cargos"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_iva_18211
+msgid "Sales - VAT Law 18211"
+msgstr "Ventas - IVA Ley 18211"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_mnt_fuera_plazo
+msgid "Sales - VAT Out of Time"
+msgstr "Ventas - IVA Fuera de Plazo"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_fzf_f_dtn
+msgid "Sales Invoices ZF Module (all)"
+msgstr "Facturas Venta Módulo ZF (todas)"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
@@ -527,9 +1295,34 @@ msgid "Sales Person"
 msgstr "Comercial"
 
 #. module: l10n_cl
-#: model:ir.model,name:l10n_cl.model_ir_sequence
-msgid "Sequence"
-msgstr "Secuencia"
+#: model:account.report.line,name:l10n_cl.tax_report_impuestos_originados_venta
+msgid "Sales Tax"
+msgstr "Impuesto Originado por la Venta"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_retencion_segunda_categ
+msgid "Second Category Withholding"
+msgstr "Retención Segunda Categoría"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_base_retencion_segunda_categ
+msgid "Second Category Withholding Base"
+msgstr "Base Retención Segunda Categoría"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_hes
+msgid "Service Entry Sheet (HES)"
+msgstr "Hoja de Entrada de Servicio (HES)"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_iva_supermercado
+msgid "Shopping - VAT amount for Supermarket purchases"
+msgstr "Compras - Monto IVA Compras Supermercado"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_purchase_mnt_exe
+msgid "Shopping Cart - Total Exempt or Unrecorded Amount"
+msgstr "Compras - Total Monto Exento o No Gravado"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_res_currency__l10n_cl_short_name
@@ -537,19 +1330,54 @@ msgid "Short Name"
 msgstr "Nombre corto"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_dus
+msgid "Single Exit Document (DUS)"
+msgstr "Documento Único de Salida (DUS)"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_impuesto_unico_trabajadores
+msgid "Single Tax Workers"
+msgstr "Impuesto Único Trabajadores"
+
+#. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
 msgid "Source Document"
-msgstr "Documento origen"
+msgstr "Documento fuente"
+
+#. module: l10n_cl
+#: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__stock_picking
+msgid "Stock Delivery"
+msgstr "Entrega de existencias"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_res_vn_sf
+msgid "Summary of Domestic Sales without Invoice"
+msgstr "Resumen Ventas de nacionales pasajes sin Factura"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_supermercado
+msgid "Supermarket Shopping"
+msgstr "Compras de Supermercado"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_tca_f_dtn
+msgid "TC-A"
+msgstr "TC-A"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_tcd_f_dtn
+msgid "TC-D"
+msgstr "TC-D"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_tmb
 msgid "TMB"
-msgstr ""
+msgstr "TMB"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_tmn
 msgid "TMN"
-msgstr ""
+msgstr "TMN"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_account_tax
@@ -558,37 +1386,49 @@ msgid "Tax"
 msgstr "Impuesto"
 
 #. module: l10n_cl
-#: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
-msgid "Tax Payer Type"
-msgstr "Tipo de Contribuyente"
+#: model:account.report,name:l10n_cl.tax_report
+msgid "Tax Report"
+msgstr "Informe fiscal"
 
 #. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
 "Tax payer type and vat number are mandatory for this type of document. "
 "Please set the current tax payer type of this customer"
 msgstr ""
-"El tipo de contribuyente y el número de RUT son requeridos para este tipo de"
-" documento. Por favor establezca un valor para el tipo de contribuyente de "
-"este Cliente"
+"El tipo de contribuyente y el número de iva son obligatorios para este tipo "
+"de documento. Por favor, establezca el tipo de contribuyente actual de este "
+"cliente"
 
 #. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
 "Tax payer type and vat number are mandatory for this type of document. "
 "Please set the current tax payer type of this supplier"
 msgstr ""
-"El tipo de contribuyente y el número de RUT son requeridos para este tipo de"
-" documento. Por favor establezca un valor para el tipo de contribuyente de "
-"este Proveedor"
+" El tipo de contribuyente y el número de iva son obligatorios para este tipo"
+" de documento. Por favor, establezca el tipo de contribuyente actual de este"
+" proveedor"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_base_imponible_ventas
+msgid "Taxable Sales Base"
+msgstr "Base Imponible Ventas"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_impuestos_pagados_compra
+msgid "Taxes Paid on Purchase"
+msgstr "Impuestos Pagados en la Compra"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_res_partner__l10n_cl_sii_taxpayer_type
 #: model:ir.model.fields,field_description:l10n_cl.field_res_users__l10n_cl_sii_taxpayer_type
 msgid "Taxpayer Type"
-msgstr "Tipo de Contribuyente"
+msgstr "Tipo de contribuyente"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_account_tax_template
@@ -596,16 +1436,23 @@ msgid "Templates for Taxes"
 msgstr "Plantilla de impuestos"
 
 #. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
 "The DIN document is intended to be used only with RUT 60805000-0 (Tesorería "
 "General de La República)"
 msgstr ""
-"El documento “declaración de ingreso” (DIN) debe ser usado solamente para "
-"“Tesorería General de La República” (RUT 60805000-0)"
+"El documento DIN está destinado a ser utilizado únicamente con el RUT "
+"60805000-0 (Tesorería General de La República)"
 
 #. module: l10n_cl
+#: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__name
+msgid "The document name"
+msgstr "El nombre del documento"
+
+#. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
@@ -613,27 +1460,34 @@ msgid ""
 "document."
 msgstr ""
 "El tipo de contribuyente de este proveedor es incorrecto para el tipo de "
-"documento seleccionado."
+"documento."
 
 #. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
 "The tax payer type of this supplier is not entitled to deliver fees "
 "documents"
 msgstr ""
-"El tipo de contribuyente para este proveedor no puede emitir boletas de "
-"honorarios"
+"El tipo de contribuyente de este proveedor no tiene derecho a la entrega de "
+"tasas documentos"
 
 #. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
 "The tax payer type of this supplier is not entitled to deliver imports "
 "documents"
 msgstr ""
-"El tipo de contribuyente para este proveedor no puede emitir documentos de "
-"importación"
+"El tipo de contribuyente de este proveedor no tiene derecho a entregar "
+"importaciones documentos"
+
+#. module: l10n_cl
+#: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__l10n_cl_active
+msgid "This boolean enables document to be included on invoicing"
+msgstr "Este booleano permite incluir el documento en la facturación"
 
 #. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
@@ -641,38 +1495,114 @@ msgid "Total"
 msgstr "Total"
 
 #. module: l10n_cl
-#: model:uom.uom,name:l10n_cl.product_uom_u
-msgid "U(JGO)"
-msgstr ""
+#: model:account.report.line,name:l10n_cl.tax_report_retencion_total_compras
+msgid "Total retention (purchases)"
+msgstr "Retención Total (compras)"
 
 #. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_ftt_f_dtn
+msgid "Transfer Invoice"
+msgstr "Factura de Traspaso"
+
+#. module: l10n_cl
+#: model:uom.uom,name:l10n_cl.product_uom_u
+msgid "U(JGO)"
+msgstr "U(JGO)"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,name:l10n_cl.dc_y_f_dte
+msgid "Unaffected or Exempt Electronic Invoice"
+msgstr "Factura no Afecta o Exenta Electrónica"
+
+#. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/res_partner.py:0
 #: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__1
 #, python-format
 msgid "VAT Affected (1st Category)"
-msgstr "IVA afecto 1ª categoría"
+msgstr "IVA afectado (1ª categoría)"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_account_bank_statement_line__partner_id_vat
 #: model:ir.model.fields,field_description:l10n_cl.field_account_move__partner_id_vat
 #: model:ir.model.fields,field_description:l10n_cl.field_account_payment__partner_id_vat
 msgid "VAT No"
-msgstr "RUT Nº"
+msgstr "Nº IVA"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_iva_no_recup
+msgid "VAT Paid Not Recoverable"
+msgstr "IVA Pagado No Recuperable"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_iva_uso_comun
+msgid "VAT Paid Purchases Common Use"
+msgstr "IVA Pagado Compras Uso Común"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_iva_recup
+msgid "VAT Paid Purchases Recoverable"
+msgstr "IVA Pagado Compras Recuperables"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_compras_iva_supermercado
+msgid "VAT Paid Supermarket Purchases"
+msgstr "IVA Pagado Compras Supermercado"
+
+#. module: l10n_cl
+#: model:account.report.line,name:l10n_cl.tax_report_iva_debito_fiscal
+msgid "VAT Tax Debit"
+msgstr "IVA Débito Fiscal"
+
+#. module: l10n_cl
+#: model:l10n_latam.document.type,report_name:l10n_cl.dc_vp_pren
+msgid "VLPR"
+msgstr "VLPR"
 
 #. module: l10n_cl
 #: model:ir.actions.act_window,name:l10n_cl.vendor_bills_and_refunds
 msgid "Vendor Bills and Refunds"
-msgstr "Facturas y Notas de Créd de Proveedores"
+msgstr "Facturas de proveedores y reembolsos"
 
 #. module: l10n_cl
 #: model:ir.ui.menu,name:l10n_cl.menu_vendor_bills_and_refunds
 msgid "Vendor Bills and Refunds (CL)"
-msgstr "Facturas de Proveedor y Notas de Crédito (CL)"
+msgstr "Facturas de proveedores y reembolsos (CL)"
 
 #. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_mnt_iva
+msgid "Sales - Amount VAT"
+msgstr "Ventas - Monto IVA"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_iva_no_retenido
+msgid "Sales - VAT Not Withheld"
+msgstr "Ventas - IVA No Retenido"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_iva_ret_parcial
+msgid "Sales - Partial Withholding VAT"
+msgstr "Ventas - IVA Retenido Parcial"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_iva_ret_total
+msgid "Sales - Total VAT Withheld"
+msgstr "Ventas - IVA Retenido Total"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_iva_terceros
+msgid "Sales - VAT Third parties"
+msgstr "Ventas - IVA Terceros"
+
+#. module: l10n_cl
+#: model:account.account.tag,name:l10n_cl.tag_cl_sale_mnt_exe
+msgid "Sales - Total Amount Exempt or Unrecorded"
+msgstr "Ventas - Total Monto Exento o No Gravado"
+
+#. module: l10n_cl
+#. odoo-python
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid "You need a journal without the use of documents for foreign suppliers"
 msgstr ""
-"Ud. necesita un diario que no use documentos para registrar facturas de "
-"proveedores extranjeros"
+"Necesita un diario sin el uso de documentos para proveedores extranjeros"

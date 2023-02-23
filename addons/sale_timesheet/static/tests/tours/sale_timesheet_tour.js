@@ -2,12 +2,13 @@ odoo.define('sale_timesheet.tour', function (require) {
 "use strict";
 
 const {Markup} = require('web.utils');
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-tour.register('sale_timesheet_tour', {
+registry.category("web_tour.tours").add('sale_timesheet_tour', {
     test: true,
     url: '/web',
-}, [...tour.stepUtils.goToAppSteps("sale.sale_menu_root", 'Go to the Sales App'),
+    steps: [...stepUtils.goToAppSteps("sale.sale_menu_root", 'Go to the Sales App'),
 {
     trigger: 'button.o_list_button_add',
     content: 'Click on CREATE button to create a quotation with service products.',
@@ -16,7 +17,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Add the customer for this quotation (e.g. Brandon Freeman)',
     run: 'text Brandon Freeman',
 }, {
-    trigger: 'ul.o_partner_autocomplete_dropdown > li:first-child > a:contains(Freeman)',
+    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the first item on the autocomplete dropdown',
 },
 {
@@ -27,24 +28,17 @@ tour.register('sale_timesheet_tour', {
     content: Markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
     run: 'text Service Product (Prepaid Hours)',
 }, {
-    trigger: 'ul.ui-menu.ui-widget.ui-autocomplete > li:first-child > a:contains(Service Product (Prepaid Hours))',
+    trigger: 'ul.ui-autocomplete a:contains(Service Product (Prepaid Hours))',
     content: 'Select the prepaid service product in the autocomplete dropdown',
 }, {
-    trigger: 'input[name="product_uom_qty"]',
+    trigger: 'div[name="product_uom_qty"] input',
     content: "Add 10 hours as ordered quantity for this product.",
     run: 'text 10',
 }, {
     trigger: 'button[name="action_confirm"]',
     content: 'Click on Confirm button to create a sale order with this quotation.',
-}, {
-    trigger: 'button.o_form_button_save',
-    extra_trigger: '.o_field_widget[name=state] button[data-value=sale].btn-primary',
-    content: 'Click on Save button to save the Sales Order.',
-}, {
-    trigger: '.o_form_readonly',
-    content: 'Save is done and form is reloaded.',
-}, tour.stepUtils.toggleHomeMenu(),
-...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
+}, stepUtils.toggleHomeMenu(),
+...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
 {
     trigger: 'button.o-kanban-button-new',
     content: 'Add a new project.',
@@ -78,7 +72,7 @@ tour.register('sale_timesheet_tour', {
     content: Markup('Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
     run: 'text Brandon Freeman',
 }, {
-    trigger: 'ul.o_partner_autocomplete_dropdown > li:first-child > a:contains(Freeman)',
+    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown.',
 }, {
     trigger: 'a.nav-link:contains(Timesheets)',
@@ -149,12 +143,8 @@ tour.register('sale_timesheet_tour', {
     content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
     run: 'text Brandon Freeman',
 }, {
-    trigger: 'ul.o_partner_autocomplete_dropdown > li:first-child > a:contains(Freeman)',
+    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
-}, {
-    trigger: 'a.nav-link[name="billing_employee_rate"]',
-    extra_trigger: 'div.o_notebook_headers',
-    content: 'Click on Invoicing tab to configure the invoicing of this project.',
 }, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
@@ -162,6 +152,10 @@ tour.register('sale_timesheet_tour', {
 }, {
     trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
+}, {
+    trigger: 'a.nav-link[name="billing_employee_rate"]',
+    extra_trigger: 'div.o_notebook_headers',
+    content: 'Click on Invoicing tab to configure the invoicing of this project.',
 }, {
     trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > a[role="button"]',
     content: 'Click on Add a line on the mapping list view.',
@@ -185,13 +179,10 @@ tour.register('sale_timesheet_tour', {
     content: 'Set Project name',
     run: 'text Project with employee mapping',
 }, {
-    trigger: '.o_form_button_save',
-    content: 'Save Project',
-}, {
     trigger: '.dropdown-item[data-menu-xmlid="project.menu_main_pm"]',
     content: 'Select Project main menu',
 }, {
-    trigger: '.oe_kanban_global_click :contains("Project for Freeman") button.o_dropdown_kanban',
+    trigger: '.o_kanban_record:contains("Project for Freeman") .o_dropdown_kanban .dropdown-toggle',
     content: 'Open the project dropdown',
 }, {
     trigger: '.o_kanban_record:contains("Project for Freeman") .dropdown-menu a:contains("Settings")',
@@ -202,12 +193,12 @@ tour.register('sale_timesheet_tour', {
     content: Markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
     run: 'text Brandon Freeman',
 }, {
-    trigger: 'ul.o_partner_autocomplete_dropdown > li:first-child > a:contains(Freeman)',
+    trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
 }, {
-    trigger: 'a.nav-link[name="billing_employee_rate"]',
+    trigger: 'a.nav-link[name="settings"]',
     extra_trigger: 'div.o_notebook_headers',
-    content: 'Click on Invoicing tab to configure the invoicing of this project.',
+    content: 'Click on Settings tab to configure this project.',
 }, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select the first sale order of the list',
@@ -215,9 +206,6 @@ tour.register('sale_timesheet_tour', {
 }, {
     trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first item on the autocomplete dropdown',
-}, {
-    trigger: '.o_form_button_save',
-    content: 'Save the modifications',
 }, {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project created',
@@ -281,11 +269,8 @@ tour.register('sale_timesheet_tour', {
     content: "Give a name to Project Update",
     run: 'text New update',
 }, {
-    trigger: ".o_form_button_save",
-    content: "Save Project Update",
-}, {
-    trigger: ".o_field_widget[name=description] h3:contains('Sold')",
-    content: "Sold title must be in description in description",
+    trigger: ".o_field_widget[name=description] h3:contains('Sales')",
+    content: "Sales title must be in description in description",
     run: function () {},
     }, {
     trigger: ".o_field_widget[name=description] td:contains('Prepaid Hours')",
@@ -300,8 +285,17 @@ tour.register('sale_timesheet_tour', {
     content: "Milestones title must be in description",
     run: function () {},
 },
-// This step is currently needed in order to prevent a session timeout at the end of the test.
-tour.stepUtils.toggleHomeMenu(),
-...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
-]);
+// Those steps are currently needed in order to prevent the following issue:
+// "Form views in edition mode are automatically saved when the page is closed, which leads to stray network requests and inconsistencies."
+{
+    trigger: '.o_back_button',
+    content: 'Go back to the kanban view and the project update will be added on that view',
+}, {
+    trigger: '.o_controller_with_rightpanel',
+    content: 'Check the kanban view of project update is rendered to be sure the user leaves the form view and the project update is created',
+    run: function() {},
+},
+stepUtils.toggleHomeMenu(),
+...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
+]});
 });

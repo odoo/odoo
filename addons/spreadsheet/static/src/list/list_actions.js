@@ -5,9 +5,8 @@ import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
 
 const { astToFormula } = spreadsheet;
 
-export const SEE_RECORD_LIST = async (env) => {
-    const cell = env.model.getters.getActiveCell();
-    const { col, row, sheetId } = env.model.getters.getCellPosition(cell.id);
+export const SEE_RECORD_LIST = async (position, env) => {
+    const cell = env.model.getters.getCell(position);
     if (!cell) {
         return;
     }
@@ -15,7 +14,7 @@ export const SEE_RECORD_LIST = async (env) => {
     const evaluatedArgs = args
         .map(astToFormula)
         .map((arg) => env.model.getters.evaluateFormula(arg));
-    const listId = env.model.getters.getListIdFromPosition(sheetId, col, row);
+    const listId = env.model.getters.getListIdFromPosition(position);
     const { model } = env.model.getters.getListDefinition(listId);
     const dataSource = await env.model.getters.getAsyncListDataSource(listId);
     const recordId = dataSource.getIdFromPosition(evaluatedArgs[1] - 1);
@@ -31,7 +30,14 @@ export const SEE_RECORD_LIST = async (env) => {
     });
 };
 
-export const SEE_RECORD_LIST_VISIBLE = (env) => {
-    const cell = env.model.getters.getActiveCell();
-    return cell && getNumberOfListFormulas(cell.content) === 1;
+export const SEE_RECORD_LIST_VISIBLE = (position, env) => {
+    const evaluatedCell = env.model.getters.getEvaluatedCell(position);
+    const cell = env.model.getters.getCell(position);
+    return (
+        evaluatedCell.type !== "empty" &&
+        evaluatedCell.type !== "error" &&
+        getNumberOfListFormulas(cell.content) === 1 &&
+        cell &&
+        getFirstListFunction(cell.content).functionName === "ODOO.LIST"
+    );
 };

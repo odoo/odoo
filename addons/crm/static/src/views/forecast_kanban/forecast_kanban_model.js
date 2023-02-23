@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import { KanbanModel } from "@web/views/kanban/kanban_model";
+import { CrmKanbanModel, CrmKanbanGroup } from "@crm/views/crm_kanban/crm_kanban_model";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 
-export class ForecastKanbanModel extends KanbanModel {
+export class ForecastKanbanModel extends CrmKanbanModel {
     setup(params, { fillTemporalService }) {
         super.setup(...arguments);
         this.fillTemporalService = fillTemporalService;
@@ -75,7 +76,7 @@ export class ForecastKanbanDynamicGroupList extends ForecastKanbanModel.DynamicG
         const result = await super.load(...arguments);
         const lastGroup = this.groups.filter((grp) => grp.value).slice(-1)[0];
         if (lastGroup) {
-            this.fillTemporalPeriod.setEnd(moment.utc(lastGroup.range[this.groupBy[0]].to));
+            this.fillTemporalPeriod.setEnd(deserializeDateTime(lastGroup.range[this.groupBy[0]].to));
         }
         return result;
     }
@@ -100,5 +101,6 @@ export class ForecastKanbanDynamicGroupList extends ForecastKanbanModel.DynamicG
     }
 }
 
-ForecastKanbanModel.services = [...KanbanModel.services, "fillTemporalService"];
+ForecastKanbanModel.services = [...CrmKanbanModel.services, "fillTemporalService"];
 ForecastKanbanModel.DynamicGroupList = ForecastKanbanDynamicGroupList;
+ForecastKanbanModel.group = CrmKanbanGroup;

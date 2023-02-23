@@ -18,7 +18,7 @@ export class BomOverviewControlPanel extends Component {
 
     updateQuantity(ev) {
         const newVal = isNaN(ev.target.value) ? 1 : parseInt(ev.target.value);
-        this.props.bus.trigger("change-quantity", newVal);
+        this.props.changeBomQuantity(newVal);
     }
 
     onKeyPress(ev) {
@@ -28,20 +28,8 @@ export class BomOverviewControlPanel extends Component {
         }
     }
 
-    changeVariant(ev) {
-        this.props.bus.trigger("change-variant", ev.target.value);
-    }
-
-    changeWarehouse(warehouseId) {
-        this.props.bus.trigger("change-warehouse", warehouseId);
-    }
-
-    clickPrint(printAll=false) {
-        this.props.bus.trigger("print", printAll);
-    }
-
     clickUnfold() {
-        this.props.bus.trigger("unfold-all");
+        this.env.overviewBus.trigger("unfold-all");
     }
 }
 
@@ -53,7 +41,6 @@ BomOverviewControlPanel.components = {
     BomOverviewDisplayFilter,
 };
 BomOverviewControlPanel.props = {
-    bus: Object,
     bomQuantity: Number,
     showOptions: Object,
     showVariants: { type: Boolean, optional: true },
@@ -62,6 +49,11 @@ BomOverviewControlPanel.props = {
     uomName: { type: String, optional: true },
     currentWarehouse: Object,
     warehouses: { type: Array, optional: true },
+    print: Function,
+    changeWarehouse: Function,
+    changeVariant: Function,
+    changeBomQuantity: Function,
+    changeDisplay: Function,
 };
 BomOverviewControlPanel.defaultProps = {
     variants: {},

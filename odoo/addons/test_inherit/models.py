@@ -159,3 +159,9 @@ class IsPublishedMixin(models.AbstractModel):
     _description = "Test Inherit Mixin"
 
     published = fields.Boolean()
+
+
+class Message(models.Model):
+    _inherit = 'test_new_api.message'
+
+    body = fields.Text(translate=True)  # Test conversion of char (with trigram indexed) to jsonb postgreSQL type

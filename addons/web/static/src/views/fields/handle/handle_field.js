@@ -4,16 +4,20 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
-export class HandleField extends Component {}
+export class HandleField extends Component {
+    static template = "web.HandleField";
+    static props = {
+        ...standardFieldProps,
+    };
+}
 
-HandleField.template = "web.HandleField";
-HandleField.props = {
-    ...standardFieldProps,
+export const handleField = {
+    component: HandleField,
+    displayName: _lt("Handle"),
+    supportedTypes: ["integer"],
+    isEmpty: () => false,
 };
-HandleField.displayName = _lt("Handle");
-HandleField.supportedTypes = ["integer"];
-HandleField.isEmpty = () => false;
 
-registry.category("fields").add("handle", HandleField);
+registry.category("fields").add("handle", handleField);

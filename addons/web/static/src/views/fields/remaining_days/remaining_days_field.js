@@ -7,11 +7,16 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class RemainingDaysField extends Component {
+    static template = "web.RemainingDaysField";
+    static props = {
+        ...standardFieldProps,
+    };
+
     get hasTime() {
-        return this.props.type === "datetime";
+        return this.props.record.fields[this.props.name].type === "datetime";
     }
 
     get pickerComponent() {
@@ -34,20 +39,18 @@ export class RemainingDaysField extends Component {
 
     onDateTimeChanged(datetime) {
         if (datetime) {
-            this.props.update(datetime);
+            this.props.record.update({ [this.props.name]: datetime });
         } else if (typeof datetime === "string") {
             // when the date is cleared
-            this.props.update(false);
+            this.props.record.update({ [this.props.name]: false });
         }
     }
 }
 
-RemainingDaysField.template = "web.RemainingDaysField";
-RemainingDaysField.props = {
-    ...standardFieldProps,
+export const remainingDaysField = {
+    component: RemainingDaysField,
+    displayName: _lt("Remaining Days"),
+    supportedTypes: ["date", "datetime"],
 };
 
-RemainingDaysField.displayName = _lt("Remaining Days");
-RemainingDaysField.supportedTypes = ["date", "datetime"];
-
-registry.category("fields").add("remaining_days", RemainingDaysField);
+registry.category("fields").add("remaining_days", remainingDaysField);

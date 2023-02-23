@@ -17,7 +17,7 @@ options.registry.InnerChart = options.Class.extend({
         'click we-button.add_row': '_onAddRowClick',
         'click we-button.o_we_matrix_remove_col': '_onRemoveColumnClick',
         'click we-button.o_we_matrix_remove_row': '_onRemoveRowClick',
-        'blur we-matrix input': '_onMatrixInputFocusOut',
+        'input we-matrix input': '_onMatrixInputInput',
         'focus we-matrix input': '_onMatrixInputFocus',
     }),
 
@@ -27,7 +27,7 @@ options.registry.InnerChart = options.Class.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.themeArray = ['o-color-1', 'o-color-2', 'o-color-3', 'o-color-4', 'o-color-5'];
-        this.style = window.getComputedStyle(document.documentElement);
+        this.style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
     },
     /**
      * @override
@@ -298,13 +298,16 @@ options.registry.InnerChart = options.Class.extend({
      * @param {string} tag tag of the HTML Element (td/th)
      * @param {string} value The current value of the cell input
      * @param {string} backgroundColor The background Color of the data on the graph
-     * @param {string} borderColor The border Color of the the data on the graph
+     * @param {string} borderColor The border Color of the data on the graph
      * @returns {HTMLElement}
      */
     _makeCell: function (tag, value, backgroundColor, borderColor) {
         const newEl = document.createElement(tag);
         const contentEl = document.createElement('input');
         contentEl.type = 'text';
+        if (tag === 'td') {
+            contentEl.type = 'number';
+        }
         contentEl.value = value || '';
         if (backgroundColor) {
             contentEl.dataset.backgroundColor = backgroundColor;
@@ -476,9 +479,8 @@ options.registry.InnerChart = options.Class.extend({
     },
     /**
      * @private
-     * @param {Event} ev
      */
-    _onMatrixInputFocusOut: function (ev) {
+    _onMatrixInputInput() {
         this._reloadGraph();
     },
     /**

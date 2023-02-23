@@ -9,7 +9,9 @@ from odoo.tools.misc import formatLang
 class EventTemplateTicket(models.Model):
     _name = 'event.type.ticket'
     _description = 'Event Template Ticket'
+    _order = 'sequence, name, id'
 
+    sequence = fields.Integer('Sequence', default=10)
     # description
     name = fields.Char(
         string='Name', default=lambda self: _('Registration'),
@@ -36,7 +38,7 @@ class EventTemplateTicket(models.Model):
     def _get_event_ticket_fields_whitelist(self):
         """ Whitelist of fields that are copied from event_type_ticket_ids to event_ticket_ids when
         changing the event_type_id field of event.event """
-        return ['name', 'description', 'seats_max']
+        return ['sequence', 'name', 'description', 'seats_max']
 
 
 class EventTicket(models.Model):
@@ -47,6 +49,7 @@ class EventTicket(models.Model):
     _name = 'event.event.ticket'
     _inherit = 'event.type.ticket'
     _description = 'Event Ticket'
+    _order = "event_id, sequence, name, id"
 
     @api.model
     def default_get(self, fields):

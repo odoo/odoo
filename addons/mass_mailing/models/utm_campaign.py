@@ -22,11 +22,12 @@ class UtmCampaign(models.Model):
 
     # A/B Testing
     ab_testing_mailings_count = fields.Integer("A/B Test Mailings #", compute="_compute_mailing_mail_count")
-    ab_testing_completed = fields.Boolean("A/B Testing Campaign Finished", copy=False)
+    ab_testing_completed = fields.Boolean("A/B Testing Campaign Finished", compute="_compute_ab_testing_completed",
+                                          copy=False, readonly=True, store=True)
+    ab_testing_winner_mailing_id = fields.Many2one("mailing.mailing", "A/B Campaign Winner Mailing", copy=False)
     ab_testing_schedule_datetime = fields.Datetime('Send Final On',
         default=lambda self: fields.Datetime.now() + relativedelta(days=1),
         help="Date that will be used to know when to determine and send the winner mailing")
-    ab_testing_total_pc = fields.Integer("Total A/B test percentage", compute="_compute_ab_testing_total_pc", store=True)
     ab_testing_winner_selection = fields.Selection([
         ('manual', 'Manual'),
         ('opened_ratio', 'Highest Open Rate'),
@@ -40,12 +41,10 @@ class UtmCampaign(models.Model):
     replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
 
-    @api.depends('mailing_mail_ids')
-    def _compute_ab_testing_total_pc(self):
+    @api.depends('ab_testing_winner_mailing_id')
+    def _compute_ab_testing_completed(self):
         for campaign in self:
-            campaign.ab_testing_total_pc = sum([
-                mailing.ab_testing_pc for mailing in campaign.mailing_mail_ids.filtered('ab_testing_enabled')
-            ])
+            campaign.ab_testing_completed = bool(self.ab_testing_winner_mailing_id)
 
     @api.depends('mailing_mail_ids')
     def _compute_mailing_mail_count(self):
@@ -68,12 +67,6 @@ class UtmCampaign(models.Model):
         for campaign in self:
             campaign.mailing_mail_count = sum(mapped_data.get(campaign._origin.id or campaign.id, []))
             campaign.ab_testing_mailings_count = sum(ab_testing_mapped_data.get(campaign._origin.id or campaign.id, []))
-
-    @api.constrains('ab_testing_total_pc', 'ab_testing_completed')
-    def _check_ab_testing_total_pc(self):
-        for campaign in self:
-            if not campaign.ab_testing_completed and campaign.ab_testing_total_pc >= 100:
-                raise ValidationError(_("The total percentage for an A/B testing campaign should be less than 100%"))
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing campaign """

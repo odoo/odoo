@@ -1,34 +1,35 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one, attr } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'LinkPreviewVideoView',
+Model({
+    name: "LinkPreviewVideoView",
+    template: "mail.LinkPreviewVideoView",
     recordMethods: {
         /**
          * Handles mouse enter event for the container of this element.
          */
         onMouseEnter() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: true });
         },
         /**
          * Handles mouse leave event for the container of this element.
          */
         onMouseLeave() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: false });
         },
     },
     fields: {
-        isHovered: attr({
-            default: false,
-        }),
-        linkPreview: one('LinkPreview', {
-            identifying: true,
-            inverse: 'linkPreviewVideoView',
-        }),
-        linkPreviewAsideView: one('LinkPreviewAsideView', {
+        isHovered: attr({ default: false }),
+        linkPreview: one("LinkPreview", { identifying: true, inverse: "linkPreviewVideoView" }),
+        linkPreviewAsideView: one("LinkPreviewAsideView", {
+            inverse: "linkPreviewVideoView",
             compute() {
                 if (!this.linkPreview.isDeletable) {
                     return clear();
@@ -36,16 +37,19 @@ registerModel({
                 if (this.messaging.device.isMobileDevice) {
                     return {};
                 }
-                if (this.isHovered || (this.linkPreviewAsideView && this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)) {
+                if (
+                    this.isHovered ||
+                    (this.linkPreviewAsideView &&
+                        this.linkPreviewAsideView.linkPreviewDeleteConfirmDialog)
+                ) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'linkPreviewVideoView',
         }),
-        linkPreviewListViewOwner: one('LinkPreviewListView', {
+        linkPreviewListViewOwner: one("LinkPreviewListView", {
             identifying: true,
-            inverse: 'linkPreviewAsVideoViews',
+            inverse: "linkPreviewAsVideoViews",
         }),
     },
 });

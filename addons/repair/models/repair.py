@@ -83,9 +83,13 @@ class Repair(models.Model):
         copy=True)
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist',
-        default=lambda self: self.env['product.pricelist'].search([('company_id', 'in', [self.env.company.id, False])], limit=1).id,
         help='Pricelist of the selected partner.', check_company=True)
-    currency_id = fields.Many2one(related='pricelist_id.currency_id')
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        compute='_compute_currency_id',
+        store=True,
+        precompute=True,
+        ondelete='restrict')
     partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address', check_company=True)
     invoice_method = fields.Selection([
         ("none", "No Invoice"),
@@ -131,13 +135,15 @@ class Repair(models.Model):
     invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
     priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
 
+    @api.depends('product_id')
     def _compute_allowed_picking_type_ids(self):
         '''
             computes the ids of return picking types
         '''
         out_picking_types = self.env['stock.picking.type'].search_read(domain=[('code', '=', 'outgoing')],
                                                                           fields=['return_picking_type_id'], load='')
-        self.allowed_picking_type_ids = [pick_type['return_picking_type_id'] for pick_type in out_picking_types]
+        self.allowed_picking_type_ids = [
+            pt['return_picking_type_id'] for pt in out_picking_types if pt['return_picking_type_id']]
 
     @api.depends('partner_id')
     def _compute_default_address_id(self):
@@ -145,27 +151,31 @@ class Repair(models.Model):
             if order.partner_id:
                 order.default_address_id = order.partner_id.address_get(['contact'])['contact']
 
+    @api.depends('pricelist_id', 'company_id')
+    def _compute_currency_id(self):
+        for order in self:
+            order.currency_id = order.pricelist_id.currency_id.id or order.company_id.currency_id.id
+
     @api.depends('picking_id', 'picking_id.state')
     def _compute_is_returned(self):
         self.is_returned = False
         returned = self.filtered(lambda r: r.picking_id and r.picking_id.state == 'done')
         returned.is_returned = True
 
-    @api.depends('operations.price_subtotal', 'invoice_method', 'fees_lines.price_subtotal', 'pricelist_id.currency_id')
+    @api.depends('operations.price_subtotal', 'invoice_method', 'fees_lines.price_subtotal', 'currency_id')
     def _amount_untaxed(self):
         for order in self:
             total = sum(operation.price_subtotal for operation in order.operations)
             total += sum(fee.price_subtotal for fee in order.fees_lines)
-            currency = order.pricelist_id.currency_id or self.env.company.currency_id
-            order.amount_untaxed = currency.round(total)
+            order.amount_untaxed = order.currency_id.round(total)
 
     @api.depends('operations.price_unit', 'operations.product_uom_qty', 'operations.product_id',
                  'fees_lines.price_unit', 'fees_lines.product_uom_qty', 'fees_lines.product_id',
-                 'pricelist_id.currency_id', 'partner_id')
+                 'currency_id', 'partner_id')
     def _amount_tax(self):
         for order in self:
             val = 0.0
-            currency = order.pricelist_id.currency_id or self.env.company.currency_id
+            currency = order.currency_id
             for operation in order.operations:
                 if operation.tax_id:
                     tax_calculate = operation.tax_id.compute_all(operation.price_unit, currency, operation.product_uom_qty, operation.product_id, order.partner_id)
@@ -181,8 +191,7 @@ class Repair(models.Model):
     @api.depends('amount_untaxed', 'amount_tax')
     def _amount_total(self):
         for order in self:
-            currency = order.pricelist_id.currency_id or self.env.company.currency_id
-            order.amount_total = currency.round(order.amount_untaxed + order.amount_tax)
+            order.amount_total = order.currency_id.round(order.amount_untaxed + order.amount_tax)
 
     _sql_constraints = [
         ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
@@ -194,7 +203,7 @@ class Repair(models.Model):
         picking_warehouse = self.picking_id.location_dest_id.warehouse_id
         if location_warehouse and picking_warehouse and location_warehouse != picking_warehouse:
             return {
-                'warning': {'title': "Warning", 'message': "Note that the warehouse of the return and repair locations don't match!"},
+                'warning': {'title': _("Warning"), 'message': _("Note that the warehouses of the return and repair locations don't match!")},
             }
 
     @api.depends('product_id')
@@ -319,6 +328,8 @@ class Repair(models.Model):
         return True
 
     def action_repair_cancel(self):
+        if any(repair.state == 'done' for repair in self):
+            raise UserError(_("You cannot cancel a completed repair order."))
         invoice_to_cancel = self.filtered(lambda repair: repair.invoice_id.state == 'draft').invoice_id
         if invoice_to_cancel:
             invoice_to_cancel.button_cancel()
@@ -330,8 +341,7 @@ class Repair(models.Model):
         template_id = self.env.ref('repair.mail_template_repair_quotation').id
         ctx = {
             'default_model': 'repair.order',
-            'default_res_id': self.id,
-            'default_use_template': bool(template_id),
+            'default_res_ids': self.ids,
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': 'mail.mail_notification_light',
@@ -372,7 +382,7 @@ class Repair(models.Model):
                 raise UserError(_('You have to select an invoice address in the repair form.'))
 
             narration = repair.quotation_notes
-            currency = repair.pricelist_id.currency_id
+            currency = repair.currency_id
             company = repair.env.company
 
             if (partner_invoice.id, currency.id, company.id) not in grouped_invoices_vals:
@@ -710,7 +720,7 @@ class RepairLine(models.Model):
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id', 'repair_id.invoice_method')
     def _compute_price_total_and_subtotal(self):
         for line in self:
-            taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.pricelist_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
+            taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
             line.price_subtotal = taxes['total_excluded']
             line.price_total = taxes['total_included']
 
@@ -773,30 +783,14 @@ class RepairLine(models.Model):
                 fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=self.repair_id.address_id)
                 taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
                 self.tax_id = fpos.map_tax(taxes)
-            warning = False
-            pricelist = self.repair_id.pricelist_id
-            if not pricelist:
-                warning = {
-                    'title': _('No pricelist found.'),
-                    'message':
-                        _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
-                return {'warning': warning}
-            else:
-                self._onchange_product_uom()
+            self._onchange_product_uom()
 
     @api.onchange('product_uom')
     def _onchange_product_uom(self):
-        pricelist = self.repair_id.pricelist_id
-        if pricelist and self.product_id and self.type != 'remove':
-            price = pricelist._get_product_price(self.product_id, self.product_uom_qty, uom=self.product_uom)
-            if price is False:
-                warning = {
-                    'title': _('No valid pricelist line found.'),
-                    'message':
-                        _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
-                return {'warning': warning}
-            else:
-                self.price_unit = price
+        if self.product_id and self.type != 'remove':
+            price = self.repair_id.pricelist_id._get_product_price(
+                self.product_id, self.product_uom_qty, uom=self.product_uom)
+            self.price_unit = price
 
 
 class RepairFee(models.Model):
@@ -816,7 +810,10 @@ class RepairFee(models.Model):
         domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
-    product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    product_uom = fields.Many2one(
+        'uom.uom', 'Product Unit of Measure',
+        compute='_compute_product_uom', store=True, readonly=False, precompute=True,
+        required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_total_and_subtotal', store=True, digits=0)
     price_total = fields.Float('Total', compute='_compute_price_total_and_subtotal', store=True, digits=0)
@@ -829,9 +826,14 @@ class RepairFee(models.Model):
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id')
     def _compute_price_total_and_subtotal(self):
         for fee in self:
-            taxes = fee.tax_id.compute_all(fee.price_unit, fee.repair_id.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, fee.repair_id.partner_id)
+            taxes = fee.tax_id.compute_all(fee.price_unit, fee.repair_id.currency_id, fee.product_uom_qty, fee.product_id, fee.repair_id.partner_id)
             fee.price_subtotal = taxes['total_excluded']
             fee.price_total = taxes['total_included']
+
+    @api.depends('product_id')
+    def _compute_product_uom(self):
+        for fee in self:
+            fee.product_uom = fee.product_id.uom_id
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')
     def onchange_product_id(self):
@@ -844,7 +846,6 @@ class RepairFee(models.Model):
 
         partner = self.repair_id.partner_id
         partner_invoice = self.repair_id.partner_invoice_id or partner
-        pricelist = self.repair_id.pricelist_id
 
         if partner and self.product_id:
             fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=self.repair_id.address_id)
@@ -861,29 +862,14 @@ class RepairFee(models.Model):
             else:
                 self.name += '\n' + self.product_id.description_sale
 
-        warning = False
-        if not pricelist:
-            warning = {
-                'title': _('No pricelist found.'),
-                'message':
-                    _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
-            return {'warning': warning}
-        else:
-            self._onchange_product_uom()
+        self._onchange_product_uom()
 
     @api.onchange('product_uom')
     def _onchange_product_uom(self):
-        pricelist = self.repair_id.pricelist_id
-        if pricelist and self.product_id:
-            price = pricelist._get_product_price(self.product_id, self.product_uom_qty, uom=self.product_uom)
-            if price is False:
-                warning = {
-                    'title': _('No valid pricelist line found.'),
-                    'message':
-                        _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
-                return {'warning': warning}
-            else:
-                self.price_unit = price
+        if self.product_id:
+            price = self.repair_id.pricelist_id._get_product_price(
+                self.product_id, self.product_uom_qty, uom=self.product_uom)
+            self.price_unit = price
 
 
 class RepairTags(models.Model):

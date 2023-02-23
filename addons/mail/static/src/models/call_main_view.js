@@ -1,13 +1,25 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { useUpdateToModel } from "@mail/component_hooks/use_update_to_model";
+import { attr, clear, many, one, Model } from "@mail/model";
 
-import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { isEventHandled, markEventHandled } from "@mail/utils/utils";
 
-registerModel({
-    name: 'CallMainView',
+import { onMounted, onWillUnmount } from "@odoo/owl";
+
+Model({
+    name: "CallMainView",
+    template: "mail.CallMainView",
+    componentSetup() {
+        useComponentToModel({ fieldName: "component" });
+        useUpdateToModel({ methodName: "onComponentUpdate" });
+        onMounted(() => {
+            this.resizeObserver = new ResizeObserver(() => this.onResize());
+            this.resizeObserver.observe(this.root.el);
+        });
+        onWillUnmount(() => this.resizeObserver.disconnect());
+    },
     recordMethods: {
         /**
          * Finds a tile layout and dimensions that respects param0.aspectRatio while maximizing
@@ -70,11 +82,17 @@ registerModel({
         onClickShowSidebar(ev) {
             this.callView.update({ isSidebarOpen: true });
         },
+        onComponentUpdate() {
+            if (!this.exists()) {
+                return;
+            }
+            this._updateLayout();
+        },
         /**
          * @param {MouseEvent} ev
          */
         onMouseleave(ev) {
-            if (ev.relatedTarget && ev.relatedTarget.closest('.o_CallActionList_popover')) {
+            if (ev.relatedTarget && ev.relatedTarget.closest(".o_CallActionListView_popover")) {
                 // the overlay should not be hidden when the cursor leaves to enter the controller popover
                 return;
             }
@@ -90,7 +108,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (isEventHandled(ev, 'CallMainView.MouseMoveOverlay')) {
+            if (isEventHandled(ev, "CallMainView.MouseMoveOverlay")) {
                 return;
             }
             this._showOverlay();
@@ -102,11 +120,17 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            markEventHandled(ev, 'CallMainView.MouseMoveOverlay');
+            markEventHandled(ev, "CallMainView.MouseMoveOverlay");
             this.update({
                 showOverlay: true,
                 showOverlayTimer: clear(),
             });
+        },
+        onResize() {
+            if (!this.exists()) {
+                return;
+            }
+            this._updateLayout();
         },
         onShowOverlayTimeout() {
             this.update({
@@ -130,62 +154,74 @@ registerModel({
                 showOverlayTimer: { doReset: this.showOverlayTimer ? true : undefined },
             });
         },
+        _updateLayout() {
+            if (!this.component.root.el || !this.tileContainerRef.el) {
+                return;
+            }
+            const { width, height } = this.tileContainerRef.el.getBoundingClientRect();
+            const { tileWidth, tileHeight } = this.calculateTessellation({
+                aspectRatio: this.callView.aspectRatio,
+                containerHeight: height,
+                containerWidth: width,
+                tileCount: this.tileContainerRef.el.children.length,
+            });
+            this.update({
+                tileHeight,
+                tileWidth,
+            });
+        },
     },
     fields: {
         /**
          * The model for the controller (buttons).
          */
-        callActionListView: one('CallActionListView', {
+        callActionListView: one("CallActionListView", {
             default: {},
-            inverse: 'callMainView',
+            inverse: "callMainView",
             readonly: true,
         }),
-        callView: one('CallView', {
-            identifying: true,
-            inverse: 'callMainView',
-        }),
+        callView: one("CallView", { identifying: true, inverse: "callMainView" }),
+        component: attr(),
         hasSidebarButton: attr({
             compute() {
-                return Boolean(this.callView.activeRtcSession && this.showOverlay && !this.callView.threadView.compact);
+                return Boolean(
+                    this.callView.activeRtcSession &&
+                        this.showOverlay &&
+                        !this.callView.threadView.compact
+                );
             },
         }),
         /**
          * Determines if the controller is an overlay or a bottom bar.
          */
         isControllerFloating: attr({
-            compute() {
-                return Boolean(this.callView.isFullScreen || this.callView.activeRtcSession && !this.callView.threadView.compact);
-            },
             default: false,
+            compute() {
+                return Boolean(
+                    this.callView.isFullScreen ||
+                        (this.callView.activeRtcSession && !this.callView.threadView.compact)
+                );
+            },
         }),
-        mainTiles: many('CallMainViewTile', {
+        mainTiles: many("CallMainViewTile", {
+            inverse: "callMainViewOwner",
             compute() {
                 if (this.callView.activeRtcSession) {
                     return [{ channelMember: this.callView.activeRtcSession.channelMember }];
                 }
-                return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
+                return this.callView.filteredChannelMembers.map((channelMember) => ({
+                    channelMember,
+                }));
             },
-            inverse: 'callMainViewOwner',
         }),
         /**
          * Determines if we show the overlay with the control buttons.
          */
-        showOverlay: attr({
-            default: true,
-        }),
-        showOverlayTimer: one('Timer', {
-            inverse: 'callMainViewAsShowOverlay',
-        }),
-        thread: one('Thread', {
-            related: 'callView.thread',
-            required: true,
-        }),
-        tileContainerRef: attr(),
-        tileHeight: attr({
-            default: 0,
-        }),
-        tileWidth: attr({
-            default: 0,
-        }),
+        showOverlay: attr({ default: true }),
+        showOverlayTimer: one("Timer", { inverse: "callMainViewAsShowOverlay" }),
+        thread: one("Thread", { related: "callView.thread", required: true }),
+        tileContainerRef: attr({ ref: "tileContainer" }),
+        tileHeight: attr({ default: 0 }),
+        tileWidth: attr({ default: 0 }),
     },
 });

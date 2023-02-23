@@ -3,27 +3,38 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillUpdateProps, useRef, useState } = owl;
+import { Component, onWillUpdateProps, useRef, useState, useExternalListener } from "@odoo/owl";
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
 export class ProgressBarField extends Component {
+    static template = "web.ProgressBarField";
+    static props = {
+        ...standardFieldProps,
+        maxValueField: { type: [String, Number], optional: true },
+        currentValueField: { type: String, optional: true },
+        isEditable: { type: Boolean, optional: true },
+        isEditableInReadonly: { type: Boolean, optional: true },
+        isCurrentValueEditable: { type: Boolean, optional: true },
+        isMaxValueEditable: { type: Boolean, optional: true },
+        title: { type: String, optional: true },
+    };
+
     setup() {
         useNumpadDecimal();
         useAutofocus({ refName: "maxValue", selectAll: true });
         useAutofocus({ refName: "currentValue", selectAll: true });
+        useExternalListener(document.body, "click", this.onClickAway, { capture: true });
         this.root = useRef("numpadDecimal");
         this.state = useState({
             currentValue: this.getCurrentValue(this.props),
             maxValue: this.getMaxValue(this.props),
             isEditing: false,
         });
-        this.onBlurDebounced = useDebounced(this.onBlur);
         onWillUpdateProps((nextProps) => {
             Object.assign(this.state, {
                 currentValue: this.getCurrentValue(nextProps),
@@ -113,14 +124,13 @@ export class ProgressBarField extends Component {
             this.state.isEditing = true;
         }
     }
-    // When both max and current value are editable, as one input is blurred when
-    // switching to the other, the state would revert to isEditing = false. We need
-    // to stay in edition mode if the focus is still in the field.
-    onBlur() {
-        if (this.root.el && this.root.el.contains(document.activeElement)) {
-            return;
+    /**
+     * @param {MouseEvent} ev
+     */
+    onClickAway(ev) {
+        if (this.root.el && !this.root.el.contains(ev.target)) {
+            this.state.isEditing = false;
         }
-        this.state.isEditing = false;
     }
 
     onCurrentValueInput(ev) {
@@ -141,23 +151,11 @@ export class ProgressBarField extends Component {
     }
 }
 
-ProgressBarField.template = "web.ProgressBarField";
-ProgressBarField.props = {
-    ...standardFieldProps,
-    maxValueField: { type: [String, Number], optional: true },
-    currentValueField: { type: String, optional: true },
-    isEditable: { type: Boolean, optional: true },
-    isEditableInReadonly: { type: Boolean, optional: true },
-    isCurrentValueEditable: { type: Boolean, optional: true },
-    isMaxValueEditable: { type: Boolean, optional: true },
-    title: { type: String, optional: true },
-};
-
-ProgressBarField.displayName = _lt("Progress Bar");
-ProgressBarField.supportedTypes = ["integer", "float"];
-
-ProgressBarField.extractProps = ({ attrs }) => {
-    return {
+export const progressBarField = {
+    component: ProgressBarField,
+    displayName: _lt("Progress Bar"),
+    supportedTypes: ["integer", "float"],
+    extractProps: ({ attrs }) => ({
         maxValueField: attrs.options.max_value,
         currentValueField: attrs.options.current_value,
         isEditable: !attrs.options.readonly && attrs.options.editable,
@@ -167,7 +165,7 @@ ProgressBarField.extractProps = ({ attrs }) => {
             (!attrs.options.edit_max_value || attrs.options.edit_current_value),
         isMaxValueEditable: attrs.options.editable && attrs.options.edit_max_value,
         title: attrs.title,
-    };
+    }),
 };
 
-registry.category("fields").add("progressbar", ProgressBarField);
+registry.category("fields").add("progressbar", progressBarField);

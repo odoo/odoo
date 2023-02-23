@@ -77,7 +77,6 @@
 
         <t t-if="!section.childrenTree.length">
           <DropdownItem
-            title="section.name"
             class="'o_nav_entry'"
             href="getMenuItemHref(section)"
             hotkey="hotkey"
@@ -89,7 +88,6 @@
         <t t-else="">
           <MenuDropdown
             hotkey="hotkey"
-            title="section.name"
             xmlid="section.xmlid"
           >
             <t t-set-slot="toggler">

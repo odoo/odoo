@@ -2,7 +2,7 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_ThreadTypingIcon_separator {
+.o_ThreadTypingIconView_separator {
     min-width: 1px;
 }
 
@@ -10,7 +10,7 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_ThreadTypingIcon_dot {
+.o_ThreadTypingIconView_dot {
     &.o-sizeMedium {
         width: $o-mail-thread-typing-icon-size-medium;
         height: $o-mail-thread-typing-icon-size-medium;
@@ -26,57 +26,19 @@
 // Animation
 // ------------------------------------------------------------------
 
-.o_ThreadTypingIcon_dot.o-animationBounce {
+.o_ThreadTypingIconView_dot {
+    animation: o_ThreadTypingIconView_dot_animation 1.5s linear infinite;
 
-    // Note: duplicated animation because dependent on size, and current SASS version doesn't support var()
-    &.o-sizeMedium {
-        animation: o_ThreadTypingIcon_dot_animationBounce_sizeMedium_animation 1.5s linear infinite;
-    }
-
-    &.o-sizeSmall {
-        animation: o_ThreadTypingIcon_dot_animationBounce_sizeSmall_animation 1.5s linear infinite;
-    }
-
-    &.o_ThreadTypingIcon_dot2 {
+    &.o_ThreadTypingIconView_dot2 {
         animation-delay: -1.35s;
     }
 
-    &.o_ThreadTypingIcon_dot3 {
+    &.o_ThreadTypingIconView_dot3 {
         animation-delay: -1.2s;
     }
 }
 
-.o_ThreadTypingIcon_dot.o-animationPulse {
-    animation: o_ThreadTypingIcon_dot_animationPulse_animation 1.5s linear infinite;
-
-    &.o_ThreadTypingIcon_dot2 {
-        animation-delay: -1.35s;
-    }
-
-    &.o_ThreadTypingIcon_dot3 {
-        animation-delay: -1.2s;
-    }
-}
-
-@keyframes o_ThreadTypingIcon_dot_animationBounce_sizeMedium_animation {
-    0%, 40%, 100% {
-        transform: initial;
-    }
-    20% {
-        transform: translateY(-$o-mail-thread-typing-icon-size-medium);
-    }
-}
-
-@keyframes o_ThreadTypingIcon_dot_animationBounce_sizeSmall_animation {
-    0%, 40%, 100% {
-        transform: initial;
-    }
-    20% {
-        transform: translateY(-$o-mail-thread-typing-icon-size-small);
-    }
-}
-
-@keyframes o_ThreadTypingIcon_dot_animationPulse_animation {
+@keyframes o_ThreadTypingIconView_dot_animation {
     0%, 40%, 100% {
         opacity: initial;
     }

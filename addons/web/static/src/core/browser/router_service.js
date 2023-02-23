@@ -107,23 +107,6 @@ export function routeToUrl(route) {
     return route.pathname + (search ? "?" + search : "") + (hash ? "#" + hash : "");
 }
 
-async function redirect(env, url, wait = false) {
-    if (wait) {
-        await new Promise((resolve) => {
-            const waitForServer = (delay) => {
-                browser.setTimeout(async () => {
-                    env.services
-                        .rpc("/web/webclient/version_info", {})
-                        .then(resolve)
-                        .catch(() => waitForServer(250));
-                }, delay);
-            };
-            waitForServer(1000);
-        });
-    }
-    browser.location.assign(url);
-}
-
 function getRoute(urlObj) {
     const { pathname, search, hash } = urlObj;
     const searchQuery = parseSearchQuery(search);
@@ -190,7 +173,6 @@ function makeRouter(env) {
         },
         pushState: makeDebouncedPush("push"),
         replaceState: makeDebouncedPush("replace"),
-        redirect: (url, wait) => redirect(env, url, wait),
         cancelPushes: () => browser.clearTimeout(pushTimeout),
     };
 }

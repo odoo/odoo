@@ -7,14 +7,14 @@
             <form>
                 <field name="orderpoint_id" invisible="1"/>
                 <field name="qty_to_order" invisible="1"/>
-                <div class="row ml8">
-                    <group class="col-6">
-                        <field nolabel="1" name="json_lead_days" widget="json_widget"/>
+                <group>
+                    <group>
+                        <field nolabel="1" name="json_lead_days" colspan="2" widget="lead_days_widget"/>
                     </group>
-                    <group class="col-6">
-                        <field nolabel="1" name="json_replenishment_history" widget="json_widget"/>
+                    <group>
+                        <field nolabel="1" name="json_replenishment_history" colspan="2" widget="replenishment_history_widget"/>
                     </group>
-                </div>
+                </group>
                 <notebook>
                     <field name="warehouseinfo_ids" invisible="1"/>
                     <page string="Warehouses" attrs="{'invisible' : [('warehouseinfo_ids', '=', [])]}">
@@ -65,7 +65,7 @@
                     <field name="warning_message"/>
                 </div>
                 <footer>
-                    <button name="order_avbl" type="object" class="btn-primary">
+                    <button name="order_avbl" type="object" class="btn-primary" attrs="{'invisible': [('free_qty', '&lt;=', 0.0)]}">
                         Order <field name="free_qty"/>
                     </button>
                     <button name="order_all" type="object">

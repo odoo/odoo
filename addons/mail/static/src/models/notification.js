@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, clear, insert, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'Notification',
+Model({
+    name: "Notification",
     modelMethods: {
         /**
          * @param {Object} data
@@ -13,19 +11,19 @@ registerModel({
          */
         convertData(data) {
             const data2 = {};
-            if ('failure_type' in data) {
+            if ("failure_type" in data) {
                 data2.failure_type = data.failure_type;
             }
-            if ('id' in data) {
+            if ("id" in data) {
                 data2.id = data.id;
             }
-            if ('notification_status' in data) {
+            if ("notification_status" in data) {
                 data2.notification_status = data.notification_status;
             }
-            if ('notification_type' in data) {
+            if ("notification_type" in data) {
                 data2.notification_type = data.notification_type;
             }
-            if ('res_partner_id' in data) {
+            if ("res_partner_id" in data) {
                 if (!data.res_partner_id) {
                     data2.partner = clear();
                 } else {
@@ -46,18 +44,18 @@ registerModel({
         iconClass: attr({
             compute() {
                 switch (this.notification_status) {
-                    case 'sent':
-                        return 'fa fa-check';
-                    case 'bounce':
-                        return 'fa fa-exclamation';
-                    case 'exception':
-                        return 'fa fa-exclamation';
-                    case 'ready':
-                        return 'fa fa-send-o';
-                    case 'canceled':
-                        return 'fa fa-trash-o';
+                    case "sent":
+                        return "fa fa-check";
+                    case "bounce":
+                        return "fa fa-exclamation";
+                    case "exception":
+                        return "fa fa-exclamation";
+                    case "ready":
+                        return "fa fa-send-o";
+                    case "canceled":
+                        return "fa fa-trash-o";
                 }
-                return '';
+                return "";
             },
         }),
         /**
@@ -66,40 +64,41 @@ registerModel({
         iconTitle: attr({
             compute() {
                 switch (this.notification_status) {
-                    case 'sent':
+                    case "sent":
                         return this.env._t("Sent");
-                    case 'bounce':
+                    case "bounce":
                         return this.env._t("Bounced");
-                    case 'exception':
+                    case "exception":
                         return this.env._t("Error");
-                    case 'ready':
+                    case "ready":
                         return this.env._t("Ready");
-                    case 'canceled':
+                    case "canceled":
                         return this.env._t("Canceled");
                 }
-                return '';
+                return "";
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         isFailure: attr({
             compute() {
-                return ['exception', 'bounce'].includes(this.notification_status);
+                return ["exception", "bounce"].includes(this.notification_status);
             },
         }),
         isFromCurrentUser: attr({
             compute() {
-                if (!this.messaging || !this.messaging.currentPartner || !this.message || !this.message.author) {
+                if (
+                    !this.messaging ||
+                    !this.messaging.currentPartner ||
+                    !this.message ||
+                    !this.message.author
+                ) {
                     return clear();
                 }
                 return this.messaging.currentPartner === this.message.author;
             },
         }),
-        message: one('Message', {
-            inverse: 'notifications',
-        }),
-        notificationGroup: one('NotificationGroup', {
+        message: one("Message", { inverse: "notifications" }),
+        notificationGroup: one("NotificationGroup", {
             compute() {
                 if (!this.isFailure || !this.isFromCurrentUser) {
                     return clear();
@@ -111,15 +110,15 @@ registerModel({
                 // and not its kanban/list/form view.
                 return {
                     notification_type: this.notification_type,
-                    res_id: thread.model === 'mail.channel' ? thread.id : null,
+                    res_id: thread.model === "mail.channel" ? thread.id : null,
                     res_model: thread.model,
                     res_model_name: thread.model_name,
                 };
             },
-            inverse: 'notifications',
+            inverse: "notifications",
         }),
         notification_status: attr(),
         notification_type: attr(),
-        partner: one('Partner'),
+        partner: one("Partner"),
     },
 });

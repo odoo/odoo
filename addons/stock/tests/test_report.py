@@ -25,14 +25,14 @@ class TestReportsCommon(TransactionCase):
 
     def get_report_forecast(self, product_template_ids=False, product_variant_ids=False, context=False):
         if product_template_ids:
-            report = self.env['report.stock.report_product_template_replenishment']
+            report = self.env['stock.forecasted_product_template']
             product_ids = product_template_ids
         elif product_variant_ids:
-            report = self.env['report.stock.report_product_product_replenishment']
+            report = self.env['stock.forecasted_product_product']
             product_ids = product_template_ids
         if context:
             report = report.with_context(context)
-        report_values = report._get_report_values(docids=product_ids)
+        report_values = report.get_report_values(docids=product_ids)
         docs = report_values['docs']
         lines = docs['lines']
         return report_values, docs, lines
@@ -356,7 +356,7 @@ class TestReports(TestReportsCommon):
         delivery_line = lines[0]
         self.assertEqual(delivery_line['quantity'], 5)
         self.assertEqual(delivery_line['replenishment_filled'], False)
-        self.assertEqual(delivery_line['document_out'].id, delivery.id)
+        self.assertEqual(delivery_line['document_out']['id'], delivery.id)
 
         # Confirms the receipt, must have two report lines now:
         #   - line with 2 qty (from the receipt to the delivery)
@@ -371,11 +371,11 @@ class TestReports(TestReportsCommon):
         unavailable_line = lines[1]
         self.assertEqual(fulfilled_line['replenishment_filled'], True)
         self.assertEqual(fulfilled_line['quantity'], 2)
-        self.assertEqual(fulfilled_line['document_in'].id, receipt.id)
-        self.assertEqual(fulfilled_line['document_out'].id, delivery.id)
+        self.assertEqual(fulfilled_line['document_in']['id'], receipt.id)
+        self.assertEqual(fulfilled_line['document_out']['id'], delivery.id)
         self.assertEqual(unavailable_line['replenishment_filled'], False)
         self.assertEqual(unavailable_line['quantity'], 3)
-        self.assertEqual(unavailable_line['document_out'].id, delivery.id)
+        self.assertEqual(unavailable_line['document_out']['id'], delivery.id)
 
         # Creates a new receipt for the remaining quantity, confirm it...
         receipt_form = Form(self.env['stock.picking'].with_context(
@@ -407,12 +407,12 @@ class TestReports(TestReportsCommon):
         self.assertEqual(line1['quantity'], 2)
         self.assertEqual(line1['replenishment_filled'], True)
         self.assertEqual(line1['document_in'], False)
-        self.assertEqual(line1['document_out'].id, delivery.id)
+        self.assertEqual(line1['document_out']['id'], delivery.id)
         # Second line must be linked to the second receipt.
         self.assertEqual(line2['quantity'], 3)
         self.assertEqual(line2['replenishment_filled'], True)
-        self.assertEqual(line2['document_in'].id, receipt2.id)
-        self.assertEqual(line2['document_out'].id, delivery.id)
+        self.assertEqual(line2['document_in']['id'], receipt2.id)
+        self.assertEqual(line2['document_out']['id'], delivery.id)
 
     def test_report_forecast_2_replenishments_order(self):
         """ Creates a receipt then creates a delivery using half of the receipt quantity.
@@ -446,9 +446,9 @@ class TestReports(TestReportsCommon):
         self.assertEqual(len(lines), 2, "Must have 2 line.")
         line_1 = lines[0]
         line_2 = lines[1]
-        self.assertEqual(line_1['document_in'].id, receipt.id)
-        self.assertEqual(line_1['document_out'].id, delivery.id)
-        self.assertEqual(line_2['document_in'].id, receipt.id)
+        self.assertEqual(line_1['document_in']['id'], receipt.id)
+        self.assertEqual(line_1['document_out']['id'], delivery.id)
+        self.assertEqual(line_2['document_in']['id'], receipt.id)
         self.assertEqual(line_2['document_out'], False)
 
     def test_report_forecast_3_sort_by_date(self):
@@ -551,13 +551,13 @@ class TestReports(TestReportsCommon):
         self.assertEqual(len(lines), 7, "The report must have 7 line.")
         self.assertEqual(draft_picking_qty['in'], 0)
         self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out'].id, delivery_7.id)
-        self.assertEqual(lines[1]['document_out'].id, delivery_5.id)
-        self.assertEqual(lines[2]['document_out'].id, delivery_3.id)
-        self.assertEqual(lines[3]['document_out'].id, delivery_1.id)
-        self.assertEqual(lines[4]['document_out'].id, delivery_2.id)
-        self.assertEqual(lines[5]['document_out'].id, delivery_4.id)
-        self.assertEqual(lines[6]['document_out'].id, delivery_6.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery_7.id)
+        self.assertEqual(lines[1]['document_out']['id'], delivery_5.id)
+        self.assertEqual(lines[2]['document_out']['id'], delivery_3.id)
+        self.assertEqual(lines[3]['document_out']['id'], delivery_1.id)
+        self.assertEqual(lines[4]['document_out']['id'], delivery_2.id)
+        self.assertEqual(lines[5]['document_out']['id'], delivery_4.id)
+        self.assertEqual(lines[6]['document_out']['id'], delivery_6.id)
 
         # Creates 3 receipts for 20 units.
         receipt_form = Form(self.env['stock.picking'].with_context(
@@ -602,23 +602,23 @@ class TestReports(TestReportsCommon):
         self.assertEqual(len(lines), 7, "The report must have 7 line.")
         self.assertEqual(draft_picking_qty['in'], 0)
         self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out'].id, delivery_7.id)
-        self.assertEqual(lines[0]['document_in'].id, receipt_2.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery_7.id)
+        self.assertEqual(lines[0]['document_in']['id'], receipt_2.id)
         self.assertEqual(lines[0]['is_late'], False)
-        self.assertEqual(lines[1]['document_out'].id, delivery_5.id)
-        self.assertEqual(lines[1]['document_in'].id, receipt_3.id)
+        self.assertEqual(lines[1]['document_out']['id'], delivery_5.id)
+        self.assertEqual(lines[1]['document_in']['id'], receipt_3.id)
         self.assertEqual(lines[1]['is_late'], True)
-        self.assertEqual(lines[2]['document_out'].id, delivery_3.id)
-        self.assertEqual(lines[2]['document_in'].id, receipt_3.id)
+        self.assertEqual(lines[2]['document_out']['id'], delivery_3.id)
+        self.assertEqual(lines[2]['document_in']['id'], receipt_3.id)
         self.assertEqual(lines[2]['is_late'], False)
-        self.assertEqual(lines[3]['document_out'].id, delivery_1.id)
-        self.assertEqual(lines[3]['document_in'].id, receipt_1.id)
+        self.assertEqual(lines[3]['document_out']['id'], delivery_1.id)
+        self.assertEqual(lines[3]['document_in']['id'], receipt_1.id)
         self.assertEqual(lines[3]['is_late'], True)
-        self.assertEqual(lines[4]['document_out'].id, delivery_2.id)
+        self.assertEqual(lines[4]['document_out']['id'], delivery_2.id)
         self.assertEqual(lines[4]['document_in'], False)
-        self.assertEqual(lines[5]['document_out'].id, delivery_4.id)
+        self.assertEqual(lines[5]['document_out']['id'], delivery_4.id)
         self.assertEqual(lines[5]['document_in'], False)
-        self.assertEqual(lines[6]['document_out'].id, delivery_6.id)
+        self.assertEqual(lines[6]['document_out']['id'], delivery_6.id)
         self.assertEqual(lines[6]['document_in'], False)
 
     def test_report_forecast_4_intermediate_transfers(self):
@@ -650,7 +650,7 @@ class TestReports(TestReportsCommon):
 
         # The Forecasted Report don't show intermediate moves, it must display only ingoing/outgoing documents.
         self.assertEqual(len(lines), 1, "The report must have only 1 line.")
-        self.assertEqual(lines[0]['document_in'].id, receipt.id, "The report must only show the receipt.")
+        self.assertEqual(lines[0]['document_in']['id'], receipt.id, "The report must only show the receipt.")
         self.assertEqual(lines[0]['document_out'], False)
         self.assertEqual(lines[0]['quantity'], reordering_rule.product_max_qty)
 
@@ -699,7 +699,7 @@ class TestReports(TestReportsCommon):
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out'].id, delivery.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
         self.assertEqual(lines[0]['quantity'], 5)
 
         report_values, docs, lines = self.get_report_forecast(
@@ -726,7 +726,7 @@ class TestReports(TestReportsCommon):
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out'].id, delivery.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
         self.assertEqual(lines[0]['quantity'], 5)
 
         report_values, docs, lines = self.get_report_forecast(
@@ -742,7 +742,7 @@ class TestReports(TestReportsCommon):
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out'].id, delivery.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
         self.assertEqual(lines[0]['quantity'], 5)
 
         report_values, docs, lines = self.get_report_forecast(
@@ -752,7 +752,7 @@ class TestReports(TestReportsCommon):
         draft_picking_qty = docs['draft_picking_qty']
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out'].id, delivery_2.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery_2.id)
         self.assertEqual(lines[0]['quantity'], 8)
 
     def test_report_forecast_6_multi_company(self):
@@ -809,7 +809,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 1, "Must have 1 line.")
-        self.assertEqual(lines[0]['document_in'].id, wh_1_receipt.id)
+        self.assertEqual(lines[0]['document_in']['id'], wh_1_receipt.id)
         self.assertEqual(lines[0]['quantity'], 2)
 
         report_values, docs, lines = self.get_report_forecast(
@@ -817,7 +817,7 @@ class TestReports(TestReportsCommon):
             context={'warehouse': wh_2.id},
         )
         self.assertEqual(len(lines), 1, "Must have 1 line.")
-        self.assertEqual(lines[0]['document_in'].id, wh_2_receipt.id)
+        self.assertEqual(lines[0]['document_in']['id'], wh_2_receipt.id)
         self.assertEqual(lines[0]['quantity'], 5)
 
     def test_report_forecast_7_multiple_variants(self):
@@ -899,7 +899,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_template.ids)
         self.assertEqual(len(lines), 5, "Must have 5 lines.")
-        self.assertEqual(docs['product_variants'].ids, product_template.product_variant_ids.ids)
+        self.assertTrue(all(product_variant['id'] in product_template.product_variant_ids.ids for product_variant in docs['product_variants']))
 
         # Create a delivery for one of these products and check the report lines
         # are correctly linked to the good receipts.
@@ -916,7 +916,7 @@ class TestReports(TestReportsCommon):
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_template.ids)
         self.assertEqual(len(lines), 5, "Still must have 5 lines.")
-        self.assertEqual(docs['product_variants'].ids, product_template.product_variant_ids.ids)
+        self.assertEqual(docs['product_variants_ids'], product_template.product_variant_ids.ids)
         # First and second lines should be about the "Game Joy Pocket (gray)"
         # and must link the delivery with the two receipt lines.
         line_1 = lines[0]
@@ -924,13 +924,13 @@ class TestReports(TestReportsCommon):
         self.assertEqual(line_1['product']['id'], gamejoy_pocket_gray.id)
         self.assertEqual(line_1['quantity'], 8)
         self.assertTrue(line_1['replenishment_filled'])
-        self.assertEqual(line_1['document_in'].id, receipt_1.id)
-        self.assertEqual(line_1['document_out'].id, delivery.id)
+        self.assertEqual(line_1['document_in']['id'], receipt_1.id)
+        self.assertEqual(line_1['document_out']['id'], delivery.id)
         self.assertEqual(line_2['product']['id'], gamejoy_pocket_gray.id)
         self.assertEqual(line_2['quantity'], 2)
         self.assertTrue(line_2['replenishment_filled'])
-        self.assertEqual(line_2['document_in'].id, receipt_2.id)
-        self.assertEqual(line_2['document_out'].id, delivery.id)
+        self.assertEqual(line_2['document_in']['id'], receipt_2.id)
+        self.assertEqual(line_2['document_out']['id'], delivery.id)
 
     def test_report_forecast_8_delivery_to_receipt_link(self):
         """
@@ -984,10 +984,10 @@ class TestReports(TestReportsCommon):
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
 
         self.assertEqual(len(lines), 2, 'Only 2 lines')
-        delivery_line = [l for l in lines if l['document_out'].id == delivery.id][0]
+        delivery_line = [l for l in lines if l['document_out']['id'] == delivery.id][0]
         self.assertTrue(delivery_line, 'No line for delivery 1')
         self.assertFalse(delivery_line['replenishment_filled'])
-        delivery2_line = [l for l in lines if l['document_out'].id == delivery2.id][0]
+        delivery2_line = [l for l in lines if l['document_out']['id'] == delivery2.id][0]
         self.assertTrue(delivery2_line, 'No line for delivery 2')
         self.assertTrue(delivery2_line['replenishment_filled'])
 
@@ -1044,10 +1044,10 @@ class TestReports(TestReportsCommon):
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
 
         self.assertEqual(len(lines), 2, 'Only 2 lines')
-        delivery_line = [l for l in lines if l['document_out'].id == delivery.id][0]
+        delivery_line = [l for l in lines if l['document_out']['id'] == delivery.id][0]
         self.assertTrue(delivery_line, 'No line for delivery 1')
         self.assertTrue(delivery_line['replenishment_filled'])
-        delivery2_line = [l for l in lines if l['document_out'].id == delivery2.id][0]
+        delivery2_line = [l for l in lines if l['document_out']['id'] == delivery2.id][0]
         self.assertTrue(delivery2_line, 'No line for delivery 2')
         self.assertTrue(delivery2_line['replenishment_filled'])
 
@@ -1120,7 +1120,7 @@ class TestReports(TestReportsCommon):
             context = picking.move_ids[0].action_product_forecast_report()['context']
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
             for line in lines:
-                if picking in [line['document_in'], line['document_out']]:
+                if (line['document_in'] and picking.id == line['document_in']['id']) or (line['document_out'] and picking.id == line['document_out']['id']): #document_in is False
                     self.assertTrue(line['is_matched'], "The corresponding picking should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the picking shoud not be matched.")
@@ -1206,10 +1206,10 @@ class TestReports(TestReportsCommon):
         # Order should be: delivery_by_date, delivery_at_confirm, delivery_by_date_priority, delivery_manual
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 4, "The report must have 4 lines.")
-        self.assertEqual(lines[0]['document_out'].id, delivery_by_date.id)
-        self.assertEqual(lines[1]['document_out'].id, delivery_at_confirm.id)
-        self.assertEqual(lines[2]['document_out'].id, delivery_by_date_priority.id)
-        self.assertEqual(lines[3]['document_out'].id, delivery_manual.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery_by_date.id)
+        self.assertEqual(lines[1]['document_out']['id'], delivery_at_confirm.id)
+        self.assertEqual(lines[2]['document_out']['id'], delivery_by_date_priority.id)
+        self.assertEqual(lines[3]['document_out']['id'], delivery_manual.id)
 
         all_delivery = delivery_by_date | delivery_at_confirm | delivery_by_date_priority | delivery_manual
         self.assertEqual(all_delivery.move_ids.mapped("forecast_availability"), [-3.0, -3.0, -3.0, -3.0])

@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'MessageAction',
-    identifyingMode: 'xor',
+Model({
+    name: "MessageAction",
+    identifyingMode: "xor",
     fields: {
         isNonCompactActionContribution: attr({
             compute() {
@@ -16,7 +14,9 @@ registerModel({
                 return 1;
             },
         }),
-        messageActionListOwner: one('MessageActionList', {
+        messageActionListOwner: one("MessageActionList", {
+            inverse: "messageActions",
+            required: true,
             compute() {
                 if (this.messageActionListOwnerAsDelete) {
                     return this.messageActionListOwnerAsDelete;
@@ -35,38 +35,37 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'messageActions',
-            required: true,
         }),
-        messageActionListOwnerAsDelete: one('MessageActionList', {
+        messageActionListOwnerAsDelete: one("MessageActionList", {
             identifying: true,
-            inverse: 'actionDelete',
+            inverse: "actionDelete",
         }),
-        messageActionListOwnerAsEdit: one('MessageActionList', {
+        messageActionListOwnerAsEdit: one("MessageActionList", {
             identifying: true,
-            inverse: 'actionEdit',
+            inverse: "actionEdit",
         }),
-        messageActionListOwnerAsMarkAsRead: one('MessageActionList', {
+        messageActionListOwnerAsMarkAsRead: one("MessageActionList", {
             identifying: true,
-            inverse: 'actionMarkAsRead',
+            inverse: "actionMarkAsRead",
         }),
-        messageActionListOwnerAsReaction: one('MessageActionList', {
+        messageActionListOwnerAsReaction: one("MessageActionList", {
             identifying: true,
-            inverse: 'actionReaction',
+            inverse: "actionReaction",
         }),
-        messageActionListOwnerAsReplyTo: one('MessageActionList', {
+        messageActionListOwnerAsReplyTo: one("MessageActionList", {
             identifying: true,
-            inverse: 'actionReplyTo',
+            inverse: "actionReplyTo",
         }),
-        messageActionListOwnerAsToggleCompact: one('MessageActionList', {
+        messageActionListOwnerAsToggleCompact: one("MessageActionList", {
             identifying: true,
-            inverse: 'actionToggleCompact',
+            inverse: "actionToggleCompact",
         }),
-        messageActionListOwnerAsToggleStar: one('MessageActionList', {
+        messageActionListOwnerAsToggleStar: one("MessageActionList", {
             identifying: true,
-            inverse: 'actionToggleStar',
+            inverse: "actionToggleStar",
         }),
-        messageActionView: one('MessageActionView', {
+        messageActionView: one("MessageActionView", {
+            inverse: "messageAction",
             compute() {
                 /**
                  * Case 0: Always display Reaction and ToggleCompact if they are existing.
@@ -78,14 +77,16 @@ registerModel({
                 if (
                     this.messageActionListOwnerAsReaction ||
                     this.messageActionListOwnerAsToggleCompact ||
-                    (this.messageActionListOwner && !this.messageActionListOwner.actionToggleCompact) ||
-                    (this.messageActionListOwner && this.messageActionListOwner.actionToggleCompact && !this.messageActionListOwner.isCompact)
+                    (this.messageActionListOwner &&
+                        !this.messageActionListOwner.actionToggleCompact) ||
+                    (this.messageActionListOwner &&
+                        this.messageActionListOwner.actionToggleCompact &&
+                        !this.messageActionListOwner.isCompact)
                 ) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'messageAction',
         }),
         /**
          * States the listing sequence of the action inside of the aciton list.

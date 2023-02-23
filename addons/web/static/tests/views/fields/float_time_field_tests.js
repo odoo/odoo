@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { clickSave, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -26,7 +26,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("FloatTimeField");
 
     QUnit.test("FloatTimeField in form view", async function (assert) {
-        assert.expect(5);
+        assert.expect(4);
 
         await makeView({
             serverData,
@@ -53,13 +53,6 @@ QUnit.module("Fields", (hooks) => {
 
         // 9 + 0.1 * 60 = 9.06
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
-            "09:06",
-            "The formatted time value should be displayed properly."
-        );
-
-        await click(target, ".o_form_button_edit");
-        assert.strictEqual(
             target.querySelector(".o_field_float_time[name=qux] input").value,
             "09:06",
             "The value should be rendered correctly in the input."
@@ -76,9 +69,9 @@ QUnit.module("Fields", (hooks) => {
             "The new value should be displayed properly in the input."
         );
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "-11:48",
             "The new value should be saved and displayed properly."
         );
@@ -108,12 +101,11 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "09:06",
             "The formatted time value should be displayed properly."
         );
 
-        await click(target, ".o_form_button_edit");
         await editInput(target.querySelector(".o_field_float_time[name=qux] input"), null, "9.5");
         assert.strictEqual(
             target.querySelector(".o_field_float_time[name=qux] input").value,
@@ -121,9 +113,9 @@ QUnit.module("Fields", (hooks) => {
             "The new value should be displayed properly in the input."
         );
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_field_widget").textContent,
+            target.querySelector(".o_field_widget input").value,
             "09:30",
             "The new value should be saved and displayed properly."
         );
@@ -145,7 +137,7 @@ QUnit.module("Fields", (hooks) => {
             null,
             "blabla"
         );
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_notification_title").textContent,
             "Invalid fields: "

@@ -9,9 +9,7 @@
     'data': [
         "data/dashboards.xml",
     ],
-    'demo': [],
     'installable': True,
     'auto_install': ['stock_account'],
     'license': 'LGPL-3',
-    'assets': {}
 }

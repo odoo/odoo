@@ -13,7 +13,7 @@ import psycopg2
 
 from odoo import models, fields, Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
@@ -212,25 +212,25 @@ class TestFields(TransactionCaseWithUserDemo):
             }
         )
         fields = self.env["test_new_api.foo"]._fields
-        triggers = self.env.registry.field_triggers
+        get_trigger_tree = self.registry.get_trigger_tree
         value1 = fields["value1"]
         valid_depends = fields["x_computed_custom_valid_depends"]
         valid_transitive_depends = fields["x_computed_custom_valid_transitive_depends"]
         invalid_depends = fields["x_computed_custom_invalid_depends"]
         invalid_transitive_depends = fields["x_computed_custom_invalid_transitive_depends"]
         # `x_computed_custom_valid_depends` in the triggers of the field `value1`
-        self.assertTrue(valid_depends in triggers[value1][None])
+        self.assertTrue(valid_depends in get_trigger_tree([value1]).root)
         # `x_computed_custom_valid_transitive_depends` in the triggers `x_computed_custom_valid_depends` and `value1`
-        self.assertTrue(valid_transitive_depends in triggers[valid_depends][None])
-        self.assertTrue(valid_transitive_depends in triggers[value1][None])
+        self.assertTrue(valid_transitive_depends in get_trigger_tree([valid_depends]).root)
+        self.assertTrue(valid_transitive_depends in get_trigger_tree([value1]).root)
         # `x_computed_custom_invalid_depends` not in any triggers, as it was invalid and was skipped
         self.assertEqual(
-            sum(invalid_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 0
+            sum(invalid_depends in get_trigger_tree([field]).root for field in fields.values()), 0
         )
         # `x_computed_custom_invalid_transitive_depends` in the triggers of `x_computed_custom_invalid_depends` only
-        self.assertTrue(invalid_transitive_depends in triggers[invalid_depends][None])
+        self.assertTrue(invalid_transitive_depends in get_trigger_tree([invalid_depends]).root)
         self.assertEqual(
-            sum(invalid_transitive_depends in field_triggers.get(None, []) for field_triggers in triggers.values()), 1
+            sum(invalid_transitive_depends in get_trigger_tree([field]).root for field in fields.values()), 1
         )
 
     @mute_logger('odoo.fields')
@@ -820,6 +820,44 @@ class TestFields(TransactionCaseWithUserDemo):
         records[1].foo = "assign"
         self.env.flush_all()
 
+    def test_17_compute_depends_on_many2many(self):
+        user1, user2, user3 = self.env['test_new_api.user'].create([{}, {}, {}])
+        group = self.env['test_new_api.group'].create({'user_ids': [Command.link(user1.id)]})
+        self.env.flush_all()
+
+        field = type(user1).group_count
+        self.assertFalse(self.env.records_to_compute(field))
+
+        # should mark user2 and user3 to compute only
+        group.write({'user_ids': [Command.link(user1.id), Command.link(user2.id), Command.link(user3.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user2 + user3)
+
+        # should mark user2 to compute only
+        self.env.flush_all()
+        group.write({'user_ids': [Command.unlink(user2.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user2)
+
+        # should mark user2 and user3 to compute only
+        self.env.flush_all()
+        group.write({'user_ids': [Command.set([user1.id, user2.id])]})
+        self.assertEqual(self.env.records_to_compute(field), user2 + user3)
+
+        # should mark user3 to compute only
+        self.env.flush_all()
+        user3.write({'group_ids': [Command.link(group.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user3)
+
+        # similar with new records, but only check recomputation
+        user1 = self.env['test_new_api.user'].new({})
+        user2 = self.env['test_new_api.user'].new({})
+        group = self.env['test_new_api.group'].new({'user_ids': [user1.id]})
+        self.assertEqual(user1.group_count, 1)
+        self.assertEqual(user2.group_count, 0)
+
+        group.user_ids += user2
+        self.assertEqual(user1.group_count, 1)
+        self.assertEqual(user2.group_count, 1)
+
     def test_20_float(self):
         """ test rounding of float fields """
         record = self.env['test_new_api.mixed'].create({})
@@ -932,6 +970,23 @@ class TestFields(TransactionCaseWithUserDemo):
             'line_ids': [Command.delete(record.line_ids.id), Command.create({'subtotal': 1.0})],
         })
         check(1.0)
+
+    def test_20_monetary_related(self):
+        """ test value rounding with related currency """
+        currency = self.env.ref('base.USD')
+        monetary_base = self.env['test_new_api.monetary_base'].create({
+            'base_currency_id': currency.id
+        })
+        monetary_related = self.env['test_new_api.monetary_related'].create({
+            'monetary_id': monetary_base.id,
+            'total': 1/3,
+        })
+        self.env.cr.execute(
+            "SELECT total FROM test_new_api_monetary_related WHERE id=%s",
+            monetary_related.ids,
+        )
+        [total] = self.env.cr.fetchone()
+        self.assertEqual(total, .33)
 
     def test_20_like(self):
         """ test filtered_domain() on char fields. """
@@ -1606,6 +1661,57 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(cat2.parent, cat1)
         with self.assertRaises(AccessError):
             cat1.name
+
+    def test_32_prefetch_missing_error(self):
+        """ Test that prefetching non-column fields works in the presence of deleted records. """
+        Discussion = self.env['test_new_api.discussion']
+
+        # add an ir.rule that forces reading field 'name'
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get(Discussion._name).id,
+            'groups': [self.env.ref('base.group_user').id],
+            'domain_force': "[('name', '!=', 'Super Secret discution')]",
+        })
+
+        records = Discussion.with_user(self.user_demo).create([
+            {'name': 'EXISTING'},
+            {'name': 'MISSING'},
+        ])
+
+        # unpack to keep the prefetch on each recordset
+        existing, deleted = records
+        self.assertEqual(existing._prefetch_ids, records._ids)
+
+        # this invalidates the caches but the prefetching remains the same
+        deleted.unlink()
+
+        # this should not trigger a MissingError
+        existing.categories
+
+        # invalidate 'categories' for the assertQueryCount
+        records.invalidate_model(['categories'])
+        with self.assertQueryCount(4):
+            # <categories>.__get__(existing)
+            #  -> records._fetch_field(['categories'])
+            #      -> records._read(['categories'])
+            #          -> records.check_access_rule('read')
+            #              -> records._filter_access_rules_python('read')
+            #                  -> records.filtered_domain(...)
+            #                      -> <name>.__get__(existing)
+            #                          -> records._fetch_field(['name'])
+            #                              -> records._read(['name', ...])
+            #                                  -> ONE QUERY to read ['name', ...] of records
+            #                                  -> ONE QUERY for deleted.exists() / code: forbidden = missing.exists()
+            #          -> ONE QUERY for records.exists() / code: self = self.exists()
+            #          -> ONE QUERY to read the many2many of existing
+            existing.categories
+
+        # this one must trigger a MissingError
+        with self.assertRaises(MissingError):
+            deleted.categories
+
+        # special case: should not fail
+        Discussion.browse([None]).read(['categories'])
 
     def test_40_real_vs_new(self):
         """ test field access on new records vs real records. """
@@ -2977,7 +3083,23 @@ class TestHtmlField(common.TransactionCase):
         })
         record = self.env['test_new_api.mixed'].create({})
 
-        # 1. Test main use case: prevent restricted user to wipe non restricted
+        # 1. Test normalize case: diff due to normalize should not prevent the
+        #    changes
+        val = '<blockquote>Something</blockquote>'
+        normalized_val = '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">Something</blockquote>'
+        write_vals = {'comment5': val}
+
+        record.with_user(internal_user).write(write_vals)
+        self.assertEqual(record.comment5, normalized_val,
+                         "should be normalized (not in groups)")
+        record.with_user(bypass_user).write(write_vals)
+        self.assertEqual(record.comment5, val,
+                         "should not be normalized (has group)")
+        record.with_user(internal_user).write(write_vals)
+        self.assertEqual(record.comment5, normalized_val,
+                         "should be normalized (not in groups) despite admin previous diff")
+
+        # 2. Test main use case: prevent restricted user to wipe non restricted
         #    user previous change
         val = '<script></script>'
         write_vals = {'comment5': val}
@@ -2993,7 +3115,7 @@ class TestHtmlField(common.TransactionCase):
             # other user that bypassed the sanitize)
             record.with_user(internal_user).write(write_vals)
 
-        # 2. Make sure field compare in `_convert` is working as expected with
+        # 3. Make sure field compare in `_convert` is working as expected with
         #    special content / format
         val = '<span  attr1 ="att1"   attr2=\'attr2\'>é@&nbsp;</span><p><span/></p>'
         write_vals = {'comment5': val}
@@ -3009,6 +3131,13 @@ class TestHtmlField(common.TransactionCase):
         record.with_user(bypass_user).write(write_vals)
         # Next write shouldn't raise a sanitize right error
         record.with_user(internal_user).write(write_vals)
+
+        # 4. Ensure our exception handling is fine
+        val = '<!-- I am a comment -->'
+        write_vals = {'comment5': val}
+        record.with_user(internal_user).write(write_vals)
+        self.assertEqual(record.comment5, '',
+                         "should be sanitized (not in groups)")
 
 
 class TestMagicFields(common.TransactionCase):
@@ -3232,6 +3361,11 @@ class TestParentStore(common.TransactionCase):
         self.assertEqual(self.cats(8).depth, 2)
         self.assertEqual(self.cats(9).depth, 2)
 
+        # add a new node: one query to INSERT, one query to UPDATE parent_path
+        with self.assertQueryCount(2):
+            cat = self.cats().create({'name': '10', 'parent': self.cats(6).id})
+            self.assertEqual(cat.depth, 2)
+
 
 class TestRequiredMany2one(common.TransactionCase):
 
@@ -3343,7 +3477,7 @@ class TestSelectionUpdates(common.TransactionCase):
             self.env[self.MODEL_BASE].create({})
         with self.assertQueryCount(1):
             record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
-        with self.assertQueryCount(3):  # SELECT, SELECT (related field), UPDATE
+        with self.assertQueryCount(1):  # SELECT, SELECT (related field), UPDATE
             record.my_selection = 'bar'
 
     def test_selection_related_readonly(self):
@@ -3357,7 +3491,7 @@ class TestSelectionUpdates(common.TransactionCase):
         related_record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
         with self.assertQueryCount(2):  # defaults (related field), INSERT
             record = self.env[self.MODEL_RELATED_UPDATE].create({'selection_id': related_record.id})
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             record.related_selection = 'bar'
 
 
@@ -3874,7 +4008,7 @@ class TestPrecomputeModel(common.TransactionCase):
         self.patch(Model.upper, 'precompute', False)
         with self.assertWarns(UserWarning):
             self.registry.setup_models(self.cr)
-            self.registry.field_triggers
+            self.registry.get_trigger_tree(Model._fields.values())
 
     def test_precompute_dependencies_many2one(self):
         Model = self.registry['test_new_api.precompute']
@@ -3898,7 +4032,7 @@ class TestPrecomputeModel(common.TransactionCase):
         self.patch(Line.size, 'precompute', False)
         with self.assertWarns(UserWarning):
             self.registry.setup_models(self.cr)
-            self.registry.field_triggers
+            self.registry.get_trigger_tree(Model._fields.values())
 
 
 class TestPrecompute(common.TransactionCase):

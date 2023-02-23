@@ -19,7 +19,7 @@
                 <field name="show_credentials_page" invisible="1"/>
                 <field name="show_allow_express_checkout" invisible="1"/>
                 <field name="show_allow_tokenization" invisible="1"/>
-                <field name="show_payment_icon_ids" invisible="1"/>
+                <field name="show_payment_method_ids" invisible="1"/>
                 <field name="show_pre_msg" invisible="1"/>
                 <field name="show_pending_msg" invisible="1"/>
                 <field name="show_auth_msg" invisible="1"/>
@@ -28,7 +28,8 @@
                 <field name="code" invisible="1"/>
                 <sheet>
                     <!-- === Stat Buttons === -->
-                    <div class="oe_button_box" name="button_box">
+                    <div class="oe_button_box" name="button_box"
+                         attrs="{'invisible': [('module_state', '!=', 'installed')]}">
                         <button name="action_toggle_is_published"
                                 attrs="{'invisible': [('is_published', '=', False)]}"
                                 class="oe_stat_button"
@@ -48,9 +49,10 @@
                             </div>
                         </button>
                     </div>
-                    <field name="image_128" widget="image" class="oe_avatar"/>
-                    <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'disabled')]}"/>
-                    <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': [('state', '!=', 'test')]}"/>
+                    <field name="image_128" widget="image" class="oe_avatar"
+                           attrs="{'readonly': [('module_state', '!=', 'installed')]}"/>
+                    <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'disabled')]}"/>
+                    <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'test')]}"/>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Name"/></h1>
                         <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
@@ -63,42 +65,62 @@
                         Please use the <em>Duplicate</em> action instead.
                     </div>
                     <group>
-                        <group name="payment_state">
-                            <field name="code" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)], 'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
-                            <field name="state" widget="radio" attrs="{'invisible': [('module_state', '=', 'uninstalled')]}"/>
+                        <group name="payment_state" attrs="{'invisible': [('module_state', 'not in', ('installed', False))]}">
+                            <field name="code" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="state" widget="radio"/>
                             <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                         </group>
                     </group>
                     <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                        <page string="Credentials" name="provider_credentials" attrs="{'invisible': ['|', ('code', '=', 'none'), ('show_credentials_page', '=', False)]}">
-                            <group name="code"/>
+                        <page string="Credentials" name="credentials" attrs="{'invisible': ['|', ('code', '=', 'none'), ('show_credentials_page', '=', False)]}">
+                            <group name="provider_credentials"/>
                         </page>
                         <page string="Configuration" name="configuration">
                             <group name="provider_config">
                                 <group string="Payment Form" name="payment_form">
                                     <field name="display_as" placeholder="If not defined, the provider name will be used."/>
-                                    <field name="payment_icon_ids" attrs="{'invisible': [('show_payment_icon_ids', '=', False)]}" widget="many2many_tags"/>
+                                    <field name="payment_method_ids"
+                                           options="{'no_create': True, 'no_edit': True}"
+                                           widget="many2many_tags"
+                                           attrs="{'invisible': [('show_payment_method_ids', '=', False)]}" />
                                     <field name="allow_tokenization" attrs="{'invisible': ['|', ('support_tokenization', '=', False), ('show_allow_tokenization', '=', False)]}"/>
                                     <field name="capture_manually" attrs="{'invisible': [('support_manual_capture', '=', False)]}"/>
                                     <field name="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
                                 </group>
                                 <group string="Availability" name="availability">
-                                    <field name="maximum_amount" widget="monetary" options="{'currency_field': 'main_currency_id'}"/>
+                                    <field name="maximum_amount"/>
+                                    <label for="available_currency_ids"/>
+                                    <!-- Use `o_row` to allow placing a button next to the field in overrides. -->
+                                    <div name="available_currencies" class="o_row">
+                                        <field name="available_currency_ids"
+                                               widget="many2many_tags"
+                                               placeholder="Select currencies. Leave empty not to restrict any."
+                                               context="{'active_test': False}"
+                                               options="{'no_create': True}"/>
+                                    </div>
                                     <field name="available_country_ids"
                                            widget="many2many_tags"
                                            placeholder="Select countries. Leave empty to make available everywhere."
-                                           options="{'no_open': True, 'no_create': True}"/>
+                                           options="{'no_create': True}"/>
                                 </group>
                                 <group string="Payment Followup" name="payment_followup" invisible="1"/>
                             </group>
                         </page>
                         <page string="Fees" name="fees" attrs="{'invisible': [('support_fees', '=', False)]}">
                             <group name="payment_fees">
-                                <field name="fees_active"/>
-                                <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <group class="oe_inline">
+                                    <field name="fees_active"/>
+                                    <field name="fees_dom_fixed"
+                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_dom_var"
+                                           widget="percentage"
+                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_fixed"
+                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_var"
+                                           widget="percentage"
+                                           attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Messages"

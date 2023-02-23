@@ -1,17 +1,20 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'MessagingMenu',
+Model({
+    name: "MessagingMenu",
+    template: "mail.MessagingMenu",
+    componentSetup() {
+        useComponentToModel({ fieldName: "component" });
+    },
     lifecycleHooks: {
         _created() {
-            document.addEventListener('click', this._onClickCaptureGlobal, true);
+            document.addEventListener("click", this._onClickCaptureGlobal, true);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+            document.removeEventListener("click", this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -20,12 +23,6 @@ registerModel({
          */
         close() {
             this.update({ isOpen: false });
-        },
-        /**
-         * @param {MouseEvent} ev
-         */
-        onClickDesktopTabButton(ev) {
-            this.update({ activeTabId: ev.currentTarget.dataset.tabId });
         },
         /**
          * @param {MouseEvent} ev
@@ -69,16 +66,16 @@ registerModel({
          */
         onMobileNewMessageInputSource(req, res) {
             const value = _.escape(req.term);
-            this.messaging.models['Partner'].imSearch({
-                callback: partners => {
-                    const suggestions = partners.map(partner => {
+            this.messaging.models["Partner"].imSearch({
+                callback: (partners) => {
+                    const suggestions = partners.map((partner) => {
                         return {
                             id: partner.id,
                             value: partner.nameOrDisplayName,
                             label: partner.nameOrDisplayName,
                         };
                     });
-                    res(_.sortBy(suggestions, 'label'));
+                    res(_.sortBy(suggestions, "label"));
                 },
                 keyword: value,
                 limit: 10,
@@ -124,12 +121,49 @@ registerModel({
         },
     },
     fields: {
+        activeTab: one("MessagingMenuTabView", {
+            compute() {
+                switch (this.activeTabId) {
+                    case "all":
+                        return this.allTab;
+                    case "channel":
+                        return this.channelTab;
+                    case "chat":
+                        return this.chatTab;
+                }
+            },
+        }),
         /**
          * Tab selected in the messaging menu.
          * Either 'all', 'chat' or 'channel'.
          */
-        activeTabId: attr({
-            default: 'all',
+        activeTabId: attr({ default: "all" }),
+        allTab: one("MessagingMenuTabView", {
+            inverse: "ownerAsAll",
+            compute() {
+                if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
+                    return {};
+                }
+                return clear();
+            },
+        }),
+        channelTab: one("MessagingMenuTabView", {
+            inverse: "ownerAsChannel",
+            compute() {
+                if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
+                    return {};
+                }
+                return clear();
+            },
+        }),
+        chatTab: one("MessagingMenuTabView", {
+            inverse: "ownerAsChat",
+            compute() {
+                if (this.isOpen && this.messaging.isInitialized && !this.messaging.device.isSmall) {
+                    return {};
+                }
+                return clear();
+            },
         }),
         component: attr(),
         /**
@@ -144,52 +178,59 @@ registerModel({
                 }
                 const inboxCounter = this.messaging.inbox ? this.messaging.inbox.counter : 0;
                 const unreadChannelsCounter = this.pinnedAndUnreadChannels.length;
-                const notificationGroupsCounter = this.messaging.models['NotificationGroup'].all().reduce(
-                    (total, group) => total + group.notifications.length,
-                    0
+                const notificationGroupsCounter = this.messaging.models["NotificationGroup"]
+                    .all()
+                    .reduce((total, group) => total + group.notifications.length, 0);
+                const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault
+                    ? 1
+                    : 0;
+                return (
+                    inboxCounter +
+                    unreadChannelsCounter +
+                    notificationGroupsCounter +
+                    notificationPemissionCounter
                 );
-                const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault ? 1 : 0;
-                return inboxCounter + unreadChannelsCounter + notificationGroupsCounter + notificationPemissionCounter;
             },
         }),
         /**
          * Determine whether the mobile new message input is visible or not.
          */
-        isMobileNewMessageToggled: attr({
-            default: false,
-        }),
+        isMobileNewMessageToggled: attr({ default: false }),
         /**
          * Determine whether the messaging menu dropdown is open or not.
          */
-        isOpen: attr({
-            default: false,
-        }),
-        notificationListView: one('NotificationListView', {
+        isOpen: attr({ default: false }),
+        notificationListView: one("NotificationListView", {
+            inverse: "messagingMenuOwner",
             compute() {
                 return this.isOpen ? {} : clear();
             },
-            inverse: 'messagingMenuOwner',
         }),
         /**
          * The navbar view on the messaging menu when in mobile.
          */
-        mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
+        mobileMessagingNavbarView: one("MobileMessagingNavbarView", {
+            inverse: "messagingMenu",
             compute() {
                 if (this.messaging.device && this.messaging.device.isSmall) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'messagingMenu',
         }),
-        mobileNewMessageAutocompleteInputView: one('AutocompleteInputView', {
+        mobileNewMessageAutocompleteInputView: one("AutocompleteInputView", {
+            inverse: "messagingMenuOwnerAsMobileNewMessageInput",
             compute() {
-                if (this.isOpen && this.messaging.isInitialized && this.messaging.device.isSmall && this.isMobileNewMessageToggled) {
+                if (
+                    this.isOpen &&
+                    this.messaging.isInitialized &&
+                    this.messaging.device.isSmall &&
+                    this.isMobileNewMessageToggled
+                ) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'messagingMenuOwnerAsMobileNewMessageInput',
         }),
         mobileNewMessageInputPlaceholder: attr({
             compute() {
@@ -199,8 +240,8 @@ registerModel({
         /**
          * States all the pinned channels that have unread messages.
          */
-        pinnedAndUnreadChannels: many('Thread', {
-            inverse: 'messagingMenuAsPinnedAndUnreadChannel',
+        pinnedAndUnreadChannels: many("Thread", {
+            inverse: "messagingMenuAsPinnedAndUnreadChannel",
             readonly: true,
         }),
         /**
@@ -210,7 +251,7 @@ registerModel({
          */
         viewId: attr({
             compute() {
-                return _.uniqueId('o_messagingMenu_');
+                return _.uniqueId("o_messagingMenu_");
             },
         }),
     },

@@ -169,14 +169,14 @@
         <span class="me-2 o_we_preview_favicon"><i class="fa fa-globe"/><img class="align-baseline d-none"/></span>
         <div class="w-100">
             <div class="d-flex">
-                <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1" t-esc="widget.href" title="Open in a new tab"/>
-                <a href="#" class="mx-2 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
+                <a href="#" target="_blank" class="o_we_url_link fw-bold flex-grow-1 text-truncate" t-esc="widget.href" title="Open in a new tab"/>
+                <a href="#" class="mx-1 o_we_copy_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy Link">
                     <i class="fa fa-clone"/>
                 </a>
-                <a href="#" class="mx-2 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Link">
+                <a href="#" class="mx-1 o_we_edit_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Link">
                     <i class="fa fa-edit"/>
                 </a>
-                <a href="#" class="ms-2 o_we_remove_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Link">
+                <a href="#" class="ms-1 o_we_remove_link text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove Link">
                     <i class="fa fa-chain-broken"/>
                 </a>
             </div>
@@ -184,14 +184,6 @@
         </div>
     </div>
     <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">
-        <we-row t-attf-class="o_we_sublevel_1 {{widget.needLabel ? '' : 'd-none'}}">
-            <we-title>Link Label</we-title>
-            <we-input class="o_we_user_value_widget">
-                <div>
-                    <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.content" type="text"/>
-                </div>
-            </we-input>
-        </we-row>
         <we-row id="url_row" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
             <we-input class="o_we_user_value_widget o_we_sublevel_1">
                 <we-title class="o_short_title"></we-title>
@@ -208,14 +200,20 @@
                     </div>
             </we-button>
         </we-row>
+        <we-row t-attf-class="o_we_sublevel_1 {{widget.needLabel ? '' : 'd-none'}}">
+            <we-title>Label</we-title>
+            <we-input class="o_we_user_value_widget">
+                <div>
+                    <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.content" type="text"/>
+                </div>
+            </we-input>
+        </we-row>
         <we-row>
             <we-select class="o_we_user_value_widget o_we_sublevel_1">
                 <we-title>Style</we-title>
                 <div class="dropdown">
-                    <button class="dropdown-toggle"
-                        data-bs-toggle="dropdown" title="" tabindex="-1"
-                        data-bs-original-title="Link Style" aria-expanded="false">
-                        <we-toggler/>
+                    <button class="dropdown-toggle" data-bs-toggle="dropdown" tabindex="-1" aria-expanded="false">
+                        <we-toggler title="Link Style"/>
                     </button>
                     <we-selection-items class="dropdown-menu" name="link_style_color">
                         <t t-foreach="widget.colorsData" t-as="colorData">
@@ -251,7 +249,7 @@
             <div>
                 <we-input class="o_we_user_value_widget" title="Border Width">
                     <div class="o_custom_border_width_input">
-                        <input name="custom_border_width" type="text" class="text-end" size="2"/>
+                        <input name="custom_border_width" type="number" class="text-end" size="2"/>
                         <span>px</span>
                     </div>
                 </we-input>
@@ -266,7 +264,7 @@
                             <we-button title="Solid" class="dropdown-item" data-value="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
                             <we-button title="Dashed" class="dropdown-item" data-value="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
                             <we-button title="Dotted" class="dropdown-item" data-value="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/></we-button>
+                            <we-button title="Double" class="dropdown-item" data-value="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
                         </we-selection-items>
                     </div>
                 </we-select>
@@ -283,10 +281,8 @@
                 <we-title>Size</we-title>
                 <div>
                     <div class="dropdown">
-                        <button class="dropdown-toggle"
-                            data-bs-toggle="dropdown" title="" tabindex="-1"
-                            data-bs-original-title="Link Size" aria-expanded="false">
-                            <we-toggler>
+                        <button class="dropdown-toggle" data-bs-toggle="dropdown" title="" tabindex="-1" aria-expanded="false">
+                            <we-toggler title="Link Size">
                                 Medium
                             </we-toggler>
                         </button>
@@ -311,10 +307,8 @@
                 <we-title>Shape</we-title>
                 <div>
                     <div class="dropdown">
-                        <button class="dropdown-toggle"
-                            data-bs-toggle="dropdown" title="" tabindex="-1"
-                            data-bs-original-title="Link Shape" aria-expanded="false">
-                            <we-toggler>
+                        <button class="dropdown-toggle" data-bs-toggle="dropdown" tabindex="-1" aria-expanded="false">
+                            <we-toggler title="Link Shape">
                                 Default
                             </we-toggler>
                         </button>

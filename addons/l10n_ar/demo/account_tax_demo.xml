@@ -13,8 +13,8 @@
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': obj().search([
-                    ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
-                    ('group_id', '=', obj().env.ref('l10n_ar.account_group_otros_impuestos').id)
+                    ('company_id', '=', ref('company_ri')),
+                    ('group_id', '=', ref('account.{}_account_group_otros_impuestos'.format(ref('company_ri'))))
                 ], limit=1).id,
             }),
         ]"/>
@@ -24,13 +24,13 @@
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': obj().search([
-                    ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
-                    ('group_id', '=', obj().env.ref('l10n_ar.account_group_otros_impuestos').id)
+                    ('company_id', '=', ref('company_ri')),
+                    ('group_id', '=', ref('account.{}_account_group_otros_impuestos'.format(ref('company_ri'))))
                 ], limit=1).id,
             }),
         ]"/>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="l10n_ar.tax_group_otros_impuestos"/>
+        <field name="tax_group_id" model="account.tax.group" eval="ref('account.{}_tax_group_otros_impuestos'.format(ref('company_ri')))"/>
         <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
@@ -46,8 +46,8 @@
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': obj().search([
-                    ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
-                    ('group_id', '=', obj().env.ref('l10n_ar.account_group_otros_impuestos').id)
+                    ('company_id', '=', ref('company_ri')),
+                    ('group_id', '=', ref('account.{}_account_group_otros_impuestos'.format(ref('company_ri'))))
                 ], limit=1).id,
 
             }),
@@ -58,13 +58,13 @@
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': obj().search([
-                    ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
-                    ('group_id', '=', obj().env.ref('l10n_ar.account_group_otros_impuestos').id)
+                    ('company_id', '=', ref('company_ri')),
+                    ('group_id', '=', ref('account.{}_account_group_otros_impuestos'.format(ref('company_ri'))))
                 ], limit=1).id,
             }),
         ]"/>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="l10n_ar.tax_group_otros_impuestos"/>
+        <field name="tax_group_id" model="account.tax.group" eval="ref('account.{}_tax_group_otros_impuestos'.format(ref('company_ri')))"/>
         <field name="company_id" ref="l10n_ar.company_ri"/>
     </record>
 
@@ -72,13 +72,13 @@
 
     <function model="account.tax" name="write" context="{'active_test': False}">
         <value model="account.tax" eval="obj().search([('company_id', '=', ref('company_ri')), ('tax_group_id', 'in',
-            [ref('tax_group_percepcion_iva'),
-             ref('tax_group_percepcion_ganancias'),
-             ref('tax_group_percepcion_iibb_caba'),
-             ref('tax_group_percepcion_iibb_ba'),
-             ref('tax_group_percepcion_iibb_co'),
-             ref('tax_group_percepcion_iibb_sf'),
-             ref('l10n_ar.tax_group_otros_impuestos')]
+            [ref('account.{}_tax_group_percepcion_iva'.format(ref('company_ri'))),
+             ref('account.{}_tax_group_percepcion_ganancias'.format(ref('company_ri'))),
+             ref('account.{}_tax_group_percepcion_iibb_caba'.format(ref('company_ri'))),
+             ref('account.{}_tax_group_percepcion_iibb_ba'.format(ref('company_ri'))),
+             ref('account.{}_tax_group_percepcion_iibb_co'.format(ref('company_ri'))),
+             ref('account.{}_tax_group_percepcion_iibb_sf'.format(ref('company_ri'))),
+             ref('account.{}_tax_group_otros_impuestos'.format(ref('company_ri')))]
         )]).ids"/>
         <value eval="{'amount': 0.1, 'active': True}"/>
     </function>

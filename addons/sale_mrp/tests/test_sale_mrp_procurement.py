@@ -239,3 +239,35 @@ class TestSaleMrpProcurement(TransactionCase):
 
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
         self.assertIn(so.name, mo.origin)
+
+    def test_so_reordering_rule(self):
+        kit_1, component_1 = self.env['product.product'].create([{
+            'name': n,
+            'type': 'product',
+        } for n in ['Kit 1', 'Compo 1']])
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': kit_1.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+            ],
+        }])
+        customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': kit_1.id,
+                    'product_uom_qty': 1.0,
+                })],
+        })
+        so.action_confirm()
+
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', kit_1.id)])
+        self.assertFalse(orderpoint_product)

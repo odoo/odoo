@@ -59,7 +59,7 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
             const ids = JSON.parse(params.get(name));
             params.set(name, JSON.stringify(ids.filter(id => id !== data.value)));
             this.form.attr('action', `${window.location.href.split('?')[0]}?${params.toString()}`);
-        } catch (_e) {
+        } catch {
             return;
         }
     },

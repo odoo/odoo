@@ -39,10 +39,9 @@ class MailingSMSController(http.Controller):
         check_res = self._check_trace(mailing_id, trace_code)
         if not check_res.get('trace'):
             return request.redirect('/web')
-        country_code = request.geoip.get('country_code')
         # parse and validate number
         sms_number = post.get('sms_number', '').strip(' ')
-        sanitize_res = phone_validation.phone_sanitize_numbers([sms_number], country_code, None)[sms_number]
+        sanitize_res = phone_validation.phone_sanitize_numbers([sms_number], request.geoip.country_code, None)[sms_number]
         tocheck_number = sanitize_res['sanitized'] or sms_number
 
         trace = check_res['trace'].filtered(lambda r: r.sms_number == tocheck_number)[:1]
@@ -86,7 +85,6 @@ class MailingSMSController(http.Controller):
 
     @http.route('/r/<string:code>/s/<int:sms_sms_id>', type='http', auth="public")
     def sms_short_link_redirect(self, code, sms_sms_id, **post):
-        country_code = request.geoip.get('country_code')
         if sms_sms_id:
             trace_id = request.env['mailing.trace'].sudo().search([('sms_sms_id_int', '=', int(sms_sms_id))]).id
         else:
@@ -95,7 +93,7 @@ class MailingSMSController(http.Controller):
         request.env['link.tracker.click'].sudo().add_click(
             code,
             ip=request.httprequest.remote_addr,
-            country_code=country_code,
+            country_code=request.geoip.country_code,
             mailing_trace_id=trace_id
         )
         return request.redirect(request.env['link.tracker'].get_url_from_code(code), code=301, local=False)

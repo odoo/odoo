@@ -65,9 +65,9 @@ class Project(models.Model):
     @api.model
     def _search_is_internal_project(self, operator, value):
         if not isinstance(value, bool):
-            raise ValueError('Invalid value: %s' % (value))
+            raise ValueError(_('Invalid value: %s', value))
         if operator not in ['=', '!=']:
-            raise ValueError('Invalid operator: %s' % (operator))
+            raise ValueError(_('Invalid operator: %s', operator))
 
         query = """
             SELECT C.internal_project_id
@@ -79,6 +79,13 @@ class Project(models.Model):
         else:
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
+
+    @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
+        makes the view cache dependent on the company timesheet encoding uom"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.company.timesheet_encode_uom_id,)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -110,9 +117,9 @@ class Project(models.Model):
             SELECT P.id
               FROM project_project P
          LEFT JOIN project_task T ON P.id = T.project_id
-             WHERE T.planned_hours IS NOT NULL
+             WHERE p.allocated_hours != 0 AND p.allow_timesheets
           GROUP BY P.id
-            HAVING SUM(T.remaining_hours) < 0
+            HAVING P.allocated_hours - SUM(T.effective_hours) < 0
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
             operator_new = 'inselect'
@@ -230,15 +237,17 @@ class Task(models.Model):
     _name = "project.task"
     _inherit = "project.task"
 
+    project_id = fields.Many2one(domain=[('is_internal_project', '=', False)])
+    display_project_id = fields.Many2one(domain=[('is_internal_project', '=', False)])
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True)
     allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
     remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage')
-    effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Time spent on this task, excluding its sub-tasks.")
+    effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Time spent on this task and its sub-tasks (and their own sub-tasks).")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg")
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
-    subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
+    subtask_effective_hours = fields.Float("Hours Spent on Sub-Tasks", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
 
@@ -293,7 +302,7 @@ class Task(models.Model):
 
     def _search_remaining_hours_percentage(self, operator, value):
         if operator not in OPERATOR_MAPPING:
-            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
+            raise NotImplementedError(_('This operator %s is not supported in this search method.', operator))
         query = f"""
             SELECT id
               FROM {self._table}
@@ -374,13 +383,20 @@ class Task(models.Model):
         return super().name_get()
 
     @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
+        makes the view cache dependent on the company timesheet encoding uom"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.company.timesheet_encode_uom_id,)
+
+    @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         """ Set the correct label for `unit_amount`, depending on company UoM """
         arch, view = super()._get_view(view_id, view_type, **options)
         # Use of sudo as the portal user doesn't have access to uom
         arch = self.env['account.analytic.line'].sudo()._apply_timesheet_label(arch)
 
-        if view_type in ['tree', 'pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+        if view_type in ['tree', 'pivot', 'graph', 'form'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
             arch = self.env['account.analytic.line']._apply_time_label(arch, related_model=self._name)
 
         return arch, view

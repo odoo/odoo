@@ -5,11 +5,7 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-import re
-
-from odoo import api, fields, models, tools
-from odoo.exceptions import UserError
-from odoo.osv.expression import AND, expression
+from odoo import fields, models
 
 
 class PurchaseReport(models.Model):
@@ -37,10 +33,6 @@ class PurchaseReport(models.Model):
     delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, group_operator='avg', help="Amount of time between purchase approval and order by date.")
     delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, group_operator='avg',
                               help="Amount of time between date planned and order by date for each purchase order line.")
-    avg_days_to_purchase = fields.Float(
-        'Average Days to Purchase', digits=(16, 2), readonly=True, store=False,  # needs store=False to prevent showing up as a 'measure' option
-        help="Amount of time between purchase approval and document creation date. Due to a hack needed to calculate this, \
-              every record will show the same average value, therefore only use this as an aggregated value with group_operator=avg")
     price_total = fields.Float('Total', readonly=True)
     price_average = fields.Float('Average Cost', readonly=True, group_operator="avg")
     nbr_lines = fields.Integer('# of Lines', readonly=True)
@@ -65,7 +57,6 @@ class PurchaseReport(models.Model):
 
     def _select(self):
         select_str = """
-            WITH currency_rate as (%s)
                 SELECT
                     po.id as order_id,
                     min(l.id) as id,
@@ -99,7 +90,7 @@ class PurchaseReport(models.Model):
                          then sum(l.product_qty / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                          else sum(l.qty_received / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                     end as qty_to_be_billed
-        """ % self.env['res.currency']._select_companies_rates()
+        """
         return select_str
 
     def _from(self):
@@ -112,10 +103,6 @@ class PurchaseReport(models.Model):
                         left join product_template t on (p.product_tmpl_id=t.id)
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
-                left join currency_rate cr on (cr.currency_id = po.currency_id and
-                    cr.company_id = po.company_id and
-                    cr.date_start <= coalesce(po.date_order, now()) and
-                    (cr.date_end is null or cr.date_end > coalesce(po.date_order, now())))
                 left join {currency_table} ON currency_table.company_id = po.company_id
         """.format(
             currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
@@ -153,46 +140,3 @@ class PurchaseReport(models.Model):
                 currency_table.rate
         """
         return group_by_str
-
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """ This is a hack to allow us to correctly calculate the average of PO specific date values since
-            the normal report query result will duplicate PO values across its PO lines during joins and
-            lead to incorrect aggregation values.
-
-            Only the AVG operator is supported for avg_days_to_purchase.
-        """
-        avg_days_to_purchase = next((field for field in fields if re.search(r'\bavg_days_to_purchase\b', field)), False)
-
-        if avg_days_to_purchase:
-            fields.remove(avg_days_to_purchase)
-            if any(field.split(':')[1].split('(')[0] != 'avg' for field in [avg_days_to_purchase] if field):
-                raise UserError("Value: 'avg_days_to_purchase' should only be used to show an average. If you are seeing this message then it is being accessed incorrectly.")
-
-        res = []
-        if fields:
-            res = super(PurchaseReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-
-        if not res and avg_days_to_purchase:
-            res = [{}]
-
-        if avg_days_to_purchase:
-            self.check_access_rights('read')
-            query = """ SELECT AVG(days_to_purchase.po_days_to_purchase)::decimal(16,2) AS avg_days_to_purchase
-                          FROM (
-                              SELECT extract(epoch from age(po.date_approve,po.create_date))/(24*60*60) AS po_days_to_purchase
-                              FROM purchase_order po
-                              WHERE po.id IN (
-                                  SELECT "purchase_report"."order_id" FROM %s WHERE %s)
-                              ) AS days_to_purchase
-                    """
-
-            subdomain = AND([domain, [('company_id', '=', self.env.company.id), ('date_approve', '!=', False)]])
-            subtables, subwhere, subparams = expression(subdomain, self).query.get_sql()
-
-            self.env.cr.execute(query % (subtables, subwhere), subparams)
-            res[0].update({
-                '__count': 1,
-                avg_days_to_purchase.split(':')[0]: self.env.cr.fetchall()[0][0],
-            })
-        return res

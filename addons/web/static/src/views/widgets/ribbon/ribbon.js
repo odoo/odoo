@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "../standard_widget_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 /**
  * This widget adds a ribbon on the top right side of the form
@@ -19,6 +19,18 @@ const { Component } = owl;
  *        by default.
  */
 class RibbonWidget extends Component {
+    static template = "web.Ribbon";
+    static props = {
+        ...standardWidgetProps,
+        text: { type: String },
+        title: { type: String, optional: true },
+        bgClass: { type: String, optional: true },
+    };
+    static defaultProps = {
+        title: "",
+        bgClass: "bg-success",
+    };
+
     get classes() {
         let classes = this.props.bgClass;
         if (this.props.text.length > 15) {
@@ -30,23 +42,15 @@ class RibbonWidget extends Component {
     }
 }
 
-RibbonWidget.template = "web.Ribbon";
-RibbonWidget.props = {
-    ...standardWidgetProps,
-    text: { type: String },
-    title: { type: String, optional: true },
-    bgClass: { type: String, optional: true },
-};
-RibbonWidget.defaultProps = {
-    title: "",
-    bgClass: "bg-success",
-};
-RibbonWidget.extractProps = ({ attrs }) => {
-    return {
-        text: attrs.title || attrs.text,
-        title: attrs.tooltip,
-        bgClass: attrs.bg_color,
-    };
+export const ribbonWidget = {
+    component: RibbonWidget,
+    extractProps: ({ attrs }) => {
+        return {
+            text: attrs.title || attrs.text,
+            title: attrs.tooltip,
+            bgClass: attrs.bg_color,
+        };
+    },
 };
 
-registry.category("view_widgets").add("web_ribbon", RibbonWidget);
+registry.category("view_widgets").add("web_ribbon", ribbonWidget);

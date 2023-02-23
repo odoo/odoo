@@ -40,7 +40,7 @@ wTourUtils.registerWebsitePreviewTour('newsletter_block_edition', {
     },
     {
         content: 'Click on the link style button',
-        trigger: '[data-bs-original-title="Link Style"]',
+        trigger: '.dropdown:has([name="link_style_color"]) > button',
     },
     {
         content: 'Click on the primary style button',
@@ -48,7 +48,7 @@ wTourUtils.registerWebsitePreviewTour('newsletter_block_edition', {
     },
     {
         content: 'Change the shape of the button',
-        trigger: '[data-bs-original-title="Link Shape"]',
+        trigger: '.dropdown:has([name="link_style_shape"]) > button',
     },
     {
         content: 'Click on the flat shape button',

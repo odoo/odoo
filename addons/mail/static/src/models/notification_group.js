@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, clear, insert, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'NotificationGroup',
+Model({
+    name: "NotificationGroup",
     recordMethods: {
         /**
          * Cancel notifications of the group.
@@ -13,7 +11,7 @@ registerModel({
         notifyCancel() {
             this.messaging.rpc({
                 model: this.res_model,
-                method: 'notify_cancel_by_type',
+                method: "notify_cancel_by_type",
                 kwargs: { notification_type: this.notification_type },
             });
         },
@@ -42,17 +40,21 @@ registerModel({
          * @private
          */
         _openDocuments() {
-            if (this.notification_type !== 'email') {
+            if (this.notification_type !== "email") {
                 return;
             }
             this.env.services.action.doAction({
                 name: this.env._t("Mail Failures"),
-                type: 'ir.actions.act_window',
-                view_mode: 'kanban,list,form',
-                views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                target: 'current',
+                type: "ir.actions.act_window",
+                view_mode: "kanban,list,form",
+                views: [
+                    [false, "kanban"],
+                    [false, "list"],
+                    [false, "form"],
+                ],
+                target: "current",
                 res_model: this.res_model,
-                domain: [['message_has_error', '=', true]],
+                domain: [["message_has_error", "=", true]],
                 context: { create: false },
             });
             if (this.messaging.device.isSmall) {
@@ -72,50 +74,46 @@ registerModel({
              */
             compute() {
                 const dates = this.notifications
-                    .filter(notification => notification.message && notification.message.date)
-                    .map(notification => notification.message.date);
+                    .filter(
+                        (notification) => notification.message && notification.message.momentDate
+                    )
+                    .map((notification) => notification.message.momentDate);
                 if (dates.length === 0) {
                     return clear();
                 }
                 return moment.max(dates);
             },
         }),
-        notification_type: attr({
-            identifying: true,
-        }),
-        notifications: many('Notification', {
-            inverse: 'notificationGroup',
-        }),
-        notificationGroupViews: many('NotificationGroupView', {
-            inverse: 'notificationGroup',
-        }),
-        res_id: attr({
-            identifying: true,
-        }),
-        res_model: attr({
-            identifying: true,
-        }),
+        notification_type: attr({ identifying: true }),
+        notifications: many("Notification", { inverse: "notificationGroup" }),
+        notificationGroupViews: many("NotificationGroupView", { inverse: "notificationGroup" }),
+        res_id: attr({ identifying: true }),
+        res_model: attr({ identifying: true }),
         res_model_name: attr(),
         /**
          * States the position of the group inside the notification list.
          */
         sequence: attr({
+            default: 0,
             /**
              * Compute the position of the group inside the notification list.
              */
             compute() {
-                return -Math.max(...this.notifications.map(notification => notification.message.id));
+                return -Math.max(
+                    ...this.notifications.map((notification) => notification.message.id)
+                );
             },
-            default: 0,
         }),
         /**
          * Related thread when the notification group concerns a single thread.
          */
-        thread: one('Thread', {
+        thread: one("Thread", {
             compute() {
                 const notificationsThreadIds = this.notifications
-                    .filter(notification => notification.message && notification.message.originThread)
-                    .map(notification => notification.message.originThread.id);
+                    .filter(
+                        (notification) => notification.message && notification.message.originThread
+                    )
+                    .map((notification) => notification.message.originThread.id);
                 const threadIds = new Set(notificationsThreadIds);
                 if (threadIds.size !== 1) {
                     return clear();
@@ -129,8 +127,8 @@ registerModel({
     },
     onChanges: [
         {
-            dependencies: ['notifications'],
-            methodName: '_onChangeNotifications',
+            dependencies: ["notifications"],
+            methodName: "_onChangeNotifications",
         },
     ],
 });

@@ -5,6 +5,7 @@ from . import barcode_rule
 from . import loyalty_card
 from . import loyalty_mail
 from . import loyalty_program
+from . import loyalty_reward
 from . import loyalty_rule
 from . import pos_config
 from . import pos_order_line

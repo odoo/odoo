@@ -1,38 +1,30 @@
-odoo.define('pos_restaurant.PrintBillButton', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const ProductScreen = require('point_of_sale.ProductScreen');
-    const { useListener } = require("@web/core/utils/hooks");
-    const Registries = require('point_of_sale.Registries');
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { LegacyComponent } from "@web/legacy/legacy_component";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { useListener } from "@web/core/utils/hooks";
 
-    class PrintBillButton extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('click', this.onClick);
-        }
-        async onClick() {
-            const order = this.env.pos.get_order();
-            if (order.get_orderlines().length > 0) {
-                await this.showTempScreen('BillScreen');
-            } else {
-                await this.showPopup('ErrorPopup', {
-                    title: this.env._t('Nothing to Print'),
-                    body: this.env._t('There are no order lines'),
-                });
-            }
-        }
+export class PrintBillButton extends LegacyComponent {
+    static template = "PrintBillButton";
+
+    setup() {
+        super.setup();
+        this.pos = usePos();
+        useListener("click", this.onClick);
     }
-    PrintBillButton.template = 'PrintBillButton';
+    _isDisabled() {
+        const order = this.env.pos.get_order();
+        return order.get_orderlines().length === 0;
+    }
+    onClick() {
+        this.pos.showTempScreen("BillScreen");
+    }
+}
 
-    ProductScreen.addControlButton({
-        component: PrintBillButton,
-        condition: function() {
-            return this.env.pos.config.iface_printbill;
-        },
-    });
-
-    Registries.Component.add(PrintBillButton);
-
-    return PrintBillButton;
+ProductScreen.addControlButton({
+    component: PrintBillButton,
+    condition: function () {
+        return this.env.pos.config.iface_printbill;
+    },
 });

@@ -48,6 +48,7 @@ class StockRule(models.Model):
 
             productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
 
+        note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for company_id, productions_values in productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_values)
@@ -61,17 +62,20 @@ class StockRule(models.Model):
                     production.message_post(
                         body=_('This production order has been created from Replenishment Report.'),
                         message_type='comment',
-                        subtype_xmlid='mail.mt_note')
+                        subtype_id=note_subtype_id
+                    )
                 elif orderpoint:
-                    production.message_post_with_view(
+                    production.message_post_with_source(
                         'mail.message_origin_link',
-                        values={'self': production, 'origin': orderpoint},
-                        subtype_id=self.env.ref('mail.mt_note').id)
+                        render_values={'self': production, 'origin': orderpoint},
+                        subtype_id=note_subtype_id,
+                    )
                 elif origin_production:
-                    production.message_post_with_view(
+                    production.message_post_with_source(
                         'mail.message_origin_link',
-                        values={'self': production, 'origin': origin_production},
-                        subtype_id=self.env.ref('mail.mt_note').id)
+                        render_values={'self': production, 'origin': origin_production},
+                        subtype_id=note_subtype_id,
+                    )
         return True
 
     @api.model
@@ -83,6 +87,10 @@ class StockRule(models.Model):
             if not warehouse_id:
                 warehouse_id = rule.location_dest_id.warehouse_id
             if rule.picking_type_id == warehouse_id.sam_type_id:
+                if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) < 0:
+                    procurement.values['group_id'] = procurement.values['group_id'].stock_move_ids.filtered(
+                        lambda m: m.state not in ['done', 'cancel']).move_orig_ids.group_id[:1]
+                    continue
                 manu_type_id = warehouse_id.manu_type_id
                 if manu_type_id:
                     name = manu_type_id.sequence_id.next_by_id()
@@ -115,8 +123,8 @@ class StockRule(models.Model):
             'origin': origin,
             'product_id': product_id.id,
             'product_description_variants': values.get('product_description_variants'),
-            'product_qty': product_qty,
-            'product_uom_id': product_uom.id,
+            'product_qty': product_uom._compute_quantity(product_qty, bom.product_uom_id) if bom else product_qty,
+            'product_uom_id': bom.product_uom_id.id if bom else product_uom.id,
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_dest_id.id,
             'location_dest_id': location_dest_id.id,
             'bom_id': bom.id,

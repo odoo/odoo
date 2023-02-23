@@ -81,9 +81,3 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
         self.assertRaises(
             Forbidden, PayUMoneyController._verify_notification_signature, payload, tx
         )
-
-    def test_payumoney_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.payumoney_merchant_key, False)
-        self.assertEqual(self.provider.payumoney_merchant_salt, False)

@@ -60,7 +60,7 @@
                 },
                 "A20": {
                     "style": 2,
-                    "content": "Operator",
+                    "content": "=_t(\"Operator\")",
                     "border": 2
                 },
                 "A21": {
@@ -191,7 +191,7 @@
                 },
                 "D20": {
                     "style": 6,
-                    "content": "Sessions",
+                    "content": "=_t(\"Sessions\")",
                     "border": 2
                 },
                 "D21": {
@@ -281,47 +281,47 @@
                 "F21": {
                     "style": 7,
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",1)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",1)"
                 },
                 "F22": {
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",2)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",2)"
                 },
                 "F23": {
                     "style": 7,
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",3)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",3)"
                 },
                 "F24": {
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",4)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",4)"
                 },
                 "F25": {
                     "style": 7,
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",5)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",5)"
                 },
                 "F26": {
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",6)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",6)"
                 },
                 "F27": {
                     "style": 7,
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",7)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",7)"
                 },
                 "F28": {
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",8)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",8)"
                 },
                 "F29": {
                     "style": 7,
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",9)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",9)"
                 },
                 "F30": {
                     "format": 2,
-                    "content": "=-ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",10)"
+                    "content": "=ODOO.PIVOT(3,\"time_to_answer\",\"#partner_id\",10)"
                 },
                 "G7": {
                     "style": 5,
@@ -691,23 +691,23 @@
             "cells": {
                 "A1": {
                     "style": 2,
-                    "content": "KPI"
+                    "content": "=_t(\"KPI\")"
                 },
                 "A2": {
-                    "content": "Sessions"
+                    "content": "=_t(\"Sessions\")"
                 },
                 "A3": {
-                    "content": "Avg. time to answer"
+                    "content": "=_t(\"Avg. time to answer\")"
                 },
                 "A4": {
-                    "content": "Avg. session duration"
+                    "content": "=_t(\"Avg. session duration\")"
                 },
                 "A5": {
-                    "content": "Rating"
+                    "content": "=_t(\"Rating\")"
                 },
                 "B1": {
                     "style": 2,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "B2": {
                     "content": "=ODOO.PIVOT(4,\"__count\")"
@@ -723,7 +723,7 @@
                 },
                 "C1": {
                     "style": 2,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "C2": {
                     "content": "=ODOO.PIVOT(5,\"__count\")"
@@ -736,7 +736,7 @@
                 },
                 "D1": {
                     "style": 2,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "D2": {
                     "style": 7,
@@ -758,7 +758,7 @@
                 },
                 "E1": {
                     "style": 2,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "E2": {
                     "style": 7,
@@ -837,9 +837,15 @@
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
         "57b7bb2f-2b24-435a-83de-d56a0452ac10": "im_livechat.menu_livechat_root",
-        "876d7cf5-21ea-441e-b4fd-08556365cb8a": "im_livechat.menu_livechat_root"
+        "876d7cf5-21ea-441e-b4fd-08556365cb8a": "im_livechat.menu_livechat_root",
+        "082454d7-d797-48a6-8db5-9182050a8c55": "im_livechat.menu_reporting_livechat_channel",
+        "ced6ca85-c9d2-4804-9100-e1ca5fd290d1": "im_livechat.menu_reporting_livechat_channel",
+        "e0b92164-4451-4c0b-bd28-3bab46fd88de": "im_livechat.menu_reporting_livechat_channel",
+        "5b8972f1-db5f-48dd-aeca-c0bc87c7155d": "im_livechat.rating_rating_menu_livechat"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
     "pivots": {
         "1": {
             "colGroupBys": [],
@@ -945,8 +951,6 @@
         }
     },
     "pivotNextId": 6,
-    "lists": {},
-    "listNextId": 1,
     "globalFilters": [
         {
             "id": "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac",

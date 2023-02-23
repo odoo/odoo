@@ -2,6 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { PropertyValue } from "./property_value";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -13,8 +14,9 @@ import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
 import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { uuid } from "../../utils";
 
-const { Component, useState, onWillUpdateProps, useEffect, useRef } = owl;
+import { Component, useState, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 
 export class PropertyDefinition extends Component {
     setup() {
@@ -40,9 +42,12 @@ export class PropertyDefinition extends Component {
             resModel: "",
             resModelDescription: "",
             matchingRecordsCount: undefined,
+            propertyIndex: this.props.propertyIndex,
         });
 
         this._syncStateWithProps(propertyDefinition);
+
+        this._domInputIdPrefix = uuid();
 
         // update the state and fetch needed information
         onWillUpdateProps((newProps) => this._syncStateWithProps(newProps.value));
@@ -56,7 +61,11 @@ export class PropertyDefinition extends Component {
             this.labelFocused = true;
             const labelInput = this.propertyDefinitionRef.el.querySelectorAll("input")[0];
             if (labelInput) {
-                labelInput.focus();
+                if (this.props.isNewlyCreated) {
+                    labelInput.select();
+                } else {
+                    labelInput.focus();
+                }
             }
         });
     }
@@ -86,6 +95,20 @@ export class PropertyDefinition extends Component {
     }
 
     /**
+     * Return True if the current properties is the first one in the list.
+     */
+    get isFirst() {
+        return this.state.propertyIndex === 0;
+    }
+
+    /**
+     * Return True if the current properties is the last one in the list.
+     */
+    get isLast() {
+        return this.state.propertyIndex === this.props.propertiesSize - 1;
+    }
+
+    /**
      * Return the list of tag values, that will be selected by the PropertyTags
      * component (all existing tags because we are editing the definition).
      *
@@ -93,6 +116,15 @@ export class PropertyDefinition extends Component {
      */
     get propertyTagValues() {
         return (this.state.propertyDefinition.tags || []).map((tag) => tag[0]);
+    }
+
+    /**
+     * Return an unique ID to be used in the DOM.
+     *
+     * @returns {string}
+     */
+    getUniqueDomID(suffix) {
+        return `property_definition_${this._domInputIdPrefix}_${suffix}`;
     }
 
     /* --------------------------------------------------------
@@ -112,6 +144,18 @@ export class PropertyDefinition extends Component {
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
+    }
+
+    /**
+     * Pressed enter on the property label close the definition.
+     *
+     * @param {event} event
+     */
+    onPropertyLabelKeypress(event) {
+        if (event.key !== "Enter") {
+            return;
+        }
+        this.props.close();
     }
 
     /**
@@ -141,8 +185,12 @@ export class PropertyDefinition extends Component {
             value: false,
         };
 
+        delete propertyDefinition.comodel;
+
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
+        this.state.resModel = "";
+        this.state.resModelDescription = "";
         this.state.typeLabel = this._typeLabel(newType);
     }
 
@@ -203,6 +251,20 @@ export class PropertyDefinition extends Component {
     }
 
     /**
+     * Move the current property up or down.
+     *
+     * @param {string} direction, either 'up' or 'down'
+     */
+    onPropertyMove(direction) {
+        if (direction === "up") {
+            this.state.propertyIndex--;
+        } else {
+            this.state.propertyIndex++;
+        }
+        this.props.onPropertyMove(direction);
+    }
+
+    /**
      * We renamed / created / removed a selection option.
      *
      * @param {array} newOptions
@@ -225,6 +287,20 @@ export class PropertyDefinition extends Component {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
             tags: newTags,
+        };
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
+    }
+
+    /**
+     * We activate / deactivate the property in the kanban view.
+     *
+     * @param {boolean} newValue
+     */
+    onViewInKanbanChange(newValue) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            view_in_kanban: newValue,
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
@@ -258,7 +334,7 @@ export class PropertyDefinition extends Component {
                     return;
                 }
                 this.state.resModelDescription = result[0].display_name;
-            } catch (_) {
+            } catch {
                 // can not read the ir.model
                 this.state.resModelDescription = sprintf(
                     _lt('You do not have access to the model "%s".'),
@@ -305,6 +381,7 @@ export class PropertyDefinition extends Component {
 
 PropertyDefinition.template = "web.PropertyDefinition";
 PropertyDefinition.components = {
+    CheckBox,
     DomainSelector,
     Dropdown,
     DropdownItem,
@@ -318,11 +395,16 @@ PropertyDefinition.props = {
     readonly: { type: Boolean, optional: true },
     canChangeDefinition: { type: Boolean, optional: true },
     propertyDefinition: { optional: true },
+    hideKanbanOption: { type: Boolean, optional: true },
     context: { type: Object },
+    isNewlyCreated: { type: Boolean, optional: true },
+    // index and number of properties, to hide the move arrows when needed
+    propertyIndex: { type: Number },
+    propertiesSize: { type: Number },
+    // events
     onChange: { type: Function, optional: true },
     onDelete: { type: Function, optional: true },
     onPropertyMove: { type: Function, optional: true },
-
     // prop needed by the popover service
     close: { type: Function, optional: true },
 };

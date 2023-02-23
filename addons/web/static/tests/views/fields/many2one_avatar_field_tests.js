@@ -1,17 +1,19 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
 import {
     click,
-    clickEdit,
     clickSave,
     editInput,
     getFixture,
     getNodesTextContent,
     patchWithCleanup,
     selectDropdownItem,
+    triggerEvent,
+    clickDiscard,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -78,15 +80,13 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=user_id]").textContent.trim(),
+            target.querySelector(".o_field_widget[name=user_id] input").value,
             "Aline"
         );
         assert.containsOnce(
             target,
             '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]'
         );
-
-        await clickEdit(target);
 
         assert.containsOnce(target, ".o_input_dropdown");
         assert.strictEqual(target.querySelector(".o_input_dropdown input").value, "Aline");
@@ -105,7 +105,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
 
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name=user_id]").textContent.trim(),
+            target.querySelector(".o_field_widget[name=user_id] input").value,
             "Christine"
         );
         assert.containsOnce(
@@ -113,7 +113,6 @@ QUnit.module("Fields", (hooks) => {
             '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]'
         );
 
-        await clickEdit(target);
         await editInput(target, '.o_field_widget[name="user_id"] input', "");
 
         assert.containsNone(target, ".o_m2o_avatar > img");
@@ -121,7 +120,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
 
         assert.containsNone(target, ".o_m2o_avatar > img");
-        assert.containsNone(target, ".o_m2o_avatar > .o_m2o_avatar_empty");
+        assert.containsOnce(target, ".o_m2o_avatar > .o_m2o_avatar_empty");
     });
 
     QUnit.test("onchange in form view flow", async function (assert) {
@@ -186,8 +185,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
-            ["Aline", "Christine", "Aline"]
+            getNodesTextContent(target.querySelectorAll(".o_data_cell[name='user_id'] span span")),
+            ["Aline", "Christine", "Aline", ""]
         );
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
         assert.strictEqual(imgs[0].dataset.src, "/web/image/user/17/avatar_128");
@@ -204,8 +203,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_data_cell .o_form_uri span")),
-            ["Aline", "Christine", "Aline"]
+            getNodesTextContent(target.querySelectorAll(".o_data_cell[name='user_id'] span span")),
+            ["Aline", "Christine", "Aline", ""]
         );
 
         const imgs = target.querySelectorAll(".o_m2o_avatar > img");
@@ -234,5 +233,109 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name='user_id'] input").placeholder,
             "Placeholder"
         );
+    });
+
+    QUnit.test("click on many2one_avatar in a list view (multi_edit='1')", async function (assert) {
+        const listView = registry.category("views").get("list");
+        patchWithCleanup(listView.Controller.prototype, {
+            openRecord() {
+                assert.step("openRecord");
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="user_id" widget="many2one_avatar"/>
+                </tree>`,
+        });
+
+        await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("click on many2one_avatar in an editable list view", async function (assert) {
+        const listView = registry.category("views").get("list");
+        patchWithCleanup(listView.Controller.prototype, {
+            openRecord() {
+                assert.step("openRecord");
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="user_id" widget="many2one_avatar"/>
+                </tree>`,
+        });
+
+        await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
+
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("click on many2one_avatar in an editable list view", async function (assert) {
+        const listView = registry.category("views").get("list");
+        patchWithCleanup(listView.Controller.prototype, {
+            openRecord() {
+                assert.step("openRecord");
+            },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="user_id" widget="many2one_avatar"/>
+                </tree>`,
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell [name='user_id'] span span"));
+        assert.containsNone(target, ".o_selected_row");
+
+        assert.verifySteps(["openRecord"]);
+    });
+
+    QUnit.test("cancelling create dialog should clear value in the field", async function (assert) {
+        serverData.views = {
+            "user,false,form": `
+                <form>
+                    <field name="name" />
+                </form>`,
+        };
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="user_id" widget="many2one_avatar"/>
+                </tree>`,
+        });
+
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        const input = target.querySelector(".o_field_widget[name=user_id] input");
+        input.value = "yy";
+        await triggerEvent(input, null, "input");
+        await click(target, ".o_field_widget[name=user_id] input");
+        await selectDropdownItem(target, "user_id", "Create and edit...");
+
+        await clickDiscard(target.querySelector(".modal"));
+        assert.strictEqual(target.querySelector(".o_field_widget[name=user_id] input").value, "");
+        assert.containsOnce(target, ".o_field_widget[name=user_id] span.o_m2o_avatar_empty");
     });
 });

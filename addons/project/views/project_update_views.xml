@@ -38,7 +38,7 @@
                         <group>
                             <field name="project_id" invisible="1"/>
                             <field name="color" invisible="1"/>
-                            <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
+                            <field name="status" widget="status_with_color"/>
                             <field name="progress" widget="progressbar" options="{'editable': true}"/>
                         </group>
                         <group>
@@ -80,15 +80,15 @@
                                         <t t-esc="record.user_id.value"/>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 text-sm-start col-6 text-end align-end">
+                                <div class="col-sm-2 text-sm-start col-6 align-end">
                                     <field name="color" invisible="1"/>
-                                    <b><field name="status" widget="status_with_color" options="{'color_field': 'color'}"/></b>
+                                    <b><field name="status" widget="status_with_color"/></b>
                                 </div>
-                                <div class="col-sm-2 col-6">
+                                <div class="col-sm-2 col-6 pb-0">
                                     <b><field name="progress_percentage" widget="percentage"/></b>
                                     <div>Progress</div>
                                 </div>
-                                <div class="col-sm-2 col-6">
+                                <div class="col-sm-2 col-6 pb-0">
                                     <b><field name="date"/></b>
                                     <div>Date</div>
                                 </div>
@@ -110,7 +110,7 @@
                 <field name="date" optional="show"/>
                 <field name="progress_percentage" string="Progress" widget="percentage" optional="show"/>
                 <field name="color" invisible="1"/>
-                <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
+                <field name="status" widget="status_with_color"/>
             </tree>
         </field>
     </record>

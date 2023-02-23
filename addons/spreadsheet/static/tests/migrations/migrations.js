@@ -68,7 +68,7 @@ QUnit.test("Global filters: pivot fields is correctly added", (assert) => {
     const data = {
         globalFilters: [
             {
-                id: "1",
+                id: "Filter1",
                 type: "relation",
                 label: "Relation Filter",
                 fields: {
@@ -79,12 +79,18 @@ QUnit.test("Global filters: pivot fields is correctly added", (assert) => {
                 },
             },
         ],
+        pivots: {
+            1: {
+                name: "test",
+            },
+        },
     };
     const migratedData = migrate(data);
     const filter = migratedData.globalFilters[0];
-    assert.deepEqual(filter.pivotFields, {
-        1: {
-            field: "foo",
+    const pivot = migratedData.pivots["1"];
+    assert.deepEqual(pivot.fieldMatching, {
+        Filter1: {
+            chain: "foo",
             type: "char",
         },
     });
@@ -121,49 +127,6 @@ QUnit.test("Global filters: date is correctly migrated", (assert) => {
     assert.deepEqual(f3.defaultValue, { yearOffset: 0 });
 });
 
-QUnit.test("Global filters: list and graph fields are added", (assert) => {
-    const data = {
-        globalFilters: [
-            {
-                id: "1",
-                type: "relation",
-            },
-            {
-                id: "1",
-                type: "relation",
-                listFields: {
-                    1: {
-                        field: "foo",
-                        type: "char",
-                    },
-                },
-                graphFields: {
-                    1: {
-                        field: "foo",
-                        type: "char",
-                    },
-                },
-            },
-        ],
-    };
-    const migratedData = migrate(data);
-    const [f1, f2] = migratedData.globalFilters;
-    assert.deepEqual(f1.listFields, {});
-    assert.deepEqual(f1.graphFields, {});
-    assert.deepEqual(f2.listFields, {
-        1: {
-            field: "foo",
-            type: "char",
-        },
-    });
-    assert.deepEqual(f2.graphFields, {
-        1: {
-            field: "foo",
-            type: "char",
-        },
-    });
-});
-
 QUnit.test("List name default is model name", (assert) => {
     const data = {
         lists: {
@@ -198,6 +161,135 @@ QUnit.test("Pivot name default is model name", (assert) => {
     assert.strictEqual(Object.values(migratedData.pivots).length, 2);
     assert.strictEqual(migratedData.pivots["1"].name, "Name");
     assert.strictEqual(migratedData.pivots["2"].name, "Model");
+});
+
+QUnit.test("fieldMatchings are moved from filters to their respective datasources", (assert) => {
+    const data = {
+        globalFilters: [
+            {
+                id: "Filter",
+                label: "MyFilter1",
+                type: "relation",
+                listFields: {
+                    1: {
+                        field: "parent_id",
+                        type: "many2one",
+                    },
+                },
+                pivotFields: {
+                    1: {
+                        field: "parent_id",
+                        type: "many2one",
+                    },
+                },
+                graphFields: {
+                    fig1: {
+                        field: "parent_id",
+                        type: "many2one",
+                    },
+                },
+            },
+        ],
+        pivots: {
+            1: {
+                name: "Name",
+            },
+        },
+        lists: {
+            1: {
+                name: "Name",
+            },
+        },
+        sheets: [
+            {
+                figures: [
+                    {
+                        id: "fig1",
+                        tag: "chart",
+                        data: {
+                            type: "odoo_bar",
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+    const migratedData = migrate(data);
+    assert.deepEqual(migratedData.pivots["1"].fieldMatching, {
+        Filter: { chain: "parent_id", type: "many2one" },
+    });
+    assert.deepEqual(migratedData.lists["1"].fieldMatching, {
+        Filter: { chain: "parent_id", type: "many2one" },
+    });
+    assert.deepEqual(migratedData.sheets[0].figures[0].data.fieldMatching, {
+        Filter: { chain: "parent_id", type: "many2one" },
+    });
+});
+
+QUnit.test("fieldMatchings offsets are correctly preserved after migration", (assert) => {
+    const data = {
+        globalFilters: [
+            {
+                id: "Filter",
+                label: "MyFilter1",
+                type: "relation",
+                listFields: {
+                    1: {
+                        field: "parent_id",
+                        type: "date",
+                        offset: "-1",
+                    },
+                },
+                pivotFields: {
+                    1: {
+                        field: "parent_id",
+                        type: "date",
+                        offset: "-1",
+                    },
+                },
+                graphFields: {
+                    fig1: {
+                        field: "parent_id",
+                        type: "date",
+                        offset: "-1",
+                    },
+                },
+            },
+        ],
+        pivots: {
+            1: {
+                name: "Name",
+            },
+        },
+        lists: {
+            1: {
+                name: "Name",
+            },
+        },
+        sheets: [
+            {
+                figures: [
+                    {
+                        id: "fig1",
+                        tag: "chart",
+                        data: {
+                            type: "odoo_bar",
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+    const migratedData = migrate(data);
+    assert.deepEqual(migratedData.pivots["1"].fieldMatching, {
+        Filter: { chain: "parent_id", type: "date", offset: "-1" },
+    });
+    assert.deepEqual(migratedData.lists["1"].fieldMatching, {
+        Filter: { chain: "parent_id", type: "date", offset: "-1" },
+    });
+    assert.deepEqual(migratedData.sheets[0].figures[0].data.fieldMatching, {
+        Filter: { chain: "parent_id", type: "date", offset: "-1" },
+    });
 });
 
 QUnit.test("Odoo version is exported", (assert) => {

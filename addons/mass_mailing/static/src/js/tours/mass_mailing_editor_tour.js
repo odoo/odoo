@@ -1,19 +1,18 @@
 odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
     "use strict";
 
-    var tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-    tour.register('mass_mailing_editor_tour', {
+    registry.category("web_tour.tours").add('mass_mailing_editor_tour', {
         url: '/web',
         test: true,
-    }, [tour.stepUtils.showAppsMenuItem(), {
+        steps: [stepUtils.showAppsMenuItem(), {
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
     }, {
         trigger: 'button.o_list_button_add',
     }, {
         trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',
-    }, {
-        trigger: 'li.ui-menu-item',
     }, {
         trigger: 'div[name="contact_list_ids"] .ui-state-active'
     }, {
@@ -21,7 +20,7 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         trigger: '[name="body_arch"] iframe #empty',
     }, {
         content: 'wait for the editor to be rendered',
-        trigger: '[name="body_arch"] iframe .o_editable',
+        trigger: '[name="body_arch"] iframe .o_editable[data-editor-message="DRAG BUILDING BLOCKS HERE"]',
         run: () => {},
     }, {
         content: 'drag the "Title" snippet from the design panel and drop it in the editor',
@@ -29,6 +28,10 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         run: function (actions) {
             actions.drag_and_drop('[name="body_arch"] iframe .o_editable', this.$anchor);
         }
+    }, {
+        content: 'wait for the snippet menu to finish the drop process',
+        trigger: '[name="body_arch"] iframe #email_designer_header_elements:not(:has(.o_we_already_dragging))',
+        run: () => {}
     }, {
         content: 'verify that the title was inserted properly in the editor',
         trigger: '[name="body_arch"] iframe .o_editable h1',
@@ -44,12 +47,14 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         trigger: '[name="body_arch"] iframe .o_editable h1',
         run: () => {},
     }, {
-        trigger: 'input[name="subject"]',
+        trigger: 'input#subject',
         run: 'text Test',
     }, {
-        trigger: 'button.o_form_button_save',
-    }, {
-        trigger: 'iframe.o_readonly',
+        trigger: '.o_form_view', // blur previous input
+    },
+    ...stepUtils.saveForm(),
+    {
+        trigger: 'iframe .o_editable',
         run: () => {},
-    }]);
+    }]});
 });

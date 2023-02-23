@@ -1,21 +1,13 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'Persona',
-    identifyingMode: 'xor',
+Model({
+    name: "Persona",
+    identifyingMode: "xor",
     fields: {
-        channelMembers: many('ChannelMember', {
-            inverse: 'persona',
-            isCausal: true,
-        }),
-        guest: one('Guest', {
-            identifying: true,
-            inverse: 'persona',
-        }),
+        channelMembers: many("ChannelMember", { inverse: "persona", isCausal: true }),
+        guest: one("Guest", { identifying: true, inverse: "persona" }),
         im_status: attr({
             compute() {
                 if (this.guest) {
@@ -27,11 +19,7 @@ registerModel({
                 return clear();
             },
         }),
-        messagingAsAnyPersona: one('Messaging', {
-            default: {},
-            inverse: 'allPersonas',
-        }),
-
+        messagingAsAnyPersona: one("Messaging", { default: {}, inverse: "allPersonas" }),
         name: attr({
             compute() {
                 if (this.guest) {
@@ -43,11 +31,8 @@ registerModel({
                 return clear();
             },
         }),
-        partner: one('Partner', {
-            identifying: true,
-            inverse: 'persona',
-        }),
-        volumeSetting: one('res.users.settings.volumes', {
+        partner: one("Partner", { identifying: true, inverse: "persona" }),
+        volumeSetting: one("res.users.settings.volumes", {
             compute() {
                 if (this.guest) {
                     return this.guest.volumeSetting || clear();

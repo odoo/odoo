@@ -8,7 +8,7 @@ var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
-var utils = require('web.utils');
+const {getCookie, setCookie, deleteCookie} = require('web.utils.cookies');
 
 var SurveyPreloadImageMixin = require('survey.preload_image_mixin');
 const { SurveyImageZoomer } = require("@survey/js/survey_image_zoomer");
@@ -42,14 +42,14 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var self = this;
         this.fadeInOutDelay = 400;
         return this._super.apply(this, arguments).then(function () {
-            self.options = self.$target.find('form').data();
+            self.options = self.$('form').data();
             self.readonly = self.options.readonly;
             self.selectedAnswers = self.options.selectedAnswers;
             self.imgZoomer = false;
 
             // Add Survey cookie to retrieve the survey if you quit the page and restart the survey.
-            if (!utils.get_cookie('survey_' + self.options.surveyToken)) {
-                utils.set_cookie('survey_' + self.options.surveyToken, self.options.answerToken, 60*60*24);
+            if (!getCookie('survey_' + self.options.surveyToken)) {
+                setCookie('survey_' + self.options.surveyToken, self.options.answerToken, 60 * 60 * 24, 'optional');
             }
 
             // Init fields
@@ -78,6 +78,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             self.$surveyProgress = $('.o_survey_progress_wrapper');
             self.$surveyNavigation = $('.o_survey_navigation_wrapper');
             self.$surveyNavigation.find('.o_survey_navigation_submit').on('click', self._onSubmit.bind(self));
+
+            self.$('button[type="submit"]').removeClass('disabled');
         });
     },
 
@@ -219,10 +221,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                             if (!treatedQuestionIds.includes(questionId)) {
                                 var dependingQuestion = $('.js_question-wrapper#' + questionId);
                                 dependingQuestion.removeClass('d-none');
+
+                                // Add answer to selected answer
+                                self.selectedAnswers.push(parseInt($target.val()));
                             }
                         });
-                        // Add answer to selected answer
-                        this.selectedAnswers.push(parseInt($target.val()));
                     }
                 }
             }
@@ -339,10 +342,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
     // Custom Events
     // -------------------------------------------------------------------------
-    
+
     /**
      * Changes the tooltip according to the type of the field.
-     * @param {Event} event 
+     * @param {Event} event
      */
     _updateEnterButtonText: function (event) {
         const $target = event.target;
@@ -502,7 +505,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var selectorsToFadeout = ['.o_survey_form_content'];
         if (options.isFinish) {
             selectorsToFadeout.push('.breadcrumb', '.o_survey_timer');
-            utils.set_cookie('survey_' + self.options.surveyToken, '', -1);  // delete cookie
+            deleteCookie('survey_' + self.options.surveyToken);
         }
         self.$(selectorsToFadeout.join(',')).fadeOut(this.fadeInOutDelay, function () {
             resolveFadeOut();
@@ -599,6 +602,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             }
             this.$('.o_survey_form_content').fadeIn(this.fadeInOutDelay);
             $("html, body").animate({ scrollTop: 0 }, this.fadeInOutDelay);
+
+            this.$('button[type="submit"]').removeClass('disabled');
+
             self._focusOnFirstInput();
         } else if (result && result.fields && result.error === 'validation') {
             this.$('.o_survey_form_content').fadeIn(0);

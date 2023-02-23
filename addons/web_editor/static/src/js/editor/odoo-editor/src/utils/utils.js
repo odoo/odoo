@@ -284,16 +284,17 @@ export function getFurthestUneditableParent(node, parentLimit) {
  *
  * @param {Node} node
  * @param {string} [selector=undefined]
- * @param {boolean} [restrictToEditable=false]
  * @returns {HTMLElement}
  */
 export function closestElement(node, selector) {
-    const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
-    if (selector && element) {
-        const elementFound = element.closest(selector);
-        return elementFound && elementFound.querySelector('.odoo-editor-editable') ? null : elementFound;
+    let element = node;
+    while (element && element.nodeType !== Node.ELEMENT_NODE) {
+        element = element.parentNode;
     }
-    return selector && element ? element.closest(selector) : element || node;
+    if (element && selector) {
+        element = element.closest(selector);
+    }
+    return element && element.querySelector('.odoo-editor-editable') ? null : element;
 }
 
 /**
@@ -661,14 +662,15 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
     do {
         node = iterator.nextNode();
     } while (node && node !== range.startContainer && !(selectedTableCells.length && node === selectedTableCells[0]));
-    const traversedNodes = new Set([node]);
+    const traversedNodes = new Set([node, ...descendants(node)]);
     while (node && node !== range.endContainer) {
         node = iterator.nextNode();
         if (node) {
             const selectedTable = closestElement(node, '.o_selected_table');
             if (selectedTable) {
                 for (const selectedTd of selectedTable.querySelectorAll('.o_selected_td')) {
-                    traversedNodes.add(selectedTd, ...descendants(selectedTd));
+                    traversedNodes.add(selectedTd);
+                    descendants(selectedTd).forEach(descendant => traversedNodes.add(descendant));
                 }
             } else {
                 traversedNodes.add(node);
@@ -691,7 +693,7 @@ export function getSelectedNodes(editable) {
         return [];
     }
     const range = sel.getRangeAt(0);
-    return getTraversedNodes(editable).flatMap(
+    return [...new Set(getTraversedNodes(editable).flatMap(
         node => {
             const td = closestElement(node, '.o_selected_td');
             if (td) {
@@ -702,7 +704,7 @@ export function getSelectedNodes(editable) {
                 return [];
             }
         },
-    );
+    ))];
 }
 
 /**
@@ -762,17 +764,18 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
             }
         }
     }
-    // A selection spanning multiple nodes and ending at position 0 of a
-    // node, like the one resulting from a triple click, are corrected so
-    // that it ends at the last position of the previous node instead.
-    const beforeEnd = end.previousSibling;
+    // A selection spanning multiple nodes and ending at position 0 of a node,
+    // like the one resulting from a triple click, is corrected so that it ends
+    // at the last position of the previous node instead.
+    const endLeaf = firstLeaf(end);
+    const beforeEnd = endLeaf.previousSibling;
     if (
         correctTripleClick &&
         !endOffset &&
         (start !== end || startOffset !== endOffset) &&
         (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)))
     ) {
-        const previous = previousLeaf(end, editable, true);
+        const previous = previousLeaf(endLeaf, editable, true);
         if (previous && closestElement(previous).isContentEditable) {
             [end, endOffset] = [previous, nodeSize(previous)];
         }
@@ -913,7 +916,7 @@ const formatsSpecs = {
     },
     fontSize: {
         isFormatted: isFontSize,
-        hasStyle: (node, props) => node.style && node.style['font-size'] === props.size,
+        hasStyle: (node) => node.style && node.style['font-size'],
         addStyle: (node, props) => node.style['font-size'] = props.size,
         removeStyle: (node) => removeStyle(node, 'font-size'),
     },
@@ -953,7 +956,7 @@ const removeFormat = (node, formatSpec) => {
         }
     }
 
-    if (formatSpec.isTag(node)) {
+    if (formatSpec.isTag && formatSpec.isTag(node)) {
         const attributesNames = node.getAttributeNames().filter((name)=> {
             return name !== 'data-oe-zws-empty-inline';
         });
@@ -1007,79 +1010,48 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
 
     const formatSpec = formatsSpecs[formatName];
     for (const selectedTextNode of selectedTextNodes) {
-        // Compute inline ancestors until finding one which is a block or has a class.
         const inlineAncestors = [];
-        let node = selectedTextNode;
-        while ((node = node.parentElement) && (!isBlock(node) && !(node.classList && node.classList.length))) {
-            inlineAncestors.unshift(node);
-        }
-        const blockOrInlineClass = node;
+        let currentNode = selectedTextNode;
+        let parentNode = selectedTextNode.parentElement;
 
-        const firstBlockOrClassHasFormat = formatSpec.isFormatted(blockOrInlineClass, formatProps);
+        // Remove the format on all inline ancestors until a block or an element
+        // with a class (in case the formating comes from the class).
+        while (parentNode && (!isBlock(parentNode) && !(parentNode.classList && parentNode.classList.length))) {
+            const isUselessZws = parentNode.tagName === 'SPAN' &&
+                parentNode.hasAttribute('data-oe-zws-empty-inline') &&
+                parentNode.getAttributeNames().length === 1;
 
-        let previousAncestorHasFormat = firstBlockOrClassHasFormat;
-        let lastAncestorInlineFormat;
-
-        for (const ancestor of inlineAncestors) {
-            const ancestorIsTag = formatSpec.isTag && formatSpec.isTag(ancestor);
-            const ancestorHasStyle = formatSpec.hasStyle && formatSpec.hasStyle(ancestor, formatProps);
-            const ancestorTagIsFormated = ancestorIsTag || ancestorHasStyle;
-            const isUselessZwsSpan =
-                ancestor.tagName === 'SPAN' &&
-                ancestor.hasAttribute('data-oe-zws-empty-inline') &&
-                ancestor.getAttributeNames().length === 1;
-            const ancestorIsFormatted = formatSpec.isFormatted(ancestor, formatProps);
-
-            if (ancestorTagIsFormated && previousAncestorHasFormat !== ancestorIsFormatted) {
-                if (lastAncestorInlineFormat) {
-                    // Remove format on two node that switch the format to flatten the DOM.
-                    const newLastAncestorInlineFormat = splitAroundUntil(ancestor, lastAncestorInlineFormat);
-                    removeFormat(newLastAncestorInlineFormat, formatSpec);
-                    removeFormat(ancestor, formatSpec);
-                    lastAncestorInlineFormat = undefined;
-                } else {
-                    lastAncestorInlineFormat = ancestor;
+            if (isUselessZws) {
+                unwrapContents(parentNode);
+            } else {
+                const newLastAncestorInlineFormat = splitAroundUntil(currentNode, parentNode);
+                removeFormat(newLastAncestorInlineFormat, formatSpec);
+                if (newLastAncestorInlineFormat.isConnected) {
+                    inlineAncestors.push(newLastAncestorInlineFormat);
+                    currentNode = newLastAncestorInlineFormat;
                 }
-                // if there is two consecutive format that are the same, remove one.
-            } else if (
-                (ancestorIsTag || ancestorHasStyle) &&
-                (
-                    previousAncestorHasFormat ||
-                    (!previousAncestorHasFormat && !ancestorIsFormatted)
-                )
-            ) {
-                removeFormat(ancestor, formatSpec);
-            } else if (isUselessZwsSpan) {
-                unwrapContents(ancestor);
             }
-            previousAncestorHasFormat = ancestor.parentElement && formatSpec.isFormatted(ancestor, formatProps);
+
+            parentNode = currentNode.parentElement;
         }
 
-        if (selectedTextNode.nodeType === Node.TEXT_NODE) {
-            const isLeafNodeFormated = formatSpec.isFormatted(selectedTextNode, formatProps);
-            if (isLeafNodeFormated !== applyStyle) {
-                if (lastAncestorInlineFormat) {
-                    const splitNode = splitAroundUntil(selectedTextNode, lastAncestorInlineFormat);
-                    removeFormat(splitNode, formatSpec);
-                } else {
-                    if (firstBlockOrClassHasFormat && !applyStyle) {
-                        formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
-                    } else if (!firstBlockOrClassHasFormat && applyStyle) {
-                        const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
-                        if (tag) {
-                            selectedTextNode.after(tag);
-                            tag.append(selectedTextNode);
+        const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
 
-                            if (!formatSpec.isFormatted(tag, formatProps)) {
-                                tag.after(selectedTextNode);
-                                tag.remove();
-                                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
-                            }
-                        } else {
-                            formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
-                        }
-                    }
+        if (firstBlockOrClassHasFormat && !applyStyle) {
+            formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
+        } else if (!firstBlockOrClassHasFormat && applyStyle) {
+            const tag = formatSpec.tagName && document.createElement(formatSpec.tagName);
+            if (tag) {
+                selectedTextNode.after(tag);
+                tag.append(selectedTextNode);
+
+                if (!formatSpec.isFormatted(tag, formatProps)) {
+                    tag.after(selectedTextNode);
+                    tag.remove();
+                    formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
                 }
+            } else if (formatName !== 'fontSize' || formatProps.size !== undefined) {
+                formatSpec.addStyle(getOrCreateSpan(selectedTextNode, inlineAncestors), formatProps);
             }
         }
     }
@@ -1337,14 +1309,14 @@ export function isUnbreakable(node) {
 }
 
 export function isUnremovable(node) {
-    if (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) {
-        return true;
-    }
     return (
+        (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.TEXT_NODE) ||
         node.oid === 'root' ||
         (node.nodeType === Node.ELEMENT_NODE &&
             (node.classList.contains('o_editable') || node.getAttribute('t-set') || node.getAttribute('t-call'))) ||
-        (node.classList && node.classList.contains('oe_unremovable'))
+        (node.classList && node.classList.contains('oe_unremovable')) ||
+        (node.nodeName === 'SPAN' && node.parentElement && node.parentElement.getAttribute('data-oe-type') === 'monetary') ||
+        (node.ownerDocument && node.ownerDocument.defaultWindow && !ancestors(node).find(ancestor => ancestor.oid === 'root')) // Node is in DOM but not in editable.
     );
 }
 
@@ -1381,6 +1353,9 @@ export function isMediaElement(node) {
             (node.classList.contains('o_image') || node.classList.contains('media_iframe_video')))
     );
 }
+export function isVoidElement(node) {
+    return isMediaElement(node) || node.tagName === 'HR';
+}
 
 export function containsUnremovable(node) {
     if (!node) {
@@ -1392,13 +1367,17 @@ export function containsUnremovable(node) {
 export function getInSelection(document, selector) {
     const selection = document.getSelection();
     const range = selection && !!selection.rangeCount && selection.getRangeAt(0);
-    return (
-        range &&
-        (closestElement(range.startContainer, selector) ||
-            [...closestElement(range.commonAncestorContainer).querySelectorAll(selector)].find(
+    if (range) {
+        const selectorInStartAncestors = closestElement(range.startContainer, selector);
+        if (selectorInStartAncestors) {
+            return selectorInStartAncestors;
+        } else {
+            const commonElementAncestor = closestElement(range.commonAncestorContainer);
+            return commonElementAncestor && [...commonElementAncestor.querySelectorAll(selector)].find(
                 node => range.intersectsNode(node),
-            ))
-    );
+            );
+        }
+    }
 }
 
 /**
@@ -1444,6 +1423,7 @@ const paragraphRelatedElements = [
     'H4',
     'H5',
     'H6',
+    'PRE',
 ];
 
 /**
@@ -1508,6 +1488,15 @@ export function getOuid(node, optimize = false) {
         node = node.parentNode;
     }
     return node && node.oid;
+}
+/**
+ * Returns true if the provided node can suport html content.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isHtmlContentSupported(node) {
+    return !closestElement(node, '[data-oe-model]:not([data-oe-field="arch"]),[data-oe-translation-id]', true);
 }
 /**
  * Returns whether the given node is a element that could be considered to be
@@ -1968,8 +1957,11 @@ export function setTagName(el, newTagName) {
     while (el.firstChild) {
         n.append(el.firstChild);
     }
-    if (el.tagName === 'LI') {
+    const closestLi = el.closest('li');
+    if (el.tagName === 'LI' && newTagName !== 'p') {
         el.append(n);
+    } else if (closestLi && newTagName === 'p') {
+        closestLi.replaceChildren(...n.childNodes);
     } else {
         el.parentNode.replaceChild(n, el);
     }
@@ -2200,6 +2192,12 @@ const priorityRestoreStateRules = [
         // Replace a space by &nbsp; when it was content before and now it is
         // a BR.
         { direction: DIRECTIONS.LEFT, cType1: CTGROUPS.INLINE, cType2: CTGROUPS.BR },
+        { spaceVisibility: true },
+    ],
+    [
+        // Replace a space by &nbsp; when it was content before and now it is
+        // a BR (removal of last character before a BR for example).
+        { direction: DIRECTIONS.RIGHT, cType1: CTGROUPS.CONTENT, cType2: CTGROUPS.BR },
         { spaceVisibility: true },
     ],
     [
@@ -2505,6 +2503,11 @@ export function getRangePosition(el, document, options = {}) {
         offset.left = marginLeft;
     }
 
+    if (options.parentContextRect) {
+        offset.left += options.parentContextRect.left;
+        offset.top += options.parentContextRect.top;
+    }
+
     if (
         offset.top - marginTop + offset.height + el.offsetHeight > window.innerHeight &&
         offset.top - el.offsetHeight - marginBottom > 0
@@ -2565,4 +2568,22 @@ export const rightLeafOnlyNotBlockNotEditablePath = createDOMPathGenerator(DIREC
 //------------------------------------------------------------------------------
 export function peek(arr) {
     return arr[arr.length - 1];
+}
+/**
+ * Check user OS 
+ * @returns {boolean} 
+ */
+export function isMacOS() {
+    return window.navigator.userAgent.includes('Mac');
+}
+
+/**
+ * Remove zero-width spaces from the provided node and its descendants.
+ *
+ * @param {Node} node
+ */
+export function cleanZWS(node) {
+    [node, ...descendants(node)]
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
 }

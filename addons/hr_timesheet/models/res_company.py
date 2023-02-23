@@ -34,9 +34,7 @@ class ResCompany(models.Model):
              "If you use the timesheet linked to projects, don't "
              "forget to setup the right unit of measure in your employees.")
     timesheet_encode_uom_id = fields.Many2one('uom.uom', string="Timesheet Encoding Unit",
-        default=_default_timesheet_encode_uom_id, domain=lambda self: [('category_id', '=', self.env.ref('uom.uom_categ_wtime').id)],
-        help="""This will set the unit of measure used to encode timesheet. This will simply provide tools
-        and widgets to help the encoding. All reporting will still be expressed in hours (default value).""")
+        default=_default_timesheet_encode_uom_id, domain=lambda self: [('category_id', '=', self.env.ref('uom.uom_categ_wtime').id)])
     internal_project_id = fields.Many2one(
         'project.project', string="Internal Project",
         help="Default project value for timesheet generated from time off type.")

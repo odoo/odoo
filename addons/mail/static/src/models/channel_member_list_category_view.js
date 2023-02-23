@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-import { sprintf } from '@web/core/utils/strings';
+import { sprintf } from "@web/core/utils/strings";
 
-registerModel({
-    name: 'ChannelMemberListCategoryView',
-    identifyingMode: 'xor',
+Model({
+    name: "ChannelMemberListCategoryView",
+    template: "mail.ChannelMemberListCategoryView",
+    identifyingMode: "xor",
     fields: {
-        channel: one('Channel', {
+        channel: one("Channel", {
+            required: true,
             compute() {
                 if (this.channelMemberListViewOwnerAsOffline) {
                     return this.channelMemberListViewOwnerAsOffline.channel;
@@ -19,26 +19,25 @@ registerModel({
                     return this.channelMemberListViewOwnerAsOnline.channel;
                 }
             },
-            required: true,
         }),
-        channelMemberListViewOwnerAsOffline: one('ChannelMemberListView', {
+        channelMemberListViewOwnerAsOffline: one("ChannelMemberListView", {
             identifying: true,
-            inverse: 'offlineCategoryView',
+            inverse: "offlineCategoryView",
         }),
-        channelMemberListViewOwnerAsOnline: one('ChannelMemberListView', {
+        channelMemberListViewOwnerAsOnline: one("ChannelMemberListView", {
             identifying: true,
-            inverse: 'onlineCategoryView',
+            inverse: "onlineCategoryView",
         }),
-        channelMemberViews: many('ChannelMemberView', {
+        channelMemberViews: many("ChannelMemberView", {
+            inverse: "channelMemberListCategoryViewOwner",
             compute() {
                 if (this.members.length === 0) {
                     return clear();
                 }
-                return this.members.map(channelMember => ({ channelMember }));
+                return this.members.map((channelMember) => ({ channelMember }));
             },
-            inverse: 'channelMemberListCategoryViewOwner',
         }),
-        members: many('ChannelMember', {
+        members: many("ChannelMember", {
             compute() {
                 if (this.channelMemberListViewOwnerAsOnline) {
                     return this.channel.orderedOnlineMembers;
@@ -58,13 +57,10 @@ registerModel({
                 if (this.channelMemberListViewOwnerAsOffline) {
                     categoryText = this.env._t("Offline");
                 }
-                return sprintf(
-                    this.env._t("%(categoryText)s - %(memberCount)s"),
-                    {
-                        categoryText,
-                        memberCount: this.members.length,
-                    }
-                );
+                return sprintf(this.env._t("%(categoryText)s - %(memberCount)s"), {
+                    categoryText,
+                    memberCount: this.members.length,
+                });
             },
         }),
     },

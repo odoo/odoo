@@ -274,7 +274,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         })
         company.write({'po_lead': 0.00})
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
-        self.mock_date = self.patcher.start()
+        self.mock_date = self.startPatcher(self.patcher)
 
         vendor = self.env['res.partner'].create({
             'name': 'Colruyt'
@@ -360,7 +360,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         new_order = po_line.order_id.sorted('date_order')[-1]
         self.assertEqual(fields.Date.to_date(new_order.date_order), fields.Date.today() + timedelta(days=2))
         self.assertEqual(new_order.order_line.product_uom_qty, 5.0)
-        self.patcher.stop()
 
     def test_supplier_lead_time(self):
         """ Basic stock configuration and a supplier with a minimum qty and a lead time """

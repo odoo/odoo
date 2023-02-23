@@ -1,36 +1,30 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'EmojiGridRowView',
+Model({
+    name: "EmojiGridRowView",
+    template: "mail.EmojiGridRowView",
     fields: {
-        emojiGridViewOwner: one('EmojiGridView', {
-            related: 'emojiGridViewRowRegistryOwner.emojiGridViewOwner',
+        category: one("EmojiCategory", { related: "viewCategory.category" }),
+        emojiGridViewOwner: one("EmojiGridView", {
+            related: "emojiGridViewRowRegistryOwner.emojiGridViewOwner",
         }),
-        index: attr({
-            identifying: true,
-        }),
-        items: many('EmojiGridItemView', {
-            inverse: 'emojiGridRowViewOwner',
-        }),
-        sectionView: one('EmojiGridSectionView', {
+        hasSection: attr({
+            default: false,
             compute() {
                 if (this.viewCategory) {
-                    return {};
+                    return true;
                 }
                 return clear();
             },
-            inverse: 'emojiGridRowViewOwner',
         }),
-        emojiGridViewRowRegistryOwner: one('EmojiGridViewRowRegistry', {
+        index: attr({ identifying: true }),
+        items: many("EmojiView", { inverse: "emojiGridRowViewOwner" }),
+        emojiGridViewRowRegistryOwner: one("EmojiGridViewRowRegistry", {
             identifying: true,
-            inverse: 'rows',
+            inverse: "rows",
         }),
-        viewCategory: one('EmojiPickerView.Category', {
-            inverse: 'emojiGridRowView',
-        }),
+        viewCategory: one("EmojiPickerView.Category", { inverse: "emojiGridRowView" }),
     },
 });

@@ -117,10 +117,10 @@ class MailPluginController(http.Controller):
 
         partner.write(partner_values)
 
-        partner.message_post_with_view(
+        partner.message_post_with_source(
             'iap_mail.enrich_company',
-            values=iap_data,
-            subtype_id=request.env.ref('mail.mt_note').id,
+            render_values=iap_data,
+            subtype_xmlid='mail.mt_note',
         )
 
         return {
@@ -262,6 +262,10 @@ class MailPluginController(http.Controller):
         Returns enrichment data for a given domain, in case an error happens the response will
         contain an enrichment_info key explaining what went wrong
         """
+        if domain in iap_tools._MAIL_DOMAIN_BLACKLIST:
+            # Can not enrich the provider domain names (gmail.com; outlook.com, etc)
+            return {'enrichment_info': {'type': 'missing_data'}}
+
         enriched_data = {}
         try:
             response = request.env['iap.enrich.api']._request_enrich({domain: domain})  # The key doesn't matter
@@ -353,10 +357,10 @@ class MailPluginController(http.Controller):
 
         new_company = request.env['res.partner'].create(new_company_info)
 
-        new_company.message_post_with_view(
+        new_company.message_post_with_source(
             'iap_mail.enrich_company',
-            values=iap_data,
-            subtype_id=request.env.ref('mail.mt_note').id,
+            render_values=iap_data,
+            subtype_xmlid='mail.mt_note',
         )
 
         return new_company, {'type': 'company_created'}

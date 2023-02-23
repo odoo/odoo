@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
 /**
  * This model defines a "Throttle", which is an abstraction to throttle calls on a
@@ -11,9 +9,9 @@ import { clear } from '@mail/model/model_field_command';
  * calls most of the time, and a few priviledged exception to immediately make the call
  * are re-trigger a cooldown like a fresh throttle call.
  */
-registerModel({
-    name: 'Throttle',
-    identifyingMode: 'xor',
+Model({
+    name: "Throttle",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * Clear any buffered function call and immediately terminates any cooling
@@ -44,16 +42,18 @@ registerModel({
         },
     },
     fields: {
-        cooldownTimer: one('Timer', {
-            inverse: 'throttleOwner',
-        }),
+        cooldownTimer: one("Timer", { inverse: "throttleOwner" }),
         /**
          * Duration, in milliseconds, of the cool down phase.
          */
         duration: attr({
+            required: true,
             compute() {
                 if (this.emojiGridViewAsOnScroll) {
                     return 150;
+                }
+                if (this.messageListViewAsScroll) {
+                    return 100;
                 }
                 if (this.threadAsThrottleNotifyCurrentPartnerTypingStatus) {
                     return 2.5 * 1000;
@@ -63,26 +63,27 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        emojiGridViewAsOnScroll: one('EmojiGridView', {
+        emojiGridViewAsOnScroll: one("EmojiGridView", {
             identifying: true,
-            inverse: 'onScrollThrottle',
+            inverse: "onScrollThrottle",
         }),
         /**
          * Inner function to be invoked and throttled.
          */
         func: attr(),
-        messagingAsUpdateImStatusRegister: one('Messaging', {
+        messageListViewAsScroll: one("MessageListView", {
             identifying: true,
-            inverse: 'updateImStatusRegisterThrottle',
+            inverse: "scrollThrottle",
         }),
-        shouldInvoke: attr({
-            default: false,
-        }),
-        threadAsThrottleNotifyCurrentPartnerTypingStatus: one('Thread', {
+        messagingAsUpdateImStatusRegister: one("Messaging", {
             identifying: true,
-            inverse: 'throttleNotifyCurrentPartnerTypingStatus',
+            inverse: "updateImStatusRegisterThrottle",
+        }),
+        shouldInvoke: attr({ default: false }),
+        threadAsThrottleNotifyCurrentPartnerTypingStatus: one("Thread", {
+            identifying: true,
+            inverse: "throttleNotifyCurrentPartnerTypingStatus",
         }),
     },
 });

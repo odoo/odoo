@@ -7,17 +7,18 @@ import { getFirstAccountFunction, getNumberOfAccountFormulas } from "./utils";
 import { parseAccountingDate } from "./accounting_functions";
 import { camelToSnakeObject } from "@spreadsheet/helpers/helpers";
 
-const { cellMenuRegistry, uiPluginRegistry } = spreadsheet.registries;
+const { cellMenuRegistry, featurePluginRegistry } = spreadsheet.registries;
 const { astToFormula } = spreadsheet;
 const { toString, toBoolean } = spreadsheet.helpers;
 
-uiPluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
+featurePluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
 
 cellMenuRegistry.add("move_lines_see_records", {
     name: _lt("See records"),
     sequence: 176,
     async action(env) {
-        const cell = env.model.getters.getActiveCell();
+        const position = env.model.getters.getActivePosition();
+        const cell = env.model.getters.getCell(position);
         const { args } = getFirstAccountFunction(cell.content);
         let [code, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
@@ -36,10 +37,14 @@ cellMenuRegistry.add("move_lines_see_records", {
         await env.services.action.doAction(action);
     },
     isVisible: (env) => {
-        const cell = env.model.getters.getActiveCell();
+        const position = env.model.getters.getActivePosition();
+        const evaluatedCell = env.model.getters.getEvaluatedCell(position);
+        const cell = env.model.getters.getCell(position);
         return (
-            cell && !cell.evaluated.error &&
-            cell.evaluated.value !== "" && getNumberOfAccountFormulas(cell.content) === 1
+            !evaluatedCell.error &&
+            evaluatedCell.value !== "" &&
+            cell &&
+            getNumberOfAccountFormulas(cell.content) === 1
         );
     },
 });

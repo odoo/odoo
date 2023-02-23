@@ -34,9 +34,9 @@ class TestPartner(TransactionCase):
         test_partner_bhide = self.env['res.partner'].create({'name': 'Atmaram Bhide'})
 
         res_jetha = test_partner_jetha.with_context(show_address=1).name_get()
-        self.assertEqual(res_jetha[0][1], "Jethala\nPowder gali\nGokuldham Society\n  \n", "name should contain comma separated name and address")
+        self.assertEqual(res_jetha[0][1], "Jethala\nPowder gali\nGokuldham Society", "name should contain comma separated name and address")
         res_bhide = test_partner_bhide.with_context(show_address=1).name_get()
-        self.assertEqual(res_bhide[0][1], "Atmaram Bhide\n  \n", "name should contain only name if address is not available, without extra commas")
+        self.assertEqual(res_bhide[0][1], "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
         res_jetha = test_partner_jetha.with_context(show_address=1, address_inline=1).name_get()
         self.assertEqual(res_jetha[0][1], "Jethala, Powder gali, Gokuldham Society", "name should contain comma separated name and address")

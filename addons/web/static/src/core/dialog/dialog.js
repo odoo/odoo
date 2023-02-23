@@ -4,7 +4,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
-const { Component, useChildSubEnv, useState } = owl;
+import { Component, useChildSubEnv, useState } from "@odoo/owl";
 export class Dialog extends Component {
     setup() {
         this.modalRef = useForwardRefToParent("modalRef");
@@ -14,7 +14,7 @@ export class Dialog extends Component {
             this.data.close();
         });
         this.id = `dialog_${this.data.id}`;
-        useChildSubEnv({ inDialog: true, dialogId: this.id });
+        useChildSubEnv({ inDialog: true, dialogId: this.id, closeDialog: this.data.close });
 
         owl.onWillDestroy(() => {
             if (this.env.isSmall) {
@@ -30,6 +30,7 @@ export class Dialog extends Component {
 Dialog.template = "web.Dialog";
 Dialog.props = {
     contentClass: { type: String, optional: true },
+    bodyClass: { type: String, optional: true },
     fullscreen: { type: Boolean, optional: true },
     footer: { type: Boolean, optional: true },
     header: { type: Boolean, optional: true },
@@ -41,6 +42,7 @@ Dialog.props = {
         type: Object,
         shape: {
             default: Object, // Content is not optional
+            header: { type: Object, optional: true },
             footer: { type: Object, optional: true },
         },
     },
@@ -48,6 +50,7 @@ Dialog.props = {
 };
 Dialog.defaultProps = {
     contentClass: "",
+    bodyClass: "",
     fullscreen: false,
     footer: true,
     header: true,

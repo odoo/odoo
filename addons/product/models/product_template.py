@@ -74,8 +74,7 @@ class ProductTemplate(models.Model):
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
         digits='Product Price', groups="base.group_user",
-        help="""In Standard Price & AVCO: value of the product (automatically computed in AVCO).
-        In FIFO: value of the next unit that will leave the stock (automatically computed).
+        help="""Value of the product (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""")
 
@@ -146,7 +145,10 @@ class ProductTemplate(models.Model):
         for template in self:
             # Pricelist item count counts the rules applicable on current template or on its variants.
             template.pricelist_item_count = template.env['product.pricelist.item'].search_count([
-                '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids)])
+                '&',
+                '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids),
+                ('pricelist_id.active', '=', True),
+            ])
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):
@@ -177,70 +179,89 @@ class ProductTemplate(models.Model):
     def _compute_cost_currency_id(self):
         self.cost_currency_id = self.env.company.currency_id.id
 
+    def _compute_template_field_from_variant_field(self, fname, default=False):
+        """Sets the value of the given field based on the template variant values
+
+        Equals to product_variant_ids[fname] if it's a single variant product.
+        Otherwise, sets the value specified in ``default``.
+        It's used to compute fields like barcode, weight, volume..
+
+        :param str fname: name of the field to compute
+            (field name must be identical between product.product & product.template models)
+        :param default: default value to set when there are multiple or no variants on the template
+        :return: None
+        """
+        for template in self:
+            variant_count = len(template.product_variant_ids)
+            if variant_count == 1:
+                template[fname] = template.product_variant_ids[fname]
+            elif variant_count == 0 and self.env.context.get("active_test", True):
+                # If the product has no active variants, retry without the active_test
+                template_ctx = template.with_context(active_test=False)
+                template_ctx._compute_template_field_from_variant_field(fname, default=default)
+            else:
+                template[fname] = default
+
+    def _set_product_variant_field(self, fname):
+        """Propagate the value of the given field from the templates to their unique variant.
+
+        Only if it's a single variant product.
+        It's used to set fields like barcode, weight, volume..
+
+        :param str fname: name of the field whose value should be propagated to the variant.
+            (field name must be identical between product.product & product.template models)
+        """
+        for template in self:
+            count = len(template.product_variant_ids)
+            if count == 1:
+                template.product_variant_ids[fname] = template[fname]
+            elif count == 0:
+                archived_variants = self.with_context(active_test=False).product_variant_ids
+                if len(archived_variants) == 1:
+                    archived_variants[fname] = template[fname]
+
     @api.depends_context('company')
-    @api.depends('product_variant_ids', 'product_variant_ids.standard_price')
+    @api.depends('product_variant_ids.standard_price')
     def _compute_standard_price(self):
         # Depends on force_company context because standard_price is company_dependent
         # on the product_product
-        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
-        for template in unique_variants:
-            template.standard_price = template.product_variant_ids.standard_price
-        for template in (self - unique_variants):
-            template.standard_price = 0.0
+        self._compute_template_field_from_variant_field('standard_price')
 
     def _set_standard_price(self):
-        for template in self:
-            if len(template.product_variant_ids) == 1:
-                template.product_variant_ids.standard_price = template.standard_price
+        self._set_product_variant_field('standard_price')
 
     def _search_standard_price(self, operator, value):
-        products = self.env['product.product'].search([('standard_price', operator, value)], limit=None)
-        return [('id', 'in', products.mapped('product_tmpl_id').ids)]
+        return [('product_variant_ids.standard_price', operator, value)]
 
-    @api.depends('product_variant_ids', 'product_variant_ids.volume')
+    @api.depends('product_variant_ids.volume')
     def _compute_volume(self):
-        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
-        for template in unique_variants:
-            template.volume = template.product_variant_ids.volume
-        for template in (self - unique_variants):
-            template.volume = 0.0
+        self._compute_template_field_from_variant_field('volume')
 
     def _set_volume(self):
-        for template in self:
-            if len(template.product_variant_ids) == 1:
-                template.product_variant_ids.volume = template.volume
+        self._set_product_variant_field('volume')
 
-    @api.depends('product_variant_ids', 'product_variant_ids.weight')
+    @api.depends('product_variant_ids.weight')
     def _compute_weight(self):
-        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
-        for template in unique_variants:
-            template.weight = template.product_variant_ids.weight
-        for template in (self - unique_variants):
-            template.weight = 0.0
+        self._compute_template_field_from_variant_field('weight')
+
+    def _set_weight(self):
+        self._set_product_variant_field('weight')
 
     def _compute_is_product_variant(self):
         self.is_product_variant = False
 
     @api.depends('product_variant_ids.barcode')
     def _compute_barcode(self):
-        self.barcode = False
-        for template in self:
-            # TODO master: update product_variant_count depends and use it instead
-            variant_count = len(template.product_variant_ids)
-            if variant_count == 1:
-                template.barcode = template.product_variant_ids.barcode
-            elif variant_count == 0:
-                archived_variants = template.with_context(active_test=False).product_variant_ids
-                if len(archived_variants) == 1:
-                    template.barcode = archived_variants.barcode
+        self._compute_template_field_from_variant_field('barcode')
 
     def _search_barcode(self, operator, value):
-        templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
-        return [('id', 'in', templates.ids)]
+        subquery = self.with_context(active_test=False)._search([
+            ('product_variant_ids.barcode', operator, value),
+        ])
+        return [('id', 'in', subquery)]
 
     def _set_barcode(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.barcode = self.barcode
+        self._set_product_variant_field('barcode')
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):
@@ -293,16 +314,13 @@ class ProductTemplate(models.Model):
     def _get_volume_uom_name_from_ir_config_parameter(self):
         return self._get_volume_uom_id_from_ir_config_parameter().display_name
 
+    @api.depends('type')
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
 
+    @api.depends('type')
     def _compute_volume_uom_name(self):
         self.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
-
-    def _set_weight(self):
-        for template in self:
-            if len(template.product_variant_ids) == 1:
-                template.product_variant_ids.weight = template.weight
 
     @api.depends('product_variant_ids.product_tmpl_id')
     def _compute_product_variant_count(self):
@@ -324,18 +342,12 @@ class ProductTemplate(models.Model):
                 'message': _("The Internal Reference '%s' already exists.", self.default_code),
             }}
 
-    @api.depends('product_variant_ids', 'product_variant_ids.default_code')
+    @api.depends('product_variant_ids.default_code')
     def _compute_default_code(self):
-        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
-        for template in unique_variants:
-            template.default_code = template.product_variant_ids.default_code
-        for template in (self - unique_variants):
-            template.default_code = False
+        self._compute_template_field_from_variant_field('default_code')
 
     def _set_default_code(self):
-        for template in self:
-            if len(template.product_variant_ids) == 1:
-                template.product_variant_ids.default_code = template.default_code
+        self._set_product_variant_field('default_code')
 
     @api.depends('product_variant_ids', 'product_variant_ids.packaging_ids')
     def _compute_packaging_ids(self):
@@ -546,10 +558,32 @@ class ProductTemplate(models.Model):
                 'default_product_tmpl_id': self.id,
                 'default_applied_on': '1_product',
                 'product_without_variants': self.product_variant_count == 1,
+                'search_default_visible': True,
             },
         }
 
-    def price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
+    def _get_product_price_context(self, combination):
+        self.ensure_one()
+        res = {}
+
+        current_attributes_price_extra = [
+            ptav.price_extra for ptav in combination.filtered(
+                lambda ptav:
+                    ptav.price_extra
+                    and ptav.product_tmpl_id == self
+            )
+        ]
+        if current_attributes_price_extra:
+            res['current_attributes_price_extra'] = tuple(current_attributes_price_extra)
+
+        return res
+
+    def _get_attributes_extra_price(self):
+        self.ensure_one()
+
+        return sum(self.env.context.get('current_attributes_price_extra', []))
+
+    def _price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company
         date = date or fields.Date.context_today(self)
 
@@ -566,12 +600,8 @@ class ProductTemplate(models.Model):
             price_currency = template.currency_id
             if price_type == 'standard_price':
                 price_currency = template.cost_currency_id
-
-            # yes, there can be attribute values for product template if it's not a variant YET
-            # (see field product.attribute create_variant)
-            if price_type == 'list_price' and self._context.get('current_attributes_price_extra'):
-                # we have a list of price_extra that comes from the attribute values, we need to sum all that
-                price += sum(self._context.get('current_attributes_price_extra'))
+            elif price_type == 'list_price':
+                price += template._get_attributes_extra_price()
 
             if uom:
                 price = template.uom_id._compute_price(price, uom)
@@ -1264,7 +1294,7 @@ class ProductTemplate(models.Model):
     def _get_placeholder_filename(self, field):
         image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
         if field in image_fields:
-            return 'product/static/img/placeholder.png'
+            return 'product/static/img/placeholder_thumbnail.png'
         return super()._get_placeholder_filename(field)
 
     def get_single_product_variant(self):
@@ -1278,15 +1308,16 @@ class ProductTemplate(models.Model):
         if self.product_variant_count == 1 and not self.has_configurable_attributes:
             return {
                 'product_id': self.product_variant_id.id,
+                'product_name': self.product_variant_id.display_name,
             }
         return {}
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         self = self.with_context(
             empty_list_help_document_name=_("product"),
         )
-        return super(ProductTemplate, self).get_empty_list_help(help)
+        return super(ProductTemplate, self).get_empty_list_help(help_message)
 
     @api.model
     def get_import_templates(self):
@@ -1299,9 +1330,6 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         # YTI TODO: During website_sale cleaning, we should get rid of those crappy context thing
         pricelist = self._get_contextual_pricelist()
-        if not pricelist:
-            return 0.0
-
         quantity = self.env.context.get('quantity', 1.0)
         uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
         date = self.env.context.get('date')

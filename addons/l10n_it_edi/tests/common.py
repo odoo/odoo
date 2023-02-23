@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from lxml import etree
 from unittest.mock import patch, MagicMock
 
 from odoo import tools
@@ -17,7 +21,7 @@ def patch_proxy_user(func):
 class TestItEdi(AccountEdiTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_it.l10n_it_chart_template_generic', edi_format_ref="l10n_it_edi.edi_fatturaPA"):
+    def setUpClass(cls, chart_template_ref='it', edi_format_ref="l10n_it_edi.edi_fatturaPA"):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
         # Company data ------
@@ -27,10 +31,10 @@ class TestItEdi(AccountEdiTestCommon):
         cls.company.vat = 'IT01234560157'
 
         cls.test_bank = cls.env['res.partner.bank'].with_company(cls.company).create({
-                'partner_id': cls.company.partner_id.id,
-                'acc_number': 'IT1212341234123412341234123',
-                'bank_name': 'BIG BANK',
-                'bank_bic': 'BIGGBANQ',
+            'partner_id': cls.company.partner_id.id,
+            'acc_number': 'IT1212341234123412341234123',
+            'bank_name': 'BIG BANK',
+            'bank_bic': 'BIGGBANQ',
         })
 
         cls.company.l10n_it_tax_system = "RF01"
@@ -38,6 +42,50 @@ class TestItEdi(AccountEdiTestCommon):
         cls.company.zip = "12345"
         cls.company.city = "Prova"
         cls.company.country_id = cls.env.ref('base.it')
+
+        # Partners
+        cls.italian_partner_a = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'vat': 'IT00465840031',
+            'l10n_it_codice_fiscale': '93026890017',
+            'country_id': cls.env.ref('base.it').id,
+            'street': 'Via Privata Alessi 6',
+            'zip': '28887',
+            'city': 'Milan',
+            'company_id': cls.company.id,
+            'is_company': True,
+        })
+
+        cls.italian_partner_b = cls.env['res.partner'].create({
+            'name': 'pa partner',
+            'vat': 'IT06655971007',
+            'l10n_it_codice_fiscale': '06655971007',
+            'l10n_it_pa_index': '123456',
+            'country_id': cls.env.ref('base.it').id,
+            'street': 'Via Test PA',
+            'zip': '32121',
+            'city': 'PA Town',
+            'is_company': True
+        })
+
+        cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'l10n_it_codice_fiscale': '00465840031',
+            'is_company': True,
+        })
+
+        cls.italian_partner_no_address_VAT = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'vat': 'IT00465840031',
+            'is_company': True,
+        })
+
+        cls.american_partner = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'vat': '00465840031',
+            'country_id': cls.env.ref('base.us').id,
+            'is_company': True,
+        })
 
         # We create this because we are unable to post without a proxy user existing
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
@@ -55,6 +103,8 @@ class TestItEdi(AccountEdiTestCommon):
             'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
         }
 
+        cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
+        cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
 
     @classmethod
     def _get_test_file_content(cls, filename):
@@ -62,3 +112,21 @@ class TestItEdi(AccountEdiTestCommon):
         path = 'l10n_it_edi/tests/expected_xmls/' + filename
         with tools.file_open(path, mode='rb') as test_file:
             return test_file.read()
+
+    def _cleanup_etree(self, content, xpaths=None):
+        xpaths = {
+            **(xpaths or {}),
+            '//FatturaElettronicaBody/Allegati': 'Allegati',
+            '//DatiTrasmissione/ProgressivoInvio': 'ProgressivoInvio',
+        }
+        return self.with_applied_xpath(
+            etree.fromstring(content),
+            "".join([f"<xpath expr='{x}' position='replace'>{y}</xpath>" for x, y in xpaths.items()])
+        )
+
+    def _test_invoice_with_sample_file(self, invoice, filename, xpaths_file=None, xpaths_result=None):
+        invoice_xml = self.edi_format._l10n_it_edi_export_invoice_as_xml(invoice)
+        expected_xml = self._get_test_file_content(filename)
+        result = self._cleanup_etree(invoice_xml, xpaths_result)
+        expected = self._cleanup_etree(expected_xml, xpaths_file)
+        self.assertXmlTreeEqual(result, expected)

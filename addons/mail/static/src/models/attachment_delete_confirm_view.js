@@ -1,12 +1,15 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
-import { sprintf } from '@web/core/utils/strings';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, one, Model } from "@mail/model";
+import { sprintf } from "@web/core/utils/strings";
 
-registerModel({
-    name: 'AttachmentDeleteConfirmView',
+Model({
+    name: "AttachmentDeleteConfirmView",
+    template: "mail.AttachmentDeleteConfirmView",
+    componentSetup() {
+        useComponentToModel({ fieldName: "component" });
+    },
     recordMethods: {
         /**
          * Returns whether the given html element is inside this attachment delete confirm view.
@@ -15,7 +18,9 @@ registerModel({
          * @returns {boolean}
          */
         containsElement(element) {
-            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
+            return Boolean(
+                this.component && this.component.root.el && this.component.root.el.contains(element)
+            );
         },
         onClickCancel() {
             this.dialogOwner.delete();
@@ -23,52 +28,61 @@ registerModel({
         async onClickOk() {
             const chatter = this.chatter;
             await this.attachment.remove();
-            if (chatter && chatter.exists() && chatter.hasParentReloadOnAttachmentsChanged) {
+            if (chatter && chatter.exists() && chatter.shouldReloadParentFromFileChanged) {
                 chatter.reloadParentView();
             }
         },
     },
     fields: {
-        attachment: one('Attachment', {
+        attachment: one("Attachment", {
+            required: true,
             compute() {
-                if (this.dialogOwner && this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm) {
+                if (
+                    this.dialogOwner &&
+                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm
+                ) {
                     return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachment;
                 }
-                if (this.dialogOwner && this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm) {
-                    return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachment;
+                if (
+                    this.dialogOwner &&
+                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm
+                ) {
+                    return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm
+                        .attachment;
                 }
                 return clear();
             },
-            required: true,
         }),
         body: attr({
             compute() {
-                return sprintf(this.env._t(`Do you really want to delete "%s"?`), this.attachment.displayName);
+                return sprintf(
+                    this.env._t(`Do you really want to delete "%s"?`),
+                    this.attachment.displayName
+                );
             },
         }),
-        chatter: one('Chatter', {
+        chatter: one("Chatter", {
             compute() {
                 if (
                     this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm &&
-                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner &&
-                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter
+                    this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList
+                        .chatterOwner
                 ) {
-                    return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter;
+                    return this.dialogOwner.attachmentCardOwnerAsAttachmentDeleteConfirm
+                        .attachmentList.chatterOwner;
                 }
                 if (
                     this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm &&
-                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner &&
-                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter
+                    this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList
+                        .chatterOwner
                 ) {
-                    return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm.attachmentList.attachmentBoxViewOwner.chatter;
+                    return this.dialogOwner.attachmentImageOwnerAsAttachmentDeleteConfirm
+                        .attachmentList.chatterOwner;
                 }
                 return clear();
             },
         }),
         component: attr(),
-        dialogOwner: one('Dialog', {
-            identifying: true,
-            inverse: 'attachmentDeleteConfirmView',
-        }),
+        dialogOwner: one("Dialog", { identifying: true, inverse: "attachmentDeleteConfirmView" }),
     },
 });

@@ -49,11 +49,21 @@
     color: lighten($gray-400, 15%);
 }
 
-.o_AttachmentViewer_toolbarButton.o_disabled {
-    filter: brightness(1.3);
+.o_AttachmentViewer_toolbarButton {
+    background-color: var(--AttachmentViewer_toolbarButton-background-color, #{$o-gray-800});
+    color: #fff;
+
+    &:hover {
+        filter: brightness(1.3);
+    }
 }
 
 .o_AttachmentViewer_view {
-    box-shadow: 0 0 40px $black;
+    background-color: #000000;
+    box-shadow: 0 0 40px #000000;
     outline: none;
+
+    &.o_AttachmentViewer_isText {
+        background: #FFFFFF;
+    }
 }

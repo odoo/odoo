@@ -1,15 +1,14 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'RtcSession',
+Model({
+    name: "RtcSession",
     lifecycleHooks: {
         _willDelete() {
             this._removeAudio();
             this._removeVideo();
+            this.messaging.browser.clearTimeout(this.connectionRecoveryTimeout);
         },
     },
     recordMethods: {
@@ -17,7 +16,7 @@ registerModel({
             this.update({ broadcastTimer: clear() });
             this.messaging.rpc(
                 {
-                    route: '/mail/rtc/session/update_and_broadcast',
+                    route: "/mail/rtc/session/update_and_broadcast",
                     params: {
                         session_id: this.id,
                         values: {
@@ -28,7 +27,7 @@ registerModel({
                         },
                     },
                 },
-                { shadow: true },
+                { shadow: true }
             );
         },
         /**
@@ -78,7 +77,8 @@ registerModel({
                 this.channelMember.persona.volumeSetting.update({ volume: this.volume });
             }
             this.messaging.userSetting.saveVolumeSetting({
-                partnerId: this.channelMember.persona.partner && this.channelMember.persona.partner.id,
+                partnerId:
+                    this.channelMember.persona.partner && this.channelMember.persona.partner.id,
                 guestId: this.channelMember.persona.guest && this.channelMember.persona.guest.id,
                 volume: this.volume,
             });
@@ -123,12 +123,14 @@ registerModel({
             }
             const stats = await this.rtcPeerConnection.peerConnection.getStats();
             for (const { localCandidateId, remoteCandidateId, state, type } of stats.values()) {
-                if (type === 'candidate-pair' && state === 'succeeded' && localCandidateId) {
+                if (type === "candidate-pair" && state === "succeeded" && localCandidateId) {
                     const localCandidate = stats.get(localCandidateId);
                     const remoteCandidate = stats.get(remoteCandidateId);
                     this.update({
                         localCandidateType: localCandidate ? localCandidate.candidateType : clear(),
-                        remoteCandidateType: remoteCandidate ? remoteCandidate.candidateType : clear(),
+                        remoteCandidateType: remoteCandidate
+                            ? remoteCandidate.candidateType
+                            : clear(),
                     });
                     return;
                 }
@@ -147,14 +149,14 @@ registerModel({
             const stream = new window.MediaStream();
             stream.addTrack(track);
 
-            if (track.kind === 'audio') {
+            if (track.kind === "audio") {
                 this._setAudio({
                     audioStream: stream,
                     isSelfMuted: false,
                     isTalking: false,
                 });
             }
-            if (track.kind === 'video') {
+            if (track.kind === "video") {
                 this.update({ videoStream: stream });
             }
         },
@@ -173,10 +175,13 @@ registerModel({
             if (!this.rtcAsConnectedSession) {
                 return;
             }
-            const track = trackKind === 'audio' ? this.rtcAsConnectedSession.audioTrack : this.rtcAsConnectedSession.videoTrack;
-            let transceiverDirection = track ? 'sendrecv' : 'recvonly';
-            if (trackKind === 'video' && !this.rtcPeerConnection.acceptsVideoStream) {
-                transceiverDirection = track ? 'sendonly' : 'inactive';
+            const track =
+                trackKind === "audio"
+                    ? this.rtcAsConnectedSession.audioTrack
+                    : this.rtcAsConnectedSession.videoTrack;
+            let transceiverDirection = track ? "sendrecv" : "recvonly";
+            if (trackKind === "video" && !this.rtcPeerConnection.acceptsVideoStream) {
+                transceiverDirection = track ? "sendonly" : "inactive";
             }
             let transceiver;
             if (initTransceiver) {
@@ -188,7 +193,7 @@ registerModel({
                 try {
                     await transceiver.sender.replaceTrack(track);
                     transceiver.direction = transceiverDirection;
-                } catch (_e) {
+                } catch {
                     // ignored, the track is probably already on the peerConnection.
                 }
                 return;
@@ -196,15 +201,15 @@ registerModel({
             try {
                 await transceiver.sender.replaceTrack(null);
                 transceiver.direction = transceiverDirection;
-            } catch (_e) {
+            } catch {
                 // ignored, the transceiver is probably already removed
             }
-            if (trackKind === 'video') {
+            if (trackKind === "video") {
                 this.rtcAsConnectedSession.notifyPeers([this.id], {
-                    event: 'trackChange',
-                    type: 'peerToPeer',
+                    event: "trackChange",
+                    type: "peerToPeer",
                     payload: {
-                        type: 'video',
+                        type: "video",
                         state: { isSendingVideo: false },
                     },
                 });
@@ -225,7 +230,7 @@ registerModel({
                 this.audioElement.pause();
                 try {
                     this.audioElement.srcObject = undefined;
-                } catch (_error) {
+                } catch {
                     // ignore error during remove, the value will be overwritten at next usage anyway
                 }
             }
@@ -253,9 +258,15 @@ registerModel({
                 console.error(error);
             }
             audioElement.load();
-            if (this.channelMember.persona.partner && this.channelMember.persona.partner.volumeSetting) {
+            if (
+                this.channelMember.persona.partner &&
+                this.channelMember.persona.partner.volumeSetting
+            ) {
                 audioElement.volume = this.channelMember.persona.partner.volumeSetting.volume;
-            } else if (this.channelMember.persona.guest && this.channelMember.persona.guest.volumeSetting) {
+            } else if (
+                this.channelMember.persona.guest &&
+                this.channelMember.persona.guest.volumeSetting
+            ) {
                 audioElement.volume = this.channelMember.persona.guest.volumeSetting.volume;
             } else {
                 audioElement.volume = this.volume;
@@ -277,7 +288,7 @@ registerModel({
                 }
                 this.update({ isAudioInError: false });
             } catch (error) {
-                if (typeof error === 'object' && error.name === 'NotAllowedError') {
+                if (typeof error === "object" && error.name === "NotAllowedError") {
                     // Ignored as some browsers may reject play() calls that do not
                     // originate from a user input.
                     return;
@@ -299,92 +310,67 @@ registerModel({
          * MediaStream
          */
         audioStream: attr(),
-        broadcastTimer: one('Timer', {
-            inverse: 'rtcSessionOwnerAsBroadcast',
-        }),
+        broadcastTimer: one("Timer", { inverse: "rtcSessionOwnerAsBroadcast" }),
         /**
          * The mail.channel of the session, rtc sessions are part and managed by
          * mail.channel
          */
-        channel: one('Thread', {
-            inverse: 'rtcSessions',
-        }),
-        channelMember: one('ChannelMember', {
-            inverse: 'rtcSession',
-        }),
+        channel: one("Thread", { inverse: "rtcSessions" }),
+        channelMember: one("ChannelMember", { inverse: "rtcSession" }),
         connectionRecoveryTimeout: attr(),
         /**
          * State of the connection with this session, uses RTCPeerConnection.iceConnectionState
          * once a peerConnection has been initialized.
          */
-        connectionState: attr({
-            default: 'Waiting for the peer to send a RTC offer',
-        }),
+        connectionState: attr({ default: "Waiting for the peer to send a RTC offer" }),
         /**
          * Id of the record on the server.
          */
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         /**
          * Channels on which this session is inviting the current partner,
          * this serves as an explicit inverse as it seems to confuse it with
          * other session-channel relations otherwise.
          */
-        calledChannels: many('Thread', {
-            inverse: 'rtcInvitingSession',
-        }),
+        calledChannels: many("Thread", { inverse: "rtcInvitingSession" }),
         /**
          * The participant cards of this session,
          * this is used to know how many views are displaying this session.
          */
-        callParticipantCards: many('CallParticipantCard', {
-            inverse: 'rtcSession',
-            isCausal: true,
-        }),
+        callParticipantCards: many("CallParticipantCard", { inverse: "rtcSession" }),
         /**
          * States whether there is currently an error with the audio element.
          */
-        isAudioInError: attr({
-            default: false,
-        }),
+        isAudioInError: attr({ default: false }),
         /**
          * Determines if the user is broadcasting a video from a user device (camera).
          */
-        isCameraOn: attr({
-            default: false,
-        }),
+        isCameraOn: attr({ default: false }),
         /**
          * States whether the current user/guest has initiated the RTC session connection offer.
          * Useful when attempting to recover a failed peer connection by
          * inverting the connection offer direction.
          */
-        isCurrentUserInitiatorOfConnectionOffer: attr({
-            default: false,
-        }),
+        isCurrentUserInitiatorOfConnectionOffer: attr({ default: false }),
         /**
          * Determines if the user is deafened, which means that all incoming
          * audio tracks are disabled.
          */
-        isDeaf: attr({
-            default: false,
-        }),
+        isDeaf: attr({ default: false }),
         /**
          * Determines if the user's microphone is in a muted state, which
          * means that they cannot send sound regardless of the push to talk or
          * voice activation (isTalking) state.
          */
-        isSelfMuted: attr({
-            default: false,
-        }),
+        isSelfMuted: attr({ default: false }),
         /**
          * Determine whether current session is unable to speak.
          */
         isMute: attr({
+            default: false,
             compute() {
                 return this.isSelfMuted || this.isDeaf;
             },
-            default: false,
         }),
         /**
          * Determines if the session is a session of the current partner.
@@ -398,23 +384,23 @@ registerModel({
                 if (!this.messaging || !this.channelMember) {
                     return;
                 }
-                return (this.channelMember.persona.partner && this.messaging.currentPartner === this.channelMember.persona.partner) ||
-                    (this.channelMember.persona.guest && this.messaging.currentGuest === this.channelMember.persona.guest);
+                return (
+                    (this.channelMember.persona.partner &&
+                        this.messaging.currentPartner === this.channelMember.persona.partner) ||
+                    (this.channelMember.persona.guest &&
+                        this.messaging.currentGuest === this.channelMember.persona.guest)
+                );
             },
         }),
         /**
          * Determines if the user is sharing their screen.
          */
-        isScreenSharingOn: attr({
-            default: false,
-        }),
+        isScreenSharingOn: attr({ default: false }),
         /**
          * Determines if the user is currently talking, which is based on
          * voice activation or push to talk.
          */
-        isTalking: attr({
-            default: false,
-        }),
+        isTalking: attr({ default: false }),
         /**
          * RTCIceCandidate.type String
          */
@@ -439,10 +425,9 @@ registerModel({
          * sessions from other channels with the same partner (sessions opened from different
          * tabs or devices).
          */
-        rtcAsCurrentSession: one('Rtc', {
-            inverse: 'currentRtcSession',
-        }),
-        rtcAsConnectedSession: one('Rtc', {
+        rtcAsCurrentSession: one("Rtc", { inverse: "currentRtcSession" }),
+        rtcAsConnectedSession: one("Rtc", {
+            inverse: "connectedRtcSessions",
             compute() {
                 if (!this.messaging || !this.messaging.rtc) {
                     return clear();
@@ -452,17 +437,12 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'connectedRtcSessions',
         }),
-        rtcPeerConnection: one('RtcPeerConnection', {
-            inverse: 'rtcSession',
-        }),
+        rtcPeerConnection: one("RtcPeerConnection", { inverse: "rtcSession" }),
         /**
          * Contains the RTCDataChannel of the rtc session.
          */
-        rtcDataChannel: one('RtcDataChannel', {
-            inverse: 'rtcSession',
-        }),
+        rtcDataChannel: one("RtcDataChannel", { inverse: "rtcSession" }),
         /**
          * MediaStream of the user's video.
          *
@@ -474,6 +454,7 @@ registerModel({
          * The volume of the audio played from this session.
          */
         volume: attr({
+            default: 0.5,
             compute() {
                 if (this.localVolume !== undefined) {
                     return this.localVolume;
@@ -485,7 +466,6 @@ registerModel({
                     return this.audioElement.volume;
                 }
             },
-            default: 0.5,
         }),
     },
 });

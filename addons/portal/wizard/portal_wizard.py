@@ -65,7 +65,6 @@ class PortalWizard(models.TransientModel):
             'name': _('Portal Access Management'),
             'type': 'ir.actions.act_window',
             'res_model': 'portal.wizard',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_id': self.id,
             'target': 'new',

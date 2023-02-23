@@ -1,12 +1,22 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import {
+    debounce,
+    throttleForAnimation,
+    useDebounced,
+    useThrottleForAnimation,
+} from "@web/core/utils/timing";
 import {
     makeDeferred,
     patchWithCleanup,
     mockTimeout,
     mockAnimationFrame,
+    mount,
+    getFixture,
+    click,
+    destroy,
 } from "../../helpers/utils";
 
 QUnit.module("utils", () => {
@@ -100,7 +110,7 @@ QUnit.module("utils", () => {
 
     QUnit.test("debounce with 'animationFrame' delay", async function (assert) {
         const { execRegisteredTimeouts } = mockTimeout();
-        const execRegisteredAnimationFrames = mockAnimationFrame();
+        const { execRegisteredAnimationFrames } = mockAnimationFrame();
         const myFunc = () => {
             assert.step("myFunc");
         };
@@ -132,24 +142,110 @@ QUnit.module("utils", () => {
     });
 
     QUnit.test("throttleForAnimation", async (assert) => {
-        assert.expect(4);
-        const execAnimationFrameCallbacks = mockAnimationFrame();
+        const { advanceFrame, execRegisteredAnimationFrames } = mockAnimationFrame();
         const throttledFn = throttleForAnimation((val) => {
-            assert.step(`throttled function called with ${val}`);
+            assert.step(`${val}`);
         });
 
-        throttledFn(0);
+        // A single call is executed immediately
         throttledFn(1);
-        assert.verifySteps([], "throttled function hasn't been called yet");
-        execAnimationFrameCallbacks();
-        assert.verifySteps(
-            ["throttled function called with 1"],
-            "only the last queued call was executed"
-        );
+        assert.verifySteps(["1"], "has been called on the leading edge");
+        execRegisteredAnimationFrames();
+        assert.verifySteps([], "has not been called");
+
+        // Successive calls
+        throttledFn(1);
+        assert.verifySteps(["1"], "has been called on the leading edge");
+        throttledFn(2);
+        throttledFn(3);
+        assert.verifySteps([], "has not been called");
+        execRegisteredAnimationFrames();
+        assert.verifySteps(["3"], "only the last queued call was executed");
+
+        // Can be cancelled
+        throttledFn(1);
+        assert.verifySteps(["1"], "has been called on the leading edge");
         throttledFn(2);
         throttledFn(3);
         throttledFn.cancel();
-        execAnimationFrameCallbacks();
+        execRegisteredAnimationFrames();
         assert.verifySteps([], "queued throttled function calls were cancelled correctly");
+
+        // Successive calls: more precise timing case
+        throttledFn(1);
+        assert.verifySteps(["1"], "has been called on the leading edge");
+        await advanceFrame();
+        throttledFn(2);
+        assert.verifySteps(["2"], "has been called on the leading edge");
+        throttledFn(3);
+        throttledFn(4);
+        await advanceFrame();
+        assert.verifySteps(["4"], "last call is executed on the trailing edge");
+        execRegisteredAnimationFrames();
+        assert.verifySteps([], "has not been called");
+    });
+
+    QUnit.module("timing > hooks");
+
+    QUnit.test("useDebounced: cancels on comp destroy", async function (assert) {
+        const { advanceTime } = mockTimeout();
+        class C extends Component {
+            static template = xml`<button class="c" t-on-click="debounced">C</button>`;
+            setup() {
+                this.debounced = useDebounced(() => assert.step("debounced"), 1000);
+            }
+        }
+        const fixture = getFixture();
+        const comp = await mount(C, fixture);
+        assert.verifySteps([]);
+        assert.containsOnce(fixture, "button.c");
+
+        await click(fixture, "button.c");
+        await advanceTime(999);
+        assert.verifySteps([]);
+        await advanceTime(1);
+        assert.verifySteps(["debounced"]);
+
+        await click(fixture, "button.c");
+        await advanceTime(999);
+        assert.verifySteps([]);
+        destroy(comp);
+        await advanceTime(1);
+        assert.verifySteps([]);
+    });
+
+    QUnit.test("useThrottleForAnimation: cancels on comp destroy", async function (assert) {
+        const { advanceFrame, execRegisteredAnimationFrames } = mockAnimationFrame();
+        class C extends Component {
+            static template = xml`<button class="c" t-on-click="throttled">C</button>`;
+            setup() {
+                this.throttled = useThrottleForAnimation(() => assert.step("throttled"), 1000);
+            }
+        }
+        const fixture = getFixture();
+        const comp = await mount(C, fixture);
+        assert.verifySteps([]);
+        assert.containsOnce(fixture, "button.c");
+
+        // Without destroy
+        await click(fixture, "button.c");
+        assert.verifySteps(["throttled"]);
+        await click(fixture, "button.c");
+        assert.verifySteps([]);
+        await advanceFrame();
+        assert.verifySteps(["throttled"]);
+
+        // Clean restart
+        execRegisteredAnimationFrames();
+        assert.verifySteps([]);
+
+        // With destroy
+        await click(fixture, "button.c");
+        assert.verifySteps(["throttled"]);
+        await click(fixture, "button.c");
+        assert.verifySteps([]);
+        destroy(comp);
+        await advanceFrame();
+        assert.verifySteps([]);
     });
 });

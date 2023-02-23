@@ -41,7 +41,7 @@ class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
         mail = self.env['mail.mail'].sudo().search([('subject', '=', 'About TestingPartner')])
         self.assertEqual(len(mail), 1)
         self.assertTrue(mail.auto_delete)
-        self.assertEqual(mail.body, '<p>Hello TestingPartner</p>')
+        self.assertEqual(mail.body_html, '<p>Hello TestingPartner</p>')
         self.assertFalse(mail.is_notification)
         with self.mock_mail_gateway(mail_unlink_sent=True):
             mail.send()
@@ -78,6 +78,9 @@ class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
         with self.assertSinglePostNotifications(
                 [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
                 message_info={'content': 'Hello %s' % self.test_partner.name,
+                              'fields_values': {
+                                'author_id': self.env.user.partner_id,
+                              },
                               'message_type': 'notification',
                               'subtype': 'mail.mt_comment',
                              }

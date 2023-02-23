@@ -47,17 +47,9 @@ class ProductCommon(
 
     @classmethod
     def _archive_other_pricelists(cls):
-        """Do not raise if there is no pricelist(s) for a given website"""
-        website_sale = cls.env['ir.module.module']._get('website_sale')
-        if website_sale.state == 'installed':
-            archive_context = patch('odoo.addons.website_sale.models.product_pricelist.ProductPricelist._check_website_pricelist')
-        else:
-            archive_context = nullcontext()
-
-        with archive_context:
-            cls.env['product.pricelist'].search([
-                ('id', '!=', cls.pricelist.id),
-            ]).action_archive()
+        cls.env['product.pricelist'].search([
+            ('id', '!=', cls.pricelist.id),
+        ]).action_archive()
 
 
 class ProductAttributesCommon(ProductCommon):

@@ -12,7 +12,6 @@ from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_sips.controllers.main import SipsController
-from odoo.addons.payment_sips.models.payment_provider import SUPPORTED_CURRENCIES
 from odoo.addons.payment_sips.tests.common import SipsCommon
 
 
@@ -20,13 +19,6 @@ from odoo.addons.payment_sips.tests.common import SipsCommon
 class SipsTest(SipsCommon, PaymentHttpCommon):
 
     def test_compatible_providers(self):
-        for curr in SUPPORTED_CURRENCIES:
-            currency = self._prepare_currency(curr)
-            providers = self.env['payment.provider']._get_compatible_providers(
-                self.company.id, self.partner.id, self.amount, currency_id=currency.id
-            )
-            self.assertIn(self.sips, providers)
-
         unsupported_currency = self._prepare_currency('VEF')
         providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, currency_id=unsupported_currency.id
@@ -138,9 +130,3 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         payload = dict(self.notification_data, Seal='dummy')
         self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)
-
-    def test_sips_neutralize(self):
-        self.env['payment.provider']._neutralize()
-
-        self.assertEqual(self.provider.sips_merchant_id, False)
-        self.assertEqual(self.provider.sips_secret, False)

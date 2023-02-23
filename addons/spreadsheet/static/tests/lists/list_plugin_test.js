@@ -5,10 +5,18 @@ import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../utils/model";
-import { selectCell, setCellContent } from "../utils/commands";
-import { getCell, getCellContent, getCellFormula, getCells, getCellValue } from "../utils/getters";
+import { addGlobalFilter, selectCell, setCellContent } from "../utils/commands";
+import {
+    getCell,
+    getCellContent,
+    getCellFormula,
+    getCells,
+    getCellValue,
+    getEvaluatedCell,
+} from "../utils/getters";
 import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
+import { RPCError } from "@web/core/network/rpc_service";
 
 QUnit.module("spreadsheet > list plugin", {}, () => {
     QUnit.test("List export", async (assert) => {
@@ -33,7 +41,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             model: "documents.document",
             columns: ["handler"],
         });
-        assert.strictEqual(getCellValue(model, "A2", "Spreadsheet"));
+        assert.strictEqual(getCellValue(model, "A2"), "Spreadsheet");
     });
 
     QUnit.test("Return name_get of many2one field", async (assert) => {
@@ -81,20 +89,20 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.strictEqual(getCell(model, "G2").format, undefined);
         assert.strictEqual(getCell(model, "G3").format, undefined);
 
-        assert.strictEqual(getCell(model, "A2").evaluated.format, "0");
-        assert.strictEqual(getCell(model, "B2").evaluated.format, "#,##0.00");
-        assert.strictEqual(getCell(model, "C2").evaluated.format, undefined);
-        assert.strictEqual(getCell(model, "D2").evaluated.format, "m/d/yyyy");
-        assert.strictEqual(getCell(model, "E2").evaluated.format, "m/d/yyyy hh:mm:ss");
-        assert.strictEqual(getCell(model, "F2").evaluated.format, undefined);
-        assert.strictEqual(getCell(model, "G2").evaluated.format, "#,##0.00[$€]");
-        assert.strictEqual(getCell(model, "G3").evaluated.format, "[$$]#,##0.00");
+        assert.strictEqual(getEvaluatedCell(model, "A2").format, "0");
+        assert.strictEqual(getEvaluatedCell(model, "B2").format, "#,##0.00");
+        assert.strictEqual(getEvaluatedCell(model, "C2").format, undefined);
+        assert.strictEqual(getEvaluatedCell(model, "D2").format, "m/d/yyyy");
+        assert.strictEqual(getEvaluatedCell(model, "E2").format, "m/d/yyyy hh:mm:ss");
+        assert.strictEqual(getEvaluatedCell(model, "F2").format, undefined);
+        assert.strictEqual(getEvaluatedCell(model, "G2").format, "#,##0.00[$€]");
+        assert.strictEqual(getEvaluatedCell(model, "G3").format, "[$$]#,##0.00");
     });
 
     QUnit.test("can select a List from cell formula", async function (assert) {
         const { model } = await createSpreadsheetWithList();
         const sheetId = model.getters.getActiveSheetId();
-        const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+        const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
         model.dispatch("SELECT_ODOO_LIST", { listId });
         const selectedListId = model.getters.getSelectedListId();
         assert.strictEqual(selectedListId, "1");
@@ -106,7 +114,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             const { model } = await createSpreadsheetWithList();
             setCellContent(model, "A1", `=-ODOO.LIST("1","1","foo")`);
             const sheetId = model.getters.getActiveSheetId();
-            const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+            const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
             model.dispatch("SELECT_ODOO_LIST", { listId });
             const selectedListId = model.getters.getSelectedListId();
             assert.strictEqual(selectedListId, "1");
@@ -118,7 +126,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             const { model } = await createSpreadsheetWithList();
             setCellContent(model, "A1", `=3*ODOO.LIST("1","1","foo")`);
             const sheetId = model.getters.getActiveSheetId();
-            const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+            const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
             model.dispatch("SELECT_ODOO_LIST", { listId });
             const selectedListId = model.getters.getSelectedListId();
             assert.strictEqual(selectedListId, "1");
@@ -136,7 +144,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList();
         setCellContent(model, "A1", `=SUM(ODOO.LIST("1","1","foo"),1)`);
         const sheetId = model.getters.getActiveSheetId();
-        const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+        const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
         model.dispatch("SELECT_ODOO_LIST", { listId });
         const selectedListId = model.getters.getSelectedListId();
         assert.strictEqual(selectedListId, "1");
@@ -149,7 +157,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             setCellContent(model, "A1", `=ODOO.LIST(G10,"1","foo")`);
             setCellContent(model, "G10", "1");
             const sheetId = model.getters.getActiveSheetId();
-            const listId = model.getters.getListIdFromPosition(sheetId, 0, 0);
+            const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
             model.dispatch("SELECT_ODOO_LIST", { listId });
             const selectedListId = model.getters.getSelectedListId();
             assert.strictEqual(selectedListId, "1");
@@ -193,10 +201,10 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             undefined
         );
         assert.strictEqual(getCellValue(model, "A1"), forbiddenFieldName);
-        const A2 = getCell(model, "A2");
-        assert.equal(A2.evaluated.type, "error");
+        const A2 = getEvaluatedCell(model, "A2");
+        assert.equal(A2.type, "error");
         assert.equal(
-            A2.evaluated.error.message,
+            A2.error.message,
             `The field ${forbiddenFieldName} does not exist or you do not have access to that field`
         );
     });
@@ -252,8 +260,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
     QUnit.test("user context is combined with list context to fetch data", async function (assert) {
         const context = {
             allowed_company_ids: [15],
-            default_stage_id: 5,
-            search_default_stage_id: 5,
             tz: "bx",
             lang: "FR",
             uid: 4,
@@ -361,25 +367,25 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList();
         model.dispatch("REMOVE_ODOO_LIST", { listId: "1" });
         assert.strictEqual(model.getters.getListIds().length, 0);
-        const B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error.message, `There is no list with id "1"`);
-        assert.equal(B4.evaluated.value, `#ERROR`);
+        const B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error.message, `There is no list with id "1"`);
+        assert.equal(B4.value, `#ERROR`);
     });
 
     QUnit.test("Can undo/redo a delete list", async function (assert) {
         const { model } = await createSpreadsheetWithList();
-        const value = getCell(model, "B4").evaluated.value;
+        const value = getEvaluatedCell(model, "B4").value;
         model.dispatch("REMOVE_ODOO_LIST", { listId: "1" });
         model.dispatch("REQUEST_UNDO");
         assert.strictEqual(model.getters.getListIds().length, 1);
-        let B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error, undefined);
-        assert.equal(B4.evaluated.value, value);
+        let B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error, undefined);
+        assert.equal(B4.value, value);
         model.dispatch("REQUEST_REDO");
         assert.strictEqual(model.getters.getListIds().length, 0);
-        B4 = getCell(model, "B4");
-        assert.equal(B4.evaluated.error.message, `There is no list with id "1"`);
-        assert.equal(B4.evaluated.value, `#ERROR`);
+        B4 = getEvaluatedCell(model, "B4");
+        assert.equal(B4.error.message, `There is no list with id "1"`);
+        assert.equal(B4.value, `#ERROR`);
     });
 
     QUnit.test("can edit list domain", async (assert) => {
@@ -415,25 +421,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.deepEqual(model.exportData().lists["1"].domain, [["foo", "in", [55]]]);
     });
 
-    QUnit.test("Can see record of a list in dashboard mode", async function (assert) {
-        const fakeActionService = {
-            dependencies: [],
-            start: (env) => ({
-                doAction: (params) => {
-                    assert.step(params.res_model);
-                    assert.step(params.res_id.toString());
-                },
-            }),
-        };
-        registry.category("services").add("action", fakeActionService);
-        const { model } = await createSpreadsheetWithList();
-        model.updateMode("dashboard");
-        const listId = model.getters.getListIds()[0];
-        const dataSource = model.getters.getListDataSource(listId);
-        selectCell(model, "A2");
-        assert.verifySteps(["partner", dataSource.getIdFromPosition(0).toString()]);
-    });
-
     QUnit.test(
         "Cannot see record of a list in dashboard mode if wrong list formula",
         async function (assert) {
@@ -458,6 +445,105 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             model.updateMode("dashboard");
             selectCell(model, "A2");
             assert.verifySteps([]);
+        }
+    );
+
+    QUnit.test("field matching is removed when filter is deleted", async function (assert) {
+        const { model } = await createSpreadsheetWithList();
+        await addGlobalFilter(
+            model,
+            {
+                filter: {
+                    id: "42",
+                    type: "relation",
+                    label: "test",
+                    defaultValue: [41],
+                    modelName: undefined,
+                    rangeType: undefined,
+                },
+            },
+            {
+                list: { 1: { chain: "product_id", type: "many2one" } },
+            }
+        );
+        const [filter] = model.getters.getGlobalFilters();
+        const matching = {
+            chain: "product_id",
+            type: "many2one",
+        };
+        assert.deepEqual(model.getters.getListFieldMatching("1", filter.id), matching);
+        assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), [
+            ["product_id", "in", [41]],
+        ]);
+        model.dispatch("REMOVE_GLOBAL_FILTER", {
+            id: filter.id,
+        });
+        assert.deepEqual(
+            model.getters.getListFieldMatching("1", filter.id),
+            undefined,
+            "it should have removed the pivot and its fieldMatching and datasource altogether"
+        );
+        assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), []);
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getListFieldMatching("1", filter.id), matching);
+        assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), [
+            ["product_id", "in", [41]],
+        ]);
+        model.dispatch("REQUEST_REDO");
+        assert.deepEqual(model.getters.getListFieldMatching("1", filter.id), undefined);
+        assert.deepEqual(model.getters.getListDataSource("1").getComputedDomain(), []);
+    });
+
+    QUnit.test("Preload currency of monetary field", async function (assert) {
+        assert.expect(3);
+        await createSpreadsheetWithList({
+            columns: ["pognon"],
+            mockRPC: async function (route, args, performRPC) {
+                if (args.method === "search_read" && args.model === "partner") {
+                    assert.strictEqual(args.kwargs.fields.length, 2);
+                    assert.strictEqual(args.kwargs.fields[0], "pognon");
+                    assert.strictEqual(args.kwargs.fields[1], "currency_id");
+                }
+            },
+        });
+    });
+
+    QUnit.test(
+        "Load list spreadsheet with models that cannot be accessed",
+        async function (assert) {
+            let hasAccessRights = true;
+            const { model } = await createSpreadsheetWithList({
+                mockRPC: async function (route, args) {
+                    if (
+                        args.model === "partner" &&
+                        args.method === "search_read" &&
+                        !hasAccessRights
+                    ) {
+                        const error = new RPCError();
+                        error.data = { message: "ya done!" };
+                        throw error;
+                    }
+                },
+            });
+            let headerCell;
+            let cell;
+            await waitForDataSourcesLoaded(model);
+            headerCell = getEvaluatedCell(model, "A3");
+            cell = getEvaluatedCell(model, "C3");
+
+            assert.equal(headerCell.value, 1);
+            assert.equal(cell.value, 42669);
+
+            hasAccessRights = false;
+            model.dispatch("REFRESH_ODOO_LIST", { listId: "1" });
+            await waitForDataSourcesLoaded(model);
+            headerCell = getEvaluatedCell(model, "A3");
+            cell = getEvaluatedCell(model, "C3");
+
+            assert.equal(headerCell.value, "#ERROR");
+            assert.equal(headerCell.error.message, "ya done!");
+            assert.equal(cell.value, "#ERROR");
+            assert.equal(cell.error.message, "ya done!");
         }
     );
 });

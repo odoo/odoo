@@ -1,23 +1,17 @@
-odoo.define('point_of_sale.PaymentScreenPaymentLines', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class PaymentScreenPaymentLines extends PosComponent {
-        formatLineAmount(paymentline) {
-            return this.env.pos.format_currency_no_symbol(paymentline.get_amount());
-        }
-        selectedLineClass(line) {
-            return { 'payment-terminal': line.get_payment_status() };
-        }
-        unselectedLineClass(line) {
-            return {};
-        }
+export class PaymentScreenPaymentLines extends LegacyComponent {
+    static template = "PaymentScreenPaymentLines";
+
+    formatLineAmount(paymentline) {
+        return this.env.pos.format_currency_no_symbol(paymentline.get_amount());
     }
-    PaymentScreenPaymentLines.template = 'PaymentScreenPaymentLines';
-
-    Registries.Component.add(PaymentScreenPaymentLines);
-
-    return PaymentScreenPaymentLines;
-});
+    selectedLineClass(line) {
+        return { "payment-terminal": line.get_payment_status() };
+    }
+    unselectedLineClass(line) {
+        return {};
+    }
+}

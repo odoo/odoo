@@ -183,13 +183,13 @@ function time_to_str (obj) {
 function auto_str_to_date (value) {
     try {
         return str_to_datetime(value);
-    } catch(_e) {}
+    } catch {}
     try {
         return str_to_date(value);
-    } catch(_e) {}
+    } catch {}
     try {
         return str_to_time(value);
-    } catch(_e) {}
+    } catch {}
     throw new Error(_.str.sprintf(_t("'%s' is not a correct date, datetime nor time"), value));
 }
 

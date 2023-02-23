@@ -3,7 +3,7 @@
 from datetime import date, datetime
 from pytz import utc, timezone
 
-from odoo.addons.resource.models.resource import Intervals, sum_intervals
+from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.fields import Date
 
 from .common import TestContractCommon
@@ -20,18 +20,22 @@ class TestResource(TestContractCommon):
             'name': '35h calendar',
             'attendance_ids': [
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Monday Evening', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Tuesday Evening', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Wednesday Evening', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Thursday Evening', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
                 (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
                 (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
             ],
         })
-        cls.calendar_35h._onchange_hours_per_day()  # update hours/day
 
         cls.contract_cdd = cls.env['hr.contract'].create({
             'date_start': Date.to_date('2021-09-01'),
@@ -96,7 +100,7 @@ class TestResource(TestContractCommon):
 
         start = utc.localize(datetime(2021, 9, 1, 0, 0, 0))
         end = utc.localize(datetime(2021, 11, 30, 23, 59, 59))
-        with self.assertQueryCount(14):
+        with self.assertQueryCount(15):
             work_intervals, _ = (employees_test | self.employee).resource_id._get_valid_work_intervals(start, end)
 
         self.assertEqual(len(work_intervals), 51)

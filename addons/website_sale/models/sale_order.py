@@ -104,6 +104,24 @@ class SaleOrder(models.Model):
             return abandoned_domain
         return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
+    def _cart_update_order_line(self, product_id, quantity, order_line, **kwargs):
+        self.ensure_one()
+
+        if order_line and quantity <= 0:
+            # Remove zero or negative lines
+            order_line.unlink()
+            order_line = self.env['sale.order.line']
+        elif order_line:
+            # Update existing line
+            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
+            if update_values:
+                self._update_cart_line_values(order_line, update_values)
+        elif quantity >= 0:
+            # Create new line
+            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
+            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
+        return order_line
+
     def _cart_update_pricelist(self, pricelist_id=None, update_pricelist=False):
         self.ensure_one()
 
@@ -129,7 +147,7 @@ class SaleOrder(models.Model):
             raise UserError(_('It is forbidden to modify a sales order which is not in draft status.'))
 
         product = self.env['product.product'].browse(product_id).exists()
-        if not product or not product._is_add_to_cart_allowed():
+        if add_qty and (not product or not product._is_add_to_cart_allowed()):
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
         if product.lst_price == 0 and product.website_id.prevent_zero_price_sale:
@@ -173,19 +191,7 @@ class SaleOrder(models.Model):
             # the requested quantity update.
             warning = ''
 
-        if order_line and quantity <= 0:
-            # Remove zero or negative lines
-            order_line.unlink()
-            order_line = self.env['sale.order.line']
-        elif order_line:
-            # Update existing line
-            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
-            if update_values:
-                self._update_cart_line_values(order_line, update_values)
-        elif quantity >= 0:
-            # Create new line
-            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
-            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
+        order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
 
         return {
             'line_id': order_line.id,
@@ -346,12 +352,10 @@ class SaleOrder(models.Model):
             'context': {
                 'default_composition_mode': 'mass_mail' if len(self.ids) > 1 else 'comment',
                 'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
-                'default_res_id': self.ids[0],
+                'default_res_ids': self.ids,
                 'default_model': 'sale.order',
-                'default_use_template': bool(template_id),
                 'default_template_id': template_id,
                 'website_sale_send_recovery_email': True,
-                'active_ids': self.ids,
             },
         }
 
@@ -380,6 +384,23 @@ class SaleOrder(models.Model):
                 template.send_mail(order.id)
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
+
+    def _message_mail_after_hook(self, mails):
+        """ After sending recovery cart emails, update orders to avoid sending
+        it again. """
+        if self.env.context.get('website_sale_send_recovery_email'):
+            self.filtered_domain([
+                ('cart_recovery_email_sent', '=', False),
+                ('is_abandoned_cart', '=', True)
+            ]).cart_recovery_email_sent = True
+        return super()._message_mail_after_hook(mails)
+
+    def _message_post_after_hook(self, message, msg_vals):
+        """ After sending recovery cart emails, update orders to avoid sending
+        it again. """
+        if self.env.context.get('website_sale_send_recovery_email'):
+            self.cart_recovery_email_sent = True
+        return super(SaleOrder, self)._message_post_after_hook(message, msg_vals)
 
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ In case of cart recovery email, update link to redirect directly
@@ -413,7 +434,7 @@ class SaleOrder(models.Model):
 
     def _is_reorder_allowed(self):
         self.ensure_one()
-        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line)
+        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line if not line.display_type)
 
     def _filter_can_send_abandoned_cart_mail(self):
         self.website_id.ensure_one()
@@ -449,9 +470,17 @@ class SaleOrder(models.Model):
         # If a potential customer creates one or more abandoned sale order and then completes a sale order before
         # the recovery email gets sent, then the email won't be sent.
 
-        return self.filtered(lambda abandoned_sale_order:
+        return self.filtered(
+            lambda abandoned_sale_order:
             abandoned_sale_order.partner_id.email
             and not any(transaction.state == 'error' for transaction in abandoned_sale_order.transaction_ids)
             and any(not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding) for line in abandoned_sale_order.order_line)
             and not has_later_sale_order.get(abandoned_sale_order.partner_id, False)
         )
+
+    def action_preview_sale_order(self):
+        action = super().action_preview_sale_order()
+        if action['url'].startswith('/'):
+            # URL should always be relative, safety check
+            action['url'] = f'/@{action["url"]}'
+        return action

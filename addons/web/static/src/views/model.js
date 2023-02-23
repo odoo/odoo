@@ -5,7 +5,7 @@ import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "@web/views/sample_server";
 import { useSetupView } from "@web/views/view_hook";
 
-const { EventBus, onWillStart, onWillUpdateProps, useComponent } = owl;
+import { EventBus, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
@@ -77,12 +77,13 @@ function getSearchParams(props) {
 }
 
 /**
- * @template {Model} T
- * @param {new (env: Object, params: Object, services: Object) => T} ModelClass
+ * @template {typeof Model} T
+ * @param {T} ModelClass
  * @param {Object} params
  * @param {Object} [options]
  * @param {Function} [options.onUpdate]
- * @returns {T}
+ * @param {boolean} [options.ignoreUseSampleModel]
+ * @returns {InstanceType<T>}
  */
 export function useModel(ModelClass, params, options = {}) {
     const component = useComponent();

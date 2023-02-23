@@ -19,7 +19,6 @@ with a single statement.
     'assets': {
         'web.assets_backend': [
             'base_iban/static/src/components/**/*',
-            'base_iban/static/src/js/*.js',
         ],
         'web.qunit_suite_tests': [
             'base_iban/static/src/tests/**/*',

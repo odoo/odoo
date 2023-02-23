@@ -2,7 +2,7 @@
 <odoo>
     <record id="partner_demo_company_id" model="res.partner">
         <field name="name">ID Company</field>
-        <field name="vat"></field>
+        <field name="vat"/>
         <field name="street">AE</field>
         <field name="city">Moncongloe</field>
         <field name="country_id" ref="base.id"/>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_id.l10n_id_chart')]"/>
+        <value eval="[]"/>
+        <value>id</value>
         <value model="res.company" eval="obj().env.ref('l10n_id.demo_company_id')"/>
     </function>
 </odoo>

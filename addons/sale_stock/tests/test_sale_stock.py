@@ -316,16 +316,15 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # deliver them
         # One of the move is for a consumable product, thus is assigned. The second one is for a
         # storable product, thus is unavailable. Hitting `button_validate` will first ask to
-        # process all the reserved quantities and, if the user chose to process, a second wizard
-        # will ask to create a backorder for the unavailable product.
+        # process all the reserved quantities and, if the user chose to process, a backorder will
+        # be created for the unavailable product.
         self.assertEqual(len(self.so.picking_ids), 1)
         res_dict = self.so.picking_ids.sorted()[0].button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         self.assertEqual(wizard._name, 'stock.immediate.transfer')
-        res_dict = wizard.process()
-        wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
-        self.assertEqual(wizard._name, 'stock.backorder.confirmation')
         wizard.process()
+        self.assertEqual(len(self.so.picking_ids), 2)
+        self.assertEqual(self.so.picking_ids[0].backorder_id.id, self.so.picking_ids[1].id)
 
         # Now, the original picking is done and there is a new one (the backorder).
         self.assertEqual(len(self.so.picking_ids), 2)
@@ -433,7 +432,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
     def test_06_uom(self):
         """ Sell a dozen of products stocked in units. Check that the quantities on the sale order
         lines as well as the delivered quantities are handled in dozen while the moves themselves
-        are handled in units. Edit the ordered quantities, check that the quantites are correctly
+        are handled in units. Edit the ordered quantities, check that the quantities are correctly
         updated on the moves. Edit the ir.config_parameter to propagate the uom of the sale order
         lines to the moves and edit a last time the ordered quantities. Deliver, check the
         quantities.
@@ -1089,7 +1088,6 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price
             })],
-            'pricelist_id': self.env.ref('product.list0').id,
         })
         so.action_confirm()
         self.assertEqual(so.state, 'done')
@@ -1291,4 +1289,27 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         so.order_line.product_uom_qty = 8
         self.assertRecordValues(so.picking_ids, [{'location_id': warehouse.lot_stock_id.id, 'location_dest_id': customer_location.id}])
+        self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)
+
+    def test_packaging_and_qty_decrease(self):
+        packaging = self.env['product.packaging'].create({
+            'name': "Super Packaging",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+        })
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_uom_qty = 10
+        so = so_form.save()
+        so.action_confirm()
+
+        self.assertEqual(so.order_line.product_packaging_id, packaging)
+
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 8
+
         self.assertEqual(so.picking_ids.move_ids.product_uom_qty, 8)

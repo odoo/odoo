@@ -1,34 +1,30 @@
-odoo.define('point_of_sale.ProductInfoButton', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const PosComponent = require('point_of_sale.PosComponent');
-    const ProductScreen = require('point_of_sale.ProductScreen');
-    const { useListener } = require("@web/core/utils/hooks");
-    const Registries = require('point_of_sale.Registries');
+import { LegacyComponent } from "@web/legacy/legacy_component";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { useListener, useService } from "@web/core/utils/hooks";
+import { ProductInfoPopup } from "@point_of_sale/js/Popups/ProductInfoPopup";
 
-    class ProductInfoButton extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('click', this.onClick);
-        }
-        async onClick() {
-            const orderline = this.env.pos.get_order().get_selected_orderline();
-            if (orderline) {
-                const product = orderline.get_product();
-                const quantity = orderline.get_quantity();
-                const info = await this.env.pos.getProductInfo(product, quantity);
-                this.showPopup('ProductInfoPopup', { info: info , product: product });
-            }
+export class ProductInfoButton extends LegacyComponent {
+    static template = "ProductInfoButton";
+
+    setup() {
+        super.setup();
+        useListener("click", this.onClick);
+        this.popup = useService("popup");
+    }
+    async onClick() {
+        const orderline = this.env.pos.get_order().get_selected_orderline();
+        if (orderline) {
+            const product = orderline.get_product();
+            const quantity = orderline.get_quantity();
+            const info = await this.env.pos.getProductInfo(product, quantity);
+            this.popup.add(ProductInfoPopup, { info: info, product: product });
         }
     }
-    ProductInfoButton.template = 'ProductInfoButton';
+}
 
-    ProductScreen.addControlButton({
-        component: ProductInfoButton,
-        position: ['before', 'SetFiscalPositionButton'],
-    });
-
-    Registries.Component.add(ProductInfoButton);
-
-    return ProductInfoButton;
+ProductScreen.addControlButton({
+    component: ProductInfoButton,
+    position: ["before", "SetFiscalPositionButton"],
 });

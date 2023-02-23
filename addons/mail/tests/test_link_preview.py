@@ -74,17 +74,19 @@ class TestLinkPreview(MailCommon):
             self.assertBusNotifications(
                 [(self.cr.dbname, 'mail.channel', self.public_channel.id)],
                 message_items=[{
-                    'type': 'mail.link.preview/insert',
-                    'payload': [{
-                        'id': link_preview.id,
-                        'message': {'id': message.id},
-                        'image_mimetype': False,
-                        'og_description': 'Test description',
-                        'og_image': False,
-                        'og_mimetype': False,
-                        'og_title': 'Test title',
-                        'og_type': False,
-                        'source_url': 'https://thisdomainedoentexist.nothing',
-                    } for link_preview in message.link_preview_ids]
+                    'type': 'mail.record/insert',
+                    'payload': {
+                        'LinkPreview': [{
+                            'id': link_preview.id,
+                            'message': {'id': message.id},
+                            'image_mimetype': False,
+                            'og_description': 'Test description',
+                            'og_image': False,
+                            'og_mimetype': False,
+                            'og_title': 'Test title',
+                            'og_type': False,
+                            'source_url': 'https://thisdomainedoentexist.nothing',
+                        }] for link_preview in message.link_preview_ids
+                    }
                 }]
             )

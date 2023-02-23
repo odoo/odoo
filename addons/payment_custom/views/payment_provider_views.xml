@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Custom Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <field name="code" invisible="1" position="after">
+                <field name="custom_mode" invisible="1"/>
+            </field>
+            <field name="capture_manually" position="after">
+                <field name="qr_code" attrs="{'invisible': [('code', '!=', 'custom')]}" />
+            </field>
+            <group name="payment_followup" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('code', '=', 'custom')]}
+                </attribute>
+            </group>
+            <field name="pending_msg" position="after">
+                <div class="o_row" colspan="2"
+                     attrs="{'invisible': [('custom_mode', '!=', 'wire_transfer')]}">
+                    <button string=" Reload Pending Message"
+                            type="object"
+                            name="action_recompute_pending_msg"
+                            class="oe_link ms-0 ps-0"
+                            icon="fa-refresh"
+                            />
+              </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -25,7 +25,7 @@
                     <field name="create_date" string="Session Date"/>
                     <field name="name" string="Attendees"/>
                     <field name="message_ids" string="# Messages"/>
-                    <field name="rating_last_image" string="Rating" widget="image" options='{"size": [20, 20]}'/>
+                    <field name="rating_last_image" string="Rating" widget="image" options='{"size": [20, 20]}' class="bg-view"/>
                 </tree>
             </field>
         </record>
@@ -37,7 +37,7 @@
                 <form string="Session Form" create="false" edit="false">
                     <sheet>
                         <div style="width:50%" class="float-end">
-                            <field name="rating_last_image" widget="image" class="float-end" readonly="1" nolabel="1"/>
+                            <field name="rating_last_image" widget="image" class="float-end bg-view" readonly="1" nolabel="1"/>
                             <field name="rating_last_feedback" nolabel="1"/>
                         </div>
                         <div style="width:50%" class="float-start">
@@ -48,13 +48,13 @@
                         </div>
 
                         <group string="History" class="o_history_container">
-                            <div class="o_history_kanban_container">
+                            <div class="o_history_kanban_container w-100 p-3" colspan="2">
                                 <div class="o_history_kanban_sub_container">
                                     <field name="message_ids" mode="kanban">
                                         <kanban default_order="create_date DESC">
                                             <field name="author_id"/>
                                             <field name="body"/>
-                                            <field name="create_date" groups="base.group_no_one"/>
+                                            <field name="create_date"/>
                                             <field name="id"/>
                                             <field name="author_avatar"/>
                                             <templates>

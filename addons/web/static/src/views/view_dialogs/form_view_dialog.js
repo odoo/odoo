@@ -2,11 +2,9 @@
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef } from "@web/core/utils/hooks";
-import { LegacyFormViewInDialogError, View } from "@web/views/view";
-import { FormViewDialog as LegacyFormViewDialog } from "web.view_dialogs";
-import { standaloneAdapter } from "web.OwlCompatibility";
+import { View } from "@web/views/view";
 
-const { Component, onError, onMounted, onWillDestroy, useState } = owl;
+import { Component, onMounted } from "@odoo/owl";
 
 export class FormViewDialog extends Component {
     setup() {
@@ -30,7 +28,10 @@ export class FormViewDialog extends Component {
             viewId: this.props.viewId || false,
             preventCreate: this.props.preventCreate,
             preventEdit: this.props.preventEdit,
-            discardRecord: () => {
+            discardRecord: async () => {
+                if (this.props.onRecordDiscarded) {
+                    await this.props.onRecordDiscarded();
+                }
                 this.props.close();
             },
             saveRecord: async (record, { saveAndNew }) => {
@@ -51,12 +52,15 @@ export class FormViewDialog extends Component {
                 }
             },
         };
+        if (this.props.removeRecord) {
+            this.viewProps.removeRecord = async () => {
+                await this.props.removeRecord();
+                this.props.close();
+            };
+        }
 
         onMounted(() => {
-            if (
-                !this.state.error &&
-                this.modalRef.el.querySelector(".modal-footer").childElementCount > 1
-            ) {
+            if (this.modalRef.el.querySelector(".modal-footer").childElementCount > 1) {
                 const defaultButton = this.modalRef.el.querySelector(
                     ".modal-footer button.o-default-button"
                 );
@@ -64,39 +68,6 @@ export class FormViewDialog extends Component {
                     defaultButton.classList.add("d-none");
                 }
             }
-        });
-
-        // FIXME: If the form view to instantiate is a js_class that hasn't been converted yet,
-        // we can't use the new FormViewDialog, as it would instantiate the legacy form view. As
-        // a consequence, the control panel buttons would not be moved to the footer. In this case,
-        // View triggers an error that we catch here, and we spawn a legacy FormViewDialog instead.
-        this.state = useState({ error: null });
-        this.dialogClose = [];
-        onError((e) => {
-            if (e.cause instanceof LegacyFormViewInDialogError) {
-                this.state.error = e.cause;
-                const adapterParent = standaloneAdapter({ Component });
-                const dialog = new LegacyFormViewDialog(adapterParent, {
-                    res_id: this.props.resId,
-                    res_model: this.props.resModel,
-                    view_id: this.props.viewId,
-                    context: this.props.context || {},
-                    title: this.props.title,
-                    disable_multiple_selection: true,
-                    on_saved: async (record) => {
-                        record.resId = record.res_id || false;
-                        await this.props.onRecordSaved(record);
-                        this.props.close();
-                    },
-                });
-                dialog.open();
-                this.dialogClose.push(() => dialog.close());
-                return;
-            }
-            throw e;
-        });
-        onWillDestroy(() => {
-            this.dialogClose.forEach((close) => close());
         });
     }
 }
@@ -112,6 +83,8 @@ FormViewDialog.props = {
         validate: (m) => ["edit", "readonly"].includes(m),
     },
     onRecordSaved: { type: Function, optional: true },
+    onRecordDiscarded: { type: Function, optional: true },
+    removeRecord: { type: Function, optional: true },
     resId: { type: [Number, Boolean], optional: true },
     title: { type: String, optional: true },
     viewId: { type: [Number, Boolean], optional: true },

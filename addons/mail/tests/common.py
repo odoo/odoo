@@ -18,8 +18,10 @@ from odoo.addons.bus.models.bus import ImBus, json_dump
 from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
+from odoo.addons.mail.models.res_users import Users
 from odoo.tests import common, new_test_user
-from odoo.tools import formataddr, pycompat
+from odoo.tools import formataddr, mute_logger, pycompat
+from odoo.tools.translate import code_translations
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'mail_create_nosubscribe': True,
@@ -68,16 +70,12 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         with self.mock_smtplib_connection(), \
              patch.object(IrMailServer, 'build_email', autospec=True, wraps=IrMailServer, side_effect=_ir_mail_server_build_email) as build_email_mocked, \
              patch.object(IrMailServer, 'send_email', autospec=True, wraps=IrMailServer, side_effect=send_email_origin) as send_email_mocked, \
-             patch.object(MailMail, 'create', autospec=True, wraps=MailMail, side_effect=_mail_mail_create), \
+             patch.object(MailMail, 'create', autospec=True, wraps=MailMail, side_effect=_mail_mail_create) as mail_mail_create_mocked, \
              patch.object(MailMail, 'unlink', autospec=True, wraps=MailMail, side_effect=_mail_mail_unlink):
             self.build_email_mocked = build_email_mocked
             self.send_email_mocked = send_email_mocked
+            self.mail_mail_create_mocked = mail_mail_create_mocked
             yield
-
-        if mail_unlink_sent:
-            # Remove all the <mail.mail> marked as to_delete to simulate the CRON
-            # Make tests easier and keep backward compatibility before this patch
-            self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
 
     def _init_mail_mock(self):
         self._mails = []
@@ -141,7 +139,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                            return_path=return_path, extra=extra,
                            email_from=email_from, msg_id=msg_id,
                            **kwargs)
-        self.env['mail.thread'].message_process(model, mail)
+        # In real use case, fetched mail processing is executed with administrative right.
+        self.env['mail.thread'].sudo().message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
     def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):
@@ -327,18 +326,19 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     # GATEWAY ASSERTS
     # ------------------------------------------------------------
 
-    def assertMailMail(self, recipients, status,
-                       mail_message=None, author=None,
-                       content=None, fields_values=None, email_values=None):
-        """ Assert mail.mail records are created and maybe sent as emails. Allow
+    def _assertMailMail(self, mail, recipients_list,
+                        status, author=None,
+                        content=None, fields_values=None, email_values=None):
+        """ Assert mail.mail record values and maybe related emails. Allow
         asserting their content. Records to check are the one generated when
-        using mock (mail.mail and outgoing emails). This method takes partners
-        as source of record fetch and assert.
+        using mock (mail.mail and outgoing emails).
 
-        :param recipients: a ``res.partner`` recordset. See ``_find_mail_mail_wpartners``;
+        :param mail: a ``mail.mail`` record;
+        :param recipients_list: an ``res.partner`` recordset or a list of
+          emails (both are supported, see ``_find_mail_mail_wpartners`` and
+          ``_find_mail_mail_wemail``);
         :param status: mail.mail state used to filter mails. If ``sent`` this method
           also check that emails have been sent trough gateway;
-        :param mail_message: see ``_find_mail_mail_wpartners``;
         :param author: see ``_find_mail_mail_wpartners``;
         :param content: if given, check it is contained within mail html body;
         :param fields_values: if given, should be a dictionary of field names /
@@ -348,52 +348,89 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
           allowing to check sent email additional values (if any).
           See ``assertSentEmail``;
         """
+        self.assertTrue(bool(mail))
+        if content:
+            self.assertIn(content, mail.body_html)
+        for fname, fvalue in (fields_values or {}).items():
+            with self.subTest(fname=fname, fvalue=fvalue):
+                self.assertEqual(
+                    mail[fname], fvalue,
+                    'Mail: expected %s for %s, got %s' % (fvalue, fname, mail[fname])
+                )
+        if status == 'sent':
+            for recipient in recipients_list:
+                with self.subTest(recipient=recipient):
+                    self.assertSentEmail(
+                        email_values['email_from'] if email_values and email_values.get('email_from') else author,
+                        [recipient],
+                        **(email_values or {})
+                    )
+
+    def assertMailMail(self, recipients, status,
+                       mail_message=None, author=None,
+                       content=None, fields_values=None, email_values=None):
+        """ Assert mail.mail records are created and maybe sent as emails. This
+        method takes partners as source to find mails and check their content.
+        See '_assertMailMail' for more details.
+
+        :param recipients: a ``res.partner`` recordset. See
+          ``_find_mail_mail_wpartners``;
+        :param mail_message: used to find the related email;
+
+        See '_assertMailMail' for more details about other parameters.
+        """
         found_mail = self._find_mail_mail_wpartners(recipients, status, mail_message=mail_message, author=author)
         self.assertTrue(bool(found_mail))
-        if content:
-            self.assertIn(content, found_mail.body_html)
-        for fname, fvalue in (fields_values or {}).items():
-            self.assertEqual(
-                found_mail[fname], fvalue,
-                'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
-        if status == 'sent':
-            for recipient in recipients:
-                self.assertSentEmail(email_values['email_from'] if email_values and email_values.get('email_from') else author, [recipient], **(email_values or {}))
+        self._assertMailMail(
+            found_mail, recipients,
+            status, author=author,
+            content=content, fields_values=fields_values, email_values=email_values,
+        )
 
     def assertMailMailWEmails(self, emails, status,
                               mail_message=None, author=None,
                               content=None, fields_values=None, email_values=None):
-        """ Assert mail.mail records are created and maybe sent as emails. Allow
-        asserting their content. Records to check are the one generated when
-        using mock (mail.mail and outgoing emails). This method takes emails
-        as source of record fetch and assert.
+        """ Assert mail.mail records are created and maybe sent as emails. This
+        method takes emails as source to find mails and check their content.
+        See '_assertMailMail' for more details.
 
         :param emails: a list of emails. See ``_find_mail_mail_wemail``;
-        :param status: mail.mail state used to filter mails. If ``sent`` this method
-          also check that emails have been sent trough gateway;
-        :param mail_message: see ``_find_mail_mail_wemail``;
-        :param author: see ``_find_mail_mail_wemail``;;
-        :param content: if given, check it is contained within mail html body;
-        :param fields_values: if given, should be a dictionary of field names /
-          values allowing to check ``mail.mail`` additional values (subject,
-          reply_to, ...);
-        :param email_values: if given, should be a dictionary of keys / values
-          allowing to check sent email additional values (if any).
-          See ``assertSentEmail``;
+        :param mail_message: used to find the related email;
+
+        See '_assertMailMail' for more details about other parameters.
         """
         for email_to in emails:
             found_mail = self._find_mail_mail_wemail(email_to, status, mail_message=mail_message, author=author)
-            if content:
-                self.assertIn(content, found_mail.body_html)
-            for fname, fvalue in (fields_values or {}).items():
-                self.assertEqual(
-                    found_mail[fname], fvalue,
-                    'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
-        if status == 'sent':
-            for email_to in emails:
-                self.assertSentEmail(email_values['email_from'] if email_values and email_values.get('email_from') else author, [email_to], **(email_values or {}))
+            self.assertTrue(bool(found_mail))
+            self._assertMailMail(
+                found_mail, [email_to],
+                status, author=author,
+                content=content, fields_values=fields_values, email_values=email_values,
+            )
+
+    def assertMailMailWRecord(self, record, recipients, status,
+                              mail_message=None, author=None,
+                              content=None, fields_values=None, email_values=None):
+        """ Assert mail.mail records are created and maybe sent as emails.  This
+        method takes a record as source to find mails and check their content
+        using model / res_id. See '_assertMailMail' for more details.
+
+        :param record: a record used to find emails sent related on it.
+          See ``_find_mail_mail_wrecord``;
+        :param mail_message: used to find the related email;
+
+        See '_assertMailMail' for more details about other parameters.
+        """
+        found_mail = self._find_mail_mail_wrecord(record, mail_message=mail_message, author=author)
+        self.assertTrue(bool(found_mail))
+        self._assertMailMail(
+            found_mail, recipients,
+            status, author=author,
+            content=content, fields_values=fields_values, email_values=email_values,
+        )
 
     def assertMailMailWId(self, mail_id, status,
+                          author=None,
                           content=None, fields_values=None):
         """ Assert mail.mail records are created and maybe sent as emails. Allow
         asserting their content. Records to check are the one generated when
@@ -401,32 +438,27 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         as source of record fetch and assert.
 
         :param mail_id: a ``mail.mail`` DB ID. See ``_find_mail_mail_wid``;
-        :param status: mail.mail state to check upon found mail;
-        :param content: if given, check it is contained within mail html body;
-        :param fields_values: if given, should be a dictionary of field names /
-          values allowing to check ``mail.mail`` additional values (subject,
-          reply_to, ...);
+
+        For other parameters, see ``_assertMailMail``.
         """
         found_mail = self._find_mail_mail_wid(mail_id)
         self.assertTrue(bool(found_mail))
-        if status:
-            self.assertEqual(found_mail.state, status)
-        if content:
-            self.assertIn(content, found_mail.body_html)
-        for fname, fvalue in (fields_values or {}).items():
-            self.assertEqual(
-                found_mail[fname], fvalue,
-                'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
+        self._assertMailMail(
+            found_mail, [],  # generally used when recipients are Falsy
+            status, author=author,
+            content=content, fields_values=fields_values,
+        )
 
     def assertMessageFields(self, message, fields_values):
         """ Just a quick helper to check a mail.message content by giving directly
         a dict for fields. Allows to hide a lot of assertEqual under a simple
         call with a dictionary of expected values. """
         for fname, fvalue in fields_values.items():
-            self.assertEqual(
-                message[fname], fvalue,
-                'Message: expected %s for %s, got %s' % (fvalue, fname, message[fname])
-            )
+            with self.subTest(fname=fname, fvalue=fvalue):
+                self.assertEqual(
+                    message[fname], fvalue,
+                    f'Message: expected {fvalue} for {fname}, got {message[fname]}',
+                )
 
     def assertNoMail(self, recipients, mail_message=None, author=None):
         """ Check no mail.mail and email was generated during gateway mock. """
@@ -530,7 +562,11 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         if 'attachments_info' in expected:
             attachments = sent_mail['attachments']
             for attachment_info in expected['attachments_info']:
-                attachment = next(attach for attach in attachments if attach[0] == attachment_info['name'])
+                attachment = next((attach for attach in attachments if attach[0] == attachment_info['name']), False)
+                self.assertTrue(
+                    bool(attachment),
+                    f'Attachment {attachment_info["name"]} not found in attachments',
+                )
                 if attachment_info.get('raw'):
                     self.assertEqual(attachment[1], attachment_info['raw'])
                 if attachment_info.get('type'):
@@ -870,9 +906,10 @@ class MailCase(MockEmail):
                 if not self.mail_unlink_sent:
                     self.assertMailMail(
                         partners, mail_status,
-                        author=message.author_id if message.author_id else message.email_from,
+                        author=message_info.get('fields_values', {}).get('author_id') or message.author_id or message.email_from,
                         mail_message=message,
                         email_values=email_values,
+                        fields_values=message_info.get('fields_values'),
                     )
                 else:
                     for recipient in partners:
@@ -992,11 +1029,13 @@ class MailCommon(common.TransactionCase, MailCase):
         cls._init_outgoing_gateway()
         # ensure admin configuration
         cls.user_admin = cls.env.ref('base.user_admin')
-        cls.user_admin.write({
-            'country_id': cls.env.ref('base.be').id,
-            'email': 'test.admin@test.example.com',
-            'notification_type': 'inbox',
-        })
+
+        with patch.object(Users, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
+            cls.user_admin.write({
+                'country_id': cls.env.ref('base.be').id,
+                'email': 'test.admin@test.example.com',
+                'notification_type': 'inbox',
+            })
         cls.partner_admin = cls.env.ref('base.partner_admin')
         cls.company_admin = cls.user_admin.company_id
         cls.company_admin.write({'email': 'company@example.com'})
@@ -1028,27 +1067,37 @@ class MailCommon(common.TransactionCase, MailCase):
         return cls.user_portal
 
     @classmethod
-    def _create_records_for_batch(cls, model, count, additional_values=None):
+    def _create_records_for_batch(cls, model, count, additional_values=None, prefix=''):
         additional_values = additional_values or {}
         records = cls.env[model]
         partners = cls.env['res.partner']
         country_id = cls.env.ref('base.be').id
 
         base_values = [
-            {'name': 'Test_%s' % idx,
+            {'name': f'{prefix}Test_{idx}',
              **additional_values,
             } for idx in range(count)
         ]
 
-        if 'customer_id' in cls.env[model]:
+        partner_fname = False
+        if 'partner_id' in cls.env[model]:
+            partner_fname = 'partner_id'
+        elif hasattr(cls.env[model], '_mail_get_partner_fields'):
+            partner_fnames = cls.env[model]._mail_get_partner_fields()
+            if partner_fnames:
+                partner_fname = partner_fnames[0]
+        elif 'customer_id' in cls.env[model]:
+            partner_fname = 'customer_id'
+
+        if partner_fname:
             partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
-                'name': 'Partner_%s' % idx,
-                'email': '_test_partner_%s@example.com' % idx,
+                'name': f'Partner_{idx}',
+                'email': f'{prefix}test_partner_{idx}@example.com',
                 'country_id': country_id,
                 'mobile': '047500%02d%02d' % (idx, idx)
             } for idx in range(count)])
             for values, partner in zip(base_values, partners):
-                values['customer_id'] = partner.id
+                values[partner_fname] = partner.id
 
         records = cls.env[model].with_context(**cls._test_context).create(base_values)
 
@@ -1101,9 +1150,9 @@ class MailCommon(common.TransactionCase, MailCase):
             * 'English Layout for' -> Spanish Layout para
           * model
             * description: English:    Lang Chatter Model (depends on test_record._name)
-                           translated: Spanish description
+                           translated: Spanish Model Description
           * module
-            * _('TestStuff') -> TestSpanishStuff (used as link button name in layout)
+            * _('NotificationButtonTitle') -> SpanishNotificationButtonTitle (used as link button name in layout)
             * _('View %s') -> SpanishView %s
           * template
             * body: English:    <p>EnglishBody for <t t-out="object.name"/></p> (depends on test_template.body)
@@ -1113,15 +1162,27 @@ class MailCommon(common.TransactionCase, MailCase):
         """
         # activate translations
         cls.env['res.lang']._activate_lang(lang_code)
-        cls.env.ref('base.module_base')._update_translations([lang_code])
+        with mute_logger("odoo.addons.base.models.ir_module", "odoo.tools.translate"):
+            cls.env.ref('base.module_base')._update_translations([lang_code])
+            cls.env.ref('base.module_mail')._update_translations([lang_code])
+            cls.env.ref('base.module_test_mail')._update_translations([lang_code])
+            code_translations.get_python_translations('mail', lang_code)
+            code_translations.get_python_translations('test_mail', lang_code)
 
         # Make sure Spanish translations have not been altered
         if test_record:
-            cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish description'
+            cls.env['ir.model']._get(test_record._name).with_context(lang=lang_code).name = 'Spanish Model Description'
+
+        # Translate some code strings used in mailing
+        code_translations.python_translations[('test_mail', 'es_ES')]['NotificationButtonTitle'] = 'SpanishButtonTitle'
+        cls.addClassCleanup(code_translations.python_translations[('test_mail', 'es_ES')].pop, 'NotificationButtonTitle')
+        code_translations.python_translations[('mail', 'es_ES')]['View %s'] = 'SpanishView %s'
+        cls.addClassCleanup(code_translations.python_translations[('mail', 'es_ES')].pop, 'View %s')
 
         # Prepare some translated value for template if given
-        test_template.with_context(lang=lang_code).subject = 'SpanishSubject for {{ object.name }}'
-        test_template.with_context(lang=lang_code).body_html = '<p>SpanishBody for <t t-out="object.name" /></p>'
+        if test_template:
+            test_template.with_context(lang=lang_code).subject = 'SpanishSubject for {{ object.name }}'
+            test_template.with_context(lang=lang_code).body_html = '<p>SpanishBody for <t t-out="object.name" /></p>'
 
         # create a custom layout for email notification
         if not layout_arch_db:
@@ -1166,13 +1227,10 @@ class MailCommon(common.TransactionCase, MailCase):
             }
         })
 
-    def _generate_attachments_data(self, count, res_model=None, res_id=None, attach_values=None):
+    @staticmethod
+    def _generate_attachments_data(count, res_model, res_id, attach_values=None):
         # attachment visibility depends on what they are attached to
         attach_values = attach_values or {}
-        if res_model is None:
-            res_model = self.template._name
-        if res_id is None:
-            res_id = self.template.id
         return [{
             'datas': base64.b64encode(b'AttContent_%02d' % x),
             'name': 'AttFileName_%02d.txt' % x,

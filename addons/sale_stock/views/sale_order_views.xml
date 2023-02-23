@@ -20,6 +20,7 @@
                     <attribute name="string">Delivery</attribute>
                 </xpath>
                 <xpath expr="//label[@for='commitment_date']" position="before">
+                    <field name="warehouse_id" invisible="1"/>  <!-- needed for js logic -->
                     <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1"/>
                     <field name="incoterm" options="{'no_open': True, 'no_create': True}" groups="sale_stock.group_display_incoterm"/>
                     <field name="incoterm_location" groups="sale_stock.group_display_incoterm"/>
@@ -33,7 +34,7 @@
                 <xpath expr="//div[@name='commitment_date_div']" position="replace">
                     <div class="o_row">
                         <field name="commitment_date"/>
-                        <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}">Expected: <field name="expected_date" widget="date"/></span>
+                        <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
                     </div>
                     <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
                 </xpath>
@@ -100,7 +101,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='ordered_qty']/field[@name='product_uom']" position="after">
                     <!-- below fields are used in the widget qty_at_date_widget -->
-                    <field name="product_type" invisible="1"/>
                     <field name="virtual_available_at_date" invisible="1"/>
                     <field name="qty_available_today" invisible="1"/>
                     <field name="free_qty_today" invisible="1"/>
@@ -111,11 +111,10 @@
                     <field name="qty_to_deliver" invisible="1"/>
                     <field name="is_mto" invisible="1"/>
                     <field name="display_qty_widget" invisible="1"/>
-                    <widget name="qty_at_date_widget" width="0.1"/>
+                    <widget name="qty_at_date_widget"/>
                 </xpath>
                 <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
                     <!-- below fields are used in the widget qty_at_date_widget -->
-                    <field name="product_type" invisible="1"/>
                     <field name="virtual_available_at_date" invisible="1"/>
                     <field name="qty_available_today" invisible="1"/>
                     <field name="free_qty_today" invisible="1"/>

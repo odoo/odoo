@@ -78,7 +78,6 @@
         <!-- Resource: stock.warehouse -->
         <record id="warehouse0" model="stock.warehouse">
             <field name="partner_id" ref="base.main_partner"/>
-            <field name="name">San Francisco</field>
             <field name="code">WH</field>
         </record>
 
@@ -111,6 +110,10 @@
             }, {
                 'xml_id': 'stock.picking_type_out',
                 'record': obj().env.ref('stock.warehouse0').out_type_id,
+                'noupdate': True,
+            },{
+                'xml_id': 'stock.picking_type_return',
+                'record': obj().env.ref('stock.warehouse0').return_type_id,
                 'noupdate': True,
             }]"/>
         </function>

@@ -6,7 +6,7 @@
             <div class="pos-receipt-container"/>
             <div class="screen-content">
                 <div class="top-content">
-                    <span class="button back" t-on-click="() => this.showScreen('FloorScreen')">
+                    <span class="button back" t-on-click="() => this.pos.showScreen('FloorScreen')">
                         <i class="fa fa-angle-double-left"></i>
                         <span> </span>
                         <span>Back</span>
@@ -55,9 +55,6 @@
                     </div>
                 </div>
             </div>
-            <t t-portal="'.pos .back-to-floor-portal'" position="before">
-                <BackToFloorButton mobileSearchBarIsShown="props.mobileSearchBarIsShown"/>
-            </t>
         </div>
     </t>
 

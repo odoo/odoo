@@ -641,13 +641,17 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 15)
 
     def test_change_in_past_decrease_out_1(self):
+        """ Decrease the qty_done of an outgoing stock.move.line will act like
+        an inventory adjustement and not a return. It will take the standard price
+        of the product in order to set the value and not the move's layers.
+        """
         self.product1.product_tmpl_id.categ_id.property_valuation = 'manual_periodic'
         move1 = self._make_in_move(self.product1, 20, unit_cost=10)
         move2 = self._make_out_move(self.product1, 15)
         move3 = self._make_in_move(self.product1, 20, unit_cost=15)
         move2.move_line_ids.qty_done = 5
 
-        self.assertEqual(self.product1.value_svl, 450)
+        self.assertEqual(self.product1.value_svl, 490)
         self.assertEqual(self.product1.quantity_svl, 35)
         self.assertEqual(sum(self.product1.stock_valuation_layer_ids.mapped('remaining_qty')), 35)
 
@@ -715,7 +719,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 30)
         self.assertEqual(self.product1.quantity_svl, 2)
-        self.assertAlmostEqual(self.product1.standard_price, 10)
+        self.assertAlmostEqual(self.product1.standard_price, 15)
 
     def test_return_delivery_2(self):
         self._make_in_move(self.product1, 1, unit_cost=10)
@@ -828,7 +832,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 1)
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-        self.assertEqual(self.product1.value_svl, 380)
+        self.assertEqual(self.product1.value_svl, 289.94)
         self.assertEqual(self.product1.quantity_svl, 19)
 
     def test_fifo_to_avco(self):
@@ -843,7 +847,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         move3 = self._make_out_move(self.product1, 1)
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
-        self.assertEqual(self.product1.value_svl, 380)
+        self.assertEqual(self.product1.value_svl, 289.94)
         self.assertEqual(self.product1.quantity_svl, 19)
 
     def test_avco_to_standard(self):
@@ -903,7 +907,12 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 0)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 1)
 
-        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.write({
+            'property_valuation': 'real_time',
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+        })
 
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)
@@ -985,6 +994,21 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         # An accounting entry should only be created for the emptying now that the category is manual.
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+
+    def test_return_delivery_fifo(self):
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.env['decimal.precision'].search([
+            ('name', '=', 'Product Price'),
+        ]).digits = 4
+        self.product1.standard_price = 280.8475
+
+        move1 = self._make_out_move(self.product1, 4, create_picking=True, force_assign=True)
+        move2 = self._make_return(move1, 4)
+
+        for move in [move1, move2]:
+            self.assertEqual(len(move.stock_valuation_layer_ids), 1)
+            self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, self.product1.standard_price)
+            self.assertAlmostEqual(abs(move.stock_valuation_layer_ids.value), 1123.39)
 
 @tagged('post_install', '-at_install')
 class TestAngloSaxonAccounting(AccountTestInvoicingCommon):

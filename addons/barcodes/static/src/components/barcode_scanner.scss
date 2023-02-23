@@ -1,0 +1,66 @@
+.o_barcode_mobile_container {
+    position: relative;
+    display: inline-block;
+    font-family: 'Lato', sans-serif;
+    font-size: 1.08333333rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #fff;
+
+    img, .o_mobile_barcode {
+        width: 115px;
+        height: 60px;
+    }
+
+    .o_mobile_barcode {
+        width: 100%;
+        bottom: 0;
+        position: absolute;
+        opacity: 0.75;
+        padding-top: 5px;
+
+        .o_barcode_mobile_camera {
+            margin: 5px;
+            font-size: 1em;
+        }
+
+        div {
+            font-size: 12px;
+        }
+    }
+
+    .o_barcode_laser {
+        // avoid dependencies to web file in pos
+        position: absolute;
+        top: 50%;
+        left: -15px;
+        bottom: auto;
+        right: -15px;
+
+        height: 5px;
+        background: rgba(red, 0.6);
+        box-shadow: 0 1px 10px 1px rgba(red, 0.8);
+        animation: o_barcode_scanner_intro 1s cubic-bezier(0.6, -0.28, 0.735, 0.045) 0.4s;
+    }
+
+    @keyframes o_barcode_scanner_intro {
+        25% {
+            top: 75%;
+        }
+        50% {
+            top: 0;
+        }
+        75% {
+            top: 100%;
+        }
+        100% {
+            top: 50%;
+        }
+    }
+}
+@media screen and (max-width: 576px) {
+    .o_event_barcode_bg.o_home_menu_background {
+        background: white;
+        height: 100%;
+    }
+}

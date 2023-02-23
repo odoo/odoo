@@ -3,16 +3,21 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, useState, onWillUpdateProps } = owl;
+import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 
 export class ColorField extends Component {
+    static template = "web.ColorField";
+    static props = {
+        ...standardFieldProps,
+    };
+
     setup() {
         this.state = useState({
-            color: this.props.value || "#000000",
+            color: this.props.value || "",
         });
 
         onWillUpdateProps((nextProps) => {
-            this.state.color = nextProps.value || "#000000";
+            this.state.color = nextProps.value || "";
         });
     }
 
@@ -21,11 +26,9 @@ export class ColorField extends Component {
     }
 }
 
-ColorField.template = "web.ColorField";
-ColorField.props = {
-    ...standardFieldProps,
+export const colorField = {
+    component: ColorField,
+    supportedTypes: ["char"],
 };
 
-ColorField.supportedTypes = ["char"];
-
-registry.category("fields").add("color", ColorField);
+registry.category("fields").add("color", colorField);

@@ -3,6 +3,8 @@
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
+    clickDiscard,
+    clickSave,
     editInput,
     getFixture,
     makeDeferred,
@@ -31,6 +33,7 @@ QUnit.module("Fields", (hooks) => {
                         },
                         bar: { string: "Bar", type: "boolean", default: true },
                         int_field: { string: "int_field", type: "integer" },
+                        image: { string: "Picture", type: "binary", searchable: true },
                     },
                     records: [
                         {
@@ -112,10 +115,53 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector(".o_read_mode").textContent,
+                target.querySelector(".o_edit_mode").textContent,
                 "This domain is not supported.",
                 "The widget should not crash the view, but gracefully admit its failure."
             );
+        }
+    );
+
+    QUnit.test(
+        "The domain editor should not crash the view when given a dynamic filter ( datetime )",
+        async function (assert) {
+            // dynamic filters (containing variables, such as uid, parent or today)
+            // are not handled by the domain editor, but it shouldn't crash the view
+            serverData.models.partner.records[0].foo = `[("datetime", "=", context_today())]`;
+            serverData.models.partner.fields.datetime = { string: "A date", type: "datetime" };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                    </form>`,
+            });
+
+            // The input field should display that the date is invalid
+            assert.equal(target.querySelector(".o_datepicker_input").value, "Invalid DateTime");
+
+            // Change the date in the datepicker
+            await click(target, ".o_datepicker_input");
+            // Select a date in the datepicker
+            await click(
+                document.body.querySelector(
+                    `.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]`
+                )
+            );
+            // Close the datepicker
+            await click(
+                document.body.querySelector(
+                    `.bootstrap-datetimepicker-widget a[data-action="close"]`
+                )
+            );
+            await clickDiscard(target);
+
+            // Open the datepicker again
+            await click(target, ".o_datepicker_input");
         }
     );
 
@@ -136,7 +182,6 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
         });
-        await click(target, ".o_form_button_edit");
 
         // As the domain is empty, there should be a button to add the first
         // domain part
@@ -189,11 +234,35 @@ QUnit.module("Fields", (hooks) => {
 
         // Saving the form view should show a readonly domain containing the
         // "color" field
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.ok(
             target.querySelector(".o_field_domain").textContent.includes("Color index"),
             "field selector readonly value should now contain 'Color index'"
         );
+    });
+
+    QUnit.test("using binary field in domain widget", async function (assert) {
+        assert.expect(0);
+        serverData.models.partner.records[0].foo = "[]";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        await click(target, ".o_domain_add_first_node_button");
+        await click(target, ".o_field_selector");
+        await click(document.body.querySelector(".o_field_selector_item[data-name='image']"));
     });
 
     QUnit.test("domain field is correctly reset on every view change", async function (assert) {
@@ -216,7 +285,6 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
         });
-        await click(target, ".o_form_button_edit");
 
         // As the domain is equal to [["id", "=", 1]] there should be a field
         // selector to change this
@@ -293,7 +361,6 @@ QUnit.module("Fields", (hooks) => {
                         <field name="foo" widget="domain" options="{'model': 'partner'}" />
                     </form>`,
             });
-            await click(target, ".o_form_button_edit");
 
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
@@ -312,7 +379,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("domain field: handle false domain as []", async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         serverData.models.partner.records[0].foo = false;
         serverData.models.partner.fields.bar.type = "char";
@@ -343,8 +410,6 @@ QUnit.module("Fields", (hooks) => {
             ".o_field_widget[name='foo']:not(.o_field_empty)",
             "there should be a domain field, not considered empty"
         );
-
-        await click(target, ".o_form_button_edit");
         assert.containsNone(
             target,
             ".o_field_widget[name='foo'] .text-warning",
@@ -460,13 +525,10 @@ QUnit.module("Fields", (hooks) => {
         await doAction(webClient, 1);
         assert.verifySteps(["[]"]);
 
-        await click(target, ".o_form_button_edit");
-
         assert.strictEqual(
             target.querySelector(".o_domain_show_selection_button").textContent.trim(),
             "2 record(s)"
         );
-        assert.verifySteps(["[]"]);
 
         await editInput(target, ".o_domain_debug_input", "[['id', '<', 40]]");
         // the count should not be re-computed when editing with the textarea
@@ -476,15 +538,12 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.verifySteps([]);
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.strictEqual(
             target.querySelector(".o_domain_show_selection_button").textContent.trim(),
             "1 record(s)"
         );
-        assert.verifySteps([
-            '[["id","<",40]]', // to validate the domain, before saving
-            '[["id","<",40]]', // to render in readonly once it has been saved
-        ]);
+        assert.verifySteps(['[["id","<",40]]']);
     });
 
     QUnit.test(
@@ -531,13 +590,10 @@ QUnit.module("Fields", (hooks) => {
             await doAction(webClient, 1);
             assert.verifySteps(["[]"]);
 
-            await click(target, ".o_form_button_edit");
-
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "2 record(s)"
             );
-            assert.verifySteps(["[]"]);
 
             await editInput(target, ".o_domain_debug_input", "[['abc']]");
             // the count should not be re-computed when editing with the textarea
@@ -547,7 +603,7 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.verifySteps([]);
 
-            await click(target, ".o_form_button_save");
+            await clickSave(target);
             assert.hasClass(
                 target.querySelector(".o_field_domain"),
                 "o_field_invalid",
@@ -603,8 +659,6 @@ QUnit.module("Fields", (hooks) => {
             await doAction(webClient, 1);
             assert.verifySteps(["[]"]);
 
-            await click(target, ".o_form_button_edit");
-
             assert.strictEqual(
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "2 record(s)"
@@ -616,7 +670,6 @@ QUnit.module("Fields", (hooks) => {
                 target.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "2 record(s)"
             );
-            assert.verifySteps(["[]"]);
 
             // click on the refresh button
             await click(target, ".o_refresh_count");
@@ -709,7 +762,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await doAction(webClient, 1);
-        await click(target, ".o_form_button_edit");
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
 
         rawDomain = `
@@ -720,7 +772,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_domain_debug_input", rawDomain);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
 
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
     });
 
     QUnit.test("domain field: edit through selector (dynamic content)", async function (assert) {
@@ -760,10 +812,8 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["/web/webclient/load_menus"]);
 
         await doAction(webClient, 1);
-        assert.verifySteps(["/web/action/load", "get_views", "read", "search_count", "fields_get"]);
+        assert.verifySteps(["/web/action/load", "get_views", "read", "search_count"]);
 
-        await click(target, ".o_form_button_edit");
-        assert.verifySteps(["search_count"]);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
         assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
 
@@ -775,15 +825,6 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
         assert.verifySteps([]);
 
-        // Save
-        await click(target, ".o_form_button_save");
-        assert.verifySteps(["search_count"]);
-
-        // Edit again
-        await click(target, ".o_form_button_edit");
-        assert.verifySteps(["search_count"]);
-        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
-
         // Manually input a date
         rawDomain = `[("date", ">=", "2020-09-09")]`;
         await editInput(target, ".o_datepicker_input", "09/09/2020");
@@ -791,12 +832,8 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
 
         // Save
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.verifySteps(["write", "read", "search_count"]);
-
-        // Edit again
-        await click(target, ".o_form_button_edit");
-        assert.verifySteps(["search_count"]);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
     });
 
@@ -896,5 +933,43 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".modal-footer .btn-primary");
         assert.containsOnce(target, ".o_domain_leaf");
         assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "ID = 1");
+    });
+
+    QUnit.test("invalid value in domain field with 'inDialog' options", async function (assert) {
+        serverData.models.partner.fields.display_name.default = "[]";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="display_name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
+                </form>`,
+            mockRPC: (route, args) => {
+                if (args.method === "search_count") {
+                    const domain = args.args[0];
+                    if (domain.length && domain[0][0] === "id" && domain[0][2] === "01/01/2002") {
+                        throw new Error("Invalid Domain");
+                    }
+                }
+            },
+        });
+        assert.containsNone(target, ".o_domain_leaf");
+        assert.containsNone(target, ".modal");
+        assert.containsNone(target, ".o_field_domain .text-warning");
+
+        await click(target, ".o_field_domain_dialog_button");
+        assert.containsOnce(target, ".modal");
+
+        await click(target, ".modal .o_domain_add_first_node_button");
+        await editInput(target, ".o_domain_leaf_value_input", "01/01/2002");
+        await click(target, ".modal-footer .btn-primary");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, 'ID = "01/01/2002"');
+        assert.strictEqual(
+            target.querySelector(".o_field_domain .text-warning").textContent.trim(),
+            "Invalid domain"
+        );
     });
 });

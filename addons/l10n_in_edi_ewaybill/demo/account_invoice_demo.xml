@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="account.journal" name="write">
+        <value model="account.journal"
+               eval="obj().search([
+                    ('type', '=', 'sale'),
+                    ('company_id', '=', ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill'))], limit=1).ids"/>
+        <value eval="{'edi_format_ids': [(6,0,[ref('edi_in_ewaybill_json_1_03')])]}"/>
+    </function>
+    <!-- Demo of B2B (business-to-business) Taxable supplies made to other registered person.-->
+    <record id="demo_invoice_b2b_ewaybill" model="account.move">
+        <field name="move_type">out_invoice</field>
+        <field name="partner_id" ref="res_partner_registered_customer_ewaybill"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="l10n_in_gst_treatment">regular</field>
+        <field name="l10n_in_type_id" ref="type_tax_invoice_sub_type_supply"/>
+        <field name="l10n_in_distance">20</field>
+        <field name="l10n_in_mode">1</field>
+        <field name="l10n_in_vehicle_no">GJ11OD1234</field>
+        <field name="l10n_in_vehicle_type">R</field>
+        <field name="journal_id" model="account.journal"
+               eval="obj().search([
+                    ('type', '=', 'sale'),
+                    ('company_id', '=', ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill'))], limit=1).id"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.product_product_8'),
+                'quantity': 2,
+                'price_unit': 40000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('company_id', '=', ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill')),
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 28),
+                    ('tax_group_id', '=', ref('account.%s_igst_group' % ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill')))], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_9'),
+                'quantity': 3,
+                'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('company_id', '=', ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill')),
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', ref('account.%s_igst_group' % ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill')))], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_10'),
+                'quantity': 4,
+                'price_unit': 300.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                        ('company_id', '=', ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill')),
+                        ('type_tax_use', '=', 'sale'),
+                    '|',
+                        '&amp;',
+                        ('amount', '=', 18),
+                        ('tax_group_id', '=', ref('account.%s_igst_group' % ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill'))),
+                        '&amp;',
+                        ('tax_group_id', '=', ref('account.%s_cess_group' % ref('l10n_in_edi_ewaybill.demo_company_in_ewaybill'))),
+                        ('children_tax_ids.amount','=', 5)
+                    ], limit=2).ids)]
+            }),
+        ]"/>
+    </record>
+</odoo>

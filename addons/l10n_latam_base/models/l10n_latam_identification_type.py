@@ -11,7 +11,7 @@ class L10nLatamIdentificationType(models.Model):
 
     sequence = fields.Integer(default=10)
     name = fields.Char(translate=True, required=True,)
-    description = fields.Char()
+    description = fields.Char(translate=True,)
     active = fields.Boolean(default=True)
     is_vat = fields.Boolean()
     country_id = fields.Many2one('res.country')

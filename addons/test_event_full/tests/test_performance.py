@@ -52,7 +52,7 @@ class TestEventPerformance(EventPerformanceCase):
         batch_size = 20
 
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=5368):  # tef 4944 / com 4943
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=3377):  # tef 3275 / com 3274
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -60,7 +60,7 @@ class TestEventPerformance(EventPerformanceCase):
                     )
                 for x in range(batch_size)
             ]
-            self.env['event.event'].create(event_values)
+            self.env['event.event'].with_context(lang='en_US').create(event_values)
 
     @users('event_user')
     @warmup
@@ -70,7 +70,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=439):  # 439
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=432):  # tef 432
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -89,7 +89,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=5480):  # tef 5056 / com 5055
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=3481):  # tef 3379 / com 3378
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -97,7 +97,7 @@ class TestEventPerformance(EventPerformanceCase):
                     )
                 for x in range(batch_size)
             ]
-            self.env['event.event'].create(event_values)
+            self.env['event.event'].with_context(lang='en_US').create(event_values)
 
 
     @users('event_user')
@@ -107,7 +107,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, no website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=206):  # tef 160 / com 160
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=108):  # tef 103 / com 103
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">
@@ -128,7 +128,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=666):  # tef 565 / com 566
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=447):  # tef 379 / com 427
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">
@@ -150,7 +150,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # type and website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=692):  # tef 593 / com 596
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=470):  # tef 402 / com 450
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             # Require for `website_menu` to be visible
             # <div name="event_menu_configuration" groups="base.group_no_one">
@@ -168,7 +168,7 @@ class TestEventPerformance(EventPerformanceCase):
     def test_event_create_single_notype(self):
         """ Test a single event creation """
         # simple without type involved
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=31):  # 31
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=31):  # tef 31
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
@@ -181,13 +181,13 @@ class TestEventPerformance(EventPerformanceCase):
     def test_event_create_single_notype_website(self):
         """ Test a single event creation """
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=352):  # tef 327 / com 326
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=242):  # tef 228 / com 234
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
                 website_menu=True
             )
-            self.env['event.event'].create([event_values])
+            self.env['event.event'].with_context(lang='en_US').create([event_values])
 
     @users('event_user')
     @warmup
@@ -196,7 +196,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=58):  # 58
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=52):  # tef 52
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
@@ -212,13 +212,13 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=387):  # tef 362 / com 361
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=271):  # tef 256 / com 262
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
                 event_type_id=event_type.id,
             )
-            self.env['event.event'].create([event_values])
+            self.env['event.event'].with_context(lang='en_US').create([event_values])
 
 
 @tagged('event_performance', 'registration_performance', 'post_install', '-at_install')
@@ -234,7 +234,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=684):  # tef 639 / com 681
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=638):  # tef 633 / com 636
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = [
                 dict(reg_data,
@@ -258,7 +258,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=210):  # tef 167 / com runbot 206
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=165):  # tef 164 / com runbot 163
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = [
                 dict(reg_data,
@@ -280,7 +280,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         form like) """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=698):  # tef 652 - com 694
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=651):  # tef 647 - com 649
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = [
                 dict(reg_data,
@@ -301,7 +301,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """ Test a single registration creation using Form """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=202):  # tef 185 / com 189
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=145):  # tef 140 / com 143
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.registration']) as reg_form:
                 reg_form.event_id = event
@@ -317,7 +317,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """ Test a single registration creation using Form """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=209):  # tef 190 / com 194
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=146):  # tef 141 / com 144
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.registration']) as reg_form:
                 reg_form.event_id = event
@@ -330,7 +330,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """ Test a single registration creation using Form """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=124):  # tef 107 / com 109
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=63):  # tef 61 / com 61
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.registration'].with_context(event_lead_rule_skip=True)) as reg_form:
                 reg_form.event_id = event
@@ -344,7 +344,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         event = self.env['event.event'].browse(self.test_event.ids)
 
         # simple customer data
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=125):  # tef 119 / com 123
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=122):  # tef 118 / com 120
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = dict(
                 self.customer_data[0],
@@ -358,7 +358,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         event = self.env['event.event'].browse(self.test_event.ids)
 
         # partner-based customer
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=129):  # tef 122 / com 127
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=121):  # tef 117 / com 120
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = {
                 'event_id': event.id,
@@ -373,7 +373,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         event = self.env['event.event'].browse(self.test_event.ids)
 
         # partner-based customer
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=46):  # tef 41 / com 43
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=39):  # tef 38 / com 38
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = {
                 'event_id': event.id,
@@ -388,7 +388,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         event = self.env['event.event'].browse(self.test_event.ids)
 
         # website customer data
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=135):  # tef 126 / com 130
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=126):  # tef 122 / com 124
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = dict(
                 self.website_customer_data[0],
@@ -437,7 +437,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate('user_eventmanager', 'user_eventmanager')
-            with self.assertQueryCount(default=36):  # tef 35
+            with self.assertQueryCount(default=35):  # tef 34
                 self._test_url_open('/event/%i' % self.test_event.id)
 
     @warmup
@@ -445,7 +445,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate(None, None)
-            with self.assertQueryCount(default=27):
+            with self.assertQueryCount(default=25):
                 self._test_url_open('/event/%i' % self.test_event.id)
 
     @warmup
@@ -453,7 +453,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate('user_eventmanager', 'user_eventmanager')
-            with self.assertQueryCount(default=39):  # tef 38
+            with self.assertQueryCount(default=43):  # tef 42
                 self._test_url_open('/event')
 
     @warmup
@@ -461,7 +461,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         # website customer data
         with freeze_time(self.reference_now):
             self.authenticate(None, None)
-            with self.assertQueryCount(default=28):
+            with self.assertQueryCount(default=39):
                 self._test_url_open('/event')
 
     # @warmup

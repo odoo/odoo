@@ -1,14 +1,17 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
+import { extractAttributes, XMLParser } from "@web/core/utils/xml";
+import { Field } from "@web/views/fields/field";
 import {
     addFieldDependencies,
     archParseBoolean,
     getActiveActions,
+    processButton,
     stringToOrderBy,
 } from "@web/views/utils";
-import { extractAttributes, XMLParser } from "@web/core/utils/xml";
-import { Field } from "@web/views/fields/field";
-import { Widget } from "@web/views/widgets/widget";
+
+const viewWidgetRegistry = registry.category("view_widgets");
 
 /**
  * NOTE ON 't-name="kanban-box"':
@@ -25,6 +28,7 @@ import { Widget } from "@web/views/widgets/widget";
  */
 
 export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
+export const KANBAN_MENU_ATTRIBUTE = "kanban-menu";
 export const KANBAN_TOOLTIP_ATTRIBUTE = "kanban-tooltip";
 
 export class KanbanArchParser extends XMLParser {
@@ -35,14 +39,15 @@ export class KanbanArchParser extends XMLParser {
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
+        const countLimit = xmlDoc.getAttribute("count_limit");
         const recordsDraggable = archParseBoolean(xmlDoc.getAttribute("records_draggable"), true);
         const groupsDraggable = archParseBoolean(xmlDoc.getAttribute("groups_draggable"), true);
         const activeActions = {
             ...getActiveActions(xmlDoc),
-            groupArchive: archParseBoolean(xmlDoc.getAttribute("archivable"), true),
-            groupCreate: archParseBoolean(xmlDoc.getAttribute("group_create"), true),
-            groupDelete: archParseBoolean(xmlDoc.getAttribute("group_delete"), true),
-            groupEdit: archParseBoolean(xmlDoc.getAttribute("group_edit"), true),
+            archiveGroup: archParseBoolean(xmlDoc.getAttribute("archivable"), true),
+            createGroup: archParseBoolean(xmlDoc.getAttribute("group_create"), true),
+            deleteGroup: archParseBoolean(xmlDoc.getAttribute("group_delete"), true),
+            editGroup: archParseBoolean(xmlDoc.getAttribute("group_edit"), true),
             quickCreate: archParseBoolean(xmlDoc.getAttribute("quick_create"), true),
         };
         const onCreate = xmlDoc.getAttribute("on_create");
@@ -56,11 +61,41 @@ export class KanbanArchParser extends XMLParser {
         const openAction = action && type ? { action, type } : null;
         const templateDocs = {};
         const activeFields = {};
+        let headerButtons = [];
+        const creates = [];
+        let buttonId = 0;
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
             if (node.hasAttribute("t-name")) {
                 templateDocs[node.getAttribute("t-name")] = node;
                 return;
+            }
+            if (node.tagName === "header") {
+                headerButtons = [...node.children]
+                    .filter((node) => node.tagName === "button")
+                    .map((node) => ({
+                        ...processButton(node),
+                        type: "button",
+                        id: buttonId++,
+                    }))
+                    .filter((button) => button.modifiers.invisible !== true);
+                return false;
+            } else if (node.tagName === "control") {
+                for (const childNode of node.children) {
+                    if (childNode.tagName === "button") {
+                        creates.push({
+                            type: "button",
+                            ...processButton(childNode),
+                        });
+                    } else if (childNode.tagName === "create") {
+                        creates.push({
+                            type: "create",
+                            context: childNode.getAttribute("context"),
+                            string: childNode.getAttribute("string"),
+                        });
+                    }
+                }
+                return false;
             }
             // Case: field node
             if (node.tagName === "field") {
@@ -87,23 +122,19 @@ export class KanbanArchParser extends XMLParser {
                 addFieldDependencies(
                     activeFields,
                     models[modelName],
-                    fieldInfo.FieldComponent.fieldDependencies
+                    fieldInfo.field.fieldDependencies
                 );
             }
             if (node.tagName === "widget") {
-                const { WidgetComponent } = Widget.parseWidgetNode(node);
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    WidgetComponent.fieldDependencies
-                );
+                const { fieldDependencies } = viewWidgetRegistry.get(node.getAttribute("name"));
+                addFieldDependencies(activeFields, models[modelName], fieldDependencies);
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.
             if (node.tagName === "img") {
                 const attSrc = node.getAttribute("t-att-src");
-                if (attSrc && /\bkanban_image\b/.test(attSrc) && !fieldNodes.__last_update) {
-                    fieldNodes.__last_update = { type: "datetime" };
+                if (attSrc && /\bkanban_image\b/.test(attSrc) && !fieldNodes.write_date) {
+                    fieldNodes.write_date = { type: "datetime" };
                 }
             }
         });
@@ -141,9 +172,11 @@ export class KanbanArchParser extends XMLParser {
             activeActions,
             activeFields,
             className,
+            creates,
             defaultGroupBy,
             fieldNodes,
             handleField,
+            headerButtons,
             colorField,
             defaultOrder,
             onCreate,
@@ -152,6 +185,7 @@ export class KanbanArchParser extends XMLParser {
             recordsDraggable,
             groupsDraggable,
             limit: limit && parseInt(limit, 10),
+            countLimit: countLimit && parseInt(countLimit, 10),
             progressAttributes,
             cardColorField,
             templateDocs,

@@ -1,47 +1,43 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
+import { attr, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'TestAddress',
+Model({
+    name: "TestAddress",
     fields: {
         id: attr({
             identifying: true,
         }),
         addressInfo: attr(),
-        contact: one('TestContact', {
-            inverse: 'address',
+        contact: one("TestContact", {
+            inverse: "address",
         }),
     },
 });
 
-registerModel({
-    name: 'TestContact',
+Model({
+    name: "TestContact",
     fields: {
         id: attr({
             identifying: true,
         }),
-        address: one('TestAddress', {
-            inverse: 'contact',
+        address: one("TestAddress", {
+            inverse: "contact",
         }),
-        favorite: one('TestHobby', {
-            default: { description: 'football' },
+        favorite: one("TestHobby", {
+            default: { description: "football" },
         }),
-        hobbies: many('TestHobby', {
-            default: [
-                { description: 'hiking' },
-                { description: 'fishing' },
-            ],
+        hobbies: many("TestHobby", {
+            default: [{ description: "hiking" }, { description: "fishing" }],
         }),
-        tasks: many('TestTask', {
-            inverse: 'responsible'
+        tasks: many("TestTask", {
+            inverse: "responsible",
         }),
     },
 });
 
-registerModel({
-    name: 'TestHobby',
+Model({
+    name: "TestHobby",
     fields: {
         description: attr({
             identifying: true,
@@ -49,8 +45,8 @@ registerModel({
     },
 });
 
-registerModel({
-    name: 'TestTask',
+Model({
+    name: "TestTask",
     fields: {
         id: attr({
             identifying: true,
@@ -59,8 +55,8 @@ registerModel({
         difficulty: attr({
             default: 1,
         }),
-        responsible: one('TestContact', {
-            inverse: 'tasks'
+        responsible: one("TestContact", {
+            inverse: "tasks",
         }),
     },
 });

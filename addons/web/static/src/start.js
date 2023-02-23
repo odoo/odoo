@@ -7,8 +7,9 @@ import { localization } from "@web/core/l10n/localization";
 import { session } from "@web/session";
 import { renderToString } from "./core/utils/render";
 import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
-const { App, whenReady } = owl;
+import { App, whenReady } from "@odoo/owl";
 
 /**
  * Function to start a webclient.
@@ -39,6 +40,7 @@ export async function startWebClient(Webclient) {
         env,
         templates,
         dev: env.debug,
+        warnIfNoStaticProps: true,
         translatableAttributes: ["data-tooltip"],
         translateFn: env._t,
     });
@@ -55,6 +57,9 @@ export async function startWebClient(Webclient) {
     if (env.debug) {
         classList.add("o_debug");
     }
+    if (hasTouch()) {
+        classList.add("o_touch_device");
+    }
     // delete odoo.debug; // FIXME: some legacy code rely on this
     odoo.__WOWL_DEBUG__ = { root };
     odoo.isReady = true;
@@ -62,11 +67,7 @@ export async function startWebClient(Webclient) {
     // Update Favicons
     const favicon = `/web/image/res.company/${env.services.company.currentCompany.id}/favicon`;
     const icons = document.querySelectorAll("link[rel*='icon']");
-    const msIcon = document.querySelector("meta[name='msapplication-TileImage']");
     for (const icon of icons) {
         icon.href = favicon;
-    }
-    if (msIcon) {
-        msIcon.content = favicon;
     }
 }

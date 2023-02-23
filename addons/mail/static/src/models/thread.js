@@ -1,15 +1,13 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndUnlink, link, unlink } from '@mail/model/model_field_command';
-import { cleanSearchTerm } from '@mail/utils/utils';
-import * as mailUtils from '@mail/js/utils';
+import { attr, clear, insert, insertAndUnlink, link, many, one, Model, unlink } from "@mail/model";
+import { cleanSearchTerm } from "@mail/utils/utils";
+import * as mailUtils from "@mail/js/utils";
 
-import { sprintf } from '@web/core/utils/strings';
-import { url } from '@web/core/utils/urls';
+import { sprintf } from "@web/core/utils/strings";
+import { url } from "@web/core/utils/urls";
 
-import { str_to_datetime } from 'web.time';
+import { str_to_datetime } from "web.time";
 
 const getSuggestedRecipientInfoNextTemporaryId = (function () {
     let tmpId = 0;
@@ -19,8 +17,8 @@ const getSuggestedRecipientInfoNextTemporaryId = (function () {
     };
 })();
 
-registerModel({
-    name: 'Thread',
+Model({
+    name: "Thread",
     lifecycleHooks: {
         _willDelete() {
             if (this.isTemporary) {
@@ -37,103 +35,111 @@ registerModel({
          */
         convertData(data) {
             const data2 = {};
-            if ('authorizedGroupFullName' in data) {
+            if ("authorizedGroupFullName" in data) {
                 data2.authorizedGroupFullName = data.authorizedGroupFullName;
             }
-            if ('channel' in data) {
+            if ("channel" in data) {
                 data2.channel = data.channel;
-                data2.model = 'mail.channel';
+                data2.model = "mail.channel";
             }
-            if ('defaultDisplayMode' in data) {
+            if ("defaultDisplayMode" in data) {
                 data2.defaultDisplayMode = data.defaultDisplayMode;
             }
-            if ('description' in data) {
+            if ("description" in data) {
                 data2.description = data.description;
             }
-            if ('model' in data) {
+            if ("model" in data) {
                 data2.model = data.model;
             }
-            if ('create_uid' in data) {
+            if ("create_uid" in data) {
                 data2.creator = insert({ id: data.create_uid });
             }
-            if ('group_based_subscription' in data) {
+            if ("group_based_subscription" in data) {
                 data2.group_based_subscription = data.group_based_subscription;
             }
-            if ('id' in data) {
+            if ("id" in data) {
                 data2.id = data.id;
             }
-            if ('invitedMembers' in data) {
+            if ("invitedMembers" in data) {
                 data2.invitedMembers = data.invitedMembers;
             }
-            if ('is_minimized' in data && 'state' in data) {
-                data2.serverFoldState = data.is_minimized ? data.state : 'closed';
+            if ("is_minimized" in data && "state" in data) {
+                data2.serverFoldState = data.is_minimized ? data.state : "closed";
             }
-            if ('is_pinned' in data) {
+            if ("is_pinned" in data) {
                 data2.isServerPinned = data.is_pinned;
             }
-            if ('last_interest_dt' in data && data.last_interest_dt) {
+            if ("last_interest_dt" in data && data.last_interest_dt) {
                 data2.lastInterestDateTime = str_to_datetime(data.last_interest_dt);
             }
-            if ('last_message' in data && data.last_message) {
-                const messageData = this.messaging.models['Message'].convertData({
+            if ("last_message" in data && data.last_message) {
+                const messageData = this.messaging.models["Message"].convertData({
                     id: data.last_message.id,
                     model: data2.model,
                     res_id: data2.id,
                 });
                 data2.serverLastMessage = insert(messageData);
             }
-            if ('last_message_id' in data && data.last_message_id) {
-                const messageData = this.messaging.models['Message'].convertData({
+            if ("last_message_id" in data && data.last_message_id) {
+                const messageData = this.messaging.models["Message"].convertData({
                     id: data.last_message_id,
                     model: data2.model,
                     res_id: data2.id,
                 });
                 data2.serverLastMessage = insert(messageData);
             }
-            if ('message_needaction_counter' in data) {
+            if ("message_needaction_counter" in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
             }
-            if ('name' in data) {
+            if ("name" in data) {
                 data2.name = data.name;
             }
-            if ('seen_message_id' in data) {
+            if ("seen_message_id" in data) {
                 data2.rawLastSeenByCurrentPartnerMessageId = data.seen_message_id;
             }
-            if ('uuid' in data) {
+            if ("uuid" in data) {
                 data2.uuid = data.uuid;
             }
 
             // relations
-            if ('rtc_inviting_session' in data) {
+            if ("rtc_inviting_session" in data) {
                 data2.rtcInvitingSession = insert(data.rtc_inviting_session);
             }
-            if ('rtcSessions' in data) {
+            if ("rtcSessions" in data) {
                 data2.rtcSessions = data.rtcSessions;
             }
-            if ('seen_partners_info' in data) {
+            if ("seen_partners_info" in data) {
                 if (!data.seen_partners_info) {
                     data2.partnerSeenInfos = clear();
                 } else {
                     data2.partnerSeenInfos = data.seen_partners_info.map(
                         ({ fetched_message_id, partner_id, seen_message_id }) => {
                             return {
-                                lastFetchedMessage: fetched_message_id ? insert({ id: fetched_message_id }) : clear(),
-                                lastSeenMessage: seen_message_id ? insert({ id: seen_message_id }) : clear(),
+                                lastFetchedMessage: fetched_message_id
+                                    ? insert({ id: fetched_message_id })
+                                    : clear(),
+                                lastSeenMessage: seen_message_id
+                                    ? insert({ id: seen_message_id })
+                                    : clear(),
                                 partner: { id: partner_id },
-                        };
-                    });
+                            };
+                        }
+                    );
                     if (data.id || this.id) {
-                        const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id }) => {
-                            if (fetched_message_id) {
-                                currentSet.add(fetched_message_id);
-                            }
-                            if (seen_message_id) {
-                                currentSet.add(seen_message_id);
-                            }
-                            return currentSet;
-                        }, new Set());
+                        const messageIds = data.seen_partners_info.reduce(
+                            (currentSet, { fetched_message_id, seen_message_id }) => {
+                                if (fetched_message_id) {
+                                    currentSet.add(fetched_message_id);
+                                }
+                                if (seen_message_id) {
+                                    currentSet.add(seen_message_id);
+                                }
+                                return currentSet;
+                            },
+                            new Set()
+                        );
                         if (messageIds.size > 0) {
-                            data2.messageSeenIndicators = [...messageIds].map(messageId => {
+                            data2.messageSeenIndicators = [...messageIds].map((messageId) => {
                                 return {
                                     message: { id: messageId },
                                 };
@@ -156,15 +162,15 @@ registerModel({
          */
         async createGroupChat({ default_display_mode, partners_to }) {
             const channelData = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'create_group',
+                model: "mail.channel",
+                method: "create_group",
                 kwargs: {
                     default_display_mode,
                     partners_to,
                 },
             });
-            return this.messaging.models['Thread'].insert(
-                this.messaging.models['Thread'].convertData(channelData)
+            return this.messaging.models["Thread"].insert(
+                this.messaging.models["Thread"].convertData(channelData)
             );
         },
         /**
@@ -180,15 +186,17 @@ registerModel({
         async fetchSuggestions(searchTerm, { thread } = {}) {
             const channelsData = await this.messaging.rpc(
                 {
-                    model: 'mail.channel',
-                    method: 'get_mention_suggestions',
+                    model: "mail.channel",
+                    method: "get_mention_suggestions",
                     kwargs: { search: searchTerm },
                 },
-                { shadow: true },
+                { shadow: true }
             );
-            this.messaging.models['Thread'].insert(channelsData.map(channelData =>
-                this.messaging.models['Thread'].convertData(channelData)
-            ));
+            this.messaging.models["Thread"].insert(
+                channelsData.map((channelData) =>
+                    this.messaging.models["Thread"].convertData(channelData)
+                )
+            );
         },
         /**
          * Returns a sort function to determine the order of display of threads
@@ -203,8 +211,14 @@ registerModel({
         getSuggestionSortFunction(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return (a, b) => {
-                const isAPublicChannel = a.model === 'mail.channel' && a.channel.channel_type === 'channel' && (!a.authorizedGroupFullName);
-                const isBPublicChannel = b.model === 'mail.channel' && b.channel.channel_type === 'channel' && (!b.authorizedGroupFullName);
+                const isAPublicChannel =
+                    a.model === "mail.channel" &&
+                    a.channel.channel_type === "channel" &&
+                    !a.authorizedGroupFullName;
+                const isBPublicChannel =
+                    b.model === "mail.channel" &&
+                    b.channel.channel_type === "channel" &&
+                    !b.authorizedGroupFullName;
                 if (isAPublicChannel && !isBPublicChannel) {
                     return -1;
                 }
@@ -219,12 +233,18 @@ registerModel({
                 if (!isMemberOfA && isMemberOfB) {
                     return 1;
                 }
-                const cleanedAName = cleanSearchTerm(a.name || '');
-                const cleanedBName = cleanSearchTerm(b.name || '');
-                if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
+                const cleanedAName = cleanSearchTerm(a.name || "");
+                const cleanedBName = cleanSearchTerm(b.name || "");
+                if (
+                    cleanedAName.startsWith(cleanedSearchTerm) &&
+                    !cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return -1;
                 }
-                if (!cleanedAName.startsWith(cleanedSearchTerm) && cleanedBName.startsWith(cleanedSearchTerm)) {
+                if (
+                    !cleanedAName.startsWith(cleanedSearchTerm) &&
+                    cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return 1;
                 }
                 if (cleanedAName < cleanedBName) {
@@ -244,7 +264,7 @@ registerModel({
          */
         async loadPreviews(threads) {
             const channelIds = threads.reduce((list, thread) => {
-                if (thread.model === 'mail.channel') {
+                if (thread.model === "mail.channel") {
                     return list.concat(thread.id);
                 }
                 return list;
@@ -252,14 +272,21 @@ registerModel({
             if (channelIds.length === 0) {
                 return;
             }
-            const channelPreviews = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_fetch_preview',
-                args: [channelIds],
-            }, { shadow: true });
-            this.messaging.models['Message'].insert(channelPreviews.filter(p => p.last_message).map(
-                channelPreview => this.messaging.models['Message'].convertData(channelPreview.last_message)
-            ));
+            const channelPreviews = await this.messaging.rpc(
+                {
+                    model: "mail.channel",
+                    method: "channel_fetch_preview",
+                    args: [channelIds],
+                },
+                { shadow: true }
+            );
+            this.messaging.models["Message"].insert(
+                channelPreviews
+                    .filter((p) => p.last_message)
+                    .map((channelPreview) =>
+                        this.messaging.models["Message"].convertData(channelPreview.last_message)
+                    )
+            );
         },
         /**
          * Performs the `channel_fold` RPC on `mail.channel`.
@@ -268,14 +295,17 @@ registerModel({
          * @param {string} state
          */
         async performRpcChannelFold(channelId, state) {
-            return this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_fold',
-                args: [[channelId]],
-                kwargs: {
-                    state,
-                }
-            }, { shadow: true });
+            return this.messaging.rpc(
+                {
+                    model: "mail.channel",
+                    method: "channel_fold",
+                    args: [[channelId]],
+                    kwargs: {
+                        state,
+                    },
+                },
+                { shadow: true }
+            );
         },
         /**
          * Performs the `channel_info` RPC on `mail.channel`.
@@ -285,13 +315,18 @@ registerModel({
          * @returns {Thread[]}
          */
         async performRpcChannelInfo({ ids }) {
-            const channelInfos = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_info',
-                args: [ids],
-            }, { shadow: true });
-            const channels = this.messaging.models['Thread'].insert(
-                channelInfos.map(channelInfo => this.messaging.models['Thread'].convertData(channelInfo))
+            const channelInfos = await this.messaging.rpc(
+                {
+                    model: "mail.channel",
+                    method: "channel_info",
+                    args: [ids],
+                },
+                { shadow: true }
+            );
+            const channels = this.messaging.models["Thread"].insert(
+                channelInfos.map((channelInfo) =>
+                    this.messaging.models["Thread"].convertData(channelInfo)
+                )
             );
             return channels;
         },
@@ -303,13 +338,16 @@ registerModel({
          * @param {integer[]} param0.lastMessageId
          */
         async performRpcChannelSeen({ id, lastMessageId }) {
-            return this.messaging.rpc({
-                route: `/mail/channel/set_last_seen_message`,
-                params: {
-                    channel_id: id,
-                    last_message_id: lastMessageId,
+            return this.messaging.rpc(
+                {
+                    route: `/mail/channel/set_last_seen_message`,
+                    params: {
+                        channel_id: id,
+                        last_message_id: lastMessageId,
+                    },
                 },
-            }, { shadow: true });
+                { shadow: true }
+            );
         },
         /**
          * Performs the `channel_pin` RPC on `mail.channel`.
@@ -319,14 +357,17 @@ registerModel({
          * @param {boolean} [param0.pinned=false]
          */
         async performRpcChannelPin({ channelId, pinned = false }) {
-            return this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_pin',
-                args: [[channelId]],
-                kwargs: {
-                    pinned,
+            return this.messaging.rpc(
+                {
+                    model: "mail.channel",
+                    method: "channel_pin",
+                    args: [[channelId]],
+                    kwargs: {
+                        pinned,
+                    },
                 },
-            }, { shadow: true });
+                { shadow: true }
+            );
         },
         /**
          * Performs the `channel_create` RPC on `mail.channel`.
@@ -338,12 +379,12 @@ registerModel({
          */
         async performRpcCreateChannel({ name, group_id }) {
             const data = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_create',
+                model: "mail.channel",
+                method: "channel_create",
                 args: [name, group_id],
             });
-            return this.messaging.models['Thread'].insert(
-                this.messaging.models['Thread'].convertData(data)
+            return this.messaging.models["Thread"].insert(
+                this.messaging.models["Thread"].convertData(data)
             );
         },
         /**
@@ -355,10 +396,10 @@ registerModel({
          */
         async searchChannelsToOpen({ limit, searchTerm }) {
             const domain = [
-                ['channel_type', '=', 'channel'],
-                ['name', 'ilike', searchTerm],
+                ["channel_type", "=", "channel"],
+                ["name", "ilike", searchTerm],
             ];
-            const fields = ['channel_type', 'name'];
+            const fields = ["channel_type", "name"];
             const channelsData = await this.messaging.rpc({
                 model: "mail.channel",
                 method: "search_read",
@@ -368,16 +409,18 @@ registerModel({
                     limit,
                 },
             });
-            return this.insert(channelsData.map(channelData =>
-                this.messaging.models['Thread'].convertData({
-                    channel: {
-                        channel_type: channelData.channel_type,
+            return this.insert(
+                channelsData.map((channelData) =>
+                    this.messaging.models["Thread"].convertData({
+                        channel: {
+                            channel_type: channelData.channel_type,
+                            id: channelData.id,
+                        },
                         id: channelData.id,
-                    },
-                    id: channelData.id,
-                    name: channelData.name,
-                })
-            ));
+                        name: channelData.name,
+                    })
+                )
+            );
         },
         /**
          * Returns threads that match the given search term. More specially only
@@ -393,7 +436,12 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             let threads;
-            if (thread && thread.model === 'mail.channel' && (thread.channel.channel_type !== 'channel' || (thread.channel.channel_type === 'channel' && thread.authorizedGroupFullName))) {
+            if (
+                thread &&
+                thread.model === "mail.channel" &&
+                (thread.channel.channel_type !== "channel" ||
+                    (thread.channel.channel_type === "channel" && thread.authorizedGroupFullName))
+            ) {
                 // Only return the current channel when in the context of a
                 // group restricted channel or group or chat. Indeed, the message with the mention
                 // would appear in the target channel, so this prevents from
@@ -401,16 +449,19 @@ registerModel({
                 // channel.
                 threads = [thread];
             } else {
-                threads = this.messaging.models['Thread'].all();
+                threads = this.messaging.models["Thread"].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
-            return [threads.filter(thread =>
-                !thread.isTemporary &&
-                thread.channel &&
-                thread.channel.channel_type === 'channel' &&
-                thread.displayName &&
-                cleanSearchTerm(thread.displayName).includes(cleanedSearchTerm)
-            )];
+            return [
+                threads.filter(
+                    (thread) =>
+                        !thread.isTemporary &&
+                        thread.channel &&
+                        thread.channel.channel_type === "channel" &&
+                        thread.displayName &&
+                        cleanSearchTerm(thread.displayName).includes(cleanedSearchTerm)
+                ),
+            ];
         },
     },
     recordMethods: {
@@ -423,8 +474,8 @@ registerModel({
         async changeDescription(description) {
             this.update({ description });
             return this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_change_description',
+                model: "mail.channel",
+                method: "channel_change_description",
                 args: [[this.id]],
                 kwargs: { description },
             });
@@ -453,12 +504,12 @@ registerModel({
             }
             const requestSet = new Set(requestList);
             if (!this.hasActivities) {
-                requestSet.delete('activities');
+                requestSet.delete("activities");
             }
-            if (requestSet.has('attachments')) {
+            if (requestSet.has("attachments")) {
                 this.update({ isLoadingAttachments: true });
             }
-            if (requestSet.has('messages')) {
+            if (requestSet.has("messages")) {
                 this.cache.loadNewMessages();
             }
             const {
@@ -469,22 +520,25 @@ registerModel({
                 mainAttachment,
                 hasReadAccess,
                 suggestedRecipients: suggestedRecipientsData,
-            } = await this.messaging.rpc({
-                route: '/mail/thread/data',
-                params: {
-                    request_list: [...requestSet],
-                    thread_id: this.id,
-                    thread_model: this.model,
+            } = await this.messaging.rpc(
+                {
+                    route: "/mail/thread/data",
+                    params: {
+                        request_list: [...requestSet],
+                        thread_id: this.id,
+                        thread_model: this.model,
+                    },
                 },
-            }, { shadow: true });
+                { shadow: true }
+            );
             if (!this.exists()) {
                 return;
             }
             const values = { hasWriteAccess, mainAttachment, hasReadAccess };
             if (activitiesData) {
                 Object.assign(values, {
-                    activities: activitiesData.map(activityData =>
-                        this.messaging.models['Activity'].convertData(activityData)
+                    activities: activitiesData.map((activityData) =>
+                        this.messaging.models["Activity"].convertData(activityData)
                     ),
                 });
             }
@@ -497,13 +551,13 @@ registerModel({
             }
             if (followersData) {
                 Object.assign(values, {
-                    followers: followersData.map(followerData =>
-                        this.messaging.models['Follower'].convertData(followerData)
+                    followers: followersData.map((followerData) =>
+                        this.messaging.models["Follower"].convertData(followerData)
                     ),
                 });
             }
             if (suggestedRecipientsData) {
-                const recipientInfoList = suggestedRecipientsData.map(recipientInfoData => {
+                const recipientInfoList = suggestedRecipientsData.map((recipientInfoData) => {
                     const [partner_id, emailInfo, lang, reason] = recipientInfoData;
                     const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
                     return {
@@ -520,7 +574,7 @@ registerModel({
                 });
             }
             this.update(values);
-            this.messaging.messagingBus.trigger('o-thread-loaded-data', { thread: this });
+            this.messaging.messagingBus.trigger("o-thread-loaded-data", { thread: this });
         },
         /**
          * Add current user to provided thread's followers.
@@ -528,7 +582,7 @@ registerModel({
         async follow() {
             await this.messaging.rpc({
                 model: this.model,
-                method: 'message_subscribe',
+                method: "message_subscribe",
                 args: [[this.id]],
                 kwargs: {
                     partner_ids: [this.messaging.currentPartner.id],
@@ -537,16 +591,19 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            this.fetchData(['followers', 'suggestedRecipients']);
+            this.fetchData(["followers", "suggestedRecipients"]);
         },
         /**
          * Performs the rpc to leave the rtc call of the channel.
          */
         async performRpcLeaveCall() {
-            await this.messaging.rpc({
-                route: '/mail/rtc/channel/leave_call',
-                params: { channel_id: this.id },
-            }, { shadow: true });
+            await this.messaging.rpc(
+                {
+                    route: "/mail/rtc/channel/leave_call",
+                    params: { channel_id: this.id },
+                },
+                { shadow: true }
+            );
         },
         /**
          * Leaves the current call if there is one, joins the call if the user was
@@ -573,23 +630,26 @@ registerModel({
          * @param {boolean} [param0.videoType] type of the video: 'user-video' or 'display'
          */
         async _joinCall({ startWithVideo = false, videoType } = {}) {
-            if (this.model !== 'mail.channel') {
+            if (this.model !== "mail.channel") {
                 return;
             }
             if (!this.messaging.device.hasRtcSupport) {
                 this.messaging.notify({
                     message: this.env._t("Your browser does not support webRTC."),
-                    type: 'warning',
+                    type: "warning",
                 });
                 return;
             }
-            const { rtcSessions, iceServers, sessionId, invitedMembers } = await this.messaging.rpc({
-                route: '/mail/rtc/channel/join_call',
-                params: {
-                    channel_id: this.id,
-                    check_rtc_session_ids: this.rtcSessions.map(rtcSession => rtcSession.id),
+            const { rtcSessions, iceServers, sessionId, invitedMembers } = await this.messaging.rpc(
+                {
+                    route: "/mail/rtc/channel/join_call",
+                    params: {
+                        channel_id: this.id,
+                        check_rtc_session_ids: this.rtcSessions.map((rtcSession) => rtcSession.id),
+                    },
                 },
-            }, { shadow: true });
+                { shadow: true }
+            );
             if (!this.exists()) {
                 return;
             }
@@ -652,10 +712,10 @@ registerModel({
          */
         async join() {
             await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'add_members',
+                model: "mail.channel",
+                method: "add_members",
                 args: [[this.id]],
-                kwargs: { partner_ids: [this.messaging.currentPartner.id] }
+                kwargs: { partner_ids: [this.messaging.currentPartner.id] },
             });
         },
         /**
@@ -663,8 +723,8 @@ registerModel({
          */
         async leave() {
             await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'action_unfollow',
+                model: "mail.channel",
+                method: "action_unfollow",
                 args: [[this.id]],
             });
         },
@@ -672,11 +732,14 @@ registerModel({
          * Mark the specified conversation as fetched.
          */
         async markAsFetched() {
-            await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_fetched',
-                args: [[this.id]],
-            }, { shadow: true });
+            await this.messaging.rpc(
+                {
+                    model: "mail.channel",
+                    method: "channel_fetched",
+                    args: [[this.id]],
+                },
+                { shadow: true }
+            );
         },
         /**
          * Mark the specified conversation as read/seen.
@@ -687,7 +750,7 @@ registerModel({
             if (this.messaging.currentGuest) {
                 return;
             }
-            if (this.model !== 'mail.channel') {
+            if (this.model !== "mail.channel") {
                 return;
             }
             if (this.pendingSeenMessageId && message.id <= this.pendingSeenMessageId) {
@@ -700,7 +763,7 @@ registerModel({
                 return;
             }
             this.update({ pendingSeenMessageId: message.id });
-            return this.messaging.models['Thread'].performRpcChannelSeen({
+            return this.messaging.models["Thread"].performRpcChannelSeen({
                 id: this.id,
                 lastMessageId: message.id,
             });
@@ -709,7 +772,9 @@ registerModel({
          * Marks as read all needaction messages with this thread as origin.
          */
         async markNeedactionMessagesAsOriginThreadAsRead() {
-            await this.messaging.models['Message'].markAsRead(this.needactionMessagesAsOriginThread);
+            await this.messaging.models["Message"].markAsRead(
+                this.needactionMessagesAsOriginThread
+            );
         },
         /**
          * Notifies the server of new fold state. Useful for initial,
@@ -718,11 +783,11 @@ registerModel({
          * @param {string} state
          */
         async notifyFoldStateToServer(state) {
-            if (this.model !== 'mail.channel') {
+            if (this.model !== "mail.channel") {
                 // Server sync of fold state is only supported for channels.
                 return;
             }
-            return this.messaging.models['Thread'].performRpcChannelFold(this.id, state);
+            return this.messaging.models["Thread"].performRpcChannelFold(this.id, state);
         },
         /**
          * Notify server to leave the current channel. Useful for cross-tab
@@ -731,11 +796,11 @@ registerModel({
          * Only makes sense if isPendingPinned is set to the desired value.
          */
         async notifyPinStateToServer() {
-            if (this.channel.channel_type === 'channel') {
+            if (this.channel.channel_type === "channel") {
                 await this.leave();
                 return;
             }
-            await this.messaging.models['Thread'].performRpcChannelPin({
+            await this.messaging.models["Thread"].performRpcChannelPin({
                 channelId: this.id,
                 pinned: this.isPendingPinned,
             });
@@ -803,7 +868,9 @@ registerModel({
          */
         refreshCurrentPartnerIsTyping() {
             this.update({
-                currentPartnerInactiveTypingTimer: { doReset: this.currentPartnerInactiveTypingTimer ? true : undefined },
+                currentPartnerInactiveTypingTimer: {
+                    doReset: this.currentPartnerInactiveTypingTimer ? true : undefined,
+                },
             });
         },
         /**
@@ -812,7 +879,7 @@ registerModel({
          * @param {Member} member
          */
         refreshOtherMemberTypingMember(member) {
-            this.messaging.models['OtherMemberLongTypingInThreadTimer'].insert({
+            this.messaging.models["OtherMemberLongTypingInThreadTimer"].insert({
                 member,
                 thread: this,
                 timer: {
@@ -834,7 +901,7 @@ registerModel({
             // Manage typing member relation.
             const memberOfCurrentUser = this.channel.memberOfCurrentUser;
             const newOrderedTypingMembers = [
-                ...this.orderedTypingMembers.filter(member => member !== memberOfCurrentUser),
+                ...this.orderedTypingMembers.filter((member) => member !== memberOfCurrentUser),
                 memberOfCurrentUser,
             ];
             this.update({
@@ -853,7 +920,7 @@ registerModel({
         registerOtherMemberTypingMember(member) {
             this.update({ otherMembersLongTypingTimers: insert({ member }) });
             const newOrderedTypingMembers = [
-                ...this.orderedTypingMembers.filter(currentMember => currentMember !== member),
+                ...this.orderedTypingMembers.filter((currentMember) => currentMember !== member),
                 member,
             ];
             this.update({
@@ -870,8 +937,8 @@ registerModel({
         async rename(name) {
             this.update({ name });
             return this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_rename',
+                model: "mail.channel",
+                method: "channel_rename",
                 args: [[this.id]],
                 kwargs: { name },
             });
@@ -885,8 +952,8 @@ registerModel({
          */
         async setCustomName(newName) {
             return this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_set_custom_name',
+                model: "mail.channel",
+                method: "channel_set_custom_name",
                 args: [this.id],
                 kwargs: { name: newName },
             });
@@ -897,8 +964,8 @@ registerModel({
         async setMainAttachment(attachment) {
             this.update({ mainAttachment: attachment });
             await this.messaging.rpc({
-                model: 'ir.attachment',
-                method: 'register_as_main_attachment',
+                model: "ir.attachment",
+                method: "register_as_main_attachment",
                 args: [[this.mainAttachment.id]],
             });
         },
@@ -937,11 +1004,13 @@ registerModel({
             });
             // Manage typing member relation.
             const memberOfCurrentUser = this.channel.memberOfCurrentUser;
-            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== memberOfCurrentUser);
+            const newOrderedTypingMembers = this.orderedTypingMembers.filter(
+                (member) => member !== memberOfCurrentUser
+            );
             this.update({
                 isCurrentPartnerTyping: false,
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: unlink(memberOfCurrentUser),
+                typingMembers: memberOfCurrentUser ? unlink(memberOfCurrentUser) : undefined,
             });
             // Notify typing status to other members.
             if (immediateNotify) {
@@ -957,7 +1026,9 @@ registerModel({
          */
         unregisterOtherMemberTypingMember(member) {
             this.update({ otherMembersLongTypingTimers: insertAndUnlink({ member }) });
-            const newOrderedTypingMembers = this.orderedTypingMembers.filter(currentMember => currentMember !== member);
+            const newOrderedTypingMembers = this.orderedTypingMembers.filter(
+                (currentMember) => currentMember !== member
+            );
             this.update({
                 orderedTypingMembers: newOrderedTypingMembers,
                 typingMembers: unlink(member),
@@ -979,14 +1050,17 @@ registerModel({
                 this.forceNotifyNextCurrentPartnerTypingStatus ||
                 this.isCurrentPartnerTyping !== this.currentPartnerLastNotifiedIsTyping
             ) {
-                if (this.model === 'mail.channel') {
-                    await this.messaging.rpc({
-                        route: '/mail/channel/notify_typing',
-                        params: {
-                            'channel_id': this.id,
-                            'is_typing': this.isCurrentPartnerTyping,
+                if (this.model === "mail.channel") {
+                    await this.messaging.rpc(
+                        {
+                            route: "/mail/channel/notify_typing",
+                            params: {
+                                channel_id: this.id,
+                                is_typing: this.isCurrentPartnerTyping,
+                            },
                         },
-                    }, { shadow: true });
+                        { shadow: true }
+                    );
                     if (!this.exists()) {
                         return;
                     }
@@ -1004,9 +1078,12 @@ registerModel({
          * @private
          */
         _onChangeLastSeenByCurrentPartnerMessageId() {
-            this.messaging.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
-                thread: this,
-            });
+            this.messaging.messagingBus.trigger(
+                "o-thread-last-seen-by-current-partner-message-id-changed",
+                {
+                    thread: this,
+                }
+            );
         },
         /**
          * Handles change of pinned state coming from the server. Useful to
@@ -1034,13 +1111,13 @@ registerModel({
             if (this.messaging.device.isSmall) {
                 return;
             }
-            if (this.serverFoldState === 'closed') {
+            if (this.serverFoldState === "closed") {
                 this.messaging.chatWindowManager.closeThread(this, {
                     notifyServer: false,
                 });
             } else {
                 this.messaging.chatWindowManager.openThread(this, {
-                    isFolded: this.serverFoldState === 'folded',
+                    isFolded: this.serverFoldState === "folded",
                     notifyServer: false,
                 });
             }
@@ -1070,88 +1147,76 @@ registerModel({
     },
     fields: {
         accessRestrictedToGroupText: attr({
+            default: "",
             compute() {
                 if (!this.authorizedGroupFullName) {
                     return clear();
                 }
-                return sprintf(
-                    this.env._t('Access restricted to group "%(groupFullName)s"'),
-                    { 'groupFullName': this.authorizedGroupFullName }
-                );
+                return sprintf(this.env._t('Access restricted to group "%(groupFullName)s"'), {
+                    groupFullName: this.authorizedGroupFullName,
+                });
             },
-            default: '',
         }),
         /**
          * Determines the `mail.activity` that belong to `this`, assuming `this`
          * has activities (@see hasActivities).
          */
-        activities: many('Activity', {
-            inverse: 'thread',
-        }),
-        allAttachments: many('Attachment', {
+        activities: many("Activity", { inverse: "thread" }),
+        activity_state: attr({
             compute() {
-                const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
-                    .sort((a1, a2) => {
-                        // "uploading" before "uploaded" attachments.
-                        if (!a1.isUploading && a2.isUploading) {
-                            return 1;
-                        }
-                        if (a1.isUploading && !a2.isUploading) {
-                            return -1;
-                        }
-                        // "most-recent" before "oldest" attachments.
-                        return Math.abs(a2.id) - Math.abs(a1.id);
-                    });
-                return allAttachments;
+                if (this.overdueActivities.length > 0) {
+                    return "overdue";
+                }
+                if (this.todayActivities.length > 0) {
+                    return "today";
+                }
+                if (this.futureActivities.length > 0) {
+                    return "planned";
+                }
+                return clear();
             },
-            inverse: 'allThreads',
         }),
-        areAttachmentsLoaded: attr({
-            default: false,
+        allAttachments: many("Attachment", {
+            inverse: "allThreads",
+            compute() {
+                return this.originThreadAttachments;
+            },
+            sort: [
+                ["truthy-first", "isUploading"],
+                ["greater-first", "id"],
+            ],
         }),
-        attachments: many('Attachment', {
-            inverse: 'threads',
-        }),
-        attachmentsInWebClientView: many('Attachment', {
-            inverse: 'threadsAsAttachmentsInWebClientView',
+        areAttachmentsLoaded: attr({ default: false }),
+        attachmentsInWebClientView: many("Attachment", {
+            inverse: "threadsAsAttachmentsInWebClientView",
             readonly: true,
-            sort() {
-                return [
-                    ['greater-first', 'id'],
-                ];
-            },
+            sort: [["greater-first", "id"]],
         }),
         authorizedGroupFullName: attr(),
-        cache: one('ThreadCache', {
+        cache: one("ThreadCache", {
             default: {},
-            inverse: 'thread',
+            inverse: "thread",
             readonly: true,
             required: true,
         }),
-        channel: one('Channel', {
-            inverse: 'thread',
-            isCausal: true,
-            readonly: true,
-        }),
+        channel: one("Channel", { inverse: "thread", isCausal: true, readonly: true }),
         /**
          * States the chat window related to this thread (if any).
          */
-        chatWindow: one('ChatWindow', {
-            inverse: 'thread',
-        }),
+        chatWindow: one("ChatWindow", { inverse: "thread" }),
         /**
          * Determines the composer state of this thread.
          */
-        composer: one('Composer', {
+        composer: one("Composer", {
+            inverse: "thread",
             compute() {
                 if (this.mailbox) {
                     return clear();
                 }
                 return {};
             },
-            inverse: 'thread',
         }),
-        creator: one('User'),
+        creator: one("User"),
         /**
          * Timer of current partner that was currently typing something, but
          * there is no change on the input for 5 seconds. This is used
@@ -1159,8 +1224,8 @@ registerModel({
          * partner has stopped typing something, due to making no changes
          * on the composer for some time.
          */
-        currentPartnerInactiveTypingTimer: one('Timer', {
-            inverse: 'threadAsCurrentPartnerInactiveTypingTimerOwner',
+        currentPartnerInactiveTypingTimer: one("Timer", {
+            inverse: "threadAsCurrentPartnerInactiveTypingTimerOwner",
         }),
         /**
          * Last 'is_typing' status of current partner that has been notified
@@ -1186,8 +1251,8 @@ registerModel({
          * is still typing something, so that they should not assume he/she
          * has stopped typing something.
          */
-        currentPartnerLongTypingTimer: one('Timer', {
-            inverse: 'threadAsCurrentPartnerLongTypingTimerOwner',
+        currentPartnerLongTypingTimer: one("Timer", {
+            inverse: "threadAsCurrentPartnerLongTypingTimerOwner",
         }),
         /**
          * Determines the default display mode of this channel. Should contain
@@ -1212,21 +1277,21 @@ registerModel({
         }),
         fetchMessagesParams: attr({
             compute() {
-                if (this.model === 'mail.channel') {
-                    return { 'channel_id': this.id };
+                if (this.model === "mail.channel") {
+                    return { channel_id: this.id };
                 }
                 if (this.mailbox) {
                     return {};
                 }
                 return {
-                    'thread_id': this.id,
-                    'thread_model': this.model,
+                    thread_id: this.id,
+                    thread_model: this.model,
                 };
             },
         }),
         fetchMessagesUrl: attr({
             compute() {
-                if (this.model === 'mail.channel') {
+                if (this.model === "mail.channel") {
                     return `/mail/channel/messages`;
                 }
                 if (this.mailbox) {
@@ -1235,15 +1300,11 @@ registerModel({
                 return `/mail/thread/messages`;
             },
         }),
-        followerOfCurrentPartner: one('Follower', {
-            inverse: 'followedThreadAsFollowerOfCurrentPartner',
+        followerOfCurrentPartner: one("Follower", {
+            inverse: "followedThreadAsFollowerOfCurrentPartner",
         }),
-        followersPartner: many('Partner', {
-            related: 'followers.partner',
-        }),
-        followers: many('Follower', {
-            inverse: 'followedThread',
-        }),
+        followersPartner: many("Partner", { related: "followers.partner" }),
+        followers: many("Follower", { inverse: "followedThread" }),
         /**
          * Determines whether the next request to notify current partner
          * typing status should always result to making RPC, regardless of
@@ -1252,21 +1313,17 @@ registerModel({
          * changed, exception being the long typing scenario of current
          * partner.
          */
-        forceNotifyNextCurrentPartnerTypingStatus: attr({
-            default: false,
-        }),
+        forceNotifyNextCurrentPartnerTypingStatus: attr({ default: false }),
         /**
          * States the `Activity` that belongs to `this` and that are
          * planned in the future (due later than today).
          */
-        futureActivities: many('Activity', {
+        futureActivities: many("Activity", {
             compute() {
-                return this.activities.filter(activity => activity.state === 'planned');
+                return this.activities.filter((activity) => activity.state === "planned");
             },
         }),
-        group_based_subscription: attr({
-            default: false,
-        }),
+        group_based_subscription: attr({ default: false }),
         /**
          * States whether the current user has read access for this thread.
          */
@@ -1274,9 +1331,7 @@ registerModel({
         /**
          * States whether `this` has activities (`mail.activity.mixin` server side).
          */
-        hasActivities: attr({
-            default: false,
-        }),
+        hasActivities: attr({ default: false }),
         /**
          * Determines whether the RTC call feature should be displayed.
          */
@@ -1285,7 +1340,7 @@ registerModel({
                 if (!this.channel) {
                     return clear();
                 }
-                return ['channel', 'chat', 'group'].includes(this.channel.channel_type);
+                return ["channel", "chat", "group"].includes(this.channel.channel_type);
             },
         }),
         /**
@@ -1294,7 +1349,7 @@ registerModel({
          */
         hasInviteFeature: attr({
             compute() {
-                return this.model === 'mail.channel';
+                return this.model === "mail.channel";
             },
         }),
         /**
@@ -1305,45 +1360,43 @@ registerModel({
                 if (!this.channel) {
                     return clear();
                 }
-                return ['channel', 'group'].includes(this.channel.channel_type);
+                return ["channel", "group"].includes(this.channel.channel_type);
             },
         }),
         /**
          * States whether there is a server request for joining or leaving the RTC session.
          * TODO Should maybe be on messaging (after messaging env rebase) to lock the rpc across all threads.
          */
-        hasPendingRtcRequest: attr({
-            default: false,
-        }),
+        hasPendingRtcRequest: attr({ default: false }),
         /**
          * Determine whether this thread has the seen indicators (V and VV)
          * enabled or not.
          */
         hasSeenIndicators: attr({
+            default: false,
             compute() {
                 if (!this.channel) {
                     return clear();
                 }
-                return ['chat', 'livechat'].includes(this.channel.channel_type);
+                return ["chat", "livechat"].includes(this.channel.channel_type);
             },
-            default: false,
         }),
         /**
          * States whether current user has write access for the record. If yes, few other operations
          * (like adding other followers to the thread) are enabled for the user.
          */
-        hasWriteAccess: attr({
-            default: false,
-        }),
-        id: attr({
-            identifying: true,
-        }),
+        hasWriteAccess: attr({ default: false }),
+        id: attr({ identifying: true }),
         invitationLink: attr({
             compute() {
                 if (!this.channel) {
                     return clear();
                 }
-                if (!this.uuid || !this.channel.channel_type || this.channel.channel_type === 'chat') {
+                if (
+                    !this.uuid ||
+                    !this.channel.channel_type ||
+                    this.channel.channel_type === "chat"
+                ) {
                     return clear();
                 }
                 return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
@@ -1352,7 +1405,7 @@ registerModel({
         /**
          * List of members that have been invited to the RTC call of this channel.
          */
-        invitedMembers: many('ChannelMember'),
+        invitedMembers: many("ChannelMember"),
         /**
          * Determines whether this description can be changed.
          * Only makes sense for channels.
@@ -1362,7 +1415,7 @@ registerModel({
                 if (!this.channel) {
                     return clear();
                 }
-                return ['channel', 'group'].includes(this.channel.channel_type);
+                return ["channel", "group"].includes(this.channel.channel_type);
             },
         }),
         /**
@@ -1374,7 +1427,7 @@ registerModel({
                 if (!this.channel) {
                     return clear();
                 }
-                return ['chat', 'channel', 'group'].includes(this.channel.channel_type);
+                return ["chat", "channel", "group"].includes(this.channel.channel_type);
             },
         }),
         /**
@@ -1384,25 +1437,24 @@ registerModel({
          * 'chat'.
          */
         isChatChannel: attr({
+            default: false,
             compute() {
                 if (!this.channel) {
                     return clear();
                 }
-                return ['chat', 'group'].includes(this.channel.channel_type);
+                return ["chat", "group"].includes(this.channel.channel_type);
             },
-            default: false,
         }),
         isCurrentPartnerFollowing: attr({
+            default: false,
             compute() {
-                return this.followers.some(follower =>
-                    follower.partner && follower.partner === this.messaging.currentPartner
+                return this.followers.some(
+                    (follower) =>
+                        follower.partner && follower.partner === this.messaging.currentPartner
                 );
             },
-            default: false,
         }),
-        isCurrentPartnerTyping: attr({
-            default: false,
-        }),
+        isCurrentPartnerTyping: attr({ default: false }),
         /**
          * States whether this thread description is editable by the current user.
          */
@@ -1410,18 +1462,16 @@ registerModel({
             compute() {
                 return Boolean(
                     this.messaging &&
-                    this.messaging.currentUser &&
-                    this.messaging.currentUser.isInternalUser &&
-                    this.isChannelDescriptionChangeable
+                        this.messaging.currentUser &&
+                        this.messaging.currentUser.isInternalUser &&
+                        this.isChannelDescriptionChangeable
                 );
             },
         }),
         /**
          * States whether `this` is currently loading attachments.
          */
-        isLoadingAttachments: attr({
-            default: false,
-        }),
+        isLoadingAttachments: attr({ default: false }),
         /**
          * Determine if there is a pending pin state change, which is a change
          * of pin state requested by the client but not yet confirmed by the
@@ -1437,7 +1487,9 @@ registerModel({
          */
         isPinned: attr({
             compute() {
-                return this.isPendingPinned !== undefined ? this.isPendingPinned : this.isServerPinned;
+                return this.isPendingPinned !== undefined
+                    ? this.isPendingPinned
+                    : this.isServerPinned;
             },
         }),
         /**
@@ -1449,41 +1501,36 @@ registerModel({
          * the code handling pin state change from the server should typically
          * update it.
          */
-        isServerPinned: attr({
-            default: false,
-        }),
-        isTemporary: attr({
-            default: false,
-        }),
+        isServerPinned: attr({ default: false }),
+        isTemporary: attr({ default: false }),
         /**
          * States the date and time of the last interesting event that happened
          * in this channel for this partner. This includes: creating, joining,
          * pinning, and new message posted. It is contained as a Date object.
          */
         lastInterestDateTime: attr(),
-        lastCurrentPartnerMessageSeenByEveryone: one('Message', {
+        lastCurrentPartnerMessageSeenByEveryone: one("Message", {
             compute() {
-                const otherPartnerSeenInfos =
-                    this.partnerSeenInfos.filter(partnerSeenInfo =>
-                        partnerSeenInfo.partner !== this.messaging.currentPartner);
+                const otherPartnerSeenInfos = this.partnerSeenInfos.filter(
+                    (partnerSeenInfo) => partnerSeenInfo.partner !== this.messaging.currentPartner
+                );
                 if (otherPartnerSeenInfos.length === 0) {
                     return clear();
                 }
 
-                const otherPartnersLastSeenMessageIds =
-                    otherPartnerSeenInfos.map(partnerSeenInfo =>
+                const otherPartnersLastSeenMessageIds = otherPartnerSeenInfos.map(
+                    (partnerSeenInfo) =>
                         partnerSeenInfo.lastSeenMessage ? partnerSeenInfo.lastSeenMessage.id : 0
-                    );
+                );
                 if (otherPartnersLastSeenMessageIds.length === 0) {
                     return clear();
                 }
-                const lastMessageSeenByAllId = Math.min(
-                    ...otherPartnersLastSeenMessageIds
-                );
-                const currentPartnerOrderedSeenMessages =
-                    this.orderedNonTransientMessages.filter(message =>
+                const lastMessageSeenByAllId = Math.min(...otherPartnersLastSeenMessageIds);
+                const currentPartnerOrderedSeenMessages = this.orderedNonTransientMessages.filter(
+                    (message) =>
                         message.author === this.messaging.currentPartner &&
-                        message.id <= lastMessageSeenByAllId);
+                        message.id <= lastMessageSeenByAllId
+                );
 
                 if (
                     !currentPartnerOrderedSeenMessages ||
@@ -1497,12 +1544,9 @@ registerModel({
         /**
          * Last message of the thread, could be a transient one.
          */
-        lastMessage: one('Message', {
+        lastMessage: one("Message", {
             compute() {
-                const {
-                    length: l,
-                    [l - 1]: lastMessage,
-                } = this.orderedMessages;
+                const { length: l, [l - 1]: lastMessage } = this.orderedMessages;
                 if (lastMessage) {
                     return lastMessage;
                 }
@@ -1512,10 +1556,10 @@ registerModel({
         /**
          * States the last known needaction message having this thread as origin.
          */
-        lastNeedactionMessageAsOriginThread: one('Message', {
+        lastNeedactionMessageAsOriginThread: one("Message", {
             compute() {
                 const orderedNeedactionMessagesAsOriginThread = this.needactionMessagesAsOriginThread.sort(
-                    (m1, m2) => m1.id < m2.id ? -1 : 1
+                    (m1, m2) => (m1.id < m2.id ? -1 : 1)
                 );
                 const {
                     length: l,
@@ -1530,12 +1574,9 @@ registerModel({
         /**
          * Last non-transient message.
          */
-        lastNonTransientMessage: one('Message', {
+        lastNonTransientMessage: one("Message", {
             compute() {
-                const {
-                    length: l,
-                    [l - 1]: lastMessage,
-                } = this.orderedNonTransientMessages;
+                const { length: l, [l - 1]: lastMessage } = this.orderedNonTransientMessages;
                 if (lastMessage) {
                     return lastMessage;
                 }
@@ -1550,6 +1591,7 @@ registerModel({
          * messages are before or after it.
          */
         lastSeenByCurrentPartnerMessageId: attr({
+            default: 0,
             /**
              * Adjusts the last seen message received from the server to consider
              * the following messages also as read if they are either transient
@@ -1571,8 +1613,12 @@ registerModel({
                         continue;
                     }
                     if (
-                        (message.author && this.messaging.currentPartner && message.author === this.messaging.currentPartner) ||
-                        (message.guestAuthor && this.messaging.currentGuest && message.guestAuthor === this.messaging.currentGuest) ||
+                        (message.author &&
+                            this.messaging.currentPartner &&
+                            message.author === this.messaging.currentPartner) ||
+                        (message.guestAuthor &&
+                            this.messaging.currentGuest &&
+                            message.guestAuthor === this.messaging.currentGuest) ||
                         message.isTransient
                     ) {
                         lastSeenByCurrentPartnerMessageId = message.id;
@@ -1582,27 +1628,24 @@ registerModel({
                 }
                 return lastSeenByCurrentPartnerMessageId;
             },
-            default: 0,
         }),
-        mailbox: one('Mailbox', {
-            inverse: 'thread',
-        }),
-        mainAttachment: one('Attachment'),
+        mailbox: one("Mailbox", { inverse: "thread" }),
+        mainAttachment: one("Attachment"),
         /**
          * Determines the last mentioned channels of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
          */
-        mentionedChannelsBackup: many('Thread'),
+        mentionedChannelsBackup: many("Thread"),
         /**
          * Determines the last mentioned partners of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
          */
-        mentionedPartnersBackup: many('Partner'),
+        mentionedPartnersBackup: many("Partner"),
         /**
          * Determines the message before which the "new message" separator must
          * be positioned, if any.
          */
-        messageAfterNewMessageSeparator: one('Message', {
+        messageAfterNewMessageSeparator: one("Message", {
             compute() {
                 if (!this.channel) {
                     return clear();
@@ -1610,8 +1653,8 @@ registerModel({
                 if (this.channel.localMessageUnreadCounter === 0) {
                     return clear();
                 }
-                const index = this.orderedMessages.findIndex(message =>
-                    message.id === this.lastSeenByCurrentPartnerMessageId
+                const index = this.orderedMessages.findIndex(
+                    (message) => message.id === this.lastSeenByCurrentPartnerMessageId
                 );
                 if (index === -1) {
                     return clear();
@@ -1623,50 +1666,46 @@ registerModel({
                 return message;
             },
         }),
-        message_needaction_counter: attr({
-            default: 0,
-        }),
+        message_needaction_counter: attr({ default: 0 }),
         /**
          * All messages that this thread is linked to.
          * Note that this field is automatically computed by inverse
          * computed field.
          */
-        messages: many('Message', {
-            inverse: 'threads',
-            readonly: true,
-        }),
+        messages: many("Message", { inverse: "threads", readonly: true }),
         /**
          * All messages that have been originally posted in this thread.
          */
-        messagesAsOriginThread: many('Message', {
-            inverse: 'originThread',
-            isCausal: true,
-        }),
+        messagesAsOriginThread: many("Message", { inverse: "originThread", isCausal: true }),
         /**
          * Contains the message fetched/seen indicators for all messages of this thread.
          */
-        messageSeenIndicators: many('MessageSeenIndicator', {
-            inverse: 'thread',
-        }),
-        messagingAsAllCurrentClientThreads: one('Messaging', {
+        messageSeenIndicators: many("MessageSeenIndicator", { inverse: "thread" }),
+        messagingAsAllCurrentClientThreads: one("Messaging", {
+            inverse: "allCurrentClientThreads",
             compute() {
-                if (!this.messaging || !this.channel || !this.channel.memberOfCurrentUser || !this.isServerPinned) {
+                if (
+                    !this.messaging ||
+                    !this.channel ||
+                    !this.channel.memberOfCurrentUser ||
+                    !this.isServerPinned
+                ) {
                     return clear();
                 }
                 return this.messaging;
             },
-            inverse: 'allCurrentClientThreads',
         }),
-        messagingAsRingingThread: one('Messaging', {
+        messagingAsRingingThread: one("Messaging", {
+            inverse: "ringingThreads",
             compute() {
                 if (this.rtcInvitingSession) {
                     return this.messaging;
                 }
                 return clear();
             },
-            inverse: 'ringingThreads',
         }),
-        messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', {
+        messagingMenuAsPinnedAndUnreadChannel: one("MessagingMenu", {
+            inverse: "pinnedAndUnreadChannels",
             compute() {
                 if (!this.messaging || !this.messaging.messagingMenu) {
                     return clear();
@@ -1676,55 +1715,49 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'pinnedAndUnreadChannels',
         }),
-        model: attr({
-            identifying: true,
-        }),
+        model: attr({ identifying: true }),
         model_name: attr(),
         moduleIcon: attr(),
         name: attr(),
         /**
          * States all known needaction messages having this thread as origin.
          */
-        needactionMessagesAsOriginThread: many('Message', {
+        needactionMessagesAsOriginThread: many("Message", {
             compute() {
-                return this.messagesAsOriginThread.filter(message => message.isNeedaction);
+                return this.messagesAsOriginThread.filter((message) => message.isNeedaction);
             },
         }),
         /**
          * All messages ordered like they are displayed.
          */
-        orderedMessages: many('Message', {
+        orderedMessages: many("Message", {
             compute() {
-                return this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1);
+                return this.messages.sort((m1, m2) => (m1.id < m2.id ? -1 : 1));
             },
         }),
         /**
          * All messages ordered like they are displayed. This field does not
          * contain transient messages which are not "real" records.
          */
-        orderedNonTransientMessages: many('Message', {
+        orderedNonTransientMessages: many("Message", {
             compute() {
-                return this.orderedMessages.filter(m => !m.isTransient);
+                return this.orderedMessages.filter((m) => !m.isTransient);
             },
         }),
         /**
          * Ordered typing members on this thread, excluding the current partner.
          */
-        orderedOtherTypingMembers: many('ChannelMember', {
+        orderedOtherTypingMembers: many("ChannelMember", {
             compute() {
-                return this.orderedTypingMembers.filter(member => !member.isMemberOfCurrentUser);
+                return this.orderedTypingMembers.filter((member) => !member.isMemberOfCurrentUser);
             },
         }),
         /**
          * Ordered list of typing members.
          */
-        orderedTypingMembers: many('ChannelMember'),
-        originThreadAttachments: many('Attachment', {
-            inverse: 'originThread',
-            isCausal: true,
-        }),
+        orderedTypingMembers: many("ChannelMember"),
+        originThreadAttachments: many("Attachment", { inverse: "originThread", isCausal: true }),
         /**
          * Registry of timers of partners currently typing in the thread,
          * excluding current partner. This is useful in order to
@@ -1736,60 +1769,49 @@ registerModel({
          * @see registerOtherMemberTypingMember
          * @see unregisterOtherMemberTypingMember
          */
-        otherMembersLongTypingTimers: many('OtherMemberLongTypingInThreadTimer', {
-            inverse: 'thread',
+        otherMembersLongTypingTimers: many("OtherMemberLongTypingInThreadTimer", {
+            inverse: "thread",
         }),
         /**
          * States the `Activity` that belongs to `this` and that are
          * overdue (due earlier than today).
          */
-        overdueActivities: many('Activity', {
+        overdueActivities: many("Activity", {
             compute() {
-                return this.activities.filter(activity => activity.state === 'overdue');
+                return this.activities.filter((activity) => activity.state === "overdue");
             },
         }),
         /**
          * Contains the seen information for all members of the thread.
          * FIXME This field should be readonly once task-2336946 is done.
          */
-        partnerSeenInfos: many('ThreadPartnerSeenInfo', {
-            inverse: 'thread',
-        }),
+        partnerSeenInfos: many("ThreadPartnerSeenInfo", { inverse: "thread" }),
         /**
          * Determine if there is a pending seen message change, which is a change
          * of seen message requested by the client but not yet confirmed by the
          * server.
          */
         pendingSeenMessageId: attr(),
-        rawLastSeenByCurrentPartnerMessageId: attr({
-            default: 0,
-        }),
+        rawLastSeenByCurrentPartnerMessageId: attr({ default: 0 }),
         /**
          * If set, the current thread is the thread that hosts the current RTC call.
          */
-        rtc: one('Rtc', {
-            inverse: 'channel',
-        }),
-        callInviteRequestPopup: one('CallInviteRequestPopup', {
+        rtc: one("Rtc", { inverse: "channel" }),
+        callInviteRequestPopup: one("CallInviteRequestPopup", {
+            inverse: "thread",
             compute() {
                 if (this.rtcInvitingSession) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'thread',
         }),
         /**
          * The session that invited the current user, it is only set when the
          * invitation is still pending.
          */
-        rtcInvitingSession: one('RtcSession', {
-            inverse: 'calledChannels',
-        }),
-        rtcSessions: many('RtcSession', {
-            inverse: 'channel',
-            isCausal: true,
-        }),
+        rtcInvitingSession: one("RtcSession", { inverse: "calledChannels" }),
+        rtcSessions: many("RtcSession", { inverse: "channel", isCausal: true }),
         /**
          * Determine the last fold state known by the server, which is the fold
          * state displayed after initialization or when the last pending
@@ -1799,9 +1821,7 @@ registerModel({
          * the code handling fold state change from the server should typically
          * update it.
          */
-        serverFoldState: attr({
-            default: 'closed',
-        }),
+        serverFoldState: attr({ default: "closed" }),
         /**
          * Last message considered by the server.
          *
@@ -1809,51 +1829,41 @@ registerModel({
          *
          * @see localMessageUnreadCounter
          */
-        serverLastMessage: one('Message'),
-        suggestable: one('ComposerSuggestable', {
+        serverLastMessage: one("Message"),
+        suggestable: one("ComposerSuggestable", {
             default: {},
-            inverse: 'thread',
+            inverse: "thread",
             readonly: true,
             required: true,
         }),
         /**
          * Determines the `SuggestedRecipientInfo` concerning `this`.
          */
-        suggestedRecipientInfoList: many('SuggestedRecipientInfo', {
-            inverse: 'thread',
+        suggestedRecipientInfoList: many("SuggestedRecipientInfo", {
+            inverse: "thread",
             isCausal: true,
         }),
         /**
          * Determines the last content of the last composer related to this
          * thread. Useful to sync the composer when re-creating it.
          */
-        textInputContentBackup: attr({
-            default: "",
-        }),
+        textInputContentBackup: attr({ default: "" }),
         /**
          * Determines the last cursor end of the last composer related to this
          * thread. Useful to sync the composer when re-creating it.
          */
-        textInputCursorEndBackup: attr({
-            default: 0,
-        }),
+        textInputCursorEndBackup: attr({ default: 0 }),
         /**
          * Determines the last cursor start of the last composer related to this
          * thread. Useful to sync the composer when re-creating it.
          */
-        textInputCursorStartBackup: attr({
-            default: 0,
-        }),
+        textInputCursorStartBackup: attr({ default: 0 }),
         /**
          * Determines the last selection direction of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
          */
-        textInputSelectionDirectionBackup: attr({
-            default: "none",
-        }),
-        threadViews: many('ThreadView', {
-            inverse: 'thread',
-        }),
+        textInputSelectionDirectionBackup: attr({ default: "none" }),
+        threadViews: many("ThreadView", { inverse: "thread" }),
         /**
          * Clearable and cancellable throttled version of the
          * `_notifyCurrentPartnerTypingStatus` method.
@@ -1864,35 +1874,34 @@ registerModel({
          *
          * @see _notifyCurrentPartnerTypingStatus
          */
-        throttleNotifyCurrentPartnerTypingStatus: one('Throttle', {
+        throttleNotifyCurrentPartnerTypingStatus: one("Throttle", {
+            inverse: "threadAsThrottleNotifyCurrentPartnerTypingStatus",
             compute() {
                 return {
                     func: () => this._notifyCurrentPartnerTypingStatus(),
                 };
             },
-            inverse: 'threadAsThrottleNotifyCurrentPartnerTypingStatus',
         }),
         /**
          * States the `Activity` that belongs to `this` and that are due
          * specifically today.
          */
-        todayActivities: many('Activity', {
+        todayActivities: many("Activity", {
             compute() {
-                return this.activities.filter(activity => activity.state === 'today');
+                return this.activities.filter((activity) => activity.state === "today");
             },
         }),
-        threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
-            inverse: 'thread',
-        }),
+        threadNeedactionPreviewViews: many("ThreadNeedactionPreviewView", { inverse: "thread" }),
         /**
          * Members that are currently typing something in the composer of this
          * thread, including current partner.
          */
-        typingMembers: many('ChannelMember'),
+        typingMembers: many("ChannelMember"),
         /**
          * Text that represents the status on this thread about typing members.
          */
         typingStatusText: attr({
+            default: "",
             compute() {
                 if (this.orderedOtherTypingMembers.length === 0) {
                     return clear();
@@ -1916,47 +1925,46 @@ registerModel({
                     this.getMemberName(this.orderedOtherTypingMembers[1].persona)
                 );
             },
-            default: '',
         }),
         /**
          * URL to access to the conversation.
          */
         url: attr({
+            default: "",
             /**
              * Compute an url string that can be used inside a href attribute
              */
             compute() {
-                const baseHref = url('/web');
-                if (this.model === 'mail.channel') {
+                const baseHref = url("/web");
+                if (this.model === "mail.channel") {
                     return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
                 }
                 return `${baseHref}#model=${this.model}&id=${this.id}`;
             },
-            default: '',
         }),
         uuid: attr(),
         /**
          * The amount of videos broadcast in the current Rtc call
          */
         videoCount: attr({
-            compute() {
-                return this.rtcSessions.filter(session => session.videoStream).length;
-            },
             default: 0,
+            compute() {
+                return this.rtcSessions.filter((session) => session.videoStream).length;
+            },
         }),
     },
     onChanges: [
         {
-            dependencies: ['lastSeenByCurrentPartnerMessageId'],
-            methodName: '_onChangeLastSeenByCurrentPartnerMessageId',
+            dependencies: ["lastSeenByCurrentPartnerMessageId"],
+            methodName: "_onChangeLastSeenByCurrentPartnerMessageId",
         },
         {
-            dependencies: ['isServerPinned'],
-            methodName: '_onIsServerPinnedChanged',
+            dependencies: ["isServerPinned"],
+            methodName: "_onIsServerPinnedChanged",
         },
         {
-            dependencies: ['serverFoldState'],
-            methodName: '_onServerFoldStateChanged',
+            dependencies: ["serverFoldState"],
+            methodName: "_onServerFoldStateChanged",
         },
     ],
 });

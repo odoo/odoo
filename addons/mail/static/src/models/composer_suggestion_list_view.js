@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
+import { attr, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ComposerSuggestionListView',
+Model({
+    name: "ComposerSuggestionListView",
+    template: "mail.ComposerSuggestionListView",
     recordMethods: {
         /**
          * Sets the first suggestion as active. Main and extra records are
@@ -28,7 +28,7 @@ registerModel({
          */
         setNextSuggestionViewActive() {
             const activeElementIndex = this.suggestionViews.findIndex(
-                suggestion => suggestion === this.activeSuggestionView
+                (suggestion) => suggestion === this.activeSuggestionView
             );
             if (activeElementIndex === this.suggestionViews.length - 1) {
                 // loop when reaching the end of the list
@@ -44,7 +44,7 @@ registerModel({
          */
         setPreviousSuggestionViewActive() {
             const activeElementIndex = this.suggestionViews.findIndex(
-                suggestion => suggestion === this.activeSuggestionView
+                (suggestion) => suggestion === this.activeSuggestionView
             );
             if (activeElementIndex === 0) {
                 // loop when reaching the start of the list
@@ -61,7 +61,8 @@ registerModel({
          * is highlighted in the UI and it will be selected when the
          * suggestion is confirmed by the user.
          */
-        activeSuggestionView: one('ComposerSuggestionView', {
+        activeSuggestionView: one("ComposerSuggestionView", {
+            inverse: "composerSuggestionListViewOwnerAsActiveSuggestionView",
             compute() {
                 if (this.suggestionViews.includes(this.rawActiveSuggestionView)) {
                     return this.rawActiveSuggestionView;
@@ -69,38 +70,49 @@ registerModel({
                 const firstSuggestionView = this.suggestionViews[0];
                 return firstSuggestionView;
             },
-            inverse: 'composerSuggestionListViewOwnerAsActiveSuggestionView',
         }),
-        composerSuggestionListViewExtraComposerSuggestionViewItems: many('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
-            compute() {
-                return this.composerViewOwner.extraSuggestions.map(suggestable => ({ suggestable }));
-            },
-            inverse: 'composerSuggestionListViewOwner',
-        }),
-        composerSuggestionListViewMainComposerSuggestionViewItems: many('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
-            compute() {
-                return this.composerViewOwner.mainSuggestions.map(suggestable => ({ suggestable }));
-            },
-            inverse: 'composerSuggestionListViewOwner',
-        }),
-        composerViewOwner: one('ComposerView', {
+        composerSuggestionListViewExtraComposerSuggestionViewItems: many(
+            "ComposerSuggestionListViewExtraComposerSuggestionViewItem",
+            {
+                inverse: "composerSuggestionListViewOwner",
+                compute() {
+                    return this.composerViewOwner.extraSuggestions.map((suggestable) => ({
+                        suggestable,
+                    }));
+                },
+            }
+        ),
+        composerSuggestionListViewMainComposerSuggestionViewItems: many(
+            "ComposerSuggestionListViewMainComposerSuggestionViewItem",
+            {
+                inverse: "composerSuggestionListViewOwner",
+                compute() {
+                    return this.composerViewOwner.mainSuggestions.map((suggestable) => ({
+                        suggestable,
+                    }));
+                },
+            }
+        ),
+        composerViewOwner: one("ComposerView", {
             identifying: true,
-            inverse: 'composerSuggestionListView',
+            inverse: "composerSuggestionListView",
         }),
         /**
          * Determines whether the currently active suggestion should be scrolled
          * into view.
          */
-        hasToScrollToActiveSuggestionView: attr({
-            default: false,
-        }),
-        rawActiveSuggestionView: one('ComposerSuggestionView'),
-        suggestionViews: many('ComposerSuggestionView', {
+        hasToScrollToActiveSuggestionView: attr({ default: false }),
+        rawActiveSuggestionView: one("ComposerSuggestionView"),
+        suggestionViews: many("ComposerSuggestionView", {
             compute() {
-                const mainSuggestionViews = this.composerSuggestionListViewMainComposerSuggestionViewItems.map(item => item.composerSuggestionView);
-                const extraSuggestionViews = this.composerSuggestionListViewExtraComposerSuggestionViewItems.map(item => item.composerSuggestionView);
+                const mainSuggestionViews = this.composerSuggestionListViewMainComposerSuggestionViewItems.map(
+                    (item) => item.composerSuggestionView
+                );
+                const extraSuggestionViews = this.composerSuggestionListViewExtraComposerSuggestionViewItems.map(
+                    (item) => item.composerSuggestionView
+                );
                 return mainSuggestionViews.concat(extraSuggestionViews);
             },
-        })
+        }),
     },
 });

@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'MobileMessagingNavbarView',
-    identifyingMode: 'xor',
+Model({
+    name: "MobileMessagingNavbarView",
+    template: "mail.MobileMessagingNavbarView",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * @param {string} tabId
@@ -18,18 +17,18 @@ registerModel({
                 }
                 this.discuss.update({ activeMobileNavbarTabId: tabId });
                 if (
-                    this.discuss.activeMobileNavbarTabId === 'mailbox' &&
+                    this.discuss.activeMobileNavbarTabId === "mailbox" &&
                     (!this.discuss.activeThread || !this.discuss.activeThread.mailbox)
                 ) {
                     this.discuss.update({ thread: this.messaging.inbox.thread });
                 }
-                if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
+                if (this.discuss.activeMobileNavbarTabId !== "mailbox") {
                     this.discuss.update({ thread: clear() });
                 }
-                if (this.discuss.activeMobileNavbarTabId !== 'chat') {
+                if (this.discuss.activeMobileNavbarTabId !== "chat") {
                     this.discuss.discussView.update({ isAddingChat: false });
                 }
-                if (this.discuss.activeMobileNavbarTabId !== 'channel') {
+                if (this.discuss.activeMobileNavbarTabId !== "channel") {
                     this.discuss.discussView.update({ isAddingChannel: false });
                 }
             }
@@ -54,13 +53,10 @@ registerModel({
                 return clear();
             },
         }),
-        discuss: one('Discuss', {
+        discuss: one("Discuss", { identifying: true, inverse: "mobileMessagingNavbarView" }),
+        messagingMenu: one("MessagingMenu", {
             identifying: true,
-            inverse: 'mobileMessagingNavbarView',
-        }),
-        messagingMenu: one('MessagingMenu', {
-            identifying: true,
-            inverse: 'mobileMessagingNavbarView',
+            inverse: "mobileMessagingNavbarView",
         }),
         /**
          * Ordered list of tabs that this navbar has.
@@ -74,34 +70,42 @@ registerModel({
         tabs: attr({
             compute() {
                 if (this.discuss) {
-                    return [{
-                        icon: 'fa fa-inbox',
-                        id: 'mailbox',
-                        label: this.env._t("Mailboxes"),
-                    }, {
-                        icon: 'fa fa-user',
-                        id: 'chat',
-                        label: this.env._t("Chat"),
-                    }, {
-                        icon: 'fa fa-users',
-                        id: 'channel',
-                        label: this.env._t("Channel"),
-                    }];
+                    return [
+                        {
+                            icon: "fa fa-inbox",
+                            id: "mailbox",
+                            label: this.env._t("Mailboxes"),
+                        },
+                        {
+                            icon: "fa fa-user",
+                            id: "chat",
+                            label: this.env._t("Chat"),
+                        },
+                        {
+                            icon: "fa fa-users",
+                            id: "channel",
+                            label: this.env._t("Channel"),
+                        },
+                    ];
                 }
                 if (this.messagingMenu) {
-                    return [{
-                        icon: 'fa fa-envelope',
-                        id: 'all',
-                        label: this.env._t("All"),
-                    }, {
-                        icon: 'fa fa-user',
-                        id: 'chat',
-                        label: this.env._t("Chat"),
-                    }, {
-                        icon: 'fa fa-users',
-                        id: 'channel',
-                        label: this.env._t("Channel"),
-                    }];
+                    return [
+                        {
+                            icon: "fa fa-envelope",
+                            id: "all",
+                            label: this.env._t("All"),
+                        },
+                        {
+                            icon: "fa fa-user",
+                            id: "chat",
+                            label: this.env._t("Chat"),
+                        },
+                        {
+                            icon: "fa fa-users",
+                            id: "channel",
+                            label: this.env._t("Channel"),
+                        },
+                    ];
                 }
                 return [];
             },

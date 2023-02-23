@@ -2,7 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
-from odoo import fields
+from odoo import Command, fields
 from odoo.exceptions import UserError, RedirectWarning
 
 from dateutil.relativedelta import relativedelta
@@ -198,6 +198,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
         with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
+
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
 
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -305,6 +308,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
         with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
+
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
 
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -387,24 +393,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             draft_moves.unlink()
 
-    def test_misc_always_balanced_move(self):
-        ''' Ensure there is no way to make '''
-        # You can't remove a journal item making the journal entry unbalanced.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            self.test_move.line_ids[0].unlink()
-
-        # Same check using write instead of unlink.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            balance = self.test_move.line_ids[0].balance + 5
-            self.test_move.line_ids[0].write({
-                'debit': balance if balance > 0.0 else 0.0,
-                'credit': -balance if balance < 0.0 else 0.0,
-            })
-
-        # You can remove journal items if the related journal entry is still balanced.
-        self.test_move.line_ids.filtered(lambda l: not l.tax_repartition_line_id).balance = 0
-        self.test_move.line_ids[0].unlink()
-
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
         company = self.env['res.company'].create({'name': 'Oopo'})
@@ -453,20 +441,41 @@ class TestAccountMove(AccountTestInvoicingCommon):
             [
                 {
                     'currency_id': self.currency_data['currency'].id,
-                    'amount_currency': 1200.0,
+                    'amount_currency': -1200.0,
                     'debit': 0.0,
-                    'credit': 0.0,
+                    'credit': 400.0,
                 },
                 {
                     'currency_id': self.currency_data['currency'].id,
-                    'amount_currency': -1200.0,
-                    'debit': 0.0,
+                    'amount_currency': 1200.0,
+                    'debit': 400.0,
                     'credit': 0.0,
                 },
             ],
         )
 
-        # Balance and amount currency are totally independant in journal entries if the line has a foreign currency
+        # Change the date to change the currency conversion's rate
+        with Form(move) as move_form:
+            move_form.date = fields.Date.from_string('2017-01-01')
+
+        self.assertRecordValues(
+            move.line_ids.sorted('debit'),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1200.0,
+                    'debit': 0.0,
+                    'credit': 600.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': 1200.0,
+                    'debit': 600.0,
+                    'credit': 0.0,
+                },
+            ],
+        )
+        # You can change the balance manually without changing the currency amount
         with Form(move) as move_form:
             with move_form.line_ids.edit(0) as line_form:
                 line_form.debit = 200
@@ -817,3 +826,84 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
         edit_tax_on_posted_moves()
+
+    def test_misc_tax_autobalance(self):
+        # Saving an unbalanced entry isn't something desired but we need this piece of code to work in order to support
+        # the tax auto-calculation on miscellaneous move. Indeed, the JS class `AutosaveMany2ManyTagsField` triggers the
+        # saving of the record as soon as a tax base_line is modified.
+        move = self.env["account.move"].create({
+            "move_type": "entry",
+            "line_ids": [
+                Command.create({
+                    "name": "revenue line",
+                    "account_id": self.company_data["default_account_revenue"].id,
+                    'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                    "balance": -10.0,
+                }),
+            ]
+        })
+        tax_line = move.line_ids.filtered("tax_ids")
+        tax_line.unlink()
+
+        # But creating unbalanced misc entry shouldn't be allowed otherwise
+        with self.assertRaisesRegex(UserError, r"The move \(.*\) is not balanced\."):
+            self.env["account.move"].create({
+                "move_type": "entry",
+                "line_ids": [
+                    Command.create({
+                        "name": "revenue line",
+                        "account_id": self.company_data["default_account_revenue"].id,
+                        "balance": -10.0,
+                    }),
+                ]
+            })
+
+    def test_reset_draft_exchange_move(self):
+        """ Ensure you can't reset to draft an exchange journal entry """
+        moves = self.env['account.move'].create([
+            {
+                'date': '2016-01-01',
+                'line_ids': [
+                    Command.create({
+                        'name': "line1",
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'currency_id': self.currency_data['currency'].id,
+                        'balance': 400.0,
+                        'amount_currency': 1200.0,
+                    }),
+                    Command.create({
+                        'name': "line2",
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'balance': -400.0,
+                    }),
+                ]
+            },
+            {
+                'date': '2017-01-01',
+                'line_ids': [
+                    Command.create({
+                        'name': "line1",
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'currency_id': self.currency_data['currency'].id,
+                        'balance': -600.0,
+                        'amount_currency': -1200.0,
+                    }),
+                    Command.create({
+                        'name': "line2",
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'balance': 600.0,
+                    }),
+                ]
+            },
+        ])
+        moves.action_post()
+
+        res = moves.line_ids\
+            .filtered(lambda x: x.account_id == self.company_data['default_account_receivable'])\
+            .reconcile()
+
+        self.assertTrue(res.get('partials'))
+        exchange_diff = res['partials'].exchange_move_id
+        self.assertTrue(exchange_diff)
+        with self.assertRaises(UserError), self.cr.savepoint():
+            exchange_diff.button_draft()

@@ -5,8 +5,10 @@ import { sprintf } from "@web/core/utils/strings";
 import { ServerData } from "../data_sources/server_data";
 
 import { LoadingDataError } from "../o_spreadsheet/errors";
+import { DisplayNameRepository } from "./display_name_repository";
+import { LabelsRepository } from "./labels_repository";
 
-const { EventBus } = owl;
+import { EventBus } from "@odoo/owl";
 
 /**
  * @typedef {object} Field
@@ -14,6 +16,7 @@ const { EventBus } = owl;
  * @property {string} type field type
  * @property {string} string display name
  * @property {string} [relation] related model technical name (only for relational fields)
+ * @property {boolean} [searchable] true if a field can be searched in database
  */
 /**
  * This class is used to provide facilities to fetch some common data. It's
@@ -27,7 +30,7 @@ const { EventBus } = owl;
  * for different entities that are defined on the same model.
  *
  * Implementation note:
- * For the labels, when someone is asking for a label which is not loaded yet,
+ * For the labels, when someone is asking for a display name which is not loaded yet,
  * the proxy returns directly (undefined) and a request for a name_get will
  * be triggered. All the requests created are batched and send, with only one
  * request per model, after a clock cycle.
@@ -36,20 +39,15 @@ const { EventBus } = owl;
 export class MetadataRepository extends EventBus {
     constructor(orm) {
         super();
-        this.orm = orm.silent;
-        /**
-         * Contains the labels of records. It's organized in the following way:
-         * {
-         *     "crm.lead": {
-         *         "city": {
-         *             "bruxelles": "Bruxelles",
-         *         }
-         *     },
-         * }
-         */
-        this._labels = {};
+        this.orm = orm;
 
         this.serverData = new ServerData(this.orm, {
+            whenDataIsFetched: () => this.trigger("labels-fetched"),
+        });
+
+        this.labelsRepository = new LabelsRepository();
+
+        this.displayNameRepository = new DisplayNameRepository(this.orm, {
             whenDataIsFetched: () => this.trigger("labels-fetched"),
         });
     }
@@ -84,13 +82,7 @@ export class MetadataRepository extends EventBus {
      * @param {string} label
      */
     registerLabel(model, field, value, label) {
-        if (!this._labels[model]) {
-            this._labels[model] = {};
-        }
-        if (!this._labels[model][field]) {
-            this._labels[model][field] = {};
-        }
-        this._labels[model][field][value] = label;
+        this.labelsRepository.setLabel(model, field, value, label);
     }
 
     /**
@@ -102,9 +94,14 @@ export class MetadataRepository extends EventBus {
      * @returns {string}
      */
     getLabel(model, field, value) {
-        return (
-            this._labels[model] && this._labels[model][field] && this._labels[model][field][value]
-        );
+        return this.labelsRepository.getLabel(model, field, value);
+    }
+
+    /**
+     * Save the result of a name_get request in the cache
+     */
+    setDisplayName(model, id, result) {
+        this.displayNameRepository.setDisplayName(model, id, result);
     }
 
     /**
@@ -118,8 +115,7 @@ export class MetadataRepository extends EventBus {
      */
     getRecordDisplayName(model, id) {
         try {
-            const result = this.serverData.batch.get(model, "name_get", id);
-            return result[1];
+            return this.displayNameRepository.getDisplayName(model, id);
         } catch (e) {
             if (e instanceof LoadingDataError) {
                 throw e;

@@ -1,19 +1,19 @@
 /** @odoo-module */
 
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
+import { _t } from "@web/core/l10n/translation";
 
 const { Model } = spreadsheet;
 
 async function downloadSpreadsheet(env, action) {
     const { orm, name, data, stateUpdateMessages } = action.params;
     const dataSources = new DataSources(orm);
-    const model = new Model(migrate(data), { dataSources }, stateUpdateMessages);
+    const model = new Model(migrate(data), { custom: { dataSources } }, stateUpdateMessages);
     await dataSources.waitForAllLoaded();
     await waitForDataLoaded(model);
     const { files } = model.exportXLSX();
@@ -37,12 +37,9 @@ async function waitForDataLoaded(model) {
         let interval = undefined;
         interval = browser.setInterval(() => {
             for (const sheetId of model.getters.getSheetIds()) {
-                for (const cell of Object.values(model.getters.getCells(sheetId))) {
-                    if (
-                        cell.evaluated &&
-                        cell.evaluated.type === "error" &&
-                        cell.evaluated.error instanceof LoadingDataError
-                    ) {
+                for (const cell of Object.values(model.getters.getEvaluatedCells(sheetId))) {
+                    if (cell.type === "error" && cell.error.message === _t("Data is loading")) {
+                        model.dispatch("EVALUATE_CELLS");
                         return;
                     }
                 }

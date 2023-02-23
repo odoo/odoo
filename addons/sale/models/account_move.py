@@ -61,7 +61,7 @@ class AccountMove(models.Model):
     def action_post(self):
         #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
-        down_payment_lines = self.line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
+        down_payment_lines = self.line_ids.filtered('is_downpayment')
         for line in down_payment_lines:
 
             if not line.sale_line_ids.display_type:
@@ -84,18 +84,16 @@ class AccountMove(models.Model):
     def button_draft(self):
         res = super().button_draft()
 
-        self.line_ids.filtered(
-            lambda line: line.sale_line_ids.is_downpayment and not line.sale_line_ids.display_type
-        ).sale_line_ids._compute_name()
+        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
+            lambda sol: not sol.display_type)._compute_name()
 
         return res
 
     def button_cancel(self):
         res = super().button_cancel()
 
-        self.line_ids.filtered(
-            lambda line: line.sale_line_ids.is_downpayment and not line.sale_line_ids.display_type
-        ).sale_line_ids._compute_name()
+        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
+            lambda sol: not sol.display_type)._compute_name()
 
         return res
 

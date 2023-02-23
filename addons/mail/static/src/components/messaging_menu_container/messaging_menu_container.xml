@@ -3,12 +3,10 @@
 
     <t t-name="mail.MessagingMenuContainer" owl="1">
         <div class="MessagingMenuContainer">
-            <t t-if="messaging and messaging.messagingMenu">
+            <t t-if="isLoaded and messaging and messaging.messagingMenu">
                 <MessagingMenu record="messaging.messagingMenu"/>
             </t>
-            <t t-else="">
-                <i class="o_MessagingMenuContainer_spinner fa fa-circle-o-notch fa-spin mx-2" title="Please wait..."/>
-            </t>
+            <i t-else="" class="o_MessagingMenuContainer_spinner fa fa-circle-o-notch fa-spin mx-2" title="Please wait..."/>
         </div>
     </t>
 </templates>

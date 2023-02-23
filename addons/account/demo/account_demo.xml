@@ -2,8 +2,13 @@
 <odoo>
     <data>
 
-        <!-- TAGS FOR RETRIEVING THE DEMO ACCOUNTS -->
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>generic_coa</value>
+            <value model="res.company" search="[('partner_id.country_id.code', 'in', ['US', False])]"/>
+        </function>
 
+        <!-- TAGS FOR RETRIEVING THE DEMO ACCOUNTS -->
         <record id="demo_capital_account" model="account.account.tag">
             <field name="name">Demo Capital Account</field>
         </record>
@@ -47,6 +52,15 @@
         </record>
         <record id="base.res_partner_1" model="res.partner">
             <field name="property_supplier_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        </record>
+
+        <!-- Analytic -->
+        <record id="analytic.analytic_plan_internal" model="account.analytic.plan">
+            <field name="applicability_ids" eval="[
+                Command.create({
+                    'business_domain': 'invoice',
+                    'account_prefix': '450000',
+                    'applicability': 'mandatory'})]"/>
         </record>
     </data>
 </odoo>

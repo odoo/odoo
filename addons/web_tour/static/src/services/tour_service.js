@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import tourManager from "web_tour.tour";
 
 export const tourService = {
     start() {
@@ -10,7 +9,7 @@ export const tourService = {
          * @returns {Object} All the tours as a map
          */
         function _getAllTourMap() {
-            return tourManager.tours;
+            return registry.get("tourManager").tours;
         }
 
         /**
@@ -20,7 +19,7 @@ export const tourService = {
         function _getActiveTourMap() {
             return Object.fromEntries(
                 Object.entries(_getAllTourMap()).filter(
-                    ([key, value]) => !tourManager.consumed_tours.includes(key)
+                    ([key, value]) => !registry.get("tourManager").consumed_tours.includes(key)
                 )
             );
         }
@@ -68,7 +67,7 @@ export const tourService = {
          * Run a tour
          */
         function run(tourName) {
-            return tourManager.run(tourName);
+            return registry.get("tourManager").run(tourName);
         }
 
         /**
@@ -76,7 +75,7 @@ export const tourService = {
          * Reset a tour
          */
         function reset(tourName) {
-            return tourManager.reset(tourName);
+            return registry.get("tourManager").reset(tourName);
         }
 
         return {

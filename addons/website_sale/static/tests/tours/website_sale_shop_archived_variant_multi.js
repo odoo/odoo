@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
-tour.register('tour_shop_archived_variant_multi', {
+registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
     test: true,
     url: '/shop?search=Test Product 2',
-},
-[
+    steps: [
     {
         content: "select Test Product",
         trigger: '.oe_product_cart a:containsExact("Test Product 2")',
@@ -41,4 +40,4 @@ tour.register('tour_shop_archived_variant_multi', {
         trigger: '.css_not_available input[data-attribute_name="Color"][data-value_name="Black"]',
         run: function () {},
     },
-]);
+]});

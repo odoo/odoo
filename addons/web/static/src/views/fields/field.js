@@ -10,7 +10,7 @@ import {
 } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
@@ -50,17 +50,17 @@ function getFieldClassFromRegistry(fieldType, widget, viewType, jsClass) {
         return fieldRegistry.get(fieldType);
     }
 
-    return DefaultField;
+    return { component: DefaultField };
 }
 
-export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo) {
+export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
     const modifiers = fieldInfo.modifiers || {};
     const readonly = evalDomain(modifiers.readonly, record.evalContext);
-    const inEdit = record.mode !== "readonly";
+    const inEdit = record.isInEdition;
 
     let empty = !record.isVirtual;
-    if ("isEmpty" in FieldComponent) {
-        empty = empty && FieldComponent.isEmpty(record, fieldName);
+    if ("isEmpty" in field) {
+        empty = empty && field.isEmpty(record, fieldName);
     } else {
         empty = empty && !record.data[fieldName];
     }
@@ -75,17 +75,17 @@ export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo
 
 export class Field extends Component {
     setup() {
-        this.FieldComponent = this.props.fieldInfo.FieldComponent;
-        if (!this.FieldComponent) {
+        this.field = this.props.fieldInfo.field;
+        if (!this.field) {
             const fieldType = this.props.record.fields[this.props.name].type;
-            this.FieldComponent = getFieldClassFromRegistry(fieldType, this.props.type);
+            this.field = getFieldClassFromRegistry(fieldType, this.props.type);
         }
     }
 
     get classNames() {
         const { class: _class, fieldInfo, name, record } = this.props;
         const { readonly, required, invalid, empty } = fieldVisualFeedback(
-            this.FieldComponent,
+            this.field,
             record,
             name,
             fieldInfo
@@ -99,6 +99,11 @@ export class Field extends Component {
             [`o_field_${this.type}`]: true,
             [_class]: Boolean(_class),
         };
+        if (this.field.additionalClasses) {
+            for (const cls of this.field.additionalClasses) {
+                classNames[cls] = true;
+            }
+        }
 
         // generate field decorations classNames (only if field-specific decorations
         // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
@@ -134,10 +139,10 @@ export class Field extends Component {
             decorationMap[decoName] = value;
         }
 
-        let propsFromAttrs = fieldInfo.propsFromAttrs;
+        let propsFromAttrs = fieldInfo.propsFromAttrs || {};
         if (this.props.attrs) {
-            const extractProps = this.FieldComponent.extractProps || (() => ({}));
-            propsFromAttrs = extractProps({
+            const extractProps = this.field.extractProps || (() => ({}));
+            propsFromAttrs = extractProps.call(this.field, {
                 field,
                 attrs: {
                     ...this.props.attrs,
@@ -152,29 +157,15 @@ export class Field extends Component {
         delete props.showTooltip;
         delete props.fieldInfo;
         delete props.attrs;
+        delete props.type;
 
         return {
             ...fieldInfo.props,
-            update: async (value) => {
-                await record.update({ [this.props.name]: value });
-                if (record.selected && record.model.multiEdit) {
-                    return;
-                }
-                const rootRecord =
-                    record.model.root instanceof record.constructor && record.model.root;
-                const isInEdition = rootRecord ? rootRecord.isInEdition : record.isInEdition;
-                // We save only if we're on view mode readonly and no readonly field modifier
-                if (!isInEdition && !readonlyFromModifiers) {
-                    // TODO: maybe move this in the model
-                    return record.save();
-                }
-            },
             value: this.props.record.data[this.props.name],
             decorations: decorationMap,
             readonly: !record.isInEdition || readonlyFromModifiers || false,
             ...propsFromAttrs,
             ...props,
-            type: field.type,
         };
     }
 
@@ -191,27 +182,24 @@ export class Field extends Component {
         return false;
     }
 }
-Field.template = xml/* xml */ `
-    <div t-att-name="props.name" t-att-class="classNames" t-att-style="props.style" t-att-data-tooltip-template="tooltip and 'web.FieldTooltip'" t-att-data-tooltip-info="tooltip">
-        <t t-component="FieldComponent" t-props="fieldComponentProps"/>
-    </div>`;
+Field.template = "web.Field";
 
 Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const fields = models[modelName];
-    const field = fields[name];
     const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+    const field = getFieldClassFromRegistry(fields[name].type, widget, viewType, jsClass);
     const fieldInfo = {
         name,
         viewType,
         context: node.getAttribute("context") || "{}",
-        string: node.getAttribute("string") || field.string,
+        string: node.getAttribute("string") || fields[name].string,
         help: node.getAttribute("help"),
         widget,
         modifiers,
         onChange: archParseBoolean(node.getAttribute("on_change")),
-        FieldComponent: getFieldClassFromRegistry(fields[name].type, widget, viewType, jsClass),
+        field,
         forceSave: archParseBoolean(node.getAttribute("force_save")),
         decorations: {}, // populated below
         noLabel: archParseBoolean(node.getAttribute("nolabel")),
@@ -242,26 +230,26 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
 
     if (viewType !== "kanban") {
         // FIXME WOWL: find a better solution
-        const extractProps = fieldInfo.FieldComponent.extractProps || (() => ({}));
-        fieldInfo.propsFromAttrs = extractProps({
-            field,
+        const extractProps = field.extractProps || (() => ({}));
+        fieldInfo.propsFromAttrs = extractProps.call(field, {
+            field: fields[name],
             attrs: { ...fieldInfo.rawAttrs, options: fieldInfo.options },
         });
     }
 
-    if (X2M_TYPES.includes(field.type)) {
+    if (X2M_TYPES.includes(fields[name].type)) {
         const views = {};
         for (const child of node.children) {
             const viewType = child.tagName === "tree" ? "list" : child.tagName;
             const { ArchParser } = viewRegistry.get(viewType);
             const xmlSerializer = new XMLSerializer();
             const subArch = xmlSerializer.serializeToString(child);
-            const archInfo = new ArchParser().parse(subArch, models, field.relation);
+            const archInfo = new ArchParser().parse(subArch, models, fields[name].relation);
             views[viewType] = {
                 ...archInfo,
-                fields: models[field.relation],
+                fields: models[fields[name].relation],
             };
-            fieldInfo.relatedFields = models[field.relation];
+            fieldInfo.relatedFields = models[fields[name].relation];
         }
 
         let viewMode = node.getAttribute("mode");
@@ -270,24 +258,23 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
                 viewMode = "list";
             } else if (!views.list && views.kanban) {
                 viewMode = "kanban";
-            } else {
+            } else if (views.list && views.kanban) {
                 viewMode = "list,kanban";
             }
         } else {
             viewMode = viewMode.replace("tree", "list");
         }
         fieldInfo.viewMode = viewMode;
-
-        const fieldsToFetch = { ...fieldInfo.FieldComponent.fieldsToFetch }; // should become an array?
-        // special case for color field
-        // GES: this is not nice, we will look for something better.
-        const colorField = fieldInfo.options.color_field;
-        if (colorField) {
-            fieldsToFetch[colorField] = { name: colorField, type: "integer", active: true };
-        }
-        fieldInfo.fieldsToFetch = fieldsToFetch;
-        fieldInfo.relation = field.relation; // not really necessary
+        fieldInfo.relation = fields[name].relation; // not really necessary
         fieldInfo.views = views;
+
+        let fieldsToFetch = field.fieldsToFetch;
+        if (fieldsToFetch) {
+            if (fieldsToFetch instanceof Function) {
+                fieldsToFetch = fieldsToFetch(fieldInfo);
+            }
+            fieldInfo.fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
+        }
     }
 
     return fieldInfo;
@@ -296,4 +283,5 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
 Field.forbiddenAttributeNames = {
     decorations: `You cannot use the "decorations" attribute name as it is used as generated prop name for the composite decoration-<something> attributes.`,
 };
-Field.defaultProps = { fieldInfo: {} };
+Field.props = ["fieldInfo?", "*"];
+Field.defaultProps = { fieldInfo: {}, setDirty: () => {} };

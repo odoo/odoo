@@ -7,7 +7,7 @@
     </template>
 
     <template id="checkout_payment" inherit_id="payment.checkout">
-        <xpath expr="//input[@name='o_payment_radio']" position="attributes">
+        <xpath expr="//t[@t-foreach='providers']//input[@name='o_payment_radio']" position="attributes">
             <attribute name="t-att-data-is-onsite">1 if provider.custom_mode == 'onsite' else 0</attribute>
         </xpath>
     </template>

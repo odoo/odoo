@@ -6,28 +6,61 @@ import logging
 import re
 import time
 import requests
+import uuid
 import werkzeug.exceptions
 import werkzeug.urls
-import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
 from base64 import b64decode, b64encode
+from datetime import datetime
 
-from odoo.http import request
+from odoo.http import request, Response
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.web_editor.tools import get_video_url_data
-from odoo.exceptions import UserError, MissingError
+from odoo.exceptions import UserError, MissingError, ValidationError
 from odoo.modules.module import get_resource_path
 from odoo.tools import file_open
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, binary_to_image
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
-from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES
+from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
+
+diverging_history_regex = 'data-last-history-steps="([0-9,]*?)"'
+
+def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
+    server_history_matches = re.search(diverging_history_regex, record[html_field_name])
+    # Do not check old documents without data-last-history-steps.
+    if server_history_matches:
+        server_last_history_id = server_history_matches[1].split(',')[-1]
+        if server_last_history_id not in incoming_history_ids:
+            logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
+            raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
+
+def handle_history_divergence(record, html_field_name, vals):
+    # Do not handle history divergence if the field is not in the values.
+    if html_field_name not in vals:
+        return
+    incoming_html = vals[html_field_name]
+    incoming_history_matches = re.search(diverging_history_regex, incoming_html)
+    # When there is no incoming history id, it means that the value does not
+    # comes from the odoo editor or the collaboration was not activated. In
+    # project, it could come from the collaboration pad. In that case, we do not
+    # handle history divergences.
+    if incoming_history_matches is None:
+        return
+    incoming_history_ids = incoming_history_matches[1].split(',')
+    incoming_last_history_id = incoming_history_ids[-1]
+
+    if record[html_field_name]:
+        ensure_no_history_divergence(record, html_field_name, incoming_history_ids)
+
+    # Save only the latest id.
+    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + incoming_last_history_id + incoming_html[incoming_history_matches.end(1):]
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -106,7 +139,7 @@ class Web_Editor(http.Controller):
         # output image
         output = io.BytesIO()
         outimage.save(output, format="PNG")
-        response = werkzeug.wrappers.Response()
+        response = Response()
         response.mimetype = 'image/png'
         response.data = output.getvalue()
         response.headers['Cache-Control'] = 'public, max-age=604800'
@@ -143,7 +176,7 @@ class Web_Editor(http.Controller):
         else:
             return value
 
-        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
+        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6].decode("utf-8")
         record.write({filename: value})
 
         return value
@@ -202,12 +235,18 @@ class Web_Editor(http.Controller):
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         data = b64decode(data)
         if is_image:
-            format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
+            format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
             try:
                 data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
+                if not name:
+                    name = '%s-%s%s' % (
+                        datetime.now().strftime('%Y%m%d%H%M%S'),
+                        str(uuid.uuid4())[:6],
+                        SUPPORTED_IMAGE_MIMETYPES[mimetype],
+                    )
             except UserError:
                 # considered as an image by the browser file input, but not
                 # recognized as such by PIL, eg .webp
@@ -278,7 +317,7 @@ class Web_Editor(http.Controller):
             # snippet images referencing the same image in /static/, so we limit to 1
             attachment = request.env['ir.attachment'].search([
                 '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
-                ('mimetype', 'in', SUPPORTED_IMAGE_MIMETYPES),
+                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
             ], limit=1)
         if not attachment:
             return {
@@ -292,6 +331,8 @@ class Web_Editor(http.Controller):
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
         """Create and return a new attachment."""
+        IrAttachment = request.env['ir.attachment']
+
         if name.lower().endswith('.bmp'):
             # Avoid mismatch between content type and mimetype, see commit msg
             name = name[:-4]
@@ -323,15 +364,13 @@ class Web_Editor(http.Controller):
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
-        # If the user is a portal and has access rights on the res_model (and
-        # on the res_id if it exists), we can create the attachment. Otherwise,
-        # one of the check will raise an error and the attachment will not be
-        # created
-        if request.env.user.has_group('base.group_portal'):
-            request.env[res_model].check_access_rights('write')
-            if res_id:
-                request.env[res_model].browse(res_id).check_access_rule('write')
-            attachment = request.env['ir.attachment'].sudo().create(attachment_data)
+        # Despite the user having no right to create an attachment, he can still
+        # create an image attachment through some flows
+        if (
+            not request.env.is_admin()
+            and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
+        ):
+            attachment = IrAttachment.sudo().create(attachment_data)
             # When portal users upload an attachment with the wysiwyg widget,
             # the access token is needed to use the image in the editor. If
             # the attachment is not public, the user won't be able to generate
@@ -339,7 +378,7 @@ class Web_Editor(http.Controller):
             if not attachment_data['public']:
                 attachment.sudo().generate_access_token()
         else:
-            attachment = request.env['ir.attachment'].create(attachment_data)
+            attachment = IrAttachment.create(attachment_data)
 
         return attachment
 
@@ -630,12 +669,7 @@ class Web_Editor(http.Controller):
         if stream.type == 'url':
             return stream.get_response()
 
-        if stream.type == 'path':
-            with file_open(stream.path, 'rb') as file:
-                image = file.read()
-        else:
-            image = stream.data
-
+        image = stream.read()
         img = binary_to_image(image)
         width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)
@@ -731,3 +765,11 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web_editor.tests')
+
+    @http.route("/web_editor/ensure_common_history", type="json", auth="user")
+    def ensure_common_history(self, model_name, field_name, res_id, history_ids):
+        record = request.env[model_name].browse([res_id])
+        try:
+            ensure_no_history_divergence(record, field_name, history_ids)
+        except ValidationError:
+            return record[field_name]

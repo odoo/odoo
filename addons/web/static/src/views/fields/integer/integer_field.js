@@ -8,9 +8,20 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class IntegerField extends Component {
+    static template = "web.IntegerField";
+    static props = {
+        ...standardFieldProps,
+        inputType: { type: String, optional: true },
+        step: { type: Number, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+    static defaultProps = {
+        inputType: "text",
+    };
+
     setup() {
         useInputField({
             getValue: () => this.formattedValue,
@@ -28,27 +39,16 @@ export class IntegerField extends Component {
     }
 }
 
-IntegerField.template = "web.IntegerField";
-IntegerField.props = {
-    ...standardFieldProps,
-    inputType: { type: String, optional: true },
-    step: { type: Number, optional: true },
-    placeholder: { type: String, optional: true },
-};
-IntegerField.defaultProps = {
-    inputType: "text",
-};
-
-IntegerField.displayName = _lt("Integer");
-IntegerField.supportedTypes = ["integer"];
-
-IntegerField.isEmpty = (record, fieldName) => (record.data[fieldName] === false ? true : false);
-IntegerField.extractProps = ({ attrs }) => {
-    return {
+export const integerField = {
+    component: IntegerField,
+    displayName: _lt("Integer"),
+    supportedTypes: ["integer"],
+    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    extractProps: ({ attrs }) => ({
         inputType: attrs.options.type,
         step: attrs.options.step,
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-registry.category("fields").add("integer", IntegerField);
+registry.category("fields").add("integer", integerField);

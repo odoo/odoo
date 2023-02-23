@@ -27,7 +27,6 @@
         'data/stock_sequence_data.xml',
         'data/stock_traceability_report_data.xml',
 
-        'report/report_stock_forecasted.xml',
         'report/report_stock_quantity.xml',
         'report/report_stock_reception.xml',
         'report/stock_report_views.xml',
@@ -87,6 +86,7 @@
         'views/stock_rule_views.xml',
         'views/stock_package_level_views.xml',
         'views/stock_package_type_view.xml',
+        'views/stock_forecasted.xml',
     ],
     'installable': True,
     'application': True,
@@ -94,13 +94,7 @@
     'post_init_hook': '_assign_default_mail_template_picking_id',
     'assets': {
         'web.report_assets_common': [
-            # legacy reports (delete when all reports are converted)
-            'stock/static/src/legacy_web_report/utils.js',
-            'stock/static/src/legacy_web_report/report.js',
-            'stock/static/src/legacy_web_report/report_backend.scss',
-
             'web/static/src/legacy/scss/views.scss',
-            'stock/static/src/scss/report_stock_forecasted.scss',
             'stock/static/src/scss/report_stock_reception.scss',
             'stock/static/src/scss/report_stock_rule.scss',
         ],
@@ -110,8 +104,7 @@
         'web.assets_backend': [
             'stock/static/src/**/*.js',
             'stock/static/src/**/*.xml',
-            'stock/static/src/scss/forecast_widget.scss',
-            'stock/static/src/scss/stock_empty_screen.scss',
+            'stock/static/src/scss/*.scss',
             'stock/static/src/views/**/*',
         ],
         'web.assets_frontend': [
@@ -123,7 +116,6 @@
         'web.qunit_suite_tests': [
             'stock/static/tests/inventory_report_list_tests.js',
             'stock/static/tests/popover_widget_tests.js',
-            'stock/static/tests/lazy_column_list_tests.js',
             'stock/static/tests/stock_traceability_report_backend_tests.js',
         ],
     },

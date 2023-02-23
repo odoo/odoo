@@ -79,7 +79,7 @@ class TestResConfig(TransactionCase):
                 self.assertTrue(module.state != 'uninstalled',
                                 "All set modules should already be installed.")
         # if we try to install something, raise; so nothing should be installed
-        with patch('odoo.addons.base.models.ir_module.Module._button_immediate_function', new=just_raise):
+        with patch('odoo.addons.base.models.ir_module.Module.button_immediate_install', new=just_raise):
             self.config.execute()
 
     def test_install(self):
@@ -91,6 +91,6 @@ class TestResConfig(TransactionCase):
         module_to_install = next(m for m in config_fields['module'] if m.state == 'uninstalled')
         self.config[f'module_{module_to_install.name}'] = True
 
-        with patch('odoo.addons.base.models.ir_module.Module._button_immediate_function', new=just_raise):
+        with patch('odoo.addons.base.models.ir_module.Module.button_immediate_install', new=just_raise):
             with self.assertRaisesRegex(Exception, "We should not be here."):
                 self.config.execute()

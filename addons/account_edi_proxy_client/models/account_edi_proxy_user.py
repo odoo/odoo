@@ -53,7 +53,7 @@ class AccountEdiProxyClientUser(models.Model):
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
-        ('unique_edi_identification_per_format', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
+        ('unique_edi_identification_per_for', 'unique(edi_identification, edi_format_id)', 'This edi identification is already assigned to a user'),
     ]
 
     def _get_demo_state(self):
@@ -206,13 +206,3 @@ class AccountEdiProxyClientUser(models.Model):
         )
         f = Fernet(key)
         return f.decrypt(base64.b64decode(data))
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.env.flush_all()
-        self.env.invalidate_all()
-        self.env.cr.execute("""
-            INSERT INTO ir_config_parameter(key, value)
-            VALUES ('account_edi_proxy_client.demo', true)
-            ON CONFLICT (key) DO UPDATE SET value = true
-        """)

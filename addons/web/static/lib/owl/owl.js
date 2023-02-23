@@ -41,8 +41,11 @@
             this.parentEl = parent;
             this.child.mount(parent, afterNode);
         }
-        moveBefore(other, afterNode) {
-            this.child.moveBefore(other ? other.child : null, afterNode);
+        moveBeforeDOMNode(node, parent) {
+            this.child.moveBeforeDOMNode(node, parent);
+        }
+        moveBeforeVNode(other, afterNode) {
+            this.moveBeforeDOMNode((other && other.firstNode()) || afterNode);
         }
         patch(other, withBeforeRemove) {
             if (this === other) {
@@ -418,7 +421,22 @@
             this.anchors = anchors;
             this.parentEl = parent;
         }
-        moveBefore(other, afterNode) {
+        moveBeforeDOMNode(node, parent = this.parentEl) {
+            this.parentEl = parent;
+            const children = this.children;
+            const anchors = this.anchors;
+            for (let i = 0, l = children.length; i < l; i++) {
+                let child = children[i];
+                if (child) {
+                    child.moveBeforeDOMNode(node, parent);
+                }
+                else {
+                    const anchor = anchors[i];
+                    nodeInsertBefore$3.call(parent, anchor, node);
+                }
+            }
+        }
+        moveBeforeVNode(other, afterNode) {
             if (other) {
                 const next = other.children[0];
                 afterNode = (next ? next.firstNode() : other.anchors[0]) || null;
@@ -429,7 +447,7 @@
             for (let i = 0, l = children.length; i < l; i++) {
                 let child = children[i];
                 if (child) {
-                    child.moveBefore(null, afterNode);
+                    child.moveBeforeVNode(null, afterNode);
                 }
                 else {
                     const anchor = anchors[i];
@@ -527,9 +545,12 @@
             nodeInsertBefore$2.call(parent, node, afterNode);
             this.el = node;
         }
-        moveBefore(other, afterNode) {
-            const target = other ? other.el : afterNode;
-            nodeInsertBefore$2.call(this.parentEl, this.el, target);
+        moveBeforeDOMNode(node, parent = this.parentEl) {
+            this.parentEl = parent;
+            nodeInsertBefore$2.call(parent, this.el, node);
+        }
+        moveBeforeVNode(other, afterNode) {
+            nodeInsertBefore$2.call(this.parentEl, this.el, other ? other.el : afterNode);
         }
         beforeRemove() { }
         remove() {
@@ -675,6 +696,15 @@
                         : document.createElement(tagName);
                 }
                 if (el instanceof Element) {
+                    if (!domParentTree) {
+                        // some html elements may have side effects when setting their attributes.
+                        // For example, setting the src attribute of an <img/> will trigger a
+                        // request to get the corresponding image. This is something that we
+                        // don't want at compile time. We avoid that by putting the content of
+                        // the block in a <template/> element
+                        const fragment = document.createElement("template").content;
+                        fragment.appendChild(el);
+                    }
                     for (let i = 0; i < attrs.length; i++) {
                         const attrName = attrs[i].name;
                         const attrValue = attrs[i].value;
@@ -962,9 +992,12 @@
             firstNode() {
                 return this.el;
             }
-            moveBefore(other, afterNode) {
-                const target = other ? other.el : afterNode;
-                nodeInsertBefore.call(this.parentEl, this.el, target);
+            moveBeforeDOMNode(node, parent = this.parentEl) {
+                this.parentEl = parent;
+                nodeInsertBefore.call(parent, this.el, node);
+            }
+            moveBeforeVNode(other, afterNode) {
+                nodeInsertBefore.call(this.parentEl, this.el, other ? other.el : afterNode);
             }
             toString() {
                 const div = document.createElement("div");
@@ -1101,14 +1134,22 @@
             }
             this.parentEl = parent;
         }
-        moveBefore(other, afterNode) {
+        moveBeforeDOMNode(node, parent = this.parentEl) {
+            this.parentEl = parent;
+            const children = this.children;
+            for (let i = 0, l = children.length; i < l; i++) {
+                children[i].moveBeforeDOMNode(node, parent);
+            }
+            parent.insertBefore(this.anchor, node);
+        }
+        moveBeforeVNode(other, afterNode) {
             if (other) {
                 const next = other.children[0];
                 afterNode = (next ? next.firstNode() : other.anchor) || null;
             }
             const children = this.children;
             for (let i = 0, l = children.length; i < l; i++) {
-                children[i].moveBefore(null, afterNode);
+                children[i].moveBeforeVNode(null, afterNode);
             }
             this.parentEl.insertBefore(this.anchor, afterNode);
         }
@@ -1123,7 +1164,7 @@
             }
             this.children = ch2;
             const proto = ch2[0] || ch1[0];
-            const { mount: cMount, patch: cPatch, remove: cRemove, beforeRemove, moveBefore: cMoveBefore, firstNode: cFirstNode, } = proto;
+            const { mount: cMount, patch: cPatch, remove: cRemove, beforeRemove, moveBeforeVNode: cMoveBefore, firstNode: cFirstNode, } = proto;
             const _anchor = this.anchor;
             const isOnlyChild = this.isOnlyChild;
             const parent = this.parentEl;
@@ -1305,12 +1346,15 @@
                 nodeInsertBefore.call(parent, textNode, afterNode);
             }
         }
-        moveBefore(other, afterNode) {
-            const target = other ? other.content[0] : afterNode;
-            const parent = this.parentEl;
+        moveBeforeDOMNode(node, parent = this.parentEl) {
+            this.parentEl = parent;
             for (let elem of this.content) {
-                nodeInsertBefore.call(parent, elem, target);
+                nodeInsertBefore.call(parent, elem, node);
             }
+        }
+        moveBeforeVNode(other, afterNode) {
+            const target = other ? other.content[0] : afterNode;
+            this.moveBeforeDOMNode(target);
         }
         patch(other) {
             if (this === other) {
@@ -1389,7 +1433,7 @@
                         const target = ev.target;
                         let currentNode = self.child.firstNode();
                         const afterNode = self.afterNode;
-                        while (currentNode !== afterNode) {
+                        while (currentNode && currentNode !== afterNode) {
                             if (currentNode.contains(target)) {
                                 return origFn.call(this, ev);
                             }
@@ -1398,8 +1442,17 @@
                     };
                 }
             }
-            moveBefore(other, afterNode) {
-                this.child.moveBefore(other ? other.child : null, afterNode);
+            moveBeforeDOMNode(node, parent = this.parentEl) {
+                this.parentEl = parent;
+                this.child.moveBeforeDOMNode(node, parent);
+                parent.insertBefore(this.afterNode, node);
+            }
+            moveBeforeVNode(other, afterNode) {
+                if (other) {
+                    // check this with @ged-odoo for use in foreach
+                    afterNode = other.firstNode() || afterNode;
+                }
+                this.child.moveBeforeVNode(other ? other.child : null, afterNode);
                 this.parentEl.insertBefore(this.afterNode, afterNode);
             }
             patch(other, withBeforeRemove) {
@@ -1690,12 +1743,13 @@
         }
     }
 
-    // Allows to get the target of a Reactive (used for making a new Reactive from the underlying object)
-    const TARGET = Symbol("Target");
-    // Escape hatch to prevent reactivity system to turn something into a reactive
-    const SKIP = Symbol("Skip");
     // Special key to subscribe to, to be notified of key creation/deletion
     const KEYCHANGES = Symbol("Key changes");
+    // Used to specify the absence of a callback, can be used as WeakMap key but
+    // should only be used as a sentinel value and never called.
+    const NO_CALLBACK = () => {
+        throw new Error("Called NO_CALLBACK. Owl is broken, please report this to the maintainers.");
+    };
     const objectToString = Object.prototype.toString;
     const objectHasOwnProperty = Object.prototype.hasOwnProperty;
     const SUPPORTED_RAW_TYPES = new Set(["Object", "Array", "Set", "Map", "WeakMap"]);
@@ -1710,7 +1764,7 @@
      * @returns the raw type of the object
      */
     function rawType(obj) {
-        return objectToString.call(obj).slice(8, -1);
+        return objectToString.call(toRaw(obj)).slice(8, -1);
     }
     /**
      * Checks whether a given value can be made into a reactive object.
@@ -1734,6 +1788,7 @@
     function possiblyReactive(val, cb) {
         return canBeMadeReactive(val) ? reactive(val, cb) : val;
     }
+    const skipped = new WeakSet();
     /**
      * Mark an object or array so that it is ignored by the reactivity system
      *
@@ -1741,7 +1796,7 @@
      * @returns the object itself
      */
     function markRaw(value) {
-        value[SKIP] = true;
+        skipped.add(value);
         return value;
     }
     /**
@@ -1751,7 +1806,7 @@
      * @returns the underlying value
      */
     function toRaw(value) {
-        return value[TARGET] || value;
+        return targets.has(value) ? targets.get(value) : value;
     }
     const targetToKeysToCallbacks = new WeakMap();
     /**
@@ -1764,6 +1819,9 @@
      * @param callback the function to call when the key changes
      */
     function observeTargetKey(target, key, callback) {
+        if (callback === NO_CALLBACK) {
+            return;
+        }
         if (!targetToKeysToCallbacks.get(target)) {
             targetToKeysToCallbacks.set(target, new Map());
         }
@@ -1817,8 +1875,11 @@
             if (!observedKeys) {
                 continue;
             }
-            for (const callbacks of observedKeys.values()) {
+            for (const [key, callbacks] of observedKeys.entries()) {
                 callbacks.delete(callback);
+                if (!callbacks.size) {
+                    observedKeys.delete(key);
+                }
             }
         }
         targetsToClear.clear();
@@ -1827,12 +1888,19 @@
         const targets = callbacksToTargets.get(callback) || [];
         return [...targets].map((target) => {
             const keysToCallbacks = targetToKeysToCallbacks.get(target);
-            return {
-                target,
-                keys: keysToCallbacks ? [...keysToCallbacks.keys()] : [],
-            };
+            let keys = [];
+            if (keysToCallbacks) {
+                for (const [key, cbs] of keysToCallbacks) {
+                    if (cbs.has(callback)) {
+                        keys.push(key);
+                    }
+                }
+            }
+            return { target, keys };
         });
     }
+    // Maps reactive objects to the underlying target
+    const targets = new WeakMap();
     const reactiveCache = new WeakMap();
     /**
      * Creates a reactive proxy for an object. Reading data on the reactive object
@@ -1848,7 +1916,7 @@
      * Subscriptions:
      * + Reading a property on an object will subscribe you to changes in the value
      *    of that property.
-     * + Accessing an object keys (eg with Object.keys or with `for..in`) will
+     * + Accessing an object's keys (eg with Object.keys or with `for..in`) will
      *    subscribe you to the creation/deletion of keys. Checking the presence of a
      *    key on the object with 'in' has the same effect.
      * - getOwnPropertyDescriptor does not currently subscribe you to the property.
@@ -1861,16 +1929,16 @@
      *  reactive has changed
      * @returns a proxy that tracks changes to it
      */
-    function reactive(target, callback = () => { }) {
+    function reactive(target, callback = NO_CALLBACK) {
         if (!canBeMadeReactive(target)) {
             throw new OwlError(`Cannot make the given value reactive`);
         }
-        if (SKIP in target) {
+        if (skipped.has(target)) {
             return target;
         }
-        const originalTarget = target[TARGET];
-        if (originalTarget) {
-            return reactive(originalTarget, callback);
+        if (targets.has(target)) {
+            // target is reactive, create a reactive on the underlying object instead
+            return reactive(targets.get(target), callback);
         }
         if (!reactiveCache.has(target)) {
             reactiveCache.set(target, new WeakMap());
@@ -1883,6 +1951,7 @@
                 : basicProxyHandler(callback);
             const proxy = new Proxy(target, handler);
             reactivesForTarget.set(callback, proxy);
+            targets.set(proxy, target);
         }
         return reactivesForTarget.get(callback);
     }
@@ -1894,29 +1963,27 @@
      */
     function basicProxyHandler(callback) {
         return {
-            get(target, key, proxy) {
-                if (key === TARGET) {
-                    return target;
-                }
+            get(target, key, receiver) {
                 // non-writable non-configurable properties cannot be made reactive
                 const desc = Object.getOwnPropertyDescriptor(target, key);
                 if (desc && !desc.writable && !desc.configurable) {
-                    return Reflect.get(target, key, proxy);
+                    return Reflect.get(target, key, receiver);
                 }
                 observeTargetKey(target, key, callback);
-                return possiblyReactive(Reflect.get(target, key, proxy), callback);
+                return possiblyReactive(Reflect.get(target, key, receiver), callback);
             },
-            set(target, key, value, proxy) {
-                const isNewKey = !objectHasOwnProperty.call(target, key);
-                const originalValue = Reflect.get(target, key, proxy);
-                const ret = Reflect.set(target, key, value, proxy);
-                if (isNewKey) {
+            set(target, key, value, receiver) {
+                const hadKey = objectHasOwnProperty.call(target, key);
+                const originalValue = Reflect.get(target, key, receiver);
+                const ret = Reflect.set(target, key, value, receiver);
+                if (!hadKey && objectHasOwnProperty.call(target, key)) {
                     notifyReactives(target, KEYCHANGES);
                 }
                 // While Array length may trigger the set trap, it's not actually set by this
                 // method but is updated behind the scenes, and the trap is not called with the
                 // new value. We disable the "same-value-optimization" for it because of that.
-                if (originalValue !== value || (Array.isArray(target) && key === "length")) {
+                if (originalValue !== Reflect.get(target, key, receiver) ||
+                    (key === "length" && Array.isArray(target))) {
                     notifyReactives(target, key);
                 }
                 return ret;
@@ -2092,10 +2159,8 @@
         // property is read.
         const specialHandlers = rawTypeToFuncHandlers[targetRawType](target, callback);
         return Object.assign(basicProxyHandler(callback), {
+            // FIXME: probably broken when part of prototype chain since we ignore the receiver
             get(target, key) {
-                if (key === TARGET) {
-                    return target;
-                }
                 if (objectHasOwnProperty.call(specialHandlers, key)) {
                     return specialHandlers[key];
                 }
@@ -2255,12 +2320,13 @@
             this.childEnv = env;
             for (const key in props) {
                 const prop = props[key];
-                if (prop && typeof prop === "object" && prop[TARGET]) {
+                if (prop && typeof prop === "object" && targets.has(prop)) {
                     props[key] = useState(prop);
                 }
             }
             this.component = new C(props, env, this);
-            this.renderFn = app.getTemplate(C.template).bind(this.component, this.component, this);
+            const ctx = Object.assign(Object.create(this.component), { this: this.component });
+            this.renderFn = app.getTemplate(C.template).bind(this.component, ctx, this);
             this.component.setup();
             currentNode = null;
         }
@@ -2373,7 +2439,7 @@
             currentNode = this;
             for (const key in props) {
                 const prop = props[key];
-                if (prop && typeof prop === "object" && prop[TARGET]) {
+                if (prop && typeof prop === "object" && targets.has(prop)) {
                     props[key] = useState(prop);
                 }
             }
@@ -2435,8 +2501,11 @@
             this.children = this.fiber.childrenMap;
             this.fiber = null;
         }
-        moveBefore(other, afterNode) {
-            this.bdom.moveBefore(other ? other.bdom : null, afterNode);
+        moveBeforeDOMNode(node, parent) {
+            this.bdom.moveBeforeDOMNode(node, parent);
+        }
+        moveBeforeVNode(other, afterNode) {
+            this.bdom.moveBeforeVNode(other ? other.bdom : null, afterNode);
         }
         patch() {
             if (this.fiber && this.fiber.parent) {
@@ -2448,6 +2517,7 @@
         }
         _patch() {
             let hasChildren = false;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             for (let _k in this.children) {
                 hasChildren = true;
                 break;
@@ -2599,66 +2669,70 @@
 
     const VText = text("").constructor;
     class VPortal extends VText {
-        constructor(selector, realBDom) {
+        constructor(selector, content) {
             super("");
             this.target = null;
             this.selector = selector;
-            this.realBDom = realBDom;
+            this.content = content;
         }
         mount(parent, anchor) {
             super.mount(parent, anchor);
             this.target = document.querySelector(this.selector);
-            if (!this.target) {
-                let el = this.el;
-                while (el && el.parentElement instanceof HTMLElement) {
-                    el = el.parentElement;
-                }
-                this.target = el && el.querySelector(this.selector);
-                if (!this.target) {
-                    throw new OwlError("invalid portal target");
-                }
+            if (this.target) {
+                this.content.mount(this.target, null);
             }
-            this.realBDom.mount(this.target, null);
+            else {
+                this.content.mount(parent, anchor);
+            }
         }
         beforeRemove() {
-            this.realBDom.beforeRemove();
+            this.content.beforeRemove();
         }
         remove() {
-            if (this.realBDom) {
+            if (this.content) {
                 super.remove();
-                this.realBDom.remove();
-                this.realBDom = null;
+                this.content.remove();
+                this.content = null;
             }
         }
         patch(other) {
             super.patch(other);
-            if (this.realBDom) {
-                this.realBDom.patch(other.realBDom, true);
+            if (this.content) {
+                this.content.patch(other.content, true);
             }
             else {
-                this.realBDom = other.realBDom;
-                this.realBDom.mount(this.target, null);
+                this.content = other.content;
+                this.content.mount(this.target, null);
             }
         }
     }
     /**
-     * <t t-slot="default"/>
+     * kind of similar to <t t-slot="default"/>, but it wraps it around a VPortal
      */
     function portalTemplate(app, bdom, helpers) {
         let { callSlot } = helpers;
         return function template(ctx, node, key = "") {
-            return callSlot(ctx, node, key, "default", false, null);
+            return new VPortal(ctx.props.target, callSlot(ctx, node, key, "default", false, null));
         };
     }
     class Portal extends Component {
         setup() {
             const node = this.__owl__;
-            const renderFn = node.renderFn;
-            node.renderFn = () => new VPortal(this.props.target, renderFn());
-            onWillUnmount(() => {
-                if (node.bdom) {
-                    node.bdom.remove();
+            onMounted(() => {
+                const portal = node.bdom;
+                if (!portal.target) {
+                    const target = document.querySelector(this.props.target);
+                    if (target) {
+                        portal.content.moveBeforeDOMNode(target.firstChild, target);
+                    }
+                    else {
+                        throw new OwlError("invalid portal target");
+                    }
                 }
+            });
+            onWillUnmount(() => {
+                const portal = node.bdom;
+                portal.remove();
             });
         }
     }
@@ -2720,6 +2794,7 @@
         if (Array.isArray(schema)) {
             schema = toSchema(schema);
         }
+        obj = toRaw(obj);
         let errors = [];
         // check if each value in obj has correct shape
         for (let key in obj) {
@@ -2824,7 +2899,7 @@
         if (__scope) {
             slotScope[__scope] = extra;
         }
-        const slotBDom = __render ? __render.call(__ctx.__owl__.component, slotScope, parent, key) : null;
+        const slotBDom = __render ? __render(slotScope, parent, key) : null;
         if (defaultContent) {
             let child1 = undefined;
             let child2 = undefined;
@@ -2832,15 +2907,14 @@
                 child1 = dynamic ? toggler(name, slotBDom) : slotBDom;
             }
             else {
-                child2 = defaultContent.call(ctx.__owl__.component, ctx, parent, key);
+                child2 = defaultContent(ctx, parent, key);
             }
             return multi([child1, child2]);
         }
         return slotBDom || text("");
     }
     function capture(ctx) {
-        const component = ctx.__owl__.component;
-        const result = ObjectCreate(component);
+        const result = ObjectCreate(ctx);
         for (let k in ctx) {
             result[k] = ctx[k];
         }
@@ -2893,14 +2967,15 @@
         return true;
     }
     class LazyValue {
-        constructor(fn, ctx, component, node) {
+        constructor(fn, ctx, component, node, key) {
             this.fn = fn;
             this.ctx = capture(ctx);
             this.component = component;
             this.node = node;
+            this.key = key;
         }
         evaluate() {
-            return this.fn.call(this.component, this.ctx, this.node);
+            return this.fn.call(this.component, this.ctx, this.node, this.key);
         }
         toString() {
             return this.evaluate().toString();
@@ -2948,8 +3023,7 @@
     let boundFunctions = new WeakMap();
     const WeakMapGet = WeakMap.prototype.get;
     const WeakMapSet = WeakMap.prototype.set;
-    function bind(ctx, fn) {
-        let component = ctx.__owl__.component;
+    function bind(component, fn) {
         let boundFnMap = WeakMapGet.call(boundFunctions, component);
         if (!boundFnMap) {
             boundFnMap = new WeakMap();
@@ -2982,10 +3056,10 @@
      * visit recursively the props and all the children to check if they are valid.
      * This is why it is only done in 'dev' mode.
      */
-    function validateProps(name, props, parent) {
+    function validateProps(name, props, comp) {
         const ComponentClass = typeof name !== "string"
             ? name
-            : parent.constructor.components[name];
+            : comp.constructor.components[name];
         if (!ComponentClass) {
             // this is an error, wrong component. We silently return here instead so the
             // error is triggered by the usual path ('component' function)
@@ -2993,7 +3067,7 @@
         }
         const schema = ComponentClass.props;
         if (!schema) {
-            if (parent.__owl__.app.warnIfNoStaticProps) {
+            if (comp.__owl__.app.warnIfNoStaticProps) {
                 console.warn(`Component '${ComponentClass.name}' does not have a static props description`);
             }
             return;
@@ -3177,7 +3251,7 @@
     //------------------------------------------------------------------------------
     // Misc types, constants and helpers
     //------------------------------------------------------------------------------
-    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,eval,void,Math,RegExp,Array,Object,Date".split(",");
+    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,eval,void,Math,RegExp,Array,Object,Date".split(",");
     const WORD_REPLACEMENT = Object.assign(Object.create(null), {
         and: "&&",
         or: "||",
@@ -3563,7 +3637,7 @@
             let result = [];
             result.push(`function ${this.name}(ctx, node, key = "") {`);
             if (this.hasRef) {
-                result.push(`  const refs = ctx.__owl__.refs;`);
+                result.push(`  const refs = this.__owl__.refs;`);
                 for (let name in this.refInfo) {
                     const [id, expr] = this.refInfo[name];
                     result.push(`  const ${id} = ${expr};`);
@@ -3585,6 +3659,13 @@
             }
             result.push(`}`);
             return result.join("\n  ");
+        }
+        currentKey(ctx) {
+            let key = this.loopLevel ? `key${this.loopLevel}` : "key";
+            if (ctx.tKeyExpr) {
+                key = `${ctx.tKeyExpr} + ${key}`;
+            }
+            return key;
         }
     }
     const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
@@ -3648,7 +3729,7 @@
                 for (let block of this.blocks) {
                     if (block.dom) {
                         let xmlString = block.asXmlString();
-                        xmlString = xmlString.replace(/`/g, "\\`");
+                        xmlString = xmlString.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
                         if (block.dynamicTagName) {
                             xmlString = xmlString.replace(/^<\w+/, `<\${tag || '${block.dom.nodeName}'}`);
                             xmlString = xmlString.replace(/\w+>$/, `\${tag || '${block.dom.nodeName}'}>`);
@@ -3715,18 +3796,14 @@
         }
         insertBlock(expression, block, ctx) {
             let blockExpr = block.generateExpr(expression);
-            const tKeyExpr = ctx.tKeyExpr;
             if (block.parentVar) {
-                let keyArg = `key${this.target.loopLevel}`;
-                if (tKeyExpr) {
-                    keyArg = `${tKeyExpr} + ${keyArg}`;
-                }
+                let key = this.target.currentKey(ctx);
                 this.helpers.add("withKey");
-                this.addLine(`${block.parentVar}[${ctx.index}] = withKey(${blockExpr}, ${keyArg});`);
+                this.addLine(`${block.parentVar}[${ctx.index}] = withKey(${blockExpr}, ${key});`);
                 return;
             }
-            if (tKeyExpr) {
-                blockExpr = `toggler(${tKeyExpr}, ${blockExpr})`;
+            if (ctx.tKeyExpr) {
+                blockExpr = `toggler(${ctx.tKeyExpr}, ${blockExpr})`;
             }
             if (block.isRoot && !ctx.preventRoot) {
                 if (this.target.on) {
@@ -3771,74 +3848,62 @@
             })
                 .join("");
         }
+        /**
+         * @returns the newly created block name, if any
+         */
         compileAST(ast, ctx) {
             switch (ast.type) {
                 case 1 /* Comment */:
-                    this.compileComment(ast, ctx);
-                    break;
+                    return this.compileComment(ast, ctx);
                 case 0 /* Text */:
-                    this.compileText(ast, ctx);
-                    break;
+                    return this.compileText(ast, ctx);
                 case 2 /* DomNode */:
-                    this.compileTDomNode(ast, ctx);
-                    break;
+                    return this.compileTDomNode(ast, ctx);
                 case 4 /* TEsc */:
-                    this.compileTEsc(ast, ctx);
-                    break;
+                    return this.compileTEsc(ast, ctx);
                 case 8 /* TOut */:
-                    this.compileTOut(ast, ctx);
-                    break;
+                    return this.compileTOut(ast, ctx);
                 case 5 /* TIf */:
-                    this.compileTIf(ast, ctx);
-                    break;
+                    return this.compileTIf(ast, ctx);
                 case 9 /* TForEach */:
-                    this.compileTForeach(ast, ctx);
-                    break;
+                    return this.compileTForeach(ast, ctx);
                 case 10 /* TKey */:
-                    this.compileTKey(ast, ctx);
-                    break;
+                    return this.compileTKey(ast, ctx);
                 case 3 /* Multi */:
-                    this.compileMulti(ast, ctx);
-                    break;
+                    return this.compileMulti(ast, ctx);
                 case 7 /* TCall */:
-                    this.compileTCall(ast, ctx);
-                    break;
+                    return this.compileTCall(ast, ctx);
                 case 15 /* TCallBlock */:
-                    this.compileTCallBlock(ast, ctx);
-                    break;
+                    return this.compileTCallBlock(ast, ctx);
                 case 6 /* TSet */:
-                    this.compileTSet(ast, ctx);
-                    break;
+                    return this.compileTSet(ast, ctx);
                 case 11 /* TComponent */:
-                    this.compileComponent(ast, ctx);
-                    break;
+                    return this.compileComponent(ast, ctx);
                 case 12 /* TDebug */:
-                    this.compileDebug(ast, ctx);
-                    break;
+                    return this.compileDebug(ast, ctx);
                 case 13 /* TLog */:
-                    this.compileLog(ast, ctx);
-                    break;
+                    return this.compileLog(ast, ctx);
                 case 14 /* TSlot */:
-                    this.compileTSlot(ast, ctx);
-                    break;
+                    return this.compileTSlot(ast, ctx);
                 case 16 /* TTranslation */:
-                    this.compileTTranslation(ast, ctx);
-                    break;
+                    return this.compileTTranslation(ast, ctx);
                 case 17 /* TPortal */:
-                    this.compileTPortal(ast, ctx);
+                    return this.compileTPortal(ast, ctx);
             }
         }
         compileDebug(ast, ctx) {
             this.addLine(`debugger;`);
             if (ast.content) {
-                this.compileAST(ast.content, ctx);
+                return this.compileAST(ast.content, ctx);
             }
+            return null;
         }
         compileLog(ast, ctx) {
             this.addLine(`console.log(${compileExpr(ast.expr)});`);
             if (ast.content) {
-                this.compileAST(ast.content, ctx);
+                return this.compileAST(ast.content, ctx);
             }
+            return null;
         }
         compileComment(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -3854,6 +3919,7 @@
                 const text = xmlDoc.createComment(ast.value);
                 block.insert(text);
             }
+            return block.varName;
         }
         compileText(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -3873,6 +3939,7 @@
                 const createFn = ast.type === 0 /* Text */ ? xmlDoc.createTextNode : xmlDoc.createComment;
                 block.insert(createFn.call(xmlDoc, value));
             }
+            return block.varName;
         }
         generateHandlerCode(rawEvent, handler) {
             const modifiers = rawEvent
@@ -3955,6 +4022,47 @@
                     attrs[`block-attribute-${selectedId}`] = "selected";
                 }
             }
+            // t-model
+            let tModelSelectedExpr;
+            if (ast.model) {
+                const { hasDynamicChildren, baseExpr, expr, eventType, shouldNumberize, shouldTrim, targetAttr, specialInitTargetAttr, } = ast.model;
+                const baseExpression = compileExpr(baseExpr);
+                const bExprId = generateId("bExpr");
+                this.define(bExprId, baseExpression);
+                const expression = compileExpr(expr);
+                const exprId = generateId("expr");
+                this.define(exprId, expression);
+                const fullExpression = `${bExprId}[${exprId}]`;
+                let idx;
+                if (specialInitTargetAttr) {
+                    let targetExpr = targetAttr in attrs && `'${attrs[targetAttr]}'`;
+                    if (!targetExpr && ast.attrs) {
+                        // look at the dynamic attribute counterpart
+                        const dynamicTgExpr = ast.attrs[`t-att-${targetAttr}`];
+                        if (dynamicTgExpr) {
+                            targetExpr = compileExpr(dynamicTgExpr);
+                        }
+                    }
+                    idx = block.insertData(`${fullExpression} === ${targetExpr}`, "attr");
+                    attrs[`block-attribute-${idx}`] = specialInitTargetAttr;
+                }
+                else if (hasDynamicChildren) {
+                    const bValueId = generateId("bValue");
+                    tModelSelectedExpr = `${bValueId}`;
+                    this.define(tModelSelectedExpr, fullExpression);
+                }
+                else {
+                    idx = block.insertData(`${fullExpression}`, "attr");
+                    attrs[`block-attribute-${idx}`] = targetAttr;
+                }
+                this.helpers.add("toNumber");
+                let valueCode = `ev.target.${targetAttr}`;
+                valueCode = shouldTrim ? `${valueCode}.trim()` : valueCode;
+                valueCode = shouldNumberize ? `toNumber(${valueCode})` : valueCode;
+                const handler = `[(ev) => { ${fullExpression} = ${valueCode}; }]`;
+                idx = block.insertData(handler, "hdlr");
+                attrs[`block-handler-${idx}`] = eventType;
+            }
             // event handlers
             for (let ev in ast.on) {
                 const name = this.generateHandlerCode(ev, ast.on[ev]);
@@ -3987,39 +4095,6 @@
                         attrs["block-ref"] = String(index);
                     }
                 }
-            }
-            // t-model
-            let tModelSelectedExpr;
-            if (ast.model) {
-                const { hasDynamicChildren, baseExpr, expr, eventType, shouldNumberize, shouldTrim, targetAttr, specialInitTargetAttr, } = ast.model;
-                const baseExpression = compileExpr(baseExpr);
-                const bExprId = generateId("bExpr");
-                this.define(bExprId, baseExpression);
-                const expression = compileExpr(expr);
-                const exprId = generateId("expr");
-                this.define(exprId, expression);
-                const fullExpression = `${bExprId}[${exprId}]`;
-                let idx;
-                if (specialInitTargetAttr) {
-                    idx = block.insertData(`${fullExpression} === '${attrs[targetAttr]}'`, "attr");
-                    attrs[`block-attribute-${idx}`] = specialInitTargetAttr;
-                }
-                else if (hasDynamicChildren) {
-                    const bValueId = generateId("bValue");
-                    tModelSelectedExpr = `${bValueId}`;
-                    this.define(tModelSelectedExpr, fullExpression);
-                }
-                else {
-                    idx = block.insertData(`${fullExpression}`, "attr");
-                    attrs[`block-attribute-${idx}`] = targetAttr;
-                }
-                this.helpers.add("toNumber");
-                let valueCode = `ev.target.${targetAttr}`;
-                valueCode = shouldTrim ? `${valueCode}.trim()` : valueCode;
-                valueCode = shouldNumberize ? `toNumber(${valueCode})` : valueCode;
-                const handler = `[(ev) => { ${fullExpression} = ${valueCode}; }]`;
-                idx = block.insertData(handler, "hdlr");
-                attrs[`block-handler-${idx}`] = eventType;
             }
             const dom = xmlDoc.createElement(ast.tag);
             for (const [attr, val] of Object.entries(attrs)) {
@@ -4065,6 +4140,7 @@
                     this.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
                 }
             }
+            return block.varName;
         }
         compileTEsc(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -4089,6 +4165,7 @@
                 const text = xmlDoc.createElement(`block-text-${idx}`);
                 block.insert(text);
             }
+            return block.varName;
         }
         compileTOut(ast, ctx) {
             let { block } = ctx;
@@ -4114,6 +4191,7 @@
                 blockStr = `safeOutput(${compileExpr(ast.expr)})`;
             }
             this.insertBlock(blockStr, block, ctx);
+            return block.varName;
         }
         compileTIfBranch(content, block, ctx) {
             this.target.indentLevel++;
@@ -4168,6 +4246,7 @@
                 const args = block.children.map((c) => c.varName).join(", ");
                 this.insertBlock(`multi([${args}])`, block, ctx);
             }
+            return block.varName;
         }
         compileTForeach(ast, ctx) {
             let { block } = ctx;
@@ -4207,8 +4286,8 @@
             if (this.dev) {
                 // Throw error on duplicate keys in dev mode
                 this.helpers.add("OwlError");
-                this.addLine(`if (keys${block.id}.has(key${this.target.loopLevel})) { throw new OwlError(\`Got duplicate key in t-foreach: \${key${this.target.loopLevel}}\`)}`);
-                this.addLine(`keys${block.id}.add(key${this.target.loopLevel});`);
+                this.addLine(`if (keys${block.id}.has(String(key${this.target.loopLevel}))) { throw new OwlError(\`Got duplicate key in t-foreach: \${key${this.target.loopLevel}}\`)}`);
+                this.addLine(`keys${block.id}.add(String(key${this.target.loopLevel}));`);
             }
             let id;
             if (ast.memo) {
@@ -4240,6 +4319,7 @@
                 this.addLine(`ctx = ctx.__proto__;`);
             }
             this.insertBlock("l", block, ctx);
+            return block.varName;
         }
         compileTKey(ast, ctx) {
             const tKeyExpr = generateId("tKey_");
@@ -4249,7 +4329,7 @@
                 block: ctx.block,
                 index: ctx.index,
             });
-            this.compileAST(ast.content, ctx);
+            return this.compileAST(ast.content, ctx);
         }
         compileMulti(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -4257,11 +4337,13 @@
             let codeIdx = this.target.code.length;
             if (isNewBlock) {
                 const n = ast.content.filter((c) => c.type !== 6 /* TSet */).length;
+                let result = null;
                 if (n <= 1) {
                     for (let child of ast.content) {
-                        this.compileAST(child, ctx);
+                        const blockName = this.compileAST(child, ctx);
+                        result = result || blockName;
                     }
-                    return;
+                    return result;
                 }
                 block = this.createBlock(block, "multi", ctx);
             }
@@ -4301,6 +4383,7 @@
                 const args = block.children.map((c) => c.varName).join(", ");
                 this.insertBlock(`multi([${args}])`, block, ctx);
             }
+            return block.varName;
         }
         compileTCall(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -4313,12 +4396,11 @@
                 this.addLine(`${ctxVar} = Object.create(${ctxVar});`);
                 this.addLine(`${ctxVar}[isBoundary] = 1;`);
                 this.helpers.add("isBoundary");
-                const nextId = BlockDescription.nextBlockId;
                 const subCtx = createContext(ctx, { preventRoot: true, ctxVar });
-                this.compileAST({ type: 3 /* Multi */, content: ast.body }, subCtx);
-                if (nextId !== BlockDescription.nextBlockId) {
+                const bl = this.compileMulti({ type: 3 /* Multi */, content: ast.body }, subCtx);
+                if (bl) {
                     this.helpers.add("zero");
-                    this.addLine(`${ctxVar}[zero] = b${nextId};`);
+                    this.addLine(`${ctxVar}[zero] = ${bl};`);
                 }
             }
             const isDynamic = INTERP_REGEXP.test(ast.name);
@@ -4353,6 +4435,7 @@
             if (ast.body && !ctx.isLast) {
                 this.addLine(`${ctxVar} = ${ctxVar}.__proto__;`);
             }
+            return block.varName;
         }
         compileTCallBlock(ast, ctx) {
             let { block, forceNewBlock } = ctx;
@@ -4363,6 +4446,7 @@
             }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(compileExpr(ast.name), block, { ...ctx, forceNewBlock: !block });
+            return block.varName;
         }
         compileTSet(ast, ctx) {
             this.target.shouldProtectScope = true;
@@ -4372,7 +4456,8 @@
                 this.helpers.add("LazyValue");
                 const bodyAst = { type: 3 /* Multi */, content: ast.body };
                 const name = this.compileInNewTarget("value", bodyAst, ctx);
-                let value = `new LazyValue(${name}, ctx, this, node)`;
+                let key = this.target.currentKey(ctx);
+                let value = `new LazyValue(${name}, ctx, this, node, ${key})`;
                 value = ast.value ? (value ? `withDefault(${expr}, ${value})` : expr) : value;
                 this.addLine(`ctx[\`${ast.name}\`] = ${value};`);
             }
@@ -4392,6 +4477,7 @@
                 this.helpers.add("setContextValue");
                 this.addLine(`setContextValue(${ctx.ctxVar || "ctx"}, "${ast.name}", ${value});`);
             }
+            return null;
         }
         generateComponentKey() {
             const parts = [generateId("__")];
@@ -4418,7 +4504,7 @@
                 if (suffix === "bind") {
                     this.helpers.add("bind");
                     name = _name;
-                    value = `bind(ctx, ${value || undefined})`;
+                    value = `bind(this, ${value || undefined})`;
                 }
                 else {
                     throw new OwlError("Invalid prop suffix");
@@ -4457,7 +4543,7 @@
                     const params = [];
                     if (slotAst.content) {
                         const name = this.compileInNewTarget("slot", slotAst.content, ctx, slotAst.on);
-                        params.push(`__render: ${name}, __ctx: ${ctxStr}`);
+                        params.push(`__render: ${name}.bind(this), __ctx: ${ctxStr}`);
                     }
                     const scope = ast.slots[slotName].scope;
                     if (scope) {
@@ -4497,7 +4583,7 @@
                 expr = `\`${ast.name}\``;
             }
             if (this.dev) {
-                this.addLine(`helpers.validateProps(${expr}, ${propVar}, ctx);`);
+                this.addLine(`helpers.validateProps(${expr}, ${propVar}, this);`);
             }
             if (block && (ctx.forceNewBlock === false || ctx.tKeyExpr)) {
                 // todo: check the forcenewblock condition
@@ -4512,6 +4598,13 @@
                 id,
                 expr: `app.createComponent(${ast.isDynamic ? null : expr}, ${!ast.isDynamic}, ${!!ast.slots}, ${!!ast.dynamicProps}, ${!ast.props && !ast.dynamicProps})`,
             });
+            if (ast.isDynamic) {
+                // If the component class changes, this can cause delayed renders to go
+                // through if the key doesn't change. Use the component name for now.
+                // This means that two component classes with the same name isn't supported
+                // in t-component. We can generate a unique id per class later if needed.
+                keyArg = `(${expr}).name + ${keyArg}`;
+            }
             let blockExpr = `${id}(${propString}, ${keyArg}, node, this, ${ast.isDynamic ? expr : null})`;
             if (ast.isDynamic) {
                 blockExpr = `toggler(${expr}, ${blockExpr})`;
@@ -4522,6 +4615,7 @@
             }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(blockExpr, block, ctx);
+            return block.varName;
         }
         wrapWithEventCatcher(expr, on) {
             this.helpers.add("createCatcher");
@@ -4567,7 +4661,7 @@
             const scope = this.getPropString(props, dynProps);
             if (ast.defaultContent) {
                 const name = this.compileInNewTarget("defaultContent", ast.defaultContent, ctx);
-                blockString = `callSlot(ctx, node, ${key}, ${slotName}, ${dynamic}, ${scope}, ${name})`;
+                blockString = `callSlot(ctx, node, ${key}, ${slotName}, ${dynamic}, ${scope}, ${name}.bind(this))`;
             }
             else {
                 if (dynamic) {
@@ -4588,11 +4682,13 @@
             }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(blockString, block, { ...ctx, forceNewBlock: false });
+            return block.varName;
         }
         compileTTranslation(ast, ctx) {
             if (ast.content) {
-                this.compileAST(ast.content, Object.assign({}, ctx, { translate: false }));
+                return this.compileAST(ast.content, Object.assign({}, ctx, { translate: false }));
             }
+            return null;
         }
         compileTPortal(ast, ctx) {
             if (!this.staticDefs.find((d) => d.id === "Portal")) {
@@ -4613,12 +4709,13 @@
                 expr: `app.createComponent(null, false, true, false, false)`,
             });
             const target = compileExpr(ast.target);
-            const blockString = `${id}({target: ${target},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx, Portal)`;
+            const blockString = `${id}({target: ${target},slots: {'default': {__render: ${name}.bind(this), __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx, Portal)`;
             if (block) {
                 this.insertAnchor(block);
             }
             block = this.createBlock(block, "multi", ctx);
             this.insertBlock(blockString, block, { ...ctx, forceNewBlock: false });
+            return block.varName;
         }
     }
 
@@ -5145,8 +5242,9 @@
             }
             // default slot
             const defaultContent = parseChildNodes(clone, ctx);
-            if (defaultContent) {
-                slots = slots || {};
+            slots = slots || {};
+            // t-set-slot="default" has priority over content
+            if (defaultContent && !slots.default) {
                 slots.default = { content: defaultContent, on, attrs: null, scope: defaultSlotScope };
             }
         }
@@ -5490,12 +5588,18 @@
 This is not suitable for production use.
 See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration for more information.`;
     };
+    window.__OWL_DEVTOOLS__ || (window.__OWL_DEVTOOLS__ = {
+        apps: new Set(),
+        Fiber: Fiber,
+        RootFiber: RootFiber,
+    });
     class App extends TemplateSet {
         constructor(Root, config = {}) {
             super(config);
             this.scheduler = new Scheduler();
             this.root = null;
             this.Root = Root;
+            window.__OWL_DEVTOOLS__.apps.add(this);
             if (config.test) {
                 this.dev = true;
             }
@@ -5552,6 +5656,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
                 this.scheduler.flush();
                 this.root.destroy();
             }
+            window.__OWL_DEVTOOLS__.apps.delete(this);
         }
         createComponent(name, isStatic, hasSlotsProp, hasDynamicPropList, hasNoProp) {
             const isDynamic = !isStatic;
@@ -5586,7 +5691,11 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
                 else {
                     // new component
                     if (isStatic) {
-                        C = parent.constructor.components[name];
+                        const components = parent.constructor.components;
+                        if (!components) {
+                            throw new OwlError(`Cannot find the definition of component "${name}", missing static components key in parent`);
+                        }
+                        C = components[name];
                         if (!C) {
                             throw new OwlError(`Cannot find the definition of component "${name}"`);
                         }
@@ -5788,9 +5897,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-beta-20';
-    __info__.date = '2022-09-09T07:39:56.389Z';
-    __info__.hash = 'b51756f';
+    __info__.version = '2.0.6';
+    __info__.date = '2023-02-17T13:32:45.287Z';
+    __info__.hash = '1291f1f';
     __info__.url = 'https://github.com/odoo/owl';
 
 

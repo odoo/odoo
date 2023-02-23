@@ -2,10 +2,11 @@
 <odoo>
     <data noupdate="1">
         <record id="email_template_badge_received" model="mail.template">
-            <field name="name">Received Badge</field>
+            <field name="name">Gamification: Badge Received</field>
             <field name="subject">New badge {{ object.badge_id.name }} granted</field>
             <field name="model_id" ref="gamification.model_gamification_badge_user"/>
             <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="description">Sent automatically to the user who received a badge</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" style="padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" width="590" cellpadding="0" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;" summary="o_mail_notification">
@@ -100,9 +101,10 @@
         </record>
 
         <record id="email_template_goal_reminder" model="mail.template">
-            <field name="name">Goal: Reminder for Goal Update</field>
+            <field name="name">Gamification: Reminder For Goal Update</field>
             <field name="model_id" ref="gamification.model_gamification_goal"/>
             <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="description">Sent automatically to participant who haven't updated their goal</field>
             <field name="body_html" type="html">
 <div>
     <strong>Reminder</strong><br/>
@@ -119,8 +121,9 @@
         </record>
         
         <record id="simple_report_template" model="mail.template">
-            <field name="name">Challenge: Simple Challenge Report Progress</field>
+            <field name="name">Gamification: Challenge Report</field>
             <field name="model_id" ref="gamification.model_gamification_challenge"/>
+            <field name="description">Send a challenge report to all participants</field>
             <field name="body_html" type="html">
 <table cellspacing="0" cellpadding="0" width="100%" style="background-color: #EEE; border-collapse: collapse;">
 <tr>
@@ -317,11 +320,12 @@
         </record>
 
         <record id="mail_template_data_new_rank_reached" model="mail.template">
-            <field name="name">User: New rank reached</field>
+            <field name="name">Gamification: New Rank Reached</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">New rank: {{ object.rank_id.name }}</field>
             <field name="email_to"></field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent automatically when user reaches a new rank</field>
             <field name="body_html" type="html">
 <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">

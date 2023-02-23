@@ -7,6 +7,9 @@
             <button class="o_codeview_btn btn btn-primary">
                 <i class="fa fa-code"></i>
             </button>
+            <button class="o_mobile_preview_btn btn btn-primary">
+                <i class="fa fa-lg fa-mobile"/>
+            </button>
             <button class="o_fullscreen_btn btn btn-primary">
                 <img src="/web_editor/font_to_img/61541/rgb(255,255,255)/16" alt="Fullscreen"/>
             </button>
@@ -20,7 +23,7 @@
     <xpath expr="//t[@id='default_snippets']" position="replace">
         <t id="default_snippets">
             <t t-set="company_id" t-value="res_company"/>
-            <div id="email_designer_themes">
+            <div id="email_designer_themes" class="d-none">
                 <div data-name="basic"
                      title="Plain Text"
                      data-nowrap="1"
@@ -37,7 +40,7 @@
                 <div data-name="default"
                      title="Welcome Message"
                      data-img="/mass_mailing/static/src/img/theme_imgs/default_thumb"
-                     data-images-info='{"logo": {"format": "png"}}'>
+                     data-images-info='{"logo": {"format": "png"}, "header_logo": {"format": "png"}}'>
                     <t t-call="mass_mailing.theme_default_template"/>
                 </div>
             </div>
@@ -195,7 +198,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="o_mail_footer_links">
+                <div class="col-lg o_mail_footer_links">
                     <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                 </div>
             </div>
@@ -266,7 +269,7 @@
             <we-button title="Solid" data-select-style="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
             <we-button title="Dashed" data-select-style="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
             <we-button title="Dotted" data-select-style="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
-            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/></we-button>
+            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
         </we-select>
         <we-colorpicker data-dependencies="border_width_opt"
                         t-att-data-apply-to="apply_to"
@@ -290,7 +293,31 @@
             t-att-data-variable="radius_variable"/>
 </template>
 
+<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options" primary="True">
+    <xpath expr="//div[@data-js='BackgroundImage']" position="attributes">
+        <attribute name="data-js">MassMailingBackgroundImage</attribute>
+    </xpath>
+</template>
+
 <template id="snippet_options_extra_shapes" inherit_id="web_editor.snippet_options">
+    <div><!-- TODO remove me in 16.0 post-backport --></div>
+</template>
+
+<template id="snippet_options_image_styles" inherit_id="web_editor.snippet_options">
+    <div><!-- TODO remove me in 16.0 post-backport --></div>
+</template>
+
+<!-- Mass Mailing Snippet Options -->
+<template id="snippet_options" inherit_id="web_editor.snippet_options" primary="True">
+    <!-- =================================================================== -->
+    <!-- Modify generic snippet options                                      -->
+    <!-- =================================================================== -->
+
+    <xpath expr="//t[@t-set='no_animations']" position="attributes">
+        <attribute name="t-value">True</attribute>
+    </xpath>
+
+    <!-- Extra shapes -->
     <xpath expr="//div[hasclass('o_we_image_shape')]//we-select-page[hasclass('o_we_basic_shapes')]" position="inside">
         <we-button data-set-img-shape="mass_mailing/basic/circle" data-select-label="Circle"/>
         <we-button data-set-img-shape="mass_mailing/basic/triangle" data-select-label="Triangle"/>
@@ -299,9 +326,11 @@
     <xpath expr="//div[hasclass('o_we_image_shape')]//we-select-page[hasclass('o_we_basic_shapes')]" position="attributes">
         <attribute name="t-if">True</attribute>
     </xpath>
-</template>
 
-<template id="snippet_options_image_styles" inherit_id="web_editor.snippet_options">
+    <!-- Image styles -->
+    <!-- TODO review to only modify what's really necessary and potentially -->
+    <!-- make the changes in web_editor directly so that website can benefit -->
+    <!-- from it. -->
     <xpath expr="//div[hasclass('o_we_image_options')]" position="replace">
         <div data-selector="span.fa, i.fa, img">
             <we-select string="Alignment" data-state-to-first-class="true">
@@ -330,12 +359,19 @@
             </we-row>
         </div>
     </xpath>
-</template>
-<!-- Snippet themes Options -->
-<template id="snippet_options">
-    <t t-set="no_animations" t-value="True"/>
-    <t t-call="mass_mailing.snippet_options_extra_shapes"/>
-    <t t-out="0"/>
+
+    <!-- Transform is _very_ badly supported in mail clients -->
+    <xpath expr="//we-button[@data-name='image_transform_opt']" position="replace" />
+
+    <xpath expr="//div[@data-js='ImageTools']" position="attributes">
+        <attribute name="data-js">MassMailingImageTools</attribute>
+    </xpath>
+
+    <!-- =================================================================== -->
+    <!-- Adding mass_mailing specific snippet options                        -->
+    <!-- =================================================================== -->
+
+    <xpath expr="." position="inside">
 
     <!-- Border | Columns -->
     <div data-js="Box"
@@ -387,16 +423,13 @@
         </we-button-group>
     </div>
 
-    <div data-option-name="minHeight" data-selector=".o_mail_snippet_general" data-exclude=".o_mail_snippet_general .row > div *">
+    <div data-selector=".o_mail_snippet_general" data-exclude=".o_mail_snippet_general .row > div *">
         <we-button-group string="Height">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
             <we-button data-select-class="o_height_400" title="400px">50%</we-button>
             <we-button data-select-class="o_height_800" title="800px">100%</we-button>
         </we-button-group>
     </div>
-    <div data-js="mass_mailing_sizing_x"
-        data-selector="img, .mv, .col_mv, td, th"
-        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
 
     <div data-js="table_row"
         data-selector="tr:has(> .row), tr:has(> .col_mv)"
@@ -442,8 +475,7 @@
 
     <div data-selector=".note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)),
         .note-editable .oe_structure > div.o_mail_snippet_general,
-        .note-editable .oe_structure > div.o_mail_snippet_general .o_cc,
-        .note-editable .oe_structure > div.o_mail_snippet_general .btn:not(.btn-link)"
+        .note-editable .oe_structure > div.o_mail_snippet_general .o_cc"
         data-exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2, .s_mail_color_blocks_2 .row > div">
         <we-colorpicker string="Background Color"
             data-select-style="true"
@@ -468,7 +500,7 @@
     </div>
 
     <!-- Allow changing background images in Masonry and Cover -->
-    <t t-call="web_editor.snippet_options_background_options">
+    <t t-call="mass_mailing.snippet_options_background_options">
         <t t-set="selector" t-value="'.s_masonry_block .row > div, .s_cover .oe_img_bg'"/>
         <t t-set="with_images" t-value="True"/>
         <t t-set="with_videos" t-value="false"/>
@@ -502,7 +534,7 @@
     </div>
 
     <!--  Vertical Alignment -->
-    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, s_mail_block_event" data-target=".row">
+    <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, s_mail_block_event" data-target=".row">
         <we-button-group string="Vert. Alignment" title="Vertical Alignment">
             <we-button title="Align Top"
                        data-select-class="align-items-start"
@@ -701,7 +733,7 @@
                     <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
                 </we-button>
                 <we-button title="Double" data-customize-css-property="double">
-                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/>
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
                 </we-button>
             </we-select>
             <we-colorpicker data-customize-css-property=""
@@ -748,7 +780,7 @@
                     <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
                 </we-button>
                 <we-button title="Double" data-customize-css-property="double">
-                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/>
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
                 </we-button>
             </we-select>
             <we-colorpicker data-customize-css-property=""
@@ -774,7 +806,7 @@
                     <div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/>
                 </we-button>
                 <we-button title="Double" data-customize-css-property="double">
-                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-start: none; border-end: none;"/>
+                    <div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/>
                 </we-button>
             </we-select>
             <we-colorpicker data-customize-css-property=""
@@ -790,5 +822,8 @@
             <we-button data-customize-css-property="100%">100%</we-button>
         </we-select>
     </div>
+
+    </xpath>
 </template>
+
 </odoo>

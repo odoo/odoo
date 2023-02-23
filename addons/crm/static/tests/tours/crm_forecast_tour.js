@@ -1,12 +1,13 @@
 /** @odoo-module */
-import tour from 'web_tour.tour';
-const today = moment();
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
+const today = luxon.DateTime.now();
 
-tour.register('crm_forecast', {
+registry.category("web_tour.tours").add('crm_forecast', {
     test: true,
     url: "/web",
-}, [
-    tour.stepUtils.showAppsMenuItem(),
+    steps: [
+    stepUtils.showAppsMenuItem(),
     {
         trigger: ".o_app[data-menu-xmlid='crm.crm_menu_root']",
         content: "open crm app",
@@ -39,7 +40,7 @@ tour.register('crm_forecast', {
     }, {
         trigger: "div[name=date_deadline] input",
         content: "complete expected closing",
-        run: `text ${today.format("MM/DD/YYYY")}`,
+        run: `text ${today.toFormat("MM/dd/yyyy")}`,
     }, {
         trigger: "div[name=date_deadline] input",
         content: "click to make the datepicker disappear",
@@ -65,14 +66,10 @@ tour.register('crm_forecast', {
         content: "edit lead",
         run: "click"
     }, {
-        trigger: ".o_form_button_edit",
-        content: "edit datetime",
-        run: "click"
-    }, {
         trigger: ".o_field_widget[name=date_deadline] input",
         content: "complete expected closing",
         run: function (actions) {
-            actions.text(`text ${moment(today).add(5, 'months').startOf('month').subtract(1, 'days').format("MM/DD/YYYY")}`, this.$anchor);
+            actions.text(`text ${today.plus({months: 5}).startOf('month').minus({days: 1}).toFormat("MM/dd/yyyy")}`, this.$anchor);
             this.$anchor[0].dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
         },
     }, {
@@ -97,4 +94,4 @@ tour.register('crm_forecast', {
         content: "assert that the opportunity has the Won banner",
         run: function () {},
     }
-]);
+]});

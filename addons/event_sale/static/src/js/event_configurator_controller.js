@@ -1,7 +1,8 @@
-odoo.define('event.EventConfiguratorFormController', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var FormController = require('web.FormController');
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { formView } from "@web/views/form/form_view";
 
 /**
  * This controller is overridden to allow configuring sale_order_lines through a popup
@@ -10,7 +11,13 @@ var FormController = require('web.FormController');
  * This allows keeping an editable list view for sales order and remove the noise of
  * those 2 fields ('event_id' + 'event_ticket_id')
  */
-var EventConfiguratorFormController = FormController.extend({
+
+class EventConfiguratorController extends formView.Controller {
+    setup() {
+        super.setup();
+        this.action = useService("action");
+    }
+
     /**
      * We let the regular process take place to allow the validation of the required fields
      * to happen.
@@ -19,20 +26,21 @@ var EventConfiguratorFormController = FormController.extend({
      *
      * @override
      */
-    saveRecord: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            var state = self.renderer.state.data;
-            self.do_action({type: 'ir.actions.act_window_close', infos: {
+    onRecordSaved(record) {
+        const { event_id, event_ticket_id } = record.data;
+        return this.action.doAction({
+            type: "ir.actions.act_window_close",
+            infos: {
                 eventConfiguration: {
-                    event_id: {id: state.event_id.data.id},
-                    event_ticket_id: {id: state.event_ticket_id.data.id}
-                }
-            }});
+                    event_id,
+                    event_ticket_id,
+                },
+            },
         });
     }
-});
+}
 
-return EventConfiguratorFormController;
-
+registry.category("views").add("event_configurator_form", {
+    ...formView,
+    Controller: EventConfiguratorController,
 });

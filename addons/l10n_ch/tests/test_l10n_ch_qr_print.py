@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class QRPrintTest(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_ch.l10nch_chart_template'):
+    def setUpClass(cls, chart_template_ref='ch'):
         super().setUpClass(chart_template_ref=chart_template_ref)
         # the partner must be located in Switzerland.
         cls.partner = cls.env['res.partner'].create({

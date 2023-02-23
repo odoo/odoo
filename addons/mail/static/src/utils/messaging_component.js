@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { useModels } from '@mail/component_hooks/use_models';
+import { useModels } from "@mail/component_hooks/use_models";
 
-const { useRef } = owl;
+import { useRef } from "@odoo/owl";
 
-const componentRegistry = {};
+export const componentRegistry = {};
 
 /**
  * Allows a component to lean on the messaging features: the component is
@@ -24,36 +24,38 @@ export function registerMessagingComponent(ComponentClass) {
     const decoratedName = `@messaging ${name}`;
     // Defining the class in an object and immediately taking it out so that it
     // has "decoratedName" as its class name in stack traces and stuff.
-    const MessagingClass = { [decoratedName]: class extends ComponentClass {
-        setup() {
-            this.root = useRef('root');
-            useModels();
-            super.setup();
-        }
-        get className() {
-            let res = '';
-            if (this.props.className) {
-                res += this.props.className;
+    const MessagingClass = {
+        [decoratedName]: class extends ComponentClass {
+            setup() {
+                this.root = useRef("root");
+                useModels();
+                super.setup();
             }
-            if (this.props.classNameObj) {
-                for (const [key, val] of Object.entries(this.props.classNameObj)) {
-                    if (val) {
-                        res += ' ' + key;
+            get className() {
+                let res = "";
+                if (this.props.className) {
+                    res += this.props.className;
+                }
+                if (this.props.classNameObj) {
+                    for (const [key, val] of Object.entries(this.props.classNameObj)) {
+                        if (val) {
+                            res += " " + key;
+                        }
                     }
                 }
+                return res;
             }
-            return res;
-        }
-        get messaging() {
-            return this.env.services.messaging.modelManager.messaging;
-        }
-        /**
-         * @returns {string}
-         */
-        toString() {
-            return `component(${decoratedName}, props: ${Object.entries(this.props || {})})`;
-        }
-    } }[decoratedName];
+            get messaging() {
+                return this.env.services.messaging.modelManager.messaging;
+            }
+            /**
+             * @returns {string}
+             */
+            toString() {
+                return `component(${decoratedName}, props: ${Object.entries(this.props || {})})`;
+            }
+        },
+    }[decoratedName];
     // Create an object whose prototype is the component registry with the values of the original
     // Component.components. This means that trying to get a value from this object will first look
     // into the original Component's components, and fall back on the registry if not found.
@@ -89,11 +91,11 @@ export function registerMessagingComponent(ComponentClass) {
  * unpatched as the main purpose of this method is to clean up the registry
  * when using one-off components in tests.
  *
- * @param {function} ComponentClass the constructor of the component to be
+ * @param {function} componentName the constructor of the component to be
  *      unregistered. Its name will be used as its key in the registry.
  */
-export function unregisterMessagingComponent(ComponentClass) {
-    delete componentRegistry[ComponentClass.name];
+export function unregisterMessagingComponent(componentName) {
+    delete componentRegistry[componentName];
 }
 
 /**

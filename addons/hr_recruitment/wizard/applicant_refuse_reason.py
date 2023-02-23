@@ -45,8 +45,19 @@ class ApplicantGetRefuseReason(models.TransientModel):
         self.applicant_ids.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False})
         if self.send_mail:
             applicants = self.applicant_ids.filtered(lambda x: x.email_from or x.partner_id.email)
-            applicants.with_context(active_test=True).message_post_with_template(self.template_id.id, **{
-                'auto_delete_message': True,
-                'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-                'email_layout_xmlid': 'mail.mail_notification_light'
-            })
+            # TDE note: keeping 16.0 behavior, clean me please
+            message_values = {
+                'email_layout_xmlid' : 'mail.mail_notification_light',
+            }
+            if len(applicants) > 1:
+                applicants.with_context(active_test=True).message_mail_with_source(
+                    self.template_id,
+                    auto_delete_keep_log=False,
+                    **message_values
+                )
+            else:
+                applicants.with_context(active_test=True).message_post_with_source(
+                    self.template_id,
+                    subtype_xmlid='mail.mt_note',
+                    **message_values
+                )

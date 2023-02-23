@@ -1,5 +1,4 @@
-.o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body,
-.o_legacy_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+.o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
     // cancel padding of form_sheet
     margin-top: -$o-sheet-cancel-tpadding;
     margin-left: -$o-sheet-cancel-hpadding;
@@ -7,8 +6,13 @@
     margin-bottom: -$o-sheet-cancel-bpadding;
 }
 
-html, body {
+html:not(.o_mass_mailing_iframe), body:not(.o_mass_mailing_iframe), html.o_fullscreen {
     overflow: visible !important;
+}
+
+#iframe_target:not(.o_fullscreen) {
+    display: flex;
+    flex-direction: column;
 }
 
 .o_mail_theme_selector {
@@ -53,6 +57,7 @@ html, body {
 
 .o_mail_theme_selector_new {
     display: block;
+    font-size: 1rem;
     position: absolute;
     overflow: auto;
     background-color: $o-we-sidebar-bg;
@@ -61,6 +66,11 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
+
+    h5 {
+        font-size: 1.25rem!important;
+    }
+
     .dropdown-item {
         padding: 10px 10px;
         &:first-child {
@@ -191,9 +201,6 @@ html, body {
     .o_mail_theme_selector_new {
         .dropdown-item {
             max-width: 50%!important;
-        }
-        h5 {
-            font-size: 1.2rem!important;
         }
     }
     .o_mail_template_preview {
@@ -337,7 +344,19 @@ body.editor_enable.o_basic_theme.o_in_iframe {
             display: block;
         }
     }
-    #oe_snippets.o_loaded {
-        transform: translateX(0);
+}
+
+.o_mass_mailing_iframe #oe_snippets.o_loaded {
+    transition: none;
+    transform: translateX(0);
+
+    > .o_we_customize_panel .oe-toolbar {
+        #style.dropup, #font-size.dropup {
+            > .dropdown-menu {
+                overflow-y: scroll;
+                max-height: 200px;
+            }
+        }
     }
 }
+

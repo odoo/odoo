@@ -20,7 +20,7 @@ class SlidesPortalChatter(PortalChatter):
             return True
         return super()._portal_post_has_content(res_model, res_id, message, attachment_ids=attachment_ids, **kw)
 
-    @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
+    @http.route()
     def portal_chatter_post(self, res_model, res_id, message, **kw):
         result = super(SlidesPortalChatter, self).portal_chatter_post(res_model, res_id, message, **kw)
         if result and res_model == 'slide.channel':

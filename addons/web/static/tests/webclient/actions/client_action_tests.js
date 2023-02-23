@@ -15,7 +15,7 @@ import {
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 let serverData;
 let target;
@@ -350,6 +350,60 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.ClientAction2;
     });
 
+    QUnit.test("client action restore scrollbar (legacy)", async function (assert) {
+        assert.expect(7);
+        const ClientAction = AbstractAction.extend({
+            hasControlPanel: true,
+            init(parent, action) {
+                action.display_name = "Title1";
+                this._super.apply(this, arguments);
+            },
+            async start() {
+                for (let i = 0; i < 100; i++) {
+                    const content = document.createElement("div");
+                    content.innerText = "Paper company";
+                    content.className = "lorem";
+                    this.el.querySelector(".o_content").appendChild(content);
+                }
+                await this._super(arguments);
+            },
+        });
+        const ClientAction2 = AbstractAction.extend({
+            hasControlPanel: true,
+            init(parent, action) {
+                action.display_name = "Title2";
+                this._super.apply(this, arguments);
+            },
+            start() {
+                return this._super.apply(this, arguments);
+            },
+        });
+        core.action_registry.add("ClientAction", ClientAction);
+        core.action_registry.add("ClientAction2", ClientAction2);
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, "ClientAction");
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.strictEqual(target.querySelector(".breadcrumb-item.active").textContent, "Title1");
+
+        target.querySelector(".lorem:last-child").scrollIntoView();
+        const scrollPosition = target.querySelector(".o_content").scrollTop;
+        assert.ok(scrollPosition > 0);
+        await doAction(webClient, "ClientAction2", { clearBreadcrumbs: false });
+        assert.containsN(target, ".breadcrumb-item", 2);
+        assert.strictEqual(target.querySelector(".breadcrumb-item.active").textContent, "Title2");
+
+        await click(target.querySelector(".breadcrumb-item:first-child"));
+        assert.strictEqual(target.querySelector(".breadcrumb-item.active").textContent, "Title1");
+
+        assert.strictEqual(
+            target.querySelector(".o_content").scrollTop,
+            scrollPosition,
+            "Should restore the scroll"
+        );
+        delete core.action_registry.map.ClientAction;
+        delete core.action_registry.map.ClientAction2;
+    });
+
     QUnit.test("ClientAction receives breadcrumbs and exports title (wowl)", async (assert) => {
         assert.expect(4);
         class ClientAction extends Component {
@@ -555,5 +609,50 @@ QUnit.module("ActionManager", (hooks) => {
             "a notification should be present"
         );
         assert.verifySteps(["onClose"]);
+    });
+
+    QUnit.test("test reload client action", async function (assert) {
+        patchWithCleanup(browser.location, {
+            assign: (url) => {
+                assert.step(url);
+            },
+            origin: "",
+            hash: "#test=42",
+        });
+
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "reload",
+        });
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "reload",
+            params: {
+                action_id: 2,
+            },
+        });
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "reload",
+            params: {
+                menu_id: 1,
+            },
+        });
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "reload",
+            params: {
+                action_id: 1,
+                menu_id: 2,
+            },
+        });
+        assert.verifySteps([
+            "/web/tests?reload=true#test=42",
+            "/web/tests?reload=true#action=2",
+            "/web/tests?reload=true#menu_id=1",
+            "/web/tests?reload=true#menu_id=2&action=1",
+        ]);
     });
 });

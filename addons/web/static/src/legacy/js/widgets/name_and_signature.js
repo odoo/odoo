@@ -377,7 +377,7 @@ var NameAndSignature = Widget.extend({
      * @returns {string} image = mimetype + image data
      */
     _getSVGText: function (font, text, width, height) {
-        var $svg = $(core.qweb.render('web.sign_svg_text', {
+        var $svg = $(core.qweb.render('web.legacy.sign_svg_text', {
             width: width,
             height: height,
             font: font,
@@ -579,6 +579,7 @@ var NameAndSignature = Widget.extend({
      */
     _onClickSignDrawButton: function (ev) {
         ev.preventDefault();
+        this.$signatureField.jSignature('reset'); // clears signature when clicking on draw
         this.setMode('draw');
     },
     /**

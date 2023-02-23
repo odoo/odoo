@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from . import iap_account
 from . import ir_actions_report
 from . import mail_message
 from . import mail_notification

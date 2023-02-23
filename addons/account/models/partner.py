@@ -8,7 +8,7 @@ from psycopg2 import sql, DatabaseError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
@@ -20,7 +20,7 @@ class AccountFiscalPosition(models.Model):
     _order = 'sequence'
 
     sequence = fields.Integer()
-    name = fields.Char(string='Fiscal Position', required=True)
+    name = fields.Char(string='Fiscal Position', required=True, translate=True)
     active = fields.Boolean(default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.")
     company_id = fields.Many2one(
@@ -30,9 +30,10 @@ class AccountFiscalPosition(models.Model):
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
-    auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
+    auto_apply = fields.Boolean(string='Detect Automatically', help="Apply tax & account mappings on invoices automatically if the matching criterias (VAT/Country) are met.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     company_country_id = fields.Many2one(string="Company Country", related='company_id.account_fiscal_country_id')
+    fiscal_country_codes = fields.Char(string="Company Fiscal Country Code", related='company_country_id.code')
     country_id = fields.Many2one('res.country', string='Country',
         help="Apply only if delivery country matches.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
@@ -63,7 +64,7 @@ class AccountFiscalPosition(models.Model):
 
             if self.env['account.tax'].search([('country_id', '=', record.country_id.id)], limit=1):
                 record.foreign_vat_header_mode = None
-            elif self.env['account.tax.template'].search([('chart_template_id.country_id', '=', record.country_id.id)], limit=1):
+            elif self.env['account.chart.template']._guess_chart_template(record.country_id) != 'generic_coa':
                 record.foreign_vat_header_mode = 'templates_found'
             else:
                 record.foreign_vat_header_mode = 'no_template'
@@ -292,6 +293,15 @@ class AccountFiscalPositionAccount(models.Model):
 class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
+
+    fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
+
+    @api.depends('company_id')
+    @api.depends_context('allowed_company_ids')
+    def _compute_fiscal_country_codes(self):
+        for record in self:
+            allowed_companies = record.company_id or self.env.companies
+            record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
 
     @property
     def _order(self):
@@ -641,20 +651,20 @@ class ResPartner(models.Model):
     def _increase_rank(self, field, n=1):
         if self.ids and field in ['customer_rank', 'supplier_rank']:
             try:
-                with self.env.cr.savepoint(flush=False):
+                with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
                     query = sql.SQL("""
-                        SELECT {field} FROM res_partner WHERE ID IN %(partner_ids)s FOR UPDATE NOWAIT;
+                        SELECT {field} FROM res_partner WHERE ID IN %(partner_ids)s FOR NO KEY UPDATE NOWAIT;
                         UPDATE res_partner SET {field} = {field} + %(n)s
                         WHERE id IN %(partner_ids)s
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
-                    for partner in self:
-                        self.env.cache.remove(partner, partner._fields[field])
+                    self.invalidate_recordset([field])
             except DatabaseError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
-                else:
+                # 55P03 LockNotAvailable
+                # 40001 SerializationFailure
+                if e.pgcode not in ('55P03', '40001'):
                     raise e
+                _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
 
     @api.model
     def get_partner_localisation_fields_required_to_invoice(self, country_id):

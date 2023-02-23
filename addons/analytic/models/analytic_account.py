@@ -10,7 +10,7 @@ class AccountAnalyticAccount(models.Model):
     _name = 'account.analytic.account'
     _inherit = ['mail.thread']
     _description = 'Analytic Account'
-    _order = 'code, name asc'
+    _order = 'plan_id, name asc'
     _check_company_auto = True
     _rec_names_search = ['name', 'code', 'partner_id']
 
@@ -19,6 +19,7 @@ class AccountAnalyticAccount(models.Model):
         index='trigram',
         required=True,
         tracking=True,
+        translate=True,
     )
     code = fields.Char(
         string='Reference',
@@ -103,9 +104,6 @@ class AccountAnalyticAccount(models.Model):
         self.env['account.analytic.line'].flush_model(['account_id', 'company_id'])
 
         self._cr.execute('''
-        SELECT line.id, line.company_id, line.account_id FROM account_analytic_line line''')
-
-        self._cr.execute('''
             SELECT line.account_id
             FROM account_analytic_line line
             JOIN account_analytic_account account ON line.account_id = account.id
@@ -120,9 +118,9 @@ class AccountAnalyticAccount(models.Model):
         for analytic in self:
             name = analytic.name
             if analytic.code:
-                name = f'[{analytic.code}]{name}'
+                name = f'[{analytic.code}] {name}'
             if analytic.partner_id.commercial_partner_id.name:
-                name = f'{name} - {analytic.partner_id.commercial_partner_id.name} - '
+                name = f'{name} - {analytic.partner_id.commercial_partner_id.name}'
             res.append((analytic.id, name))
         return res
 

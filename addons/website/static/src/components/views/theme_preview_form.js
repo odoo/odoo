@@ -23,14 +23,22 @@ export function useLoaderOnClick() {
         async onClickViewButton(params) {
             const name = params.clickParams.name;
             if (['button_refresh_theme', 'button_choose_theme'].includes(name)) {
+                website.invalidateSnippetCache = true;
                 website.showLoader({ showTips: name !== 'button_refresh_theme' });
                 try {
                     const resParams = params.getResParams();
                     const callback = await orm.silent.call(resParams.resModel, name, [[resParams.resId]]);
+                    let keepLoader = false;
                     if (callback) {
+                        callback.target = 'main';
                         await action.doAction(callback);
+                        if (callback.tag === 'website_preview' && callback.context.params.with_loader) {
+                            keepLoader = true;
+                        }
                     }
-                    website.hideLoader();
+                    if (!keepLoader) {
+                        website.hideLoader();
+                    }
                 } catch (error) {
                     website.hideLoader();
                     throw error;

@@ -20,9 +20,3 @@ class AuthOAuthProvider(models.Model):
     css_class = fields.Char(string='CSS class', default='fa fa-fw fa-sign-in text-primary')
     body = fields.Char(required=True, string="Login button label", help='Link text in Login Dialog', translate=True)
     sequence = fields.Integer(default=10)
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.flush_model(['enabled'])
-        self.env.cr.execute("UPDATE auth_oauth_provider SET enabled = false")
-        self.invalidate_model(['enabled'])

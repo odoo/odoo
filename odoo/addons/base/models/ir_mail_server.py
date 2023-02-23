@@ -75,7 +75,13 @@ def extract_rfc2822_addresses(text):
     if not text:
         return []
     candidates = address_pattern.findall(ustr(text))
-    return [formataddr(('', c), charset='ascii') for c in candidates]
+    valid_addresses = []
+    for c in candidates:
+        try:
+            valid_addresses.append(formataddr(('', c), charset='ascii'))
+        except idna.IDNAError:
+            pass
+    return valid_addresses
 
 
 class IrMailServer(models.Model):
@@ -92,9 +98,13 @@ class IrMailServer(models.Model):
         "FROM Filtering",
         help='Define for which email address or domain this server can be used.\n'
              'e.g.: "notification@odoo.com" or "odoo.com"')
-    smtp_host = fields.Char(string='SMTP Server', required=True, help="Hostname or IP of SMTP server")
-    smtp_port = fields.Integer(string='SMTP Port', required=True, default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
-    smtp_authentication = fields.Selection([('login', 'Username'), ('certificate', 'SSL Certificate')], string='Authenticate with', required=True, default='login')
+    smtp_host = fields.Char(string='SMTP Server', help="Hostname or IP of SMTP server")
+    smtp_port = fields.Integer(string='SMTP Port', default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
+    smtp_authentication = fields.Selection([
+        ('login', 'Username'),
+        ('certificate', 'SSL Certificate'),
+        ('cli', 'Command Line Interface')
+    ], string='Authenticate with', required=True, default='login')
     smtp_authentication_info = fields.Text('Authentication Info', compute='_compute_smtp_authentication_info')
     smtp_user = fields.Char(string='Username', help="Optional username for SMTP authentication", groups='base.group_system')
     smtp_pass = fields.Char(string='Password', help="Optional password for SMTP authentication", groups='base.group_system')
@@ -131,6 +141,9 @@ class IrMailServer(models.Model):
                 server.smtp_authentication_info = _(
                     'Authenticate by using SSL certificates, belonging to your domain name. \n'
                     'SSL certificates allow you to authenticate your mail server for the entire domain name.')
+            elif server.smtp_authentication == 'cli':
+                server.smtp_authentication_info = _(
+                    'Use the SMTP configuration set in the "Command Line Interface" arguments.')
             else:
                 server.smtp_authentication = False
 
@@ -189,6 +202,14 @@ class IrMailServer(models.Model):
 
     def _get_test_email_addresses(self):
         self.ensure_one()
+        if self.from_filter:
+            if "@" in self.from_filter:
+                # All emails will be sent from the same address
+                return self.from_filter, "noreply@odoo.com"
+            # All emails will be sent from any address in the same domain
+            default_from = self.env["ir.config_parameter"].sudo().get_param("mail.default.from", "odoo")
+            return f"{default_from}@{self.from_filter}", "noreply@odoo.com"
+        # Fallback to current user email if there's no from filter
         email_from = self.env.user.email
         if not email_from:
             raise UserError(_('Please configure an email on the current user to simulate '
@@ -296,7 +317,7 @@ class IrMailServer(models.Model):
             mail_server = self.env['ir.mail_server']
         ssl_context = None
 
-        if mail_server:
+        if mail_server and mail_server.smtp_authentication != "cli":
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
             if mail_server.smtp_authentication == "certificate":
@@ -332,8 +353,12 @@ class IrMailServer(models.Model):
             smtp_port = tools.config.get('smtp_port', 25) if port is None else port
             smtp_user = user or tools.config.get('smtp_user')
             smtp_password = password or tools.config.get('smtp_password')
-            from_filter = self.env['ir.config_parameter'].sudo().get_param(
-                'mail.default.from_filter', tools.config.get('from_filter'))
+            if mail_server:
+                from_filter = mail_server.from_filter
+            else:
+                from_filter = self.env['ir.config_parameter'].sudo().get_param(
+                    'mail.default.from_filter', tools.config.get('from_filter'))
+
             smtp_encryption = encryption
             if smtp_encryption is None and tools.config.get('smtp_ssl'):
                 smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7
@@ -453,8 +478,6 @@ class IrMailServer(models.Model):
         body = body or u''
 
         msg = EmailMessage(policy=email.policy.SMTP)
-        msg.set_charset('utf-8')
-
         if not message_id:
             if object_id:
                 message_id = tools.generate_tracking_message_id(object_id)
@@ -478,9 +501,11 @@ class IrMailServer(models.Model):
 
         email_body = ustr(body)
         if subtype == 'html' and not body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(ustr(body_alternative), subtype=subtype_alternative, charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         else:
@@ -778,9 +803,3 @@ class IrMailServer(models.Model):
         outgoing mail server.
         """
         return getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.env.flush_all()
-        self.env.invalidate_all()
-        self.env.cr.execute("UPDATE ir_mail_server SET active = false")

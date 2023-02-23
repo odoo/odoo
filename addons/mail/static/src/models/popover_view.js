@@ -1,18 +1,28 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'PopoverView',
-    identifyingMode: 'xor',
+import { usePosition } from "@web/core/position_hook";
+
+Model({
+    name: "PopoverView",
+    template: "mail.PopoverView",
+    componentSetup() {
+        useComponentToModel({ fieldName: "component" });
+        usePosition(() => this.anchorRef && this.anchorRef.el, {
+            popper: "root",
+            margin: 16,
+            position: this.position,
+        });
+    },
+    identifyingMode: "xor",
     lifecycleHooks: {
         _created() {
-            document.addEventListener('click', this._onClickCaptureGlobal, true);
+            document.addEventListener("click", this._onClickCaptureGlobal, true);
         },
         _willDelete() {
-            document.removeEventListener('click', this._onClickCaptureGlobal, true);
+            document.removeEventListener("click", this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -24,7 +34,9 @@ registerModel({
          * @returns {boolean}
          */
         contains(element) {
-            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
+            return Boolean(
+                this.component && this.component.root.el && this.component.root.el.contains(element)
+            );
         },
         /**
          * Closes the popover when clicking outside, if appropriate.
@@ -46,23 +58,41 @@ registerModel({
         },
     },
     fields: {
-        activityMarkDonePopoverContentView: one('ActivityMarkDonePopoverContentView', {
+        activityButtonViewOwnerAsActivityList: one("ActivityButtonView", {
+            identifying: true,
+            inverse: "activityListPopoverView",
+        }),
+        activityCellViewOwnerAsActivityList: one("ActivityCellView", {
+            identifying: true,
+            inverse: "activityListPopoverView",
+        }),
+        activityListView: one("ActivityListView", {
+            inverse: "popoverViewOwner",
+            compute() {
+                return this.activityButtonViewOwnerAsActivityList ||
+                    this.activityCellViewOwnerAsActivityList
+                    ? {}
+                    : clear();
+            },
+        }),
+        activityMarkDonePopoverContentView: one("ActivityMarkDonePopoverContentView", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.activityViewOwnerAsMarkDone) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'popoverViewOwner',
         }),
-        activityViewOwnerAsMarkDone: one('ActivityView', {
+        activityViewOwnerAsMarkDone: one("ActivityView", {
             identifying: true,
-            inverse: 'markDonePopoverView',
+            inverse: "markDonePopoverView",
         }),
         /**
          * HTML element that is used as anchor position for this popover view.
          */
         anchorRef: attr({
+            required: true,
             compute() {
                 if (this.activityViewOwnerAsMarkDone) {
                     return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
@@ -79,6 +109,15 @@ registerModel({
                 if (this.composerViewOwnerAsEmoji) {
                     return this.composerViewOwnerAsEmoji.buttonEmojisRef;
                 }
+                if (this.emojiTextFieldViewOwner) {
+                    return this.emojiTextFieldViewOwner.buttonEmojisRef;
+                }
+                if (this.activityButtonViewOwnerAsActivityList) {
+                    return this.activityButtonViewOwnerAsActivityList.buttonRef;
+                }
+                if (this.activityCellViewOwnerAsActivityList) {
+                    return this.activityCellViewOwnerAsActivityList.contentRef;
+                }
                 if (this.messageActionViewOwnerAsReaction) {
                     return this.messageActionViewOwnerAsReaction.actionRef;
                 }
@@ -87,45 +126,44 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
         }),
-        callActionListViewOwnerAsMoreMenu: one('CallActionListView', {
+        callActionListViewOwnerAsMoreMenu: one("CallActionListView", {
             identifying: true,
-            inverse: 'moreMenuPopoverView',
+            inverse: "moreMenuPopoverView",
         }),
-        callOptionMenuView: one('CallOptionMenu', {
+        callOptionMenuView: one("CallOptionMenu", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.callActionListViewOwnerAsMoreMenu) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'popoverViewOwner',
         }),
-        callParticipantCardOwner: one('CallParticipantCard', {
+        callParticipantCardOwner: one("CallParticipantCard", {
             identifying: true,
-            inverse: 'callParticipantCardPopoverView',
+            inverse: "callParticipantCardPopoverView",
         }),
-        callParticipantCardPopoverContentView: one('CallParticipantCardPopoverContentView', {
+        callParticipantCardPopoverContentView: one("CallParticipantCardPopoverContentView", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.callParticipantCardOwner) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'popoverViewOwner',
         }),
         /**
          * The record that represents the content inside the popover view.
          */
-        channelInvitationForm: one('ChannelInvitationForm', {
+        channelInvitationForm: one("ChannelInvitationForm", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.threadViewTopbarOwnerAsInvite) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'popoverViewOwner',
         }),
         /**
          * States the OWL component of this popover view.
@@ -134,14 +172,15 @@ registerModel({
         /**
          * If set, this popover view is owned by a composer view.
          */
-        composerViewOwnerAsEmoji: one('ComposerView', {
+        composerViewOwnerAsEmoji: one("ComposerView", {
             identifying: true,
-            inverse: 'emojisPopoverView',
+            inverse: "emojisPopoverView",
         }),
         /**
          * Determines the record that is content of this popover view.
          */
-        content: one('Record', {
+        content: one("Record", {
+            required: true,
             compute() {
                 if (this.activityMarkDonePopoverContentView) {
                     return this.activityMarkDonePopoverContentView;
@@ -158,135 +197,158 @@ registerModel({
                 if (this.emojiPickerView) {
                     return this.emojiPickerView;
                 }
+                if (
+                    this.activityButtonViewOwnerAsActivityList ||
+                    this.activityCellViewOwnerAsActivityList
+                ) {
+                    return this.activityListView;
+                }
                 if (this.messageNotificationPopoverContentView) {
                     return this.messageNotificationPopoverContentView;
                 }
                 return clear();
             },
-            required: true,
         }),
         /**
          * Determines the class name for the component
          * that is content of this popover view.
          */
         contentClassName: attr({
+            default: "",
             compute() {
                 if (this.channelInvitationForm) {
-                    return 'o_PopoverView_channelInvitationForm';
+                    return "o_PopoverView_channelInvitationForm";
                 }
                 if (this.emojiPickerView) {
-                    return 'o_PopoverView_emojiPickerView';
+                    return "o_PopoverView_emojiPickerView";
                 }
                 return clear();
             },
-            default: '',
         }),
         /**
          * Determines the component name of the content.
          */
         contentComponentName: attr({
+            default: "",
+            required: true,
             compute() {
                 if (this.activityMarkDonePopoverContentView) {
-                    return 'ActivityMarkDonePopoverContent';
+                    return "ActivityMarkDonePopoverContentView";
                 }
                 if (this.callOptionMenuView) {
-                    return 'CallOptionMenu';
+                    return "CallOptionMenu";
                 }
                 if (this.callParticipantCardPopoverContentView) {
-                    return 'CallParticipantCardPopoverContentView';
+                    return "CallParticipantCardPopoverContentView";
                 }
                 if (this.channelInvitationForm) {
-                    return 'ChannelInvitationForm';
+                    return "ChannelInvitationForm";
                 }
                 if (this.emojiPickerView) {
-                    return 'EmojiPickerView';
+                    return "EmojiPickerView";
+                }
+                if (
+                    this.activityButtonViewOwnerAsActivityList ||
+                    this.activityCellViewOwnerAsActivityList
+                ) {
+                    return "ActivityListView";
                 }
                 if (this.messageNotificationPopoverContentView) {
-                    return 'MessageNotificationPopoverContent';
+                    return "MessageNotificationPopoverContentView";
                 }
                 return clear();
             },
-            default: '',
-            required: true,
+        }),
+        emojiTextFieldViewOwner: one('EmojiTextFieldView', {
+            identifying: true,
+            inverse: 'emojisPopoverView'
         }),
         /**
          * If set, the content of this popover view is a list of emojis.
          */
-        emojiPickerView: one('EmojiPickerView', {
+        emojiPickerView: one("EmojiPickerView", {
+            inverse: "popoverViewOwner",
             compute() {
-                if (this.composerViewOwnerAsEmoji) {
-                    return {};
-                }
-                if (this.messageActionViewOwnerAsReaction) {
+                if (this.composerViewOwnerAsEmoji
+                    || this.emojiTextFieldViewOwner
+                    || this.messageActionViewOwnerAsReaction) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'popoverViewOwner',
         }),
-        manager: one('PopoverManager', {
+        manager: one("PopoverManager", {
+            inverse: "popoverViews",
             compute() {
                 if (this.messaging.popoverManager) {
                     return this.messaging.popoverManager;
                 }
                 return clear();
             },
-            inverse: 'popoverViews',
         }),
         /**
          * If set, this popover view is owned by a message action view.
          */
-        messageActionViewOwnerAsReaction: one('MessageActionView', {
+        messageActionViewOwnerAsReaction: one("MessageActionView", {
             identifying: true,
-            inverse: 'reactionPopoverView',
+            inverse: "reactionPopoverView",
         }),
-        messageNotificationPopoverContentView: one('MessageNotificationPopoverContentView', {
+        messageNotificationPopoverContentView: one("MessageNotificationPopoverContentView", {
+            inverse: "popoverViewOwner",
             compute() {
                 if (this.messageViewOwnerAsNotificationContent) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'popoverViewOwner',
         }),
-        messageViewOwnerAsNotificationContent: one('MessageView', {
+        messageViewOwnerAsNotificationContent: one("MessageView", {
             identifying: true,
-            inverse: 'notificationPopoverView',
+            inverse: "notificationPopoverView",
         }),
         /**
          * Position of the popover view relative to its anchor point.
          * Valid values: 'top', 'right', 'bottom', 'left'
          */
         position: attr({
+            default: "top",
             compute() {
                 if (this.activityViewOwnerAsMarkDone) {
-                    return 'right';
+                    return "right";
                 }
                 if (this.callActionListViewOwnerAsMoreMenu) {
-                    return 'top';
+                    return "top";
                 }
                 if (this.callParticipantCardOwner) {
-                    return 'bottom';
+                    return "bottom";
                 }
                 if (this.threadViewTopbarOwnerAsInvite) {
-                    return 'bottom';
+                    return "bottom";
                 }
                 if (this.composerViewOwnerAsEmoji) {
-                    return 'top';
+                    return "top";
+                }
+                if (this.emojiTextFieldViewOwner) {
+                    return "bottom";
+                }
+                if (this.activityButtonViewOwnerAsActivityList) {
+                    return "bottom-start";
+                }
+                if (this.activityCellViewOwnerAsActivityList) {
+                    return "bottom-start";
                 }
                 if (this.messageActionViewOwnerAsReaction) {
-                    return 'top';
+                    return "top";
                 }
                 return clear();
             },
-            default: 'top',
         }),
         /**
          * If set, this popover view is owned by a thread view topbar record.
          */
-        threadViewTopbarOwnerAsInvite: one('ThreadViewTopbar', {
+        threadViewTopbarOwnerAsInvite: one("ThreadViewTopbar", {
             identifying: true,
-            inverse: 'invitePopoverView',
+            inverse: "invitePopoverView",
         }),
     },
 });

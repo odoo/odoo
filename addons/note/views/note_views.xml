@@ -18,7 +18,6 @@
     <record id="view_note_stage_tree" model="ir.ui.view">
       <field name="name">note.stage.tree</field>
       <field name="model">note.stage</field>
-      <field name="field_parent"></field>
       <field name="arch" type="xml">
         <tree string="Stages of Notes" editable="bottom">
             <field name="sequence" widget="handle"/>
@@ -90,6 +89,10 @@
           <field name="activity_state" />
           <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
           <templates>
+            <t t-name="kanban-menu">
+              <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+              <ul class="oe_kanban_colorpicker" data-field="color"/>
+            </t>
             <t t-name="kanban-box">
               <t t-set="noteHasFollowers" t-value="record.message_partner_ids.raw_value.length &gt; 1"/>
 
@@ -97,15 +100,6 @@
 
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
-                <div class="o_dropdown_kanban dropdown">
-                    <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                        <span class="fa fa-ellipsis-v"/>
-                    </a>
-                    <div class="dropdown-menu" role="menu">
-                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                        <ul class="oe_kanban_colorpicker" data-field="color"/>
-                    </div>
-                </div>
                 <div t-attf-class="d-flex #{noteHasFollowers ? 'flex-wrap' : 'flex-nowrap'}">
                   <div class="d-flex flex-grow-1">
                     <span class="me-2">

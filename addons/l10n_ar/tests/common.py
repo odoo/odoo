@@ -9,11 +9,10 @@ import time
 _logger = logging.getLogger(__name__)
 
 
-@tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestAr(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_ar.l10nar_ri_chart_template'):
+    def setUpClass(cls, chart_template_ref='ar_ri'):
         super(TestAr, cls).setUpClass(chart_template_ref=chart_template_ref)
 
         # ==== Company ====
@@ -44,7 +43,7 @@ class TestAr(AccountTestInvoicingCommon):
         cls.partner_ri = cls.company_ri.partner_id
 
         # ==== Company MONO ====
-        cls.company_mono = cls.setup_company_data('(AR) Monotributista (Unit Tests)', chart_template=cls.env.ref('l10n_ar.l10nar_base_chart_template'))['company']
+        cls.company_mono = cls.setup_company_data('(AR) Monotributista (Unit Tests)', chart_template=chart_template_ref)['company']
         cls.company_mono.write({
             'parent_id': cls.env.ref('base.main_company').id,
             'currency_id': cls.env.ref('base.ARS').id,
@@ -720,7 +719,7 @@ class TestAr(AccountTestInvoicingCommon):
         res = self.env['account.tax'].with_context(active_test=False).search([
             ('type_tax_use', '=', type_tax_use),
             ('company_id', '=', self.env.company.id),
-            ('tax_group_id', '=', self.env.ref('l10n_ar.tax_group_' + tax_type).id)], limit=1)
+            ('tax_group_id', '=', self.env.ref(f'account.{self.env.company.id}_tax_group_{tax_type}').id)], limit=1)
         self.assertTrue(res, '%s Tax was not found' % (tax_type))
         return res
 

@@ -29,9 +29,11 @@
         'web.assets_frontend': [
             'website_hr_recruitment/static/src/scss/**/*',
         ],
+        'website.assets_wysiwyg': [
+            'website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js',
+        ],
         'website.assets_editor': [
             'website_hr_recruitment/static/src/js/systray_items/new_content.js',
-            'website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js',
         ],
         'web.assets_tests': [
             'website_hr_recruitment/static/tests/**/*',

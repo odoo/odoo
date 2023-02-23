@@ -47,7 +47,7 @@ display: none !important;
 * List of changes made in the library
 * There is no changes to pdf.js in this section, but only a note about changes that has been done in /web/static/lib/pdfjs/.
 *
-* In the module account_invoice_extract, the the code need to react to the 'pagerendered' event triggered by
+* In the module account_invoice_extract, the code need to react to the 'pagerendered' event triggered by
 * pdf.js. However in recent version of pdf.js, event are not visible outside of the library, except if the 
 * 'eventBusDispatchToDOM' has been set to true.
 *

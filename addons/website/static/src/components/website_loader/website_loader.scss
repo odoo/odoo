@@ -1,4 +1,6 @@
 .o_website_loader_container {
+    --website-loader-color: #{$white};
+
     font-family: "Montserrat", $font-family-sans-serif;
     background-color: rgba($o-shadow-color, .9);
     pointer-events: all;
@@ -6,6 +8,7 @@
     justify-content: space-evenly;
     z-index: $zindex-modal - 1;
     padding: 7%;
+    color: var(--website-loader-color);
 
     .o_website_loader {
         position: relative;
@@ -19,6 +22,8 @@
 
     .o_website_loader_tip {
         font-size: 0.5em;
+        color: var(--website-loader-color);
+        
         @include media-breakpoint-down(md) {
             width: 50% !important;
         }

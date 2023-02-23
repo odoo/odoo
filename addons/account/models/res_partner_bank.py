@@ -170,6 +170,7 @@ class ResPartnerBank(models.Model):
         """
         return None
 
+    @api.model_create_multi
     def create(self, vals_list):
         # EXTENDS base res.partner.bank
         res = super().create(vals_list)

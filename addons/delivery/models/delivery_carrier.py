@@ -1,10 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import psycopg2
+import re
 
-from odoo import api, fields, models, registry, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_round
+from odoo import _, api, fields, models, registry, SUPERUSER_ID
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_round
+from odoo.tools.safe_eval import safe_eval
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
 
@@ -38,7 +40,12 @@ class DeliveryCarrier(models.Model):
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
-    delivery_type = fields.Selection([('fixed', 'Fixed Price')], string='Provider', default='fixed', required=True)
+    delivery_type = fields.Selection(
+        [('base_on_rule', 'Based on Rules'), ('fixed', 'Fixed Price')],
+        string='Provider',
+        default='fixed',
+        required=True,
+    )
     integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
     debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
@@ -54,7 +61,8 @@ class DeliveryCarrier(models.Model):
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
     state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States')
     zip_prefix_ids = fields.Many2many(
-        'delivery.zip.prefix', 'delivery_zip_prefix_rel', 'carrier_id', 'zip_prefix_id', 'Zip Prefixes')
+        'delivery.zip.prefix', 'delivery_zip_prefix_rel', 'carrier_id', 'zip_prefix_id', 'Zip Prefixes',
+        help="Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')")
     carrier_description = fields.Text(
         'Carrier Description', translate=True,
         help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
@@ -73,6 +81,10 @@ class DeliveryCarrier(models.Model):
         "Insurance Percentage",
         help="Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit.",
         default=0
+    )
+
+    price_rule_ids = fields.One2many(
+        'delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True
     )
 
     _sql_constraints = [
@@ -99,11 +111,12 @@ class DeliveryCarrier(models.Model):
             c.debug_logging = not c.debug_logging
 
     def install_more_provider(self):
+        exclude_apps = ['delivery_barcode', 'delivery_stock_picking_batch', 'delivery_iot']
         return {
-            'name': 'New Providers',
+            'name': _('New Providers'),
             'view_mode': 'kanban,form',
             'res_model': 'ir.module.module',
-            'domain': [['name', '=like', 'delivery_%'], ['name', '!=', 'delivery_barcode']],
+            'domain': [['name', '=like', 'delivery_%'], ['name', 'not in', exclude_apps]],
             'type': 'ir.actions.act_window',
             'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
@@ -119,8 +132,10 @@ class DeliveryCarrier(models.Model):
             return False
         if self.state_ids and partner.state_id not in self.state_ids:
             return False
-        if self.zip_prefix_ids and not partner.zip.upper().startswith(tuple(self.zip_prefix_ids.mapped('name'))):
-            return False
+        if self.zip_prefix_ids:
+            regex = re.compile('|'.join(['^' + zip_prefix for zip_prefix in self.zip_prefix_ids.mapped('name')]))
+            if not re.match(regex, partner.zip.upper()):
+                return False
         return True
 
     @api.onchange('integration_level')
@@ -310,6 +325,120 @@ class DeliveryCarrier(models.Model):
     def fixed_cancel_shipment(self, pickings):
         raise NotImplementedError()
 
+    # ----------------------------------- #
+    # Based on rule delivery type methods #
+    # ----------------------------------- #
+
+    def base_on_rule_rate_shipment(self, order):
+        carrier = self._match_address(order.partner_shipping_id)
+        if not carrier:
+            return {'success': False,
+                    'price': 0.0,
+                    'error_message': _('Error: this delivery method is not available for this address.'),
+                    'warning_message': False}
+
+        try:
+            price_unit = self._get_price_available(order)
+        except UserError as e:
+            return {'success': False,
+                    'price': 0.0,
+                    'error_message': e.args[0],
+                    'warning_message': False}
+
+        price_unit = self._compute_currency(order, price_unit, 'company_to_pricelist')
+
+        return {'success': True,
+                'price': price_unit,
+                'error_message': False,
+                'warning_message': False}
+
+    def _get_conversion_currencies(self, order, conversion):
+        if conversion == 'company_to_pricelist':
+            from_currency, to_currency = order.company_id.currency_id, order.pricelist_id.currency_id
+        elif conversion == 'pricelist_to_company':
+            from_currency, to_currency = order.currency_id, order.company_id.currency_id
+
+        return from_currency, to_currency
+
+    def _compute_currency(self, order, price, conversion):
+        from_currency, to_currency = self._get_conversion_currencies(order, conversion)
+        if from_currency.id == to_currency.id:
+            return price
+        return from_currency._convert(price, to_currency, order.company_id, order.date_order or fields.Date.today())
+
+    def _get_price_available(self, order):
+        self.ensure_one()
+        self = self.sudo()
+        order = order.sudo()
+        total = weight = volume = quantity = 0
+        total_delivery = 0.0
+        for line in order.order_line:
+            if line.state == 'cancel':
+                continue
+            if line.is_delivery:
+                total_delivery += line.price_total
+            if not line.product_id or line.is_delivery:
+                continue
+            if line.product_id.type == "service":
+                continue
+            qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+            weight += (line.product_id.weight or 0.0) * qty
+            volume += (line.product_id.volume or 0.0) * qty
+            quantity += qty
+        total = (order.amount_total or 0.0) - total_delivery
+
+        total = self._compute_currency(order, total, 'pricelist_to_company')
+        # weight is either,
+        # 1- weight chosen by user in choose.delivery.carrier wizard passed by context
+        # 2- saved weight to use on sale order
+        # 3- total order line weight as fallback
+        weight = self.env.context.get('order_weight') or order.shipping_weight or weight
+        return self._get_price_from_picking(total, weight, volume, quantity)
+
+    def _get_price_dict(self, total, weight, volume, quantity):
+        '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
+        Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
+        return {
+            'price': total,
+            'volume': volume,
+            'weight': weight,
+            'wv': volume * weight,
+            'quantity': quantity
+        }
+
+    def _get_price_from_picking(self, total, weight, volume, quantity):
+        price = 0.0
+        criteria_found = False
+        price_dict = self._get_price_dict(total, weight, volume, quantity)
+        if self.free_over and total >= self.amount:
+            return 0
+        for line in self.price_rule_ids:
+            test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
+            if test:
+                price = line.list_base_price + line.list_price * price_dict[line.variable_factor]
+                criteria_found = True
+                break
+        if not criteria_found:
+            raise UserError(_("Not available for current order"))
+
+        return price
+
+    def base_on_rule_send_shipping(self, pickings):
+        res = []
+        for p in pickings:
+            carrier = self._match_address(p.partner_id)
+            if not carrier:
+                raise ValidationError(_('There is no matching delivery rule.'))
+            res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
+                          'tracking_number': False}]
+        return res
+
+    def base_on_rule_get_tracking_link(self, picking):
+        return False
+
+    def base_on_rule_cancel_shipment(self, pickings):
+        raise NotImplementedError()
+
     # -------------------------------- #
     # get default packages/commodities #
     # -------------------------------- #
@@ -322,6 +451,9 @@ class DeliveryCarrier(models.Model):
             total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
 
         total_weight = order._get_estimated_weight() + default_package_type.base_weight
+        if total_weight == 0.0:
+            weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (weight_uom_name))
         # If max weight == 0 => division by 0. If this happens, we want to have
         # more in the max weight than in the total weight, so that it only
         # creates ONE package with everything.
@@ -329,10 +461,17 @@ class DeliveryCarrier(models.Model):
         total_full_packages = int(total_weight / max_weight)
         last_package_weight = total_weight % max_weight
 
-        package_weights = [max_weight] * total_full_packages + [last_package_weight] if last_package_weight else []
+        package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
         partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
+        order_commodities = self._get_commodities_from_order(order)
+
+        # Split the commodities value uniformly as well
+        for commodity in order_commodities:
+            commodity.monetary_value /= len(package_weights)
+            commodity.qty = max(1, commodity.qty // len(package_weights))
+
         for weight in package_weights:
-            packages.append(DeliveryPackage(None, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
+            packages.append(DeliveryPackage(order_commodities, weight, default_package_type, total_cost=partial_cost, currency=order.company_id.currency_id, order=order))
         return packages
 
     def _get_packages_from_picking(self, picking, default_package_type):
@@ -360,6 +499,8 @@ class DeliveryCarrier(models.Model):
             for move_line in picking.move_line_ids:
                 package_total_cost += self._product_price_to_company_currency(move_line.qty_done, move_line.product_id, picking.company_id)
             packages.append(DeliveryPackage(commodities, picking.weight_bulk, default_package_type, name='Bulk Content', total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+        elif not packages:
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (picking.weight_uom_name))
 
         return packages
 
@@ -390,16 +531,3 @@ class DeliveryCarrier(models.Model):
 
     def _product_price_to_company_currency(self, quantity, product, company):
         return company.currency_id._convert(quantity * product.standard_price, product.currency_id, company, fields.Date.today())
-
-    # -------------------------- #
-    # neutralize                 #
-    # -------------------------- #
-
-    def _neutralize(self):
-        super()._neutralize()
-        self.flush_model()
-        self.invalidate_model()
-        self.env.cr.execute("""
-            UPDATE delivery_carrier
-            SET prod_environment = false, active = false
-        """)

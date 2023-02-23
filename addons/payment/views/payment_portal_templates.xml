@@ -19,6 +19,8 @@
     <!-- Display of /payment/pay -->
     <template id="pay">
         <!-- Variables description:
+            - 'company_mismatch' - Whether the user should make the payment in another company.
+            - 'expected_company' - The record of the company that the user should switch to.
             - 'partner_is_different' - Whether the partner logged in is the one making the payment
         -->
         <t t-call="portal.frontend_layout">
@@ -39,6 +41,9 @@
                             </div>
                             <div t-elif="not partner_id" class="alert alert-warning">
                                 <strong>Warning</strong> You must be logged in to pay.
+                            </div>
+                            <div t-elif="company_mismatch">
+                                <t t-call="payment.company_mismatch_warning"/>
                             </div>
                             <div t-elif="not providers and not tokens" class="alert alert-warning">
                                 <strong>No suitable payment option could be found.</strong><br/>

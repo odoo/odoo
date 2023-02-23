@@ -16,7 +16,7 @@ def odoo_charts(data):
     figures = []
     for sheet in data["sheets"]:
         figures += [
-            figure["data"]
+            dict(figure["data"], id=figure["id"])
             for figure in sheet["figures"]
             if figure["tag"] == "chart" and figure["data"]["type"].startswith("odoo_")
         ]
@@ -41,7 +41,7 @@ def odoo_view_links(data):
     urls looks like odoo://view/{... view data...}
     """
     return [
-        json.loads(url[len(odoo_view_link_prefix) :])
+        json.loads(url[len(odoo_view_link_prefix):])
         for url in links_urls(data)
         if url.startswith(odoo_view_link_prefix)
     ]
@@ -120,17 +120,36 @@ def filter_fields(data):
     """return all field names used in global filter definitions"""
     fields_by_model = defaultdict(set)
     charts = odoo_charts(data)
-    for filter_definition in data["globalFilters"]:
-        for pivot_id, matching in filter_definition.get("pivotFields", dict()).items():
-            model = data["pivots"][pivot_id]["model"]
-            fields_by_model[model].add(matching["field"])
-        for list_id, matching in filter_definition.get("listFields", dict()).items():
-            model = data["lists"][list_id]["model"]
-            fields_by_model[model].add(matching["field"])
-        for chart_id, matching in filter_definition.get("graphFields", dict()).items():
-            chart = next((chart for chart in charts if chart["id"] == chart_id), None)
+    odoo_version = data.get("odooVersion", 1)
+    if odoo_version < 5:
+        for filter_definition in data.get("globalFilters", []):
+            for pivot_id, matching in filter_definition.get("pivotFields", dict()).items():
+                model = data["pivots"][pivot_id]["model"]
+                fields_by_model[model].add(matching["field"])
+            for list_id, matching in filter_definition.get("listFields", dict()).items():
+                model = data["lists"][list_id]["model"]
+                fields_by_model[model].add(matching["field"])
+            for chart_id, matching in filter_definition.get("graphFields", dict()).items():
+                chart = next((chart for chart in charts if chart["id"] == chart_id), None)
+                model = chart["metaData"]["resModel"]
+                fields_by_model[model].add(matching["field"])
+    else:
+        for pivot in data["pivots"].values():
+            model = pivot.model
+            field = pivot.get("fieldMatching", {}).get("chain")
+            if field:
+                fields_by_model[model].add(field)
+        for _list in data["lists"].values():
+            model = _list.model
+            field = _list.get("fieldMatching", {}).get("chain")
+            if field:
+                fields_by_model[model].add(field)
+        for chart in charts:
             model = chart["metaData"]["resModel"]
-            fields_by_model[model].add(matching["field"])
+            field = chart.get("fieldMatching", {}).get("chain")
+            if field:
+                fields_by_model[model].add(field)
+
     return dict(fields_by_model)
 
 
@@ -164,7 +183,7 @@ def fields_in_spreadsheet(data):
 def xml_ids_in_spreadsheet(data):
 
     return set(data.get("chartOdooMenusReferences", {}).values()) | {
-        url[len(xml_id_url_prefix) :]
+        url[len(xml_id_url_prefix):]
         for url in links_urls(data)
         if url.startswith(xml_id_url_prefix)
     }

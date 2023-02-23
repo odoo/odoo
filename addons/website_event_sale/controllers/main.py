@@ -12,7 +12,6 @@ class WebsiteEventSaleController(WebsiteEventController):
 
     @route()
     def event_register(self, event, **post):
-        event = event.with_context(pricelist=request.website.id)
         if not request.context.get('pricelist'):
             pricelist = request.website.pricelist_id
             if pricelist:
@@ -76,18 +75,3 @@ class WebsiteEventSaleController(WebsiteEventController):
                 request.website.sale_reset()
 
         return res
-
-    def _prepare_event_values(self, name, event_start, event_end, address_values=None):
-        values = super()._prepare_event_values(name, event_start, event_end, address_values)
-        product = request.env.ref('event_sale.product_product_event', raise_if_not_found=False)
-        if product:
-            values.update({
-                'event_ticket_ids': [[0, 0, {
-                    'name': _('Registration'),
-                    'product_id': product.id,
-                    'end_sale_datetime': False,
-                    'seats_max': 1000,
-                    'price': 0,
-                }]]
-            })
-        return values

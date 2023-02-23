@@ -2,7 +2,7 @@
 <odoo noupdate="1">
 
     <record id="hr_resume_rule_employee" model="ir.rule">
-        <field name="name">Resumé: employee: read all</field>
+        <field name="name">Resume: employee: read all</field>
         <field name="model_id" ref="model_hr_resume_line"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="perm_create" eval="False"/>
@@ -12,14 +12,14 @@
     </record>
 
     <record id="hr_resume_rule_employee_hr_user" model="ir.rule">
-        <field name="name">Resumé: HR user: all</field>
+        <field name="name">Resume: HR user: all</field>
         <field name="model_id" ref="model_hr_resume_line"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4,ref('hr.group_hr_user'))]"/>
     </record>
 
     <record id="hr_skills_rule_employee_update" model="ir.rule">
-        <field name="name">Resumé: employee: create/write/unlink own</field>
+        <field name="name">Resume: employee: create/write/unlink own</field>
         <field name="model_id" ref="model_hr_resume_line"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
         <field name="perm_read" eval="False"/>

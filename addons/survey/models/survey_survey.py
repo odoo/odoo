@@ -367,7 +367,8 @@ class Survey(models.Model):
         This implementation assumes that the order of created questions/answers will be kept between
         the original and the clone, using 'zip()' to match the records between the two.
 
-        Note that when question_ids is provided in the default parameter, it falls back to the standard copy.
+        Note that when question_ids is provided in the default parameter, it falls back to the
+        standard copy, meaning that triggering logic will not be maintained.
         """
         self.ensure_one()
         clone = super(Survey, self).copy(default)
@@ -382,6 +383,7 @@ class Survey(models.Model):
         }
         for src, dst in zip(self.question_ids, clone.question_ids):
             if src.is_conditional:
+                dst.is_conditional = True
                 dst.triggering_question_id = questions_map.get(src.triggering_question_id.id)
                 dst.triggering_answer_id = answers_map.get(src.triggering_answer_id.id)
         return clone
@@ -581,10 +583,29 @@ class Survey(models.Model):
             if self.questions_selection == 'random' and not self.session_state:
                 result = user_input.predefined_question_ids
             else:
-                result = self.question_and_page_ids.filtered(
-                    lambda question: not question.is_page or not is_html_empty(question.description))
+                result = self._get_pages_and_questions_to_show()
 
         return result
+
+    def _get_pages_and_questions_to_show(self):
+        """
+        :return: survey.question recordset excluding invalid conditional questions and pages without description
+        """
+
+        self.ensure_one()
+        invalid_questions = self.env['survey.question']
+        questions_and_valid_pages = self.question_and_page_ids.filtered(
+            lambda question: not question.is_page or not is_html_empty(question.description))
+        for question in questions_and_valid_pages.filtered(lambda q: q.is_conditional).sorted():
+            trigger = question.triggering_question_id
+            if (trigger in invalid_questions
+                    or trigger.is_page
+                    or trigger.question_type not in ['simple_choice', 'multiple_choice']
+                    or not trigger.suggested_answer_ids
+                    or trigger.sequence > question.sequence
+                    or (trigger.sequence == question.sequence and trigger.id > question.id)):
+                invalid_questions |= question
+        return questions_and_valid_pages - invalid_questions
 
     def _get_next_page_or_question(self, user_input, page_or_question_id, go_back=False):
         """ Generalized logic to retrieve the next question or page to show on the survey.
@@ -902,9 +923,9 @@ class Survey(models.Model):
         local_context = dict(
             self.env.context,
             default_survey_id=self.id,
-            default_use_template=bool(template),
             default_template_id=template and template.id or False,
             default_email_layout_xmlid='mail.mail_notification_light',
+            default_send_email=(self.access_mode != 'public'),
         )
         return {
             'type': 'ir.actions.act_window',

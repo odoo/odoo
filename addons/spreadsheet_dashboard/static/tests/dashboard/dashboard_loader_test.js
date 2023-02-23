@@ -7,7 +7,7 @@ import {
     DashboardLoader,
     Status,
 } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_loader";
-import { nextTick } from "@web/../tests/helpers/utils";
+import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { getDashboardServerData } from "../utils/data";
 
 import { waitForDataSourcesLoaded } from "@spreadsheet/../tests/utils/model";
@@ -29,9 +29,9 @@ async function createDashboardLoader(params = {}) {
         const [record] = await env.services.orm.read(
             "spreadsheet.dashboard",
             [dashboardId],
-            ["raw"]
+            ["spreadsheet_data"]
         );
-        return { data: record.raw, revisions: [] };
+        return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
     });
 }
 
@@ -176,7 +176,7 @@ QUnit.test("load spreadsheet data with error", async (assert) => {
             if (
                 args.method === "read" &&
                 args.model === "spreadsheet.dashboard" &&
-                args.args[1][0] === "raw"
+                args.args[1][0] === "spreadsheet_data"
             ) {
                 throw new Error("Bip");
             }
@@ -206,7 +206,7 @@ QUnit.test("async formulas are correctly evaluated", async (assert) => {
     serverData.models["spreadsheet.dashboard"].records = [
         {
             id: dashboardId,
-            raw: JSON.stringify(spreadsheetData),
+            spreadsheet_data: JSON.stringify(spreadsheetData),
             json_data: JSON.stringify(spreadsheetData),
             name: "Dashboard Accounting 1",
             dashboard_group_id: 2,
@@ -239,4 +239,17 @@ QUnit.test("Model is in dashboard mode", async (assert) => {
     await nextTick();
     const { model } = loader.getDashboard(3);
     assert.strictEqual(model.config.mode, "dashboard");
+});
+
+QUnit.test("Model is in dashboard mode", async (assert) => {
+    patchWithCleanup(DashboardLoader.prototype, {
+        _activateFirstSheet: () => {
+            assert.step("activate sheet");
+        },
+    });
+    const loader = await createDashboardLoader();
+    await loader.load();
+    loader.getDashboard(3);
+    await nextTick();
+    assert.verifySteps(["activate sheet"]);
 });

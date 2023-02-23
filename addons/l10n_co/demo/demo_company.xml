@@ -7,7 +7,7 @@
         <field name="city">Zuluaga</field>
         <field name="country_id" ref="base.co"/>
         <field name="state_id" ref="base.state_co_33"/>
-        <field name="zip"></field>
+        <field name="zip"/>
         <field name="phone">+57 321 1234567</field>
         <field name="email">info@company.coexample.com</field>
         <field name="website">www.coexample.com</field>
@@ -28,7 +28,8 @@
     </function>
 
     <function model="account.chart.template" name="try_loading">
-        <value eval="[ref('l10n_co.l10n_co_chart_template_generic')]"/>
+        <value eval="[]"/>
+        <value>co</value>
         <value model="res.company" eval="obj().env.ref('l10n_co.demo_company_co')"/>
     </function>
 </odoo>

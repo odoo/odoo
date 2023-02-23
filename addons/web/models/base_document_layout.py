@@ -40,11 +40,19 @@ class BaseDocumentLayout(models.TransientModel):
     def _default_company_details(self):
         company = self.env.company
         address_format, company_data = company.partner_id._prepare_display_address()
+        address_format = self._clean_address_format(address_format, company_data)
         # company_name may *still* be missing from prepared address in case commercial_company_name is falsy
         if 'company_name' not in address_format:
             address_format = '%(company_name)s\n' + address_format
             company_data['company_name'] = company_data['company_name'] or company.name
         return Markup(nl2br(address_format)) % company_data
+
+    def _clean_address_format(self, address_format, company_data):
+        missing_company_data = [k for k, v in company_data.items() if not v]
+        for key in missing_company_data:
+            if key in address_format:
+                address_format = address_format.replace(f'%({key})s\n', '')
+        return address_format
 
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company, required=True)

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.MyAttendances" owl="1">
+    <CardLayout>
+        <t t-if="employee">
+            <t t-call="hr_attendance.UserBadge">
+                <t t-set="userId" t-value="employee.id"/>
+                <t t-set="userName" t-value="employee.name"/>
+            </t>
+
+            <div class="flex-grow-1">
+                <h1 class="mt-5" t-esc="employee.name"/>
+                <h3><t t-if="!checkedIn">Welcome!</t><t t-else="">Want to check out?</t></h3>
+                <h4 class="mt0 mb0 text-muted" t-if="checkedIn">Today's work hours: <span t-esc="hoursToday"/></h4>
+            </div>
+
+            <CheckInOut checkedIn="checkedIn" employeeId="employee.id" nextAction="nextAction"/>
+        </t>
+        <div t-else="" class="alert alert-warning">
+            <b>Warning</b> : Your user should be linked to an employee to use attendance.<br/> Please contact your administrator.
+        </div>
+    </CardLayout>
+</t>
+
+</templates>

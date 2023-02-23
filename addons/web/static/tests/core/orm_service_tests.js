@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { makeTestEnv } from "../helpers/mock_env";
 import { getFixture, mount } from "../helpers/utils";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 QUnit.module("ORM Service", {
@@ -91,7 +91,7 @@ QUnit.test("basic method call of model", async (assert) => {
     });
 });
 
-QUnit.test("create method", async (assert) => {
+QUnit.test("create method: one record", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
@@ -99,9 +99,40 @@ QUnit.test("create method", async (assert) => {
     assert.strictEqual(query.route, "/web/dataset/call_kw/partner/create");
     assert.deepEqual(query.params, {
         args: [
-            {
-                color: "red",
+            [
+                {
+                    color: "red",
+                },
+            ],
+        ],
+        kwargs: {
+            context: {
+                lang: "en",
+                tz: "taht",
+                uid: 7,
             },
+        },
+        method: "create",
+        model: "partner",
+    });
+});
+
+QUnit.test("create method: several records", async (assert) => {
+    const [query, rpc] = makeFakeRPC();
+    serviceRegistry.add("rpc", rpc);
+    const env = await makeTestEnv();
+    await env.services.orm.create("partner", [{ color: "red" }, { color: "green" }]);
+    assert.strictEqual(query.route, "/web/dataset/call_kw/partner/create");
+    assert.deepEqual(query.params, {
+        args: [
+            [
+                {
+                    color: "red",
+                },
+                {
+                    color: "green",
+                },
+            ],
         ],
         kwargs: {
             context: {

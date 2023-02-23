@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useService, useBus } from "@web/core/utils/hooks";
 
-const { Component, onWillStart, onMounted, useState } = owl;
+const { Component, onWillStart, useState } = owl;
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -15,15 +15,10 @@ export class EditInBackendSystray extends Component {
 
         onWillStart(this._updateMainObjectName);
         useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', this._updateMainObjectName);
-
-        onMounted(() => {
-            this.websiteService.editedObjectPath = null;
-        });
     }
 
     editInBackend() {
         const { metadata: { mainObject } } = this.websiteService.currentWebsite;
-        this.websiteService.editedObjectPath = this.websiteService.contentWindow.location.pathname;
         this.actionService.doAction({
             res_model: mainObject.model,
             res_id: mainObject.id,

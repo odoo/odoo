@@ -7,6 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS, RESULT_CODES_MAPPING
 
 _logger = logging.getLogger(__name__)
@@ -75,6 +76,10 @@ class PaymentTransaction(models.Model):
             'recurringProcessingModel': 'Subscription',
             'shopperIP': payment_utils.get_customer_ip_address(),
             'shopperInteraction': 'ContAuth',
+            'shopperEmail': self.partner_email,
+            'shopperName': adyen_utils.format_partner_name(self.partner_name),
+            'telephoneNumber': self.partner_phone,
+            **adyen_utils.include_partner_addresses(self),
         }
 
         # Force the capture delay on Adyen side if the provider is not configured for capturing
@@ -102,24 +107,18 @@ class PaymentTransaction(models.Model):
         )
         self._handle_notification_data('adyen', response_content)
 
-    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
+    def _send_refund_request(self, amount_to_refund=None):
         """ Override of payment to send a refund request to Adyen.
 
         Note: self.ensure_one()
 
         :param float amount_to_refund: The amount to refund
-        :param bool create_refund_transaction: Whether a refund transaction should be created or not
-        :return: The refund transaction if any
+        :return: The refund transaction created to process the refund request.
         :rtype: recordset of `payment.transaction`
         """
+        refund_tx = super()._send_refund_request(amount_to_refund=amount_to_refund)
         if self.provider_code != 'adyen':
-            return super()._send_refund_request(
-                amount_to_refund=amount_to_refund,
-                create_refund_transaction=create_refund_transaction
-            )
-        refund_tx = super()._send_refund_request(
-            amount_to_refund=amount_to_refund, create_refund_transaction=True
-        )
+            return refund_tx
 
         # Make the refund request to Adyen
         converted_amount = payment_utils.to_minor_currency_units(

@@ -1,19 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Authorize.Net Payment Provider',
+    'name': 'Payment Provider: Authorize.Net',
     'version': '2.0',
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
-    'summary': 'Payment Provider: Authorize.net Implementation',
-    'description': """Authorize.Net Payment Provider""",
+    'summary': "An payment provider covering the US, Australia, and Canada.",
     'depends': ['payment'],
     'data': [
-        'views/payment_views.xml',
         'views/payment_authorize_templates.xml',
+        'views/payment_provider_views.xml',
+        'views/payment_token_views.xml',
+
         'data/payment_provider_data.xml',
     ],
-    'application': True,
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {

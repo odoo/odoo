@@ -132,16 +132,16 @@
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order" class="o_purchase_order" js_class="legacy_form">
+                <form string="Purchase Order" class="o_purchase_order">
                 <header>
                     <button name="action_rfq_send" states="draft" string="Send by Email" type="object" context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user" data-hotkey="k"/>
-                    <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm" data-hotkey="v"/>
+                    <button name="button_confirm" type="object" states="sent" string="Confirm Order" context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm" data-hotkey="v"/>
                     <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" class="oe_highlight" context="{'create_bill':True}" attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'in', ('no', 'invoiced'))]}" data-hotkey="w"/>
                     <button name="action_rfq_send" states="sent" string="Re-Send by Email" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user" data-hotkey="k"/>
-                    <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
+                    <button name="button_confirm" type="object" states="draft" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
                     <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|','|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('date_planned', '=', False)]}" groups="base.group_no_one" data-hotkey="o"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}" data-hotkey="w"/>
@@ -163,7 +163,7 @@
                     <div class="oe_title">
                         <span class="o_form_label" attrs="{'invisible': [('state','not in',('draft','sent'))]}">Request for Quotation </span>
                         <span class="o_form_label" attrs="{'invisible': [('state','in',('draft','sent'))]}">Purchase Order </span>
-                        <h1>
+                        <h1 class="d-flex">
                             <field name="priority" widget="priority" class="me-3"/>
                             <field name="name" readonly="1"/>
                         </h1>
@@ -177,7 +177,7 @@
                             <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
                             <field name="id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" invisible="1" groups="!base.group_multi_currency"/>
                         </group>
                         <group>
                             <field name="date_order" attrs="{'invisible': [('state','in',('purchase','done'))]}"/>
@@ -193,12 +193,12 @@
                                 <field name="mail_reminder_confirmed" invisible="1"/>
                                 <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
                             </div>
-                            <label for="receipt_reminder_email" invisible='1'/>
+                            <label for="receipt_reminder_email" class="d-none" groups="purchase.group_send_reminder"/>
                             <div name="reminder" class="o_row" groups='purchase.group_send_reminder' title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
                                 <field name="receipt_reminder_email"/>
                                 <span>Ask confirmation</span>
                                 <div class="o_row oe_inline" attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
-                                    <field name="reminder_date_before_receipt" class="oe_inline"/>
+                                    <field name="reminder_date_before_receipt"/>
                                     day(s) before
                                     <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself." attrs="{'invisible': [('id', '=', False)]}"/>
                                 </div>
@@ -237,13 +237,10 @@
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text"/>
                                     <field name="date_planned" optional="hide" attrs="{'required': [('display_type', '=', False)]}" force_save="1"/>
-                                    <field name="analytic_distribution_stored_char" invisible="1"/>
-                                    <!-- TODO widget="analytic_distribution" -->
-                                    <field name="analytic_distribution"
-                                           optional="hide" invisible="1"
+                                    <field name="analytic_distribution" widget="analytic_distribution"
+                                           optional="hide"
                                            groups="analytic.group_analytic_accounting"
-                                           options="{'product_field': 'product_id'}"
-                                           business_domain_compute="'purchase'"/>
+                                           options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                                     <field name="product_qty"/>
                                     <field name="qty_received_manual" invisible="1"/>
                                     <field name="qty_received_method" invisible="1"/>
@@ -261,6 +258,8 @@
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" attrs="{'invisible': [('id', '=', False)]}"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="price_subtotal" widget="monetary"/>
+                                    <field name="price_total" invisible="1"/>
+                                    <field name="price_tax" invisible="1"/>
                                 </tree>
                                 <form string="Purchase Order Line">
                                         <field name="state" invisible="1"/>
@@ -287,15 +286,12 @@
                                             </group>
                                             <group>
                                                 <field name="date_planned" widget="date" attrs="{'required': [('display_type', '=', False)]}"/>
-                                                <field name="analytic_distribution_stored_char" invisible="1"/>
-                                                <!-- TODO widget="analytic_distribution" -->
-                                                <field name="analytic_distribution"
-                                                       groups="analytic.group_analytic_accounting" invisible="1"
-                                                       options="{'product_field': 'product_id'}"
-                                                       business_domain_compute="'purchase'"/>
+                                                <field name="analytic_distribution" widget="analytic_distribution"
+                                                       groups="analytic.group_analytic_accounting"
+                                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                                             </group>
-                                            <group colspan="12">
-                                            <notebook>
+                                            <group>
+                                            <notebook colspan="4">
                                                 <page string="Notes" name="notes">
                                                     <field name="name"/>
                                                 </page>
@@ -341,7 +337,7 @@
                                                              <span>
                                                                  Quantity:
                                                                  <t t-esc="record.product_qty.value"/>
-                                                                 <t t-esc="record.product_uom.value"/>
+                                                                 <t t-esc="record.product_uom.value" groups="uom.group_uom"/>
                                                              </span>
                                                          </div>
                                                      </div>
@@ -368,7 +364,7 @@
                             </field>
                             <group>
                                 <group>
-                                    <field name="notes" nolabel="1" placeholder="Define your terms and conditions ..."/>
+                                    <field colspan="2" name="notes" nolabel="1" placeholder="Define your terms and conditions ..."/>
                                 </group>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
@@ -742,12 +738,9 @@
                                     domain="[('type_tax_use', '=', 'purchase')]"/>
                                 <field name="date_planned" widget="date" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                <field name="analytic_distribution_stored_char" invisible="1"/>
-                                <!-- TODO widget="analytic_distribution" -->
-                                <field name="analytic_distribution"
-                                       groups="analytic.group_analytic_accounting" invisible="1"
-                                       options="{'product_field': 'product_id'}"
-                                       business_domain_compute="'purchase'"/>
+                                <field name="analytic_distribution" widget="analytic_distribution"
+                                       groups="analytic.group_analytic_accounting"
+                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                             </group>
                         </group>
                         <field name="name"/>
@@ -764,7 +757,7 @@
                 <search string="Search Purchase Order">
                     <field name="order_id"/>
                     <field name="product_id"/>
-                    <field name="partner_id" string="Vendor" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" string="Vendor"/>
                     <filter name="hide_cancelled" string="Hide cancelled lines" domain="[('state', '!=', 'cancel')]"/>
                     <group expand="0" string="Group By">
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />

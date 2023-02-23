@@ -75,6 +75,7 @@
 
     <template id="user_dropdown" name="Portal User Dropdown">
         <t t-nocache="Each user is different regardless of the page visited."
+           t-nocache-_avatar="_avatar"
            t-nocache-_icon="_icon"
            t-nocache-_icon_class="_icon_class"
            t-nocache-_user_name="_user_name"
@@ -355,7 +356,7 @@
 
     <template id="portal_contact" name="Contact">
         <div class="o_portal_contact_details mb-5">
-            <h4><t t-if="title" t-esc="title"/><t t-else="">Your contact</t></h4>
+            <h4>Your contact</h4>
             <hr class="mt-1 mb0"/>
             <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
             <div class="d-flex align-items-center mb-1">

@@ -4,19 +4,19 @@
         <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
             <t t-if="receipt.l10n_fr_hash !== false">
                 <br/>
-                <div style="word-wrap:break-word;"><t t-esc="receipt.l10n_fr_hash"/></div>
+                <div style="word-wrap:break-word;"><t t-out="receipt.l10n_fr_hash"/></div>
             </t>
         </xpath>
     </t>
 
     <t t-name="OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//t[@t-foreach='receipt.orderlines']" position="inside">
-            <t t-if="receipt.l10n_fr_hash !== false and line.price_manually_set === true">
+            <t t-if="receipt.l10n_fr_hash !== false and line.price !== line.fixed_lst_price">
                 <div class="pos-receipt-right-padding">
                     Old unit price:
                     <span class="oldPrice">
                         <s>
-                            <t t-esc="env.pos.format_currency(line.fixed_lst_price, 'Product Price')" /> / Units
+                            <t t-out="env.pos.format_currency(line.fixed_lst_price, 'Product Price')" /> / Units
                         </s>
                     </span>
                 </div>

@@ -29,7 +29,7 @@ export async function monitorAudio(track, processorOptions) {
     const stream = new window.MediaStream([monitoredTrack]);
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) {
-        throw 'missing audio context';
+        throw "missing audio context";
     }
     const audioContext = new AudioContext();
     const source = audioContext.createMediaStreamSource(stream);
@@ -37,7 +37,7 @@ export async function monitorAudio(track, processorOptions) {
     let processor;
     try {
         processor = await _loadAudioWorkletProcessor(source, audioContext, processorOptions);
-    } catch (_e) {
+    } catch {
         // In case Worklets are not supported by the browser (eg: Safari)
         processor = _loadScriptProcessor(source, audioContext, processorOptions);
     }
@@ -46,7 +46,7 @@ export async function monitorAudio(track, processorOptions) {
         processor.disconnect();
         source.disconnect();
         monitoredTrack.stop();
-    }
+    };
 }
 
 //------------------------------------------------------------------------------
@@ -60,7 +60,17 @@ export async function monitorAudio(track, processorOptions) {
  * @returns {Object} returnValue
  * @returns {function} returnValue.disconnect disconnect callback
  */
-function _loadScriptProcessor(source, audioContext, { frequencyRange = HUMAN_VOICE_FREQUENCY_RANGE, minimumActiveCycles = 10, onThreshold, onTic, volumeThreshold = 0.3 } = {}) {
+function _loadScriptProcessor(
+    source,
+    audioContext,
+    {
+        frequencyRange = HUMAN_VOICE_FREQUENCY_RANGE,
+        minimumActiveCycles = 10,
+        onThreshold,
+        onTic,
+        volumeThreshold = 0.3,
+    } = {}
+) {
     // audio setup
     const bitSize = 1024;
     const analyser = audioContext.createAnalyser();
@@ -72,7 +82,7 @@ function _loadScriptProcessor(source, audioContext, { frequencyRange = HUMAN_VOI
 
     // timing variables
     const processInterval = 50; // how many ms between each computation
-    const intervalInFrames = processInterval / 1000 * analyser.context.sampleRate;
+    const intervalInFrames = (processInterval / 1000) * analyser.context.sampleRate;
     let nextUpdateFrame = processInterval;
 
     // process variables
@@ -89,7 +99,11 @@ function _loadScriptProcessor(source, audioContext, { frequencyRange = HUMAN_VOI
         nextUpdateFrame += intervalInFrames;
 
         // computes volume and threshold
-        const normalizedVolume = getFrequencyAverage(analyser, frequencyRange[0], frequencyRange[1]);
+        const normalizedVolume = getFrequencyAverage(
+            analyser,
+            frequencyRange[0],
+            frequencyRange[1]
+        );
         if (normalizedVolume >= volumeThreshold) {
             activityBuffer = minimumActiveCycles;
         } else if (normalizedVolume < volumeThreshold && activityBuffer > 0) {
@@ -119,17 +133,27 @@ function _loadScriptProcessor(source, audioContext, { frequencyRange = HUMAN_VOI
  * @returns {Object} returnValue
  * @returns {function} returnValue.disconnect disconnect callback
  */
-async function _loadAudioWorkletProcessor(source, audioContext, { frequencyRange = HUMAN_VOICE_FREQUENCY_RANGE, minimumActiveCycles = 10, onThreshold, onTic, volumeThreshold = 0.3 } = {}) {
+async function _loadAudioWorkletProcessor(
+    source,
+    audioContext,
+    {
+        frequencyRange = HUMAN_VOICE_FREQUENCY_RANGE,
+        minimumActiveCycles = 10,
+        onThreshold,
+        onTic,
+        volumeThreshold = 0.3,
+    } = {}
+) {
     await audioContext.resume();
     // Safari does not support Worklet.addModule
-    await audioContext.audioWorklet.addModule('/mail/rtc/audio_worklet_processor');
-    const thresholdProcessor = new window.AudioWorkletNode(audioContext, 'audio-processor', {
+    await audioContext.audioWorklet.addModule("/mail/rtc/audio_worklet_processor");
+    const thresholdProcessor = new window.AudioWorkletNode(audioContext, "audio-processor", {
         processorOptions: {
             minimumActiveCycles,
             volumeThreshold,
             frequencyRange,
             postAllTics: !!onTic,
-        }
+        },
     });
     source.connect(thresholdProcessor).connect(audioContext.destination);
     thresholdProcessor.port.onmessage = (event) => {
@@ -174,6 +198,6 @@ function getFrequencyAverage(analyser, lowerFrequency, higherFrequency) {
  * @returns {number} the index of the targetFrequency within binCount
  */
 function _getFrequencyIndex(targetFrequency, sampleRate, binCount) {
-    const index = Math.round(targetFrequency / (sampleRate / 2) * binCount);
+    const index = Math.round((targetFrequency / (sampleRate / 2)) * binCount);
     return Math.min(Math.max(0, index), binCount);
 }

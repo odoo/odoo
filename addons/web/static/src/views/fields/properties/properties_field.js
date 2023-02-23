@@ -12,13 +12,29 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { reposition } from "@web/core/position_hook";
+import { archParseBoolean } from "@web/views/utils";
 
-const { Component, useRef, useState, useEffect, onWillStart, onWillUpdateProps } = owl;
+import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 
 export class PropertiesField extends Component {
+    static template = "web.PropertiesField";
+    static components = {
+        Dropdown,
+        DropdownItem,
+        PropertyDefinition,
+        PropertyValue,
+    };
+    static props = {
+        ...standardFieldProps,
+        columns: { type: Number, optional: true },
+        hideKanbanOption: { type: Boolean, optional: true },
+    };
+
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.user = useService("user");
         this.dialogService = useService("dialog");
         this.popover = usePopover();
         this.propertiesRef = useRef("properties");
@@ -37,13 +53,6 @@ export class PropertiesField extends Component {
             await this._checkDefinitionAccess();
         });
 
-        onWillUpdateProps(async () => {
-            // reset the initials properties values if we saved the record
-            if (this.props.record.mode === "readonly") {
-                this._saveInitialPropertiesValues();
-            }
-        });
-
         useEffect(() => {
             this._movePopoverIfNeeded();
 
@@ -55,7 +64,7 @@ export class PropertiesField extends Component {
                     `.o_property_field[property-name="${lastPropertyName}"] .o_field_property_open_popover`
                 );
                 const lastLabel = labels[labels.length - 1];
-                lastLabel.click();
+                this._openPropertyDefinition(lastLabel, lastPropertyName, true);
             }
         });
     }
@@ -88,6 +97,21 @@ export class PropertiesField extends Component {
     }
 
     /**
+     * Return the current properties value splitted in multiple groups/columns.
+     *
+     * @returns {Array<Array>}
+     */
+    get groupedPropertiesList() {
+        const columns = this.env.isSmall ? 1 : this.props.columns;
+        // If no properties, assure that the "Add Property" button is shown.
+        const res = [...Array(columns)].map((col) => []);
+        this.propertiesList.forEach((val, index) => {
+            res[index % columns].push(val);
+        });
+        return res;
+    }
+
+    /**
      * Return false if we should not close the popover containing the
      * properties definition based on the event received.
      *
@@ -115,7 +139,26 @@ export class PropertiesField extends Component {
             return true;
         }
 
+        if (event.target.closest(".o_tag_popover")) {
+            // tag color popover
+            return true;
+        }
+
+        if (event.target.closest(".o_field_selector_popover")) {
+            // domain selector
+            return true;
+        }
+
         return false;
+    }
+
+    /**
+     * Generate an unique ID to be used in the DOM.
+     *
+     * @returns {string}
+     */
+    generateUniqueDomID() {
+        return `property_${uuid()}`;
     }
 
     /* --------------------------------------------------------
@@ -150,9 +193,10 @@ export class PropertiesField extends Component {
         propertiesValues[targetIndex] = propertiesValues[propertyIndex];
         propertiesValues[propertyIndex] = prop;
         propertiesValues[propertyIndex].definition_changed = true;
-        this.props.update(propertiesValues);
-        // move the popover once the DOM is updated
-        this.shouldUpdatePopoverPosition = true;
+        this.props.record.update({ [this.props.name]: propertiesValues }).then(() => {
+            // move the popover once the DOM is updated
+            this.shouldUpdatePopoverPosition = true;
+        });
     }
 
     /**
@@ -165,11 +209,12 @@ export class PropertiesField extends Component {
     onPropertyValueChange(propertyName, propertyValue) {
         const propertiesValues = this.propertiesList;
         propertiesValues.find((property) => property.name === propertyName).value = propertyValue;
-        this.props.update(propertiesValues);
+        this.props.record.update({ [this.props.name]: propertiesValues });
     }
 
     /**
-     * Open the popover with the property definition.
+     * Check if the definition is not already opened
+     * and if it's not the case, open the popover with the property definition.
      *
      * @param {event} event
      * @param {string} propertyName
@@ -184,31 +229,7 @@ export class PropertiesField extends Component {
         }
 
         event.target.classList.add("disabled");
-
-        this.popoverCloseFn = this.popover.add(
-            event.currentTarget,
-            PropertyDefinition,
-            {
-                readonly: this.props.readonly || !this.state.canChangeDefinition,
-                canChangeDefinition: this.state.canChangeDefinition,
-                propertyDefinition: this.propertiesList.find(
-                    (property) => property.name === propertyName
-                ),
-                context: this.context,
-                onChange: this.onPropertyDefinitionChange.bind(this),
-                onDelete: () => this.onPropertyDelete(propertyName),
-                onPropertyMove: (direction) => this.onPropertyMove(propertyName, direction),
-            },
-            {
-                preventClose: this.checkPopoverClose,
-                popoverClass: "o_property_field_popover",
-                position: "top",
-                onClose: () => {
-                    this.state.movedPropertyName = null;
-                    event.target.classList.remove("disabled");
-                },
-            }
-        );
+        this._openPropertyDefinition(event.target, propertyName, false);
     }
 
     /**
@@ -223,27 +244,10 @@ export class PropertiesField extends Component {
             (property) => property.name === propertyDefinition.name
         );
 
-        // if the type / model are the same, restore the original name to not reset the children
-        // otherwise, generate a new value so all value of the record are reset
-        const initialValues = this.initialValues[propertyDefinition.name];
-        if (
-            initialValues &&
-            propertyDefinition.type === initialValues.type &&
-            propertyDefinition.comodel === initialValues.comodel
-        ) {
-            // restore the original name
-            propertyDefinition.name = initialValues.name;
-        } else if (initialValues && initialValues.name === propertyDefinition.name) {
-            // generate a new new to reset all values on other records
-            // store the new generated name to be able to restore it
-            // if needed
-            const newName = uuid();
-            this.initialValues[newName] = initialValues;
-            propertyDefinition.name = newName;
-        }
+        this._regeneratePropertyName(propertyDefinition);
 
         propertiesValues[propertyIndex] = propertyDefinition;
-        this.props.update(propertiesValues);
+        this.props.record.update({ [this.props.name]: propertiesValues });
     }
 
     /**
@@ -261,6 +265,7 @@ export class PropertiesField extends Component {
                 this.parentName,
                 this.parentString
             ),
+            confirmLabel: _lt("Delete"),
             confirm: () => {
                 if (this.popoverCloseFn) {
                     this.popoverCloseFn();
@@ -270,7 +275,7 @@ export class PropertiesField extends Component {
                 propertiesDefinitions.find(
                     (property) => property.name === propertyName
                 ).definition_deleted = true;
-                this.props.update(propertiesDefinitions);
+                this.props.record.update({ [this.props.name]: propertiesDefinitions });
             },
             cancel: () => {},
         };
@@ -302,7 +307,7 @@ export class PropertiesField extends Component {
             definition_changed: true,
         });
         this.openLastPropertyDefinition = true;
-        this.props.update(propertiesDefinitions);
+        this.props.record.update({ [this.props.name]: propertiesDefinitions });
     }
 
     /**
@@ -347,14 +352,15 @@ export class PropertiesField extends Component {
             .querySelector(".o_field_property_definition")
             .closest(".o_popover");
         const targetElement = document.querySelector(
-            `.o_property_field[property-name="${propertyName}"]`
+            `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
         );
-        const targetPosition = targetElement.getBoundingClientRect();
-        const popoverPosition = popover.getBoundingClientRect();
 
-        popover.style.top = targetPosition.top - popoverPosition.height - 10 + "px";
-        popover.style.left = targetPosition.left + "px";
-        popover.style.position = "absolute";
+        reposition(targetElement, popover, { position: "top", margin: 10 });
+
+        const arrow = popover.querySelector(".popover-arrow");
+        if (arrow) {
+            arrow.classList.add("d-none");
+        }
     }
 
     /**
@@ -372,11 +378,41 @@ export class PropertiesField extends Component {
         }
 
         // check if we can write on the definition record
-        this.state.canChangeDefinition = await this.orm.call(
+        this.state.canChangeDefinition = await this.user.checkAccessRight(
             definitionRecordModel,
-            "check_access_rights",
-            ["write", false]
+            "write"
         );
+    }
+
+    /**
+     * Regenerate a new name if needed or restore the original one.
+     * (see @_saveInitialPropertiesValues).
+     *
+     * If the type / model are the same, restore the original name to not reset the
+     * children otherwise, generate a new value so all value of the record are reset.
+     *
+     * @param {object} propertyDefinition
+     */
+    _regeneratePropertyName(propertyDefinition) {
+        const initialValues = this.initialValues[propertyDefinition.name];
+        if (
+            initialValues &&
+            propertyDefinition.type === initialValues.type &&
+            propertyDefinition.comodel === initialValues.comodel
+        ) {
+            // restore the original name
+            propertyDefinition.name = initialValues.name;
+        } else if (initialValues && initialValues.name === propertyDefinition.name) {
+            // Generate a new name to reset all values on other records.
+            // because the name has been changed on the definition,
+            // the old name on others record won't match the name on the definition
+            // and the python field will just ignore the old value.
+            // Store the new generated name to be able to restore it
+            // if needed.
+            const newName = uuid();
+            this.initialValues[newName] = initialValues;
+            propertyDefinition.name = newName;
+        }
     }
 
     /**
@@ -400,25 +436,75 @@ export class PropertiesField extends Component {
             };
         }
     }
+
+    /**
+     * Open the popover with the property definition.
+     *
+     * @param {DomElement} target
+     * @param {string} propertyName
+     * @param {boolean} isNewlyCreated
+     */
+    _openPropertyDefinition(target, propertyName, isNewlyCreated = false) {
+        const propertiesList = this.propertiesList;
+        const propertyIndex = propertiesList.findIndex(
+            (property) => property.name === propertyName
+        );
+
+        // maybe the property has been renamed because the type / model
+        // changed, retrieve the new one
+        const currentName = (propertyName) => {
+            const propertiesList = this.propertiesList;
+            for (const [newName, initialValue] of Object.entries(this.initialValues)) {
+                if (initialValue.name === propertyName) {
+                    const prop = propertiesList.find((prop) => prop.name === newName);
+                    if (prop) {
+                        return newName;
+                    }
+                }
+            }
+            return propertyName;
+        };
+
+        this.popoverCloseFn = this.popover.add(
+            target,
+            PropertyDefinition,
+            {
+                readonly: this.props.readonly || !this.state.canChangeDefinition,
+                canChangeDefinition: this.state.canChangeDefinition,
+                propertyDefinition: this.propertiesList.find(
+                    (property) => property.name === currentName(propertyName)
+                ),
+                context: this.context,
+                onChange: this.onPropertyDefinitionChange.bind(this),
+                onDelete: () => this.onPropertyDelete(currentName(propertyName)),
+                onPropertyMove: (direction) =>
+                    this.onPropertyMove(currentName(propertyName), direction),
+                isNewlyCreated: isNewlyCreated,
+                propertyIndex: propertyIndex,
+                propertiesSize: propertiesList.length,
+                hideKanbanOption: this.props.hideKanbanOption,
+            },
+            {
+                preventClose: this.checkPopoverClose,
+                popoverClass: "o_property_field_popover",
+                position: "top",
+                onClose: () => {
+                    this.state.movedPropertyName = null;
+                    target.classList.remove("disabled");
+                },
+            }
+        );
+    }
 }
 
-PropertiesField.template = "web.PropertiesField";
-PropertiesField.components = {
-    Dropdown,
-    DropdownItem,
-    PropertyDefinition,
-    PropertyValue,
-};
-PropertiesField.props = {
-    ...standardFieldProps,
-    columns: { type: Number, optional: true },
-};
-PropertiesField.extractProps = ({ attrs, field }) => {
-    const columns = parseInt(attrs.columns || "1");
-    return { columns };
+export const propertiesField = {
+    component: PropertiesField,
+    displayName: _lt("Properties"),
+    supportedTypes: ["properties"],
+    extractProps: ({ attrs }) => ({
+        columns: parseInt(attrs.columns || "1"),
+        hideKanbanOption: archParseBoolean(attrs.hideKanbanOption),
+    }),
 };
 
-PropertiesField.displayName = _lt("Properties");
-PropertiesField.supportedTypes = ["properties"];
-
-registry.category("fields").add("properties", PropertiesField);
+registry.category("fields").add("properties", propertiesField);

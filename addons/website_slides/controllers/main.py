@@ -15,7 +15,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import email_split
 
@@ -221,11 +221,11 @@ class WebsiteSlides(WebsiteProfile):
         slides_domain = [('channel_id', '=', channel.id)]
         if slide:
             slides_domain = expression.AND([slides_domain, [('id', '=', slide.id)]])
-        slides = request.env['slide.slide'].search_read(slides_domain, ['id'])
+        slides = request.env['slide.slide'].search(slides_domain)
 
         session_slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])
-        for slide in slides:
-            session_slide_answer_quiz.pop(str(slide['id']), None)
+        for slide_id in slides.ids:
+            session_slide_answer_quiz.pop(str(slide_id), None)
         request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
     # TAG UTILITIES
@@ -345,6 +345,19 @@ class WebsiteSlides(WebsiteProfile):
 
         return request.render('website_slides.courses_home', render_values)
 
+    def _get_slide_channel_search_options(self, my=None, slug_tags=None, slide_category=None, **post):
+        return {
+            'displayDescription': True,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'my': my,
+            'tag': slug_tags or post.get('tag'),
+            'slide_category': slide_category,
+        }
+
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
     def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
         if slug_tags and request.httprequest.method == 'GET':
@@ -375,17 +388,12 @@ class WebsiteSlides(WebsiteProfile):
 
            * ``search``: filter on course description / name;
         """
-        options = {
-            'displayDescription': True,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
-            'allowFuzzy': not post.get('noFuzzy'),
-            'my': my,
-            'tag': slug_tags or post.get('tag'),
-            'slide_category': slide_category,
-        }
+        options = self._get_slide_channel_search_options(
+            my=my,
+            slug_tags=slug_tags,
+            slide_category=slide_category,
+            **post
+        )
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
         _, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,
@@ -591,27 +599,6 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.CHANNEL UTILS
     # --------------------------------------------------
 
-    @http.route('/slides/channel/add', type='http', auth='user', methods=['POST'], website=True)
-    def slide_channel_create(self, *args, **kw):
-        channel = request.env['slide.channel'].create(self._slide_channel_prepare_values(**kw))
-        return request.redirect("/slides/%s" % (slug(channel)))
-
-    def _slide_channel_prepare_values(self, **kw):
-        # `tag_ids` is a string representing a list of int with coma. i.e.: '2,5,7'
-        # We don't want to allow user to create tags and tag groups on the fly.
-        tag_ids = []
-        if kw.get('tag_ids'):
-            tag_ids = [int(item) for item in kw['tag_ids'].split(',')]
-
-        return {
-            'name': kw['name'],
-            'description': kw.get('description'),
-            'channel_type': kw.get('channel_type', 'documentation'),
-            'user_id': request.env.user.id,
-            'tag_ids': [(6, 0, tag_ids)],
-            'allow_comment': bool(kw.get('allow_comment')),
-        }
-
     def _slide_channel_prepare_review_values(self, channel):
         values = {
             'rating_avg': channel.rating_avg,
@@ -661,14 +648,14 @@ class WebsiteSlides(WebsiteProfile):
         # TDE FIXME: why 2 routes ?
         if not request.website.is_public_user():
             channel = request.env['slide.channel'].browse(int(channel_id))
-            channel.action_add_member()
+            channel._action_add_member()
         return request.redirect("/slides/%s" % (slug(channel)))
 
     @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
     def slide_channel_join(self, channel_id):
         if request.website.is_public_user():
             return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
-        success = request.env['slide.channel'].browse(channel_id).action_add_member()
+        success = request.env['slide.channel'].browse(channel_id)._action_add_member()
         if not success:
             return {'error': 'join_done'}
         return success
@@ -814,7 +801,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
                 type='http', auth="public", website=True, sitemap=False)
     def slide_get_pdf_content(self, slide):
-        response = werkzeug.wrappers.Response()
+        response = Response()
         response.data = slide.binary_content and base64.b64decode(slide.binary_content) or b''
         response.mimetype = 'application/pdf'
         return response

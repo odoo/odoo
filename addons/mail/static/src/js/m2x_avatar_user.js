@@ -1,12 +1,16 @@
 /** @odoo-module **/
 
-import core from 'web.core';
-import fieldRegistry from 'web.field_registry';
-import { FieldMany2ManyTagsAvatar, KanbanMany2ManyTagsAvatar, ListMany2ManyTagsAvatar, Many2OneAvatar } from 'web.relational_fields';
-import session from 'web.session';
+import core from "web.core";
+import fieldRegistry from "web.field_registry";
+import {
+    FieldMany2ManyTagsAvatar,
+    KanbanMany2ManyTagsAvatar,
+    ListMany2ManyTagsAvatar,
+    Many2OneAvatar,
+} from "web.relational_fields";
+import session from "web.session";
 
-const { Component } = owl;
-
+import { Component } from "@odoo/owl";
 
 // This module defines extensions of the Many2OneAvatar and Many2ManyAvatar
 // widgets, which are integrated with the messaging system. They are designed
@@ -23,14 +27,18 @@ const { Component } = owl;
 // models than 'res.users'.
 
 const M2XAvatarMixin = {
-    supportedModels: ['res.users'],
+    supportedModels: ["res.users"],
 
     init() {
         this._super(...arguments);
         if (!this.supportedModels.includes(this.field.relation)) {
-            throw new Error(`This widget is only supported on many2one and many2many fields pointing to ${JSON.stringify(this.supportedModels)}`);
+            throw new Error(
+                `This widget is only supported on many2one and many2many fields pointing to ${JSON.stringify(
+                    this.supportedModels
+                )}`
+            );
         }
-        this.className = `${this.className || ''} o_clickable_m2x_avatar`.trim();
+        this.className = `${this.className || ""} o_clickable_m2x_avatar`.trim();
     },
 
     //--------------------------------------------------------------------------
@@ -51,14 +59,14 @@ const M2XAvatarMixin = {
 
 export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
     events: Object.assign({}, Many2OneAvatar.prototype.events, {
-        'click .o_m2o_avatar > img': '_onAvatarClicked',
+        "click .o_m2o_avatar > img": "_onAvatarClicked",
     }),
 
     on_attach_callback() {
-        this._registerCommandAssignTo()
+        this._registerCommandAssignTo();
     },
-    on_detach_callback(){
-        this._unregisterCommandAssignTo()
+    on_detach_callback() {
+        this._unregisterCommandAssignTo();
     },
 
     //--------------------------------------------------------------------------
@@ -69,24 +77,24 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
      * @override
      * @private
      */
-     _registerCommandAssignTo() {
+    _registerCommandAssignTo() {
         const self = this;
         if (self.viewType === "form") {
-            let provide = async (env, options) => {
+            const provide = async (env, options) => {
                 if (self.isDestroyed()) {
-                    return
+                    return;
                 }
-                const records = await self._searchAssignTo(options.searchValue, 10)
+                const records = await self._searchAssignTo(options.searchValue, 10);
                 return records.map((record) => ({
                     name: record[1],
                     action: () => {
                         if (self.isDestroyed()) {
-                            return
+                            return;
                         }
                         self.reinitialize({ id: record[0], display_name: record[1] });
-                    }
-                }))
-            }
+                    },
+                }));
+            };
             let getCommandDefinition = (env) => ({
                 name: env._t("Assign to ..."),
                 options: {
@@ -106,8 +114,12 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
                     };
                 },
             });
-            core.bus.trigger("set_legacy_command", "web.Many2OneAvatar.assignTo", getCommandDefinition, self.el);
-
+            core.bus.trigger(
+                "set_legacy_command",
+                "web.Many2OneAvatar.assignTo",
+                getCommandDefinition,
+                self.el
+            );
 
             getCommandDefinition = (env) => ({
                 name: env._t("Assign/unassign to me"),
@@ -118,19 +130,23 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
                 },
                 action() {
                     if (self.isDestroyed()) {
-                        return
+                        return;
                     }
                     if (self.value.res_id === session.user_id[0]) {
                         self._setValue({
-                            operation: 'DELETE',
+                            operation: "DELETE",
                             ids: [session.user_id[0]],
-                            });
+                        });
                     } else {
                         self.reinitialize({ id: session.user_id[0], display_name: session.name });
                     }
                 },
             });
-            core.bus.trigger("set_legacy_command", "web.Many2OneAvatar.assignToMe", getCommandDefinition);
+            core.bus.trigger(
+                "set_legacy_command",
+                "web.Many2OneAvatar.assignToMe",
+                getCommandDefinition
+            );
         }
     },
 
@@ -152,13 +168,13 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
         const domain = this.record.getDomain(this.recordParams);
         const context = Object.assign(
             this.record.getContext(this.recordParams),
-            this.additionalContext,
+            this.additionalContext
         );
 
         // Exclude black-listed ids from the domain
         const blackListedIds = this._getSearchBlacklist();
         if (blackListedIds.length) {
-            domain.push(['id', 'not in', blackListedIds]);
+            domain.push(["id", "not in", blackListedIds]);
         }
 
         const nameSearch = this._rpc({
@@ -170,7 +186,7 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
                 operator: "ilike",
                 limit: limit + 1,
                 context,
-            }
+            },
         });
         return this.orderer.add(nameSearch);
     },
@@ -188,11 +204,11 @@ export const Many2OneAvatarUser = Many2OneAvatar.extend(M2XAvatarMixin, {
     _onAvatarClicked(ev) {
         ev.stopPropagation(); // in list view, prevent from opening the record
         this._openChat({ userId: this.value.res_id });
-    }
+    },
 });
 
 export const KanbanMany2OneAvatarUser = Many2OneAvatarUser.extend({
-    _template: 'mail.KanbanMany2OneAvatarUser',
+    _template: "mail.KanbanMany2OneAvatarUser",
 
     init() {
         this._super(...arguments);
@@ -202,7 +218,7 @@ export const KanbanMany2OneAvatarUser = Many2OneAvatarUser.extend({
 
 const M2MAvatarMixin = Object.assign(M2XAvatarMixin, {
     events: Object.assign({}, FieldMany2ManyTagsAvatar.prototype.events, {
-        'click .o_m2m_avatar': '_onAvatarClicked',
+        "click .o_m2m_avatar": "_onAvatarClicked",
     }),
 
     //----------------------------------------------------------------------
@@ -215,18 +231,17 @@ const M2MAvatarMixin = Object.assign(M2XAvatarMixin, {
      */
     _onAvatarClicked(ev) {
         ev.stopPropagation(); // in list view, prevent from opening the record
-        const userId = parseInt(ev.target.getAttribute('data-id'), 10);
+        const userId = parseInt(ev.target.getAttribute("data-id"), 10);
         this._openChat({ userId: userId });
     },
 });
 
 export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixin, {
-
     on_attach_callback() {
-        this._registerCommandAssignTo()
+        this._registerCommandAssignTo();
     },
-    on_detach_callback(){
-        this._unregisterCommandAssignTo()
+    on_detach_callback() {
+        this._unregisterCommandAssignTo();
     },
 
     //--------------------------------------------------------------------------
@@ -237,15 +252,15 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
      * @override
      * @private
      */
-     _registerCommandAssignTo() {
+    _registerCommandAssignTo() {
         const self = this;
         if (self.viewType === "form") {
             const provide = async (env, options) => {
                 if (self.isDestroyed()) {
-                    return
+                    return;
                 }
                 const many2one = new Many2OneAvatarUser(self, self.name, self.record, {
-                    mode: 'edit',
+                    mode: "edit",
                     noOpen: true,
                     noCreate: !self.canCreate,
                     viewType: self.viewType,
@@ -254,19 +269,19 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
                 many2one._getSearchBlacklist = function () {
                     return self.value.res_ids;
                 };
-                const records = await many2one._searchAssignTo(options.searchValue, 10)
+                const records = await many2one._searchAssignTo(options.searchValue, 10);
                 return records.map((record) => ({
                     name: record[1],
                     action: () => {
                         if (self.isDestroyed()) {
-                            return
+                            return;
                         }
                         self._setValue({
-                            operation: 'ADD_M2M',
-                            ids: { id: record[0], display_name: record[1] }
+                            operation: "ADD_M2M",
+                            ids: { id: record[0], display_name: record[1] },
                         });
                     },
-                }))
+                }));
             };
             let getCommandDefinition = (env) => ({
                 name: env._t("Assign to ..."),
@@ -287,7 +302,11 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
                     };
                 },
             });
-            core.bus.trigger("set_legacy_command", "web.FieldMany2ManyTagsAvatar.assignTo", getCommandDefinition)
+            core.bus.trigger(
+                "set_legacy_command",
+                "web.FieldMany2ManyTagsAvatar.assignTo",
+                getCommandDefinition
+            );
 
             getCommandDefinition = (env) => ({
                 name: env._t("Assign/unassign to me"),
@@ -298,22 +317,26 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
                 },
                 action() {
                     if (self.isDestroyed()) {
-                        return
+                        return;
                     }
                     if (self.value.res_ids.includes(session.user_id[0])) {
                         self._setValue({
-                            operation: 'DELETE',
+                            operation: "DELETE",
                             ids: [session.user_id[0]],
-                            });
+                        });
                     } else {
                         self._setValue({
-                            operation: 'ADD_M2M',
-                            ids: { id:  session.user_id[0], display_name: session.name }
+                            operation: "ADD_M2M",
+                            ids: { id: session.user_id[0], display_name: session.name },
                         });
                     }
                 },
             });
-            core.bus.trigger("set_legacy_command", "web.Many2OneAvatar.assignToMe", getCommandDefinition);
+            core.bus.trigger(
+                "set_legacy_command",
+                "web.Many2OneAvatar.assignToMe",
+                getCommandDefinition
+            );
         }
     },
 
@@ -321,19 +344,19 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2MAvatarMixi
      * @override
      * @private
      */
-     _unregisterCommandAssignTo() {
+    _unregisterCommandAssignTo() {
         core.bus.trigger("remove_legacy_command", "web.FieldMany2ManyTagsAvatar.assignTo");
         core.bus.trigger("remove_legacy_command", "web.Many2OneAvatar.assignToMe");
-     }
+    },
 });
 
 export const KanbanMany2ManyAvatarUser = KanbanMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
 
 export const ListMany2ManyAvatarUser = ListMany2ManyTagsAvatar.extend(M2MAvatarMixin, {});
 
-fieldRegistry.add('many2one_avatar_user', Many2OneAvatarUser);
-fieldRegistry.add('kanban.many2one_avatar_user', KanbanMany2OneAvatarUser);
-fieldRegistry.add('activity.many2one_avatar_user', KanbanMany2OneAvatarUser);
-fieldRegistry.add('many2many_avatar_user', Many2ManyAvatarUser);
-fieldRegistry.add('kanban.many2many_avatar_user', KanbanMany2ManyAvatarUser);
-fieldRegistry.add('list.many2many_avatar_user', ListMany2ManyAvatarUser);
+fieldRegistry.add("many2one_avatar_user", Many2OneAvatarUser);
+fieldRegistry.add("kanban.many2one_avatar_user", KanbanMany2OneAvatarUser);
+fieldRegistry.add("activity.many2one_avatar_user", KanbanMany2OneAvatarUser);
+fieldRegistry.add("many2many_avatar_user", Many2ManyAvatarUser);
+fieldRegistry.add("kanban.many2many_avatar_user", KanbanMany2ManyAvatarUser);
+fieldRegistry.add("list.many2many_avatar_user", ListMany2ManyAvatarUser);

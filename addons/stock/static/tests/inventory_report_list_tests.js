@@ -18,20 +18,21 @@ const arch =
 
 const setup_date = DateTime.fromISO('2022-01-03T08:03:44+00:00').toSQL();
 
-function mockRPC(route, args) {
+function mockRPC(route, { args }) {
     if (route === '/web/dataset/call_kw/person/create') {
         // simulate 'stock.quant' create function which can return existing record
-        args.args[0].create_date = DateTime.now().toSQL();
-        args.args[0].write_date = args.args[0].create_date;
-        var name = args.args[0].name;
-        var age = args.args[0].age;
-        var job = args.args[0].job;
+        const [values] = args[0];
+        values.create_date = DateTime.now().toSQL();
+        values.write_date = values.create_date;
+        var name = values.name;
+        var age = values.age;
+        var job = values.job;
         for (var d of serverData.models.person.records) {
             if (d.name === name) {
                 d.age = age;
                 d.job = job;
-                d.write_date = args.args[0].write_date;
-                return Promise.resolve(d.id);
+                d.write_date = values.write_date;
+                return Promise.resolve([d.id]);
             }
         }
     }

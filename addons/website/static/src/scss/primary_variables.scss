@@ -1954,6 +1954,7 @@ $o-selected-color-palettes-names: (
 $o-base-website-values-palette: (
     'font-size-base': 1rem, // Need a set value as the value is used in bootstrap_overridden files
     'google-fonts': null,
+    'google-local-fonts': null,
 
     'body-image': null,
     'body-image-type': 'image', // 'image' or 'pattern'
@@ -1994,7 +1995,8 @@ $o-base-website-values-palette: (
     'input-border-radius-sm': null, // Default to BS
     'input-border-radius-lg': null, // Default to BS
 
-    // A key from the $o-theme-font-configs map (null = default to the first key)
+    // A key from the $o-theme-font-configs map (null = default to the first key
+    // for the base 'font' value, the others just fallback to 'font').
     'font': null,
     'headings-font': null,
     'navbar-font': null,
@@ -2030,9 +2032,11 @@ $o-font-aliases-to-keys: (
 );
 $o-website-values-palettes: (
     (
-        'headings-font': 'Source Sans Pro',
-        'navbar-font': 'Source Sans Pro',
-        'buttons-font': 'Source Sans Pro',
+        // By default, the $o-base-website-values-palette for fonts are "null"
+        // but will actually automatically be filled with the first font themes
+        // define in $o-theme-font-configs (for the base one). For the default
+        // website, we want to specifically use the system fonts.
+        'font': 'SYSTEM_FONTS',
     ),
 ) !default;
 $o-website-values-palette-number: 1 !default;
@@ -2066,6 +2070,16 @@ $o-theme-h6-font-size-multiplier: 1 !default;
 //         ...,
 //     )
 // )
+// $o-base-theme-font-configs will be used to automatically extend
+// $o-theme-font-configs whatever themes added inside.
+$o-base-theme-font-configs: (
+    'SYSTEM_FONTS': (
+        // This allows users to use default system fonts, potentially improving
+        // page loading performances. This should always be kept as the first
+        // font defined in $o-base-theme-font-configs.
+        'family': $o-system-fonts,
+    ),
+) !default;
 $o-theme-font-configs: (
     'Roboto': (
         'family': ('Roboto', sans-serif),

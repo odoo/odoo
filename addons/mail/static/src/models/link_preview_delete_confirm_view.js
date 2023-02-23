@@ -1,10 +1,14 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { useComponentToModel } from "@mail/component_hooks/use_component_to_model";
+import { attr, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'LinkPreviewDeleteConfirmView',
+Model({
+    name: "LinkPreviewDeleteConfirmView",
+    template: "mail.LinkPreviewDeleteConfirmView",
+    componentSetup() {
+        useComponentToModel({ fieldName: "component" });
+    },
     recordMethods: {
         /**
          * Returns whether the given html element is inside this attachment delete confirm view.
@@ -13,7 +17,9 @@ registerModel({
          * @returns {boolean}
          */
         containsElement(element) {
-            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
+            return Boolean(
+                this.component && this.component.root.el && this.component.root.el.contains(element)
+            );
         },
         onClickCancel() {
             this.dialogOwner.delete();
@@ -24,15 +30,13 @@ registerModel({
     },
     fields: {
         component: attr(),
-        dialogOwner: one('Dialog', {
-            identifying: true,
-            inverse: 'linkPreviewDeleteConfirmView',
-        }),
-        linkPreview: one('LinkPreview', {
-            compute() {
-                return this.dialogOwner.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm.linkPreview;
-            },
+        dialogOwner: one("Dialog", { identifying: true, inverse: "linkPreviewDeleteConfirmView" }),
+        linkPreview: one("LinkPreview", {
             required: true,
+            compute() {
+                return this.dialogOwner.linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm
+                    .linkPreview;
+            },
         }),
     },
 });

@@ -1,21 +1,19 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'EmojiGridViewRowRegistry',
-    identifyingMode: 'xor',
+Model({
+    name: "EmojiGridViewRowRegistry",
+    identifyingMode: "xor",
     recordMethods: {
         computeNonSearchRows() {
             const value = [];
             let index = 0;
-            for (let viewCategory of this.emojiGridViewOwner.emojiPickerViewOwner.categories) {
+            for (const viewCategory of this.emojiGridViewOwner.emojiPickerViewOwner.categories) {
                 value.push({ viewCategory, index });
                 index++;
                 let currentItems = [];
-                for (let emojiInCategory of viewCategory.category.allEmojiInCategoryOfCurrent) {
+                for (const emojiInCategory of viewCategory.category.allEmojiInCategoryOfCurrent) {
                     currentItems.push({ emojiOrEmojiInCategory: { emojiInCategory } });
                     if (currentItems.length === this.emojiGridViewOwner.amountOfItemsPerRow) {
                         value.push({ items: currentItems, index });
@@ -32,14 +30,16 @@ registerModel({
             return value;
         },
         computeSearchRows() {
-            if (this.emojiGridViewOwner.emojiPickerViewOwner.emojiSearchBarView.currentSearch === "") {
+            if (this.emojiGridViewOwner.emojiPickerViewOwner.currentSearch === "") {
                 return clear();
             }
-            const emojis = this.messaging.emojiRegistry.allEmojis.filter(this.emojiGridViewOwner._filterEmoji);
+            const emojis = this.messaging.emojiRegistry.allEmojis.filter(
+                this.emojiGridViewOwner._filterEmoji
+            );
             const value = [];
             let index = 0;
             let currentItems = [];
-            for (let emoji of emojis) {
+            for (const emoji of emojis) {
                 currentItems.push({ emojiOrEmojiInCategory: { emoji } });
                 if (currentItems.length === this.emojiGridViewOwner.amountOfItemsPerRow) {
                     value.push({ items: currentItems, index });
@@ -56,7 +56,8 @@ registerModel({
         },
     },
     fields: {
-        rows: many('EmojiGridRowView', {
+        rows: many("EmojiGridRowView", {
+            inverse: "emojiGridViewRowRegistryOwner",
             compute() {
                 if (!this.emojiGridViewOwner) {
                     return clear();
@@ -69,25 +70,20 @@ registerModel({
                 }
                 return clear();
             },
-            inverse: 'emojiGridViewRowRegistryOwner',
-            sort() {
-                return [
-                    ['smaller-first', 'index'],
-                ];
-            },
+            sort: [["smaller-first", "index"]],
         }),
-        emojiGridViewOwner: one('EmojiGridView', {
+        emojiGridViewOwner: one("EmojiGridView", {
             compute() {
                 return this.emojiGridViewOwnerAsNonSearch || this.emojiGridViewOwnerAsSearch;
             },
         }),
-        emojiGridViewOwnerAsNonSearch: one('EmojiGridView', {
+        emojiGridViewOwnerAsNonSearch: one("EmojiGridView", {
             identifying: true,
-            inverse: 'nonSearchRowRegistry',
+            inverse: "nonSearchRowRegistry",
         }),
-        emojiGridViewOwnerAsSearch: one('EmojiGridView', {
+        emojiGridViewOwnerAsSearch: one("EmojiGridView", {
             identifying: true,
-            inverse: 'searchRowRegistry',
+            inverse: "searchRowRegistry",
         }),
     },
 });

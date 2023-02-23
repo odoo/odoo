@@ -59,9 +59,6 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            // switch to edit mode
-            await click(target, ".o_form_button_edit");
-
             assert.hasClass(
                 target.querySelectorAll(".o_field_color_picker button"),
                 "o_colorlist_item_color_0",
@@ -101,9 +98,6 @@ QUnit.module("Fields", (hooks) => {
                     </group>
                 </form>`,
         });
-
-        // switch to edit mode
-        await click(target, ".o_form_button_edit");
 
         await click(target, ".o_field_color_picker button");
 

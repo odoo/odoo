@@ -31,5 +31,5 @@ class TestTimesheetAttendance(TestCommonTimesheet):
             ['user_id'],
         )[0]
         self.assertEqual(report_data['total_timesheet'], 6.0, "Total timesheet in report should be 4.0")
-        self.assertEqual(report_data['total_attendance'], 8.0, "Total attendance in report should be 8.0")
-        self.assertEqual(report_data['total_attendance'] - report_data['total_timesheet'], 2)
+        self.assertEqual(report_data['total_attendance'], 7.0, "Total attendance in report should be 8.0")
+        self.assertEqual(report_data['total_attendance'] - report_data['total_timesheet'], 1)

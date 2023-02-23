@@ -127,7 +127,7 @@ class TestEquipmentMulticompany(TransactionCase):
             'company_id': company_b.id,
             'owner_user_id': equipment_manager.id,
         })
-        # Now there are total 2 equipments created and can view by equipment_manager user
+        # Now there are total 2 equipment created and can view by equipment_manager user
         self.assertEqual(Equipment.with_user(equipment_manager).with_context(allowed_company_ids=cids).search_count([]), 2)
 
         # And there is total 1 equipment can be view by Normal User ( Which user is followers)

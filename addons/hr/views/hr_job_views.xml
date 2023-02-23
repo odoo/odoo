@@ -39,6 +39,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -94,7 +95,7 @@
                     <field name="name" string="Job Position"/>
                     <field name="department_id" operator="child_of"/>
                     <separator/>
-                    <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]"/>
+                    <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
                     <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">

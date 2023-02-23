@@ -1,14 +1,13 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour'
+import { registry } from "@web/core/registry";
 import wTourUtils from 'website.tour_utils';
 import wsTourUtils from 'website_sale.tour_utils';
 
-tour.register('onsite_payment_tour', {
+registry.category("web_tour.tours").add('onsite_payment_tour', {
         test: true,
         url: '/web',
-    },
-    [
+        steps: [
         ...wsTourUtils.addToCart({productName: 'Chair floor protection'}),
         wsTourUtils.goToCart(),
         wTourUtils.clickOnElement('Proceed to checkout', 'a:contains(Process Checkout)'),
@@ -43,4 +42,4 @@ tour.register('onsite_payment_tour', {
             trigger: 'body:not(:contains("Test Payment Provider"))',
         },
     ]
-);
+});

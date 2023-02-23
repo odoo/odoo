@@ -6,9 +6,20 @@ import { standardFieldProps } from "../standard_field_props";
 import { FileInput } from "@web/core/file_input/file_input";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class Many2ManyBinaryField extends Component {
+    static template = "web.Many2ManyBinaryField";
+    static components = {
+        FileInput,
+    };
+    static props = {
+        ...standardFieldProps,
+        acceptedFileExtensions: { type: String, optional: true },
+        className: { type: String, optional: true },
+        uploadText: { type: String, optional: true },
+    };
+
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
@@ -45,26 +56,19 @@ export class Many2ManyBinaryField extends Component {
     }
 }
 
-Many2ManyBinaryField.template = "web.Many2ManyBinaryField";
-Many2ManyBinaryField.components = {
-    FileInput,
-};
-Many2ManyBinaryField.props = {
-    ...standardFieldProps,
-    acceptedFileExtensions: { type: String, optional: true },
-    className: { type: String, optional: true },
-    uploadText: { type: String, optional: true },
-};
-
-Many2ManyBinaryField.supportedTypes = ["many2many"];
-
-Many2ManyBinaryField.isEmpty = () => false;
-Many2ManyBinaryField.extractProps = ({ attrs, field }) => {
-    return {
+export const many2ManyBinaryField = {
+    component: Many2ManyBinaryField,
+    supportedTypes: ["many2many"],
+    isEmpty: () => false,
+    fieldsToFetch: [
+        { name: "name", type: "char" },
+        { name: "mimetype", type: "char" },
+    ],
+    extractProps: ({ attrs, field }) => ({
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
         className: attrs.class,
         uploadText: field.string,
-    };
+    }),
 };
 
-registry.category("fields").add("many2many_binary", Many2ManyBinaryField);
+registry.category("fields").add("many2many_binary", many2ManyBinaryField);

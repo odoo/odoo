@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { SelectionField } from "@web/views/fields/selection/selection_field";
+import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
 
 /**
  * The purpose of this field is to be able to define some values which should not be
@@ -33,12 +33,14 @@ FilterableSelectionField.props = {
     blacklisted_values: { type: Array, optional: true },
 };
 
-FilterableSelectionField.extractProps = ({ attrs }) => {
-    return {
-        ...SelectionField.extractProps({ attrs }),
-        whitelisted_values: attrs.options.whitelisted_values,
-        blacklisted_values: attrs.options.blacklisted_values,
-    };
+export const filterableSelectionField = {
+    ...selectionField,
+    component: FilterableSelectionField,
+    extractProps: (params) => ({
+        ...selectionField.extractProps(params),
+        whitelisted_values: params.attrs.options.whitelisted_values,
+        blacklisted_values: params.attrs.options.blacklisted_values,
+    }),
 };
 
-registry.category("fields").add("filterable_selection", FilterableSelectionField);
+registry.category("fields").add("filterable_selection", filterableSelectionField);

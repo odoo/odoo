@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarQuickCreate" owl="1">
+        <Dialog size="'sm'" title="dialogTitle">
+            <div class="o-calendar-quick-create mb-3">
+                <label for="title" class="col-form-label o_form_label">
+                    Meeting Subject:
+                </label>
+                <input
+                    type="text"
+                    class="o_input o_required_modifier o-calendar-quick-create--input"
+                    name="title"
+                    t-ref="title"
+                    t-on-keyup="onInputKeyup"
+                />
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-calendar-quick-create--create-btn" t-on-click="onCreateBtnClick">
+                    Create
+                </button>
+                <button class="btn btn-secondary o-calendar-quick-create--edit-btn" t-on-click="onEditBtnClick">
+                    Edit
+                </button>
+                <button class="btn btn-secondary o-calendar-quick-create--cancel-btn" t-on-click="onCancelBtnClick">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

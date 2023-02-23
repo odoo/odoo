@@ -49,18 +49,23 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS ===#
 
     @api.model
-    def _get_compatible_providers(self, *args, currency_id=None, is_validation=False, **kwargs):
-        """ Override of payment to filter out Flutterwave providers for unsupported currencies or
-        for validation operations. """
-        providers = super()._get_compatible_providers(
-            *args, currency_id=currency_id, is_validation=is_validation, **kwargs
-        )
+    def _get_compatible_providers(self, *args, is_validation=False, **kwargs):
+        """ Override of `payment` to filter out Flutterwave providers for validation operations. """
+        providers = super()._get_compatible_providers(*args, is_validation=is_validation, **kwargs)
 
-        currency = self.env['res.currency'].browse(currency_id).exists()
-        if (currency and currency.name not in SUPPORTED_CURRENCIES) or is_validation:
+        if is_validation:
             providers = providers.filtered(lambda p: p.code != 'flutterwave')
 
         return providers
+
+    def _get_supported_currencies(self):
+        """ Override of `payment` to return the supported currencies. """
+        supported_currencies = super()._get_supported_currencies()
+        if self.code == 'flutterwave':
+            supported_currencies = supported_currencies.filtered(
+                lambda c: c.name in SUPPORTED_CURRENCIES
+            )
+        return supported_currencies
 
     def _flutterwave_make_request(self, endpoint, payload=None, method='POST'):
         """ Make a request to Flutterwave API at the specified endpoint.
@@ -99,11 +104,3 @@ class PaymentProvider(models.Model):
                 "Flutterwave: " + _("Could not establish the connection to the API.")
             )
         return response.json()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('flutterwave', [
-            'flutterwave_public_key',
-            'flutterwave_secret_key',
-            'flutterwave_webhook_secret',
-        ])

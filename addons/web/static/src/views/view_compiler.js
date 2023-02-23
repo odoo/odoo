@@ -16,9 +16,7 @@ import { toStringExpression } from "./utils";
  * @property {(el: Element, params: Record<string, any>) => Element} fn
  */
 
-const { xml } = owl;
-
-const templateIds = Object.create(null);
+import { xml } from "@odoo/owl";
 
 const BUTTON_CLICK_PARAMS = [
     "name",
@@ -27,6 +25,8 @@ const BUTTON_CLICK_PARAMS = [
     "context",
     "close",
     "confirm",
+    "confirm-title",
+    "confirm-label",
     "special",
     "effect",
     "help",
@@ -67,7 +67,7 @@ export function toInterpolatedStringExpression(str) {
  * @param {string} attr
  * @param {string} string
  */
-function appendAttr(el, attr, string) {
+export function appendAttr(el, attr, string) {
     const attrKey = `t-att-${attr}`;
     const attrVal = el.getAttribute(attrKey);
     el.setAttribute(attrKey, appendToStringifiedObject(attrVal, string));
@@ -176,15 +176,6 @@ function getTitleTag(node) {
 }
 
 /**
- * @param {any} invisibleModifer
- * @param {{ enableInvisible?: boolean }} params
- * @returns {boolean}
- */
-export function isAlwaysInvisible(invisibleModifer, params) {
-    return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
-}
-
-/**
  * @param {Node} node
  * @returns {boolean}
  */
@@ -234,7 +225,11 @@ export class ViewCompiler {
             { selector: "widget", fn: this.compileWidget },
         ];
         this.templates = templates;
-        this.ctx = { readonly: "props.readonly" };
+        this.ctx = { readonly: "__comp__.props.readonly" };
+
+        this.owlDirectiveRegexesWhitelist = this.constructor.OWL_DIRECTIVE_WHITELIST.map(
+            (d) => new RegExp(d)
+        );
         this.setup();
     }
 
@@ -250,19 +245,18 @@ export class ViewCompiler {
         if (!invisible) {
             return compiled;
         }
-        if (typeof invisible === "boolean" && !params.enableInvisible) {
+        if (typeof invisible === "boolean") {
             return;
         }
-        if (!params.enableInvisible) {
-            let isVisileExpr = `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`;
-            if (compiled.hasAttribute("t-if")) {
-                const formerTif = compiled.getAttribute("t-if");
-                isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
-            }
-            compiled.setAttribute("t-if", isVisileExpr);
-        } else {
-            appendAttr(compiled, "class", `o_invisible_modifier:${invisible}`);
+        const recordExpr = params.recordExpr || "__comp__.props.record";
+        let isVisileExpr = `!__comp__.evalDomainFromRecord(${recordExpr},${JSON.stringify(
+            invisible
+        )})`;
+        if (compiled.hasAttribute("t-if")) {
+            const formerTif = compiled.getAttribute("t-if");
+            isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
         }
+        compiled.setAttribute("t-if", isVisileExpr);
         return compiled;
     }
 
@@ -290,10 +284,11 @@ export class ViewCompiler {
             return createTextNode(node.nodeValue);
         }
 
+        this.validateNode(node);
         let invisible;
         if (evalInvisible) {
             invisible = getModifier(node, "invisible");
-            if (isAlwaysInvisible(invisible, params)) {
+            if (this.isAlwaysInvisible(invisible, params)) {
                 return;
             }
         }
@@ -332,24 +327,11 @@ export class ViewCompiler {
         }
         const button = createElement("ViewButton", {
             tag: toStringExpression(tag),
-            record: `props.record`,
+            record: "__comp__.props.record",
         });
 
         assignOwlDirectives(button, el);
 
-        const clickParams = {};
-        for (const { name, value } of el.attributes) {
-            if (BUTTON_CLICK_PARAMS.includes(name)) {
-                clickParams[name] = value;
-            } else if (BUTTON_STRING_PROPS.includes(name)) {
-                button.setAttribute(name, toStringExpression(value));
-            }
-        }
-        if (el.hasAttribute("data-hotkey")) {
-            button.setAttribute("hotkey", toStringExpression(el.getAttribute("data-hotkey")));
-        }
-
-        button.setAttribute("clickParams", JSON.stringify(clickParams));
         combineAttributes(
             button,
             "className",
@@ -358,6 +340,21 @@ export class ViewCompiler {
         );
         el.removeAttribute("class");
         button.removeAttribute("class");
+
+        const clickParams = {};
+        const attrs = {};
+        for (const { name, value } of el.attributes) {
+            if (BUTTON_CLICK_PARAMS.includes(name)) {
+                clickParams[name] = value;
+            } else if (BUTTON_STRING_PROPS.includes(name)) {
+                button.setAttribute(name, toStringExpression(value));
+            } else if (!name.startsWith("t-")) {
+                attrs[name] = value;
+            }
+        }
+
+        button.setAttribute("clickParams", JSON.stringify(clickParams));
+        button.setAttribute("attrs", JSON.stringify(attrs));
 
         // Button's body
         const buttonContent = [];
@@ -382,15 +379,15 @@ export class ViewCompiler {
      * @param {Element} el
      * @returns {Element}
      */
-    compileField(el) {
+    compileField(el, params) {
         const fieldName = el.getAttribute("name");
         const fieldId = el.getAttribute("field_id") || fieldName;
 
         const field = createElement("Field");
         field.setAttribute("id", `'${fieldId}'`);
         field.setAttribute("name", `'${fieldName}'`);
-        field.setAttribute("record", `props.record`);
-        field.setAttribute("fieldInfo", `props.archInfo.fieldNodes['${fieldId}']`);
+        field.setAttribute("record", params.recordExpr || "__comp__.props.record");
+        field.setAttribute("fieldInfo", `__comp__.props.archInfo.fieldNodes['${fieldId}']`);
 
         if (el.hasAttribute("widget")) {
             field.setAttribute("type", `'${el.getAttribute("widget")}'`);
@@ -405,7 +402,7 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileGenericNode(el, params) {
-        const compiled = createElement(el.nodeName);
+        const compiled = createElement(el.nodeName.toLowerCase());
         const metaAttrs = ["modifiers", "attrs", "invisible", "readonly"];
         for (const attr of el.attributes) {
             if (metaAttrs.includes(attr.name)) {
@@ -429,7 +426,7 @@ export class ViewCompiler {
      */
     compileWidget(el) {
         const attrs = {};
-        const props = { record: `props.record`, readonly: this.ctx.readonly };
+        const props = { record: "__comp__.props.record", readonly: this.ctx.readonly };
         for (const { name, value } of el.attributes) {
             switch (name) {
                 case "class":
@@ -450,8 +447,30 @@ export class ViewCompiler {
         const widget = createElement("Widget", props);
         return assignOwlDirectives(widget, el);
     }
-}
 
+    /**
+     * @param {any} invisibleModifer
+     * @param {{ enableInvisible?: boolean }} params
+     * @returns {boolean}
+     */
+    isAlwaysInvisible(invisibleModifer, params) {
+        return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
+    }
+
+    validateNode(node) {
+        // detect attributes not in whitelist, starting with t-
+        const attributes = Object.values(node.attributes).map((attr) => attr.name);
+        const regexes = this.owlDirectiveRegexesWhitelist;
+        for (const attr of attributes) {
+            if (attr.startsWith("t-") && !regexes.some((regex) => regex.test(attr))) {
+                console.warn(`Forbidden directive ${attr} used in arch`);
+            }
+        }
+    }
+}
+ViewCompiler.OWL_DIRECTIVE_WHITELIST = [];
+
+let templateIds = Object.create(null);
 /**
  * @param {typeof ViewCompiler} ViewCompiler
  * @param {string} rawArch
@@ -472,4 +491,16 @@ export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
         }
     }
     return { ...compiledTemplates };
+}
+
+/*
+ * clear the view compiler's cache.
+ * FIXME: that function only purges the compiler's cache and NOT the cache in owl's app.
+ * the owl.xml function creates an internal template each time, so the cache is here to prevent
+ * creating new owl templates every time. If we clear the cache, new templates WILL be created,
+ * even if the arch to compile is the same.
+ * This is how a memory leak occurs. :-)
+ */
+export function resetViewCompilerCache() {
+    templateIds = Object.create(null);
 }

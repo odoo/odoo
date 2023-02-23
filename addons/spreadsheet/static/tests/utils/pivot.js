@@ -32,13 +32,14 @@ export async function insertPivotInSpreadsheet(model, params) {
         },
         name: "Partner Pivot",
     };
-    const dataSource = model.config.dataSources.create(PivotDataSource, definition);
+    const dataSource = model.config.custom.dataSources.create(PivotDataSource, definition);
     await dataSource.load();
-    const { cols, rows, measures } = dataSource.getTableStructure().export();
+    const { cols, rows, measures, rowTitle } = dataSource.getTableStructure().export();
     const table = {
         cols,
         rows,
         measures,
+        rowTitle,
     };
     const [col, row] = params.anchor || [0, 0];
     model.dispatch("INSERT_PIVOT", {
@@ -68,7 +69,7 @@ export async function createSpreadsheetWithPivot(params = {}) {
     });
     const arch = params.arch || serverData.views["partner,false,pivot"];
     await insertPivotInSpreadsheet(model, { arch });
-    const env = model.config.evalContext.env;
+    const env = model.config.custom.env;
     env.model = model;
     await waitForDataSourcesLoaded(model);
     return { model, env };

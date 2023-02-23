@@ -66,7 +66,7 @@
                 },
                 "A20": {
                     "style": 2,
-                    "content": "Reference",
+                    "content": "=_t(\"Reference\")",
                     "border": 2
                 },
                 "A21": {
@@ -128,7 +128,7 @@
                 },
                 "A33": {
                     "style": 7,
-                    "content": "Country",
+                    "content": "=_t(\"Country\")",
                     "border": 2
                 },
                 "A34": {
@@ -190,7 +190,7 @@
                 },
                 "A46": {
                     "style": 7,
-                    "content": "Product",
+                    "content": "=_t(\"Product\")",
                     "border": 2
                 },
                 "A47": {
@@ -248,7 +248,7 @@
                 },
                 "B20": {
                     "style": 13,
-                    "content": "Salesperson",
+                    "content": "=_t(\"Salesperson\")",
                     "border": 2
                 },
                 "B21": {
@@ -296,7 +296,7 @@
                 },
                 "B33": {
                     "style": 16,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "B34": {
@@ -357,7 +357,7 @@
                 },
                 "B46": {
                     "style": 16,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "B47": {
@@ -416,7 +416,7 @@
                 },
                 "C20": {
                     "style": 13,
-                    "content": "Status",
+                    "content": "=_t(\"Status\")",
                     "border": 2
                 },
                 "C21": {
@@ -464,7 +464,7 @@
                 },
                 "C33": {
                     "style": 16,
-                    "content": "Ratio",
+                    "content": "=_t(\"Ratio\")",
                     "border": 2
                 },
                 "C34": {
@@ -516,7 +516,6 @@
                     "format": 3
                 },
                 "C44": {
-                    "format": 3,
                     "content": "=iferror(if(B44,B44/ODOO.PIVOT(2,\"price_subtotal\"),\"\"),\"\")"
                 },
                 "C45": {
@@ -525,7 +524,7 @@
                 },
                 "C46": {
                     "style": 16,
-                    "content": "Ratio",
+                    "content": "=_t(\"Ratio\")",
                     "border": 2
                 },
                 "C47": {
@@ -580,7 +579,7 @@
                 },
                 "D20": {
                     "style": 13,
-                    "content": "Customer",
+                    "content": "=_t(\"Customer\")",
                     "border": 2
                 },
                 "D21": {
@@ -719,7 +718,7 @@
                 },
                 "E33": {
                     "style": 7,
-                    "content": "Top Categories",
+                    "content": "=_t(\"Top Categories\")",
                     "border": 2
                 },
                 "E34": {
@@ -781,7 +780,7 @@
                 },
                 "E46": {
                     "style": 7,
-                    "content": "Salesperson",
+                    "content": "=_t(\"Salesperson\")",
                     "border": 2
                 },
                 "E47": {
@@ -835,12 +834,11 @@
                 },
                 "F20": {
                     "style": 13,
-                    "content": "Date",
+                    "content": "=_t(\"Date\")",
                     "border": 2
                 },
                 "F21": {
-                    "style": 14,
-                    "format": 1,
+                    "style": 15,
                     "content": "=ODOO.LIST(1,1,\"invoice_date\")"
                 },
                 "F22": {
@@ -883,7 +881,7 @@
                 },
                 "F33": {
                     "style": 16,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "F34": {
@@ -944,7 +942,7 @@
                 },
                 "F46": {
                     "style": 16,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "F47": {
@@ -999,57 +997,47 @@
                 },
                 "G20": {
                     "style": 18,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "G21": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,1,\"amount_untaxed_signed\")"
                 },
                 "G22": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,2,\"amount_untaxed_signed\")"
                 },
                 "G23": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,3,\"amount_untaxed_signed\")"
                 },
                 "G24": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,4,\"amount_untaxed_signed\")"
                 },
                 "G25": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,5,\"amount_untaxed_signed\")"
                 },
                 "G26": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,6,\"amount_untaxed_signed\")"
                 },
                 "G27": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,7,\"amount_untaxed_signed\")"
                 },
                 "G28": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,8,\"amount_untaxed_signed\")"
                 },
                 "G29": {
                     "style": 17,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,9,\"amount_untaxed_signed\")"
                 },
                 "G30": {
                     "style": 6,
-                    "format": 3,
                     "content": "=ODOO.LIST(1,10,\"amount_untaxed_signed\")"
                 },
                 "G31": {
@@ -1061,7 +1049,7 @@
                 },
                 "G33": {
                     "style": 16,
-                    "content": "Ratio",
+                    "content": "=_t(\"Ratio\")",
                     "border": 2
                 },
                 "G34": {
@@ -1113,7 +1101,6 @@
                     "format": 3
                 },
                 "G44": {
-                    "format": 3,
                     "content": "=iferror(if(F44,F44/ODOO.PIVOT(1,\"price_subtotal\"),\"\"),\"\")"
                 },
                 "G45": {
@@ -1122,7 +1109,7 @@
                 },
                 "G46": {
                     "style": 16,
-                    "content": "Ratio",
+                    "content": "=_t(\"Ratio\")",
                     "border": 2
                 },
                 "G47": {
@@ -1235,7 +1222,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -1363,68 +1349,61 @@
             "merges": [],
             "cells": {
                 "A1": {
-                    "content": "KPI - Income"
+                    "content": "=_t(\"KPI - Income\")"
                 },
                 "A2": {
-                    "content": "KPI - Average Invoice"
+                    "content": "=_t(\"KPI - Average Invoice\")"
                 },
                 "A3": {
-                    "content": "KPI - Invoice Count"
+                    "content": "=_t(\"KPI - Invoice Count\")"
                 },
                 "A4": {
-                    "content": "Current year"
+                    "content": "=_t(\"Current year\")"
                 },
                 "A5": {
-                    "content": "Receivable"
+                    "content": "=_t(\"Receivable\")"
                 },
                 "A6": {
-                    "content": "Income"
+                    "content": "=_t(\"Income\")"
                 },
                 "A7": {
-                    "content": "COGS"
+                    "content": "=_t(\"COGS\")"
                 },
                 "A8": {
-                    "content": "Revenue"
+                    "content": "=_t(\"Revenue\")"
                 },
                 "A9": {
-                    "content": "# days"
+                    "content": "=_t(\"# days\")"
                 },
                 "A10": {
-                    "content": "KPI - DSO"
+                    "content": "=_t(\"KPI - DSO\")"
                 },
                 "A11": {
-                    "content": "KPI - Unpaid Invoices"
+                    "content": "=_t(\"KPI - Unpaid Invoices\")"
                 },
                 "B1": {
-                    "format": 4,
                     "content": "=ODOO.PIVOT(5,\"price_subtotal\")"
                 },
                 "B2": {
-                    "format": 4,
-                    "content": "=ODOO.PIVOT(6,\"price_subtotal\")/B3"
+                    "content": "=IFERROR(ODOO.PIVOT(6,\"price_subtotal\")/B3)"
                 },
                 "B3": {
                     "format": 1,
                     "content": "=ODOO.PIVOT(6,\"__count\")"
                 },
                 "B4": {
-                    "format": 4,
                     "content": "=YEAR(TODAY())"
                 },
                 "B5": {
-                    "format": 4,
                     "content": "=ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_receivable\"),$B$4)"
                 },
                 "B6": {
-                    "format": 4,
-                    "content": "=ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),$B$4)"
+                    "content": "=-ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),$B$4)"
                 },
                 "B7": {
-                    "format": 4,
                     "content": "=ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),$B$4)"
                 },
                 "B8": {
-                    "format": 4,
                     "content": "=B6-B7"
                 },
                 "B9": {
@@ -1435,7 +1414,6 @@
                     "content": "=ROUND(IFERROR(B5/B8*B9))"
                 },
                 "B11": {
-                    "format": 4,
                     "content": "=ODOO.PIVOT(7,\"price_subtotal\")"
                 },
                 "C1": {
@@ -1444,7 +1422,6 @@
                 },
                 "C2": {
                     "style": 15,
-                    "format": 3,
                     "content": "=FORMAT.LARGE.NUMBER(B2)"
                 },
                 "C3": {
@@ -1453,7 +1430,7 @@
                 },
                 "C10": {
                     "style": 15,
-                    "content": "=CONCATENATE(FORMAT.LARGE.NUMBER(B10),\" days\")"
+                    "content": "=CONCATENATE(FORMAT.LARGE.NUMBER(B10),_t(\" days\"))"
                 },
                 "C11": {
                     "style": 15,
@@ -1570,9 +1547,48 @@
     },
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
-        "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": "account.menu_finance"
+        "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912": "account.menu_finance",
+        "1aeea7b2-900b-4067-b8ad-3e4772c54028": "account.menu_action_move_out_invoice_type",
+        "bdfb27d0-5902-4a2a-9b7e-514a6625578c": "account.menu_action_account_invoice_report_all",
+        "b1673523-d139-47fb-b5ea-9e4f969aacb6": "account.menu_action_account_invoice_report_all"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
+    "lists": {
+        "1": {
+            "columns": [
+                "name",
+                "invoice_partner_display_name",
+                "invoice_date",
+                "invoice_date_due",
+                "activity_ids",
+                "amount_untaxed_signed",
+                "amount_total_signed",
+                "amount_total_in_currency_signed",
+                "payment_state",
+                "state"
+            ],
+            "domain": [
+                [
+                    "move_type",
+                    "=",
+                    "out_invoice"
+                ]
+            ],
+            "model": "account.move",
+            "context": {
+                "default_move_type": "out_invoice"
+            },
+            "orderBy": [
+                {
+                    "name": "amount_total_signed",
+                    "asc": false
+                }
+            ],
+            "id": "1",
+            "name": "Invoices by Total Signed"
+        }
+    },
+    "listNextId": 2,
     "pivots": {
         "1": {
             "colGroupBys": [],
@@ -1908,48 +1924,12 @@
         }
     },
     "pivotNextId": 8,
-    "lists": {
-        "1": {
-            "columns": [
-                "name",
-                "invoice_partner_display_name",
-                "invoice_date",
-                "invoice_date_due",
-                "activity_ids",
-                "amount_untaxed_signed",
-                "amount_total_signed",
-                "amount_total_in_currency_signed",
-                "payment_state",
-                "state"
-            ],
-            "domain": [
-                [
-                    "move_type",
-                    "=",
-                    "out_invoice"
-                ]
-            ],
-            "model": "account.move",
-            "context": {
-                "default_move_type": "out_invoice"
-            },
-            "orderBy": [
-                {
-                    "name": "amount_total_signed",
-                    "asc": false
-                }
-            ],
-            "id": "1",
-            "name": "Invoices by Total Signed"
-        }
-    },
-    "listNextId": 2,
     "globalFilters": [
         {
             "id": "757a1b4b-e339-4879-beb6-9851050387cf",
             "type": "date",
             "label": "Period",
-            "defaultValue": "last_year",
+            "defaultValue": "last_three_months",
             "rangeType": "relative",
             "defaultsToCurrentPeriod": true,
             "pivotFields": {
@@ -2045,7 +2025,7 @@
             },
             "listFields": {
                 "1": {
-                    "field": "partner_id",
+                    "field": "partner_id.country_id",
                     "type": "many2one"
                 }
             },
@@ -2097,8 +2077,8 @@
             },
             "listFields": {
                 "1": {
-                    "field": "invoice_line_ids",
-                    "type": "one2many"
+                    "field": "invoice_line_ids.product_id.categ_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {
@@ -2149,8 +2129,8 @@
             },
             "listFields": {
                 "1": {
-                    "field": "invoice_line_ids",
-                    "type": "one2many"
+                    "field": "invoice_line_ids.product_id",
+                    "type": "many2one"
                 }
             },
             "graphFields": {

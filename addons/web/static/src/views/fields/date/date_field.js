@@ -7,9 +7,30 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class DateField extends Component {
+    static template = "web.DateField";
+    static components = {
+        DatePicker,
+    };
+    static props = {
+        ...standardFieldProps,
+        pickerOptions: { type: Object, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+    static defaultProps = {
+        pickerOptions: {},
+    };
+
+    setup() {
+        /**
+         * The last value that has been commited to the model.
+         * Not changed in case of invalid field value.
+         */
+        this.lastSetValue = null;
+    }
+
     get isDateTime() {
         return this.props.record.fields[this.props.name].type === "datetime";
     }
@@ -25,32 +46,26 @@ export class DateField extends Component {
 
     onDateTimeChanged(date) {
         if (!areDateEquals(this.date || "", date)) {
-            this.props.update(date);
+            this.props.record.update({ [this.props.name]: date });
         }
+    }
+    onDatePickerInput(ev) {
+        this.props.setDirty(ev.target.value !== this.lastSetValue);
+    }
+    onUpdateInput(date) {
+        this.props.setDirty(false);
+        this.lastSetValue = date;
     }
 }
 
-DateField.template = "web.DateField";
-DateField.components = {
-    DatePicker,
-};
-DateField.props = {
-    ...standardFieldProps,
-    pickerOptions: { type: Object, optional: true },
-    placeholder: { type: String, optional: true },
-};
-DateField.defaultProps = {
-    pickerOptions: {},
-};
-
-DateField.displayName = _lt("Date");
-DateField.supportedTypes = ["date", "datetime"];
-
-DateField.extractProps = ({ attrs }) => {
-    return {
+export const dateField = {
+    component: DateField,
+    displayName: _lt("Date"),
+    supportedTypes: ["date", "datetime"],
+    extractProps: ({ attrs }) => ({
         pickerOptions: attrs.options.datepicker,
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-registry.category("fields").add("date", DateField);
+registry.category("fields").add("date", dateField);

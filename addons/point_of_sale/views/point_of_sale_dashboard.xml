@@ -11,6 +11,14 @@
             'search_default_config_id': [active_id],
             'default_config_id': active_id}
         </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No sessions found
+            </p>
+            <p>
+                Daily sessions hold sales from your Point of Sale.
+            </p>
+        </field>
     </record>
 
     <record id="action_pos_order_filtered" model="ir.actions.act_window">
@@ -60,8 +68,39 @@
                 <field name="pos_session_state"/>
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
-                <field name="number_of_opened_session"/>
+                <field name="number_of_rescue_session"/>
                 <templates>
+                    <t t-name="kanban-menu">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>View</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_pos_order_filtered)d" type="action">Orders</a>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_pos_session_filtered)d" type="action">Sessions</a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div role="menuitem" class="o_kanban_card_manage_title">
+                                        <span>Reporting</span>
+                                    </div>
+                                    <div role="menuitem">
+                                        <a name="%(action_report_pos_order_all_filtered)d" type="action">Orders</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="point_of_sale.group_pos_manager">
+                                <div role="menuitem" class="col-12">
+                                    <a name="action_pos_config_modal_edit" type="object">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                     <t t-name="kanban-box">
                         <div>
                             <div class="o_kanban_card_header">
@@ -84,9 +123,6 @@
                                              To Close
                                         </div>
                                     </t>
-                                </div>
-                                <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_kanban_card_content">
@@ -121,43 +157,17 @@
                                             </div>
                                         </div>
 
-                                        <button t-if="record.number_of_opened_session.value &gt; 1" class="btn btn-link" style="padding-left:0; text-decoration: underline" name="open_opened_session_list" type="object">
-                                            There are <t t-esc="record.number_of_opened_session.value"/> open sessions
-                                        </button>
+                                        <div>
+                                            <a t-if="record.number_of_rescue_session.value &gt; 0" class="oe_kanban_action oe_kanban_action_a col-12" name="open_opened_rescue_session_form" type="object">
+                                                <t t-esc="record.number_of_rescue_session.value" /> outstanding rescue session
+                                            </a>                                     
+                                        </div>
                                     </div>
                                 </div>
                                 <div style="text-align:right;">
                                     <field name="current_user_id" widget="many2one_avatar_user"/>
                                 </div>
 
-                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                                <div class="row">
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>View</span>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_pos_order_filtered)d" type="action">Orders</a>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_pos_session_filtered)d" type="action">Sessions</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                        <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>Reporting</span>
-                                        </div>
-                                        <div role="menuitem">
-                                            <a name="%(action_report_pos_order_all_filtered)d" type="action">Orders</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="point_of_sale.group_pos_manager">
-                                    <div role="menuitem" class="col-12">
-                                        <a name="action_pos_config_modal_edit" type="object">Edit</a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </t>

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 /**
- * @param {Number} value
- * @param {Number} comparisonValue
- * @returns {Number}
+ * @param {number} value
+ * @param {number} comparisonValue
+ * @returns {number}
  */
 export function computeVariation(value, comparisonValue) {
     if (isNaN(value) || isNaN(comparisonValue)) {
@@ -24,10 +24,10 @@ export function computeVariation(value, comparisonValue) {
 /**
  * Returns value clamped to the inclusive range of min and max.
  *
- * @param {Number} num
- * @param {Number} min
- * @param {Number} max
- * @returns {Number}
+ * @param {number} num
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
  */
 export function clamp(num, min, max) {
     return Math.max(Math.min(num, max), min);

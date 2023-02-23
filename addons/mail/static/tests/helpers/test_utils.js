@@ -1,17 +1,18 @@
 /** @odoo-module **/
 
-import { getPyEnv, startServer } from '@bus/../tests/helpers/mock_python_environment';
+import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { nextTick } from '@mail/utils/utils';
-import { getAdvanceTime } from '@mail/../tests/helpers/time_control';
-import { getWebClientReady } from '@mail/../tests/helpers/webclient_setup';
+import { nextTick } from "@mail/utils/utils";
+import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
+import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
 import { wowlServicesSymbol } from "@web/legacy/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { session as sessionInfo } from "@web/session";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
-const { App, EventBus } = owl;
+import { App, EventBus } from "@odoo/owl";
 const { afterNextRender } = App;
 
 //------------------------------------------------------------------------------
@@ -27,11 +28,11 @@ const { afterNextRender } = App;
  */
 function _createFakeDataTransfer(files) {
     return {
-        dropEffect: 'all',
-        effectAllowed: 'all',
+        dropEffect: "all",
+        effectAllowed: "all",
         files,
         items: [],
-        types: ['Files'],
+        types: ["Files"],
     };
 }
 
@@ -80,7 +81,7 @@ function getAfterEvent({ messagingBus }) {
         });
         // Set up the promise to resolve if the event is triggered.
         const eventProm = makeDeferred();
-        const eventHandler = ev => {
+        const eventHandler = (ev) => {
             if (!predicate || predicate(ev.detail)) {
                 eventProm.resolve();
             }
@@ -104,14 +105,23 @@ function getAfterEvent({ messagingBus }) {
 
 function getClick({ afterNextRender }) {
     return async function click(selector) {
-        await afterNextRender(() => document.querySelector(selector).click());
+        await afterNextRender(() => {
+            if (typeof selector === "string") {
+                $(selector)[0].click();
+            } else if (selector instanceof HTMLElement) {
+                selector.click();
+            } else {
+                // jquery
+                selector[0].click();
+            }
+        });
     };
 }
 
 function getMouseenter({ afterNextRender }) {
     return async function mouseenter(selector) {
         await afterNextRender(() =>
-            document.querySelector(selector).dispatchEvent(new window.MouseEvent('mouseenter'))
+            document.querySelector(selector).dispatchEvent(new window.MouseEvent("mouseenter"))
         );
     };
 }
@@ -123,56 +133,61 @@ function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props 
             id: 104,
             context,
             params,
-            tag: 'mail.action_discuss',
-            type: 'ir.actions.client',
+            tag: "mail.action_discuss",
+            type: "ir.actions.client",
         };
         if (waitUntilMessagesLoaded) {
             let threadId = context.active_id;
-            if (typeof threadId === 'string') {
-                threadId = parseInt(threadId.split('_')[1]);
+            if (typeof threadId === "string") {
+                threadId = parseInt(threadId.split("_")[1]);
             }
-            return afterNextRender(() => afterEvent({
-                eventName: 'o-thread-view-hint-processed',
-                func: () => doAction(webClient, actionOpenDiscuss, { props }),
-                message: "should wait until discuss loaded its messages",
-                predicate: ({ hint, threadViewer }) => {
-                    return (
-                        hint.type === 'messages-loaded' &&
-                        (!threadId || threadViewer.thread.id === threadId)
-                    );
-                },
-            }));
+            return afterNextRender(() =>
+                afterEvent({
+                    eventName: "o-thread-view-hint-processed",
+                    func: () => doAction(webClient, actionOpenDiscuss, { props }),
+                    message: "should wait until discuss loaded its messages",
+                    predicate: ({ hint, threadViewer }) => {
+                        return (
+                            hint.type === "messages-loaded" &&
+                            (!threadId || threadViewer.thread.id === threadId)
+                        );
+                    },
+                })
+            );
         }
         return afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
     };
 }
 
 function getOpenFormView(afterEvent, openView) {
-    return async function openFormView(action, { props, waitUntilDataLoaded = true, waitUntilMessagesLoaded = true } = {}) {
-        action['views'] = [[false, 'form']];
+    return async function openFormView(
+        action,
+        { props, waitUntilDataLoaded = true, waitUntilMessagesLoaded = true } = {}
+    ) {
+        action["views"] = [[false, "form"]];
         const func = () => openView(action, props);
-        const waitData = func => afterNextRender(() => afterEvent({
-            eventName: 'o-thread-loaded-data',
-            func,
-            message: "should wait until chatter loaded its data",
-            predicate: ({ thread }) => {
-                return (
-                    thread.model === action.res_model &&
-                    thread.id === action.res_id
-                );
-            },
-        }));
-        const waitMessages = func => afterNextRender(() => afterEvent({
-            eventName: 'o-thread-loaded-messages',
-            func,
-            message: "should wait until chatter loaded its messages",
-            predicate: ({ thread }) => {
-                return (
-                    thread.model === action.res_model &&
-                    thread.id === action.res_id
-                );
-            },
-        }));
+        const waitData = (func) =>
+            afterNextRender(() =>
+                afterEvent({
+                    eventName: "o-thread-loaded-data",
+                    func,
+                    message: "should wait until chatter loaded its data",
+                    predicate: ({ thread }) => {
+                        return thread.model === action.res_model && thread.id === action.res_id;
+                    },
+                })
+            );
+        const waitMessages = (func) =>
+            afterNextRender(() =>
+                afterEvent({
+                    eventName: "o-thread-loaded-messages",
+                    func,
+                    message: "should wait until chatter loaded its messages",
+                    predicate: ({ thread }) => {
+                        return thread.model === action.res_model && thread.id === action.res_id;
+                    },
+                })
+            );
         if (waitUntilDataLoaded && waitUntilMessagesLoaded) {
             return waitData(() => waitMessages(func));
         }
@@ -224,34 +239,40 @@ function getOpenFormView(afterEvent, openView) {
 async function start(param0 = {}) {
     // patch _.debounce and _.throttle to be fast and synchronous.
     patchWithCleanup(_, {
-        debounce: func => func,
-        throttle: func => func,
+        debounce: (func) => func,
+        throttle: (func) => func,
     });
-    const {
-        discuss = {},
-        hasTimeControl,
-        waitUntilMessagingCondition = 'initialized',
-    } = param0;
+    const { discuss = {}, hasTimeControl, waitUntilMessagingCondition = "initialized" } = param0;
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
-    const target = param0['target'] || getFixture();
-    param0['target'] = target;
-    if (!['none', 'created', 'initialized'].includes(waitUntilMessagingCondition)) {
-        throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
+    const target = param0["target"] || getFixture();
+    param0["target"] = target;
+    if (!["none", "created", "initialized"].includes(waitUntilMessagingCondition)) {
+        throw Error(
+            `Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`
+        );
     }
     const messagingBus = new EventBus();
     const afterEvent = getAfterEvent({ messagingBus });
 
     const pyEnv = await getPyEnv();
+    patchWithCleanup(sessionInfo, {
+        user_context: {
+            ...sessionInfo.user_context,
+            uid: pyEnv.currentUserId,
+        },
+        uid: pyEnv.currentUserId,
+        partner_id: pyEnv.currentPartnerId,
+    });
     param0.serverData = param0.serverData || getActionManagerServerData();
     param0.serverData.models = { ...pyEnv.getData(), ...param0.serverData.models };
     param0.serverData.views = { ...pyEnv.getViews(), ...param0.serverData.views };
     let webClient;
     await afterNextRender(async () => {
         webClient = await getWebClientReady({ ...param0, messagingBus });
-        if (waitUntilMessagingCondition === 'created') {
+        if (waitUntilMessagingCondition === "created") {
             await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
         }
-        if (waitUntilMessagingCondition === 'initialized') {
+        if (waitUntilMessagingCondition === "initialized") {
             await webClient.env.services.messaging.modelManager.messagingCreatedPromise;
             await webClient.env.services.messaging.modelManager.messagingInitializedPromise;
         }
@@ -266,7 +287,7 @@ async function start(param0 = {}) {
         delete owl.Component.env;
     });
     const openView = async (action, options) => {
-        action['type'] = action['type'] || 'ir.actions.act_window';
+        action["type"] = action["type"] || "ir.actions.act_window";
         await afterNextRender(() => doAction(webClient, action, { props: options }));
     };
     return {
@@ -298,8 +319,8 @@ async function start(param0 = {}) {
  *   @see testUtils.file.createFile
  */
 function dragenterFiles(el, files) {
-    const ev = new Event('dragenter', { bubbles: true });
-    Object.defineProperty(ev, 'dataTransfer', {
+    const ev = new Event("dragenter", { bubbles: true });
+    Object.defineProperty(ev, "dataTransfer", {
         value: _createFakeDataTransfer(files),
     });
     el.dispatchEvent(ev);
@@ -313,8 +334,8 @@ function dragenterFiles(el, files) {
  *   @see testUtils.file.createFile
  */
 function dropFiles(el, files) {
-    const ev = new Event('drop', { bubbles: true });
-    Object.defineProperty(ev, 'dataTransfer', {
+    const ev = new Event("drop", { bubbles: true });
+    Object.defineProperty(ev, "dataTransfer", {
         value: _createFakeDataTransfer(files),
     });
     el.dispatchEvent(ev);
@@ -328,8 +349,8 @@ function dropFiles(el, files) {
  *   @see testUtils.file.createFile
  */
 function pasteFiles(el, files) {
-    const ev = new Event('paste', { bubbles: true });
-    Object.defineProperty(ev, 'clipboardData', {
+    const ev = new Event("paste", { bubbles: true });
+    Object.defineProperty(ev, "clipboardData", {
         value: _createFakeDataTransfer(files),
     });
     el.dispatchEvent(ev);
@@ -343,13 +364,17 @@ function pasteFiles(el, files) {
  * @param {string} selector
  * @param {string} content
  */
- async function insertText(selector, content) {
+async function insertText(selector, content) {
     await afterNextRender(() => {
         document.querySelector(selector).focus();
         for (const char of content) {
-            document.execCommand('insertText', false, char);
-            document.querySelector(selector).dispatchEvent(new window.KeyboardEvent('keydown', { key: char }));
-            document.querySelector(selector).dispatchEvent(new window.KeyboardEvent('keyup', { key: char }));
+            document.execCommand("insertText", false, char);
+            document
+                .querySelector(selector)
+                .dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
+            document
+                .querySelector(selector)
+                .dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
         }
     });
 }
@@ -379,6 +404,7 @@ export {
     afterNextRender,
     dragenterFiles,
     dropFiles,
+    insertText,
     isScrolledToBottom,
     nextAnimationFrame,
     nextTick,

@@ -1,26 +1,23 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'DiscussSidebarMailboxView',
-    identifyingMode: 'xor',
+Model({
+    name: "DiscussSidebarMailboxView",
+    template: "mail.DiscussSidebarMailboxView",
+    identifyingMode: "xor",
     fields: {
-        discussViewOwnerAsHistory: one('DiscussView', {
+        discussViewOwnerAsHistory: one("DiscussView", {
             identifying: true,
-            inverse: 'historyView',
+            inverse: "historyView",
         }),
-        discussViewOwnerAsInbox: one('DiscussView', {
+        discussViewOwnerAsInbox: one("DiscussView", { identifying: true, inverse: "inboxView" }),
+        discussViewOwnerAsStarred: one("DiscussView", {
             identifying: true,
-            inverse: 'inboxView',
+            inverse: "starredView",
         }),
-        discussViewOwnerAsStarred: one('DiscussView', {
-            identifying: true,
-            inverse: 'starredView',
-        }),
-        mailbox: one('Mailbox', {
+        mailbox: one("Mailbox", {
+            required: true,
             compute() {
                 if (this.discussViewOwnerAsHistory) {
                     return this.messaging.history;
@@ -33,7 +30,10 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
+        }),
+        threadIconView: one("ThreadIconView", {
+            default: {},
+            inverse: "discussSidebarMailboxViewOwner",
         }),
     },
 });

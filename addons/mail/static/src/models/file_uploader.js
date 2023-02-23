@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, one, Model } from "@mail/model";
 
-import core from 'web.core';
+import core from "web.core";
 
 const getAttachmentNextTemporaryId = (function () {
     let tmpId = 0;
@@ -14,9 +12,9 @@ const getAttachmentNextTemporaryId = (function () {
     };
 })();
 
-registerModel({
-    name: 'FileUploader',
-    identifyingMode: 'xor',
+Model({
+    name: "FileUploader",
+    identifyingMode: "xor",
     recordMethods: {
         openBrowserFileUploader() {
             this.fileInput.click();
@@ -40,13 +38,12 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            if (this.fileInput && this.fileInput.el) {
-                this.fileInput.el.value = '';
+            if (this.chatterOwner && !this.chatterOwner.hasAttachmentBox) {
+                this.chatterOwner.openAttachmentBox();
             }
-            if (this.chatterOwner && !this.chatterOwner.attachmentBoxView) {
-                this.chatterOwner.openAttachmentBoxView();
-            }
-            this.messaging.messagingBus.trigger('o-file-uploader-upload', { files });
+            this.messaging.messagingBus.trigger("o-file-uploader-upload", { files });
+            // clear at the end because side-effect of emptying `files`
+            this.fileInput.value = "";
         },
         /**
          * @private
@@ -58,11 +55,11 @@ registerModel({
          */
         _createFormData({ composer, file, thread }) {
             const formData = new window.FormData();
-            formData.append('csrf_token', core.csrf_token);
-            formData.append('is_pending', Boolean(composer));
-            formData.append('thread_id', thread && thread.id);
-            formData.append('thread_model', thread && thread.model);
-            formData.append('ufile', file, file.name);
+            formData.append("csrf_token", core.csrf_token);
+            formData.append("is_pending", Boolean(composer));
+            formData.append("thread_id", thread && thread.id);
+            formData.append("thread_model", thread && thread.model);
+            formData.append("ufile", file, file.name);
             return formData;
         },
         /**
@@ -76,14 +73,14 @@ registerModel({
         _onAttachmentUploaded({ attachmentData, composer, thread }) {
             if (attachmentData.error || !attachmentData.id) {
                 this.messaging.notify({
-                    type: 'danger',
+                    type: "danger",
                     message: attachmentData.error,
                 });
                 return;
             }
-            return (composer || thread).messaging.models['Attachment'].insert({
+            return (composer || thread).messaging.models["Attachment"].insert({
                 composer: composer,
-                originThread: (!composer && thread) ? thread : undefined,
+                originThread: !composer && thread ? thread : undefined,
                 ...attachmentData,
             });
         },
@@ -94,25 +91,31 @@ registerModel({
          * @returns {Promise}
          */
         async _performUpload({ files }) {
+            const reloadFunc =
+                this.activityListViewItemOwner && this.activityListViewItemOwner.reloadFunc;
+            const webRecord =
+                this.activityListViewItemOwner && this.activityListViewItemOwner.webRecord;
             const composer = this.composerView && this.composerView.composer; // save before async
             const thread = this.thread; // save before async
-            const chatter = (
-                (this.chatterOwner) ||
-                (this.attachmentBoxView && this.attachmentBoxView.chatter) ||
-                (this.activityView && this.activityView.activityBoxView.chatter)
-            ); // save before async
-            const activity = this.activityView && this.activityView.activity; // save before async
+            const chatter =
+                this.chatterOwner || (this.activityView && this.activityView.chatterOwner); // save before async
+            const activity =
+                (this.activityView && this.activityView.activity) ||
+                (this.activityListViewItemOwner && this.activityListViewItemOwner.activity); // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
-                uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
-                    composer,
-                    filename: file.name,
-                    id: getAttachmentNextTemporaryId(),
-                    isUploading: true,
-                    mimetype: file.type,
-                    name: file.name,
-                    originThread: (!composer && thread) ? thread : undefined,
-                }));
+                uploadingAttachments.set(
+                    file,
+                    this.messaging.models["Attachment"].insert({
+                        composer,
+                        filename: file.name,
+                        id: getAttachmentNextTemporaryId(),
+                        isUploading: true,
+                        mimetype: file.type,
+                        name: file.name,
+                        originThread: !composer && thread ? thread : undefined,
+                    })
+                );
             }
             const attachments = [];
             for (const file of files) {
@@ -125,11 +128,14 @@ registerModel({
                     return;
                 }
                 try {
-                    const response = await (composer || thread).messaging.browser.fetch('/mail/attachment/upload', {
-                        method: 'POST',
-                        body: this._createFormData({ composer, file, thread }),
-                        signal: uploadingAttachment.uploadingAbortController.signal,
-                    });
+                    const response = await (composer || thread).messaging.browser.fetch(
+                        "/mail/attachment/upload",
+                        {
+                            method: "POST",
+                            body: this._createFormData({ composer, file, thread }),
+                            signal: uploadingAttachment.uploadingAbortController.signal,
+                        }
+                    );
                     const attachmentData = await response.json();
                     if (uploadingAttachment.exists()) {
                         uploadingAttachment.delete();
@@ -137,39 +143,40 @@ registerModel({
                     if ((composer && !composer.exists()) || (thread && !thread.exists())) {
                         return;
                     }
-                    const attachment = this._onAttachmentUploaded({ attachmentData, composer, thread });
+                    const attachment = this._onAttachmentUploaded({
+                        attachmentData,
+                        composer,
+                        thread,
+                    });
                     attachments.push(attachment);
                 } catch (e) {
-                    if (e.name !== 'AbortError') {
+                    if (e.name !== "AbortError") {
                         throw e;
                     }
                 }
             }
-            if (chatter && chatter.exists() && chatter.hasParentReloadOnAttachmentsChanged) {
-                chatter.reloadParentView();
-            }
             if (activity && activity.exists()) {
-                activity.markAsDone({ attachments });
+                await activity.markAsDone({ attachments });
+            }
+            if (reloadFunc) {
+                reloadFunc();
+            }
+            if (webRecord) {
+                webRecord.model.load({ resId: thread.id });
+            }
+            if (chatter && chatter.exists() && chatter.shouldReloadParentFromFileChanged) {
+                chatter.reloadParentView();
             }
         },
     },
     fields: {
-        activityView: one('ActivityView', {
+        activityListViewItemOwner: one("ActivityListViewItem", {
             identifying: true,
-            inverse: 'fileUploader',
+            inverse: "fileUploader",
         }),
-        attachmentBoxView: one('AttachmentBoxView', {
-            identifying: true,
-            inverse: 'fileUploader',
-        }),
-        chatterOwner: one('Chatter', {
-            identifying: true,
-            inverse: 'fileUploader',
-        }),
-        composerView: one('ComposerView', {
-            identifying: true,
-            inverse: 'fileUploader',
-        }),
+        activityView: one("ActivityView", { identifying: true, inverse: "fileUploader" }),
+        chatterOwner: one("Chatter", { identifying: true, inverse: "fileUploader" }),
+        composerView: one("ComposerView", { identifying: true, inverse: "fileUploader" }),
         fileInput: attr({
             /**
              * Create an HTML element that will serve as file input.
@@ -177,20 +184,21 @@ registerModel({
              * use to trigger the file browser and start the upload process.
              */
             compute() {
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
+                const fileInput = document.createElement("input");
+                fileInput.type = "file";
                 fileInput.multiple = true;
                 fileInput.onchange = this.onChangeAttachment;
                 return fileInput;
             },
         }),
-        thread: one('Thread', {
+        thread: one("Thread", {
+            required: true,
             compute() {
                 if (this.activityView) {
                     return this.activityView.activity.thread;
                 }
-                if (this.attachmentBoxView) {
-                    return this.attachmentBoxView.chatter.thread;
+                if (this.activityListViewItemOwner) {
+                    return this.activityListViewItemOwner.activity.thread;
                 }
                 if (this.chatterOwner) {
                     return this.chatterOwner.thread;
@@ -200,7 +208,6 @@ registerModel({
                 }
                 return clear();
             },
-            required: true,
-        })
+        }),
     },
 });

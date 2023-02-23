@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { uiService, useActiveElement } from "@web/core/ui/ui_service";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import {
     destroy,
@@ -17,7 +17,7 @@ import {
 } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, useRef, useState, xml } = owl;
+import { Component, useRef, useState, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -1167,4 +1167,19 @@ QUnit.test("mixing hotkeys with and without operation area", async (assert) => {
     triggerHotkey("Space");
     await nextTick();
     assert.verifySteps(["withArea"]);
+});
+
+QUnit.test("native browser space key ' ' is correctly translated to 'space' ", async (assert) => {
+    class A extends Component {
+        setup() {
+            useHotkey("space", () => assert.step("space"));
+        }
+    }
+    A.template = xml``;
+
+    assert.strictEqual(getActiveHotkey({ key: " " }), "space");
+
+    await mount(A, target, { env });
+    await triggerHotkey(" "); // event key triggered by the browser
+    assert.verifySteps(["space"]);
 });

@@ -32,7 +32,7 @@ export const websiteService = {
         let fullscreen;
         let pageDocument;
         let contentWindow;
-        let editedObjectPath;
+        let lastUrl;
         let websiteRootInstance;
         let Wysiwyg;
         let isRestrictedEditor;
@@ -42,6 +42,8 @@ export const websiteService = {
         let blockingProcesses = [];
         let modelNamesProm = null;
         const modelNames = {};
+        let invalidateSnippetCache = false;
+        let lastWebsiteId = null;
 
         const context = reactive({
             showNewContentModal: false,
@@ -55,11 +57,15 @@ export const websiteService = {
 
         hotkey.add("escape", () => {
             // Toggle fullscreen mode when pressing escape.
-            if (currentWebsiteId) {
-                fullscreen = !fullscreen;
-                document.body.classList.toggle('o_website_fullscreen', fullscreen);
-                bus.trigger((fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE'));
+            if (!currentWebsiteId && !fullscreen) {
+                // Only allow to use this feature while on the website app, or
+                // while it is already fullscreen (in case you left the website
+                // app in fullscreen mode, thanks to CTRL-K).
+                return;
             }
+            fullscreen = !fullscreen;
+            document.body.classList.toggle('o_website_fullscreen', fullscreen);
+            bus.trigger(fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE');
         }, { global: true });
         registry.category('main_components').add('FullscreenIndication', {
             Component: FullscreenIndication,
@@ -71,6 +77,10 @@ export const websiteService = {
         });
         return {
             set currentWebsiteId(id) {
+                if (id && id !== lastWebsiteId) {
+                    invalidateSnippetCache = true;
+                    lastWebsiteId = id;
+                }
                 currentWebsiteId = id;
                 websiteSystrayRegistry.trigger('EDIT-WEBSITE');
             },
@@ -103,12 +113,18 @@ export const websiteService = {
                     contentWindow = null;
                     return;
                 }
-                // Not all files have a dataset. (e.g. XML)
-                if (!document.documentElement.dataset) {
+                const { dataset } = document.documentElement;
+                // XML files have no dataset on Firefox, and an empty one on
+                // Chrome.
+                const isWebsitePage = dataset && dataset.websiteId;
+                if (!isWebsitePage) {
                     currentMetadata = {};
                 } else {
-                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = document.documentElement.dataset;
-                    const contentMenuEl = document.querySelector('[data-content_menu_id]');
+                    const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = dataset;
+                    const contentMenus = [...document.querySelectorAll('[data-content_menu_id]')].map(menu => [
+                        menu.dataset.menu_name,
+                        menu.dataset.content_menu_id,
+                    ]);
                     currentMetadata = {
                         path: document.location.href,
                         mainObject: unslugHtmlDataObject(mainObject),
@@ -118,13 +134,15 @@ export const websiteService = {
                         editableInBackend: editableInBackend === 'True',
                         title: document.title,
                         translatable: !!translatable,
-                        contentMenuId: contentMenuEl && contentMenuEl.dataset.content_menu_id,
+                        contentMenus,
                         // TODO: Find a better way to figure out if
                         // a page is editable or not. For now, we use
                         // the editable selector because it's the common
                         // denominator of editable pages.
                         editable: !!document.getElementById('wrapwrap'),
                         viewXmlid: viewXmlid,
+                        lang: document.documentElement.getAttribute('lang').replace('-', '_'),
+                        direction: document.documentElement.querySelector('#wrapwrap.o_rtl') ? 'rtl' : 'ltr',
                     };
                 }
                 contentWindow = document.defaultView;
@@ -143,11 +161,11 @@ export const websiteService = {
                 websiteRootInstance = rootInstance;
                 context.isPublicRootReady = !!rootInstance;
             },
-            set editedObjectPath(path) {
-                editedObjectPath = path;
+            set lastUrl(url) {
+                lastUrl = url;
             },
-            get editedObjectPath() {
-                return editedObjectPath;
+            get lastUrl() {
+                return lastUrl;
             },
             get isRestrictedEditor() {
                 return isRestrictedEditor === true;
@@ -164,7 +182,19 @@ export const websiteService = {
             set actionJsId(jsId) {
                 actionJsId = jsId;
             },
-            goToWebsite({ websiteId, path, edition, translation } = {}) {
+            get invalidateSnippetCache() {
+                return invalidateSnippetCache;
+            },
+            set invalidateSnippetCache(value) {
+                invalidateSnippetCache = value;
+            },
+
+            goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
+                this.websiteRootInstance = undefined;
+                if (lang) {
+                    invalidateSnippetCache = true;
+                    path = `/website/lang/${lang}?r=${encodeURIComponent(path)}`;
+                }
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,
                     additionalContext: {

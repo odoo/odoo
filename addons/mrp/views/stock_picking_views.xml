@@ -11,6 +11,43 @@
                 <field name="count_mo_late"/>
             </field>
 
+            <xpath expr="//t[@t-name='kanban-menu']" position="inside">
+                <div class="container" t-if="record.code.raw_value == 'mrp_operation'">
+                    <div class="row">
+                        <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view" name="picking_left_manage_pane">
+                            <div role="menuitem" class="o_kanban_card_manage_title">
+                                <span>Orders</span>
+                            </div>
+                            <div role="menuitem">
+                                <a name="%(mrp_production_action_picking_deshboard)d" type="action">All</a>
+                            </div>
+                            <div role="menuitem">
+                                <a name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_inprogress': 1}">In Progress</a>
+                            </div>
+                            <div role="menuitem">
+                                <a name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_planned': 1}">Planned</a>
+                            </div>
+                        </div>
+                        <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                            <div role="menuitem" class="o_kanban_card_manage_title">
+                                <span>New</span>
+                            </div>
+                            <div role="menuitem">
+                                <a name="%(action_mrp_production_form)d" context="{'default_picking_type_id': active_id}" type="action">Manufacturing Order</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                        <div role="menuitem" aria-haspopup="true" class="col-8">
+                            <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
+                        </div>
+                        <div class="col-4">
+                            <a class="dropdown-item" role="menuitem" type="edit">Configuration</a>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
             <xpath expr='//div[@name="stock_picking"]' position="after">
                 <div t-if="record.code.raw_value == 'mrp_operation'" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                     <div>
@@ -23,9 +60,6 @@
                                 </div>
                                 <span class="o_primary" t-if="selection_mode"><field name="name"/></span>
                                 <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>
-                            </div>
-                            <div class="o_kanban_manage_button_section" t-if="!selection_mode">
-                                <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                             </div>
                         </div>
                         <div class="container o_kanban_card_content" t-if="!selection_mode">
@@ -56,40 +90,6 @@
                                             <field name="count_mo_late"/>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
-                            <div class="row">
-                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view" name="picking_left_manage_pane">
-                                    <div role="menuitem" class="o_kanban_card_manage_title">
-                                        <span>Orders</span>
-                                    </div>
-                                    <div role="menuitem">
-                                        <a name="%(mrp_production_action_picking_deshboard)d" type="action">All</a>
-                                    </div>
-                                    <div role="menuitem">
-                                        <a name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_inprogress': 1}">In Progress</a>
-                                    </div>
-                                    <div role="menuitem">
-                                        <a name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_planned': 1}">Planned</a>
-                                    </div>
-                                </div>
-                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                    <div role="menuitem" class="o_kanban_card_manage_title">
-                                        <span>New</span>
-                                    </div>
-                                    <div role="menuitem">
-                                        <a name="%(action_mrp_production_form)d" context="{'default_picking_type_id': active_id}" type="action">Manufacturing Order</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                <div role="menuitem" aria-haspopup="true" class="col-8">
-                                    <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
-                                </div>
-                                <div class="col-4">
-                                    <a class="dropdown-item" role="menuitem" type="edit">Configuration</a>
                                 </div>
                             </div>
                         </div>
@@ -143,4 +143,18 @@
             </field>
         </field>
     </record>
+
+    <record id="action_picking_tree_mrp_operation" model="ir.actions.act_window">
+        <field name="name">Manufacturings</field>
+        <field name="res_model">stock.picking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="domain">[('picking_type_code', '=', 'mrp_operation')]</field>
+        <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'mrp_operation'}</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+    </record>
+
+    <menuitem id="mrp_operation_picking" name="Manufacturings" parent="stock.menu_stock_transfers"
+        action="action_picking_tree_mrp_operation" sequence="25"
+        groups="stock.group_stock_manager,stock.group_stock_user"/>
 </odoo>

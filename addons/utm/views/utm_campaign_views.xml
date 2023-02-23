@@ -33,7 +33,7 @@
                     <group id="top-group">
                         <field class="text-break" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                         <field name="name" invisible="1"/>
-                        <field name="user_id" domain="[('share', '=', False)]"/>
+                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                     <notebook>
@@ -66,7 +66,7 @@
                 <group>
                     <field name="name" invisible="1"/>
                     <field class="o_text_overflow" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
-                    <field name="user_id" domain="[('share', '=', False)]"/>
+                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                 </group>
             </form>
@@ -82,23 +82,18 @@
                 <field name='user_id'/>
                 <field name="stage_id"/>
                 <templates>
+                    <t t-name="kanban-menu">
+                        <t t-if="widget.editable">
+                            <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                        </t>
+                        <t t-if="widget.deletable">
+                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        </t>
+                        <div role="separator" class="dropdown-divider"/>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                            <div class="o_dropdown_kanban dropdown">
-                                <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
-                                    <span class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu" role="menu">
-                                    <t t-if="widget.editable">
-                                        <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
-                                    </t>
-                                    <t t-if="widget.deletable">
-                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                    </t>
-                                    <div role="separator" class="dropdown-divider"/>
-                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                </div>
-                            </div>
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">

@@ -8,7 +8,7 @@ class AccountAccountTag(models.Model):
     _name = 'account.account.tag'
     _description = 'Account Tag'
 
-    name = fields.Char('Tag Name', required=True)
+    name = fields.Char('Tag Name', required=True, translate=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes'), ('products', 'Products')], required=True, default='accounts')
     color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Account Tag without removing it.")
@@ -21,7 +21,7 @@ class AccountAccountTag(models.Model):
         in the specified country.
         """
         domain = self._get_tax_tags_domain(tag_name, country_id)
-        return self.env['account.account.tag'].search(domain)
+        return self.env['account.account.tag'].with_context(active_test=False).search(domain)
 
     @api.model
     def _get_tax_tags_domain(self, tag_name, country_id, sign=None):

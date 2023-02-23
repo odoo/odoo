@@ -19,6 +19,7 @@ export const calendarNotificationService = {
                 }
             }
         });
+        bus_service.start();
 
         /**
          * Displays the Calendar notification on user's screen

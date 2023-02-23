@@ -1,22 +1,24 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'LinkPreviewAsideView',
-    identifyingMode: 'xor',
+Model({
+    name: "LinkPreviewAsideView",
+    template: "mail.LinkPreviewAsideView",
+    identifyingMode: "xor",
     recordMethods: {
         /**
          * Handles the click on delete link preview and open the confirm dialog.
          */
         onClick() {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ linkPreviewDeleteConfirmDialog: {} });
         },
     },
     fields: {
-        linkPreview: one('LinkPreview', {
+        linkPreview: one("LinkPreview", {
             compute() {
                 if (this.linkPreviewCardView) {
                     return this.linkPreviewCardView.linkPreview;
@@ -31,21 +33,21 @@ registerModel({
             },
             required: true,
         }),
-        linkPreviewCardView: one('LinkPreviewCardView', {
+        linkPreviewCardView: one("LinkPreviewCardView", {
             identifying: true,
-            inverse: 'linkPreviewAsideView',
+            inverse: "linkPreviewAsideView",
         }),
-        linkPreviewDeleteConfirmDialog: one('Dialog', {
-            inverse: 'linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm',
+        linkPreviewDeleteConfirmDialog: one("Dialog", {
+            inverse: "linkPreviewAsideViewOwnerAsLinkPreviewDeleteConfirm",
             isCausal: true,
         }),
-        linkPreviewImageView: one('LinkPreviewImageView', {
+        linkPreviewImageView: one("LinkPreviewImageView", {
             identifying: true,
-            inverse: 'linkPreviewAsideView',
+            inverse: "linkPreviewAsideView",
         }),
-        linkPreviewVideoView: one('LinkPreviewVideoView', {
+        linkPreviewVideoView: one("LinkPreviewVideoView", {
             identifying: true,
-            inverse: 'linkPreviewAsideView',
+            inverse: "linkPreviewAsideView",
         }),
     },
 });

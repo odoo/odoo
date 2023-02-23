@@ -1,6 +1,8 @@
 /** @odoo-module */
 
 import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
+import { Domain } from '@web/core/domain';
+import { session } from '@web/session';
 
 export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
     get context() {
@@ -19,6 +21,17 @@ export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
 
     get isGroupedByPersonalStages() {
         return !!this.groupByField && this.groupByField.name === 'personal_stage_type_ids';
+    }
+
+    async _loadGroups() {
+        if (!this.isGroupedByPersonalStages) {
+            return super._loadGroups(...arguments);
+        }
+        const previousDomain = this.domain;
+        this.domain = Domain.and([[['user_ids', 'in', session.uid]], previousDomain]).toList({});
+        const result = await super._loadGroups(...arguments);
+        this.domain = previousDomain;
+        return result;
     }
 
     async createGroup() {

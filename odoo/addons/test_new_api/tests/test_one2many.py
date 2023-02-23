@@ -256,6 +256,18 @@ class One2manyCase(TransactionCase):
         # at this point, member.container_id must be computed for member to
         # appear in container.member_ids
         self.assertEqual(container.member_ids, member)
+        self.assertEqual(container.member_count, 1)
+
+        # Changing member.name will trigger recomputing member.container_id,
+        # container.member_ids and container.member_count. Since we are setting
+        # the name to bar, it will be detached from container, resulting in a
+        # member_count of zero on the container.
+        member.name = 'Bar'
+        self.assertEqual(container.member_count, 0)
+
+        # Reattach member to container again
+        member.name = 'Foo'
+        self.assertEqual(container.member_count, 1)
 
     def test_reward_line_delete(self):
         order = self.env['test_new_api.order'].create({

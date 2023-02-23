@@ -5,7 +5,7 @@
         <field name="name">payment.token.form</field>
         <field name="model">payment.token</field>
         <field name="arch" type="xml">
-            <form string="Payment Tokens" create="false" editable="bottom">
+            <form string="Payment Tokens" create="false" edit="false">
                 <sheet>
                     <field name="active" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
@@ -15,14 +15,16 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <group name="general_information">
-                        <field name="payment_details"/>
-                        <field name="partner_id" />
-                    </group>
-                    <group name="technical_information">
-                        <field name="provider_id"/>
-                        <field name="provider_ref"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                    <group>
+                        <group name="general_information">
+                            <field name="payment_details"/>
+                            <field name="partner_id" />
+                        </group>
+                        <group name="technical_information">
+                            <field name="provider_id"/>
+                            <field name="provider_ref"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -33,11 +35,11 @@
         <field name="name">payment.token.list</field>
         <field name="model">payment.token</field>
         <field name="arch" type="xml">
-            <tree string="Payment Tokens">
+            <tree string="Payment Tokens" create="false">
                 <field name="payment_details"/>
                 <field name="partner_id"/>
-                <field name="provider_id" readonly="1"/>
-                <field name="provider_ref" readonly="1"/>
+                <field name="provider_id"/>
+                <field name="provider_ref"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>
         </field>
@@ -66,7 +68,7 @@
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new payment token
+                There is no token created yet.
             </p>
         </field>
     </record>

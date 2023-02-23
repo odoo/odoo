@@ -1,14 +1,19 @@
-odoo.define('hr_holidays.leave_stats_widget_tests', function (require) {
-    "use strict";
+/** @odoo-module */
 
-    var FormView = require("web.FormView");
-    var testUtils = require('web.test_utils');
+import { selectDropdownItem, editInput, getFixture } from '@web/../tests/helpers/utils';
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
-    var createView = testUtils.createView;
 
-    QUnit.module('leave_stats_widget', {
-        beforeEach: function () {
-            this.data = {
+let serverData;
+let target;
+
+QUnit.module('leave_stats_widget', (hooks) => {
+    hooks.beforeEach(() => {
+        setupViewRegistries();
+
+        target = getFixture();
+        serverData = {
+            models: {
                 department: {
                     fields: {
                         name: { string: "Name", type: "char" },
@@ -82,74 +87,73 @@ odoo.define('hr_holidays.leave_stats_widget_tests', function (require) {
                         holiday_type: 'employee',
                     }]
                 }
-            };
-        }
-    }, function () {
-        QUnit.test('leave stats renders correctly', async function (assert) {
-            assert.expect(5);
-            var self = this;
-            var form = await createView({
-                View: FormView,
-                model: 'hr.leave',
-                data: this.data,
-                arch: '<form string="Leave">' +
-                    '<field name="employee_id"/>' +
-                    '<field name="department_id"/>' +
-                    '<field name="date_from"/>' +
-                    '<widget name="hr_leave_stats"/>' +
-                '</form>',
-                res_id: 12,
-                mockRPC: function (route, args) {
-                    if (args.model === 'hr.leave' && args.method === 'search') {
-                        return Promise.resolve(self.data['hr.leave'].records.map(function (record) { return record.id; }));
-                    }
-                    return this._super.apply(this, arguments);
-                },
-            });
-            const $leaveTypeBody = form.$('.o_leave_stats #o_leave_stats_employee');
-            const $leavesDepartmentBody = form.$('.o_leave_stats #o_leave_stats_department');
+            }
+        };
+    });
 
-            assert.strictEqual($leaveTypeBody.find('span:contains(Legal Leave)').length, 1, "it should have leave type");
-            assert.strictEqual($leaveTypeBody.find('span:contains(6)').length, 1, "it should have 6 days");
-
-            assert.strictEqual($leavesDepartmentBody.find('span:contains(Richard)').length, 2, "it should have 2 leaves for Richard");
-            assert.strictEqual($leavesDepartmentBody.find('span:contains(Jesus)').length, 1, "it should have 1 leaves for Jesus");
-            assert.strictEqual($leavesDepartmentBody.find('div.o_horizontal_separator:contains(R&D)').length, 1, "it should have R&D title");
-            form.destroy();
+    QUnit.test('leave stats renders correctly', async (assert) => {
+        assert.expect(5);
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: 'hr.leave',
+            arch: '<form string="Leave">' +
+                '<field name="employee_id"/>' +
+                '<field name="department_id"/>' +
+                '<field name="date_from"/>' +
+                '<widget name="hr_leave_stats"/>' +
+            '</form>',
+            resId: 12,
+            mockRPC(route, args) {
+                if (args.model === 'hr.leave' && args.method === 'search') {
+                    return Promise.resolve(this.data['hr.leave'].records.map(function (record) { return record.id; }));
+                }
+            },
         });
-        QUnit.test('leave stats reload when employee/department changes', async function (assert) {
-            assert.expect(2);
-            var form = await createView({
-                View: FormView,
-                model: 'hr.leave',
-                mode: 'edit',
-                data: this.data,
-                arch: '<form string="Leave">' +
-                    '<field name="employee_id"/>' +
-                    '<field name="department_id"/>' +
-                    '<field name="date_from"/>' +
-                    '<widget name="hr_leave_stats"/>' +
-                '</form>',
-                mockRPC: function (route, args) {
-                    if (args.model === 'hr.leave' && args.method === 'search_read') {
-                        assert.ok(_.some(args.args[0], _.matcher(['department_id', '=', 11])), "It should load department's leaves data");
-                    }
-                    if (args.model === 'hr.leave' && args.method === 'read_group') {
-                        assert.ok(_.some(args.kwargs.domain, _.matcher(['employee_id', '=', 200])), "It should load employee's leaves data");
-                    }
-                    return this._super.apply(this, arguments);
-                },
-            });
-            // Set date => shouldn't load data yet (no employee nor department defined)
-            await testUtils.fields.editSelect($('input[name="date_from"]'), '2016-10-12 09:00:00');
-            // Set employee => should load employee's date
-            await testUtils.fields.many2one.clickOpenDropdown("employee_id");
-            await testUtils.fields.many2one.clickItem("employee_id", "Jesus");
-            // Set department => should load department's data
-            await testUtils.fields.many2one.clickOpenDropdown("department_id");
-            await testUtils.fields.many2one.clickItem("department_id", "R&D");
 
-            form.destroy();
+        const $leaveTypeBody = target.querySelector('.o_leave_stats #o_leave_stats_employee');
+        const $leavesDepartmentBody = target.querySelector('.o_leave_stats #o_leave_stats_department');
+
+        assert.containsOnce($leaveTypeBody, 'span:contains(Legal Leave)', "it should have leave type");
+        assert.containsOnce($leaveTypeBody, 'span:contains(6)', "it should have 6 days");
+
+        assert.containsN($leavesDepartmentBody, 'span:contains(Richard)', 2, "it should have 2 leaves for Richard");
+        assert.containsOnce($leavesDepartmentBody, 'span:contains(Jesus)', "it should have 1 leaves for Jesus");
+        assert.containsOnce($leavesDepartmentBody, 'div.o_horizontal_separator:contains(R&D)', "it should have R&D title");
+    });
+    QUnit.test('leave stats reload when employee/department changes', async (assert) => {
+        assert.expect(3);
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: 'hr.leave',
+            mode: 'edit',
+            arch: '<form string="Leave">' +
+                '<field name="employee_id"/>' +
+                '<field name="department_id"/>' +
+                '<field name="date_from"/>' +
+                '<widget name="hr_leave_stats"/>' +
+            '</form>',
+            mockRPC(route, args) {
+                if (args.model === 'hr.leave' && args.method === 'search_read') {
+                    assert.ok(_.some(args.kwargs.domain, _.matcher(['department_id', '=', 11])), "It should load department's leaves data");
+                }
+                if (args.model === 'hr.leave' && args.method === 'read_group') {
+                    assert.ok(_.some(args.kwargs.domain, _.matcher(['employee_id', '=', 200])), "It should load employee's leaves data");
+                }
+            },
         });
+
+        // Set date => shouldn't load data yet (no employee nor department defined)
+        await editInput(
+            target,
+            "div[name='date_from'] input",
+            "2016-10-12 09:00:00"
+        );
+
+        // Set employee => should load employee's date
+        await selectDropdownItem(target, "employee_id", "Jesus");
+        // Set department => should load department's data
+        await selectDropdownItem(target, "department_id", "R&D");
     });
 });

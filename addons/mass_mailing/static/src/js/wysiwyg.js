@@ -21,6 +21,14 @@ const MassMailingWysiwyg = Wysiwyg.extend({
         return res;
     },
 
+    toggleLinkTools(options = {}) {
+        this._super({
+            ...options,
+            // Always open the dialog for the basic theme as it has no sidebar.
+            forceDialog: options.forceDialog || this.$iframeBody.find('.o_basic_theme').length
+        });
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -42,8 +50,6 @@ const MassMailingWysiwyg = Wysiwyg.extend({
         const {commands} = options;
         const linkCommands = commands.filter(command => command.name === 'Link' || command.name === 'Button');
         for (const linkCommand of linkCommands) {
-            // Don't open the dialog: use the link tools.
-            linkCommand.callback = () => this.toggleLinkTools({forceDialog: false});
             // Remove the command if the selection is within a background-image.
             const superIsDisabled = linkCommand.isDisabled;
             linkCommand.isDisabled = () => {

@@ -1,27 +1,23 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { one, Model } from "@mail/model";
 
-registerModel({
-    name: 'OtherMemberLongTypingInThreadTimer',
+Model({
+    name: "OtherMemberLongTypingInThreadTimer",
     recordMethods: {
         onOtherMemberLongTypingTimeout() {
             this.thread.unregisterOtherMemberTypingMember(this.member);
         },
     },
     fields: {
-        member: one('ChannelMember', {
+        member: one("ChannelMember", {
             identifying: true,
-            inverse: 'otherMemberLongTypingInThreadTimers',
+            inverse: "otherMemberLongTypingInThreadTimers",
         }),
-        thread: one('Thread', {
-            identifying: true,
-            inverse: 'otherMembersLongTypingTimers',
-        }),
-        timer: one('Timer', {
+        thread: one("Thread", { identifying: true, inverse: "otherMembersLongTypingTimers" }),
+        timer: one("Timer", {
             default: {},
-            inverse: 'otherMemberLongTypingInThreadTimerOwner',
+            inverse: "otherMemberLongTypingInThreadTimerOwner",
             required: true,
         }),
     },

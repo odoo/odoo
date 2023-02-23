@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.CropOverlay" owl="1">
+        <div t-ref="crop-container"
+             t-on-mousedown="pointerDown" t-on-touchstart="pointerDown"
+             t-on-mousemove="pointerMove" t-on-touchmove="pointerMove"
+             t-on-mouseup="pointerUp" t-on-touchend="pointerUp"
+             class="d-grid align-content-center justify-content-center h-100 o_crop_container"
+        >
+            <t t-slot="default"/>
+            <t t-if="props.isReady">
+                <div class="o_crop_overlay"/>
+                <img class="o_crop_icon" src="/web/static/img/transform.svg" draggable="false"/>
+            </t>
+        </div>
+    </t>
+</templates>

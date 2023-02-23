@@ -1,16 +1,17 @@
 /** @odoo-module **/
 
-import { patchFields } from '@mail/model/model_core';
-// ensure that the model definition is loaded before the patch
-import '@mail/models/channel_preview_view';
+import { Patch } from "@mail/model";
 
-patchFields('ChannelPreviewView', {
-    imageUrl: {
-        compute() {
-            if (this.channel.channel_type === 'livechat') {
-                return '/mail/static/src/img/smiley/avatar.jpg';
-            }
-            return this._super();
+Patch({
+    name: "ChannelPreviewView",
+    fields: {
+        imageUrl: {
+            compute() {
+                if (this.channel.channel_type === "livechat") {
+                    return "/mail/static/src/img/smiley/avatar.jpg";
+                }
+                return this._super();
+            },
         },
     },
 });

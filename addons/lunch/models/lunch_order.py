@@ -11,7 +11,7 @@ class LunchOrder(models.Model):
     _order = 'id desc'
     _display_name = 'product_id'
 
-    name = fields.Char(related='product_id.name', string="Product Name", store=True, readonly=True)
+    name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
     topping_ids_1 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 1', domain=[('topping_category', '=', 1)])
     topping_ids_2 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 2', domain=[('topping_category', '=', 2)])
     topping_ids_3 = fields.Many2many('lunch.topping', 'lunch_order_topping', 'order_id', 'topping_id', string='Extras 3', domain=[('topping_category', '=', 3)])

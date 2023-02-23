@@ -14,7 +14,6 @@ import re
 import threading
 import time
 import uuid
-import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from inspect import currentframe
@@ -22,7 +21,7 @@ from inspect import currentframe
 import psycopg2
 import psycopg2.extensions
 import psycopg2.extras
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
+from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from psycopg2.sql import SQL, Identifier
 from werkzeug import urls
@@ -48,6 +47,8 @@ re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
 
 sql_counter = 0
+
+MAX_IDLE_TIMEOUT = 60 * 10
 
 
 class Savepoint:
@@ -237,11 +238,8 @@ class Cursor(BaseCursor):
     """
     IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
 
-    def __init__(self, pool, dbname, dsn, **kwargs):
+    def __init__(self, pool, dbname, dsn):
         super().__init__()
-        if 'serialized' in kwargs:
-            warnings.warn("Since 16.0, 'serialized' parameter is not used anymore.", DeprecationWarning, 2)
-        assert kwargs.keys() <= {'serialized'}
         self.sql_from_log = {}
         self.sql_into_log = {}
 
@@ -307,8 +305,6 @@ class Cursor(BaseCursor):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
-        _logger.debug("query: %s", self._format(query, params))
-
         start = real_time()
         try:
             params = params or None
@@ -317,7 +313,10 @@ class Cursor(BaseCursor):
             if log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
             raise
-        delay = real_time() - start
+        finally:
+            delay = real_time() - start
+            if _logger.isEnabledFor(logging.DEBUG):
+                _logger.debug("[%.3f ms] query: %s", 1000 * delay, self._format(query, params))
 
         # simple query count is always computed
         self.sql_log_count += 1
@@ -391,7 +390,7 @@ class Cursor(BaseCursor):
             _logger.setLevel(level)
 
     def close(self):
-        if not self._closed:
+        if not self.closed:
             return self._close(False)
 
     def _close(self, leak=False):
@@ -424,17 +423,6 @@ class Cursor(BaseCursor):
             keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
-    def autocommit(self, on):
-        warnings.warn(
-            f"Deprecated Methods since 16.0, use {'`_cnx.autocommit = True`' if on else '`_cnx.set_isolation_level`'} instead.",
-            DeprecationWarning, stacklevel=2
-        )
-        if on:
-            isolation_level = ISOLATION_LEVEL_AUTOCOMMIT
-        else:
-            isolation_level = ISOLATION_LEVEL_REPEATABLE_READ if self._serialized else ISOLATION_LEVEL_READ_COMMITTED
-        self._cnx.set_isolation_level(isolation_level)
-
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
@@ -463,7 +451,7 @@ class Cursor(BaseCursor):
 
     @property
     def closed(self):
-        return self._closed
+        return self._closed or self._cnx.closed
 
     def now(self):
         """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
@@ -527,9 +515,6 @@ class TestCursor(BaseCursor):
 
             self._lock.release()
 
-    def autocommit(self, on):
-        warnings.warn("Deprecated method and does nothing since 16.0", DeprecationWarning, 2)
-
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
@@ -580,7 +565,7 @@ class ConnectionPool(object):
         self._lock = threading.Lock()
 
     def __repr__(self):
-        used = len([1 for c, u in self._connections[:] if u])
+        used = len([1 for c, u, _ in self._connections[:] if u])
         count = len(self._connections)
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
@@ -590,22 +575,28 @@ class ConnectionPool(object):
     @locked
     def borrow(self, connection_info):
         """
+        Borrow a PsycoConnection from the pool. If no connection is available, create a new one
+        as long as there are still slots available. Perform some garbage-collection in the pool:
+        idle, dead and leaked connections are removed.
+
         :param dict connection_info: dict of psql connection keywords
         :rtype: PsycoConnection
         """
-        # free dead and leaked connections
-        for i, (cnx, _) in tools.reverse_enumerate(self._connections):
+        # free idle, dead and leaked connections
+        for i, (cnx, used, last_used) in tools.reverse_enumerate(self._connections):
+            if not used and not cnx.closed and time.time() - last_used > MAX_IDLE_TIMEOUT:
+                self._debug('Close connection at index %d: %r', i, cnx.dsn)
+                cnx.close()
             if cnx.closed:
                 self._connections.pop(i)
                 self._debug('Removing closed connection at index %d: %r', i, cnx.dsn)
                 continue
             if getattr(cnx, 'leaked', False):
                 delattr(cnx, 'leaked')
-                self._connections.pop(i)
-                self._connections.append((cnx, False))
+                self._connections[i][1] = False
                 _logger.info('%r: Free leaked connection to %r', self, cnx.dsn)
 
-        for i, (cnx, used) in enumerate(self._connections):
+        for i, (cnx, used, _) in enumerate(self._connections):
             if not used and cnx._original_dsn == connection_info:
                 try:
                     cnx.reset()
@@ -615,15 +606,14 @@ class ConnectionPool(object):
                     if not cnx.closed:
                         cnx.close()
                     continue
-                self._connections.pop(i)
-                self._connections.append((cnx, True))
+                self._connections[i][1] = True
                 self._debug('Borrow existing connection to %r at index %d', cnx.dsn, i)
 
                 return cnx
 
         if len(self._connections) >= self._maxconn:
             # try to remove the oldest connection not used
-            for i, (cnx, used) in enumerate(self._connections):
+            for i, (cnx, used, _) in enumerate(self._connections):
                 if not used:
                     self._connections.pop(i)
                     if not cnx.closed:
@@ -642,20 +632,22 @@ class ConnectionPool(object):
             _logger.info('Connection to the database failed')
             raise
         result._original_dsn = connection_info
-        self._connections.append((result, True))
+        self._connections.append([result, True, 0])
         self._debug('Create new connection backend PID %d', result.get_backend_pid())
         return result
 
     @locked
     def give_back(self, connection, keep_in_pool=True):
         self._debug('Give back connection to %r', connection.dsn)
-        for i, (cnx, used) in enumerate(self._connections):
+        for i, (cnx, _, _) in enumerate(self._connections):
             if cnx is connection:
-                self._connections.pop(i)
                 if keep_in_pool:
-                    self._connections.append((cnx, False))
+                    # Release the connection and record the last time used
+                    self._connections[i][1] = False
+                    self._connections[i][2] = time.time()
                     self._debug('Put connection to %r in pool', cnx.dsn)
                 else:
+                    self._connections.pop(i)
                     self._debug('Forgot connection to %r', cnx.dsn)
                     cnx.close()
                 break
@@ -666,7 +658,7 @@ class ConnectionPool(object):
     def close_all(self, dsn=None):
         count = 0
         last = None
-        for i, (cnx, used) in tools.reverse_enumerate(self._connections):
+        for i, (cnx, _, _) in tools.reverse_enumerate(self._connections):
             if dsn is None or cnx._original_dsn == dsn:
                 cnx.close()
                 last = self._connections.pop(i)[0]
@@ -683,16 +675,9 @@ class Connection(object):
         self.dsn = dsn
         self.__pool = pool
 
-    def cursor(self, **kwargs):
-        if 'serialized' in kwargs:
-            warnings.warn("Since 16.0, 'serialized' parameter is deprecated", DeprecationWarning, 2)
-        cursor_type = kwargs.pop('serialized', True) and 'serialized ' or ''
-        _logger.debug('create %scursor to %r', cursor_type, self.dsn)
+    def cursor(self):
+        _logger.debug('create cursor to %r', self.dsn)
         return Cursor(self.__pool, self.dbname, self.dsn)
-
-    def serialized_cursor(self, **kwargs):
-        warnings.warn("Since 16.0, 'serialized_cursor' is deprecated, use `cursor` instead", DeprecationWarning, 2)
-        return self.cursor(**kwargs)
 
     def __bool__(self):
         raise NotImplementedError()

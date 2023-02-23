@@ -3,7 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-const { Component, xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 class DialogCommand extends Component {}
 DialogCommand.template = xml`
@@ -33,7 +33,7 @@ commandProviderRegistry.add("partner", {
     async provide(newEnv, options) {
         const messaging = await newEnv.services.messaging.get();
         const suggestions = [];
-        await messaging.models['Partner'].imSearch({
+        await messaging.models["Partner"].imSearch({
             callback(partners) {
                 partners.forEach((partner) => {
                     suggestions.push({
@@ -59,7 +59,7 @@ commandProviderRegistry.add("channel", {
     namespace: "#",
     async provide(newEnv, options) {
         const messaging = await newEnv.services.messaging.get();
-        const channels = await messaging.models['Thread'].searchChannelsToOpen({
+        const channels = await messaging.models["Thread"].searchChannelsToOpen({
             limit: 10,
             searchTerm: options.searchValue,
         });

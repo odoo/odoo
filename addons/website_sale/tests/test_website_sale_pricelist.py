@@ -36,7 +36,8 @@ class TestWebsitePriceList(TransactionCase):
         self.website = self.env.ref('website.default_website')
         self.website.user_id = self.env.user
 
-        (self.env['product.pricelist'].search([]) - self.env.ref('product.list0')).write({'website_id': False, 'active': False})
+        self.env['product.pricelist'].search([]).action_archive()
+        self.env['product.pricelist'].create({'name': 'Public Pricelist'})
         self.benelux = self.env['res.country.group'].create({
             'name': 'BeNeLux',
             'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
@@ -84,8 +85,6 @@ class TestWebsitePriceList(TransactionCase):
             'compute_price': 'formula',
             'base': 'list_price',
         })
-        self.env.ref('product.list0').website_id = self.website.id
-        self.website.pricelist_id = self.ref('product.list0')
 
         ca_group = self.env['res.country.group'].create({
             'name': 'Canada',
@@ -103,8 +102,7 @@ class TestWebsitePriceList(TransactionCase):
             'current_pl': False,
         }
         patcher = patch('odoo.addons.website_sale.models.website.Website.get_pricelist_available', wraps=self._get_pricelist_available)
-        patcher.start()
-        self.addCleanup(patcher.stop)
+        self.startPatcher(patcher)
 
     # Mock nedded because request.session doesn't exist during test
     def _get_pricelist_available(self, show_visible=False):
@@ -229,7 +227,8 @@ class TestWebsitePriceList(TransactionCase):
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price,
                 'tax_id': False,
-            })]
+            })],
+            'website_id': current_website.id,
         })
         sol = so.order_line
         self.assertEqual(sol.price_total, 100.0)
@@ -237,7 +236,7 @@ class TestWebsitePriceList(TransactionCase):
         with MockRequest(self.env, website=current_website, sale_order_id=so.id):
             so._cart_update(product_id=product.id, line_id=sol.id, set_qty=500)
         self.assertEqual(sol.price_unit, 37.0, 'Both reductions should be applied')
-        self.assertEqual(sol.price_reduce, 27.75, 'Both reductions should be applied')
+        self.assertEqual(sol.discount, 25.0, 'Both reductions should be applied')
         self.assertEqual(sol.price_total, 13875)
 
     def test_pricelist_with_no_list_price(self):
@@ -275,7 +274,7 @@ class TestWebsitePriceList(TransactionCase):
         with MockRequest(self.env, website=current_website, sale_order_id=so.id):
             so._cart_update(product_id=product.id, line_id=sol.id, set_qty=6)
         self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
-        self.assertEqual(sol.price_reduce, 10.0, 'Pricelist price should be applied')
+        self.assertEqual(sol.discount, 0, 'Pricelist price should be applied')
         self.assertEqual(sol.price_total, 60.0)
 
 
@@ -284,8 +283,7 @@ def simulate_frontend_context(self, website_id=1):
     def get_request_website():
         return self.env['website'].browse(website_id)
     patcher = patch('odoo.addons.website.models.ir_http.get_request_website', wraps=get_request_website)
-    patcher.start()
-    self.addCleanup(patcher.stop)
+    self.startPatcher(patcher)
 
 
 @tagged('post_install', '-at_install')
@@ -498,9 +496,6 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         Website = self.env['website']
         self.website = self.env.ref('website.default_website')
         self.website.company_id = self.company2
-        # Delete unused website, it will make PL manipulation easier, avoiding
-        # UserError being thrown when a website wouldn't have any PL left.
-        Website.search([('id', '!=', self.website.id)]).unlink()
         self.website2 = Website.create({
             'name': 'Website 2',
             'company_id': self.company1.id,

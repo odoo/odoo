@@ -23,4 +23,7 @@ class RedirectField extends Component {
 }
 
 RedirectField.template = "website.RedirectField";
-registry.category("fields").add("website_redirect_button", RedirectField);
+
+registry.category("fields").add("website_redirect_button", {
+    component: RedirectField,
+});

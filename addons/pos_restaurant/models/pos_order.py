@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from itertools import groupby
+from odoo.tools import groupby
 from re import search
 from functools import partial
+
+import pytz
 
 from odoo import api, fields, models
 
@@ -18,8 +20,8 @@ class PosOrderLine(models.Model):
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
-    table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null')
-    customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.')
+    table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null', readonly=True)
+    customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
     multiprint_resume = fields.Char(string='Multiprint Resume', help="Last printed state of the order")
 
     def _get_pack_lot_lines(self, order_lines):
@@ -45,7 +47,7 @@ class PosOrder(models.Model):
             del pack_lot['id']
 
         for order_line_id, pack_lot_ids in groupby(pack_lots, key=lambda x:x['order_line']):
-            next(order_line for order_line in order_lines if order_line['id'] == order_line_id)['pack_lot_ids'] = list(pack_lots)
+            next(order_line for order_line in order_lines if order_line['id'] == order_line_id)['pack_lot_ids'] = list(pack_lot_ids)
 
     def _get_fields_for_order_line(self):
         fields = super(PosOrder, self)._get_fields_for_order_line()
@@ -65,6 +67,23 @@ class PosOrder(models.Model):
         ])
         return fields
 
+    def _prepare_order_line(self, order_line):
+        """Method that will allow the cleaning of values to send the correct information.
+        :param order_line: order_line that will be cleaned.
+        :type order_line: pos.order.line.
+        :returns: dict -- dict representing the order line's values.
+        """
+        order_line = super(PosOrder, self)._prepare_order_line(order_line)
+        order_line["product_id"] = order_line["product_id"][0]
+        order_line["server_id"] = order_line["id"]
+
+        del order_line["id"]
+        if not "pack_lot_ids" in order_line:
+            order_line["pack_lot_ids"] = []
+        else:
+            order_line["pack_lot_ids"] = [[0, 0, lot] for lot in order_line["pack_lot_ids"]]
+        return order_line
+
     def _get_order_lines(self, orders):
         """Add pos_order_lines to the orders.
 
@@ -82,13 +101,7 @@ class PosOrder(models.Model):
 
         extended_order_lines = []
         for order_line in order_lines:
-            order_line['product_id'] = order_line['product_id'][0]
-            order_line['server_id'] = order_line['id']
-
-            del order_line['id']
-            if not 'pack_lot_ids' in order_line:
-                order_line['pack_lot_ids'] = []
-            extended_order_lines.append([0, 0, order_line])
+            extended_order_lines.append([0, 0, self._prepare_order_line(order_line)])
 
         for order_id, order_lines in groupby(extended_order_lines, key=lambda x:x[2]['order_id']):
             next(order for order in orders if order['id'] == order_id[0])['lines'] = list(order_lines)
@@ -146,21 +159,30 @@ class PosOrder(models.Model):
             'table_id',
             'to_invoice',
             'multiprint_resume',
+            'access_token',
         ]
 
+    def _get_domain_for_draft_orders(self, table_ids):
+        """ Get the domain to search for draft orders on a table.
+        :param table_ids: Ids of the selected tables.
+        :type table_ids: list of int.
+        "returns: list -- list of tuples that represents a domain.
+        """
+        return [('state', '=', 'draft'), ('table_id', 'in', table_ids)]
+
     @api.model
-    def get_table_draft_orders(self, table_id):
+    def get_table_draft_orders(self, table_ids):
         """Generate an object of all draft orders for the given table.
 
         Generate and return an JSON object with all draft orders for the given table, to send to the
         front end application.
 
-        :param table_id: Id of the selected table.
-        :type table_id: int.
+        :param table_ids: Ids of the selected tables.
+        :type table_ids: list of int.
         :returns: list -- list of dict representing the table orders
         """
         table_orders = self.search_read(
-                domain=[('state', '=', 'draft'), ('table_id', '=', table_id)],
+                domain=self._get_domain_for_draft_orders(table_ids),
                 fields=self._get_fields_for_draft_order())
 
         self._get_order_lines(table_orders)

@@ -4,7 +4,7 @@ odoo.define('website_sale_comparison.comparison', function (require) {
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
+const {getCookie, setCookie} = require('web.utils.cookies');
 var VariantMixin = require('sale.VariantMixin');
 var website_sale_utils = require('website_sale.utils');
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
@@ -28,7 +28,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this._super.apply(this, arguments);
 
         this.product_data = {};
-        this.comparelist_product_ids = JSON.parse(utils.get_cookie('comparelist_product_ids') || '[]');
+        this.comparelist_product_ids = JSON.parse(getCookie('comparelist_product_ids') || '[]');
         this.product_compare_limit = 4;
         this.guard = new concurrency.Mutex();
     },
@@ -141,7 +141,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             route: '/shop/get_product_data',
             params: {
                 product_ids: product_ids,
-                cookies: JSON.parse(utils.get_cookie('comparelist_product_ids') || '[]'),
+                cookies: JSON.parse(getCookie('comparelist_product_ids') || '[]'),
             },
         }).then(function (data) {
             self.comparelist_product_ids = JSON.parse(data.cookies);
@@ -225,7 +225,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _updateCookie: function () {
-        document.cookie = 'comparelist_product_ids=' + JSON.stringify(this.comparelist_product_ids) + '; path=/';
+        setCookie('comparelist_product_ids', JSON.stringify(this.comparelist_product_ids), 24 * 60 * 60 * 365, 'required');
         this._updateComparelistView();
     },
     /**

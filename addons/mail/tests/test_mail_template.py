@@ -5,10 +5,11 @@ from markupsafe import Markup
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError
 from odoo.modules.module import get_module_resource
-from odoo.tests import Form, users
+from odoo.tests import Form, tagged, users
 from odoo.tools import convert_file
 
 
+@tagged('mail_template')
 class TestMailTemplate(MailCommon):
 
     @classmethod
@@ -44,7 +45,7 @@ class TestMailTemplate(MailCommon):
             'subject': '{{ 1 + 5 }}',
         })
 
-        values = mail_compose_message.get_mail_values(self.partner_employee.ids)
+        values = mail_compose_message._prepare_mail_values(self.partner_employee.ids)
 
         self.assertEqual(values[self.partner_employee.id]['subject'], '6', 'We must trust mail template values')
         self.assertIn('13', values[self.partner_employee.id]['body_html'], 'We must trust mail template values')
@@ -147,10 +148,11 @@ class TestMailTemplate(MailCommon):
         self.assertFalse(server.active)
 
 
+@tagged('mail_template')
 class TestMailTemplateReset(MailCommon):
 
     def _load(self, module, *args):
-        convert_file(self.cr, module='mail',
+        convert_file(self.env, module='mail',
                      filename=get_module_resource(module, *args),
                      idref={}, mode='init', noupdate=False, kind='test')
 

@@ -12,7 +12,7 @@ from werkzeug.exceptions import BadRequest
 
 from odoo import api, http, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied
-from odoo.http import request
+from odoo.http import request, Response
 from odoo import registry as registry_get
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
@@ -30,7 +30,7 @@ def fragment_to_query_string(func):
     def wrapper(self, *a, **kw):
         kw.pop('debug', False)
         if not kw:
-            return """<html><head><script>
+            return Response("""<html><head><script>
                 var l = window.location;
                 var q = l.hash.substring(1);
                 var r = l.pathname + l.search;
@@ -42,7 +42,7 @@ def fragment_to_query_string(func):
                     r = '/';
                 }
                 window.location = r;
-            </script></head><body></body></html>"""
+            </script></head><body></body></html>""")
         return func(self, *a, **kw)
     return wrapper
 

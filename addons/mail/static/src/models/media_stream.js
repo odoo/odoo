@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { attr, Model } from "@mail/model";
 
-registerModel({
-    name: 'MediaStream',
+Model({
+    name: "MediaStream",
     lifecycleHooks: {
         _willDelete() {
             for (const track of this.webMediaStream.getTracks()) {
@@ -13,12 +12,7 @@ registerModel({
         },
     },
     fields: {
-        id: attr({
-            identifying: true,
-        }),
-        webMediaStream: attr({
-            required: true,
-            readonly: true,
-        }),
+        id: attr({ identifying: true }),
+        webMediaStream: attr({ required: true, readonly: true }),
     },
 });

@@ -21,12 +21,13 @@ import odoo
 
 from odoo import http, models, fields, _
 from odoo.exceptions import AccessError
-from odoo.http import request
+from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
+from odoo.addons.web.controllers.binary import Binary
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +44,8 @@ class QueryURL(object):
         self.path_args = OrderedSet(path_args or [])
 
     def __call__(self, path=None, path_args=None, **kw):
-        path = path or self.path
+        path_prefix = path or self.path
+        path = ''
         for key, value in self.args.items():
             kw.setdefault(key, value)
         path_args = OrderedSet(path_args or []) | self.path_args
@@ -65,12 +67,14 @@ class QueryURL(object):
                 path += '/' + key + '/' + value
         if fragments:
             path += '?' + '&'.join(fragments)
+        if not path.startswith(path_prefix):
+            path = path_prefix + path
         return path
 
 
 class Website(Home):
 
-    @http.route('/', type='http', auth="public", website=True, sitemap=True)
+    @http.route('/', auth="public", website=True, sitemap=True)
     def index(self, **kw):
         """ The goal of this controller is to make sure we don't serve a 404 as
         the website homepage. As this is the website entry point, serving a 404
@@ -103,7 +107,7 @@ class Website(Home):
         if homepage_url and homepage_url != '/':
             try:
                 return request._serve_ir_http()
-            except (AccessError, NotFound):
+            except (AccessError, NotFound, SessionExpiredException):
                 pass
 
         # Fallback on first accessible menu
@@ -282,6 +286,15 @@ class Website(Home):
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
+    # if not icon provided in DOM, browser tries to access /favicon.ico, eg when
+    # opening an order pdf
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
+    def favicon(self, **kw):
+        website = request.website
+        response = request.redirect(website.image_url(website, 'favicon'), code=301)
+        response.headers['Cache-Control'] = 'public, max-age=%s' % http.STATIC_CACHE_LONG
+        return response
+
     @http.route('/website/info', type='http', auth="public", website=True, sitemap=True)
     def website_info(self, **kwargs):
         Module = request.env['ir.module.module'].sudo()
@@ -339,7 +352,7 @@ class Website(Home):
         for name, url, mod in current_website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
                 module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
-                icon = mod and "<img src='%s' width='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
+                icon = mod and "<img src='%s' width='24px' height='24px' class='mr-2 rounded' /> " % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
                     'label': '%s%s (%s)' % (icon, url, name),
@@ -352,16 +365,6 @@ class Website(Home):
                 dict(title=_('Apps url'), values=suggested_controllers),
             ]
         }
-
-    @http.route('/website/get_modules_info', type='json', auth="user")
-    def get_modules_info(self, xml_ids):
-        def get_module_info(xml_id):
-            module_info = request.env.ref(xml_id)
-            return {'id': module_info.id, 'name': module_info.shortdesc}
-        modules_info = {}
-        for xml_id in xml_ids:
-            modules_info[xml_id] = get_module_info(xml_id)
-        return modules_info
 
     @http.route('/website/snippet/filters', type='json', auth='public', website=True)
     def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False):
@@ -398,6 +401,10 @@ class Website(Home):
             t['numOfEl'] = attribs.get('data-number-of-elements')
             t['numOfElSm'] = attribs.get('data-number-of-elements-sm')
             t['numOfElFetch'] = attribs.get('data-number-of-elements-fetch')
+            t['rowPerSlide'] = attribs.get('data-row-per-slide')
+            t['arrowPosition'] = attribs.get('data-arrow-position')
+            t['extraClasses'] = attribs.get('data-extra-classes')
+            t['thumb'] = attribs.get('data-thumb')
         return templates
 
     @http.route('/website/get_current_currency', type='json', auth="public", website=True)
@@ -503,16 +510,19 @@ class Website(Home):
             'fuzzy_search': fuzzy_term,
         }
 
-    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False)
-    def pages_list(self, page=1, search='', **kw):
-        options = {
+    def _get_page_search_options(self, **post):
+        return {
             'displayDescription': False,
             'displayDetail': False,
             'displayExtraDetail': False,
             'displayExtraLink': False,
             'displayImage': False,
-            'allowFuzzy': not kw.get('noFuzzy'),
+            'allowFuzzy': not post.get('noFuzzy'),
         }
+
+    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False)
+    def pages_list(self, page=1, search='', **kw):
+        options = self._get_page_search_options(**kw)
         step = 50
         pages_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
             "pages", search, limit=page * step, order='name asc, website_id desc, id',
@@ -538,6 +548,16 @@ class Website(Home):
         }
         return request.render("website.list_website_public_pages", values)
 
+    def _get_hybrid_search_options(self, **post):
+        return {
+            'displayDescription': True,
+            'displayDetail': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': not post.get('noFuzzy'),
+        }
+
     @http.route([
         '/website/search',
         '/website/search/page/<int:page>',
@@ -548,14 +568,7 @@ class Website(Home):
         if not search:
             return request.render("website.list_hybrid")
 
-        options = {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
-            'allowFuzzy': not kw.get('noFuzzy'),
-        }
+        options = self._get_hybrid_search_options(**kw)
         data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=500, max_nb_chars=200, options=options)
 
         results = data.get('results', [])
@@ -599,6 +612,10 @@ class Website(Home):
                 template = default_templ
 
         template = template and dict(template=template) or {}
+        website_id = kwargs.get('website_id')
+        if website_id:
+            website = request.env['website'].browse(website_id)
+            website._force()
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
         url = page['url']
 
@@ -777,11 +794,27 @@ class Website(Home):
         return request.redirect('/')
 
 
-class WebsiteBinary(http.Controller):
-    # if not icon provided in DOM, browser tries to access /favicon.ico, eg when opening an order pdf
-    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False)
-    def favicon(self, **kw):
-        website = request.website
-        response = request.redirect(website.image_url(website, 'favicon'), code=301)
-        response.headers['Cache-Control'] = 'public, max-age=%s' % http.STATIC_CACHE_LONG
-        return response
+class WebsiteBinary(Binary):
+
+    # Retrocompatibility routes
+    @http.route([
+        '/website/image',
+        '/website/image/<xmlid>',
+        '/website/image/<xmlid>/<int:width>x<int:height>',
+        '/website/image/<xmlid>/<field>',
+        '/website/image/<xmlid>/<field>/<int:width>x<int:height>',
+        '/website/image/<model>/<id>/<field>',
+        '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
+    ], type='http', auth="public", website=False, multilang=False)
+    # pylint: disable=redefined-builtin,invalid-name
+    def website_content_image(self, id=None, max_width=0, max_height=0, **kw):
+        if max_width:
+            kw['width'] = max_width
+        if max_height:
+            kw['height'] = max_height
+        if id:
+            id, _, unique = id.partition('_')
+            kw['id'] = int(id)
+            if unique:
+                kw['unique'] = unique
+        return self.content_image(**kw)

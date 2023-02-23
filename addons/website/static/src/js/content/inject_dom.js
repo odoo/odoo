@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { get_cookie } from 'web.utils.cookies';
+import {getCookie} from 'web.utils.cookies';
 import { session } from '@web/session';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'utm_campaign': 'utmCampaign',
     };
     for (const [name, dsName] of Object.entries(cookieNamesToDataNames)) {
-        const cookie = get_cookie(`odoo_${name}`);
+        const cookie = getCookie(`odoo_${name}`);
         if (cookie) {
             // Remove leading and trailing " and '
             htmlEl.dataset[dsName] = cookie.replace(/(^["']|["']$)/g, '');

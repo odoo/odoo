@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0\n"
+"Project-Id-Version: Odoo Server 16.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-29 15:07+0000\n"
-"PO-Revision-Date: 2020-01-29 15:07+0000\n"
+"POT-Creation-Date: 2022-12-27 08:05+0000\n"
+"PO-Revision-Date: 2022-12-27 08:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,18 +21,8 @@ msgid "ABM Code"
 msgstr ""
 
 #. module: l10n_mx
-#: model:ir.model,name:l10n_mx.model_account_account
-msgid "Account"
-msgstr ""
-
-#. module: l10n_mx
 #: model:ir.model,name:l10n_mx.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
-
-#. module: l10n_mx
-#: model:ir.model,name:l10n_mx.model_account_account_tag
-msgid "Account Tag"
 msgstr ""
 
 #. module: l10n_mx
@@ -43,6 +33,13 @@ msgstr ""
 #. module: l10n_mx
 #: model:ir.model,name:l10n_mx.model_res_partner_bank
 msgid "Bank Accounts"
+msgstr ""
+
+#. module: l10n_mx
+#. odoo-python
+#: code:addons/l10n_mx/models/chart_template.py:0
+#, python-format
+msgid "Bank Suspense Account"
 msgstr ""
 
 #. module: l10n_mx
@@ -62,59 +59,83 @@ msgid "Create your electronic invoices automatically (CFDI format)"
 msgstr ""
 
 #. module: l10n_mx
-#: model:ir.model.fields.selection,name:l10n_mx.selection__account_account_tag__nature__a
-msgid "Creditable Account"
+#: model:account.account.tag,name:l10n_mx.tag_credit_balance_account
+msgid "Credit Balance Account"
 msgstr ""
 
 #. module: l10n_mx
-#: model:ir.model.fields.selection,name:l10n_mx.selection__account_account_tag__nature__d
-msgid "Debitable Account"
+#: model:ir.model.fields.selection,name:l10n_mx.selection__account_tax__l10n_mx_tax_type__cuota
+#: model:ir.model.fields.selection,name:l10n_mx.selection__account_tax_template__l10n_mx_tax_type__cuota
+msgid "Cuota"
 msgstr ""
 
 #. module: l10n_mx
+#: model:account.account.tag,name:l10n_mx.tag_debit_balance_account
+msgid "Debit Balance Account"
+msgstr ""
+
+#. module: l10n_mx
+#. odoo-python
 #: code:addons/l10n_mx/models/chart_template.py:0
 #, python-format
 msgid "Effectively Paid"
 msgstr ""
 
 #. module: l10n_mx
-#: model:account.tax.group,name:l10n_mx.tax_group_isr_ret_10
-msgid "ISR Retencion 10%"
+#: model:ir.model.fields.selection,name:l10n_mx.selection__account_tax__l10n_mx_tax_type__exento
+#: model:ir.model.fields.selection,name:l10n_mx.selection__account_tax_template__l10n_mx_tax_type__exento
+msgid "Exento"
 msgstr ""
 
 #. module: l10n_mx
-#: model:account.tax.group,name:l10n_mx.tax_group_iva_0
-msgid "IVA 0%"
+#: model:ir.model.fields,field_description:l10n_mx.field_account_tax__l10n_mx_tax_type
+#: model:ir.model.fields,field_description:l10n_mx.field_account_tax_template__l10n_mx_tax_type
+msgid "Factor Type"
 msgstr ""
 
 #. module: l10n_mx
-#: model:account.tax.group,name:l10n_mx.tax_group_iva_16
-msgid "IVA 16% "
+#: model:account.account.tag,name:l10n_mx.tag_diot_0
+msgid "IDTTP: 0%"
 msgstr ""
 
 #. module: l10n_mx
-#: model:account.tax.group,name:l10n_mx.tax_group_iva_8
-msgid "IVA 8%"
+#: model:account.account.tag,name:l10n_mx.tag_diot_16
+msgid "IDTTP: 16%"
 msgstr ""
 
 #. module: l10n_mx
-#: model:account.tax.group,name:l10n_mx.tax_group_iva_ret_10
-msgid "IVA Retencion 10%"
+#: model:account.account.tag,name:l10n_mx.tag_diot_16_imp
+msgid "IDTTP: 16% IMPORT"
 msgstr ""
 
 #. module: l10n_mx
-#: model:account.tax.group,name:l10n_mx.tax_group_iva_ret_1067
-msgid "IVA Retencion 10.67%"
+#: model:account.account.tag,name:l10n_mx.tag_diot_16_non_cre
+msgid "IDTTP: 16% NON-CREDITABLE"
 msgstr ""
 
 #. module: l10n_mx
-#: model:account.tax.group,name:l10n_mx.tax_group_iva_ret_4
-msgid "IVA Retencion 4%"
+#: model:account.account.tag,name:l10n_mx.tag_diot_8
+msgid "IDTTP: 8%"
 msgstr ""
 
 #. module: l10n_mx
-#: model:ir.model,name:l10n_mx.model_account_journal
-msgid "Journal"
+#: model:account.account.tag,name:l10n_mx.tag_diot_8_non_cre
+msgid "IDTTP: 8% NON-CREDITABLE"
+msgstr ""
+
+#. module: l10n_mx
+#: model:account.account.tag,name:l10n_mx.tag_diot_exento
+msgid "IDTTP: Exempt"
+msgstr ""
+
+#. module: l10n_mx
+#: model:account.account.tag,name:l10n_mx.tag_diot_ret
+msgid "IDTTP: Withholding"
+msgstr ""
+
+#. module: l10n_mx
+#: model:account.account.tag,name:l10n_mx.tag_isr
+msgid "Income tax"
 msgstr ""
 
 #. module: l10n_mx
@@ -123,8 +144,8 @@ msgid "Mexican Electronic Invoicing"
 msgstr ""
 
 #. module: l10n_mx
-#: model:ir.model.fields,field_description:l10n_mx.field_account_account_tag__nature
-msgid "Nature"
+#: model:account.account.tag,name:l10n_mx.tag_ieps
+msgid "Output tax"
 msgstr ""
 
 #. module: l10n_mx
@@ -135,6 +156,30 @@ msgid ""
 msgstr ""
 
 #. module: l10n_mx
+#: model:ir.model.fields.selection,name:l10n_mx.selection__account_tax__l10n_mx_tax_type__tasa
+#: model:ir.model.fields.selection,name:l10n_mx.selection__account_tax_template__l10n_mx_tax_type__tasa
+msgid "Tasa"
+msgstr ""
+
+#. module: l10n_mx
+#: model:ir.model,name:l10n_mx.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_mx
+#: model:ir.model,name:l10n_mx.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr ""
+
+#. module: l10n_mx
+#: model:ir.model.fields,help:l10n_mx.field_account_tax__l10n_mx_tax_type
+#: model:ir.model.fields,help:l10n_mx.field_account_tax_template__l10n_mx_tax_type
+msgid ""
+"The CFDI version 3.3 have the attribute 'TipoFactor' in the tax lines. In it"
+" is indicated the factor type that is applied to the base of the tax."
+msgstr ""
+
+#. module: l10n_mx
 #: model:ir.model.fields,help:l10n_mx.field_res_bank__l10n_mx_edi_code
 msgid ""
 "Three-digit number assigned by the ABM to identify banking institutions (ABM"
@@ -142,6 +187,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_mx
-#: model:ir.model.fields,help:l10n_mx.field_account_account_tag__nature
-msgid "Used in Mexican report of electronic accounting (account nature)."
+#: model:account.account.tag,name:l10n_mx.tag_iva
+msgid "VAT"
 msgstr ""

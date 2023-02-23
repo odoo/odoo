@@ -18,8 +18,9 @@
                     <field name="journal_id"/>
                     <field name="payment_method_line_id"/>
                     <field name="partner_id" string="Customer"/>
-                    <field name="amount_signed" string="Amount in Currency" groups="base.group_multi_currency" optional="hide"/>
-                    <field name="currency_id" string="Payment Currency" groups="base.group_multi_currency" optional="hide"/>
+                    <field name="amount_signed" string="Amount in Currency" optional="hide" groups="!base.group_multi_currency"/>
+                    <field name="amount_signed" string="Amount in Currency" optional="show" groups="base.group_multi_currency"/>
+                    <field name="currency_id" string="Payment Currency" optional="hide"/>
                     <field name="amount_company_currency_signed" widget="monetary" string="Amount" sum="Total"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
                 </tree>
@@ -67,7 +68,7 @@
                                         <strong><span><field name="name"/></span></strong>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.date.value"/></strong>
+                                        <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-out="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -99,7 +100,7 @@
             <field name="arch" type="xml">
                 <search string="Payments">
                     <field name="name" string="Payment"
-                        filter_domain="['|', '|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('ref', 'ilike', self), ('amount', 'ilike', self)]"/>
+                        filter_domain="['|', '|', '|', '|', ('name', 'ilike', self), ('partner_id', 'ilike', self), ('ref', 'ilike', self), ('amount_company_currency_signed' , 'ilike', self), ('amount', 'ilike', self)]"/>
                     <field name="partner_id" string="Customer/Vendor"/>
                     <field name="journal_id"/>
                     <field name="is_internal_transfer"/>
@@ -187,35 +188,42 @@
                         <field name="company_id" invisible="1"/>
                         <field name="paired_internal_transfer_payment_id" invisible="1"/>
                         <field name="available_journal_ids" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
 
                         <div class="oe_button_box" name="button_box">
                             <!-- Invoice stat button -->
                             <button name="button_open_invoices" type="object"
                                     class="oe_stat_button" icon="fa-bars"
                                     attrs="{'invisible': [('reconciled_invoices_count','=', 0)]}">
-                                <field name="reconciled_invoices_count"/>
-                                <span attrs="{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&gt;', 1)]}">Invoice</span>
-                                <span attrs="{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}">Invoices</span>
-                                <span attrs="{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&gt;', 1)]}">Credit Note</span>
-                                <span attrs="{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}">Credit Notes</span>
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">
+                                        <field name="reconciled_invoices_count"/>
+                                        <span attrs="{'invisible': [('reconciled_invoices_type', '!=', 'invoice')]}"> Invoice</span>
+                                        <span attrs="{'invisible': [('reconciled_invoices_type', '=', 'invoice')]}"> Credit Note</span>
+                                    </span>
+                                </div>
                             </button>
 
                             <!-- Bill stat button -->
                             <button name="button_open_bills" type="object"
                                     class="oe_stat_button" icon="fa-bars"
                                     attrs="{'invisible': [('reconciled_bills_count','=', 0)]}">
-                                <field name="reconciled_bills_count"/>
-                                <span attrs="{'invisible': [('reconciled_bills_count','&gt;', 1)]}">Bill</span>
-                                <span attrs="{'invisible': [('reconciled_bills_count','&lt;=', 1)]}">Bills</span>
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">
+                                        <field name="reconciled_bills_count"/>
+                                        <span> Bill</span>
+                                    </span>
+                                </div>
                             </button>
 
                             <!-- Statement stat button -->
                             <button name="button_open_statement_lines" type="object"
                                     class="oe_stat_button" icon="fa-bars"
                                     attrs="{'invisible': [('reconciled_statement_lines_count','=', 0)]}">
-                                <field name="reconciled_statement_lines_count"/>
-                                <span attrs="{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}">Statement line</span>
-                                <span attrs="{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}">Statement lines</span>
+                                <div class="o_form_field o_stat_info">
+                                    <field name="reconciled_statement_lines_count"/>
+                                    <span> Transaction</span>
+                                </div>
                             </button>
 
                             <!-- Journal Entry  button -->
@@ -243,9 +251,11 @@
                                 <field name="payment_type" widget="radio" options="{'horizontal': True}"
                                         attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
+                                       options="{'no_quick_create': True}"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
                                              'invisible':['|', ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Vendor"
+                                       options="{'no_quick_create': True}"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
                                                'invisible':['|', ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)]}"/>
                                 <label for="amount"/>
@@ -420,7 +430,6 @@
             <field name="context" eval="{
                 'mail_post_autofollow': True,
                 'default_composition_mode': 'comment',
-                'default_use_template': True,
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),
                 'default_email_layout_xmlid': 'mail.mail_notification_light',
             }"/>
@@ -437,7 +446,6 @@
             <field name="context" eval="{
                 'mail_post_autofollow': True,
                 'default_composition_mode': 'mass_mail',
-                'default_use_template': True,
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),
                 'default_email_layout_xmlid': 'mail.mail_notification_light',
             }"/>

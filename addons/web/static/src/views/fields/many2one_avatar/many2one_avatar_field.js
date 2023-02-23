@@ -1,22 +1,23 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { Many2OneField } from "../many2one/many2one_field";
+import { many2OneField, Many2OneField } from "../many2one/many2one_field";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
-export class Many2OneAvatarField extends Component {}
+export class Many2OneAvatarField extends Component {
+    static template = "web.Many2OneAvatarField";
+    static components = {
+        Many2OneField,
+    };
+    static props = {
+        ...Many2OneField.props,
+    };
+}
 
-Many2OneAvatarField.template = "web.Many2OneAvatarField";
-Many2OneAvatarField.components = {
-    Many2OneField,
+export const many2OneAvatarField = {
+    ...many2OneField,
+    component: Many2OneAvatarField,
 };
-Many2OneAvatarField.props = {
-    ...Many2OneField.props,
-};
 
-Many2OneAvatarField.supportedTypes = ["many2one"];
-
-Many2OneAvatarField.extractProps = Many2OneField.extractProps;
-
-registry.category("fields").add("many2one_avatar", Many2OneAvatarField);
+registry.category("fields").add("many2one_avatar", many2OneAvatarField);

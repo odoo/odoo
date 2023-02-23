@@ -151,7 +151,6 @@ var VariantMixin = {
                     if (previousCustomValue) {
                         $input.val(previousCustomValue);
                     }
-                    $input[0].focus();
                 }
             } else {
                 $variantContainer.find('.variant_custom_value').remove();
@@ -281,10 +280,16 @@ var VariantMixin = {
 
     /**
      * Will return the list of selected product.template.attribute.value ids
+     * For the modal, the "main product"'s attribute values are stored in the
+     * "unchanged_value_ids" data
+     *
      * @param {$.Element} $container the container to look into
      */
     getSelectedVariantValues: function ($container) {
         var values = [];
+        var unchangedValues = $container
+            .find('div.oe_unchanged_value_ids')
+            .data('unchanged_value_ids') || [];
 
         var variantsValuesSelectors = [
             'input.js_variant_change:checked',
@@ -294,7 +299,7 @@ var VariantMixin = {
             values.push(+$(el).val());
         });
 
-        return values;
+        return values.concat(unchangedValues);
     },
 
     /**
@@ -326,8 +331,11 @@ var VariantMixin = {
             var route = '/sale/create_product_variant';
             if (useAjax) {
                 productReady = ajax.jsonRpc(route, 'call', params);
-            } else {
+            } else if (Boolean(this._rpc)) {
+                // HACK to combine owl and non owl calls
                 productReady = this._rpc({route: route, params: params});
+            } else {
+                productReady = this.rpc(route, params);
             }
         }
 
@@ -519,7 +527,7 @@ var VariantMixin = {
         }
         this._toggleDisable($parent, isCombinationPossible);
 
-        if (combination.has_discounted_price) {
+        if (combination.has_discounted_price && !combination.compare_list_price) {
             $default_price
                 .closest('.oe_website_sale')
                 .addClass("discount");

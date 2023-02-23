@@ -84,7 +84,6 @@ class MailMail(models.Model):
     auto_delete = fields.Boolean(
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
-    to_delete = fields.Boolean('To Delete', help='If set, the mail will be deleted during the next Email Queue CRON run.')
     scheduled_date = fields.Datetime('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
     fetchmail_server_id = fields.Many2one('fetchmail.server', "Inbound Mail Server", readonly=True)
@@ -111,19 +110,6 @@ class MailMail(models.Model):
             restricted_attaments = mail_sudo.attachment_ids - IrAttachment._filter_attachment_access(mail_sudo.attachment_ids.ids)
             mail_sudo.attachment_ids = restricted_attaments | mail.unrestricted_attachment_ids
 
-    def init(self):
-        """Create a partial index on "to_delete" to make the search on those records fast.
-
-        The benefit on this partial index is to not have a big impact on the
-        update / insert of other records in the database in comparison to a standard
-        index.
-        """
-        self._cr.execute("""
-            CREATE INDEX IF NOT EXISTS mail_mail_to_delete_idx
-                      ON mail_mail(id)
-                   WHERE to_delete = TRUE;
-        """)
-
     @api.model_create_multi
     def create(self, values_list):
         # notification field: if not set, set if mail comes from an existing mail.message
@@ -137,7 +123,7 @@ class MailMail(models.Model):
                 values['scheduled_date'] = False  # void string crashes
         new_mails = super(MailMail, self).create(values_list)
 
-        new_mails_w_attach = self
+        new_mails_w_attach = self.env['mail.mail']
         for mail, values in zip(new_mails, values_list):
             if values.get('attachment_ids'):
                 new_mails_w_attach += mail
@@ -239,8 +225,6 @@ class MailMail(models.Model):
         except Exception:
             _logger.exception("Failed processing mail queue")
 
-        # Remove all the <mail.mail> marked as "to delete"
-        self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
         return res
 
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
@@ -278,7 +262,7 @@ class MailMail(models.Model):
                     # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_message_notification_update()  # notify user that we have a failure
         if not failure_type or failure_type in ['mail_email_invalid', 'mail_email_missing']:  # if we have another error, we want to keep the mail.
-            self.filtered(lambda mail: mail.auto_delete).to_delete = True
+            self.filtered(lambda mail: mail.auto_delete).unlink()
 
         return True
 
@@ -309,6 +293,7 @@ class MailMail(models.Model):
             except (ValueError, TypeError):
                 parsed_datetime = False
         if parsed_datetime:
+            parsed_datetime = parsed_datetime.replace(microsecond=0)
             if not parsed_datetime.tzinfo:
                 parsed_datetime = pytz.utc.localize(parsed_datetime)
             else:
@@ -322,31 +307,122 @@ class MailMail(models.Model):
     # mail_mail formatting, tools and send mechanism
     # ------------------------------------------------------
 
-    def _send_prepare_body(self):
+    def _prepare_outgoing_body(self):
         """Return a specific ir_email body. The main purpose of this method
         is to be inherited to add custom content depending on some module."""
         self.ensure_one()
-        return self.body_html or ''
+        if tools.is_html_empty(self.body_html):
+            return ''
+        return self.env['mail.render.mixin']._replace_local_links(self.body_html)
 
-    def _send_prepare_values(self, partner=None):
-        """Return a dictionary for specific email values, depending on a
-        partner, or generic to the whole recipients given by mail.email_to.
+    def _prepare_outgoing_list(self):
+        """ Return a list of emails to send based on current mail.mail. Each
+        is a dictionary for specific email values, depending on a partner, or
+        generic to the whole recipients given by mail.email_to.
 
-            :param Model partner: specific recipient partner
+        :return list: list of dicts used in IrMailServer.build_email()
         """
         self.ensure_one()
-        body = self._send_prepare_body()
+        body = self._prepare_outgoing_body()
         body_alternative = tools.html2plaintext(body)
-        if partner:
-            email_to = [tools.formataddr((partner.name or 'False', partner.email or 'False'))]
-        else:
+
+        # headers
+        headers = {}
+        ICP = self.env['ir.config_parameter'].sudo()
+        bounce_alias = ICP.get_param("mail.bounce.alias")
+        catchall_domain = ICP.get_param("mail.catchall.domain")
+        if bounce_alias and catchall_domain:
+            headers['Return-Path'] = f'{bounce_alias}@{catchall_domain}'
+        if self.headers:
+            try:
+                headers.update(ast.literal_eval(self.headers))
+            except (ValueError, TypeError) as e:
+                _logger.warning(
+                    'Evaluation error when evaluating mail headers (received %r): %s',
+                    self.headers, e,
+                )
+            # global except as we don't want to crash the queue just due to a malformed
+            # headers value
+            except Exception as e:
+                _logger.warning(
+                    'Unknown error when evaluating mail headers (received %r): %s',
+                    self.headers, e,
+                )
+
+        # prepare recipients: use email_to if defined then check recipient_ids
+        # that receive a specific email, notably due to link shortening / redirect
+        # that is recipients-dependent. Keep original email/partner as this is
+        # used in post-processing to know failures, like missing recipients
+        email_list = []
+        if self.email_to:
             email_to = tools.email_split_and_format(self.email_to)
-        res = {
-            'body': body,
-            'body_alternative': body_alternative,
-            'email_to': email_to,
-        }
-        return res
+            email_list.append({
+                'email_cc': [],
+                'email_to': email_to,
+                # keep raw initial value for incoming pre processing of outgoing emails
+                'email_to_raw': self.email_to or '',
+                'partner_id': False,
+            })
+        # add all cc once, either to the first "To", either as a single entry (do not mix
+        # with partner-specific sending)
+        if self.email_cc:
+            if email_list:
+                email_list[0]['email_cc'] = tools.email_split(self.email_cc)
+            else:
+                email_list.append({
+                    'email_cc':  tools.email_split(self.email_cc),
+                    'email_to': [],
+                    'email_to_raw': False,
+                    'partner_id': False,
+                })
+        # specific behavior to customize the send email for notified partners
+        for partner in self.recipient_ids:
+            # check partner email content
+            email_to = [tools.formataddr((partner.name or '', partner.email or 'False'))]
+            email_list.append({
+                'email_cc': [],
+                'email_to': email_to,
+                # keep raw initial value for incoming pre processing of outgoing emails
+                'email_to_raw': partner.email or '',
+                'partner_id': partner,
+            })
+
+        # prepare attachments: remove attachments if user send the link with the
+        # access_token.
+        attachments = self.attachment_ids
+        if attachments:
+            if body:
+                link_ids = {int(link) for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body)}
+                if link_ids:
+                    attachments = attachments - self.env['ir.attachment'].browse(list(link_ids))
+            # load attachment binary data with a separate read(), as prefetching all
+            # `datas` (binary field) could bloat the browse cache, triggering
+            # soft/hard mem limits with temporary data.
+            email_attachments = [
+                (a['name'], base64.b64decode(a['datas']), a['mimetype'])
+                for a in attachments.sudo().read(['name', 'datas', 'mimetype']) if a['datas'] is not False
+            ]
+        else:
+            email_attachments = []
+
+        return [
+            {
+                'attachments': email_attachments,
+                'body': body,
+                'body_alternative': body_alternative,
+                'email_cc': email_values['email_cc'],
+                'email_from': self.email_from,
+                'email_to': email_values['email_to'],
+                'email_to_raw': email_values['email_to_raw'],
+                'headers': headers,
+                'message_id': self.message_id,
+                'object_id': f'{self.res_id}-{self.model}' if self.res_id else '',
+                'partner_id': email_values['partner_id'],
+                'references': self.references,
+                'reply_to': self.reply_to,
+                'subject': self.subject,
+            } for email_values in email_list
+        ]
 
     def _split_by_mail_configuration(self):
         """Group the <mail.mail> based on their "email_from" and their "mail_server_id".
@@ -432,7 +508,6 @@ class MailMail(models.Model):
 
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
         IrMailServer = self.env['ir.mail_server']
-        IrAttachment = self.env['ir.attachment']
         for mail_id in self.ids:
             success_pids = []
             failure_type = None
@@ -442,40 +517,6 @@ class MailMail(models.Model):
                 mail = self.browse(mail_id)
                 if mail.state != 'outgoing':
                     continue
-
-                # remove attachments if user send the link with the access_token
-                body = mail.body_html or ''
-                attachments = mail.attachment_ids
-                for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body):
-                    attachments = attachments - IrAttachment.browse(int(link))
-
-                # load attachment binary data with a separate read(), as prefetching all
-                # `datas` (binary field) could bloat the browse cache, triggerring
-                # soft/hard mem limits with temporary data.
-                attachments = [(a['name'], base64.b64decode(a['datas']), a['mimetype'])
-                               for a in attachments.sudo().read(['name', 'datas', 'mimetype']) if a['datas'] is not False]
-
-                # specific behavior to customize the send email for notified partners
-                email_list = []
-                if mail.email_to:
-                    email_list.append(mail._send_prepare_values())
-                for partner in mail.recipient_ids:
-                    values = mail._send_prepare_values(partner=partner)
-                    values['partner_id'] = partner
-                    email_list.append(values)
-
-                # headers
-                headers = {}
-                ICP = self.env['ir.config_parameter'].sudo()
-                bounce_alias = ICP.get_param("mail.bounce.alias")
-                catchall_domain = ICP.get_param("mail.catchall.domain")
-                if bounce_alias and catchall_domain:
-                    headers['Return-Path'] = '%s@%s' % (bounce_alias, catchall_domain)
-                if mail.headers:
-                    try:
-                        headers.update(ast.literal_eval(mail.headers))
-                    except Exception:
-                        pass
 
                 # Writing on the mail object may fail (e.g. lock on user) which
                 # would trigger a rollback *after* actually sending the email.
@@ -507,22 +548,26 @@ class MailMail(models.Model):
                 res = None
                 # TDE note: could be great to pre-detect missing to/cc and skip sending it
                 # to go directly to failed state update
+                email_list = mail._prepare_outgoing_list()
+
+                # send each sub-email
                 for email in email_list:
                     msg = IrMailServer.build_email(
-                        email_from=mail.email_from,
-                        email_to=email.get('email_to'),
-                        subject=mail.subject,
-                        body=email.get('body'),
-                        body_alternative=email.get('body_alternative'),
-                        email_cc=tools.email_split(mail.email_cc),
-                        reply_to=mail.reply_to,
-                        attachments=attachments,
-                        message_id=mail.message_id,
-                        references=mail.references,
-                        object_id=mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
+                        email_from=email['email_from'],
+                        email_to=email['email_to'],
+                        subject=email['subject'],
+                        body=email['body'],
+                        body_alternative=email['body_alternative'],
+                        email_cc=email['email_cc'],
+                        reply_to=email['reply_to'],
+                        attachments=email['attachments'],
+                        message_id=email['message_id'],
+                        references=email['references'],
+                        object_id=email['object_id'],
                         subtype='html',
                         subtype_alternative='plain',
-                        headers=headers)
+                        headers=email['headers'],
+                    )
                     processing_pid = email.pop("partner_id", None)
                     try:
                         res = IrMailServer.send_email(

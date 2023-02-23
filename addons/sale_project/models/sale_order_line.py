@@ -19,35 +19,7 @@ class SaleOrderLine(models.Model):
         'project.task', 'Generated Task',
         index=True, copy=False)
     # used to know if generate a task and/or a project, depending on the product settings
-    is_service = fields.Boolean("Is a Service", compute='_compute_is_service', store=True, compute_sudo=True)
     reached_milestones_ids = fields.One2many('project.milestone', 'sale_line_id', string='Reached Milestones', domain=[('is_reached', '=', True)])
-
-    def name_get(self):
-        res = super().name_get()
-        with_price_unit = self.env.context.get('with_price_unit')
-        if with_price_unit:
-            names = dict(res)
-            result = []
-            sols_by_so_dict = defaultdict(lambda: self.env[self._name])  # key: (sale_order_id, product_id), value: sale order line
-            for line in self:
-                sols_by_so_dict[line.order_id.id, line.product_id.id] += line
-
-            for sols in sols_by_so_dict.values():
-                if len(sols) > 1 and all(sols.mapped('is_service')):
-                    result += [(
-                        line.id,
-                        '%s - %s' % (
-                            names.get(line.id), format_amount(self.env, line.price_unit, line.currency_id))
-                    ) for line in sols]
-                else:
-                    result += [(line.id, names.get(line.id)) for line in sols]
-            return result
-        return res
-
-    @api.depends('product_id.type')
-    def _compute_is_service(self):
-        for so_line in self:
-            so_line.is_service = so_line.product_id.type == 'service'
 
     @api.depends('product_id.type')
     def _compute_product_updatable(self):
@@ -55,21 +27,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.product_id.type == 'service' and line.state == 'sale':
                 line.product_updatable = False
-
-    def _auto_init(self):
-        """
-        Create column to stop ORM from computing it himself (too slow)
-        """
-        if not column_exists(self.env.cr, 'sale_order_line', 'is_service'):
-            create_column(self.env.cr, 'sale_order_line', 'is_service', 'bool')
-            self.env.cr.execute("""
-                UPDATE sale_order_line line
-                SET is_service = (pt.type = 'service')
-                FROM product_product pp
-                LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
-                WHERE pp.id = line.product_id
-            """)
-        return super()._auto_init()
 
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
@@ -106,9 +63,10 @@ class SaleOrderLine(models.Model):
         # generate task with hours=0.
         for line in lines:
             if line.state == 'sale' and not line.is_expense:
+                has_task = bool(line.task_id)
                 line.sudo()._timesheet_service_generation()
                 # if the SO line created a task, post a message on the order
-                if line.task_id:
+                if line.task_id and not has_task:
                     msg_body = _("Task Created (%s): %s", line.product_id.name, line.task_id._get_html_link())
                     line.order_id.message_post(body=msg_body)
         return lines
@@ -149,6 +107,7 @@ class SaleOrderLine(models.Model):
             'sale_line_id': self.id,
             'active': True,
             'company_id': self.company_id.id,
+            'allow_billable': True,
         }
 
     def _timesheet_create_project(self):
@@ -192,7 +151,9 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
-        planned_hours = self._convert_qty_company_hours(self.company_id)
+        planned_hours = 0.0
+        if self.product_id.service_type not in ['milestones', 'manual']:
+            planned_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
         description = '<br/>'.join(sale_line_name_parts[1:])

@@ -17,6 +17,32 @@ import logging
 from pytz import timezone
 
 _logger = logging.getLogger(__name__)
+_server_action_logger = _logger.getChild("server_action_safe_eval")
+
+
+class LoggerProxy:
+    """ Proxy of the `_logger` element in order to be used in server actions.
+    We purposefully restrict its method as it will be executed in `safe_eval`.
+    """
+    @staticmethod
+    def log(level, message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.log(level, message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def info(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.info(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def warning(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.warning(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def error(message, *args, stack_info=False, exc_info=False):
+        _server_action_logger.error(message, *args, stack_info=stack_info, exc_info=exc_info)
+
+    @staticmethod
+    def exception(message, *args, stack_info=False, exc_info=True):
+        _server_action_logger.exception(message, *args, stack_info=stack_info, exc_info=exc_info)
 
 
 class IrActions(models.Model):
@@ -408,15 +434,16 @@ class IrActionsServer(models.Model):
     _order = 'sequence,name'
 
     DEFAULT_PYTHON_CODE = """# Available variables:
-#  - env: Odoo Environment on which the action is triggered
-#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - env: environment on which the action is triggered
+#  - model: model of the record on which the action is triggered; is a void recordset
 #  - record: record on which the action is triggered; may be void
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
-#  - float_compare: Odoo function to compare floats based on specific precisions
+#  - float_compare: utility function to compare floats based on specific precision
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
-#  - UserError: Warning Exception to use with raise
-#  - Command: x2Many commands namespace
+#  - _logger: _logger.info(message): logger to emit messages in server logs
+#  - UserError: exception class for raising user-facing warning messages
+#  - Command: x2many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     type = fields.Char(default='ir.actions.server')
@@ -603,13 +630,13 @@ class IrActionsServer(models.Model):
             'env': self.env,
             'model': model,
             # Exceptions
-            'Warning': odoo.exceptions.Warning,
             'UserError': odoo.exceptions.UserError,
             # record
             'record': record,
             'records': records,
             # helpers
             'log': log,
+            '_logger': LoggerProxy,
         })
         return eval_context
 

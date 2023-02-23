@@ -6,6 +6,7 @@ var core = require('web.core');
 var publicWidget = require('web.public.widget');
 var { OptionalProductsModal } = require('@sale_product_configurator/js/product_configurator_modal');
 require('website_sale.website_sale');
+const wsUtils = require('website_sale.utils');
 
 var _t = core._t;
 
@@ -81,6 +82,7 @@ publicWidget.registry.WebsiteSale.include({
      * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
      */
     _onModalSubmit: function (goToShop) {
+        const self = this;
         const $product = $('#product_detail');
         let currency;
         if ($product.length) {
@@ -116,6 +118,9 @@ publicWidget.registry.WebsiteSale.include({
                         const $quantity = $(".my_cart_quantity");
                         $quantity.parent().parent().removeClass('d-none');
                         $quantity.text(quantity).hide().fadeIn(600);
+                        // find the closest div that has an img tag in it
+                        const imgContainerEl = self.$form.closest('div:has(img)');
+                        wsUtils.animateClone($('header .o_wsale_my_cart').first(), imgContainerEl, 25, 40);
                         sessionStorage.setItem('website_sale_cart_quantity', quantity);
                     });
             });

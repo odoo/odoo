@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ke_inherit_product_template_form_view" model="ir.ui.view">
+
+        <field name="name">l10n.ke.inherit.product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='invoicing']//group[@name='accounting']" position="inside">
+                <group name="HS Code" string="HS Code" attrs="{'invisible': [('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
+                    <field name="l10n_ke_hsn_code"/>
+                    <field name="l10n_ke_hsn_name"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_ke_inherit_product_product_form_view" model="ir.ui.view">
+        <field name="name">l10n.ke.inherit.product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group>
+                    <group name="KRA Item Code" string="KRA Item Code">
+                        <field name="l10n_ke_hsn_code"/>
+                        <field name="l10n_ke_hsn_name"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

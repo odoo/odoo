@@ -8,9 +8,16 @@ import { useInputField } from "../input_field_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 
 export class PercentageField extends Component {
+    static template = "web.PercentageField";
+    static props = {
+        ...standardFieldProps,
+        digits: { type: Array, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+
     setup() {
         useInputField({
             getValue: () =>
@@ -31,21 +38,27 @@ export class PercentageField extends Component {
     }
 }
 
-PercentageField.template = "web.PercentageField";
-PercentageField.props = {
-    ...standardFieldProps,
-    digits: { type: Array, optional: true },
-    placeholder: { type: String, optional: true },
+export const percentageField = {
+    component: PercentageField,
+    displayName: _lt("Percentage"),
+    supportedTypes: ["integer", "float"],
+    extractProps: ({ attrs, field }) => {
+        // Sadly, digits param was available as an option and an attr.
+        // The option version could be removed with some xml refactoring.
+        let digits;
+        if (attrs.digits) {
+            digits = JSON.parse(attrs.digits);
+        } else if (attrs.options.digits) {
+            digits = attrs.options.digits;
+        } else if (Array.isArray(field.digits)) {
+            digits = field.digits;
+        }
+
+        return {
+            digits,
+            placeholder: attrs.placeholder,
+        };
+    },
 };
 
-PercentageField.displayName = _lt("Percentage");
-PercentageField.supportedTypes = ["integer", "float"];
-
-PercentageField.extractProps = ({ attrs, field }) => {
-    return {
-        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
-        placeholder: attrs.placeholder,
-    };
-};
-
-registry.category("fields").add("percentage", PercentageField);
+registry.category("fields").add("percentage", percentageField);

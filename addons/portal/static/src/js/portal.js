@@ -252,7 +252,7 @@ publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
             this._rpc({
                 model: 'res.users.apikeys',
                 method: 'remove',
-                args: [parseInt(this.target.id)]
+                args: [parseInt(this.el.id)]
             })
         );
         window.location = window.location;

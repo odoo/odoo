@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PopupContainer" owl="1">
+        <div t-if="Object.keys(props.popups).length > 0" class="popups">
+            <t t-foreach="props.popups" t-as="popup" t-key="popup">
+                <div t-if="popup_last || popup_value.props.keepBehind" role="dialog" class="modal-dialog">
+                    <t t-component="popup_value.component" t-props="popup_value.props" isActive="popup_last" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

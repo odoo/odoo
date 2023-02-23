@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
-tour.register('shop_variant_exclusion', {
+registry.category("web_tour.tours").add('shop_variant_exclusion', {
         url: '/shop',
         test: true,
-    },
-    [
+        steps: [
         {
             content: "select product attribute First Attribute - Value 1",
             trigger: 'form.js_attributes input:not(:checked) + label:contains(First Attribute - Value 1)',
@@ -35,5 +34,5 @@ tour.register('shop_variant_exclusion', {
             run: () => {}
         },
     ]
-);
+});
 

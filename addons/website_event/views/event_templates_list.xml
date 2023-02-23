@@ -48,7 +48,7 @@
     <nav class="navbar navbar-light border-top shadow-sm d-print-none">
         <div class="container">
             <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
-                <span class="navbar-brand h4 my-0 me-auto">Events</span>
+                <span class="navbar-brand h4 my-0 me-auto pe-sm-4">Events</span>
                 <ul class="o_wevent_index_topbar_filters nav">
                     <t t-foreach="categories" t-as="category">
                         <li t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="nav-item dropdown me-2 my-1">

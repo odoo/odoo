@@ -18,16 +18,14 @@
     'installable': True,
     'assets': {
         'web.assets_backend': [
-            'google_calendar/static/src/js/google_calendar_popover.js',
-            'google_calendar/static/src/js/google_calendar.js',
             'google_calendar/static/src/scss/google_calendar.scss',
-            'google_calendar/static/src/xml/*.xml',
+            'google_calendar/static/src/views/**/*',
         ],
         'web.qunit_suite_tests': [
             'google_calendar/static/tests/**/*',
         ],
         'web.qunit_mobile_suite_tests': [
-            'google_calendar/static/tests/mock_server.js',
+            'google_calendar/static/tests/google_calendar_mock_server.js',
         ],
     },
     'license': 'LGPL-3',

@@ -3,11 +3,12 @@
 
     <!-- Templates for interest / refusing applicants -->
     <record id="email_template_data_applicant_refuse" model="mail.template">
-        <field name="name">Applicant: Refuse</field>
+        <field name="name">Recruitment: Refuse</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
         <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
         <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">When you refuse an application, you can choose this template</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
     <tr>
@@ -57,11 +58,12 @@
     </record>
 
     <record id="email_template_data_applicant_interest" model="mail.template">
-        <field name="name">Applicant: Interest</field>
+        <field name="name">Recruitment: Interest</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
         <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
         <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Set this template to a recruitment stage to send it when applications reach that stage</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
     <tr>
@@ -148,11 +150,12 @@
     </record>
 
     <record id="email_template_data_applicant_congratulations" model="mail.template">
-        <field name="name">Applicant: Acknowledgement</field>
+        <field name="name">Recruitment: Application Acknowledgement</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
         <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
         <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Confirmation email sent to all new job applications</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
     <tr>
@@ -227,11 +230,12 @@
     </record>
 
     <record id="email_template_data_applicant_not_interested" model="mail.template">
-        <field name="name">Applicant: Not interested anymore</field>
+        <field name="name">Recruitment: Not interested anymore</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
         <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
         <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">When you refuse an application, you can choose this template</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
     <tr>

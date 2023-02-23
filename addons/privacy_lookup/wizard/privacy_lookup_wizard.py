@@ -130,9 +130,7 @@ class PrivacyLookupWizard(models.TransientModel):
                     has_additional_query = True
                     rec_name = model._rec_name or 'name'
                     is_normalized = field_name == 'email_normalized' or (model_name == 'mailing.trace' and field_name == 'email')
-                    if rec_name in model and model._fields[model._rec_name].type == 'char':
-                        if model._fields[model._rec_name].translate:
-                            rec_name = f"jsonb_path_query_array({rec_name}, '$.*')::text"
+                    if rec_name in model and model._fields[model._rec_name].type == 'char' and not model._fields[model._rec_name].translate:
                         additional_query += """
                             {field_name} {search_type} %s OR {rec_name} ilike %s
                             """.format(

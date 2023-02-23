@@ -1,7 +1,7 @@
 odoo.define('website_hr_recruitment.tour', function(require) {
     'use strict';
 
-    var tour = require("web_tour.tour");
+    const { registry } = require("@web/core/registry");
     const wTourUtils = require("website.tour_utils");
 
     function applyForAJob(jobName, application) {
@@ -36,10 +36,10 @@ odoo.define('website_hr_recruitment.tour', function(require) {
         }];
     }
 
-    tour.register('website_hr_recruitment_tour', {
+    registry.category("web_tour.tours").add('website_hr_recruitment_tour', {
         test: true,
         url: '/jobs',
-    }, [
+        steps: [
         ...applyForAJob('Guru', {
             name: 'John Smith',
             email: 'john@smith.com',
@@ -59,7 +59,7 @@ odoo.define('website_hr_recruitment.tour', function(require) {
             phone: '118.712',
             subject: '### HR [INTERN] RECRUITMENT TEST DATA ###',
         }),
-    ]);
+    ]});
 
     wTourUtils.registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
         test: true,

@@ -12,7 +12,7 @@ import { loadSpreadsheetDependencies } from "@spreadsheet/helpers/helpers";
 import { useService } from "@web/core/utils/hooks";
 
 const { Spreadsheet } = spreadsheet;
-const { Component, onWillStart, useState, useEffect } = owl;
+import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 
 export class SpreadsheetDashboardAction extends Component {
     setup() {
@@ -76,13 +76,6 @@ export class SpreadsheetDashboardAction extends Component {
         this.state = useState({ activeDashboard: undefined });
     }
 
-    getStyle(model) {
-        const sheetId = model.getters.getActiveSheetId();
-        const { right } = model.getters.getSheetZone(sheetId);
-        const { end } = model.getters.getColDimensions(sheetId, right);
-        return `max-width: ${end}px;`;
-    }
-
     /**
      * @returns {number | undefined}
      */
@@ -136,8 +129,12 @@ export class SpreadsheetDashboardAction extends Component {
      * @returns {Promise<{ data: string, revisions: object[] }>}
      */
     async _fetchDashboardData(dashboardId) {
-        const [record] = await this.orm.read("spreadsheet.dashboard", [dashboardId], ["raw"]);
-        return { data: record.raw, revisions: [] };
+        const [record] = await this.orm.read(
+            "spreadsheet.dashboard",
+            [dashboardId],
+            ["spreadsheet_data"]
+        );
+        return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
     }
 }
 SpreadsheetDashboardAction.template = "spreadsheet_dashboard.DashboardAction";

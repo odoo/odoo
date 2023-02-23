@@ -5,12 +5,20 @@ import { registry } from "@web/core/registry";
 import { archParseBoolean } from "@web/views/utils";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component } = owl;
+import { Component } from "@odoo/owl";
 const formatters = registry.category("formatters");
 
 export class StatInfoField extends Component {
+    static template = "web.StatInfoField";
+    static props = {
+        ...standardFieldProps,
+        labelField: { type: String, optional: true },
+        noLabel: { type: Boolean, optional: true },
+        digits: { type: Array, optional: true },
+    };
+
     get formattedValue() {
-        const formatter = formatters.get(this.props.type);
+        const formatter = formatters.get(this.props.record.fields[this.props.name].type);
         return formatter(this.props.value || 0, { digits: this.props.digits });
     }
     get label() {
@@ -20,24 +28,29 @@ export class StatInfoField extends Component {
     }
 }
 
-StatInfoField.template = "web.StatInfoField";
-StatInfoField.props = {
-    ...standardFieldProps,
-    labelField: { type: String, optional: true },
-    noLabel: { type: Boolean, optional: true },
-    digits: { type: Array, optional: true },
+export const statInfoField = {
+    component: StatInfoField,
+    displayName: _lt("Stat Info"),
+    supportedTypes: ["float", "integer", "monetary"],
+    isEmpty: () => false,
+    extractProps: ({ attrs, field }) => {
+        // Sadly, digits param was available as an option and an attr.
+        // The option version could be removed with some xml refactoring.
+        let digits;
+        if (attrs.digits) {
+            digits = JSON.parse(attrs.digits);
+        } else if (attrs.options.digits) {
+            digits = attrs.options.digits;
+        } else if (Array.isArray(field.digits)) {
+            digits = field.digits;
+        }
+
+        return {
+            digits,
+            labelField: attrs.options.label_field,
+            noLabel: archParseBoolean(attrs.nolabel),
+        };
+    },
 };
 
-StatInfoField.displayName = _lt("Stat Info");
-StatInfoField.supportedTypes = ["float", "integer", "monetary"];
-
-StatInfoField.isEmpty = () => false;
-StatInfoField.extractProps = ({ attrs, field }) => {
-    return {
-        labelField: attrs.options.label_field,
-        noLabel: archParseBoolean(attrs.nolabel),
-        digits: (attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits) || field.digits,
-    };
-};
-
-registry.category("fields").add("statinfo", StatInfoField);
+registry.category("fields").add("statinfo", statInfoField);

@@ -1,25 +1,19 @@
-odoo.define('pos_restaurant.SplitOrderline', function(require) {
-    'use strict';
+/** @odoo-module */
 
-    const { useListener } = require("@web/core/utils/hooks");
-    const PosComponent = require('point_of_sale.PosComponent');
-    const Registries = require('point_of_sale.Registries');
+import { useListener } from "@web/core/utils/hooks";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    class SplitOrderline extends PosComponent {
-        setup() {
-            super.setup();
-            useListener('click', this.onClick);
-        }
-        get isSelected() {
-            return this.props.split.quantity !== 0;
-        }
-        onClick() {
-            this.trigger('click-line', this.props.line);
-        }
+export class SplitOrderline extends LegacyComponent {
+    static template = "SplitOrderline";
+
+    setup() {
+        super.setup();
+        useListener("click", this.onClick);
     }
-    SplitOrderline.template = 'SplitOrderline';
-
-    Registries.Component.add(SplitOrderline);
-
-    return SplitOrderline;
-});
+    get isSelected() {
+        return this.props.split.quantity !== 0;
+    }
+    onClick() {
+        this.trigger("click-line", this.props.line);
+    }
+}

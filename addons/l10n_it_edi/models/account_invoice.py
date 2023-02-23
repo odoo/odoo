@@ -35,7 +35,7 @@ class AccountMove(models.Model):
     def _compute_l10n_it_einvoice(self):
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for invoice in self:
-            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa)
+            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa).sudo()
             invoice.l10n_it_einvoice_id = einvoice.attachment_id
             invoice.l10n_it_einvoice_name = einvoice.attachment_id.name
 
@@ -43,7 +43,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
 
-        data = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._export_as_xml())
+        data = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._l10n_it_edi_export_invoice_as_xml())
         description = _('Italian invoice: %s', self.move_type)
         attachment = self.env['ir.attachment'].create({
             'name': report_name,
@@ -71,14 +71,11 @@ class AccountMove(models.Model):
         invoice_lines = []
         lines = self.invoice_line_ids.filtered(lambda l: not l.display_type in ('line_note', 'line_section'))
         for num, line in enumerate(lines):
-            price_subtotal = line.balance if convert_to_euros else line.price_subtotal
-            # The price_subtotal should be negative when:
-            # The line has downpayment lines, but is not a downpayment (i.e. the final invoice, from which downpayment lines are subtracted) or,
-            # the line is a reverse charge refund.
-            if (line._get_downpayment_lines() and not is_downpayment) or reverse_charge_refund:
-                price_subtotal = -abs(price_subtotal)
-            else:
-                price_subtotal = abs(price_subtotal)
+            sign = -1 if line.move_id.is_inbound() else 1
+            price_subtotal = (line.balance * sign) if convert_to_euros else line.price_subtotal
+            # The price_subtotal should be inverted when the line is a reverse charge refund.
+            if reverse_charge_refund:
+                price_subtotal = -price_subtotal
 
             # Unit price
             price_unit = 0
@@ -94,14 +91,14 @@ class AccountMove(models.Model):
                     if moves:
                         description += ', '.join([move.name for move in moves])
 
-            line_dict = {
+            invoice_lines.append({
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
                 'unit_price': price_unit,
                 'subtotal_price': price_subtotal,
-            }
-            invoice_lines.append(line_dict)
+                'vat_tax': line.tax_ids._l10n_it_filter_kind('vat'),
+            })
         return invoice_lines
 
     def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details, reverse_charge_refund=False):
@@ -135,6 +132,11 @@ class AccountMove(models.Model):
             }
             tax_lines.append(tax_line_dict)
         return tax_lines
+
+    def _l10n_it_edi_filter_fatturapa_tax_details(self, line, tax_values):
+        """Filters tax details to only include the positive amounted lines regarding VAT taxes."""
+        repartition_line = tax_values['tax_repartition_line']
+        return (repartition_line.factor_percent >= 0 and repartition_line.tax_id.amount >= 0)
 
     def _prepare_fatturapa_export_values(self):
         self.ensure_one()
@@ -208,9 +210,7 @@ class AccountMove(models.Model):
         pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
-        tax_details = self._prepare_edi_tax_details(
-            filter_to_apply=lambda base_line, tax_values: tax_values['tax_repartition_line'].factor_percent >= 0
-        )
+        tax_details = self._prepare_edi_tax_details(filter_to_apply=self._l10n_it_edi_filter_fatturapa_tax_details)
 
         company = self.company_id
         partner = self.commercial_partner_id
@@ -256,7 +256,7 @@ class AccountMove(models.Model):
             'document_total': document_total,
             'representative': company.l10n_it_tax_representative_partner_id,
             'codice_destinatario': codice_destinatario,
-            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF01',
+            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
             'is_self_invoice': is_self_invoice,
             'partner_bank': self.partner_bank_id,
             'format_date': format_date,
@@ -348,7 +348,7 @@ class AccountTax(models.Model):
             ("N6.7", "[N6.7] Inversione contabile – prestazioni comparto edile esettori connessi"),
             ("N6.8", "[N6.8] Inversione contabile – operazioni settore energetico"),
             ("N6.9", "[N6.9] Inversione contabile – altri casi"),
-            ("N7", "[N7] IVA assolta in altro stato UE (vendite a distanza ex art. 40 c. 3 e 4 e art. 41 c. 1 lett. b,  DL 331/93; prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-sexies lett. f, g, art. 74-sexies DPR 633/72)")],
+            ("N7", "[N7] IVA assolta in altro stato UE (prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-octies, comma 1 lett. a, b, art. 74-sexies DPR 633/72)")],
         string="Exoneration",
         help="Exoneration type",
         default="N1")
@@ -366,3 +366,7 @@ class AccountTax(models.Model):
                     raise ValidationError(_("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."))
                 if tax.l10n_it_kind_exoneration == 'N6' and tax.l10n_it_vat_due_date == 'S':
                     raise UserError(_("'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"))
+
+    def _l10n_it_filter_kind(self, kind):
+        """ This can be overridden by l10n_it_edi_withholding for different kind of taxes (withholding, pension_fund)."""
+        return self if kind == 'vat' else self.env['account.tax']

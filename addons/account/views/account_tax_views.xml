@@ -73,11 +73,11 @@
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row mb4">
                                     <div class="col-6">
-                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                        <strong><span><t t-out="record.name.value"/></span></strong>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <span class="badge rounded-pill"><t t-esc="record.type_tax_use.value"/></span>
-                                        <span class="badge rounded-pill"><t t-esc="record.tax_scope.value"/></span>
+                                        <span class="badge rounded-pill"><t t-out="record.type_tax_use.value"/></span>
+                                        <span class="badge rounded-pill"><t t-out="record.tax_scope.value"/></span>
                                     </div>
                                 </div>
                             </div>
@@ -149,10 +149,12 @@
                         <page string="Definition" name="definition">
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
                                 <field name="country_code" invisible="1"/>
-                                <label for="invoice_repartition_line_ids"/>
-                                <field name="invoice_repartition_line_ids"/>
-                                <label for="refund_repartition_line_ids"/>
-                                <field name="refund_repartition_line_ids"/>
+                                <group string="Distribution for Invoices">
+                                    <field name="invoice_repartition_line_ids" nolabel="1" colspan="2"/>
+                                </group>
+                                <group string="Distribution for Refunds">
+                                    <field name="refund_repartition_line_ids" nolabel="1" colspan="2"/>
+                                </group>
                             </div>
                             <field name="children_tax_ids" attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
                                 <tree string="Children Taxes">
@@ -226,26 +228,42 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="country_id"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="country_code" invisible="True"/>
 
-                    <!--
-                        'force_account_company' context key is used so that the RedirectWarning
-                        potentially raised during tax closing doesn't allow the user choosing
-                        accounts from another company in case the multicompany selector
-                        currently grants access to multiple companies.
-                    -->
-                    <field name="property_tax_payable_account_id"
-                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
-                    />
-                    <field name="property_tax_receivable_account_id"
-                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
-                    />
-                    <field name="property_advance_tax_payment_account_id"
-                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
-                    />
+                    <field name="tax_payable_account_id" domain="[('company_id', '=', company_id)]"/>
+                    <field name="tax_receivable_account_id" domain="[('company_id', '=', company_id)]"/>
+                    <field name="advance_tax_payment_account_id" domain="[('company_id', '=', company_id)]"/>
 
                     <field name="preceding_subtotal" optional="hide"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_tax_group_form" model="ir.ui.view">
+            <field name="name">account.tax.group.form</field>
+            <field name="model">account.tax.group</field>
+            <field name="arch" type="xml">
+                <form string="Account Tax Group">
+                    <field name="company_id" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="country_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="tax_payable_account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="tax_receivable_account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="advance_tax_payment_account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="preceding_subtotal"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 

@@ -4,7 +4,7 @@
         <field name="name">stock.move.line.tree</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
-            <tree string="Move Lines" create="0" default_order="date desc" action="action_open_reference" type="object">
+            <tree string="Move Lines" create="0" default_order="id desc" action="action_open_reference" type="object">
                 <field name="location_usage" invisible="1"/>
                 <field name="location_dest_usage" invisible="1"/>
                 <field name="date"/>
@@ -27,6 +27,7 @@
                        decoration-muted="state == 'draft'"
                        decoration-success="state == 'done'"
                        decoration-warning="state not in ('draft','cancel','done','assigned')"/>
+                <field name="create_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -97,6 +98,7 @@
                             <field name="package_id" string="Source Package" groups="stock.group_tracking_lot"/>
                             <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
+                            <field name="create_uid" string="Done By" widget="many2one_avatar_user" optional="hide"/>
                         </group>
                     </group>
                 </sheet>

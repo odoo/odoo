@@ -1,141 +1,76 @@
-odoo.define('partner.autocomplete.many2one', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var FieldMany2One = require('web.relational_fields').FieldMany2One;
-var core = require('web.core');
-var AutocompleteMixin = require('partner.autocomplete.Mixin');
-var field_registry = require('web.field_registry');
+import { Many2XAutocomplete } from '@web/views/fields/relational_utils';
+import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 
-var _t = core._t;
+import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core"
 
-var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
-    jsLibs: [
-        '/partner_autocomplete/static/lib/jsvat.js'
-    ],
+export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
+    setup() {
+        super.setup();
+        this.partner_autocomplete = usePartnerAutocomplete();
+    }
 
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this._addAutocompleteSource(this._searchSuggestions, {
-            placeholder: _t('Searching Autocomplete...'),
-            order: 20,
-            validation: this._validateSearchTerm,
-        });
+    validateSearchTerm(request) {
+        return request && request.length > 2;
+    }
 
-        this.additionalContext['show_vat'] = true;
-    },
+    get sources() {
+        return super.sources.concat(
+            {
+                options: async (request) => {
+                    if (this.validateSearchTerm(request)) {
+                        const suggestions = await this.partner_autocomplete.autocomplete(request);
+                        suggestions.forEach((suggestion) => {
+                            suggestion.classList = "partner_autocomplete_dropdown_many2one";
+                        });
+                        return suggestions;
+                    }
+                    else {
+                        return [];
+                    }
+                },
+                optionTemplate: "partner_autocomplete.Many2oneDropdownOption",
+                placeholder: _t('Searching Autocomplete...'),
+            },
+        );
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Action : create popup form with pre-filled values from Autocomplete
-     *
-     * @param {Object} company
-     * @returns {Promise}
-     * @private
-     */
-    _createPartner: function (company) {
-        var self = this;
-        self.$('input').val('');
-
-        return self._getCreateData(company).then(function (data){
-            var context = {
+    async onSelect(option) {
+        if (option.partner_gid) {  // Checks that it is a partner autocomplete option
+            const data = await this.partner_autocomplete.getCreateData(Object.getPrototypeOf(option));
+            let context = {
                 'default_is_company': true
             };
-            _.each(data.company, function (val, key) {
+
+            for (const [key, val] of Object.entries(data.company)) {
                 context['default_' + key] = val && val.id ? val.id : val;
-            });
+            }
 
-            // if(data.company.street_name && !data.company.street_number) context.default_street_number = '';
-            if (data.logo) context.default_image_1920 = data.logo;
-
-            return self._searchCreatePopup("form", false, context);
-        });
-    },
-
-    /**
-     * Modify autocomplete results rendering
-     * Add logo in the autocomplete results if logo is provided
-     *
-     * @private
-     */
-    _modifyAutompleteRendering: function (){
-        var api = this.$input.data('ui-autocomplete');
-        // FIXME: bugfix to prevent traceback in mobile apps due to override
-        // of Many2one widget with native implementation.
-        if (!api) {
-            return;
+            if (data.logo) {
+                context.default_image_1920 = data.logo;
+            }
+            return this.openMany2X({ context });
         }
-        api._renderItem = function(ul, item){
-            ul.addClass('o_partner_autocomplete_dropdown');
-            var $a = $('<a/>')["html"](item.label);
-            if (item.logo){
-                var $img = $('<img/>').attr('src', item.logo);
-                $a.append($img);
-            }
+        else {
+            return super.onSelect(option);
+        }
+    }
 
-            return $("<li></li>")
-                .data("item.autocomplete",item)
-                .append($a)
-                .appendTo(ul)
-                .addClass(item.classname);
-        };
-    },
+}
 
-    /**
-     * @override
-     * @private
-     */
-    _renderEdit: function (){
-        this._super.apply(this, arguments);
-        this._modifyAutompleteRendering();
-    },
+export class PartnerAutoCompleteMany2one extends Many2OneField {}
 
-    /**
-     * Query Autocomplete and add results to the popup
-     *
-     * @override
-     * @param search_val {string}
-     * @returns {Promise}
-     * @private
-     */
-    _searchSuggestions: function (search_val) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            if (self._isOnline()) {
+PartnerAutoCompleteMany2one.components = {
+    ...Many2OneField.components,
+    Many2XAutocomplete: PartnerMany2XAutocomplete,
+}
 
-                self._autocomplete(search_val).then(function (suggestions) {
-                    var choices = [];
-                    if (suggestions && suggestions.length) {
-                        _.each(suggestions, function (suggestion) {
-                            var label = '<i class="fa fa-magic text-muted"/> ';
-                            label += _.str.sprintf('%s, <span class="text-muted">%s</span>', suggestion.label, suggestion.description);
+export const partnerAutoCompleteMany2one = {
+    ...many2OneField,
+    component: PartnerAutoCompleteMany2one,
+};
 
-                            choices.push({
-                                label: label,
-                                action: function () {
-                                    self._createPartner(suggestion);
-                                },
-                                logo: suggestion.logo,
-                                classname: 'o_partner_autocomplete_dropdown_item',
-                            });
-                        });
-                    }
-
-                    resolve(choices);
-                });
-            } else {
-               resolve([]);
-            }
-        });
-    },
-});
-
-field_registry.add('res_partner_many2one', PartnerField);
-
-return PartnerField;
-});
+registry.category("fields").add("res_partner_many2one", partnerAutoCompleteMany2one);

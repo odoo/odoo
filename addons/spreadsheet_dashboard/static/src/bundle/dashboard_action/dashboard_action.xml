@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-    <div t-name="spreadsheet_dashboard.DashboardAction" owl="1" class="o_action o_spreadsheet_dashboard_action">
+    <div t-name="spreadsheet_dashboard.DashboardAction" owl="1" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
         <ControlPanel display="controlPanelDisplay">
             <t t-set-slot="control-panel-top-right">
                 <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
@@ -24,7 +24,7 @@
                     groups="getDashboardGroups()"/>
             </t>
             <t t-else="">
-                <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-white overflow-auto">
+                <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto">
                     <section t-foreach="getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category">
                         <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default user-select-none">
                             <b t-esc="group.name"/>
@@ -50,7 +50,7 @@
                 </div>
                 <t t-else="">
                     <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>
-                    <div t-else="" class="o_renderer" t-att-style="getStyle(dashboard.model)">
+                    <div t-else="" class="o_renderer">
                         <Spreadsheet
                             model="dashboard.model"
                             t-key="dashboard.id"/>

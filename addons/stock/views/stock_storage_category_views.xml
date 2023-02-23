@@ -39,7 +39,7 @@
                                 <tree editable="bottom">
                                     <field name="product_id" required="1" context="{'default_detailed_type': 'product'}"/>
                                     <field name="quantity"/>
-                                    <field name="product_uom_id" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="product_uom_id" groups="uom.group_uom" options="{'no_create': True, 'no_open': True}"/>
                                     <field name="company_id" invisible="1"/>
                                 </tree>
                             </field>
@@ -85,7 +85,7 @@
                 <field name="product_id" invisible="context.get('default_product_id')" attrs="{'required': [('package_type_id', '=', False)], 'readonly': [('package_type_id', '!=', False)]}"/>
                 <field name="package_type_id" attrs="{'required': [('product_id', '=', False)], 'readonly': [('product_id', '!=', False)]}" invisible="context.get('hide_package_type', False)" groups="stock.group_tracking_lot"/>
                 <field name="quantity"/>
-                <field name="product_uom_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="product_uom_id" groups="uom.group_uom" options="{'no_create': True, 'no_open': True}"/>
                 <field name="company_id" invisible="1"/>
                 <field name="package_type_id" invisible="1"/>
             </tree>
@@ -100,6 +100,5 @@
     </record>
 
     <menuitem id="menu_storage_categoty_config" action="action_storage_category" name="Storage Categories" parent="menu_warehouse_config" sequence="6" groups="stock.group_stock_storage_categories"/>
-    <menuitem id="menu_storage_categoty_capacity_config" action="action_storage_category_capacity" name="Storage Category Capacity" parent="menu_warehouse_config" sequence="7" groups="base.group_no_one"/>
 
 </odoo>

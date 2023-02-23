@@ -169,7 +169,10 @@ Contracts:
 
         start = min(self.mapped('date_from') + [fields.Datetime.from_string(vals.get('date_from', False)) or datetime.max])
         stop = max(self.mapped('date_to') + [fields.Datetime.from_string(vals.get('date_to', False)) or datetime.min])
-        with self.env['hr.work.entry']._error_checking(start=start, stop=stop, skip=skip_check):
+        employee_ids = self.employee_id.ids
+        if 'employee_id' in vals and vals['employee_id']:
+            employee_ids += vals['employee_id']
+        with self.env['hr.work.entry']._error_checking(start=start, stop=stop, skip=skip_check, employee_ids=employee_ids):
             return super().write(vals)
 
     @api.model_create_multi
@@ -178,13 +181,14 @@ Contracts:
         stop_dates = [v.get('date_to') for v in vals_list if v.get('date_to')]
         if any(vals.get('holiday_type', 'employee') == 'employee' and not vals.get('multi_employee', False) and not vals.get('employee_id', False) for vals in vals_list):
             raise ValidationError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
-        with self.env['hr.work.entry']._error_checking(start=min(start_dates, default=False), stop=max(stop_dates, default=False)):
+        employee_ids = {v['employee_id'] for v in vals_list if v.get('employee_id')}
+        with self.env['hr.work.entry']._error_checking(start=min(start_dates, default=False), stop=max(stop_dates, default=False), employee_ids=employee_ids):
             return super().create(vals_list)
 
     def action_confirm(self):
         start = min(self.mapped('date_from'), default=False)
         stop = max(self.mapped('date_to'), default=False)
-        with self.env['hr.work.entry']._error_checking(start=start, stop=stop):
+        with self.env['hr.work.entry']._error_checking(start=start, stop=stop, employee_ids=self.employee_id.ids):
             return super().action_confirm()
 
     def _get_leaves_on_public_holiday(self):
@@ -223,16 +227,15 @@ Contracts:
             vals_list += work_entry.contract_id._get_work_entries_values(work_entry.date_start, work_entry.date_stop)
         self.env['hr.work.entry'].create(vals_list)
 
-    def _get_number_of_days(self, date_from, date_to, employee_id):
+    def _get_number_of_days(self, date_from, date_to, employee):
         """ If an employee is currently working full time but asks for time off next month
             where he has a new contract working only 3 days/week. This should be taken into
             account when computing the number of days for the leave (2 weeks leave = 6 days).
             Override this method to get number of days according to the contract's calendar
             at the time of the leave.
         """
-        days = super(HrLeave, self)._get_number_of_days(date_from, date_to, employee_id)
-        if employee_id:
-            employee = self.env['hr.employee'].browse(employee_id)
+        days = super()._get_number_of_days(date_from, date_to, employee)
+        if employee:
             # Use sudo otherwise base users can't compute number of days
             contracts = employee.sudo()._get_contracts(date_from, date_to, states=['open'])
             contracts |= employee.sudo()._get_incoming_contracts(date_from, date_to)

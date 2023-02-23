@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { loadJS, loadCSS } from "@web/core/assets";
+import { assets, loadJS, loadCSS } from "@web/core/assets";
 
 QUnit.module("utils", () => {
     QUnit.module("Assets");
@@ -18,6 +18,7 @@ QUnit.module("utils", () => {
     });
 
     QUnit.test("loadCSS: load invalid CSS lib", function (assert) {
+        assets.retries = {count: 3, delay: 1, extraDelay: 1}; // Fail fast.
         assert.rejects(
             loadCSS("/some/invalid/file.css"),
             new RegExp("The loading of /some/invalid/file.css failed"),

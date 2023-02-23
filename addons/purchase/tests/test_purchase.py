@@ -290,3 +290,46 @@ class TestPurchase(AccountTestInvoicingCommon):
         pol.name = "New custom description"
         pol.product_qty += 1
         self.assertEqual(pol.name, "New custom description")
+
+    def test_unit_price_precision_multicurrency(self):
+        """
+        Purchase order lines should keep unit price precision of products
+        """
+        self.env['decimal.precision'].search([
+            ('name', '=', 'Product Price'),
+        ]).digits = 5
+        product = self.env['product.product'].create({
+            'name': 'product_test',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 10.0,
+            'standard_price': 0.12345,
+        })
+        currency = self.env['res.currency'].create({
+            'name': 'Dark Chocolate Coin',
+            'symbol': '🍫',
+            'rounding': 0.001,
+            'position': 'after',
+            'currency_unit_label': 'Dark Choco',
+            'currency_subunit_label': 'Dark Cacao Powder',
+        })
+        currency_rate = self.env['res.currency.rate'].create({
+            'name': '2016-01-01',
+            'rate': 2,
+            'currency_id': currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+        purchase_order_usd = po_form.save()
+        self.assertEqual(purchase_order_usd.order_line.price_unit, product.standard_price, "Value shouldn't be rounded $")
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        po_form.currency_id = currency
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+        purchase_order_coco = po_form.save()
+        self.assertEqual(purchase_order_coco.order_line.price_unit, currency_rate.rate * product.standard_price, "Value shouldn't be rounded 🍫")

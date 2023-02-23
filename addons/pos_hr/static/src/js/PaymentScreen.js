@@ -1,18 +1,11 @@
-odoo.define('pos_hr.PaymentScreen', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const PaymentScreen = require('point_of_sale.PaymentScreen');
-    const Registries = require('point_of_sale.Registries');
+import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
+import { patch } from "@web/core/utils/patch";
 
-    const PosHrPaymentScreen = (PaymentScreen_) =>
-          class extends PaymentScreen_ {
-              async _finalizeValidation() {
-                  this.currentOrder.employee = this.env.pos.get_cashier();
-                  await super._finalizeValidation();
-              }
-          };
-
-    Registries.Component.extend(PaymentScreen, PosHrPaymentScreen);
-
-    return PaymentScreen;
+patch(PaymentScreen.prototype, "pos_hr.PaymentScreen", {
+    async _finalizeValidation() {
+        this.currentOrder.cashier = this.env.pos.get_cashier();
+        await this._super(...arguments);
+    },
 });

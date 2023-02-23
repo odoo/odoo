@@ -77,10 +77,11 @@ class EventRegistration(models.Model):
         registrations = super(EventRegistration, self).create(vals_list)
         for registration in registrations:
             if registration.sale_order_id:
-                registration.message_post_with_view(
+                registration.message_post_with_source(
                     'mail.message_origin_link',
-                    values={'self': registration, 'origin': registration.sale_order_id},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                    render_values={'self': registration, 'origin': registration.sale_order_id},
+                    subtype_xmlid='mail.mt_note',
+                )
         return registrations
 
     def write(self, vals):
@@ -131,6 +132,6 @@ class EventRegistration(models.Model):
         res.update({
             'payment_status': self.payment_status,
             'payment_status_value': dict(self._fields['payment_status']._description_selection(self.env))[self.payment_status],
-            'has_to_pay': not self.is_paid,
+            'has_to_pay': self.payment_status == 'to_pay',
         })
         return res

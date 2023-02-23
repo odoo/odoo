@@ -1,34 +1,14 @@
 /** @odoo-module **/
 
 import { useService } from "@web/core/utils/hooks";
-import { session } from "@web/session";
 import { sprintf } from "@web/core/utils/strings";
+import { getDataURLFromFile } from "@web/core/utils/urls";
+import { session } from "@web/session";
 import { formatFloat } from "./formatters";
 
-const { Component, useRef, useState } = owl;
+import { Component, useRef, useState } from "@odoo/owl";
 
 const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
-
-/**
- * Gets dataURL (base64 data) from the given file or blob.
- * Technically wraps FileReader.readAsDataURL in Promise.
- *
- * @param {Blob | File} file
- * @returns {Promise} resolved with the dataURL, or rejected if the file is
- *  empty or if an error occurs.
- */
-function getDataURLFromFile(file) {
-    if (!file) {
-        return Promise.reject();
-    }
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.addEventListener("load", () => resolve(reader.result));
-        reader.addEventListener("abort", reject);
-        reader.addEventListener("error", reject);
-        reader.readAsDataURL(file);
-    });
-}
 
 export class FileUploader extends Component {
     setup() {
@@ -95,3 +75,12 @@ export class FileUploader extends Component {
 
 FileUploader.template = "web.FileUploader";
 FileUploader.nextId = 0;
+FileUploader.props = {
+    onUploaded: Function,
+    onUploadComplete: { type: Function, optional: true },
+    multiUpload: { type: Boolean, optional: true },
+    inputName: { type: String, optional: true },
+    fileUploadClass: { type: String, optional: true },
+    acceptedFileExtensions: { type: String, optional: true },
+    slots: { type: Object, optional: true },
+};

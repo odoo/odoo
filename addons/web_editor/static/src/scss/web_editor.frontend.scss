@@ -1,6 +1,8 @@
 @include media-breakpoint-down(md) {
     img, .media_iframe_video, span.fa, i.fa {
-        transform: none !important;
+        &:not(.o_animate) {
+            transform: none !important;
+        }
     }
 }
 
@@ -15,20 +17,6 @@
     transform: translate(-50%, -50%)
 }
 
-.ui-autocomplete {
-    max-height: 50vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    .ui-menu-item {
-        padding: 0;
-        > .ui-state-active {
-            border: none;
-            font-weight: normal;
-            margin: 0;
-        }
-    }
-}
 @include media-breakpoint-down(md) {
     .o_we_shape {
         display: none;
@@ -46,7 +34,7 @@
 
 // GRID LAYOUT
 .o_grid_mode {
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(lg) {
         display: grid !important;
         grid-auto-rows: 50px;
         grid-template-columns: repeat(12, 1fr);
@@ -59,8 +47,9 @@
 
     > * {
         width: 100%;
-        margin: 0;
-        padding: var(--grid-item-padding-y) var(--grid-item-padding-x);
+        min-width: 0;
+        margin: 0 !important;
+        padding: var(--grid-item-padding-y) var(--grid-item-padding-x) !important;
     }
 }
 
@@ -68,12 +57,25 @@
     --gutter-x: 30px;
 }
 
-.o_grid_item {
-    word-break: break-word;
-
+.o_grid_item_image {
     > img {
-        width: 100%;
-        height: 100%;
+        width: 100% !important;
+        height: 100% !important;
         object-fit: cover !important;
+    }
+
+    &.o_grid_item_image_contain > img,
+    > img[data-shape] {
+        object-fit: contain !important;
+    }
+}
+
+// Override the default image selection color used in "web_editor". This
+// prevents selected images from being covered with a blue filter in edit mode
+// (Website, Email Marketing). This allows to see the correct final rendering
+// of an image when it is edited.
+body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
+    img::selection {
+        background-color: transparent !important;
     }
 }

@@ -1,16 +1,20 @@
 /** @odoo-module */
 
-import { throttleForAnimation } from "./utils/timing";
+import { useThrottleForAnimation } from "./utils/timing";
+import { useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { localization } from "@web/core/l10n/localization";
 
-const { onWillUnmount, useEffect, useExternalListener, useRef } = owl;
+/**
+ * @typedef {(popperElement: HTMLElement, solution: PositioningSolution) => void} PositionEventHandler
+ */
 
 /**
  * @typedef {{
  *  popper?: string;
- *  container?: HTMLElement;
+ *  container?: HTMLElement | (() => HTMLElement);
  *  margin?: number;
  *  position?: Direction | Position;
- *  onPositioned?: (popperElement: HTMLElement, solution: PositioningSolution) => void;
+ *  onPositioned?: PositionEventHandler;
  * }} Options
  *
  * @typedef {keyof DirectionsData} DirectionsDataKey
@@ -32,7 +36,7 @@ const { onWillUnmount, useEffect, useExternalListener, useRef } = owl;
  * }} VariantsData
  *
  * @typedef {"top" | "left" | "bottom" | "right"} Direction
- * @typedef {"start" | "middle" | "end"} Variant
+ * @typedef {"start" | "middle" | "end" | "fit"} Variant
  *
  * @typedef {{[direction in Direction]: string}} DirectionFlipOrder
  *  values are successive DirectionsDataKey represented as a single string
@@ -53,11 +57,13 @@ const { onWillUnmount, useEffect, useExternalListener, useRef } = owl;
 /** @type {{[d: string]: Direction}} */
 const DIRECTIONS = { t: "top", r: "right", b: "bottom", l: "left" };
 /** @type {{[v: string]: Variant}} */
-const VARIANTS = { s: "start", m: "middle", e: "end" };
+const VARIANTS = { s: "start", m: "middle", e: "end", f: "fit" };
 /** @type DirectionFlipOrder */
 const DIRECTION_FLIP_ORDER = { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" };
 /** @type VariantFlipOrder */
-const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems" };
+const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems", fit: "f" };
+/** @type DirectionFlipOrder */
+const FIT_FLIP_ORDER = { top: "tb", right: "rl", bottom: "bt", left: "lr" };
 
 /** @type {Options} */
 const DEFAULTS = {
@@ -82,8 +88,13 @@ const DEFAULTS = {
 function getBestPosition(reference, popper, { container, margin, position }) {
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
-    const directions = DIRECTION_FLIP_ORDER[directionKey];
+    const directions =
+        variantKey === "fit" ? FIT_FLIP_ORDER[directionKey] : DIRECTION_FLIP_ORDER[directionKey];
     const variants = VARIANT_FLIP_ORDER[variantKey];
+
+    if (typeof container === "function") {
+        container = container();
+    }
 
     // Boxes
     const popBox = popper.getBoundingClientRect();
@@ -102,9 +113,11 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     };
     /** @type {VariantsData} */
     const variantsData = {
+        vf: refBox.left,
         vs: refBox.left,
         vm: refBox.left + refBox.width / 2 + -popBox.width / 2,
         ve: refBox.right - popBox.width,
+        hf: refBox.top,
         hs: refBox.top,
         hm: refBox.top + refBox.height / 2 + -popBox.height / 2,
         he: refBox.bottom - popBox.height,
@@ -139,11 +152,11 @@ function getBestPosition(reference, popper, { container, margin, position }) {
 
             // Abort if outside container boundaries
             const directionOverflow =
-                Math.ceil(directionValue) < Math.ceil(directionMin) ||
-                Math.ceil(directionValue + directionSize) > Math.ceil(directionMax);
+                Math.ceil(directionValue) < Math.floor(directionMin) ||
+                Math.floor(directionValue + directionSize) > Math.ceil(directionMax);
             const variantOverflow =
-                Math.ceil(variantValue) < Math.ceil(variantMin) ||
-                Math.ceil(variantValue + variantSize) > Math.ceil(variantMax);
+                Math.ceil(variantValue) < Math.floor(variantMin) ||
+                Math.floor(variantValue + variantSize) > Math.ceil(variantMax);
             if (directionOverflow || variantOverflow) {
                 return null;
             }
@@ -193,7 +206,8 @@ function getBestPosition(reference, popper, { container, margin, position }) {
  * @param {HTMLElement} popper
  * @param {Options} options
  */
-function reposition(reference, popper, options) {
+export function reposition(reference, popper, options) {
+    const [directionKey, variantKey = "middle"] = options.position.split("-");
     options = {
         container: document.documentElement,
         ...options,
@@ -209,6 +223,12 @@ function reposition(reference, popper, options) {
     const { top, left } = position;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
+
+    if (variantKey === "fit") {
+        const styleProperty = ["top", "bottom"].includes(directionKey) ? "width" : "height";
+        popper.style[styleProperty] = reference.getBoundingClientRect()[styleProperty] + "px";
+    }
+
     if (options.onPositioned) {
         options.onPositioned(popper, position);
     }
@@ -230,7 +250,21 @@ function reposition(reference, popper, options) {
  */
 export function usePosition(reference, options) {
     options = { ...DEFAULTS, ...options };
-    const { popper } = options;
+    const { popper, position } = options;
+
+    let [directionKey, variantKey = "middle"] = position.split("-");
+
+    if (localization.direction === "rtl") {
+        if (["bottom", "top"].includes(directionKey)) {
+            if (variantKey !== "middle") {
+                variantKey = variantKey === "start" ? "end" : "start";
+            }
+        } else {
+            directionKey = directionKey === "left" ? "right" : "left";
+        }
+        options.position = [directionKey, variantKey].join("-");
+    }
+
     const popperRef = useRef(popper);
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
     const update = () => {
@@ -240,8 +274,7 @@ export function usePosition(reference, options) {
         }
     };
     useEffect(update);
-    const throttledUpdate = throttleForAnimation(update);
+    const throttledUpdate = useThrottleForAnimation(update);
     useExternalListener(document, "scroll", throttledUpdate, { capture: true });
     useExternalListener(window, "resize", throttledUpdate);
-    onWillUnmount(throttledUpdate.cancel);
 }

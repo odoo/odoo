@@ -4,7 +4,7 @@
     <t t-name="account.LegacyTaxGroupComponent" owl="1">
         <tr>
             <td class="o_td_label">
-                <label class="o_form_label o_tax_total_label" t-esc="props.taxGroup.tax_group_name"/>
+                <label class="o_form_label o_tax_total_label" t-out="props.taxGroup.tax_group_name"/>
             </td>
 
             <td>
@@ -44,7 +44,7 @@
                 <t t-foreach="totals.value.subtotals" t-as="subtotal" t-key="subtotal['name']">
                     <tr>
                         <td class="o_td_label">
-                            <label class="o_form_label o_tax_total_label" t-esc="subtotal['name']"/>
+                            <label class="o_form_label o_tax_total_label" t-out="subtotal['name']"/>
                         </td>
 
                         <td>

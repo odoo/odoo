@@ -62,10 +62,18 @@ export function processArch(arch, viewType, resModel, models) {
         }
         if (node.tagName === "field") {
             const fieldName = node.getAttribute("name");
-            viewFields[fieldName] = viewFields[fieldName] || {
-                ...models[resModel][fieldName],
-                views: {},
-            };
+            if (viewFields[fieldName] === undefined) {
+                const viewFieldsInfo = models[resModel][fieldName];
+                const nodeString = node.getAttribute("string");
+                if (nodeString === undefined && viewFieldsInfo === undefined) {
+                    throw new Error(`Missing field string information for the field '${fieldName}' from the '${resModel}' model`);
+                }
+                viewFields[fieldName] = {
+                    ...viewFieldsInfo,
+                    string: nodeString || viewFieldsInfo.string,
+                    views: {},
+                };
+            }
             // extract subviews
             // note: this should only be done for form views, because x2many subviews doesn't make
             // any sense in any other view type, but sometimes in the codebase, people inline

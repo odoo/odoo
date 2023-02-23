@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'ThreadView',
+Model({
+    name: "ThreadView",
+    template: "mail.ThreadView",
     lifecycleHooks: {
         _willDelete() {
             this.messaging.browser.clearTimeout(this.loaderTimeout);
@@ -43,9 +42,9 @@ registerModel({
          */
         markComponentHintProcessed(hint) {
             this.update({
-                componentHintList: this.componentHintList.filter(h => h !== hint),
+                componentHintList: this.componentHintList.filter((h) => h !== hint),
             });
-            this.messaging.messagingBus.trigger('o-thread-view-hint-processed', {
+            this.messaging.messagingBus.trigger("o-thread-view-hint-processed", {
                 hint,
                 threadViewer: this.threadViewer,
             });
@@ -77,7 +76,11 @@ registerModel({
         startEditingLastMessageFromCurrentUser() {
             const messageListViewItems = this.messageListView.messageListViewItems;
             messageListViewItems.reverse();
-            const messageListViewItem = messageListViewItems.find(messageListViewItem => messageListViewItem.message.isCurrentUserOrGuestAuthor && messageListViewItem.message.canBeDeleted);
+            const messageListViewItem = messageListViewItems.find(
+                (messageListViewItem) =>
+                    messageListViewItem.message.isCurrentUserOrGuestAuthor &&
+                    messageListViewItem.message.canBeDeleted
+            );
             if (messageListViewItem) {
                 messageListViewItem.messageView.startEditing();
             }
@@ -118,7 +121,7 @@ registerModel({
         _onThreadCacheChanged() {
             // clear obsolete hints
             this.update({ componentHintList: clear() });
-            this.addComponentHint('change-of-thread-cache');
+            this.addComponentHint("change-of-thread-cache");
             if (this.threadCache) {
                 this.threadCache.update({
                     isCacheRefreshRequested: true,
@@ -133,16 +136,18 @@ registerModel({
             if (this.threadCache && this.threadCache.isLoading) {
                 if (!this.isLoading && !this.isPreparingLoading) {
                     this.update({ isPreparingLoading: true });
-                    (new Promise(resolve => {
-                            this.update({ loaderTimeout: this.messaging.browser.setTimeout(resolve, this.messaging.loadingBaseDelayDuration) });
-                        }
-                    )).then(() => {
+                    new Promise((resolve) => {
+                        this.update({
+                            loaderTimeout: this.messaging.browser.setTimeout(
+                                resolve,
+                                this.messaging.loadingBaseDelayDuration
+                            ),
+                        });
+                    }).then(() => {
                         if (!this.exists()) {
                             return;
                         }
-                        const isLoading = this.threadCache
-                            ? this.threadCache.isLoading
-                            : false;
+                        const isLoading = this.threadCache ? this.threadCache.isLoading : false;
                         this.update({ isLoading, isPreparingLoading: false });
                     });
                 }
@@ -169,27 +174,31 @@ registerModel({
             if (!prevMessage.date && message.date) {
                 return false;
             }
-            if (message.date && prevMessage.date && Math.abs(message.date.diff(prevMessage.date)) > 60000) {
+            if (
+                message.momentDate &&
+                prevMessage.momentDate &&
+                Math.abs(message.momentDate.diff(prevMessage.momentDate)) > 60000
+            ) {
                 // more than 1 min. elasped
                 return false;
             }
             if (prevMessage.dateDay !== message.dateDay) {
                 return false;
             }
-            if (prevMessage.message_type !== 'comment' || message.message_type !== 'comment') {
+            if (prevMessage.message_type !== "comment" || message.message_type !== "comment") {
                 return false;
             }
-            if (prevMessage.author !== message.author || prevMessage.guestAuthor !== message.guestAuthor) {
+            if (
+                prevMessage.author !== message.author ||
+                prevMessage.guestAuthor !== message.guestAuthor
+            ) {
                 // from a different author
                 return false;
             }
             if (prevMessage.originThread !== message.originThread) {
                 return false;
             }
-            if (
-                prevMessage.notifications.length > 0 ||
-                message.notifications.length > 0
-            ) {
+            if (prevMessage.notifications.length > 0 || message.notifications.length > 0) {
                 // visual about notifications is restricted to non-squashed messages
                 return false;
             }
@@ -199,7 +208,7 @@ registerModel({
                 prevOriginThread &&
                 originThread &&
                 prevOriginThread.model === originThread.model &&
-                originThread.model !== 'mail.channel' &&
+                originThread.model !== "mail.channel" &&
                 prevOriginThread.id !== originThread.id
             ) {
                 // messages linked to different document thread
@@ -212,27 +221,30 @@ registerModel({
         /**
          * Model for the component with the controls for RTC related settings.
          */
-        callSettingsMenu: one('CallSettingsMenu', {
+        callSettingsMenu: one("CallSettingsMenu", {
+            inverse: "threadViewOwner",
             compute() {
                 if (this.isCallSettingsMenuOpen) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'threadViewOwner',
         }),
-        channelMemberListView: one('ChannelMemberListView', {
+        channelMemberListView: one("ChannelMemberListView", {
+            inverse: "threadViewOwner",
             compute() {
-                if (this.thread && this.thread.hasMemberListFeature && this.hasMemberList && this.isMemberListOpened) {
+                if (
+                    this.thread &&
+                    this.thread.hasMemberListFeature &&
+                    this.hasMemberList &&
+                    this.isMemberListOpened
+                ) {
                     return {};
                 }
                 return clear();
             },
-            inverse: 'threadViewOwner',
         }),
-        compact: attr({
-            related: 'threadViewer.compact',
-        }),
+        compact: attr({ related: "threadViewer.compact" }),
         /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
@@ -251,10 +263,9 @@ registerModel({
          *                      message id.
          *   }
          */
-        componentHintList: attr({
-            default: [],
-        }),
-        composerView: one('ComposerView', {
+        componentHintList: attr({ default: [] }),
+        composerView: one("ComposerView", {
+            inverse: "threadView",
             compute() {
                 if (!this.thread || this.thread.mailbox) {
                     return clear();
@@ -264,21 +275,16 @@ registerModel({
                 }
                 return {};
             },
-            inverse: 'threadView',
         }),
         /**
          * Determines which extra class this thread view component should have.
          */
-        extraClass: attr({
-            related: 'threadViewer.extraClass',
-        }),
+        extraClass: attr({ related: "threadViewer.extraClass" }),
         /**
          * Determines whether this thread viewer has a member list.
          * Only makes sense if thread.hasMemberListFeature is true.
          */
-        hasMemberList: attr({
-            related: 'threadViewer.hasMemberList',
-        }),
+        hasMemberList: attr({ related: "threadViewer.hasMemberList" }),
         /**
          * Determines whether this thread view should squash close messages.
          * See `_shouldMessageBeSquashed` for which conditions are considered
@@ -286,21 +292,20 @@ registerModel({
          */
         hasSquashCloseMessages: attr({
             compute() {
-                return Boolean(this.threadViewer && !this.threadViewer.chatter && this.thread && !this.thread.mailbox);
+                return Boolean(
+                    this.threadViewer &&
+                        !this.threadViewer.chatter &&
+                        this.thread &&
+                        !this.thread.mailbox
+                );
             },
         }),
         /**
          * Determines whether this thread view has a top bar.
          */
-        hasTopbar: attr({
-            related: 'threadViewer.hasTopbar',
-        }),
-        isCallSettingsMenuOpen: attr({
-            default: false,
-        }),
-        isComposerFocused: attr({
-            related: 'composerView.isFocused',
-        }),
+        hasTopbar: attr({ related: "threadViewer.hasTopbar" }),
+        isCallSettingsMenuOpen: attr({ default: false }),
+        isComposerFocused: attr({ related: "composerView.isFocused" }),
         /**
          * States whether `this.threadCache` is currently loading messages.
          *
@@ -310,16 +315,12 @@ registerModel({
          * It is computed through `_onThreadCacheIsLoadingChanged` and it should
          * otherwise be considered read-only.
          */
-        isLoading: attr({
-            default: false,
-        }),
+        isLoading: attr({ default: false }),
         /**
          * Determines whether the member list of this thread is opened.
          * Only makes sense if hasMemberListFeature and hasMemberList are true.
          */
-        isMemberListOpened: attr({
-            default: false,
-        }),
+        isMemberListOpened: attr({ default: false }),
         /**
          * States whether `this` is aware of `this.threadCache` currently
          * loading messages, but `this` is not yet ready to display that loading
@@ -330,25 +331,21 @@ registerModel({
          *
          * @see `this.isLoading`
          */
-        isPreparingLoading: attr({
-            default: false,
-        }),
+        isPreparingLoading: attr({ default: false }),
         /**
          * Determines whether `this` should automatically scroll on receiving
          * a new message. Detection of new message is done through the component
          * hint `message-received`.
          */
-        hasAutoScrollOnMessageReceived: attr({
-            default: true,
-        }),
+        hasAutoScrollOnMessageReceived: attr({ default: true }),
         hasComposerThreadName: attr({
+            default: false,
             compute() {
                 if (this.threadViewer.discuss) {
                     return this.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * If set, determines whether the composer should display status of
@@ -356,90 +353,88 @@ registerModel({
          * it defaults to composer component default value.
          */
         hasComposerThreadTyping: attr({
+            default: false,
             compute() {
                 if (this.threadViewer.threadView_hasComposerThreadTyping !== undefined) {
                     return this.threadViewer.threadView_hasComposerThreadTyping;
                 }
                 return clear();
             },
-            default: false,
         }),
         /**
          * Last message in the context of the currently displayed thread cache.
          */
-        lastMessage: one('Message', {
-            related: 'thread.lastMessage',
-        }),
-        lastMessageView: one('MessageView', {
+        lastMessage: one("Message", { related: "thread.lastMessage" }),
+        lastMessageListViewItem: one("MessageListViewItem", {
+            inverse: "threadViewOwnerAsLastMessageListViewItem",
             compute() {
                 if (!this.messageListView) {
                     return clear();
                 }
-                const { length, [length - 1]: messageListViewItem } = this.messageListView.messageListViewItems;
-                return messageListViewItem && messageListViewItem.messageView ? messageListViewItem.messageView : clear();
+                const {
+                    length,
+                    [length - 1]: messageListViewItem,
+                } = this.messageListView.messageListViewItems;
+                return messageListViewItem;
             },
-            inverse: 'threadViewOwnerAsLastMessageView',
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
          * current partner in the currently displayed thread cache.
          */
-        lastVisibleMessage: one('Message'),
+        lastVisibleMessage: one("Message"),
         loaderTimeout: attr(),
-        messageListView: one('MessageListView', {
+        messageListView: one("MessageListView", {
+            inverse: "threadViewOwner",
             compute() {
-                return (
-                    (this.thread && this.thread.isTemporary) ||
+                return (this.thread && this.thread.isTemporary) ||
                     (this.threadCache && this.threadCache.isLoaded)
-                ) ? {} : clear();
+                    ? {}
+                    : clear();
             },
-            inverse: 'threadViewOwner',
         }),
-        messages: many('Message', {
-            related: 'threadCache.messages',
-        }),
+        messages: many("Message", { related: "threadCache.messages" }),
         /**
          * States the order mode of the messages on this thread view.
          * Either 'asc', or 'desc'.
          */
-        order: attr({
-            related: 'threadViewer.order',
-        }),
+        order: attr({ related: "threadViewer.order" }),
         /**
          * Determines the message that's currently being replied to.
          */
-        replyingToMessageView: one('MessageView'),
+        replyingToMessageView: one("MessageView"),
         /**
          * Determines the call view of this thread.
          */
-        callView: one('CallView', {
+        callView: one("CallView", {
+            inverse: "threadView",
             compute() {
-                return (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0)
+                return this.thread &&
+                    this.thread.model === "mail.channel" &&
+                    this.thread.rtcSessions.length > 0
                     ? {}
                     : clear();
             },
-            inverse: 'threadView',
         }),
         /**
          * Determines the `Thread` currently displayed by `this`.
          */
-        thread: one('Thread', {
-            inverse: 'threadViews',
-            related: 'threadViewer.thread',
-        }),
+        thread: one("Thread", { inverse: "threadViews", related: "threadViewer.thread" }),
         /**
          * States the `ThreadCache` currently displayed by `this`.
          */
-        threadCache: one('ThreadCache', {
-            inverse: 'threadViews',
-            related: 'threadViewer.threadCache',
+        threadCache: one("ThreadCache", {
+            inverse: "threadViews",
+            related: "threadViewer.threadCache",
         }),
         threadCacheInitialScrollHeight: attr({
             compute() {
                 if (!this.threadCache) {
                     return clear();
                 }
-                const threadCacheInitialScrollHeight = this.threadCacheInitialScrollHeights[this.threadCache.localId];
+                const threadCacheInitialScrollHeight = this.threadCacheInitialScrollHeights[
+                    this.threadCache.localId
+                ];
                 if (threadCacheInitialScrollHeight !== undefined) {
                     return threadCacheInitialScrollHeight;
                 }
@@ -451,7 +446,9 @@ registerModel({
                 if (!this.threadCache) {
                     return clear();
                 }
-                const threadCacheInitialScrollPosition = this.threadCacheInitialScrollPositions[this.threadCache.localId];
+                const threadCacheInitialScrollPosition = this.threadCacheInitialScrollPositions[
+                    this.threadCache.localId
+                ];
                 if (threadCacheInitialScrollPosition !== undefined) {
                     return threadCacheInitialScrollPosition;
                 }
@@ -463,44 +460,47 @@ registerModel({
          */
         threadCacheInitialScrollHeights: attr({
             default: {},
-            related: 'threadViewer.threadCacheInitialScrollHeights',
+            related: "threadViewer.threadCacheInitialScrollHeights",
         }),
         /**
          * List of saved initial scroll positions of thread caches.
          */
         threadCacheInitialScrollPositions: attr({
             default: {},
-            related: 'threadViewer.threadCacheInitialScrollPositions',
+            related: "threadViewer.threadCacheInitialScrollPositions",
         }),
         /**
          * Determines the `ThreadViewer` currently managing `this`.
          */
-        threadViewer: one('ThreadViewer', {
-            identifying: true,
-            inverse: 'threadView',
-        }),
+        threadViewer: one("ThreadViewer", { identifying: true, inverse: "threadView" }),
         /**
          * Determines the top bar of this thread view, if any.
          */
-        topbar: one('ThreadViewTopbar', {
+        topbar: one("ThreadViewTopbar", {
+            inverse: "threadView",
             compute() {
                 return this.hasTopbar ? {} : clear();
             },
-            inverse: 'threadView',
         }),
     },
     onChanges: [
         {
-            dependencies: ['threadCache'],
-            methodName: '_onThreadCacheChanged',
+            dependencies: ["threadCache"],
+            methodName: "_onThreadCacheChanged",
         },
         {
-            dependencies: ['threadCache.isLoading'],
-            methodName: '_onThreadCacheIsLoadingChanged',
+            dependencies: ["threadCache.isLoading"],
+            methodName: "_onThreadCacheIsLoadingChanged",
         },
         {
-            dependencies: ['isComposerFocused', 'lastMessage', 'thread.lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
-            methodName: '_computeThreadShouldBeSetAsSeen',
+            dependencies: [
+                "isComposerFocused",
+                "lastMessage",
+                "thread.lastNonTransientMessage",
+                "lastVisibleMessage",
+                "threadCache",
+            ],
+            methodName: "_computeThreadShouldBeSetAsSeen",
         },
     ],
 });

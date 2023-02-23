@@ -120,7 +120,7 @@ export function getBasicData() {
         "documents.document": {
             fields: {
                 name: { string: "Name", type: "char" },
-                raw: { string: "Data", type: "text" },
+                spreadsheet_data: { string: "Data", type: "text" },
                 thumbnail: { string: "Thumbnail", type: "text" },
                 favorited_ids: { string: "Name", type: "many2many" },
                 is_favorited: { string: "Name", type: "boolean" },
@@ -150,7 +150,7 @@ export function getBasicData() {
                 {
                     id: 1,
                     name: "My spreadsheet",
-                    raw: "{}",
+                    spreadsheet_data: "{}",
                     is_favorited: false,
                     folder_id: 1,
                     handler: "spreadsheet",
@@ -158,7 +158,7 @@ export function getBasicData() {
                 {
                     id: 2,
                     name: "",
-                    raw: "{}",
+                    spreadsheet_data: "{}",
                     is_favorited: true,
                     folder_id: 1,
                     handler: "spreadsheet",
@@ -266,22 +266,41 @@ export function getBasicData() {
                     searchable: true,
                     group_operator: "sum",
                 },
-                bar: { string: "Bar", type: "boolean", store: true, sortable: true },
-                name: { string: "name", type: "char", store: true, sortable: true },
-                date: { string: "Date", type: "date", store: true, sortable: true },
+                bar: {
+                    string: "Bar",
+                    type: "boolean",
+                    store: true,
+                    sortable: true,
+                    searchable: true,
+                },
+                name: {
+                    string: "name",
+                    type: "char",
+                    store: true,
+                    sortable: true,
+                    searchable: true,
+                },
+                date: {
+                    string: "Date",
+                    type: "date",
+                    store: true,
+                    sortable: true,
+                    searchable: true,
+                },
                 create_date: {
                     string: "Creation Date",
                     type: "datetime",
                     store: true,
                     sortable: true,
                 },
-                active: { string: "Active", type: "bool", default: true },
+                active: { string: "Active", type: "bool", default: true, searchable: true },
                 product_id: {
                     string: "Product",
                     type: "many2one",
                     relation: "product",
                     store: true,
                     sortable: true,
+                    searchable: true,
                 },
                 tag_ids: {
                     string: "Tags",
@@ -289,6 +308,7 @@ export function getBasicData() {
                     relation: "tag",
                     store: true,
                     sortable: true,
+                    searchable: true,
                 },
                 probability: {
                     string: "Probability",
@@ -309,6 +329,7 @@ export function getBasicData() {
                     relation: "res.currency",
                     store: true,
                     sortable: true,
+                    searchable: true,
                 },
                 pognon: {
                     string: "Money!",
@@ -317,6 +338,7 @@ export function getBasicData() {
                     store: true,
                     sortable: true,
                     group_operator: "avg",
+                    searchable: true,
                 },
             },
             records: [

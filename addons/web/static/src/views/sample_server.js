@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { parseDate, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    parseDate,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { groupBy as arrayGroupBy, sortBy as arraySortBy } from "@web/core/utils/arrays";
@@ -16,6 +22,17 @@ class UnimplementedRouteError extends Error {}
  */
 function getSampleFromId(id, sampleTexts) {
     return sampleTexts[(id - 1) % sampleTexts.length];
+}
+
+function serializeGroupValue(value, type) {
+    switch (type) {
+        case "date":
+            return serializeDate(value);
+        case "datetime":
+            return serializeDateTime(value);
+        default:
+            return value;
+    }
 }
 
 /**
@@ -117,6 +134,8 @@ export class SampleServer {
                 return this._mockReadProgressBar(params);
             case "read":
                 return this._mockRead(params);
+            case "name_get":
+                return this._mockNameGet(params);
         }
         // this rpc can't be mocked by the SampleServer itself, so check if there is an handler
         // in the registry: either specific for this model (with key 'model/method'), or
@@ -340,6 +359,31 @@ export class SampleServer {
     _getRandomSubRecordId() {
         return Math.floor(Math.random() * SampleServer.SUB_RECORDSET_SIZE) + 1;
     }
+
+    /**
+     * Simulate a 'name_get' operation
+     *
+     * @private
+     * @param {Object} params
+     * @param {string} params.model
+     * @param {Array[]} params.args
+     * @returns {Array[]} a list of [id, display_name]
+     */
+    _mockNameGet(params) {
+        const { model, args } = params;
+        let ids = args[0];
+        if (!args.length) {
+            throw new Error("name_get: expected one argument");
+        } else if (!ids) {
+            return [];
+        }
+        if (!Array.isArray(ids)) {
+            ids = [ids];
+        }
+        const { records } = this.data[model];
+        return ids.map((id) => [id, records.find((r) => r.id === id).display_name]);
+    }
+
     /**
      * Mocks calls to the read method.
      * @private
@@ -449,8 +493,21 @@ export class SampleServer {
             group[countKey] = records.length;
             const firstElem = records[0];
             for (const gb of normalizedGroupBys) {
-                const { alias, fieldName } = gb;
+                const { alias, fieldName, type } = gb;
                 group[alias] = this._formatValue(firstElem[fieldName], gb);
+                if (["date", "datetime"].includes(type)) {
+                    group.__range = {};
+                    const val = firstElem[fieldName];
+                    if (val) {
+                        const deserialize = type === "date" ? deserializeDate : deserializeDateTime;
+                        const serialize = type === "date" ? serializeDate : serializeDateTime;
+                        const from = deserialize(val).startOf(gb.interval);
+                        const to = SampleServer.INTERVALS[gb.interval](from);
+                        group.__range[alias] = { from: serialize(from), to: serialize(to) };
+                    } else {
+                        group.__range[alias] = false;
+                    }
+                }
             }
             Object.assign(group, this._aggregateFields(measures, records));
             result.push(group);
@@ -478,7 +535,7 @@ export class SampleServer {
      * @return {Object}
      */
     _mockReadProgressBar(params) {
-        const groupBy = params.group_by;
+        const groupBy = params.group_by.split(":")[0];
         const progress_bar = params.progress_bar;
         const groupByField = this.data[params.model].fields[groupBy];
         const data = {};
@@ -488,6 +545,14 @@ export class SampleServer {
                 const relatedRecords = this.data[groupByField.relation].records;
                 const relatedRecord = relatedRecords.find((r) => r.id === groupByValue);
                 groupByValue = relatedRecord.display_name;
+            }
+            // special case for bool values: rpc call response with capitalized strings
+            if (!(groupByValue in data)) {
+                if (groupByValue === true) {
+                    groupByValue = "True";
+                } else if (groupByValue === false) {
+                    groupByValue = "False";
+                }
             }
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
@@ -572,7 +637,7 @@ export class SampleServer {
     _populateExistingGroups(params) {
         if (!this.existingGroupsPopulated) {
             const groups = this.existingGroups;
-            const groupBy = params.groupBy[0];
+            const groupBy = params.groupBy[0].split(":")[0];
             const groupByField = this.data[params.model].fields[groupBy];
             const groupedByM2O = groupByField.type === "many2one";
             if (groupedByM2O) {
@@ -583,7 +648,7 @@ export class SampleServer {
             }
             for (const r of this.data[params.model].records) {
                 const group = getSampleFromId(r.id, groups);
-                r[groupBy] = group.value;
+                r[groupBy] = serializeGroupValue(group.value, groupByField.type);
             }
             this.existingGroupsPopulated = true;
         }
@@ -644,12 +709,16 @@ export class SampleServer {
         this._populateExistingGroups(params);
 
         // update count and aggregates for each group
-        const groupBy = params.groupBy[0].split(":")[0];
+        const fullGroupBy = params.groupBy[0];
+        const groupBy = fullGroupBy.split(":")[0];
+        const groupByField = this.data[params.model].fields[groupBy];
         const records = this.data[params.model].records;
         for (const g of groups) {
-            const recordsInGroup = records.filter((r) => r[groupBy] === g.value);
+            const recordsInGroup = records.filter((r) => {
+                return r[groupBy] === serializeGroupValue(g.value, groupByField.type);
+            });
             g[`${groupBy}_count`] = recordsInGroup.length;
-            g[groupBy] = [g.value, g.displayName];
+            g[fullGroupBy] = g.__rawValue;
             for (const field of params.fields) {
                 const fieldType = this.data[params.model].fields[field].type;
                 if (["integer, float", "monetary"].includes(fieldType)) {
@@ -663,6 +732,7 @@ export class SampleServer {
                 }),
                 length: recordsInGroup.length,
             };
+            g.__range = { ...g.range };
         }
     }
 }
@@ -673,6 +743,13 @@ SampleServer.FORMATS = {
     month: "MMMM yyyy",
     quarter: "'Q'q yyyy",
     year: "y",
+};
+SampleServer.INTERVALS = {
+    day: (dt) => dt.plus({ days: 1 }),
+    week: (dt) => dt.plus({ weeks: 1 }),
+    month: (dt) => dt.plus({ months: 1 }),
+    quarter: (dt) => dt.plus({ months: 3 }),
+    year: (dt) => dt.plus({ years: 1 }),
 };
 SampleServer.DISPLAY_FORMATS = Object.assign({}, SampleServer.FORMATS, { day: "dd MMM yyyy" });
 
@@ -720,6 +797,7 @@ export function buildSampleORM(resModel, fields, user) {
         return sampleServer.mockRpc({ method, model, args, ...kwargs, groupBy });
     };
     const sampleORM = new ORM(fakeRPC, user);
+    sampleORM.isSample = true;
     sampleORM.setGroups = (groups) => sampleServer.setExistingGroups(groups);
     return sampleORM;
 }

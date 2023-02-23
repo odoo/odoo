@@ -23,7 +23,7 @@ function getDomain(controlPanel) {
     return controlPanel.env.searchModel.domain;
 }
 
-const { onWillUpdateProps } = owl;
+import { onWillUpdateProps } from "@odoo/owl";
 
 let target;
 let serverData;
@@ -38,6 +38,7 @@ QUnit.module("Search", (hooks) => {
                         birth_datetime: { string: "Birth DateTime", type: "datetime" },
                         foo: { string: "Foo", type: "char" },
                         bool: { string: "Bool", type: "boolean" },
+                        company: { string: "Company", type: "many2one", relation: "partner" },
                     },
                     records: [
                         {
@@ -57,6 +58,7 @@ QUnit.module("Search", (hooks) => {
                             bool: false,
                             birthday: "1982-06-04",
                             birth_datetime: "1982-06-04 02:00:00",
+                            company: 1,
                         },
                         {
                             id: 3,
@@ -66,6 +68,7 @@ QUnit.module("Search", (hooks) => {
                             bool: false,
                             birthday: "1985-09-13",
                             birth_datetime: "1985-09-13 03:00:00",
+                            company: 5,
                         },
                         {
                             id: 4,
@@ -96,6 +99,7 @@ QUnit.module("Search", (hooks) => {
                         <field name="birthday"/>
                         <field name="birth_datetime"/>
                         <field name="bar" context="{'bar': self}"/>
+                        <field name="company" domain="[('bool', '=', True)]"/>
                         <filter string="Birthday" name="date_filter" date="birthday"/>
                         <filter string="Birthday" name="date_group_by" context="{'group_by': 'birthday:day'}"/>
                     </search>
@@ -243,7 +247,6 @@ QUnit.module("Search", (hooks) => {
         await editSearch(target, "07/15/1983 00:00:00");
         searchInput = target.querySelector(".o_searchview input");
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
-        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
         await triggerEvent(searchInput, null, "keydown", { key: "Enter" }); // select
 
         assert.deepEqual(
@@ -315,8 +318,8 @@ QUnit.module("Search", (hooks) => {
         assert.containsN(
             target,
             ".o_searchview_autocomplete li",
-            2,
-            "there should be 2 result for 'a' in search bar autocomplete"
+            3,
+            "there should be 3 result for 'a' in search bar autocomplete"
         );
 
         const searchInput = target.querySelector(".o_searchview input");
@@ -897,5 +900,158 @@ QUnit.module("Search", (hooks) => {
         const searchInput = target.querySelector(".o_searchview input");
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowUp" });
         assert.containsOnce(target, ".focus");
+    });
+
+    QUnit.test("many2one_reference fields are supported in search view", async function (assert) {
+        serverData.models.partner.fields.res_id = {
+            string: "Resource ID",
+            type: "many2one_reference",
+        };
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: /*xml*/ `
+                <search>
+                    <field name="foo" />
+                    <field name="res_id" />
+                </search>
+            `,
+        });
+
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        await editSearch(target, "12");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_searchview ul li.dropdown-item")].map(
+                (el) => el.innerText
+            ),
+            ["Search Foo for: 12", "Search Resource ID for: 12"]
+        );
+        await triggerEvent(target.querySelector(".o_searchview input"), null, "keydown", {
+            key: "ArrowDown",
+        });
+        await validateSearch(target);
+        assert.deepEqual(getDomain(controlPanel), [["res_id", "=", 12]]);
+
+        await removeFacet(target);
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        await editSearch(target, "1a");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_searchview ul li.dropdown-item")].map(
+                (el) => el.innerText
+            ),
+            ["Search Foo for: 1a"]
+        );
+        await validateSearch(target);
+        assert.deepEqual(getDomain(controlPanel), [["foo", "ilike", "1a"]]);
+    });
+
+    QUnit.test("check kwargs of a rpc call with a domain", async function (assert) {
+        assert.expect(3);
+
+        const mockRPC = async (route, args) => {
+            if (route.includes("/partner/name_search")) {
+                assert.deepEqual(args, {
+                    model: "partner",
+                    method: "name_search",
+                    args: [],
+                    kwargs: {
+                        args: [["bool", "=", true]],
+                        context: { lang: "en", uid: 7, tz: "taht" },
+                        limit: 8,
+                        name: "F",
+                    },
+                });
+            }
+        };
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            mockRPC,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+        });
+
+        await editSearch(target, "F");
+        assert.containsN(
+            target,
+            ".o_searchview_autocomplete li",
+            3,
+            "there should be 3 result for 'F' in search bar autocomplete"
+        );
+
+        const searchInput = target.querySelector(".o_searchview input");
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowRight" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "Enter" });
+        assert.deepEqual(getDomain(controlPanel), [["company", "=", 5]]);
+    });
+
+    QUnit.test("should wait label promises for one2many search defaults", async function (assert) {
+        assert.expect(3);
+
+        const target = getFixture();
+
+        const def = makeDeferred();
+        const mockRPC = async (_, args) => {
+            if (args.method === "name_get") {
+                await def;
+            }
+        };
+
+        makeWithSearch({
+            serverData,
+            mockRPC,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            context: { search_default_company: 1 },
+        });
+
+        await nextTick();
+        assert.containsNone(target, ".o_control_panel");
+
+        def.resolve();
+        await nextTick();
+        assert.containsOnce(target, ".o_control_panel");
+        assert.strictEqual(getFacetTexts(target)[0].replace("\n", ""), "CompanyFirst record");
+    });
+
+    QUnit.test("globalContext keys in name_search", async function (assert) {
+        assert.expect(1);
+
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                <search>
+                    <field name="company"/>
+                </search>
+            `,
+            context: { specialKey: "ABCD" },
+            mockRPC(_, args) {
+                if (args.method === "name_search") {
+                    assert.strictEqual(args.kwargs.context.specialKey, "ABCD");
+                }
+            },
+        });
+
+        await editSearch(target, "F");
+        await triggerEvent(target, ".o_searchview input", "keydown", { key: "ArrowRight" });
     });
 });

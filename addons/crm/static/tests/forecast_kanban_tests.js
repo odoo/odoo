@@ -219,7 +219,7 @@ QUnit.module('Crm Fill Temporal Service', {
                 type: 'date',
             },
             granularity: 'month',
-        }).end.format('YYYY-MM-DD'), '2022-02-01');
+        }).end.toFormat('yyyy-MM-dd'), '2022-02-01');
     });
 
     /**
@@ -262,6 +262,6 @@ QUnit.module('Crm Fill Temporal Service', {
                 type: 'date',
             },
             granularity: 'year',
-        }).end.format('YYYY-MM-DD'), '2023-01-01');
+        }).end.toFormat('yyyy-MM-dd'), '2023-01-01');
     });
 });

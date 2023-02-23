@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
-import { cleanSearchTerm } from '@mail/utils/utils';
+import { attr, clear, insert, many, one, Model } from "@mail/model";
+import { cleanSearchTerm } from "@mail/utils/utils";
 
-registerModel({
-    name: 'Partner',
+Model({
+    name: "Partner",
     modelMethods: {
         /**
          * Fetches partners matching the given search term to extend the
@@ -19,19 +17,22 @@ registerModel({
          */
         async fetchSuggestions(searchTerm, { thread } = {}) {
             const kwargs = { search: searchTerm };
-            const isNonPublicChannel = thread && thread.model === 'mail.channel' && (thread.authorizedGroupFullName || thread.channel.channel_type !== 'channel');
+            const isNonPublicChannel =
+                thread &&
+                thread.model === "mail.channel" &&
+                (thread.authorizedGroupFullName || thread.channel.channel_type !== "channel");
             if (isNonPublicChannel) {
                 kwargs.channel_id = thread.id;
             }
             const suggestedPartners = await this.messaging.rpc(
                 {
-                    model: 'res.partner',
-                    method: 'get_mention_suggestions',
+                    model: "res.partner",
+                    method: "get_mention_suggestions",
                     kwargs,
                 },
-                { shadow: true },
+                { shadow: true }
             );
-            this.messaging.models['Partner'].insert(suggestedPartners);
+            this.messaging.models["Partner"].insert(suggestedPartners);
         },
         /**
          * Returns a sort function to determine the order of display of partners
@@ -74,12 +75,18 @@ registerModel({
                         return 1;
                     }
                 }
-                const cleanedAName = cleanSearchTerm(a.name || '');
-                const cleanedBName = cleanSearchTerm(b.name || '');
-                if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
+                const cleanedAName = cleanSearchTerm(a.name || "");
+                const cleanedBName = cleanSearchTerm(b.name || "");
+                if (
+                    cleanedAName.startsWith(cleanedSearchTerm) &&
+                    !cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return -1;
                 }
-                if (!cleanedAName.startsWith(cleanedSearchTerm) && cleanedBName.startsWith(cleanedSearchTerm)) {
+                if (
+                    !cleanedAName.startsWith(cleanedSearchTerm) &&
+                    cleanedBName.startsWith(cleanedSearchTerm)
+                ) {
                     return 1;
                 }
                 if (cleanedAName < cleanedBName) {
@@ -88,12 +95,18 @@ registerModel({
                 if (cleanedAName > cleanedBName) {
                     return 1;
                 }
-                const cleanedAEmail = cleanSearchTerm(a.email || '');
-                const cleanedBEmail = cleanSearchTerm(b.email || '');
-                if (cleanedAEmail.startsWith(cleanedSearchTerm) && !cleanedAEmail.startsWith(cleanedSearchTerm)) {
+                const cleanedAEmail = cleanSearchTerm(a.email || "");
+                const cleanedBEmail = cleanSearchTerm(b.email || "");
+                if (
+                    cleanedAEmail.startsWith(cleanedSearchTerm) &&
+                    !cleanedAEmail.startsWith(cleanedSearchTerm)
+                ) {
                     return -1;
                 }
-                if (!cleanedBEmail.startsWith(cleanedSearchTerm) && cleanedBEmail.startsWith(cleanedSearchTerm)) {
+                if (
+                    !cleanedBEmail.startsWith(cleanedSearchTerm) &&
+                    cleanedBEmail.startsWith(cleanedSearchTerm)
+                ) {
                     return 1;
                 }
                 if (cleanedAEmail < cleanedBEmail) {
@@ -115,9 +128,9 @@ registerModel({
          */
         async imSearch({ callback, keyword, limit = 10 }) {
             // prefetched partners
-            let partners = [];
+            const partners = [];
             const cleanedSearchTerm = cleanSearchTerm(keyword);
-            for (const partner of this.all(partner => partner.active)) {
+            for (const partner of this.all((partner) => partner.active)) {
                 if (partners.length < limit) {
                     if (
                         partner.name &&
@@ -131,9 +144,9 @@ registerModel({
             if (!partners.length) {
                 const partnersData = await this.messaging.rpc(
                     {
-                        model: 'res.partner',
-                        method: 'im_search',
-                        args: [keyword, limit]
+                        model: "res.partner",
+                        method: "im_search",
+                        args: [keyword, limit],
                     },
                     { shadow: true }
                 );
@@ -153,16 +166,21 @@ registerModel({
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             let partners;
-            const isNonPublicChannel = thread && thread.channel && (thread.authorizedGroupFullName || thread.channel.channel_type !== 'channel');
+            const isNonPublicChannel =
+                thread &&
+                thread.channel &&
+                (thread.authorizedGroupFullName || thread.channel.channel_type !== "channel");
             if (isNonPublicChannel) {
                 // Only return the channel members when in the context of a
                 // group restricted channel. Indeed, the message with the mention
                 // would be notified to the mentioned partner, so this prevents
                 // from inadvertently leaking the private message to the
                 // mentioned partner.
-                partners = thread.channel.channelMembers.filter(member => member.persona && member.persona.partner).map(member => member.persona.partner);
+                partners = thread.channel.channelMembers
+                    .filter((member) => member.persona && member.persona.partner)
+                    .map((member) => member.persona.partner);
             } else {
-                partners = this.messaging.models['Partner'].all();
+                partners = this.messaging.models["Partner"].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             const mainSuggestionList = [];
@@ -179,7 +197,7 @@ registerModel({
                     continue;
                 }
                 if (
-                    (cleanSearchTerm(partner.name).includes(cleanedSearchTerm)) ||
+                    cleanSearchTerm(partner.name).includes(cleanedSearchTerm) ||
                     (partner.email && cleanSearchTerm(partner.email).includes(cleanedSearchTerm))
                 ) {
                     if (partner.user) {
@@ -198,14 +216,17 @@ registerModel({
          * applicable.
          */
         async checkIsUser() {
-            const userIds = await this.messaging.rpc({
-                model: 'res.users',
-                method: 'search',
-                args: [[['partner_id', '=', this.id]]],
-                kwargs: {
-                    context: { active_test: false },
+            const userIds = await this.messaging.rpc(
+                {
+                    model: "res.users",
+                    method: "search",
+                    args: [[["partner_id", "=", this.id]]],
+                    kwargs: {
+                        context: { active_test: false },
+                    },
                 },
-            }, { shadow: true });
+                { shadow: true }
+            );
             if (!this.exists()) {
                 return;
             }
@@ -231,8 +252,10 @@ registerModel({
             // prevent chatting with non-users
             if (!this.user) {
                 this.messaging.notify({
-                    message: this.env._t("You can only chat with partners that have a dedicated user."),
-                    type: 'info',
+                    message: this.env._t(
+                        "You can only chat with partners that have a dedicated user."
+                    ),
+                    type: "info",
                 });
                 return;
             }
@@ -262,26 +285,26 @@ registerModel({
         async openProfile() {
             return this.messaging.openDocument({
                 id: this.id,
-                model: 'res.partner',
+                model: "res.partner",
             });
         },
     },
     fields: {
-        active: attr({
-            default: true,
-        }),
+        active: attr({ default: true }),
         avatarUrl: attr({
             compute() {
                 return `/web/image/res.partner/${this.id}/avatar_128`;
             },
         }),
-        channelInvitationFormSelectablePartnerViews: many('ChannelInvitationFormSelectablePartnerView', {
-            inverse: 'partner',
-        }),
-        channelInvitationFormSelectedPartnerViews: many('ChannelInvitationFormSelectedPartnerView', {
-            inverse: 'partner',
-        }),
-        country: one('Country'),
+        channelInvitationFormSelectablePartnerViews: many(
+            "ChannelInvitationFormSelectablePartnerView",
+            { inverse: "partner" }
+        ),
+        channelInvitationFormSelectedPartnerViews: many(
+            "ChannelInvitationFormSelectedPartnerView",
+            { inverse: "partner" }
+        ),
+        country: one("Country"),
         /**
          * Deprecated.
          * States the `display_name` of this partner, as returned by the server.
@@ -293,6 +316,7 @@ registerModel({
          */
         display_name: attr(),
         displayName: attr({
+            default: "",
             compute() {
                 if (this.display_name) {
                     return this.display_name;
@@ -302,26 +326,19 @@ registerModel({
                 }
                 return clear();
             },
-            default: "",
         }),
-        dmChatWithCurrentPartner: one('Channel', {
-            inverse: 'correspondentOfDmChat',
-        }),
+        dmChatWithCurrentPartner: one("Channel", { inverse: "correspondentOfDmChat" }),
         email: attr(),
         /**
          * Whether an attempt was already made to fetch the user corresponding
          * to this partner. This prevents doing the same RPC multiple times.
          */
-        hasCheckedUser: attr({
-            default: false,
-        }),
-        id: attr({
-            identifying: true,
-        }),
+        hasCheckedUser: attr({ default: false }),
+        id: attr({ identifying: true }),
         im_status: attr(),
         isImStatusSet: attr({
             compute() {
-                return Boolean(this.im_status && this.im_status !== 'im_partner');
+                return Boolean(this.im_status && this.im_status !== "im_partner");
             },
         }),
         /**
@@ -329,36 +346,30 @@ registerModel({
          */
         isOnline: attr({
             compute() {
-                return ['online', 'away'].includes(this.im_status);
+                return ["online", "away"].includes(this.im_status);
             },
         }),
         is_public: attr(),
-        model: attr({
-            default: 'res.partner',
-        }),
+        model: attr({ default: "res.partner" }),
         name: attr(),
         nameOrDisplayName: attr({
             compute() {
                 return this.name || this.displayName;
             },
         }),
-        persona: one('Persona', {
+        persona: one("Persona", {
             default: {},
-            inverse: 'partner',
+            inverse: "partner",
             readonly: true,
             required: true,
         }),
-        suggestable: one('ComposerSuggestable', {
+        suggestable: one("ComposerSuggestable", {
             default: {},
-            inverse: 'partner',
+            inverse: "partner",
             readonly: true,
             required: true,
         }),
-        user: one('User', {
-            inverse: 'partner',
-        }),
-        volumeSetting: one('res.users.settings.volumes', {
-            inverse: 'partner_id',
-        }),
+        user: one("User", { inverse: "partner" }),
+        volumeSetting: one("res.users.settings.volumes", { inverse: "partner_id" }),
     },
 });

@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { attr, clear, Model } from "@mail/model";
 
-registerModel({
-    name: 'Country',
+Model({
+    name: "Country",
     fields: {
         code: attr(),
         flagUrl: attr({
@@ -16,9 +14,7 @@ registerModel({
                 return `/base/static/img/country_flags/${this.code}.png`;
             },
         }),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         name: attr(),
     },
 });

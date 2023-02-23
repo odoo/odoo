@@ -21,9 +21,6 @@
         'web.assets_backend': [
             'purchase_product_matrix/static/src/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'purchase_product_matrix/static/tests/section_and_note_widget_tests.js',
-        ],
         'web.assets_tests': [
             'purchase_product_matrix/static/tests/tours/**/*',
         ],

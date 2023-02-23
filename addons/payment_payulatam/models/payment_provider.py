@@ -2,11 +2,10 @@
 
 from hashlib import md5
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.tools.float_utils import float_repr
 
-SUPPORTED_CURRENCIES = ('ARS', 'BRL', 'CLP', 'COP', 'MXN', 'PEN', 'USD')
-
+from odoo.addons.payment_payulatam.const import SUPPORTED_CURRENCIES
 
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
@@ -25,16 +24,14 @@ class PaymentProvider(models.Model):
         string="PayU Latam API Key", required_if_provider='payulatam',
         groups='base.group_system')
 
-    @api.model
-    def _get_compatible_providers(self, *args, currency_id=None, **kwargs):
-        """ Override of payment to unlist PayU Latam providers for unsupported currencies. """
-        providers = super()._get_compatible_providers(*args, currency_id=currency_id, **kwargs)
-
-        currency = self.env['res.currency'].browse(currency_id).exists()
-        if currency and currency.name not in SUPPORTED_CURRENCIES:
-            providers = providers.filtered(lambda p: p.code != 'payulatam')
-
-        return providers
+    def _get_supported_currencies(self):
+        """ Override of `payment` to return the supported currencies. """
+        supported_currencies = super()._get_supported_currencies()
+        if self.code == 'payulatam':
+            supported_currencies = supported_currencies.filtered(
+                lambda c: c.name in SUPPORTED_CURRENCIES
+            )
+        return supported_currencies
 
     def _payulatam_generate_sign(self, values, incoming=True):
         """ Generate the signature for incoming or outgoing communications.
@@ -64,15 +61,7 @@ class PaymentProvider(models.Model):
                 self.payulatam_api_key,
                 self.payulatam_merchant_id,
                 values['referenceCode'],
-                float_repr(float(values['amount']), 1),
+                float_repr(float(values['amount']), 2),
                 values['currency'],
             ])
         return md5(data_string.encode('utf-8')).hexdigest()
-
-    def _neutralize(self):
-        super()._neutralize()
-        self._neutralize_fields('payulatam', [
-            'payulatam_merchant_id',
-            'payulatam_account_id',
-            'payulatam_api_key',
-        ])

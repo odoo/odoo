@@ -3,8 +3,8 @@
     // Common: left semi-trophy icon for certifications
     .o_survey_kanban_card_certification {
         background-image:
-            linear-gradient(rgba(255,255,255,.9),
-                            rgba(255,255,255,.9)),
+            linear-gradient(rgba($o-view-background-color,.75),
+                            rgba($o-view-background-color,.75)),
             url(/survey/static/src/img/trophy-solid.svg);
         background-repeat: no-repeat;
         background-position: bottom 6px left -45px;
@@ -31,9 +31,6 @@
             width: 100%;
             margin: 0px;
             border-top: 0px !important;
-            &:first-child {
-                border-bottom: 1px solid #dee2e6 !important;
-            }
         }
     }
 
@@ -65,8 +62,8 @@
 
         // Left semi-trophy icon for certifications: tweak display for list view
         .o_survey_kanban_card_certification {
-            background-position: bottom 6px left -30px;
-            background-size: 100%, 65px;
+            background-position: center left -35px;
+            background-size: auto 75%;
         }
 
         // Due to activity widget crashing if present twice, have to set absolute and tweak
@@ -137,9 +134,13 @@
 // FORM view
 .o_survey_form table.o_section_list_view tr.o_data_row.o_is_section {
     font-weight: bold;
-    background-color: #DDD;
+    background-color: var(--SurveyForm__section-background-color, #DDD);
     border-top: 1px solid #BBB;
     border-bottom: 1px solid #BBB;
+    
+    > td {
+        background: transparent;
+    }
 }
 
 // TOOLS
@@ -172,4 +173,9 @@
             }
         }
     }
+}
+
+.o_form_label.o_form_label_readonly.o_survey_label_survey_start_url{
+    opacity: 100;
+    font-weight: 500;
 }

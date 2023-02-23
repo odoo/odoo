@@ -30,7 +30,7 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
         website_test = Website.create({'name': 'Website Test'})
 
         # simulate attachment state when editing 2 theme through customize
-        custom_url = '/TEST/website/static/src/scss/options/colors/user_theme_color_palette.custom.web.assets_common.scss'
+        custom_url = '/TEST/website/static/src/scss/options/colors/user_theme_color_palette.custom.web.assets_frontend.scss'
         scss_attachment = Attachment.create({
             'name': custom_url,
             'type': 'binary',
@@ -113,6 +113,7 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
     def media_dialog_undraw(self):
         self.start_tour("/", 'website_media_dialog_undraw', login='admin')
 
+
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
@@ -123,6 +124,72 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'url_code': 'pa_GB',
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'rte_translator', login='admin', timeout=120)
+
+    def test_translate_menu_name(self):
+        lang_en = self.env.ref('base.lang_en')
+        parseltongue = self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        self.env['res.lang']._activate_lang(parseltongue.code)
+        default_website = self.env.ref('website.default_website')
+        default_website.write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [(6, 0, (lang_en + parseltongue).ids)],
+        })
+        new_menu = self.env['website.menu'].create({
+            'name': 'Menu to edit',
+            'parent_id': default_website.menu_id.id,
+            'website_id': default_website.id,
+            'url': '/englishURL',
+        })
+
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_menu_name', login='admin')
+
+        self.assertNotEqual(new_menu.name, 'value pa-GB', msg="The new menu should not have its value edited, only its translation")
+        self.assertEqual(new_menu.with_context(lang=parseltongue.code).name, 'value pa-GB', msg="The new translation should be set")
+
+    def test_snippet_translation(self):
+        ResLang = self.env['res.lang']
+        parseltongue, fake_user_lang = ResLang.create([{
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        }, {
+            'name': 'Fake User Lang',
+            'code': 'fu_GB',
+            'iso_code': 'fu_GB',
+            'url_code': 'fu_GB',
+        }])
+        ResLang._activate_lang(parseltongue.code)
+        ResLang._activate_lang(fake_user_lang.code)
+        self.env.ref('base.user_admin').lang = fake_user_lang.code
+        self.env.ref('website.s_cover').update_field_translations('arch_db', {
+            parseltongue.code: {
+                'Contact us': 'Contact us in Parseltongue'
+            }
+        })
+        self.env.ref('web_editor.snippets').update_field_translations('arch_db', {
+            fake_user_lang.code: {
+                'Save': 'Save in fu_GB',
+            }
+        })
+        website = self.env['website'].create({
+            'name': 'website pa_GB',
+            'language_ids': [(6, 0, [parseltongue.id])],
+            'default_lang_id': parseltongue.id,
+        })
+        website_2 = self.env['website'].create({
+            'name': 'website en_US',
+            'language_ids': [(6, 0, [self.env.ref('base.lang_en').id, parseltongue.id])],
+            'default_lang_id': parseltongue.id,
+        })
+
+        self.start_tour(f"/website/force/{website.id}", 'snippet_translation', login='admin')
+        self.start_tour(f"/website/force/{website_2.id}", 'snippet_translation_changing_lang', login='admin')
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -317,3 +384,20 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_23_website_multi_edition(self):
         self.start_tour('/@?enable_editor=1', 'website_multi_edition', login='admin')
+
+    def test_24_snippet_cache_across_websites(self):
+        default_website = self.env.ref('website.default_website')
+        self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
+            name='custom_snippet_test',
+            arch="""
+                <section class="s_text_block">
+                    <div class="custom_snippet_website_1">Custom Snippet Website 1</div>
+                </section>
+            """,
+            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            snippet_key='s_text_block',
+            template_key='website.snippets')
+        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin')
+
+    def test_25_website_edit_discard(self):
+        self.start_tour('/web', 'homepage_edit_discard', login='admin')

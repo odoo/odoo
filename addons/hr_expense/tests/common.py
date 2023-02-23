@@ -39,6 +39,14 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'address_id': cls.expense_user_employee.partner_id.id,
         })
 
+        cls.product_zero_cost = cls.env['product.product'].create({
+            'name': 'General',
+            'default_code': 'EXP_GEN',
+            'standard_price': 0.0,
+            'can_be_expensed': True,
+        })
+
+
         # Allow the current accounting user to access the expenses.
         cls.env.user.groups_id |= group_expense_manager
 
@@ -55,6 +63,3 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
 
         # Ensure products can be expensed.
         (cls.product_a + cls.product_b).write({'can_be_expensed': True})
-        # Taxes on the products are included in price
-        (cls.product_a.supplier_taxes_id + cls.product_b.supplier_taxes_id).write({'price_include': True})
-        cls.company_data['default_tax_purchase'].write({'price_include': True})

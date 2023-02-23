@@ -35,4 +35,15 @@
             </field>
         </field>
     </record>
+
+    <record id="event_registration_view_search" model="ir.ui.view">
+        <field name="name">event.registration.view.search.inherit.website.event.questions</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_registration_search"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="registration_answer_ids" string="Selected Answers"/>
+            </field>
+        </field>
+    </record>
 </odoo>

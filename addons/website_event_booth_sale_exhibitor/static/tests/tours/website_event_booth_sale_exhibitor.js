@@ -7,8 +7,8 @@ odoo.define("website_event_booth_sale_exhibitor.tour", function (require) {
 
         _getSteps: function () {
             return [{
-                content: 'Confirm your order',
-                trigger: '.btn-primary[href="/shop/confirm_order"]',
+                content: 'Checkout your order',
+                trigger: 'a[role="button"] span:contains("Process Checkout")',
                 run: 'click',
             }, {
                 content: "Select `Wire Transfer` payment method",

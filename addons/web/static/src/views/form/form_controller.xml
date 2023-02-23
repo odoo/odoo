@@ -3,56 +3,71 @@
 
     <t t-name="web.FormView" owl="1">
         <div t-att-class="className" t-ref="root">
-            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
-                <t t-set-slot="layout-buttons">
-                    <t t-if="footerArchInfo and env.inDialog">
-                        <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo"/>
+            <div class="o_form_view_container">
+                <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                    <t t-set-slot="layout-buttons">
+                        <t t-if="footerArchInfo and env.inDialog">
+                            <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons"/>
+                        </t>
+                        <t t-else="">
+                            <t t-call="{{ props.buttonTemplate }}"/>
+                        </t>
                     </t>
-                    <t t-else="">
-                        <t t-call="{{ props.buttonTemplate }}"/>
+                    <t t-set-slot="control-panel-action-menu">
+                        <t t-if="props.info.actionMenus">
+                            <ActionMenus
+                                getActiveIds="() => model.root.isVirtual ? [] : [model.root.resId]"
+                                context="props.context"
+                                items="actionMenuItems"
+                                isDomainSelected="model.root.isDomainSelected"
+                                resModel="model.root.resModel"
+                                domain="props.domain"
+                                onActionExecuted="() => model.load({ resId: model.root.resId, resIds: model.root.resIds })"
+                                shouldExecuteAction.bind="shouldExecuteAction"
+                            />
+                        </t>
                     </t>
-                </t>
-                <t t-set-slot="control-panel-bottom-left">
-                    <t t-if="props.info.actionMenus and !model.root.isVirtual">
-                        <ActionMenus
-                            activeIds="[model.root.resId]"
-                            context="props.context"
-                            items="getActionMenuItems()"
-                            isDomainSelected="model.root.isDomainSelected"
-                            resModel="model.root.resModel"
-                            domain="props.domain"
-                            onActionExecuted="() => model.load()"
-                        />
+                    <t t-set-slot="control-panel-status-indicator">
+                        <t t-if="canEdit">
+                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" isDisabled="state.isDisabled" fieldIsDirty="state.fieldIsDirty" />
+                        </t>
                     </t>
-                </t>
-                <t t-set-slot="control-panel-bottom-right"> </t>
-                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert"/>
-            </Layout>
+                    <t t-set-slot="control-panel-create-button">
+                        <t t-if="canCreate">
+                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create" t-att-disabled="state.isDisabled">New</button>
+                        </t>
+                    </t>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" setFieldAsDirty.bind="setFieldAsDirty" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
+                </Layout>
+            </div>
         </div>
     </t>
 
     <t t-name="web.FormView.Buttons" owl="1">
         <div class="o_cp_buttons" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
             <div t-if="model.root.isInEdition" class="o_form_buttons_edit">
-                <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.save()">
+                <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
                     Save
                 </button>
                 <button type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
                     Discard
                 </button>
-            </div>
-            <div t-else="canEdit or canCreate" class="o_form_buttons_view">
-                <button t-if="canEdit" type="button" class="btn btn-primary o_form_button_edit" data-hotkey="a" data-bounce-button="" t-on-click.stop="edit">
-                    Edit
+                <button t-if="props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
+                    Remove
                 </button>
-                <button t-if="canCreate" type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
-                    Create
+            </div>
+            <div t-elif="canCreate" class="o_form_buttons_view">
+                <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
+                    New
                 </button>
             </div>
         </div>
     </t>
 
-    <!-- Used in FormRenderer -->
+    <!--
+        Used in FormRenderer
+        Note: `props` is only accessible through `this` as we call the compiled template a restricted context (t-call-context)
+    -->
     <t t-name="web.TranslateAlert" owl="1">
         <div class="alert alert-info alert-dismissible" role="alertdialog">
             Please update translations of :

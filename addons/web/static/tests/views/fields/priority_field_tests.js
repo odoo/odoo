@@ -2,6 +2,7 @@
 
 import {
     click,
+    clickSave,
     getFixture,
     nextTick,
     triggerEvent,
@@ -211,8 +212,6 @@ QUnit.module("Fields", (hooks) => {
             "should temporary have no empty star since we are hovering the third value"
         );
 
-        // switch to edit mode and check the result
-        await click(target, ".o_form_button_edit");
         assert.containsN(
             target,
             ".o_field_widget .o_priority a.o_priority_star",
@@ -230,8 +229,6 @@ QUnit.module("Fields", (hooks) => {
             "should still have one empty star since the value is the second value"
         );
 
-        // save
-        await click(target, ".o_form_button_save");
         assert.containsN(
             target,
             ".o_field_widget .o_priority a.o_priority_star",
@@ -248,9 +245,6 @@ QUnit.module("Fields", (hooks) => {
             ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
-
-        // switch to edit mode to check that the new value was properly written
-        await click(target, ".o_form_button_edit");
 
         assert.containsN(
             target,
@@ -292,7 +286,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(target, ".o_form_button_save");
+        await clickSave(target);
         assert.containsN(
             target,
             ".o_field_widget .o_priority a.o_priority_star",

@@ -18,7 +18,7 @@ publicWidget.registry.displayTimerWidget = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.options = self.$target.data();
+            self.options = self.$el.data();
             self.preCountdownDisplay = self.options["preCountdownDisplay"];
             self.preCountdownTime = self.options["preCountdownTime"];
             self.preCountdownText = self.options["preCountdownText"];

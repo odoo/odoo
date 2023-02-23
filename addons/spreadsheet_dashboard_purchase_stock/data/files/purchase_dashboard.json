@@ -37,7 +37,7 @@
             },
             "cols": {
                 "0": {
-                    "size": 125
+                    "size": 75
                 },
                 "1": {
                     "size": 75
@@ -49,7 +49,7 @@
                     "size": 175
                 },
                 "4": {
-                    "size": 75
+                    "size": 100
                 },
                 "5": {
                     "size": 50
@@ -58,7 +58,7 @@
                     "size": 175
                 },
                 "7": {
-                    "size": 75
+                    "size": 100
                 },
                 "8": {
                     "size": 75
@@ -78,7 +78,7 @@
                 },
                 "A20": {
                     "style": 2,
-                    "content": "RFQ",
+                    "content": "=_t(\"RFQ\")",
                     "border": 2
                 },
                 "A21": {
@@ -128,7 +128,7 @@
                 },
                 "A33": {
                     "style": 2,
-                    "content": "Order",
+                    "content": "=_t(\"Order\")",
                     "border": 2
                 },
                 "A34": {
@@ -173,12 +173,12 @@
                 },
                 "A45": {
                     "style": 1,
-                    "content": "[Late Receipts](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[\"&\",[\"picking_type_code\",\"=\",\"incoming\"],\"&\",[\"state\",\"in\",[\"assigned\",\"waiting\",\"confirmed\"]],\"|\",\"|\",[\"has_deadline_issue\",\"=\",true],[\"date_deadline\",\"<\",\"2022-09-15\"],[\"scheduled_date\",\"<\",\"2022-09-15\"]],\"context\":{\"group_by\":[]},\"modelName\":\"stock.picking\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"calendar\"],[false,\"map\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Late Receipts\"})",
+                    "content": "[Late Receipts](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[\"&\",[\"picking_type_code\",\"=\",\"incoming\"],\"&\",[\"state\",\"in\",[\"assigned\",\"waiting\",\"confirmed\"]],\"|\",\"|\",[\"has_deadline_issue\",\"=\",true],[\"date_deadline\",\"<\",\"2022-09-15\"],[\"scheduled_date\",\"<\",\"2022-09-15\"]],\"context\":{\"group_by\":[]},\"modelName\":\"stock.picking\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"calendar\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Late Receipts\"})",
                     "border": 1
                 },
                 "A46": {
                     "style": 2,
-                    "content": "Transfer",
+                    "content": "=_t(\"Transfer\")",
                     "border": 2
                 },
                 "A47": {
@@ -226,12 +226,12 @@
                 },
                 "A58": {
                     "style": 1,
-                    "content": "[Top Buyers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"order_id\",\"qty_ordered\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"dashboard\"],[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Buyers\"})",
+                    "content": "[Top Buyers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"order_id\",\"qty_ordered\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Buyers\"})",
                     "border": 1
                 },
                 "A59": {
                     "style": 5,
-                    "content": "Buyer",
+                    "content": "=_t(\"Buyer\")",
                     "border": 2
                 },
                 "A60": {
@@ -280,7 +280,7 @@
                 },
                 "B20": {
                     "style": 2,
-                    "content": "Open since",
+                    "content": "=_t(\"Opened\")",
                     "border": 2
                 },
                 "B21": {
@@ -339,7 +339,7 @@
                 },
                 "B33": {
                     "style": 2,
-                    "content": "Ordered on",
+                    "content": "=_t(\"Ordered\")",
                     "border": 2
                 },
                 "B34": {
@@ -398,7 +398,7 @@
                 },
                 "B46": {
                     "style": 2,
-                    "content": "Ordered on",
+                    "content": "=_t(\"Ordered\")",
                     "border": 2
                 },
                 "B47": {
@@ -461,7 +461,7 @@
                 },
                 "B59": {
                     "style": 11,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "B60": {
@@ -515,7 +515,7 @@
                 },
                 "C20": {
                     "style": 2,
-                    "content": "Buyer",
+                    "content": "=_t(\"Buyer\")",
                     "border": 2
                 },
                 "C21": {
@@ -559,7 +559,7 @@
                 },
                 "C33": {
                     "style": 2,
-                    "content": "Buyer",
+                    "content": "=_t(\"Buyer\")",
                     "border": 2
                 },
                 "C34": {
@@ -603,7 +603,7 @@
                 },
                 "C46": {
                     "style": 2,
-                    "content": "Scheduled on",
+                    "content": "=_t(\"Scheduled on\")",
                     "border": 2
                 },
                 "C47": {
@@ -666,7 +666,7 @@
                 },
                 "C59": {
                     "style": 11,
-                    "content": "Quantity Ordered",
+                    "content": "=_t(\"Qty Ordered\")",
                     "border": 2
                 },
                 "C60": {
@@ -720,7 +720,7 @@
                 },
                 "D20": {
                     "style": 2,
-                    "content": "Vendor",
+                    "content": "=_t(\"Vendor\")",
                     "border": 2
                 },
                 "D21": {
@@ -764,7 +764,7 @@
                 },
                 "D33": {
                     "style": 2,
-                    "content": "Vendor",
+                    "content": "=_t(\"Vendor\")",
                     "border": 2
                 },
                 "D34": {
@@ -808,7 +808,7 @@
                 },
                 "D46": {
                     "style": 2,
-                    "content": "Responsible",
+                    "content": "=_t(\"Responsible\")",
                     "border": 2
                 },
                 "D47": {
@@ -848,7 +848,7 @@
                 },
                 "D59": {
                     "style": 11,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "D60": {
@@ -902,52 +902,42 @@
                 },
                 "E20": {
                     "style": 13,
-                    "content": "Total Untaxed",
+                    "content": "=_t(\"Total Untaxed\")",
                     "border": 2
                 },
                 "E21": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(1,1,\"amount_untaxed\")"
                 },
                 "E22": {
-                    "format": 4,
                     "content": "=ODOO.LIST(1,2,\"amount_untaxed\")"
                 },
                 "E23": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(1,3,\"amount_untaxed\")"
                 },
                 "E24": {
-                    "format": 4,
                     "content": "=ODOO.LIST(1,4,\"amount_untaxed\")"
                 },
                 "E25": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(1,5,\"amount_untaxed\")"
                 },
                 "E26": {
-                    "format": 4,
                     "content": "=ODOO.LIST(1,6,\"amount_untaxed\")"
                 },
                 "E27": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(1,7,\"amount_untaxed\")"
                 },
                 "E28": {
-                    "format": 4,
                     "content": "=ODOO.LIST(1,8,\"amount_untaxed\")"
                 },
                 "E29": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(1,9,\"amount_untaxed\")"
                 },
                 "E30": {
-                    "format": 4,
                     "content": "=ODOO.LIST(1,10,\"amount_untaxed\")"
                 },
                 "E32": {
@@ -956,52 +946,42 @@
                 },
                 "E33": {
                     "style": 13,
-                    "content": "Total Untaxed",
+                    "content": "=_t(\"Total Untaxed\")",
                     "border": 2
                 },
                 "E34": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(2,1,\"amount_untaxed\")"
                 },
                 "E35": {
-                    "format": 4,
                     "content": "=ODOO.LIST(2,2,\"amount_untaxed\")"
                 },
                 "E36": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(2,3,\"amount_untaxed\")"
                 },
                 "E37": {
-                    "format": 4,
                     "content": "=ODOO.LIST(2,4,\"amount_untaxed\")"
                 },
                 "E38": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(2,5,\"amount_untaxed\")"
                 },
                 "E39": {
-                    "format": 4,
                     "content": "=ODOO.LIST(2,6,\"amount_untaxed\")"
                 },
                 "E40": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(2,7,\"amount_untaxed\")"
                 },
                 "E41": {
-                    "format": 4,
                     "content": "=ODOO.LIST(2,8,\"amount_untaxed\")"
                 },
                 "E42": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(2,9,\"amount_untaxed\")"
                 },
                 "E43": {
-                    "format": 4,
                     "content": "=ODOO.LIST(2,10,\"amount_untaxed\")"
                 },
                 "E45": {
@@ -1010,52 +990,42 @@
                 },
                 "E46": {
                     "style": 14,
-                    "content": "Vendor",
+                    "content": "=_t(\"Vendor\")",
                     "border": 2
                 },
                 "E47": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(3,1,\"partner_id\")"
                 },
                 "E48": {
-                    "format": 4,
                     "content": "=ODOO.LIST(3,2,\"partner_id\")"
                 },
                 "E49": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(3,3,\"partner_id\")"
                 },
                 "E50": {
-                    "format": 4,
                     "content": "=ODOO.LIST(3,4,\"partner_id\")"
                 },
                 "E51": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(3,5,\"partner_id\")"
                 },
                 "E52": {
-                    "format": 4,
                     "content": "=ODOO.LIST(3,6,\"partner_id\")"
                 },
                 "E53": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(3,7,\"partner_id\")"
                 },
                 "E54": {
-                    "format": 4,
                     "content": "=ODOO.LIST(3,8,\"partner_id\")"
                 },
                 "E55": {
                     "style": 12,
-                    "format": 4,
                     "content": "=ODOO.LIST(3,9,\"partner_id\")"
                 },
                 "E56": {
-                    "format": 4,
                     "content": "=ODOO.LIST(3,10,\"partner_id\")"
                 },
                 "E57": {
@@ -1063,12 +1033,12 @@
                 },
                 "G19": {
                     "style": 1,
-                    "content": "[Top Countries](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"country_id\",\"!=\",false]],\"context\":{\"group_by\":[\"country_id\"],\"pivot_measures\":[\"order_id\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"country_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"dashboard\"],[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Countries\"})",
+                    "content": "[Top Countries](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"country_id\",\"!=\",false]],\"context\":{\"group_by\":[\"country_id\"],\"pivot_measures\":[\"order_id\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"country_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Countries\"})",
                     "border": 1
                 },
                 "G20": {
                     "style": 5,
-                    "content": "Country",
+                    "content": "=_t(\"Country\")",
                     "border": 2
                 },
                 "G21": {
@@ -1116,12 +1086,12 @@
                 },
                 "G32": {
                     "style": 1,
-                    "content": "[Top Vendors](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"order_id\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"dashboard\"],[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Vendors\"})",
+                    "content": "[Top Vendors](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"order_id\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Vendors\"})",
                     "border": 1
                 },
                 "G33": {
                     "style": 5,
-                    "content": "Vendor",
+                    "content": "=_t(\"Vendor\")",
                     "border": 2
                 },
                 "G34": {
@@ -1166,12 +1136,12 @@
                 },
                 "G45": {
                     "style": 1,
-                    "content": "[Top Product Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"category_id\",\"!=\",false]],\"context\":{\"group_by\":[\"category_id\"],\"pivot_measures\":[\"order_id\",\"qty_ordered\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"category_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"dashboard\"],[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Categories\"})",
+                    "content": "[Top Product Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"category_id\",\"!=\",false]],\"context\":{\"group_by\":[\"category_id\"],\"pivot_measures\":[\"order_id\",\"qty_ordered\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"category_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Categories\"})",
                     "border": 1
                 },
                 "G46": {
                     "style": 5,
-                    "content": "Category",
+                    "content": "=_t(\"Category\")",
                     "border": 2
                 },
                 "G47": {
@@ -1216,12 +1186,12 @@
                 },
                 "G58": {
                     "style": 1,
-                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"order_id\",\"qty_ordered\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"dashboard\"],[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Products\"})",
+                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"order_id\",\"qty_ordered\",\"untaxed_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Products\"})",
                     "border": 1
                 },
                 "G59": {
                     "style": 5,
-                    "content": "Product",
+                    "content": "=_t(\"Product\")",
                     "border": 2
                 },
                 "G60": {
@@ -1270,7 +1240,7 @@
                 },
                 "H20": {
                     "style": 11,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "H21": {
@@ -1324,7 +1294,7 @@
                 },
                 "H33": {
                     "style": 11,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "H34": {
@@ -1378,7 +1348,7 @@
                 },
                 "H46": {
                     "style": 11,
-                    "content": "Quantity Ordered",
+                    "content": "=_t(\"Qty Ordered\")",
                     "border": 2
                 },
                 "H47": {
@@ -1432,7 +1402,7 @@
                 },
                 "H59": {
                     "style": 11,
-                    "content": "Quantity Ordered",
+                    "content": "=_t(\"Qty Ordered\")",
                     "border": 2
                 },
                 "H60": {
@@ -1486,7 +1456,7 @@
                 },
                 "I20": {
                     "style": 11,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "I21": {
@@ -1540,7 +1510,7 @@
                 },
                 "I33": {
                     "style": 11,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "I34": {
@@ -1594,7 +1564,7 @@
                 },
                 "I46": {
                     "style": 11,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "I47": {
@@ -1648,7 +1618,7 @@
                 },
                 "I59": {
                     "style": 11,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "I60": {
@@ -1762,11 +1732,12 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "40aef9ad-8e20-47d1-861c-9e9121a4cdd0",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
-                            "groupBy": ["date_order:month"],
+                            "groupBy": [
+                                "date_order:month"
+                            ],
                             "measure": "untaxed_total",
                             "order": null,
                             "resModel": "purchase.report"
@@ -1777,11 +1748,25 @@
                             "domain": [
                                 "&",
                                 "&",
-                                ["state", "!=", "draft"],
-                                ["state", "!=", "sent"],
-                                ["state", "!=", "cancel"]
+                                [
+                                    "state",
+                                    "!=",
+                                    "draft"
+                                ],
+                                [
+                                    "state",
+                                    "!=",
+                                    "sent"
+                                ],
+                                [
+                                    "state",
+                                    "!=",
+                                    "cancel"
+                                ]
                             ],
-                            "groupBy": ["date_order:month"],
+                            "groupBy": [
+                                "date_order:month"
+                            ],
                             "orderBy": []
                         },
                         "type": "odoo_line",
@@ -1879,29 +1864,29 @@
             "cells": {
                 "A1": {
                     "style": 5,
-                    "content": "KPI"
+                    "content": "=_t(\"KPI\")"
                 },
                 "A2": {
-                    "content": "Amount"
+                    "content": "=_t(\"Amount\")"
                 },
                 "A3": {
-                    "content": "Orders"
+                    "content": "=_t(\"Orders\")"
                 },
                 "A4": {
-                    "content": "Average order"
+                    "content": "=_t(\"Average order\")"
                 },
                 "A5": {
-                    "content": "Days to receive"
+                    "content": "=_t(\"Days to receive\")"
                 },
                 "A6": {
-                    "content": "Days to confirm"
+                    "content": "=_t(\"Days to confirm\")"
                 },
                 "A7": {
-                    "content": "Quantity ordered"
+                    "content": "=_t(\"Quantity ordered\")"
                 },
                 "B1": {
                     "style": 5,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "B2": {
                     "content": "=ODOO.PIVOT(10,\"untaxed_total\")"
@@ -1923,7 +1908,7 @@
                 },
                 "C1": {
                     "style": 5,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "C2": {
                     "content": "=ODOO.PIVOT(11,\"untaxed_total\")"
@@ -1945,7 +1930,7 @@
                 },
                 "D1": {
                     "style": 5,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "D2": {
                     "style": 15,
@@ -1961,11 +1946,11 @@
                 },
                 "D5": {
                     "style": 15,
-                    "content": "=CONCATENATE(ROUNDUP(B5),\" days\")"
+                    "content": "=CONCATENATE(ROUNDUP(B5),_t(\" days\"))"
                 },
                 "D6": {
                     "style": 15,
-                    "content": "=CONCATENATE(ROUNDUP(B6),\" days\")"
+                    "content": "=CONCATENATE(ROUNDUP(B6),_t(\" days\"))"
                 },
                 "D7": {
                     "style": 15,
@@ -1973,7 +1958,7 @@
                 },
                 "E1": {
                     "style": 5,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "E2": {
                     "style": 15,
@@ -2077,21 +2062,47 @@
     },
     "borders": {
         "1": {
-            "bottom": ["thin", "#000"]
+            "bottom": [
+                "thin",
+                "#000"
+            ]
         },
         "2": {
-            "top": ["thin", "#000"]
+            "top": [
+                "thin",
+                "#000"
+            ]
         }
     },
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
-        "40aef9ad-8e20-47d1-861c-9e9121a4cdd0": "purchase.menu_purchase_root"
+        "40aef9ad-8e20-47d1-861c-9e9121a4cdd0": "purchase.menu_purchase_root",
+        "3026e15a-cf89-4626-b40d-d61b0d802cd4": "purchase.menu_purchase_form_action",
+        "bf0b19f1-c857-463c-ab3b-501de4bac427": "purchase.menu_purchase_form_action",
+        "f146ff41-fce3-4f51-a21c-f0903a4e2c96": "purchase.purchase_report",
+        "05fe6a6d-5d49-4d24-a916-f89b7199c470": "purchase.purchase_report"
     },
-    "odooVersion": 3,
+    "odooVersion": 4,
     "lists": {
         "1": {
-            "columns": ["name", "create_date", "partner_id", "user_id", "amount_untaxed"],
-            "domain": [["state", "in", ["draft", "sent", "to approve"]]],
+            "columns": [
+                "name",
+                "create_date",
+                "partner_id",
+                "user_id",
+                "amount_untaxed"
+            ],
+            "domain": [
+                [
+                    "state",
+                    "in",
+                    [
+                        "draft",
+                        "sent",
+                        "to approve"
+                    ]
+                ]
+            ],
             "model": "purchase.order",
             "context": {
                 "quotation_only": true
@@ -2106,8 +2117,23 @@
             "name": "Requests for Quotation by Untaxed Amount"
         },
         "2": {
-            "columns": ["name", "date_approve", "partner_id", "user_id", "amount_untaxed"],
-            "domain": [["state", "in", ["purchase", "done"]]],
+            "columns": [
+                "name",
+                "date_approve",
+                "partner_id",
+                "user_id",
+                "amount_untaxed"
+            ],
+            "domain": [
+                [
+                    "state",
+                    "in",
+                    [
+                        "purchase",
+                        "done"
+                    ]
+                ]
+            ],
             "model": "purchase.order",
             "context": {},
             "orderBy": [
@@ -2131,14 +2157,38 @@
             ],
             "domain": [
                 "&",
-                ["picking_type_code", "=", "incoming"],
+                [
+                    "picking_type_code",
+                    "=",
+                    "incoming"
+                ],
                 "&",
-                ["state", "in", ["assigned", "waiting", "confirmed"]],
+                [
+                    "state",
+                    "in",
+                    [
+                        "assigned",
+                        "waiting",
+                        "confirmed"
+                    ]
+                ],
                 "|",
                 "|",
-                ["has_deadline_issue", "=", true],
-                ["date_deadline", "<", "2022-09-15"],
-                ["scheduled_date", "<", "2022-09-15"]
+                [
+                    "has_deadline_issue",
+                    "=",
+                    true
+                ],
+                [
+                    "date_deadline",
+                    "<",
+                    "2022-09-15"
+                ],
+                [
+                    "scheduled_date",
+                    "<",
+                    "2022-09-15"
+                ]
             ],
             "model": "stock.picking",
             "context": {
@@ -2167,7 +2217,13 @@
         "1": {
             "colGroupBys": [],
             "context": {},
-            "domain": [["country_id", "!=", false]],
+            "domain": [
+                [
+                    "country_id",
+                    "!=",
+                    false
+                ]
+            ],
             "id": "1",
             "measures": [
                 {
@@ -2178,13 +2234,17 @@
                 }
             ],
             "model": "purchase.report",
-            "rowGroupBys": ["country_id"],
+            "rowGroupBys": [
+                "country_id"
+            ],
             "name": "Purchase Analysis by Partner Country",
             "sortedColumn": {
-                "groupId": [[], []],
+                "groupId": [
+                    [],
+                    []
+                ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [0]
+                "order": "desc"
             }
         },
         "2": {
@@ -2201,19 +2261,29 @@
                 }
             ],
             "model": "purchase.report",
-            "rowGroupBys": ["partner_id"],
+            "rowGroupBys": [
+                "partner_id"
+            ],
             "name": "Purchase Analysis by Vendor",
             "sortedColumn": {
-                "groupId": [[], []],
+                "groupId": [
+                    [],
+                    []
+                ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [0]
+                "order": "desc"
             }
         },
         "6": {
             "colGroupBys": [],
             "context": {},
-            "domain": [["category_id", "!=", false]],
+            "domain": [
+                [
+                    "category_id",
+                    "!=",
+                    false
+                ]
+            ],
             "id": "6",
             "measures": [
                 {
@@ -2227,19 +2297,29 @@
                 }
             ],
             "model": "purchase.report",
-            "rowGroupBys": ["category_id"],
+            "rowGroupBys": [
+                "category_id"
+            ],
             "name": "Purchase Analysis by Product Category",
             "sortedColumn": {
-                "groupId": [[], []],
+                "groupId": [
+                    [],
+                    []
+                ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [0]
+                "order": "desc"
             }
         },
         "7": {
             "colGroupBys": [],
             "context": {},
-            "domain": [["product_id", "!=", false]],
+            "domain": [
+                [
+                    "product_id",
+                    "!=",
+                    false
+                ]
+            ],
             "id": "7",
             "measures": [
                 {
@@ -2253,19 +2333,29 @@
                 }
             ],
             "model": "purchase.report",
-            "rowGroupBys": ["product_id"],
+            "rowGroupBys": [
+                "product_id"
+            ],
             "name": "Purchase Analysis by Product",
             "sortedColumn": {
-                "groupId": [[], []],
+                "groupId": [
+                    [],
+                    []
+                ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [0]
+                "order": "desc"
             }
         },
         "8": {
             "colGroupBys": [],
             "context": {},
-            "domain": [["user_id", "!=", false]],
+            "domain": [
+                [
+                    "user_id",
+                    "!=",
+                    false
+                ]
+            ],
             "id": "8",
             "measures": [
                 {
@@ -2279,13 +2369,17 @@
                 }
             ],
             "model": "purchase.report",
-            "rowGroupBys": ["user_id"],
+            "rowGroupBys": [
+                "user_id"
+            ],
             "name": "Purchase Analysis by Purchase Representative",
             "sortedColumn": {
-                "groupId": [[], []],
+                "groupId": [
+                    [],
+                    []
+                ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [0]
+                "order": "desc"
             }
         },
         "10": {
@@ -2314,10 +2408,12 @@
             "rowGroupBys": [],
             "name": "purchase stats - current",
             "sortedColumn": {
-                "groupId": [[], []],
+                "groupId": [
+                    [],
+                    []
+                ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [0]
+                "order": "desc"
             }
         },
         "11": {
@@ -2346,10 +2442,12 @@
             "rowGroupBys": [],
             "name": "purchase stats - previous",
             "sortedColumn": {
-                "groupId": [[], []],
+                "groupId": [
+                    [],
+                    []
+                ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [0]
+                "order": "desc"
             }
         }
     },
@@ -2463,7 +2561,20 @@
                     "type": "many2one"
                 }
             },
-            "listFields": {},
+            "listFields": {
+                "1": {
+                    "field": "partner_id.country_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "partner_id.country_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "partner_id.country_id",
+                    "type": "many2one"
+                }
+            },
             "graphFields": {
                 "40aef9ad-8e20-47d1-861c-9e9121a4cdd0": {
                     "field": "country_id",
@@ -2570,7 +2681,20 @@
                     "type": "many2one"
                 }
             },
-            "listFields": {},
+            "listFields": {
+                "1": {
+                    "field": "product_id.categ_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "product_id.categ_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "product_id.categ_id",
+                    "type": "many2one"
+                }
+            },
             "graphFields": {
                 "40aef9ad-8e20-47d1-861c-9e9121a4cdd0": {
                     "field": "category_id",
@@ -2679,15 +2803,15 @@
             },
             "listFields": {
                 "1": {
-                    "field": "activity_user_id",
+                    "field": "user_id",
                     "type": "many2one"
                 },
                 "2": {
-                    "field": "activity_user_id",
+                    "field": "user_id",
                     "type": "many2one"
                 },
                 "3": {
-                    "field": "activity_user_id",
+                    "field": "user_id",
                     "type": "many2one"
                 }
             },

@@ -61,7 +61,7 @@
     <record id="hr_leave_rule_employee_unlink" model="ir.rule">
         <field name="name">Time Off base.group_user unlink</field>
         <field name="model_id" ref="model_hr_leave"/>
-        <field name="domain_force">[('employee_id.user_id', '=', user.id), ('state', 'in', ['draft', 'confirm'])]</field>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id), ('state', 'in', ['draft', 'confirm', 'validate1'])]</field>
         <field name="perm_read" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -139,7 +139,7 @@
     </record>
 
     <record id="hr_leave_allocation_rule_multicompany" model="ir.rule">
-        <field name="name">Leave Allocations: multi company global rule</field>
+        <field name="name">Time Off: multi company global rule</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">['|', ('holiday_status_id.company_id', '=', False), ('holiday_status_id.company_id', 'in', company_ids)]</field>
     </record>
@@ -166,9 +166,7 @@
             ('holiday_status_id.employee_requests', '=', 'yes'),
             ('holiday_type', '=', 'employee'),
             '|',
-                '&amp;',
-                    ('employee_id.user_id', '=', user.id),
-                    ('state', '!=', 'validate'),
+                ('employee_id.user_id', '=', user.id),
                 '&amp;',
                     ('validation_type', '=', 'officer'),
                     ('employee_id.leave_manager_id', '=', user.id),

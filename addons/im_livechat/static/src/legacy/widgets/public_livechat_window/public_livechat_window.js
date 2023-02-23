@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
-import config from 'web.config';
-import { _t, qweb } from 'web.core';
-import Widget from 'web.Widget';
+import config from "web.config";
+import { _t, qweb } from "web.core";
+import Widget from "web.Widget";
 
-import { set_cookie, unaccent } from 'web.utils';
+import { unaccent } from "web.utils";
+import { setCookie } from "web.utils.cookies";
 
 /**
  * This is the widget that represent windows of livechat in the frontend.
@@ -13,17 +14,17 @@ import { set_cookie, unaccent } from 'web.utils';
  */
 const PublicLivechatWindow = Widget.extend({
     FOLD_ANIMATION_DURATION: 200, // duration in ms for (un)fold transition
-    HEIGHT_OPEN: '400px', // height in px of thread window when open
-    HEIGHT_FOLDED: '34px', // height, in px, of thread window when folded
-    template: 'im_livechat.legacy.PublicLivechatWindow',
+    HEIGHT_OPEN: "400px", // height in px of thread window when open
+    HEIGHT_FOLDED: "34px", // height, in px, of thread window when folded
+    template: "im_livechat.legacy.PublicLivechatWindow",
     events: {
-        'click .o_thread_window_close': '_onClickClose',
-        'click .o_thread_window_header': '_onClickFold',
-        'click .o_composer_text_field': '_onComposerClick',
-        'click .o_mail_thread': '_onThreadWindowClicked',
-        'keydown .o_composer_text_field': '_onKeydown',
-        'keypress .o_composer_text_field': '_onKeypress',
-        'input .o_composer_text_field': '_onInput',
+        "click .o_thread_window_close": "_onClickClose",
+        "click .o_thread_window_header": "_onClickFold",
+        "click .o_composer_text_field": "_onComposerClick",
+        "click .o_mail_thread": "_onThreadWindowClicked",
+        "keydown .o_composer_text_field": "_onKeydown",
+        "keypress .o_composer_text_field": "_onKeypress",
+        "input .o_composer_text_field": "_onInput",
     },
     /**
      * @param {Widget} parent
@@ -41,32 +42,39 @@ const PublicLivechatWindow = Widget.extend({
      * @return {Promise}
      */
     async start() {
-        this.$input = this.$('.o_composer_text_field');
-        this.$header = this.$('.o_thread_window_header');
+        this.$input = this.$(".o_composer_text_field");
+        this.$header = this.$(".o_thread_window_header");
 
         // animate the (un)folding of thread windows
-        this.$el.css({ transition: 'height ' + this.FOLD_ANIMATION_DURATION + 'ms linear' });
+        this.$el.css({ transition: "height " + this.FOLD_ANIMATION_DURATION + "ms linear" });
         if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded) {
-            this.$el.css('height', this.HEIGHT_FOLDED);
+            this.$el.css("height", this.HEIGHT_FOLDED);
         } else {
             this._focusInput();
         }
-        if (!config.device.isMobile) {
-            const margin_dir = _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
-            this.$el.css(margin_dir, $.position.scrollbarWidth());
-        }
-        const def = this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.replace(this.$('.o_thread_window_content')).then(() => {
-            this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.$el.on('scroll', this, this._debouncedOnScroll);
-        });
+        const def = this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget
+            .replace(this.$(".o_thread_window_content"))
+            .then(() => {
+                this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.$el.on(
+                    "scroll",
+                    this,
+                    this._debouncedOnScroll
+                );
+            });
         await Promise.all([this._super(), def]);
         if (this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor) {
-            this.$('.o_thread_window_header').css('background-color', this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor);
+            this.$(".o_thread_window_header").css(
+                "background-color",
+                this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor
+            );
         }
         if (this.messaging.publicLivechatGlobal.livechatButtonView.titleColor) {
-            this.$('.o_thread_window_header').css('color', this.messaging.publicLivechatGlobal.livechatButtonView.titleColor);
+            this.$(".o_thread_window_header").css(
+                "color",
+                this.messaging.publicLivechatGlobal.livechatButtonView.titleColor
+            );
         }
     },
-
 
     //--------------------------------------------------------------------------
     // Public
@@ -76,10 +84,14 @@ const PublicLivechatWindow = Widget.extend({
      * @override
      */
     close() {
-        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_composer input').prop('disabled');
-        const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
-            return message.id !== '_welcome';
-        });
+        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.widget
+            .$(".o_thread_composer input")
+            .prop("disabled");
+        const shouldAskFeedback =
+            !isComposerDisabled &&
+            this.messaging.publicLivechatGlobal.messages.find(function (message) {
+                return message.id !== "_welcome";
+            });
         if (shouldAskFeedback) {
             this.messaging.publicLivechatGlobal.chatWindow.widget.toggleFold(false);
             this.messaging.publicLivechatGlobal.livechatButtonView.askFeedback();
@@ -102,7 +114,9 @@ const PublicLivechatWindow = Widget.extend({
      */
     render() {
         this.renderHeader();
-        this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.render({ displayLoadMore: false });
+        this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.render({
+            displayLoadMore: false,
+        });
     },
     /**
      * Render the header of this thread window.
@@ -112,15 +126,43 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     renderHeader() {
-        this.$header.html(qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', { widget: this }));
+        this.$header.html(
+            qweb.render("im_livechat.legacy.PublicLivechatWindow.HeaderContent", { widget: this })
+        );
     },
+
+    /**
+     * Render the chat window itself.
+     */
+    renderChatWindow() {
+        this.renderElement();
+        this.adjustPosition();
+    },
+
+    /**
+     * Compute position of this chat window and apply corresponding styles to
+     * the underlying widget.
+     */
+    adjustPosition() {
+        const cssProps = { bottom: 0 };
+        cssProps[this.messaging.locale.textDirection === "rtl" ? "left" : "right"] = 0;
+        if (!config.device.isMobile) {
+            const margin_dir =
+                _t.database.parameters.direction === "rtl" ? "margin-left" : "margin-right";
+            cssProps[margin_dir] = $.position.scrollbarWidth();
+        }
+        this.$el.css(cssProps);
+    },
+
     /**
      * Replace the thread content with provided new content
      *
      * @param {$.Element} $element
      */
     replaceContentWith($element) {
-        $element.replace(this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.$el);
+        $element.replace(
+            this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.$el
+        );
     },
     /**
      * Toggle the fold state of this thread window. Also update the fold state
@@ -137,7 +179,19 @@ const PublicLivechatWindow = Widget.extend({
             folded = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded;
         }
         this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: folded });
-        set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
+        if (this.messaging.publicLivechatGlobal.publicLivechat.operator) {
+            setCookie(
+                "im_livechat_session",
+                unaccent(
+                    JSON.stringify(
+                        this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()
+                    ),
+                    true
+                ),
+                60 * 60,
+                "required"
+            );
+        }
         this.updateVisualFoldState();
     },
     /**
@@ -150,7 +204,9 @@ const PublicLivechatWindow = Widget.extend({
             this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
             this._focusInput();
         }
-        const height = this.messaging.publicLivechatGlobal.publicLivechat.isFolded ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN;
+        const height = this.messaging.publicLivechatGlobal.publicLivechat.isFolded
+            ? this.HEIGHT_FOLDED
+            : this.HEIGHT_OPEN;
         this.$el.css({ height });
     },
 
@@ -166,10 +222,7 @@ const PublicLivechatWindow = Widget.extend({
      * Set the focus on the input of the window
      */
     _focusInput() {
-        if (
-            config.device.touch &&
-            config.device.size_class <= config.device.SIZES.SM
-        ) {
+        if (config.device.touch && config.device.size_class <= config.device.SIZES.SM) {
             return;
         }
         this.$input.focus();
@@ -182,7 +235,7 @@ const PublicLivechatWindow = Widget.extend({
      * @returns {boolean}
      */
     _hasFocus() {
-        return this.$input.is(':focus');
+        return this.$input.is(":focus");
     },
     /**
      * Post a message on this thread window, and auto-scroll to the bottom of
@@ -194,10 +247,14 @@ const PublicLivechatWindow = Widget.extend({
     async _postMessage(messageData) {
         try {
             await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData);
-        } catch (_err) {
+        } catch {
             await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData); // try again just in case
         }
-        this.messaging.publicLivechatGlobal.publicLivechat.widget.postMessage(messageData)
+        if (!this.messaging.publicLivechatGlobal.publicLivechat.operator) {
+            return;
+        }
+        this.messaging.publicLivechatGlobal.publicLivechat.widget
+            .postMessage(messageData)
             .then(() => {
                 this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
             });
@@ -244,7 +301,7 @@ const PublicLivechatWindow = Widget.extend({
      * @param {Event} ev
      */
     _onComposerClick(ev) {
-        if ($(ev.target).closest('a, button').length) {
+        if ($(ev.target).closest("a, button").length) {
             return;
         }
         this._focusInput();
@@ -256,7 +313,9 @@ const PublicLivechatWindow = Widget.extend({
      */
     _onInput() {
         const isTyping = this.$input.val().length > 0;
-        this.messaging.publicLivechatGlobal.publicLivechat.widget.setMyselfTyping({ typing: isTyping });
+        this.messaging.publicLivechatGlobal.publicLivechat.widget.setMyselfTyping({
+            typing: isTyping,
+        });
     },
     /**
      * Called when typing something on the composer of this thread window.
@@ -274,7 +333,7 @@ const PublicLivechatWindow = Widget.extend({
                 attachment_ids: [],
                 partner_ids: [],
             };
-            this.$input.val('');
+            this.$input.val("");
             if (content) {
                 this._postMessage(messageData);
             }

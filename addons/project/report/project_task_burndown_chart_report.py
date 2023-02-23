@@ -4,50 +4,8 @@
 from odoo import _, api, fields, models
 from odoo.models import regex_field_agg, VALID_AGGREGATE_FUNCTIONS
 from odoo.exceptions import UserError
-from odoo.osv.expression import AND_OPERATOR, OR_OPERATOR, NOT_OPERATOR, DOMAIN_OPERATORS, FALSE_LEAF, TRUE_LEAF, normalize_domain
 from odoo.tools import OrderedSet
-
-
-def remove_domain_leaf(domain, fields_to_remove):
-    """ Make the provided domain insensitive to the fields provided in fields_to_remove. Fields that are part of
-    `fields_to_remove` are replaced by either a `FALSE_LEAF` or a `TRUE_LEAF` in order to ensure the evaluation of the
-    complete domain.
-
-    :param domain: The domain to process.
-    :param fields_to_remove: List of fields the domain has to be insensitive to.
-    :return: The insensitive domain.
-    """
-    def _process_leaf(elements, index, operator, new_domain):
-        leaf = elements[index]
-        if len(leaf) == 3:
-            if leaf[0] in fields_to_remove:
-                if operator == AND_OPERATOR:
-                    new_domain.append(TRUE_LEAF)
-                elif operator == OR_OPERATOR:
-                    new_domain.append(FALSE_LEAF)
-            else:
-                new_domain.append(leaf)
-            return 1
-        elif len(leaf) == 1 and leaf in DOMAIN_OPERATORS:
-            # Special case to avoid OR ('|') that can never resolve to true
-            if leaf == OR_OPERATOR \
-                    and len(elements[index + 1]) == 3 and len(elements[index + 2]) == 3 \
-                    and elements[index + 1][0] in fields_to_remove and elements[index + 1][0] in fields_to_remove:
-                new_domain.append(TRUE_LEAF)
-                return 3
-            new_domain.append(leaf)
-            if leaf[0] == NOT_OPERATOR:
-                return 1 + _process_leaf(elements, index + 1, '&', new_domain)
-            first_leaf_skip = _process_leaf(elements, index + 1, leaf, new_domain)
-            second_leaf_skip = _process_leaf(elements, index + 1 + first_leaf_skip, leaf, new_domain)
-            return 1 + first_leaf_skip + second_leaf_skip
-        return 0
-
-    if len(domain) == 0:
-        return domain
-    new_domain = []
-    _process_leaf(normalize_domain(domain), 0, AND_OPERATOR, new_domain)
-    return new_domain
+from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
 class ReportProjectTaskBurndownChart(models.AbstractModel):
@@ -297,8 +255,8 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         :return: A tuple containing the non `project.task` specific domain and the `project.task` specific domain.
         """
         burndown_chart_specific_fields = list(set(self._fields) - set(self.task_specific_fields))
-        task_specific_domain = remove_domain_leaf(domain, burndown_chart_specific_fields)
-        non_task_specific_domain = remove_domain_leaf(domain, self.task_specific_fields)
+        task_specific_domain = filter_domain_leaf(domain, lambda field: field not in burndown_chart_specific_fields)
+        non_task_specific_domain = filter_domain_leaf(domain, lambda field: field not in self.task_specific_fields)
         return non_task_specific_domain, task_specific_domain
 
     @api.model
@@ -361,7 +319,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                 fname = fname or name
                 field = self._fields.get(fname)
                 if not field:
-                    raise ValueError("Invalid field %r on model %r" % (fname, self._name))
+                    raise ValueError(_("Invalid field %r on model %r", (fname, self._name)))
                 if not (field.base_field.store and field.base_field.column_type):
                     raise UserError(_("Cannot aggregate field %r.", fname))
                 if func not in VALID_AGGREGATE_FUNCTIONS:
@@ -370,7 +328,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                 # we have 'name', retrieve the aggregator on the field
                 field = self._fields.get(name)
                 if not field:
-                    raise ValueError("Invalid field %r on model %r" % (name, self._name))
+                    raise ValueError(_("Invalid field %r on model %r", (name, self._name)))
                 if not (field.base_field.store and
                         field.base_field.column_type and field.group_operator):
                     continue

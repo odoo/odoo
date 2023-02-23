@@ -1,13 +1,11 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, clear, insert, many, one, Model } from "@mail/model";
 
-const { markup } = owl;
+import { markup } from "@odoo/owl";
 
-registerModel({
-    name: 'Activity',
+Model({
+    name: "Activity",
     modelMethods: {
         /**
          * @param {Object} data
@@ -15,39 +13,39 @@ registerModel({
          */
         convertData(data) {
             const data2 = {};
-            if ('activity_category' in data) {
+            if ("activity_category" in data) {
                 data2.category = data.activity_category;
             }
-            if ('can_write' in data) {
+            if ("can_write" in data) {
                 data2.canWrite = data.can_write;
             }
-            if ('create_date' in data) {
+            if ("create_date" in data) {
                 data2.dateCreate = data.create_date;
             }
-            if ('date_deadline' in data) {
+            if ("date_deadline" in data) {
                 data2.dateDeadline = data.date_deadline;
             }
-            if ('chaining_type' in data) {
+            if ("chaining_type" in data) {
                 data2.chaining_type = data.chaining_type;
             }
-            if ('icon' in data) {
+            if ("icon" in data) {
                 data2.icon = data.icon;
             }
-            if ('id' in data) {
+            if ("id" in data) {
                 data2.id = data.id;
             }
-            if ('note' in data) {
+            if ("note" in data) {
                 data2.rawNote = data.note;
             }
-            if ('state' in data) {
+            if ("state" in data) {
                 data2.state = data.state;
             }
-            if ('summary' in data) {
+            if ("summary" in data) {
                 data2.summary = data.summary;
             }
 
             // relation
-            if ('activity_type_id' in data) {
+            if ("activity_type_id" in data) {
                 if (!data.activity_type_id) {
                     data2.type = clear();
                 } else {
@@ -57,7 +55,7 @@ registerModel({
                     });
                 }
             }
-            if ('create_uid' in data) {
+            if ("create_uid" in data) {
                 if (!data.create_uid) {
                     data2.creator = clear();
                 } else {
@@ -67,16 +65,16 @@ registerModel({
                     });
                 }
             }
-            if ('mail_template_ids' in data) {
+            if ("mail_template_ids" in data) {
                 data2.mailTemplates = insert(data.mail_template_ids);
             }
-            if ('res_id' in data && 'res_model' in data) {
+            if (data.res_id && data.res_model) {
                 data2.thread = insert({
                     id: data.res_id,
                     model: data.res_model,
                 });
             }
-            if ('user_id' in data) {
+            if ("user_id" in data) {
                 if (!data.user_id) {
                     data2.assignee = clear();
                 } else {
@@ -86,7 +84,7 @@ registerModel({
                     });
                 }
             }
-            if ('request_partner_id' in data) {
+            if ("request_partner_id" in data) {
                 if (!data.request_partner_id) {
                     data2.requestingPartner = clear();
                 } else {
@@ -106,8 +104,8 @@ registerModel({
          */
         async deleteServerRecord() {
             await this.messaging.rpc({
-                model: 'mail.activity',
-                method: 'unlink',
+                model: "mail.activity",
+                method: "unlink",
                 args: [[this.id]],
             });
             if (!this.exists()) {
@@ -121,49 +119,37 @@ registerModel({
          *
          * @return {Promise} promise that is fulfilled when the form has been closed
          */
-        edit() {
-            const action = {
-                type: 'ir.actions.act_window',
-                name: this.env._t("Schedule Activity"),
-                res_model: 'mail.activity',
-                view_mode: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: {
-                    default_res_id: this.thread.id,
-                    default_res_model: this.thread.model,
-                },
-                res_id: this.id,
-            };
-            return new Promise(resolve => {
-                this.env.services.action.doAction(action, {
-                    onClose: () => {
-                        resolve();
-                        this.fetchAndUpdate();
-                    },
-                })
-            });
+        async edit() {
+            await this.messaging.openActivityForm({ activity: this });
+            if (this.exists()) {
+                this.fetchAndUpdate();
+            }
         },
         async fetchAndUpdate() {
-            const [data] = await this.messaging.rpc({
-                model: 'mail.activity',
-                method: 'activity_format',
-                args: [this.id],
-            }, { shadow: true }).catch(e => {
-                const errorName = e.message && e.message.data && e.message.data.name;
-                if (errorName === 'odoo.exceptions.MissingError') {
-                    return [];
-                } else {
-                    throw e;
-                }
-            });
+            const [data] = await this.messaging
+                .rpc(
+                    {
+                        model: "mail.activity",
+                        method: "activity_format",
+                        args: [this.id],
+                    },
+                    { shadow: true }
+                )
+                .catch((e) => {
+                    const errorName = e.message && e.message.data && e.message.data.name;
+                    if ([errorName, e.exceptionName].includes("odoo.exceptions.MissingError")) {
+                        return [];
+                    } else {
+                        throw e;
+                    }
+                });
             let shouldDelete = false;
             if (data) {
                 this.update(this.constructor.convertData(data));
             } else {
                 shouldDelete = true;
             }
-            this.thread.fetchData(['activities', 'attachments', 'messages']);
+            this.thread.fetchData(["activities", "attachments", "messages"]);
             if (shouldDelete) {
                 this.delete();
             }
@@ -174,11 +160,11 @@ registerModel({
          * @param {string|boolean} [param0.feedback=false]
          */
         async markAsDone({ attachments = [], feedback = false }) {
-            const attachmentIds = attachments.map(attachment => attachment.id);
+            const attachmentIds = attachments.map((attachment) => attachment.id);
             const thread = this.thread;
             await this.messaging.rpc({
-                model: 'mail.activity',
-                method: 'action_feedback',
+                model: "mail.activity",
+                method: "action_feedback",
                 args: [[this.id]],
                 kwargs: {
                     attachment_ids: attachmentIds,
@@ -186,7 +172,7 @@ registerModel({
                 },
             });
             if (thread.exists()) {
-                thread.fetchData(['attachments', 'messages']);
+                thread.fetchData(["attachments", "messages"]);
             }
             if (!this.exists()) {
                 return;
@@ -196,18 +182,17 @@ registerModel({
         /**
          * @param {Object} param0
          * @param {string} param0.feedback
-         * @returns {Object}
          */
         async markAsDoneAndScheduleNext({ feedback }) {
             const thread = this.thread;
             const action = await this.messaging.rpc({
-                model: 'mail.activity',
-                method: 'action_feedback_schedule_next',
+                model: "mail.activity",
+                method: "action_feedback_schedule_next",
                 args: [[this.id]],
                 kwargs: { feedback },
             });
             if (thread.exists()) {
-                thread.fetchData(['activities', 'attachments', 'messages']);
+                thread.fetchData(["activities", "attachments", "messages"]);
             }
             if (this.exists()) {
                 this.delete();
@@ -215,34 +200,24 @@ registerModel({
             if (!action) {
                 return;
             }
-            this.env.services.action.doAction(
-                action,
-                {
-                    onClose: () => {
-                        if (!thread.exists()) {
-                            return;
-                        }
-                        thread.fetchData(['activities']);
-                    },
-                },
-            );
+            await new Promise((resolve) => {
+                this.env.services.action.doAction(action, {
+                    onClose: resolve,
+                });
+            });
+            if (!thread.exists()) {
+                return;
+            }
+            thread.fetchData(["activities"]);
         },
     },
     fields: {
-        activityViews: many('ActivityView', {
-            inverse: 'activity',
-        }),
-        assignee: one('User', {
-            inverse: 'activitiesAsAssignee',
-        }),
-        attachments: many('Attachment', {
-            inverse: 'activities',
-        }),
-        canWrite: attr({
-            default: false,
-        }),
+        activityViews: many("ActivityView", { inverse: "activity" }),
+        assignee: one("User", { inverse: "activitiesAsAssignee" }),
+        attachments: many("Attachment", { inverse: "activities" }),
+        canWrite: attr({ default: false }),
         category: attr(),
-        creator: one('User'),
+        creator: one("User"),
         dateCreate: attr(),
         dateDeadline: attr(),
         /**
@@ -251,13 +226,9 @@ registerModel({
          * In all other cases, this field value should not be trusted.
          */
         feedbackBackup: attr(),
-        chaining_type: attr({
-            default: 'suggest',
-        }),
+        chaining_type: attr({ default: "suggest" }),
         icon: attr(),
-        id: attr({
-            identifying: true,
-        }),
+        id: attr({ identifying: true }),
         isCurrentPartnerAssignee: attr({
             compute() {
                 if (!this.assignee || !this.assignee.partner || !this.messaging.currentPartner) {
@@ -267,9 +238,7 @@ registerModel({
             },
             default: false,
         }),
-        mailTemplates: many('MailTemplate', {
-            inverse: 'activities',
-        }),
+        mailTemplates: many("MailTemplate", { inverse: "activities" }),
         /**
          * This value is meant to be returned by the server
          * (and has been sanitized before stored into db).
@@ -283,7 +252,7 @@ registerModel({
              * value, to reduce the size the empty note takes on the UI.
              */
             compute() {
-                if (this.rawNote === '<p><br></p>') {
+                if (this.rawNote === "<p><br></p>") {
                     return clear();
                 }
                 return this.rawNote;
@@ -302,18 +271,14 @@ registerModel({
          * Also, be useful when the assigned user is different from the
          * "source" or "requesting" partner.
          */
-        requestingPartner: one('Partner'),
+        requestingPartner: one("Partner"),
         state: attr(),
         summary: attr(),
         /**
          * Determines to which "thread" (using `mail.activity.mixin` on the
          * server) `this` belongs to.
          */
-        thread: one('Thread', {
-            inverse: 'activities',
-        }),
-        type: one('ActivityType', {
-            inverse: 'activities',
-        }),
+        thread: one("Thread", { inverse: "activities" }),
+        type: one("ActivityType", { inverse: "activities" }),
     },
 });

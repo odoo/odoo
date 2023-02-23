@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:58+0000\n"
-"PO-Revision-Date: 2022-04-19 13:58+0000\n"
+"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"PO-Revision-Date: 2023-01-17 10:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,11 @@ msgstr ""
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__partner_id
 msgid "Booked by"
+msgstr ""
+
+#. module: website_event_questions
+#: model_terms:ir.actions.act_window,help:website_event_questions.action_event_registration_report
+msgid "Come back once you have registrations to overview answers."
 msgstr ""
 
 #. module: website_event_questions
@@ -130,13 +135,6 @@ msgid ""
 msgstr ""
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer____last_update
-#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__write_uid
@@ -151,8 +149,25 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
+msgid "Mandatory"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
+msgstr ""
+
+#. module: website_event_questions
+#: model_terms:ir.actions.act_window,help:website_event_questions.action_event_registration_report
+msgid "No Answers yet!"
+msgstr ""
+
+#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
+msgid "Once per Order"
 msgstr ""
 
 #. module: website_event_questions
@@ -170,6 +185,7 @@ msgid "Question Type"
 msgstr ""
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
@@ -190,6 +206,7 @@ msgid "Registration"
 msgstr ""
 
 #. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_tree
 msgid "Selected Answers"
 msgstr ""
@@ -213,6 +230,11 @@ msgstr ""
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
 msgid "Specific Questions"
+msgstr ""
+
+#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+msgid "Stats"
 msgstr ""
 
 #. module: website_event_questions
@@ -247,6 +269,7 @@ msgid "Type"
 msgstr ""
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
@@ -254,6 +277,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
@@ -261,6 +285,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""

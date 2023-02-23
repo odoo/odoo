@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, clear, insert, many, one, Model } from "@mail/model";
 
-registerModel({
-    name: 'User',
+Model({
+    name: "User",
     modelMethods: {
         /**
          * @param {Object} data
@@ -13,14 +11,14 @@ registerModel({
          */
         convertData(data) {
             const data2 = {};
-            if ('id' in data) {
+            if ("id" in data) {
                 data2.id = data.id;
             }
-            if ('partner_id' in data) {
+            if ("partner_id" in data) {
                 if (!data.partner_id) {
                     data2.partner = clear();
                 } else {
-                    const partnerNameGet = data['partner_id'];
+                    const partnerNameGet = data["partner_id"];
                     const partnerData = {
                         display_name: partnerNameGet[1],
                         id: partnerNameGet[0],
@@ -39,17 +37,20 @@ registerModel({
          * @param {integer[]} param0.ids
          */
         async performRpcRead({ context, fields, ids }) {
-            const usersData = await this.messaging.rpc({
-                model: 'res.users',
-                method: 'read',
-                args: [ids, fields],
-                kwargs: {
-                    context,
+            const usersData = await this.messaging.rpc(
+                {
+                    model: "res.users",
+                    method: "read",
+                    args: [ids, fields],
+                    kwargs: {
+                        context,
+                    },
                 },
-            }, { shadow: true });
-            return this.messaging.models['User'].insert(usersData.map(userData =>
-                this.messaging.models['User'].convertData(userData)
-            ));
+                { shadow: true }
+            );
+            return this.messaging.models["User"].insert(
+                usersData.map((userData) => this.messaging.models["User"].convertData(userData))
+            );
         },
     },
     recordMethods: {
@@ -57,9 +58,9 @@ registerModel({
          * Fetches the partner of this user.
          */
         async fetchPartner() {
-            return this.messaging.models['User'].performRpcRead({
+            return this.messaging.models["User"].performRpcRead({
                 ids: [this.id],
-                fields: ['partner_id'],
+                fields: ["partner_id"],
                 context: { active_test: false },
             });
         },
@@ -84,7 +85,7 @@ registerModel({
                 //   another tab or by another user.
                 this.messaging.notify({
                     message: this.env._t("You can only chat with existing users."),
-                    type: 'warning',
+                    type: "warning",
                 });
                 return;
             }
@@ -93,7 +94,7 @@ registerModel({
             if (!chat || !chat.thread.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
-                chat = await this.messaging.models['Channel'].performRpcCreateChat({
+                chat = await this.messaging.models["Channel"].performRpcCreateChat({
                     partnerIds: [this.partner.id],
                 });
                 if (!this.exists()) {
@@ -102,8 +103,10 @@ registerModel({
             }
             if (!chat) {
                 this.messaging.notify({
-                    message: this.env._t("An unexpected error occurred during the creation of the chat."),
-                    type: 'warning',
+                    message: this.env._t(
+                        "An unexpected error occurred during the creation of the chat."
+                    ),
+                    type: "warning",
                 });
                 return;
             }
@@ -147,7 +150,7 @@ registerModel({
                 //   another tab or by another user.
                 this.messaging.notify({
                     message: this.env._t("You can only open the profile of existing users."),
-                    type: 'warning',
+                    type: "warning",
                 });
                 return;
             }
@@ -155,12 +158,8 @@ registerModel({
         },
     },
     fields: {
-        activitiesAsAssignee: many('Activity', {
-            inverse: 'assignee',
-        }),
-        id: attr({
-            identifying: true,
-        }),
+        activitiesAsAssignee: many("Activity", { inverse: "assignee" }),
+        id: attr({ identifying: true }),
         /**
          * Determines whether this user is an internal user. An internal user is
          * a member of the group `base.group_user`. This is the inverse of the
@@ -169,6 +168,7 @@ registerModel({
         isInternalUser: attr(),
         display_name: attr(),
         displayName: attr({
+            default: "",
             compute() {
                 if (this.display_name) {
                     return this.display_name;
@@ -178,21 +178,14 @@ registerModel({
                 }
                 return clear();
             },
-            default: "",
         }),
-        model: attr({
-            default: 'res.user',
-        }),
+        model: attr({ default: "res.user" }),
         nameOrDisplayName: attr({
             compute() {
-                return this.partner && this.partner.nameOrDisplayName || this.display_name;
+                return (this.partner && this.partner.nameOrDisplayName) || this.display_name;
             },
         }),
-        partner: one('Partner', {
-            inverse: 'user',
-        }),
-        res_users_settings_id: one('res.users.settings', {
-            inverse: 'user_id',
-        }),
+        partner: one("Partner", { inverse: "user" }),
+        res_users_settings_id: one("res.users.settings", { inverse: "user_id" }),
     },
 });

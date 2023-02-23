@@ -12,13 +12,12 @@ SurveyFormWidget.include({
     }
 });
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
-tour.register('test_certification_success', {
+registry.category("web_tour.tours").add('test_certification_success', {
     test: true,
-    url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac'
-},
-[{ // Page-1
+    url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
+    steps: [{ // Page-1
         content: "Clicking on Start Certification",
         trigger: 'button.btn.btn-primary.btn-lg:contains("Start Certification")',
     }, { // Question: Do we sell Acoustic Bloc Screens?
@@ -95,6 +94,6 @@ tour.register('test_certification_success', {
         content: "test passed",
         trigger: 'div:contains("Congratulations, you have passed the test!")',
     }
-]);
+]});
 
 });

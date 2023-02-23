@@ -1,14 +1,13 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 import ajax from 'web.ajax';
 import tourUtils from 'website_sale.tour_utils';
 
-tour.register('shop_sale_loyalty', {
+registry.category("web_tour.tours").add('shop_sale_loyalty', {
     test: true,
     url: '/shop?search=Small%20Cabinet',
-},
-    [
+    steps: [
         /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */
         {
             content: "select Small Cabinet",
@@ -143,4 +142,4 @@ tour.register('shop_sale_loyalty', {
             run: function () {}, // it's a check
         },
     ]
-);
+});

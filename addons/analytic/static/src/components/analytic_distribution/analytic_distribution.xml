@@ -1,39 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
-    <t t-name="analytic_distribution" owl="1">
-        <div class="analytic_distribution" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
-            <t t-call="analytic_distribution.tags"/>
-            <t t-if="!props.readonly">
-                <div class="o_input o_input_dropdown hidden-focus" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus">
-                    <a role="button" class="o_dropdown_button" draggable="false" />
-                    <t t-call="analytic_distribution.popup"/>
-                </div>
-            </t>
+    <t t-name="analytic.AnalyticDistribution" owl="1">
+        <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
+            <TagsList tags="this.tags"/>
+            <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
+                <span class="analytic_distribution_placeholder"/>
+                <a role="button" class="o_dropdown_button" draggable="false"/>
+                <t t-call="analytic.AnalyticDistributionPopup"/>
+            </div>
         </div>
     </t>
 
-    <t t-name="analytic_distribution_form" owl="1">
-        <div class="analytic_distribution" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
-
-            <t t-call="analytic_distribution.tags"/>
-            <t t-if="!props.readonly">
-                <div class="o_input o_input_dropdown hidden-focus" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
-                    <input class="invisible"/>
-                    <a role="button" class="o_dropdown_button" draggable="false" />
-                    <t t-call="analytic_distribution.popup"/>
-                </div>
-            </t>
-        </div>
-    </t>
-
-    <t t-name="analytic_distribution.tags" owl="1">
-        <div class="tag-list d-inline-flex flex-wrap">
-            <TagsList tags="tags"/>
-        </div>
-    </t>
-
-    <t t-name="analytic_distribution.popup" owl="1">
+    <t t-name="analytic.AnalyticDistributionPopup" owl="1">
         <div class="analytic_distribution_popup o-dropdown-menu show rounded py-0" t-if="state.showDropdown" t-ref="analyticDropdown">
             <div class="popover-header">
                 <div class="d-flex">
@@ -50,9 +29,9 @@
                     <table class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-borderless" t-attf-id="plan_{{plan.id}}">
                         <tr class="border-bottom">
                             <th class="o_analytic_account_name">
-                                <t t-esc="plan.name"/>
+                                <t t-out="plan.name"/>
                                 <t t-if="plan.account_count === 0"> (no accounts)</t>
-                                <span t-attf-class="o_status d-inline-block o_analytic_status_{{groupStatus(plan.id)}}" t-att-title="applicabilityStatus(plan.id) + ' ' + formatPercentage(sumByGroup(plan.id))"/>
+                                <span t-if="plan.applicability === 'mandatory'" t-attf-class="o_status d-inline-block o_analytic_status_{{groupStatus(plan.id)}}" t-att-title="statusDescription(plan.id)"/>
                             </th>
                         </tr>
                         <t t-foreach="plan.distribution" t-as="dist_tag" t-key="dist_tag.id">

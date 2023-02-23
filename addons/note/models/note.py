@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from random import randint
+
 from odoo import api, fields, models, _
 from odoo.tools import html2plaintext
-
+from odoo.addons.web_editor.controllers.main import handle_history_divergence
 
 class Stage(models.Model):
 
@@ -22,8 +24,11 @@ class Tag(models.Model):
     _name = "note.tag"
     _description = "Note Tag"
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char('Tag Name', required=True, translate=True)
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', default=_get_default_color)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -87,15 +92,20 @@ class Note(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if groupby and groupby[0] == "stage_id" and (len(groupby) == 1 or lazy):
             stages = self.env['note.stage'].search([('user_id', '=', self.env.uid)])
-            if stages:  # if the user has some stages
-                result = [{  # notes by stage for stages user
-                    '__context': {'group_by': groupby[1:]},
-                    '__domain': domain + [('stage_ids.id', '=', stage.id)],
-                    'stage_id': (stage.id, stage.name),
-                    'stage_id_count': self.search_count(domain + [('stage_ids', '=', stage.id)]),
-                    '__fold': stage.fold,
-                } for stage in stages]
-
+            if stages:
+                # if the user has some stages
+                result = []
+                for stage in stages:
+                    # notes by stage for stages user
+                    nb_stage_counts = self.search_count(domain + [('stage_ids', '=', stage.id)])
+                    result.append({
+                        '__context': {'group_by': groupby[1:]},
+                        '__domain': domain + [('stage_ids.id', '=', stage.id)],
+                        'stage_id': (stage.id, stage.name),
+                        'stage_id_count': nb_stage_counts,
+                        '__count': nb_stage_counts,
+                        '__fold': stage.fold,
+                    })
                 # note without user's stage
                 nb_notes_ws = self.search_count(domain + [('stage_ids', 'not in', stages.ids)])
                 if nb_notes_ws:
@@ -105,6 +115,7 @@ class Note(models.Model):
                         dom_in = result[0]['__domain'].pop()
                         result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
                         result[0]['stage_id_count'] += nb_notes_ws
+                        result[0]['__count'] += nb_notes_ws
                     else:
                         # add the first stage column
                         result = [{
@@ -112,6 +123,7 @@ class Note(models.Model):
                             '__domain': domain + [dom_not_in],
                             'stage_id': (stages[0].id, stages[0].name),
                             'stage_id_count': nb_notes_ws,
+                            '__count': nb_notes_ws,
                             '__fold': stages[0].name,
                         }] + result
             else:  # if stage_ids is empty, get note without user's stage
@@ -121,7 +133,8 @@ class Note(models.Model):
                         '__context': {'group_by': groupby[1:]},
                         '__domain': domain,
                         'stage_id': False,
-                        'stage_id_count': nb_notes_ws
+                        'stage_id_count': nb_notes_ws,
+                        '__count': nb_notes_ws
                     }]
                 else:
                     result = []
@@ -133,3 +146,8 @@ class Note(models.Model):
 
     def action_open(self):
         return self.write({'open': True})
+
+    def write(self, vals):
+        if len(self) == 1:
+            handle_history_divergence(self, 'memo', vals)
+        return super(Note, self).write(vals)

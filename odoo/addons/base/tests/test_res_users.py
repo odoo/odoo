@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from types import SimpleNamespace
+from unittest.mock import patch
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
 from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase, Form, tagged
+from odoo.tests.common import Form, TransactionCase, new_test_user, tagged
 from odoo.tools import mute_logger
 
 
@@ -188,6 +190,37 @@ class TestUsers(TransactionCase):
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
 
+    def test_context_get_lang(self):
+        self.env['res.lang'].with_context(active_test=False).search([
+            ('code', 'in', ['fr_FR', 'es_ES', 'de_DE', 'en_US'])
+        ]).write({'active': True})
+
+        user = new_test_user(self.env, 'jackoneill')
+        user = user.with_user(user)
+        user.lang = 'fr_FR'
+
+        company = user.company_id.partner_id.sudo()
+        company.lang = 'de_DE'
+
+        request = SimpleNamespace()
+        request.best_lang = 'es_ES'
+        request_patch = patch('odoo.addons.base.models.res_users.request', request)
+        self.addCleanup(request_patch.stop)
+        request_patch.start()
+
+        self.assertEqual(user.context_get()['lang'], 'fr_FR')
+        self.env.registry.clear_caches()
+        user.lang = False
+
+        self.assertEqual(user.context_get()['lang'], 'es_ES')
+        self.env.registry.clear_caches()
+        request_patch.stop()
+
+        self.assertEqual(user.context_get()['lang'], 'de_DE')
+        self.env.registry.clear_caches()
+        company.lang = False
+
+        self.assertEqual(user.context_get()['lang'], 'en_US')
 
 @tagged('post_install', '-at_install')
 class TestUsers2(TransactionCase):
@@ -405,7 +438,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 97 requests if only base is installed
         # 412 runbot community
         # 549 runbot enterprise
-        with self.assertQueryCount(__system__=549), \
+        with self.assertQueryCount(__system__=436), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = False
             UserForm._perform_onchange([self.sales_categ_field])
@@ -427,7 +460,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 97 requests if only base is installed
         # 412 runbot community
         # 549 runbot enterprise
-        with self.assertQueryCount(__system__=549), \
+        with self.assertQueryCount(__system__=437), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = self.group_sales_user.id
             UserForm._perform_onchange([self.sales_categ_field])
@@ -451,7 +484,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 101 requests if only base is installed
         # 416 runbot community
         # 553 runbot enterprise
-        with self.assertQueryCount(__system__=553), \
+        with self.assertQueryCount(__system__=438), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = self.group_sales_user.id
             UserForm._values[self.project_categ_field] = self.group_project_user.id
@@ -479,7 +512,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 98 requests if only base is installed
         # 413 runbot community
         # 550 runbot enterprise
-        with self.assertQueryCount(__system__=550), \
+        with self.assertQueryCount(__system__=437), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.timesheets_categ_field] = self.group_timesheets_user_own_timesheet.id
             UserForm._perform_onchange([self.timesheets_categ_field])
@@ -500,7 +533,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 83 requests if only base is installed
         # 397 runbot community
         # 534 runbot enterprise
-        with self.assertQueryCount(__system__=534), \
+        with self.assertQueryCount(__system__=420), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.field_service_categ_field] = self.group_field_service_user.id
             UserForm._perform_onchange([self.field_service_categ_field])

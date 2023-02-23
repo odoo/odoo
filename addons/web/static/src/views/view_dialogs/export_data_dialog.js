@@ -8,7 +8,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable";
 import { useDebounced } from "@web/core/utils/timing";
 
-const { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } = owl;
+import { Component, useRef, useState, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 
 class DeleteExportListDialog extends Component {
     async onDelete() {
@@ -79,7 +79,6 @@ export class ExportDataDialog extends Component {
         this.title = this.env._t("Export Data");
         this.newTemplateText = this.env._t("New template");
         this.removeFieldText = this.env._t("Remove field");
-        this.expandText = this.env._t("Show sub-fields");
 
         this.debouncedOnResize = useDebounced(this.updateSize, 300);
 
@@ -110,14 +109,14 @@ export class ExportDataDialog extends Component {
 
         onWillStart(async () => {
             this.availableFormats = await this.rpc("/web/export/formats");
-            this.templates = await this.rpc("/web/dataset/call_kw", {
-                args: [],
-                kwargs: {
+            this.templates = await this.orm.searchRead(
+                "ir.exports",
+                [["resource", "=", this.props.root.resModel]],
+                [],
+                {
                     context: this.props.context,
-                },
-                model: "ir.exports",
-                method: "search_read",
-            });
+                }
+            );
             await this.fetchFields();
         });
 
@@ -178,8 +177,8 @@ export class ExportDataDialog extends Component {
         return this.expandedFields[id] && !this.expandedFields[id].hidden;
     }
 
-    isFieldExpandable({ field_type, name }) {
-        return ["one2many", "many2one"].includes(field_type) && name.split("/").length < 3;
+    isFieldExpandable({ name }) {
+        return this.knownFields[name].children && name.split("/").length < 3;
     }
 
     async loadExportList(value) {
@@ -264,7 +263,7 @@ export class ExportDataDialog extends Component {
                 type: "danger",
             });
         }
-        const id = await this.orm.create(
+        const [id] = await this.orm.create(
             "ir.exports",
             [
                 {
@@ -352,9 +351,7 @@ export class ExportDataDialog extends Component {
                 ({ name }) => this.knownFields[name]
             );
         } else {
-            this.state.exportList = Object.values(this.knownFields).filter(
-                ({ name }) => name && this.props.root.activeFields[name]
-            );
+            this.state.exportList = this.props.defaultExportList;
         }
     }
 
@@ -367,4 +364,12 @@ export class ExportDataDialog extends Component {
     }
 }
 ExportDataDialog.components = { CheckBox, Dialog, ExportDataItem };
+ExportDataDialog.props = {
+    close: { type: Function },
+    context: { type: Object, optional: true },
+    defaultExportList: { type: Array },
+    download: { type: Function },
+    getExportedFields: { type: Function },
+    root: { type: Object },
+};
 ExportDataDialog.template = "web.ExportDataDialog";

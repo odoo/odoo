@@ -103,6 +103,7 @@
         'views/ir_attachment_views.xml',
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
+        'views/neutralize_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
     ],
@@ -114,6 +115,9 @@
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
+        'mail.assets_messaging': [
+            'website/static/src/models/*.js',
+        ],
         'web.assets_frontend': [
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/scss/website.scss',
@@ -129,6 +133,7 @@
             'website/static/src/js/post_link.js',
             'website/static/src/js/plausible.js',
             'website/static/src/js/user_custom_javascript.js',
+            'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.share.xml',
@@ -177,13 +182,21 @@
             'website/static/src/components/views/*',
             'website/static/src/services/website_service.js',
             'website/static/src/js/utils.js',
+
+            # Don't include dark mode files in light mode
+            ('remove', 'website/static/src/client_actions/*/*.dark.scss'),
+        ],
+        "web.dark_mode_assets_backend": [
+            'website/static/src/components/dialog/*.dark.scss',
+            'website/static/src/scss/website.backend.dark.scss',
+            'website/static/src/client_actions/*/*.dark.scss',
+            'website/static/src/components/website_loader/website_loader.dark.scss'
         ],
         'web.assets_common': [
             'website/static/src/js/tours/tour_utils.js',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',
-            'website/static/tests/website_tests.js',
             'website/static/tests/redirect_field_tests.js',
         ],
         'web.tests_assets': [
@@ -195,7 +208,7 @@
         'website.assets_wysiwyg': [
             ('include', 'web._assets_helpers'),
             'web_editor/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'website/static/src/scss/website.wysiwyg.scss',
             'website/static/src/scss/website.edit_mode.scss',
@@ -206,7 +219,6 @@
             'website/static/src/snippets/s_image_gallery/options.js',
             'website/static/src/snippets/s_image_gallery/000.xml',
             'website/static/src/snippets/s_countdown/options.js',
-            'website/static/src/snippets/s_countdown/000.xml',
             'website/static/src/snippets/s_countdown/options.xml',
             'website/static/src/snippets/s_masonry_block/options.js',
             'website/static/src/snippets/s_popup/options.js',
@@ -223,16 +235,14 @@
             'website/static/src/snippets/s_google_map/options.js',
             'website/static/src/snippets/s_map/options.js',
             'website/static/src/snippets/s_dynamic_snippet/options.js',
-            'website/static/src/snippets/s_dynamic_snippet/000.xml',
             'website/static/src/snippets/s_dynamic_snippet_carousel/options.js',
-            'website/static/src/snippets/s_dynamic_snippet_carousel/000.xml',
             'website/static/src/snippets/s_embed_code/options.js',
             'website/static/src/snippets/s_website_form/options.js',
+            'website/static/src/js/form_editor_registry.js',
             'website/static/src/xml/website_form.xml',
             'website/static/src/xml/website.editor.xml',
             'website/static/src/xml/website_form_editor.xml',
             'website/static/src/snippets/s_searchbar/options.js',
-            'website/static/src/snippets/s_searchbar/000.xml',
             'website/static/src/snippets/s_social_media/options.js',
             'website/static/src/snippets/s_process_steps/options.js',
             'website/static/src/js/editor/wysiwyg.js',
@@ -245,7 +255,7 @@
         ],
         'website.assets_editor': [
             ('include', 'web._assets_helpers'),
-            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'website/static/src/components/ace_editor/ace_editor.js',
             'website/static/src/components/ace_editor/ace_editor.scss',
@@ -264,7 +274,6 @@
             'website/static/src/components/translator/translator.js',
             'website/static/src/components/translator/translator.scss',
             'website/static/src/components/translator/translator.xml',
-            'website/static/src/js/form_editor_registry.js',
             'website/static/src/js/new_content_form.js',
             'website/static/src/services/website_custom_menus.js',
             'website/static/src/js/tours/homepage.js',
@@ -273,15 +282,9 @@
             'website/static/src/client_actions/*/*.xml',
             'website/static/src/components/website_loader/*.xml',
             'website/static/src/js/backend/**/*',
-        ],
-        'website.test_bundle': [
-            '/web/static/lib/qweb/qweb2.js',
-            'http://test.external.link/javascript1.js',
-            '/web/static/lib/jquery.ui/jquery-ui.css',
-            'http://test.external.link/style1.css',
-            '/web/static/src/boot.js',
-            'http://test.external.link/javascript2.js',
-            'http://test.external.link/style2.css',
+
+            # Don't include dark mode files in light mode
+            ('remove', 'website/static/src/components/dialog/*.dark.scss'),
         ],
     },
     'license': 'LGPL-3',

@@ -62,7 +62,7 @@
             "cells": {
                 "A7": {
                     "style": 1,
-                    "content": "[Top Vendors by Amount](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"untaxed_total\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"dashboard\"],[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Vendors by Amount\"})",
+                    "content": "[Top Vendors by Amount](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"untaxed_total\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"purchase.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Vendors by Amount\"})",
                     "border": 1
                 },
                 "A19": {
@@ -72,7 +72,7 @@
                 },
                 "A20": {
                     "style": 2,
-                    "content": "Order",
+                    "content": "=_t(\"Order\")",
                     "border": 2
                 },
                 "A21": {
@@ -240,7 +240,7 @@
                 },
                 "B20": {
                     "style": 2,
-                    "content": "Ordered on",
+                    "content": "=_t(\"Ordered\")",
                     "border": 2
                 },
                 "B21": {
@@ -448,7 +448,7 @@
                 },
                 "C20": {
                     "style": 2,
-                    "content": "Buyer",
+                    "content": "=_t(\"Buyer\")",
                     "border": 2
                 },
                 "C21": {
@@ -596,7 +596,7 @@
                 },
                 "D20": {
                     "style": 2,
-                    "content": "Source",
+                    "content": "=_t(\"Source\")",
                     "border": 2
                 },
                 "D21": {
@@ -744,7 +744,7 @@
                 },
                 "E20": {
                     "style": 2,
-                    "content": "Vendor",
+                    "content": "=_t(\"Vendor\")",
                     "border": 2
                 },
                 "E21": {
@@ -892,187 +892,147 @@
                 },
                 "F20": {
                     "style": 9,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "F21": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,1,\"amount_untaxed\")"
                 },
                 "F22": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,2,\"amount_untaxed\")"
                 },
                 "F23": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,3,\"amount_untaxed\")"
                 },
                 "F24": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,4,\"amount_untaxed\")"
                 },
                 "F25": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,5,\"amount_untaxed\")"
                 },
                 "F26": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,6,\"amount_untaxed\")"
                 },
                 "F27": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,7,\"amount_untaxed\")"
                 },
                 "F28": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,8,\"amount_untaxed\")"
                 },
                 "F29": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,9,\"amount_untaxed\")"
                 },
                 "F30": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,10,\"amount_untaxed\")"
                 },
                 "F31": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,11,\"amount_untaxed\")"
                 },
                 "F32": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,12,\"amount_untaxed\")"
                 },
                 "F33": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,13,\"amount_untaxed\")"
                 },
                 "F34": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,14,\"amount_untaxed\")"
                 },
                 "F35": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,15,\"amount_untaxed\")"
                 },
                 "F36": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,16,\"amount_untaxed\")"
                 },
                 "F37": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,17,\"amount_untaxed\")"
                 },
                 "F38": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,18,\"amount_untaxed\")"
                 },
                 "F39": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,19,\"amount_untaxed\")"
                 },
                 "F40": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,20,\"amount_untaxed\")"
                 },
                 "F41": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,21,\"amount_untaxed\")"
                 },
                 "F42": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,22,\"amount_untaxed\")"
                 },
                 "F43": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,23,\"amount_untaxed\")"
                 },
                 "F44": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,24,\"amount_untaxed\")"
                 },
                 "F45": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,25,\"amount_untaxed\")"
                 },
                 "F46": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,26,\"amount_untaxed\")"
                 },
                 "F47": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,27,\"amount_untaxed\")"
                 },
                 "F48": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,28,\"amount_untaxed\")"
                 },
                 "F49": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,29,\"amount_untaxed\")"
                 },
                 "F50": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,30,\"amount_untaxed\")"
                 },
                 "F51": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,31,\"amount_untaxed\")"
                 },
                 "F52": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,32,\"amount_untaxed\")"
                 },
                 "F53": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,33,\"amount_untaxed\")"
                 },
                 "F54": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,34,\"amount_untaxed\")"
                 },
                 "F55": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,35,\"amount_untaxed\")"
                 },
                 "F56": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,36,\"amount_untaxed\")"
                 },
                 "F57": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,37,\"amount_untaxed\")"
                 },
                 "F58": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,38,\"amount_untaxed\")"
                 },
                 "F59": {
                     "style": 8,
-                    "format": 2,
                     "content": "=ODOO.LIST(1,39,\"amount_untaxed\")"
                 },
                 "F60": {
-                    "format": 2,
                     "content": "=ODOO.LIST(1,40,\"amount_untaxed\")"
                 },
                 "F61": {
@@ -1100,7 +1060,7 @@
                 },
                 "H20": {
                     "style": 2,
-                    "content": "Country",
+                    "content": "=_t(\"Country\")",
                     "border": 2
                 },
                 "H21": {
@@ -1152,7 +1112,7 @@
                 },
                 "H34": {
                     "style": 2,
-                    "content": "Vendor"
+                    "content": "=_t(\"Vendor\")"
                 },
                 "H35": {
                     "style": 2
@@ -1207,7 +1167,7 @@
                 },
                 "H49": {
                     "style": 2,
-                    "content": "Buyer",
+                    "content": "=_t(\"Buyer\")",
                     "border": 2
                 },
                 "H50": {
@@ -1259,7 +1219,7 @@
                 },
                 "I20": {
                     "style": 9,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "I21": {
@@ -1305,7 +1265,7 @@
                 },
                 "I34": {
                     "style": 9,
-                    "content": "Orders"
+                    "content": "=_t(\"Orders\")"
                 },
                 "I35": {
                     "style": 9
@@ -1354,7 +1314,7 @@
                 },
                 "I49": {
                     "style": 9,
-                    "content": "Orders",
+                    "content": "=_t(\"Orders\")",
                     "border": 2
                 },
                 "I50": {
@@ -1401,7 +1361,7 @@
                 },
                 "J20": {
                     "style": 9,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "J21": {
@@ -1457,7 +1417,7 @@
                 },
                 "J34": {
                     "style": 9,
-                    "content": "Amount"
+                    "content": "=_t(\"Amount\")"
                 },
                 "J35": {
                     "style": 9
@@ -1516,7 +1476,7 @@
                 },
                 "J49": {
                     "style": 9,
-                    "content": "Amount",
+                    "content": "=_t(\"Amount\")",
                     "border": 2
                 },
                 "J50": {
@@ -1651,7 +1611,6 @@
                     "tag": "chart",
                     "data": {
                         "title": "",
-                        "id": "155096a3-ad7f-4e64-bf38-051fcfc90ee0",
                         "background": "#FFFFFF",
                         "legendPosition": "none",
                         "metaData": {
@@ -1786,26 +1745,26 @@
             "cells": {
                 "A1": {
                     "style": 2,
-                    "content": "KPI"
+                    "content": "=_t(\"KPI\")"
                 },
                 "A2": {
-                    "content": "Untaxed total"
+                    "content": "=_t(\"Untaxed total\")"
                 },
                 "A3": {
-                    "content": "Lines"
+                    "content": "=_t(\"Lines\")"
                 },
                 "A4": {
-                    "content": "Orders"
+                    "content": "=_t(\"Orders\")"
                 },
                 "A5": {
-                    "content": "Qty ordered"
+                    "content": "=_t(\"Qty ordered\")"
                 },
                 "A6": {
-                    "content": "Days to receive"
+                    "content": "=_t(\"Days to receive\")"
                 },
                 "B1": {
                     "style": 2,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "B2": {
                     "content": "=ODOO.PIVOT(4,\"untaxed_total\")"
@@ -1824,7 +1783,7 @@
                 },
                 "C1": {
                     "style": 2,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "C2": {
                     "content": "=ODOO.PIVOT(5,\"untaxed_total\")"
@@ -1843,7 +1802,7 @@
                 },
                 "D1": {
                     "style": 2,
-                    "content": "Current"
+                    "content": "=_t(\"Current\")"
                 },
                 "D2": {
                     "style": 8,
@@ -1863,11 +1822,11 @@
                 },
                 "D6": {
                     "style": 13,
-                    "content": "=CONCATENATE(ROUNDUP(B6),\" days\")"
+                    "content": "=CONCATENATE(ROUNDUP(B6),_t(\" days\"))"
                 },
                 "E1": {
                     "style": 2,
-                    "content": "Previous"
+                    "content": "=_t(\"Previous\")"
                 },
                 "E2": {
                     "style": 8,
@@ -1966,10 +1925,15 @@
             ]
         }
     },
-    "revisionId": "START_REVISION",
+    "revisionId": "ebff854f-062d-403f-9f92-a495d68f3b39",
     "chartOdooMenusReferences": {
         "8b6dfcc3-d418-4b74-80ea-f6bdcdc3b229": "purchase.menu_purchase_root",
-        "155096a3-ad7f-4e64-bf38-051fcfc90ee0": "purchase.menu_purchase_root"
+        "155096a3-ad7f-4e64-bf38-051fcfc90ee0": "purchase.menu_purchase_root",
+        "53bdb059-e5ce-47d9-bb63-d5f2e665c05f": "purchase.purchase_report",
+        "1e548a1e-ef9f-47f8-a9c7-b42709559c74": "purchase.menu_purchase_form_action",
+        "d161aa79-1991-4d86-9b51-df4e66f9ae7e": "purchase.menu_purchase_form_action",
+        "7bd14ede-d636-44cc-ac07-bc3fe6c565c0": "purchase.purchase_report",
+        "3b318ab5-0677-4790-8446-d37a0b4c6ac6": "purchase.purchase_report"
     },
     "odooVersion": 4,
     "lists": {
@@ -2035,10 +1999,7 @@
                     []
                 ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         },
         "2": {
@@ -2065,10 +2026,7 @@
                     []
                 ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         },
         "3": {
@@ -2101,10 +2059,7 @@
                     []
                 ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         },
         "4": {
@@ -2138,10 +2093,7 @@
                     []
                 ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         },
         "5": {
@@ -2175,10 +2127,7 @@
                     []
                 ],
                 "measure": "untaxed_total",
-                "order": "desc",
-                "originIndexes": [
-                    0
-                ]
+                "order": "desc"
             }
         }
     },
@@ -2264,7 +2213,12 @@
                     "type": "many2one"
                 }
             },
-            "listFields": {},
+            "listFields": {
+                "1": {
+                    "field": "partner_id.country_id",
+                    "type": "many2one"
+                }
+            },
             "graphFields": {
                 "155096a3-ad7f-4e64-bf38-051fcfc90ee0": {
                     "field": "country_id",
@@ -2349,7 +2303,7 @@
             },
             "listFields": {
                 "1": {
-                    "field": "activity_user_id",
+                    "field": "user_id",
                     "type": "many2one"
                 }
             },

@@ -73,7 +73,7 @@
         <field name="arch" type="xml">
             <tree string="Meetings" sample="1" multi_edit="1">
                 <header>
-                    <button name="action_open_composer" type="object" context="{'composition_mode':'mass_mail'}"
+                    <button name="action_open_composer" type="object" context="{'default_composition_mode':'mass_mail'}"
                             string="Send Mail"/>
                 </header>
                 <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly':[('recurrency','=',True)]}"/>
@@ -160,16 +160,17 @@
                                 <group>
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                                     <field name="location" />
-                                    <field name="videocall_location" class="oe_inline" string="Videocall URL" widget="CopyClipboardChar" force_save="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
-                                    <div colspan="12" class="d-flex justify-content-center">
-                                    <button name="clear_videocall_location" type="object" class="btn btn-link"
-                                        attrs="{'invisible': [('videocall_location', '=', False)]}" context="{'recurrence_update': recurrence_update}">
-                                         <span class="fa fa-times"></span><span> Clear meeting</span>
-                                    </button>
-                                    <button name="set_discuss_videocall_location" type="object" class="btn btn-link"
-                                        attrs="{'invisible':  [('videocall_location', '!=', False)]}" context="{'recurrence_update': recurrence_update}">
-                                         <span class="fa fa-plus"></span><span> Add Odoo meeting</span>
-                                    </button>
+                                    <label for="videocall_location"/>
+                                    <div col="2" class="o_row">
+                                        <field name="videocall_location" class="oe_inline" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
+                                        <button name="clear_videocall_location" type="object" class="btn btn-link"
+                                            attrs="{'invisible': [('videocall_location', '=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                            <span class="fa fa-times"></span><span> Clear meeting</span>
+                                        </button>
+                                        <button name="set_discuss_videocall_location" type="object" class="btn btn-link"
+                                            attrs="{'invisible':  [('videocall_location', '!=', False)]}" context="{'recurrence_update': recurrence_update}">
+                                            <span class="fa fa-plus"></span><span> Add Odoo meeting</span>
+                                        </button>
                                     </div>
                                     <field name="videocall_source" invisible="1"/>
                                     <field name="access_token" invisible="1" force_save="1"/>
@@ -191,7 +192,7 @@
                                             <label for="interval"/>
                                             <div class="o_col">
                                                 <div class="o_row">
-                                                    <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                    <field name="interval" class="oe_inline" attrs="{'required': [('recurrency', '=', True)]}"/>
                                                     <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
                                                 </div>
                                                 <widget name="week_days" attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}"/>

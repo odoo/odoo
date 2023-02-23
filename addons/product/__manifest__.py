@@ -60,7 +60,6 @@ Print product labels with barcode.
     'assets': {
         'web.assets_backend': [
             'product/static/src/js/**/*',
-            'product/static/src/xml/**/*',
         ],
         'web.report_assets_common': [
             'product/static/src/scss/report_label_sheet.scss',

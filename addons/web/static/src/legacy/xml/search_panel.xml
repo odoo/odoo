@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web.Legacy.SearchPanel" owl="1">
-    <div class="o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-white overflow-auto" t-att-class="props.className" t-ref="legacySearchPanel">
+    <div class="o_search_panel flex-grow-0 flex-shrink-0 border-end pe-2 pb-5 ps-4 h-100 bg-view overflow-auto" t-att-class="props.className" t-ref="legacySearchPanel">
         <section t-foreach="model.get('sections', s => !s.empty)" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >

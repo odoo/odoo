@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, OrderedSet
+from odoo.tools import float_is_zero, float_round, OrderedSet
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -46,8 +46,9 @@ class StockMove(models.Model):
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
+            layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
-            return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
+            return float_round(sum(layers.mapped("value")) / quantity, precision_digits=precision) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
 
     @api.model
@@ -86,7 +87,7 @@ class StockMove(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if self._get_in_move_lines():
+        if self._get_in_move_lines() and not self._is_dropshipped_returned():
             return True
         return False
 
@@ -114,7 +115,7 @@ class StockMove(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if self._get_out_move_lines():
+        if self._get_out_move_lines() and not self._is_dropshipped():
             return True
         return False
 
@@ -206,23 +207,26 @@ class StockMove(models.Model):
 
             common_vals = dict(move._prepare_common_svl_vals(), remaining_qty=0)
 
-            # create the in
-            in_vals = {
-                'unit_cost': unit_cost,
-                'value': unit_cost * quantity,
-                'quantity': quantity,
-            }
-            in_vals.update(common_vals)
-            svl_vals_list.append(in_vals)
+            # create the in if it does not come from a valued location (eg subcontract -> customer)
+            if not move.location_id._should_be_valued():
+                in_vals = {
+                    'unit_cost': unit_cost,
+                    'value': unit_cost * quantity,
+                    'quantity': quantity,
+                }
+                in_vals.update(common_vals)
+                svl_vals_list.append(in_vals)
 
-            # create the out
-            out_vals = {
-                'unit_cost': unit_cost,
-                'value': unit_cost * quantity * -1,
-                'quantity': quantity * -1,
-            }
-            out_vals.update(common_vals)
-            svl_vals_list.append(out_vals)
+            # create the out if it does not go to a valued location (eg customer -> subcontract)
+            if not move.location_dest_id._should_be_valued():
+                out_vals = {
+                    'unit_cost': unit_cost,
+                    'value': unit_cost * quantity * -1,
+                    'quantity': quantity * -1,
+                }
+                out_vals.update(common_vals)
+                svl_vals_list.append(out_vals)
+
         return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
 
     def _create_dropshipped_returned_svl(self, forced_quantity=None):
@@ -247,6 +251,9 @@ class StockMove(models.Model):
         valued_moves['in'].product_price_update_before_done()
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
+
+        # '_action_done' might have deleted some exploded stock moves
+        valued_moves = {value_type: moves.exists() for value_type, moves in valued_moves.items()}
 
         # '_action_done' might have created an extra move to be valued
         for move in res - self:
@@ -297,7 +304,11 @@ class StockMove(models.Model):
         tmpl_dict = defaultdict(lambda: 0.0)
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
-        for move in self.filtered(lambda move: move._is_in() and move.with_company(move.company_id).product_id.cost_method == 'average'):
+        for move in self:
+            if not move._is_in():
+                continue
+            if move.with_company(move.company_id).product_id.cost_method == 'standard':
+                continue
             product_tot_qty_available = move.product_id.sudo().with_company(move.company_id).quantity_svl + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
@@ -321,12 +332,6 @@ class StockMove(models.Model):
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
             move.product_id.with_company(move.company_id.id).with_context(disable_auto_svl=True).sudo().write({'standard_price': new_std_price})
             std_price_update[move.company_id.id, move.product_id.id] = new_std_price
-
-        # adapt standard price on incomming moves if the product cost_method is 'fifo'
-        for move in self.filtered(lambda move:
-                                  move.with_company(move.company_id).product_id.cost_method == 'fifo'
-                                  and float_is_zero(move.product_id.sudo().quantity_svl, precision_rounding=move.product_id.uom_id.rounding)):
-            move.product_id.with_company(move.company_id.id).sudo().write({'standard_price': move._get_price_unit()})
 
     def _get_accounting_data_for_valuation(self):
         """ Return the accounts and journal to use to post Journal Entries for
@@ -407,7 +412,7 @@ class StockMove(models.Model):
             # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
             # we would have to recompute all the analytic estimation at each out.
             amount = - unit_amount * self.product_id.standard_price
-        elif self.product_id.valuation == 'real_time':
+        elif self.product_id.valuation == 'real_time' and not self._ignore_automatic_valuation():
             accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
             account_valuation = accounts_data.get('stock_valuation', False)
             analytic_line_vals = self.stock_valuation_layer_ids.account_move_id.line_ids.filtered(
@@ -424,6 +429,9 @@ class StockMove(models.Model):
         elif amount:
             return self._generate_analytic_lines_data(
                 unit_amount, amount)
+
+    def _ignore_automatic_valuation(self):
+        return False
 
     def _generate_analytic_lines_data(self, unit_amount, amount):
         self.ensure_one()
@@ -593,3 +601,6 @@ class StockMove(models.Model):
             return self.location_id and self.location_id.usage == 'customer'   # goods returned from customer
         if valued_type == 'out':
             return self.location_dest_id and self.location_dest_id.usage == 'supplier'   # goods returned to supplier
+
+    def _get_all_related_aml(self):
+        return self.account_move_ids.line_ids

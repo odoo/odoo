@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import { registerModel } from '@mail/model/model_core';
-import { attr, many } from '@mail/model/model_field';
+import { attr, many, Model } from "@mail/model";
 
 /**
  * Models a record that provides the current date, updated at a given frequency.
  */
-registerModel({
-    name: 'Clock',
+Model({
+    name: "Clock",
     lifecycleHooks: {
         _created() {
             // The date is set here rather than via a default value so that the
@@ -45,9 +44,7 @@ registerModel({
          * An integer representing the frequency in milliseconds at which `date`
          * must be recomputed.
          */
-        frequency: attr({
-            identifying: true,
-        }),
+        frequency: attr({ identifying: true }),
         tickInterval: attr({
             compute() {
                 return this.messaging.browser.setInterval(this._onInterval, this.frequency);
@@ -58,15 +55,12 @@ registerModel({
          *
          * The clock self-destructs when there are no more watchers.
          */
-        watchers: many('ClockWatcher', {
-            inverse: 'clock',
-            isCausal: true,
-        }),
+        watchers: many("ClockWatcher", { inverse: "clock", isCausal: true }),
     },
     onChanges: [
         {
-            dependencies: ['watchers'],
-            methodName: '_onChangeWatchers',
+            dependencies: ["watchers"],
+            methodName: "_onChangeWatchers",
         },
     ],
 });
