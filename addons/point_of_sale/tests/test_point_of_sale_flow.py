@@ -692,6 +692,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         rescue_session.post_closing_cash_details(total_cash_payment)
         rescue_session.close_session_from_ui()
         self.assertEqual(rescue_session.state, 'closed', "Rescue session was not properly closed")
+        self.assertEqual(rescue_session.cash_register_balance_start, current_session.cash_register_balance_end_real, "Rescue session does not start with the same amount as the previous session")
 
     def test_order_to_payment_currency(self):
         """
