@@ -116,7 +116,7 @@ class ProjectTaskType(models.Model):
             " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
 
-    user_id = fields.Many2one('res.users', 'Stage Owner', index=True)
+    user_id = fields.Many2one('res.users', 'Stage Owner', index=False)
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -380,7 +380,7 @@ class Project(models.Model):
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message')
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
-    date = fields.Date(string='Expiration Date', index=True, tracking=True,
+    date = fields.Date(string='Expiration Date', index=False, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
     allow_subtasks = fields.Boolean('Sub-tasks', default=lambda self: self.env.user.has_group('project.group_subtask_project'))
     allow_recurring_tasks = fields.Boolean('Recurring Tasks', default=lambda self: self.env.user.has_group('project.group_project_recurring_tasks'))
@@ -414,7 +414,7 @@ class Project(models.Model):
 
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
-        tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_stage_ids')
+        tracking=True, index=False, copy=False, default=_default_stage_id, group_expand='_read_group_stage_ids')
 
     update_ids = fields.One2many('project.update', 'project_id')
     last_update_id = fields.Many2one('project.update', string='Last Update', copy=False)
@@ -1141,10 +1141,10 @@ class Task(models.Model):
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'High'),
-    ], default='0', index=True, string="Priority", tracking=True)
+    ], default='0', index=False, string="Priority", tracking=True)
     sequence = fields.Integer(string='Sequence', default=10)
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
-        store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
+        store=True, readonly=False, ondelete='restrict', tracking=True, index=False,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False, task_dependency_tracking=True)
     tag_ids = fields.Many2many('project.tags', string='Tags',
@@ -1157,26 +1157,26 @@ class Task(models.Model):
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, task_dependency_tracking=True)
     create_date = fields.Datetime("Created On", readonly=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
-    date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
+    date_end = fields.Datetime(string='Ending Date', index=False, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True,
         help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.")
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True, task_dependency_tracking=True)
+    date_deadline = fields.Date(string='Deadline', index=False, copy=False, tracking=True, task_dependency_tracking=True)
 
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
-        index=True,
+        index=False,
         copy=False,
         readonly=True,
         help="Date on which the stage of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another.")
     project_id = fields.Many2one('project.project', string='Project', recursive=True,
         compute='_compute_project_id', store=True, readonly=False, precompute=True,
-        index=True, tracking=True, check_company=True, change_default=True)
+        index=False, tracking=True, check_company=True, change_default=True)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
     # Defines in which project the task will be displayed / taken into account in statistics.
     # Example: 1 task A with 1 subtask B in project P
     # A -> project_id=P, display_project_id=P
     # B -> project_id=P (to inherit from ACL/security rules), display_project_id=False
-    display_project_id = fields.Many2one('project.project', index=True)
+    display_project_id = fields.Many2one('project.project', index=False)
     planned_hours = fields.Float("Initially Planned Hours", tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
@@ -1227,8 +1227,8 @@ class Task(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
-    is_closed = fields.Boolean(related="stage_id.fold", string="Closing Stage", store=True, index=True, help="Folded in Kanban stages are closing stages.")
-    parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
+    is_closed = fields.Boolean(related="stage_id.fold", string="Closing Stage", store=True, index=False, help="Folded in Kanban stages are closing stages.")
+    parent_id = fields.Many2one('project.task', string='Parent Task', index=False)
     ancestor_id = fields.Many2one('project.task', string='Ancestor Task', compute='_compute_ancestor_id', index='btree_not_null', recursive=True, store=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
     child_text = fields.Char(compute="_compute_child_text")
