@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_move_send_inherit_account_peppol">
+            <field name="name">account.move.send.form.inherit.peppol</field>
+            <field name="model">account.move.send</field>
+            <field name="inherit_id" ref="account.account_move_send_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='standard_options']" position="before">
+                    <field name="peppol_proxy_state" invisible="1"/>
+                    <div class="alert alert-warning text-center" role="alert" attrs="{
+                                'invisible': ['|', '|',
+                                    ('peppol_proxy_state', '!=', 'active'),
+                                    ('checkbox_send_peppol', '!=', True),
+                                    ('peppol_warning', '=', False),
+                                ]}">
+                        <field name="peppol_warning"/>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@name='option_send_by_post']" position='before'>
+                    <div name="option_peppol"
+                         attrs="{'invisible': ['|', ('peppol_proxy_state', '!=', 'active'), ('enable_ubl_cii_xml', '=', False)]}">
+                        <field name="checkbox_send_peppol" attrs="{'readonly': [('checkbox_ubl_cii_xml', '=', False)]}"/>
+                        <b>
+                            <label for="checkbox_send_peppol"/>
+                        </b>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

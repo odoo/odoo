@@ -65,6 +65,7 @@ class AccountEdiProxyClientUser(models.Model):
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
         ('unique_edi_identification', 'unique(edi_identification, proxy_type, edi_mode)', 'This edi identification is already assigned to a user'),
+        ('unique_company_proxy', 'unique(company_id, proxy_type, edi_mode)', 'This company has a user already created for this EDI type'),
     ]
 
     @api.depends('company_id')
@@ -189,7 +190,7 @@ class AccountEdiProxyClientUser(models.Model):
             if 'error' in response:
                 raise UserError(response['error'])
 
-        self.create({
+        return self.create({
             'id_client': response['id_client'],
             'company_id': company.id,
             'proxy_type': proxy_type,

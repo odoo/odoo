@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='analytic']" position="after">
+                <field name="is_account_peppol_eligible" invisible="1"/>
+                <div attrs="{'invisible': [('is_account_peppol_eligible', '=', False)]}">
+                    <h2>PEPPOL Electronic Document Invoicing</h2>
+                    <div class="row mt16 o_settings_container" id='account_peppol'>
+                        <div class="col-12 col-lg-12 o_setting_box">
+                            <field name="account_peppol_proxy_state" invisible="1"/>
+                            <div class="o_setting_left_pane">
+                                <field name="is_account_peppol_participant"
+                                    attrs="{'invisible': [('account_peppol_proxy_state', 'not in', (False, 'not_registered'))]}"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <div attrs="{'invisible': [('account_peppol_proxy_state', '!=', 'not_registered')]}">
+                                    <label for="is_account_peppol_participant" string='Use PEPPOL Invoicing'/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                                    <div class="text-muted">
+                                        Once you select this option and confirm, we will review your application.
+                                        You will be able to start sending and receiving documents via PEPPOL once your participation is approved.
+                                        We will notify you once we have reviewed your application.
+                                    </div>
+                                    <div class="pt-3 pb-3"
+                                         attrs="{'invisible': [('is_account_peppol_participant', '=', False)]}">
+                                        <b>
+                                            Please verify the EAS code and the Endpoint (Participant ID) below
+                                             before confirming the registration!
+                                        </b>
+                                        <div class="row pt-3">
+                                            <label string="Peppol EAS"
+                                                for="account_peppol_eas"
+                                                class="col-lg-3 o_light_label"/>
+                                            <field name="account_peppol_eas"/>
+                                        </div>
+                                        <div class="row">
+                                            <label string="Peppol Endpoint"
+                                                for="account_peppol_eas"
+                                                class="col-lg-3 o_light_label"/>
+                                            <field name="account_peppol_endpoint"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content-group"
+                                    attrs="{'invisible': ['|',
+                                        ('is_account_peppol_participant', '=', False),
+                                        ('account_peppol_proxy_state', 'in', ('rejected', 'not_registered'))]}">
+                                    <div class="row">
+                                        <label string="Incoming Invoices Journal"
+                                            for="account_peppol_purchase_journal_id"
+                                            class="col-lg-3 o_light_label"/>
+                                        <field name="account_peppol_purchase_journal_id"
+                                               attrs="{'required': [
+                                                    ('is_account_peppol_participant', '=', True),
+                                                    ('account_peppol_proxy_state', 'not in', ('rejected', 'not_registered')),
+                                               ]}"/>
+                                    </div>
+                                </div>
+                                <div class="content-group pt-3"
+                                    attrs="{'invisible': ['|',
+                                        ('is_account_peppol_participant', '=', False),
+                                        ('account_peppol_proxy_state', '!=', 'not_registered')]}">
+                                    <span>
+                                        Upload a document to verify Company information.
+                                    </span>
+                                    <div class="row mt-3">
+                                        <field name="account_peppol_attachment_ids"
+                                               widget="many2many_binary"
+                                               nolabel="1"
+                                               string="Upload documents"/>
+                                    </div>
+                                </div>
+                                <div class="pt-3 pb-3"
+                                    attrs="{'invisible': [('account_peppol_proxy_state', 'in', (False, 'not_registered'))]}">
+                                    Application status:
+                                    <b>
+                                        <field name="account_peppol_proxy_state"
+                                            decoration-danger="account_peppol_proxy_state == 'rejected'"
+                                            decoration-info="account_peppol_proxy_state == 'active'"/>
+                                    </b>
+                                </div>
+                                <div class="mt-5"
+                                    attrs="{'invisible': ['|',
+                                                ('is_account_peppol_participant', '=', False),
+                                                ('account_peppol_proxy_state', '!=', 'not_registered')]}">
+                                    <div class="mb-3">
+                                        By clicking the "Confirm" button, I accept that Odoo may process my e-invoices.
+                                    </div>
+                                    <button name="button_create_peppol_proxy_user"
+                                            type="object"
+                                            string="Confirm"
+                                            class="btn btn-primary"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
