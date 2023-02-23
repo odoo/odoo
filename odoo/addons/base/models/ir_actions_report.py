@@ -336,6 +336,9 @@ class IrActionsReport(models.Model):
             if paperformat_id.disable_shrinking:
                 command_args.extend(['--disable-smart-shrinking'])
 
+        # Add extra time to allow the page to render
+        command_args.extend(['--javascript-delay', '1000'])
+
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
 
