@@ -365,7 +365,7 @@ def createOrderLinesFromCart(cart, pos_id):
             'qty': item.get('qty'),
             'price_unit': product_sudo.list_price,
             'price_subtotal': product_sudo.list_price * item.get('qty'),
-            'price_subtotal_incl': product_sudo.get_product_info_pos(product_sudo.list_price, item.get('qty'), int(pos_id))['all_prices']['price_with_tax'],
+            'price_subtotal_incl': product_sudo.get_product_info_pos(product_sudo.list_price, item.get('qty'), int(pos_id))['all_prices']['price_with_tax'] * item.get('qty'),
             'discount': 0,
             'tax_ids': product_sudo.taxes_id,
             'id': 1,

@@ -2,6 +2,7 @@
 
 const { Component, useState } = owl;
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
+import { formatMonetary } from "@web/views/fields/formatters";
 import { NavBar } from "../NavBar/NavBar.js";
 import { IncrementCounter } from "../UtilComponents/IncrementCounter/IncrementCounter.js";
 export class ProductMainView extends Component {
@@ -16,6 +17,7 @@ export class ProductMainView extends Component {
             )[0].qty;
         }
         this.selfOrder = useSelfOrder();
+        this.formatMonetary = formatMonetary;
     }
     setValue = (qty) => {
         if (qty >= 0) {

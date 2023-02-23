@@ -7,11 +7,13 @@ import { AlertMessage } from "../../AlertMessage/AlertMessage.js";
 import { OrdersList } from "../../OrdersList/OrdersList.js";
 import { PaymentMethodsSelect } from "../../PaymentMethodsSelect/PaymentMethodsSelect.js";
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
+import { formatMonetary } from "@web/views/fields/formatters";
 export class LandingPage extends Component {
     setup() {
         this.state = useState(this.env.state);
         this.orders_list = [];
         this.selfOrder = useSelfOrder();
+        this.formatMonetary = formatMonetary;
         onWillStart(async () => {
             if (this.selfOrder.config.self_order_location === "table") {
                 this.orders_list = await this.updateOrdersFromLocalStorage();

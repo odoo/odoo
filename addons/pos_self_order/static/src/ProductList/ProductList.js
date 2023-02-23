@@ -3,6 +3,7 @@
 const { Component, useState } = owl;
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 import { useAutofocus } from "@web/core/utils/hooks";
+import { formatMonetary } from "@web/views/fields/formatters";
 import { NavBar } from "../NavBar/NavBar";
 /**
  * @typedef {import("@pos_self_order/jsDocTypes").Product} Product
@@ -22,12 +23,12 @@ export class ProductList extends Component {
             search_input: "",
         });
         this.selfOrder = useSelfOrder();
+        this.formatMonetary = formatMonetary;
         useAutofocus({ refName: "searchInput", mobile: true });
     }
     filteredProducts = () => {
         // here we only want to return the products
         // that have the selected tags
-        console.log("this.inputRef :>> ", this.inputRef);
         return this.props.productList.filter((product) => {
             return (
                 this.itemHasAllOfTheTags(product, this.private_state.selected_tags) &&

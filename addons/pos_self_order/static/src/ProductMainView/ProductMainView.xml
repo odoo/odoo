@@ -12,8 +12,9 @@
     <!-- Product Name -->
                     <h3><t t-esc="props.product.name"/></h3>
     <!-- Price -->
-                    <h3 class="ml-auto text-secondary"><t t-esc="props.product.list_price + '€'"/></h3>
-                    <h3 class="ml-auto text-secondary"><t t-esc="formatMonetary(props.product.list_price), {currencyId: selfOrder.config.currency_id})"/></h3>
+                    <h3 class="ml-auto text-secondary">
+                        <t t-esc="formatMonetary(props.product.list_price, {currencyId: selfOrder.config.currency_id})"/>
+                    </h3>
                 </div>
     <!-- Product Description -->
                 <div class="p-3 text-center">
