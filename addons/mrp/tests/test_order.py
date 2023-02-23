@@ -1323,7 +1323,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
 
     def test_product_produce_13(self):
-        """ Check that the production cannot be completed without any consumption."""
+        """ Check that the production can be completed without any consumption."""
         product = self.env['product.product'].create({
             'name': 'Product no BoM',
             'type': 'product',
@@ -1353,13 +1353,10 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_confirm()
 
         mo.qty_producing = 1
-        # can't produce without any consumption (i.e. components w/ 0 consumed)
-        with self.assertRaises(UserError):
-            mo.button_mark_done()
-
-        mo.move_raw_ids.quantity_done = 1
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.qty_produced, 1)
+        self.assertEqual(mo.move_raw_ids.state, 'cancel')
 
     def test_product_produce_14(self):
         """ Check two component move with the same product are not merged."""
