@@ -83,6 +83,67 @@
         </field>
     </record>
 
+    <record id="view_invoice_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="l10n_it_edi_transaction" optional="hide"/>
+                <field name="l10n_it_edi_attachment_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_edi.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='journal_id']" position="after">
+                <field name="l10n_it_edi_transaction" groups="base.group_no_one"/>
+                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_in_bill_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="edi_state" optional="hide"/>
+                <field name="edi_blocking_level" optional="hide"/>
+                <field name="edi_error_message" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_out_invoice_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_edi.view_out_invoice_tree_inherit" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="l10n_it_edi_transaction" optional="hide"/>
+                <field name="l10n_it_edi_attachment_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_edi.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='journal_id']" position="after">
+                <field name="l10n_it_edi_transaction" groups="base.group_no_one"/>
+                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="account_invoice_form_l10n_it" model="ir.ui.view">
         <field name="name">account.move.form.l10n.it</field>
         <field name="model">account.move</field>
@@ -96,6 +157,7 @@
                     attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('country_code', '!=', 'IT')]}">
                     <group>
                         <group>
+                            <field name="l10n_it_edi_transaction" groups="base.group_no_one" readonly="1"/>
                             <field name="l10n_it_stamp_duty"/>
                             <field name="l10n_it_ddt_id"
                                    attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
