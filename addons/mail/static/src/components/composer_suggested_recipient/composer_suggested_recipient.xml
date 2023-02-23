@@ -6,7 +6,7 @@
                 <input t-attf-id="{{ id }}_checkbox" class="form-check-input" type="checkbox" t-att-checked="composerSuggestedRecipientView.suggestedRecipientInfo.isSelected ? 'checked' : undefined" t-on-change="_onChangeCheckbox" t-ref="checkbox" />
                 <label class="form-check-label" t-attf-for="{{ id }}_checkbox">
                     <t t-if="composerSuggestedRecipientView.suggestedRecipientInfo.name" t-esc="composerSuggestedRecipientView.suggestedRecipientInfo.name"/>
-                    <t t-if="composerSuggestedRecipientView.suggestedRecipientInfo.email">
+                    <t t-if="composerSuggestedRecipientView.suggestedRecipientInfo.email and composerSuggestedRecipientView.suggestedRecipientInfo.email != composerSuggestedRecipientView.suggestedRecipientInfo.name">
                         (<t t-esc="composerSuggestedRecipientView.suggestedRecipientInfo.email"/>)
                     </t>
                 </label>

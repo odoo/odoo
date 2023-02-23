@@ -75,6 +75,11 @@ class Partner(models.Model):
     # ------------------------------------------------------------
     # ORM
     # ------------------------------------------------------------
+    @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """Add context variable force_email in the key as _get_view depends on it."""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self._context.get('force_email'),)
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -108,6 +113,11 @@ class Partner(models.Model):
         can be given to newly created partners. If an email is not unique (e.g.
         multi-email input), only the first found email is considered.
 
+        Additional values allow to customize the created partner when context
+        allows to give more information. It data is based on email normalized
+        as it is the main information used in this method to distinguish or
+        find partners.
+
         If no valid email is found for a given item, the given value is used to
         find partners with same invalid email or create a new one with the wrong
         value. It allows updating it afterwards. Notably with notifications
@@ -116,12 +126,16 @@ class Partner(models.Model):
 
         :param list emails: list of emails that may be formatted (each input
           will be parsed and normalized);
-        :param dict additional_values: additional values given to create if
-          the partner is not found. Typically used to propagate a company_id;
+        :param dict additional_values: additional values per normalized email
+          given to create if the partner is not found. Typically used to
+          propagate a company_id and customer information from related record.
+          Values for key 'False' are used when creating partner for invalid
+          emails;
 
         :return: res.partner records in a list, following order of emails. It
           is not a recordset, to keep Falsy values.
         """
+        additional_values = additional_values if additional_values else {}
         partners, tocreate_vals_list = self.env['res.partner'], []
         name_emails = [self._parse_partner_name(email) for email in emails]
 
@@ -161,7 +175,7 @@ class Partner(models.Model):
             {
                 self._rec_name: name or email_normalized,
                 'email': email_normalized,
-                **(additional_values or {})
+                **additional_values.get(email_normalized, {}),
             }
             for name, email_normalized in notfound_name_emails
         ]
@@ -172,7 +186,7 @@ class Partner(models.Model):
             {
                 self._rec_name: name,
                 'email': name,
-                **(additional_values or {})
+                **additional_values.get(False, {}),
             }
             for name in names if name not in partners.mapped('email')
         ]

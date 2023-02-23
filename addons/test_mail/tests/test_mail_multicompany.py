@@ -3,10 +3,12 @@
 
 import socket
 
+from itertools import product
+
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests import tagged
 from odoo.tests.common import users
-from odoo.tools import formataddr
+from odoo.tools import formataddr, mute_logger
 
 
 @tagged('multi_company')
@@ -46,6 +48,75 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
             'author_id': cls.partner_1.id,
             'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (cls.test_record.id, socket.gethostname()),
         })
+
+    @users('erp_manager')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_mail_composer_wtpl_populate_new_recipient(self):
+        """ Test auto-populate of auto created partner with related record
+        values when sending a mail with a template.
+        """
+        self.user_erp_manager.write({
+            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+        })
+        companies = self.company_admin + self.company_2
+        test_records = self.env['mail.test.ticket.mc'].create([
+            {
+                'email_from': f'newpartner{idx}@example.com',
+                'company_id': companies[idx].id,
+                'customer_id': False,
+                'mobile_number': f'+3319900{idx:02d}{idx:02d}',
+                'name': f'TestRecord{idx}',
+                'phone_number': False,
+                'user_id': False,
+            } for idx in range(2)
+        ])
+        manual_recipients = test_records.mapped('email_from')
+        template = self.env['mail.template'].create({
+            'email_to': '{{ object.email_from }}',
+            'model_id': self.env['ir.model']._get_id(test_records._name),
+            'partner_to': False,
+        })
+
+        for composition_mode, batch_mode in product(
+            ('comment', 'mass_mail'),
+            (True, False)
+        ):
+            with self.subTest(composition_mode=composition_mode, batch_mode=batch_mode):
+                test_records = test_records if batch_mode else test_records[0]
+
+                self.assertFalse(
+                    self.env['res.partner'].search(
+                        [('email_normalized', 'in', manual_recipients)]
+                    )
+                )
+                ctx = {
+                    'default_composition_mode': composition_mode,
+                    'default_model': test_records._name,
+                    'default_res_ids': test_records.ids,
+                }
+                composer = self.env['mail.compose.message'].with_context(ctx).create({
+                    'template_id': template.id,
+                })
+
+                with self.mock_mail_gateway():
+                    composer._action_send_mail()
+
+                new_partners = self.env['res.partner'].search([('email_normalized', 'in', manual_recipients)],
+                                                              order='email')
+                try:
+                    self.assertEqual(
+                        len(new_partners), len(test_records)
+                    )
+                    self.assertEqual(
+                        new_partners.mapped('company_id'),
+                        test_records.mapped('company_id')
+                    )
+                    self.assertEqual(
+                        new_partners.mapped('mobile'),
+                        test_records.mapped('mobile_number')
+                    )
+                finally:
+                    new_partners.unlink()
 
     @users('employee')
     def test_notify_reply_to_computation(self):

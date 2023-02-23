@@ -1609,7 +1609,8 @@ class MailThread(models.AbstractModel):
     def _message_add_suggested_recipient(self, result, partner=None, email=None, lang=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
-                partner_id, partner_name<partner_email> or partner_name, reason """
+                partner_id, partner_name<partner_email> or partner_name, lang,
+                reason, create_values """
         self.ensure_one()
         if email and not partner:
             # get partner info from email
@@ -1623,16 +1624,18 @@ class MailThread(models.AbstractModel):
         if partner and partner.id in [val[0] for val in result[self.ids[0]]]:  # already existing partner ID -> skip
             return result
         if partner and partner.email:  # complete profile: id, name <email>
-            result[self.ids[0]].append((partner.id, partner.email_formatted, lang, reason))
+            result[self.ids[0]].append((partner.id, partner.email_formatted, lang, reason, {}))
         elif partner:  # incomplete profile: id, name
-            result[self.ids[0]].append((partner.id, '%s' % (partner.name), lang, reason))
+            result[self.ids[0]].append((partner.id, '%s' % (partner.name), lang, reason, {}))
         else:  # unknown partner, we are probably managing an email address
-            result[self.ids[0]].append((False, email, lang, reason))
+            _, parsed_email = self.env['res.partner']._parse_partner_name(email)
+            partner_create_values = self._get_customer_information().get(parsed_email, {})
+            result[self.ids[0]].append((False, email, lang, reason, partner_create_values))
         return result
 
     def _message_get_suggested_recipients(self):
         """ Returns suggested recipients for ids. Those are a list of
-        tuple (partner_id, partner_name, reason), to be managed by Chatter. """
+        tuple (partner_id, partner_name, reason, default_create_value), to be managed by Chatter. """
         result = dict((res_id, []) for res_id in self.ids)
         if 'user_id' in self._fields:
             for obj in self.sudo():  # SUPERUSER because of a read on res.users that would crash otherwise
@@ -1792,6 +1795,19 @@ class MailThread(models.AbstractModel):
                     ('author_id', '=', False)
                 ]).write({'author_id': partner.id})
         return result
+
+
+    def _get_customer_information(self):
+        """ Get customer information that can be extracted from the records by
+        normalized email.
+
+        The goal of this method is to offer an extension point to subclasses
+        for retrieving initial values from a record to populate related
+        customers record (res_partner).
+
+        :return dict: normalized email -> dict of initial res_partner values
+        """
+        return {}
 
     # ------------------------------------------------------------
     # MESSAGE POST MAIN
