@@ -4,7 +4,7 @@
 <t t-name="mail.discuss_sidebar" owl="1">
     <div class="o-mail-discuss-sidebar d-flex flex-column overflow-auto flex-shrink-0 h-100 pt-3 border-end bg-light">
         <div class="d-flex justify-content-center">
-            <button class="btn btn-primary rounded" title="Start a meeting">
+            <button t-on-click="onClickStartMeeting" class="btn btn-primary rounded" title="Start a meeting">
                 Start a meeting
             </button>
         </div>

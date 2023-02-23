@@ -440,6 +440,7 @@ export class ThreadService {
         const channel = this.createChannelThread(data);
         this.sortChannels();
         this.open(channel);
+        return channel;
     }
 
     remove(thread) {

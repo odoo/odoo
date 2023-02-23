@@ -403,6 +403,10 @@ export class Rtc {
         this.soundEffectsService.play("mute");
     }
 
+    /**
+     * @param {import("@mail/new/core/thread_model").Thread} channel
+     * @param {boolean} startWithVideo
+     */
     async toggleCall(channel, startWithVideo) {
         if (this.state.hasPendingRequest) {
             return;
