@@ -259,6 +259,9 @@ class PosSelfOrder(http.Controller):
         # it does not get this error
 
         order_sudo = request.env['pos.order'].sudo().create_from_ui([order])[0]
+        # is_trusted is set to True by default.
+        # We need to set it to False, because we are creating an order from a public route
+        order_sudo.is_trusted = False
         order_id = order_sudo.get("pos_reference")
         response_sudo = {
             "order_id": order_id,
