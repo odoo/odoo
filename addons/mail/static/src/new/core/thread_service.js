@@ -289,7 +289,7 @@ export class ThreadService {
     }
 
     async getChat({ userId, partnerId }) {
-        if (!partnerId) {
+        if (userId) {
             let user = this.store.users[userId];
             if (!user) {
                 this.store.users[userId] = { id: userId };
@@ -316,6 +316,27 @@ export class ThreadService {
             }
             partnerId = user.partner_id;
         }
+
+        if (partnerId) {
+            const localId = createLocalId("partner", partnerId);
+            let user = this.store.personas[localId]?.user;
+            if (!user) {
+                [user] = await this.orm.silent.searchRead(
+                    "res.users",
+                    [["partner_id", "=", partnerId]],
+                    [],
+                    { context: { active_test: false } }
+                );
+                if (!user) {
+                    this.notificationService.add(
+                        _t("You can only chat with partners that have a dedicated user."),
+                        { type: "info" }
+                    );
+                    return;
+                }
+            }
+        }
+
         let chat = Object.values(this.store.threads).find(
             (thread) => thread.type === "chat" && thread.chatPartnerId === partnerId
         );

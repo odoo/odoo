@@ -308,6 +308,7 @@ QUnit.test(
 QUnit.test("Click on avatar opens its partner chat window", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "testPartner" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "Test",
