@@ -411,7 +411,8 @@ class Project(models.Model):
             domain,
             [('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
             ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '>', 0)],
+            ('price_subtotal', '>', 0),
+            ('is_downpayment', '=', False)],
         ])
 
     def _get_revenues_items_from_invoices(self, excluded_move_line_ids=None):
