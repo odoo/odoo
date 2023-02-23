@@ -3,7 +3,7 @@
 from odoo import _, models
 from odoo.tools import float_repr
 from odoo.tests.common import Form
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
 
 from zeep import Client
@@ -307,6 +307,18 @@ class AccountEdiCommon(models.AbstractModel):
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
 
         return invoice
+
+    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat):
+        """ Retrieve the partner, if no matching partner is found, create it
+        """
+        invoice.partner_id = self.env['account.edi.format']._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
+        if not invoice.partner_id and name:
+            invoice.partner_id = self.env['res.partner'].create({'name': name, 'email': mail, 'phone': phone})
+            # an invalid VAT will throw a ValidationError (see 'check_vat' in base_vat)
+            try:
+                invoice.partner_id.vat = vat
+            except ValidationError:
+                invoice.partner_id.vat = False
 
     def _import_fill_invoice_allowance_charge(self, tree, invoice_form, journal, qty_factor):
         logs = []
