@@ -97,6 +97,11 @@ class AddonManifestPatched(HttpCase):
 
 
 class FileTouchable(AddonManifestPatched):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink()
+
     def setUp(self):
         super(FileTouchable, self).setUp()
         self.touches = {}
@@ -108,10 +113,6 @@ class FileTouchable(AddonManifestPatched):
 
 class TestJavascriptAssetsBundle(FileTouchable):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink()
     def setUp(self):
         super(TestJavascriptAssetsBundle, self).setUp()
         self.jsbundle_name = 'test_assetsbundle.bundle1'
@@ -128,8 +129,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """
         user_direction = self.env['res.lang']._lang_get(lang or self.env.user.lang).direction
         bundle = self.jsbundle_name if extension in ['js', 'min.js'] else self.cssbundle_name
-        rtl = 'rtl/' if extension in ['css', 'min.css'] and user_direction == 'rtl' else ''
-        url = f'/web/assets/%/{rtl}{bundle}.{extension}'
+        extra = 'ud_rtl' if extension in ['css', 'min.css'] and user_direction == 'rtl' else '-'
+        url = f'/web/assets/%/{extra}/{bundle}.{extension}'
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 
@@ -387,7 +388,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         debug_bundle = self._get_asset(self.cssbundle_name)
         nodes = debug_bundle.to_node(debug='assets')
         bundle2_url = nodes[0][1]['href']
-        self.assertEqual('/web/assets/debug/test_assetsbundle.bundle2.css', bundle2_url)
+        self.assertEqual('/web/assets/debug/-/test_assetsbundle.bundle2.css', bundle2_url)
 
         self.url_open(bundle2_url)
         # there should be one css asset created in debug mode
@@ -597,20 +598,20 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         cssbundle_url = nodes[0][1]['href']
         # there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets
-        self.assertEqual('/web/assets/debug/rtl/test_assetsbundle.bundle2.css', cssbundle_url,
+        self.assertEqual('/web/assets/debug/ud_rtl/test_assetsbundle.bundle2.css', cssbundle_url,
                          "there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets")
 
         # there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets
-        css_response = self.url_open('/web/assets/debug/rtl/test_assetsbundle.bundle2.css')
+        css_response = self.url_open('/web/assets/debug/ud_rtl/test_assetsbundle.bundle2.css')
         self.assertEqual(css_response.status_code, 200)
         source_map_url = css_response.text.splitlines()[-1].split('=')[-1].split(' ')[0]
-        self.assertIn('/test_assetsbundle.bundle2.css.map', source_map_url)
+        self.assertIn('/ud_rtl/test_assetsbundle.bundle2.css.map', source_map_url)
         self.assertEqual(self.url_open(source_map_url).status_code, 200)
         css_bundle = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%/rtl/test_assetsbundle.bundle2.css')
+            ('url', '=like', '/web/assets/%/ud_rtl/test_assetsbundle.bundle2.css')
         ])
         self.assertEqual(len(css_bundle), 1,
-                         "there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets")
+                         "there should be an css assets bundle created in /ud_rtl if user's lang direction is rtl and debug=assets")
         source_map_url = cssbundle_url
         self.assertEqual(self.url_open(source_map_url).status_code, 200)
 
@@ -663,8 +664,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
             "asset_version_css": asset_data_css.attrib.get('data-asset-version'),
             "asset_bundle_js": asset_data_js.attrib.get('data-asset-bundle'),
             "asset_version_js": asset_data_js.attrib.get('data-asset-version'),
-            "css": '/web/assets/debug/test_assetsbundle.bundle4.css',
-            "js": '/web/assets/debug/test_assetsbundle.bundle4.js',
+            "css": '/web/assets/debug/-/test_assetsbundle.bundle4.css',
+            "js": '/web/assets/debug/-/test_assetsbundle.bundle4.js',
         }
         self.assertEqual(html.strip(), ("""<!DOCTYPE html>
 <html>
@@ -781,26 +782,31 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
         self.assertEqual(self.counter['unlink'], 0)
         asset.generate(css=True, minified=False)
         asset.generate(js=True, minified=False)
-        self.assertEqual(self.counter['create'], 2 if should_create else 0)
-        self.assertEqual(self.counter['unlink'], 2 if should_unlink else 0)
+        if should_create and self.counter['create'] != 2:
+            self.fail('2 bundles should have been created')
+        if not should_create and self.counter['create'] != 0:
+            self.fail('no bundle should have been created')
+        if should_unlink and self.counter['unlink'] != 2:
+            self.fail('2 bundles should have been unlink')
+        if not should_unlink and self.counter['unlink'] != 0:
+            self.fail('no bundle should have been unlink')
 
     def test_01_debug_mode_assets(self):
         """ Checks that the ir.attachments records created for compiled assets in debug mode
         are correctly invalidated.
         """
-        # Compile for t
-    def test_01_cached(self):
-        bundle = self.get_bundle('test_assetsbundle.manifest1', js=True, css=True)
-        #(SELECT "ir_attachment".id
-        # FROM "ir_attachment"
-        # WHERE ((("ir_attach
-        # Touch the file and compile a third time
+
+        # Compile for the first time
+        self._bundle(self._get_asset(), True, False)
+
+        # Compile a second time, without changes
+        self._bundle(self._get_asset(), False, False)
+
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
         t = time.time() + 5
         asset = self._get_asset()
         with self._touch(path, t):
             self._bundle(asset, True, True)
-
             # Because we are in the same transaction since the beginning of the test, the first asset
             # created and the second one have the same write_date, but the file's last modified date
             # has really been modified. If we do not update the write_date to a posterior date, we are
@@ -832,14 +838,27 @@ class TestAssetsBundlePerformances(FileTouchable):
 
     def test_01_cached(self):
 
+        self.assertEqual(self.look_like('SELECT ... FROM model'), "SELECT field1, field2, field3 FROM model")
+        self.assertIn(self.look_like('Company ... (SF)'), ['TestPartner', 'Company 8 (SF)', 'SomeAdress'])
+        self.assertEqual([
+            'TestPartner',
+            self.look_like('Company ... (SF)'),
+            self.look_like('...'),
+        ], [
+            'TestPartner',
+            'Company 8 (SF)',
+            'Anything else'
+        ])
+
         search_bundle_by_url = '''SELECT "ir_attachment".id FROM "ir_attachment" WHERE ("ir_attachment"."res_field" IS NULL AND ("ir_attachment"."url" = %s)) ORDER BY "ir_attachment"."id" DESC LIMIT 1'''
         search_ir_assets = '''SELECT "ir_asset".id FROM "ir_asset" WHERE ("ir_asset"."bundle" = %s) ORDER BY "ir_asset"."sequence" ,"ir_asset"."id"'''
         get_attachments_search = '''SELECT max(id) FROM ir_attachment WHERE create_uid = %s AND url like %s GROUP BY name ORDER BY name'''
-        create_attachment = '''INSERT INTO "ir_attachment" ("checksum", "company_id", "create_date", "create_uid", "db_datas", "file_size", "index_content", "mimetype", "name", "public", "res_id", "res_model", "store_fname", "type", "url", "write_date", "write_uid") VALUES %s RETURNING "id"'''
+        create_attachment = self.look_like('''INSERT INTO "ir_attachment" (...) VALUES %s RETURNING "id"''')
         clean_attachment = '''SELECT "ir_attachment".id FROM "ir_attachment" WHERE (("ir_attachment"."res_field" IS NULL AND ("ir_attachment"."url"::text like %s)) AND (NOT (("ir_attachment"."url"::text like %s)))) ORDER BY "ir_attachment"."id" DESC'''
         attachment_exists = '''SELECT "ir_attachment".id FROM "ir_attachment" WHERE "ir_attachment".id IN %s'''
 
         validate_access_public = 'SELECT "ir_attachment"."id" AS "id", "ir_attachment"."public" AS "public" FROM "ir_attachment" WHERE "ir_attachment".id IN %s'
+        prefetch_attachment = self.look_like('SELECT ... mimetype ... FROM "ir_attachment" WHERE "ir_attachment".id IN %s')
 
         def queries(p):
             # get the queries from a profiler but remove queries on table not relevant for this scope
@@ -853,7 +872,7 @@ class TestAssetsBundlePerformances(FileTouchable):
         bundle_url = f'/web/assets/{bundle.version}/test_assetsbundle.manifest1.min.js'
 
         # 1. access url when attachment does not exists
-        with self.profile(collectors=['sql'], db='profiling') as p:
+        with self.profile(collectors=['sql'], db=False) as p:
             self.assertEqual(self.url_open(bundle_url).status_code, 200)
 
         cold_queries = queries(p)
@@ -866,27 +885,24 @@ class TestAssetsBundlePerformances(FileTouchable):
         self.assertIn(search_bundle_by_url, cold_queries)
         self.assertIn(search_bundle_by_url, warm_queries)
 
-        self.assertIn(search_ir_assets, cold_queries)
-        self.assertNotIn(search_ir_assets, warm_queries)
-
         self.assertIn(create_attachment, cold_queries)
         self.assertNotIn(create_attachment, warm_queries)
 
-        self.assertIn(create_attachment, cold_queries)
-        self.assertNotIn(create_attachment, warm_queries)
-
+        # this second part is more descriptive of the current behaviour and can be easily adapted if needed
         self.assertEqual(cold_queries, [
             search_bundle_by_url,  # /web/assets search
             search_ir_assets,  # search ir_assets to generate file list
-            get_attachments_search,  # ensure there is no existing attachment (usefull if the version is not the same as the one given in the route)
+            get_attachments_search,  # ensure there is no existing attachment (useful if the version is not the same as the one given in the route)
             create_attachment,  # create the bundle attachment
             clean_attachment,  # clean the previous ones
             attachment_exists,  # not really useful
         ])
-        self.assertEqual(warm_queries[:-1], [  # last one is prefecth with all fields
+
+        self.assertEqual(warm_queries, [
             search_bundle_by_url,
             attachment_exists,  # not really useful
             validate_access_public,  # preftech public field (prefetch=False)
+            prefetch_attachment,  # last one is prefecth with all fields
         ])
 
 
@@ -1036,7 +1052,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertEqual(len(scripts), 2)
         self.assertEqual(scripts[0].get('src'), 'http://external.link/external.js')
         manifest1_url = scripts[1].get('src')
-        self.assertRegex(manifest1_url, '/web/assets/[a-f0-9]{7}/test_assetsbundle.manifest1.min.js')
+        self.assertRegex(manifest1_url, '/web/assets/[a-f0-9]{7}/-/test_assetsbundle.manifest1.min.js')
         content = self.url_open(manifest1_url).text
         self.assertStringEqual(
             content,
@@ -1400,7 +1416,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertEqual(len(scripts), 2)
         self.assertEqual(scripts[0].get('src'), 'http://external.link/external.js')
         manifest4_url = scripts[1].get('src')
-        self.assertRegex(manifest4_url, '/web/assets/[a-f0-9]{7}/test_assetsbundle.manifest4.min.js')
+        self.assertRegex(manifest4_url, '/web/assets/[a-f0-9]{7}/-/test_assetsbundle.manifest4.min.js')
         content = self.url_open(manifest4_url).text
         self.assertStringEqual(
             content,
@@ -1443,7 +1459,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertEqual(stylesheets[0].get('href'), 'http://external.css/externalstyle.css')
         self.assertEqual(stylesheets[0].get('media'), 'print')
         irasset2_url = stylesheets[1].get('href')
-        self.assertRegex(irasset2_url, '/web/assets/[a-f0-9]{7}/test_assetsbundle.irasset2.min.css')
+        self.assertRegex(irasset2_url, '/web/assets/[a-f0-9]{7}/-/test_assetsbundle.irasset2.min.css')
         content = self.url_open(irasset2_url).text
         self.assertStringEqual(
             content,
@@ -1908,8 +1924,8 @@ class TestAssetsManifest(AddonManifestPatched):
             'http://test.external.link/style1.css',
             'http://test.external.link/javascript2.js',
             'http://test.external.link/style2.css',
-            f'/web/assets/{version}/test_assetsbundle.bundle4.min.css',
-            f'/web/assets/{version}/test_assetsbundle.bundle4.min.js'
+            f'/web/assets/{version}/-/test_assetsbundle.bundle4.min.css',
+            f'/web/assets/{version}/-/test_assetsbundle.bundle4.min.js'
         ])
 
     def test_39_generate_assets_nodes_debug(self):
@@ -1921,6 +1937,6 @@ class TestAssetsManifest(AddonManifestPatched):
             'http://test.external.link/style1.css',
             'http://test.external.link/javascript2.js',
             'http://test.external.link/style2.css',
-            f'/web/assets/{version}/test_assetsbundle.bundle4.css',
-            f'/web/assets/{version}/test_assetsbundle.bundle4.js'
+            f'/web/assets/{version}/-/test_assetsbundle.bundle4.css',
+            f'/web/assets/{version}/-/test_assetsbundle.bundle4.js'
         ])

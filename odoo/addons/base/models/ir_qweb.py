@@ -2462,8 +2462,8 @@ class IrQWeb(models.AbstractModel):
     def _generate_asset_nodes_cache(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
 
-    @tools.ormcache('bundle', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())')
-    def _get_asset_content(self, bundle, defer_load=False, lazy_load=False, media=None):
+    @tools.ormcache('bundle', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())')
+    def _get_asset_content(self, bundle):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
         files = []
@@ -2495,10 +2495,16 @@ class IrQWeb(models.AbstractModel):
                     'atype': mimetype,
                     'url': path,
                     'filename': get_resource_path(*segments) if segments else None,
-                    'content': '',
-                    'media': media,
+                    'content': '',  # TODO remove me
                 })
             else:
+                remains.append((is_js, is_css, is_xml, mimetype, path))
+        return (files, remains)
+
+    def _generate_remains_nodes(self, remains, js=True, css=True, defer_load=False, lazy_load=False, media=None):
+        remains_nodes = []
+        for is_js, is_css, is_xml, mimetype, path in remains:
+            if js:
                 if is_js:
                     tag = 'script'
                     attributes = {
@@ -2507,14 +2513,7 @@ class IrQWeb(models.AbstractModel):
                     attributes["data-src" if lazy_load else "src"] = path
                     if defer_load or lazy_load:
                         attributes["defer"] = "defer"
-                elif is_css:
-                    tag = 'link'
-                    attributes = {
-                        "type": mimetype,
-                        "rel": "stylesheet",
-                        "href": path,
-                        'media': media,
-                    }
+                    remains_nodes.append((tag, attributes, None))
                 elif is_xml:
                     tag = 'script'
                     attributes = {
@@ -2523,14 +2522,23 @@ class IrQWeb(models.AbstractModel):
                         "rel": "prefetch",
                         "data-src": path,
                     }
-                remains.append((tag, attributes, None))
-
-        return (files, remains)
+                    remains_nodes.append((tag, attributes, None))
+            if css and is_css:
+                tag = 'link'
+                attributes = {
+                    "type": mimetype,
+                    "rel": "stylesheet",
+                    "href": path,
+                    'media': media,
+                }
+                remains_nodes.append((tag, attributes, None))
+        return remains_nodes
 
     def _get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True, user_direction=None):
         return AssetsBundle(bundle_name, files, env=env, css=css, js=js, user_direction=user_direction)
 
-    def _generate_assets_bundle(self, filename, extra):
+    def _generate_assets_bundle(self, filename, extra=None):
+        extra = extra or '-'
         css = js = minified = False
         bundle_name = filename
         if bundle_name.endswith('.css'):
@@ -2543,18 +2551,16 @@ class IrQWeb(models.AbstractModel):
             minified = True
             bundle_name = bundle_name[:-4]
         assert bool(css) != bool(js)
-        files, _remains = self._get_asset_content(bundle_name)  # defer_load, lazy_load and media are only usefull for remains, this could be refactored
-        if _remains:
-            _logger.warning('remains are not usefull here')
-        user_direction = 'rtl' if extra and 'rtl' in extra else 'ltr'
+        files, _remains = self._get_asset_content(bundle_name)
+        user_direction = 'rtl' if 'ud_rtl' in extra.split('-') else 'ltr'
         asset_bundle = self._get_asset_bundle(bundle_name, files, env=self.env, css=css, js=js, user_direction=user_direction)
         return asset_bundle.generate(css=css, js=js, minified=minified)
 
     def _generate_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
-        files, remains = self._get_asset_content(bundle, defer_load=defer_load, lazy_load=lazy_load, media=css and media or None)
+        files, remains = self._get_asset_content(bundle)
         asset = self._get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
-        remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
-        value = remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
+        remains_nodes = self._generate_remains_nodes(remains, js, css, defer_load=defer_load, lazy_load=lazy_load, media=media)
+        value = remains_nodes + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load, media=media)
         return value
 
     def _get_asset_link_urls(self, bundle, debug=False):
@@ -2585,16 +2591,16 @@ class IrQWeb(models.AbstractModel):
                     js_bundles.add(asset)
                 if css:
                     css_bundles.add(asset)
-        nodes = []
+        attachments = self.env['ir.attachment']
         start = time.time()
         for bundle in sorted(js_bundles):
-            nodes += self._generate_asset_nodes(bundle, css=False, js=True)
-        _logger.info('JS Assets bundles generated in %s seconds', time.time()-start)
+            attachments |= self._generate_assets_bundle(f'{bundle}.min.js')
+        _logger.info('JS Assets bundles generated in %s seconds', time.time() - start)
         start = time.time()
         for bundle in sorted(css_bundles):
-            nodes += self._generate_asset_nodes(bundle, css=True, js=False)
-        _logger.info('CSS Assets bundles generated in %s seconds', time.time()-start)
-        return nodes
+            attachments |=  self._generate_assets_bundle(f'{bundle}.min.css')
+        _logger.info('CSS Assets bundles generated in %s seconds', time.time() - start)
+        return attachments
 
 
 def render(template_name, values, load, **options):

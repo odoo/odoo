@@ -133,37 +133,38 @@ class AssetsBundle(object):
         ).direction
 
         # asset-wide html "media" attribute
+        # TODO xdo remove all inline stuff, look useless since _get_asset_content will only return url
         for f in files:
             if css:
                 if f['atype'] == 'text/sass':
-                    self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                    self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], direction=self.user_direction))
                 elif f['atype'] == 'text/scss':
-                    self.stylesheets.append(ScssStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                    self.stylesheets.append(ScssStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], direction=self.user_direction))
                 elif f['atype'] == 'text/less':
-                    self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                    self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], direction=self.user_direction))
                 elif f['atype'] == 'text/css':
-                    self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                    self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], direction=self.user_direction))
             if js:
                 if f['atype'] == 'text/javascript':
                     self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
                 elif f['atype'] == 'text/xml':
                     self.templates.append(XMLAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
-    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
+    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         response = []
         is_debug_assets = debug and 'assets' in debug
 
         if css and self.stylesheets:
             if is_debug_assets:
                 href = self.get_debug_asset_url(
-                    extra='rtl/' if self.user_direction == 'rtl' else '',
+                    extra=['ud_rtl'] if self.user_direction == 'rtl' else [],
                     name=self.name,
                     extension='css'
                 )
             else:
                 href = self.get_asset_url(
                     unique=self.version,
-                    extra='rtl/' if self.user_direction == 'rtl' else '',
+                    extra=['ud_rtl'] if self.user_direction == 'rtl' else [],
                     name=self.name,
                     extension='min.css'
                 )
@@ -173,6 +174,7 @@ class AssetsBundle(object):
                 ["href", href],
                 ['data-asset-bundle', self.name],
                 ['data-asset-version', self.version],
+                ['media', media],
             ])
             response.append(("link", attr, None))
         if js and self.javascripts:
@@ -194,6 +196,7 @@ class AssetsBundle(object):
                 ["data-src" if lazy_load else "src", src],
                 ['data-asset-bundle', self.name],
                 ['data-asset-version', self.version],
+                ['media', media],
             ])
             response.append(("script", attr, None))
         return response
@@ -226,6 +229,8 @@ class AssetsBundle(object):
 
         if js and self.javascripts:
             return self.js(is_minified=minified)
+
+        return self.env['ir.attachment']
 
     @func.lazy_property
     def last_modified_combined(self):
@@ -260,17 +265,18 @@ class AssetsBundle(object):
     def _get_asset_url_values(self, unique, extra, name, extension):  # extra can contain direction or/and website
         return {
             'unique': unique,
-            'extra': extra or '-',
+            'extra': '-'.join(sorted(extra)) or '-',
             'name': name,
             'extension': extension,
         }
 
-    def get_asset_url(self, unique='%', extra='', name='%', extension='%'):
+    def get_asset_url(self, unique='%', extra=None, name='%', extension='%'):
+        extra = extra or []
         return self._get_asset_template_url().format(
             **self._get_asset_url_values(unique=unique, extra=extra, name=name, extension=extension)
         )
 
-    def get_debug_asset_url(self, extra='', name='%', extension='%'):
+    def get_debug_asset_url(self,  extra=None, name='%', extension='%'):
         return self.get_asset_url(unique='debug', extra=extra, name=name, extension=extension)
 
     def _unlink_attachments(self, attachments):
@@ -298,15 +304,15 @@ class AssetsBundle(object):
         must exclude the current bundle.
         """
         ira = self.env['ir.attachment']
-        url = self.get_asset_url(
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
+        to_delete_url = self.get_asset_url(
+            extra=['ud_rtl'] if 'css' in extension.split('.') and self.user_direction == 'rtl' else [],
             name=self.name,
             extension=extension
         )
-
+        current_version_url = self.get_asset_url(unique=self.version, extra='%')
         domain = [
-            ('url', '=like', url),
-            '!', ('url', '=like', self.get_asset_url(unique=self.version))
+            ('url', '=like', to_delete_url),
+            '!', ('url', '=like', current_version_url)
         ]
         attachments = ira.sudo().search(domain)
         # avoid to invalidate cache if it's already empty (mainly useful for test)
@@ -336,7 +342,7 @@ class AssetsBundle(object):
 
         url_pattern = self.get_asset_url(
             unique=unique,
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
+            extra=['ud_rtl'] if 'css' in extension.split('.') and self.user_direction == 'rtl' else [],
             name=self.name,
             extension=extension
         )
@@ -377,7 +383,7 @@ class AssetsBundle(object):
 
         url = self.get_asset_url(
             unique=self.version,
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
+            extra=['ud_rtl'] if 'css' in extension.split('.') and self.user_direction == 'rtl' else [],
             name=self.name,
             extension=extension
         )
@@ -644,8 +650,10 @@ class AssetsBundle(object):
         :param content_import_rules: string containing all the @import rules to put at the beginning of the bundle
         :return ir.attachment representing the un-minified content of the bundleCSS
         """
+
         sourcemap_attachment = self.get_attachments('css.map') \
                                 or self.save_attachment('css.map', '')
+        
         debug_asset_url = self.get_debug_asset_url(name=self.name,
                                                    extra='rtl/' if self.user_direction == 'rtl' else '')
         generator = SourceMapGenerator(
@@ -856,9 +864,6 @@ class WebAsset(object):
             except ValueError:
                 raise AssetNotFound("Could not find %s" % self.name)
 
-    def to_node(self):
-        raise NotImplementedError()
-
     @func.lazy_property
     def last_modified(self):
         try:
@@ -927,22 +932,6 @@ class JavascriptAsset(WebAsset):
         except AssetError as e:
             return u"console.error(%s);" % json.dumps(to_text(e))
 
-    def to_node(self):
-        if self.url:
-            return ("script", dict([
-                ["type", "text/javascript"],
-                ["src", self.html_url],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ]), None)
-        else:
-            return ("script", dict([
-                ["type", "text/javascript"],
-                ["charset", "utf-8"],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ]), self.with_header())
-
     def with_header(self, content=None, minimal=True):
         if minimal:
             return super().with_header(content)
@@ -980,17 +969,6 @@ class XMLAsset(WebAsset):
             return ''.join(etree.tostring(el, encoding='unicode') for el in root)
         return etree.tostring(root, encoding='unicode')
 
-    def to_node(self):
-        attributes = {
-            'async': 'async',
-            'defer': 'defer',
-            'type': 'text/xml',
-            'data-src': self.html_url,
-            'data-asset-bundle': self.bundle.name,
-            'data-asset-version': self.bundle.version,
-        }
-        return ("script", attributes, None)
-
     def with_header(self, content=None):
         if content is None:
             content = self.content
@@ -1023,20 +1001,12 @@ class StylesheetAsset(WebAsset):
     rx_charset = re.compile(r'(@charset "[^"]+";)', re.U)
 
     def __init__(self, *args, **kw):
-        self.media = kw.pop('media', None)
         self.direction = kw.pop('direction', None)
         super().__init__(*args, **kw)
         if self.direction == 'rtl' and self.url:
             self.html_url_args = self.url.rsplit('.', 1)
             self.html_url_format = '%%s/%s/%s.%%s' % ('rtl', self.bundle.name)
             self.html_url_args = tuple(self.html_url_args)
-
-    @property
-    def content(self):
-        content = super().content
-        if self.media:
-            content = '@media %s { %s }' % (self.media, content)
-        return content
 
     def _fetch_content(self):
         try:
@@ -1077,26 +1047,6 @@ class StylesheetAsset(WebAsset):
         content = re.sub(r'\s+', ' ', content)
         content = re.sub(r' *([{}]) *', r'\1', content)
         return self.with_header(content)
-
-    def to_node(self):
-        if self.url:
-            attr = dict([
-                ["type", "text/css"],
-                ["rel", "stylesheet"],
-                ["href", self.html_url],
-                ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ])
-            return ("link", attr, None)
-        else:
-            attr = dict([
-                ["type", "text/css"],
-                ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ])
-            return ("style", attr, self.with_header())
 
 
 class PreprocessedCSS(StylesheetAsset):

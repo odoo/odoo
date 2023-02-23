@@ -41,6 +41,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch
+from unittest import util
 from xmlrpc import client as xmlrpclib
 
 import requests
@@ -81,6 +82,9 @@ ADMIN_USER_ID = odoo.SUPERUSER_ID
 CHECK_BROWSER_SLEEP = 0.1 # seconds
 CHECK_BROWSER_ITERATIONS = 100
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
+
+
+util._MAX_LENGTH = 200  # initially 80
 
 
 def get_db_name():
@@ -831,6 +835,54 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         # See https://github.com/odoo/odoo/pull/107572 for more info.
         self._outcome.errors = _ErrorCatcher(self)
         super()._callSetUp()
+
+    def look_like(self, *args):
+        """
+        A shortcut to get a LookLike object without importing it
+
+        Example of usage:
+
+            self.assertEqual(self.look_like('SELECT ... FROM model'), "SELECT field1, field2, field3 FROM model")
+            self.assertIn(self.look_like('Company ... (SF)'), ['TestPartner', 'Company 8 (SF)', 'SomeAdress'])
+            self.assertEqual([
+                'TestPartner',
+                self.look_like('Company ... (SF)'),
+                self.look_like('...'),
+            ], [
+                'TestPartner',
+                'Company 8 (SF)',
+                'Anything else'
+            ])
+
+        In case of mismatch, here is an example of error message
+
+            AssertionError: Lists differ: ['TestPartner', ~Company ... (SF), ~...] != ['TestPartner', 'Company 8 (LA)', 'Anything else']
+
+            First differing element 1:
+            ~Company ... (SF)
+            'Company 8 (LA)'
+
+            - ['TestPartner', ~Company ... (SF), ~...]
+            + ['TestPartner', 'Company 8 (LA)', 'Anything else']
+
+
+        """
+        return LookLike(*args)
+
+
+class LookLike():
+    """
+    LookLike allows to define a string like object that will use a regex match instead of an equal when compared to a string.
+    """
+    def __init__(self, descriptor):
+        self.descriptor = descriptor
+        self.regex = '.*' . join([re.escape(part.strip()) for part in self.descriptor.split('...')])
+
+    def __eq__(self, other):
+        return re.fullmatch(self.regex, other)
+
+    def __repr__(self):
+        return f'~{self.descriptor}'
 
 
 class _ErrorCatcher(list):

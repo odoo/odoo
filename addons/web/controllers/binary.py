@@ -108,8 +108,8 @@ class Binary(http.Controller):
 =======
     def content_assets(self, filename=None, unique=False, extra=None, nocache=False):
         extra = extra or '-'
-        unique = unique or '%'
-        url = f'/web/assets/{unique}/{extra}/{filename}'
+        unique_filter = unique or '%'
+        url = f'/web/assets/{unique_filter}/{extra}/{filename}'
         if unique:
             domain = [('url', '=', url)]
         else:
@@ -132,6 +132,7 @@ class Binary(http.Controller):
             raise request.not_found()
 >>>>>>> wip
         with replace_exceptions(UserError, by=request.not_found()):
+            #attachment.validate_access()
             record = request.env['ir.binary']._find_record(res_id=int(attachment.id))
             stream = request.env['ir.binary']._get_stream_from(record, 'raw', filename)
 

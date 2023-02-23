@@ -20,9 +20,10 @@ re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^
 
 class AssetsBundleMultiWebsite(AssetsBundle):
     def _get_asset_url_values(self, unique, extra, name, extension):
+        extra = extra or []
         website_id = self.env.context.get('website_id')
-        website_id_path = website_id and ('%s-' % website_id) or ''
-        extra = website_id_path + extra
+        if website_id:
+            extra += f'website_{website_id}'
         res = super()._get_asset_url_values(unique, extra, name, extension)
         return res
 
@@ -156,32 +157,28 @@ class IrQWeb(models.AbstractModel):
         # version part combine with the initial extra (rtl) should be enough to ensure they are identical.
         # we dont expect to have any pregenerated rtl/website attachment so we don't manage assets with extra
 
-        nodes = super()._pregenerate_assets_bundles()
+        attachments = super()._pregenerate_assets_bundles()
         website = self.env['website'].search([], order='id', limit=1)
         if not website:
-            return nodes
+            return attachments
         nb_created = 0
-        for node in nodes:
-            bundle_info = node[1]
-            bundle_url = bundle_info.get('src', '') or bundle_info.get('href', '')
-            if bundle_url.startswith('/web/assets/'):
-                # example: "/web/assets/2152-ee56665/web.assets_frontend_lazy.min.js"
-                _, _, _, id_unique, name = bundle_url.split('/')
-                attachment_id, unique = id_unique.split('-')
-                url_pattern = f'/web/assets/%s/{website.id}/{name}'
-                existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % ('%', '%'))])
-                if existing:
-                    if f'-{unique}/' in existing.url:
-                        continue
-                    _logger.runbot(f'Updating exiting assets {existing.url} for website {website.id}')
-                    # we assume that most of the time the first website bundles will be the same as the base one
-                    # if the unique changes, it is most likely because sources where update since install.
-                    # this is mainly for dev downloading a database from runbot and trying to execute tests locally
-                    existing.unlink()
-                new = self.env['ir.attachment'].browse(int(attachment_id)).copy()
-                new.url = url_pattern % (new.id, unique)
-                nb_created += 1
+        for attachment in attachments:
+            _, _, _, unique, extra, name = attachment.url.split('/')
+            assert extra == '-'
+            url_pattern = f'/web/assets/%s/we_{website.id}/{name}'
+            existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % '%')])
+            if existing:
+                if existing.url.split('/')[3] == unique:
+                    continue
+                _logger.runbot(f'Updating exiting assets {existing.url} for website {website.id}')
+                # we assume that most of the time the first website bundles will be the same as the base one
+                # if the unique changes, it is most likely because sources where update since install.
+                # this is mainly for dev downloading a database from runbot and trying to execute tests locally
+                existing.unlink()
+            new = attachment.copy()
+            new.url = url_pattern % unique
+            nb_created += 1
         if nb_created:
             _logger.runbot('%s bundle(s) were copied for website %s', nb_created, website.id)
 
-        return nodes
+        return attachment
