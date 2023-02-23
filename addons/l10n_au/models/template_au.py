@@ -33,5 +33,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'au_61630',
                 'account_journal_early_pay_discount_loss_account_id': 'au_61610',
                 'account_journal_early_pay_discount_gain_account_id': 'au_61620',
+                'fiscalyear_last_month': '6',
+                'fiscalyear_last_day': 30,
             },
         }
