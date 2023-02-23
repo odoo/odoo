@@ -2976,7 +2976,7 @@ class BaseModel(metaclass=MetaModel):
 
         return self._read_format(fnames=fields, load=load)
 
-    def update_field_translations(self, field_name, translations):
+    def update_field_translations(self, field_name, translations, reset_langs=None):
         """ Update the values of a translated field.
 
         :param str field_name: field name
@@ -2984,9 +2984,9 @@ class BaseModel(metaclass=MetaModel):
             like ``{lang: new_value}``; if ``translate`` is a callable, it should be like
             ``{lang: {old_term: new_term}}``
         """
-        return self._update_field_translations(field_name, translations)
+        return self._update_field_translations(field_name, translations, reset_langs=reset_langs)
 
-    def _update_field_translations(self, field_name, translations, digest=None):
+    def _update_field_translations(self, field_name, translations, digest=None, reset_langs=None):
         """ Private implementation of :meth:`~update_field_translations`.
         The main difference comes from the extra function ``digest``, which may
         be used to make identifiers for old terms.
@@ -2994,11 +2994,11 @@ class BaseModel(metaclass=MetaModel):
         :param dict translations:
             if the field has ``translate=True``, it should be a dictionary like ``{lang: new_value}``
                 new_value: str: the new translation for lang
-                new_value: False: void the current translation for lang and fallback to current en_US value
             if ``translate`` is a callable, it should be like
             ``{lang: {old_term: new_term}}``, or ``{lang: {digest(old_term): new_term}}`` when ``digest`` is callable
-                new_value: str: the new translation of old_term for lang
+                new_value: str: the new non-empty translation of old_term for lang
         :param digest: an optional digest function for the old_term
+        :param list reset_langs: languages to reset translations
         """
         self.ensure_one()
 
@@ -3024,17 +3024,17 @@ class BaseModel(metaclass=MetaModel):
         self.check_field_access_rights('write', [field_name])
         self.check_access_rule('write')
 
+        translations_reset = {lang: None for lang in reset_langs or []}
+        if 'en_US' in translations_reset:
+            raise UserError(_("English translations cannot be reset"))
+        translations = {lang: v for lang, v in translations.items() if lang not in translations_reset}
+
+        if not translations and not translations_reset:
+            return True
+
         if field.translate is True:
-            # falsy values (except emtpy str) are used to void the corresponding translation
-            if any(translation and not isinstance(translation, str) for translation in translations.values()):
-                raise UserError(_("Translations for model translated fields only accept falsy values and str"))
-            value_en = translations.get('en_US', True)
-            if not value_en and value_en != '':
-                translations.pop('en_US')
-            translations = {
-                lang: translation if isinstance(translation, str) else None
-                for lang, translation in translations.items()
-            }
+            translations = {lang: str(value) for lang, value in translations.items()}
+            translations.update(translations_reset)
             self.invalidate_recordset([field_name])
             self._cr.execute(f'''
                 UPDATE {self._table} SET {field_name} = jsonb_strip_nulls({field_name} || %s) WHERE id = %s
@@ -3050,23 +3050,30 @@ class BaseModel(metaclass=MetaModel):
             # assert record_fr.with_context(lang='fr_FR') == '<div>English 1</div><div>French 2<div/>'
             # assert record_nl.with_context(lang='nl_NL') == '<div>English 3</div><div>English 2<div/>'
 
-            old_translations = field._get_stored_translations(self)
-            if not old_translations:
-                return False
-            new_translations = old_translations
-            for lang, translation in translations.items():
-                old_value = new_translations.get(lang) or new_translations.get('en_US')
-                if digest:
-                    old_terms = field.get_trans_terms(old_value)
-                    old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
-                    translation = {
-                        old_terms_digested2value[key]: value
-                        for key, value in translation.items()
-                        if key in old_terms_digested2value
-                    }
-                new_translations[lang] = field.translate(translation.get, old_value)
-            self.env.cache.update_raw(self, field, [new_translations], dirty=True)
+            if translations:
+                old_translations = field._get_stored_translations(self)
+                if not old_translations:
+                    return False
+                new_translations = old_translations
+                for lang, translation in translations.items():
+                    old_value = new_translations.get(lang) or new_translations.get('en_US')
+                    if digest:
+                        old_terms = field.get_trans_terms(old_value)
+                        old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
+                        translation = {
+                            old_terms_digested2value[key]: value
+                            for key, value in translation.items()
+                            if key in old_terms_digested2value
+                        }
+                    new_translations[lang] = field.translate(translation.get, old_value)
+                self.env.cache.update_raw(self, field, [new_translations], dirty=True)
+            if translations_reset:
+                self.invalidate_recordset([field_name])
+                self._cr.execute(f'''
+                    UPDATE {self._table} SET {field_name} = jsonb_strip_nulls({field_name} || %s) WHERE id = %s
+                ''', (Json(translations_reset), self.id))
             self.modified([field_name])
+
         return True
 
     def get_field_translations(self, field_name):

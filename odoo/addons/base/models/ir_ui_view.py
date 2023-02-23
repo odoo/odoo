@@ -583,8 +583,8 @@ actual arch.
             self.inherit_children_ids.unlink()
         return super(View, self).unlink()
 
-    def _update_field_translations(self, fname, translations, digest=None):
-        res = super()._update_field_translations(fname, translations, digest)
+    def _update_field_translations(self, fname, translations, digest=None, reset_langs=None):
+        res = super()._update_field_translations(fname, translations, digest=digest, reset_langs=reset_langs)
         if fname == 'arch_db' and 'install_filename' not in self._context:
             self.write({'arch_updated': True})
         return res

@@ -19,19 +19,19 @@ export class TranslationDialog extends Component {
         this.terms = [];
 
         onWillStart(async () => {
-            const languages = await loadLanguages(this.orm);
             const [translations, context] = await this.loadTranslations();
             let id = 1;
             translations.forEach((t) => (t.id = id++));
+            this.props.languages = await loadLanguages(this.orm);
             this.props.isText = ["text", "html"].includes(context.field_type);
             this.props.translateType = context.translate_type;
             this.props.enUSActivated = context.en_US_activated;
             if (!this.props.enUSActivated) {
-                languages.push(["en_US", _t("Source Value")]);
+                this.props.languages.push(["en_US", _t("Source Value")]);
             }
 
             this.terms = translations.map((term) => {
-                const relatedLanguage = languages.find((l) => l[0] === term.lang);
+                const relatedLanguage = this.props.languages.find((l) => l[0] === term.lang);
                 const termInfo = {
                     ...term,
                     langName: relatedLanguage[1],
@@ -94,10 +94,18 @@ export class TranslationDialog extends Component {
             }
         });
 
+        const resetLangs = [];
+        this.props.languages.forEach(([language, languageName]) => {
+            if (!this.terms.some((t) => t.lang === language && (t.translated || !t.isModified))) {
+                resetLangs.push(language);
+            }
+        });
+
         await this.orm.call(this.props.resModel, "update_field_translations", [
             [this.props.resId],
             this.props.fieldName,
             translations,
+            resetLangs,
         ]);
 
         await this.props.onSave();
@@ -141,12 +149,7 @@ export class TranslationDialog extends Component {
             term.value = ev.target.value;
         } else {
             ev.target.classList.add("o_field_translate_fallback");
-            if (this.props.translateType === "model_terms") {
-                term.value = term.source;
-            } else {
-                term.value = false;
-            }
-            ev.target.value = term.source;
+            ev.target.value = term.value = term.source;
         }
     }
 
