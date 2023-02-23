@@ -2774,7 +2774,7 @@ class MailThread(models.AbstractModel):
                 thread = self.env[message.model].browse(message.res_id)
             if not thread:
                 mail_subject = message.record_name
-            else:
+            elif hasattr(thread, '_message_compute_subject'):
                 mail_subject = thread._message_compute_subject()
 
         # Replace new lines by spaces to conform to email headers requirements
