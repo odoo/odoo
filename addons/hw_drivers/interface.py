@@ -10,14 +10,7 @@ from odoo.addons.hw_drivers.main import drivers, interfaces, iot_devices
 _logger = logging.getLogger(__name__)
 
 
-class InterfaceMetaClass(type):
-    def __new__(cls, clsname, bases, attrs):
-        new_interface = super(InterfaceMetaClass, cls).__new__(cls, clsname, bases, attrs)
-        interfaces[clsname] = new_interface
-        return new_interface
-
-
-class Interface(Thread, metaclass=InterfaceMetaClass):
+class Interface(Thread):
     _loop_delay = 3  # Delay (in seconds) between calls to get_devices or 0 if it should be called only once
     _detected_devices = {}
     connection_type = ''
@@ -25,6 +18,10 @@ class Interface(Thread, metaclass=InterfaceMetaClass):
     def __init__(self):
         super(Interface, self).__init__()
         self.drivers = sorted([d for d in drivers if d.connection_type == self.connection_type], key=lambda d: d.priority, reverse=True)
+
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+        interfaces[cls.__name__] = cls
 
     def run(self):
         while self.connection_type and self.drivers:
