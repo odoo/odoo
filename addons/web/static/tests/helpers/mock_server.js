@@ -1069,6 +1069,16 @@ export class MockServer {
                         }
                         break;
                     }
+                    case "boolean": {
+                        if (func === "array_agg") {
+                            group[name] = records.map((r) => r[fieldName]);
+                        } else if (func === "bool_or") {
+                            group[name] = records.some((r) => Boolean(r[fieldName]));
+                        } else if (func === "bool_and") {
+                            group[name] = records.every((r) => Boolean(r[fieldName]));
+                        }
+                        break;
+                    }
                 }
             }
         }
