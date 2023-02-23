@@ -102,9 +102,16 @@ class PosSelfOrder(http.Controller):
             })
         return response
 
-    # this is the route that the POS Self Order App uses to GET THE MENU
     @http.route('/pos-self-order/get-menu', auth='public', type="json", website=True)
     def pos_self_order_get_menu(self, pos_id=None):
+        """
+        This is the route that the POS Self Order App uses to GET THE MENU
+        :param pos_id: the id of the POS
+        :type pos_id: int
+
+        :return: the menu
+        :rtype: list of dict
+        """
         if not pos_id:
             raise werkzeug.exceptions.NotFound()
         pos_sudo = request.env['pos.config'].sudo().search(
@@ -126,9 +133,15 @@ class PosSelfOrder(http.Controller):
     # FIXME: crop the images to be square -- maybe we want to do this in the frontend?
     # TODO: maybe we want to lazy load the images
     # TODO: right now this route will return the image to whoever calls it; is there any reason to not make it public?
-    # this is the route that the POS Self Order App uses to GET THE PRODUCT IMAGES
     @http.route('/pos-self-order/get-images/<int:product_id>', methods=['GET'], type='http', auth='public')
     def pos_self_order_get_images(self, product_id):
+        """
+        This is the route that the POS Self Order App uses to GET THE PRODUCT IMAGES
+
+        :param product_id: the id of the product
+        :type product_id: int
+        
+        """
         # We get the product with the specific id from the database
         product_sudo = request.env['product.product'].sudo().browse(product_id)
         # We return the image of the product in binary format
@@ -185,7 +198,7 @@ class PosSelfOrder(http.Controller):
         sequence_number = None
         existing_order_sudo = None
         # Here we determine whether to make a new order or to add items to an existing order
-        if order_id:
+        if pos_sudo.allow_ongoing_orders and order_id:
             existing_order_sudo = request.env['pos.order'].sudo().search(
                 [('pos_reference', '=', order_id)], limit=1)
             if existing_order_sudo and existing_order_sudo.state == "draft":
@@ -281,6 +294,7 @@ class PosSelfOrder(http.Controller):
         This is used by the frontend to find the latest state of an order.
         (e.g. if a customer orders something from the self order app and then the waiter adds an item to the order,
         the customer will be able to see the new item in the order)
+
         :parmam order_id: the id of the order that we want to view
         :type order_id: str
         :param access_token: the access token of the order that we want to view -- this is needed 
@@ -385,14 +399,45 @@ def createOrderLinesFromCart(cart, pos_id):
 
 
 def computeAmountTotalFromOrderLines(lines):
+    """
+    Compute the amount total from the order lines.
+
+    :param lines: The order lines.
+    :type lines: List of 'pos.order.line' objects.
+
+    :return: The amount total.
+    :rtype: float.
+    """
     return sum(orderline[2].get("price_subtotal_incl") for orderline in lines)
 
 
 def computeAmountTaxFromOrderLines(lines):
+    """
+    Compute the total amount of tax from the order lines.
+
+    :param lines: The order lines.
+    :type lines: List of 'pos.order.line' objects.
+
+    :return: The amount total.
+    :rtype: float.
+    """
     return sum(orderline[2].get("price_subtotal_incl")-orderline[2].get("price_subtotal") for orderline in lines)
 
 
 def findNewSequenceNumber(pos_id, table_id, session_id):
+    """
+    Find the new sequence number for the order.
+
+    :param pos_id: The id of the pos.
+    :type pos_id: int.
+    :param table_id: The id of the table.
+    :type table_id: int.
+    :param session_id: The id of the session.
+    :type session_id: int.
+
+    :return: The new sequence number.
+    :rtype: int.
+    """
     sequence_number = 1
     # TODO: TEST if this is correct
     old_sequence_number = request.env['pos.order'].sudo().search([('config_id', '=', int(pos_id)),

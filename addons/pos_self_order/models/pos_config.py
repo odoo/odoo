@@ -24,12 +24,20 @@ class PosConfig(models.Model):
     def self_order_allow_view_menu(self):
         self.ensure_one()
         return self.self_order_view_mode or self.self_order_kiosk_mode
+
     def self_order_allow_order(self):
         self.ensure_one()
         return self.compute_self_order_location != 'none'
-    def self_order_allow_open_tabs(self):
+
+    def self_order_allow_ongoing_orders(self):
+        """
+        Returns True if ongoing orders are allowed.
+        Ongoing orders means that a customer can order multiple times and pay at the end of the meal,
+        instead of paying after each order.
+        """
         self.ensure_one()
         return self.self_order_pay_after == 'meal'
+
     def compute_self_order_location(self):
         self.ensure_one()
         if self.self_order_kiosk_mode:
