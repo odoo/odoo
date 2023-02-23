@@ -890,6 +890,9 @@ class TriggerTree(dict):
     def __bool__(self):
         return bool(self.root or len(self))
 
+    def __repr__(self) -> str:
+        return f"TriggerTree(root={self.root!r}, {super().__repr__()})"
+
     def increase(self, key):
         try:
             return self[key]
