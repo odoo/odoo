@@ -2707,7 +2707,8 @@ class BaseModel(metaclass=MetaModel):
                 # following specific properties:
                 #  - reading inherited fields should not bypass access rights
                 #  - copy inherited fields iff their original field is copied
-                self._add_field(name, field.new(
+                Field = type(field)
+                self._add_field(name, Field(
                     inherited=True,
                     inherited_field=field,
                     related=f"{parent_fname}.{name}",
@@ -2800,7 +2801,8 @@ class BaseModel(metaclass=MetaModel):
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:
-                self._add_field(name, fields_[-1].new(_base_fields=fields_))
+                Field = type(fields_[-1])
+                self._add_field(name, Field(_base_fields=fields_))
 
         # 2. add manual fields
         if self.pool._init_modules:
@@ -4285,12 +4287,7 @@ class BaseModel(metaclass=MetaModel):
         return records
 
     def _compute_field_value(self, field):
-        # This is for base automation, to have something to override to catch
-        # the changes of values for stored compute fields.
-        if isinstance(field.compute, str):
-            getattr(self, field.compute)()
-        else:
-            field.compute(self)
+        fields.determine(field.compute, self)
 
         if field.store and any(self._ids):
             # check constraints of the fields that have been computed
