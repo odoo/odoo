@@ -1912,16 +1912,68 @@ var SnippetsMenu = Widget.extend({
             }
             $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
 
-            const proms = _.map($invisibleSnippets, async el => {
-                const editor = await this._createSnippetEditor($(el));
-                const $invisEntry = $('<div/>', {
-                    class: 'o_we_invisible_entry d-flex align-items-center justify-content-between',
-                    text: editor.getName(),
-                }).append($('<i/>', {class: `fa ${editor.isTargetVisible() ? 'fa-eye' : 'fa-eye-slash'} ml-2`}));
-                $invisibleDOMPanelEl.append($invisEntry);
-                this.invisibleDOMMap.set($invisEntry[0], el);
+            // descendantPerSnippet: a map with its keys set to invisible
+            // snippets that have invisible descendants. The value corresponding
+            // to an invisible snippet element is a list filled with all its
+            // descendant invisible snippets except those that have a closer
+            // invisible snippet ancestor.
+            const descendantPerSnippet = new Map();
+            // Filter the "$invisibleSnippets" to only keep the root snippets
+            // and create the map ("descendantPerSnippet") of the snippets and
+            // their descendant snippets.
+            const rootInvisibleSnippetEls = [...$invisibleSnippets].filter(invisibleSnippetEl => {
+                const ancestorInvisibleEl = invisibleSnippetEl
+                                                 .parentElement.closest(".o_snippet_invisible");
+                if (!ancestorInvisibleEl) {
+                    return true;
+                }
+                const descendantSnippets = descendantPerSnippet.get(ancestorInvisibleEl) || [];
+                descendantPerSnippet.set(ancestorInvisibleEl,
+                    [...descendantSnippets, invisibleSnippetEl]);
+                return false;
             });
-            return Promise.all(proms);
+            // Insert an invisible snippet in its "parentEl" element.
+            const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant,
+                                                  parentEl) => {
+                const editor = await this._createSnippetEditor($(invisibleSnippetEl));
+                const invisibleEntryEl = document.createElement("div");
+                invisibleEntryEl.className = `${isRootParent ? "o_we_invisible_root_parent" : ""}`;
+                invisibleEntryEl.classList.add("o_we_invisible_entry", "d-flex",
+                    "align-items-center", "justify-content-between");
+                invisibleEntryEl.innerText = isDescendant ? `└ ${editor.getName()}` :
+                                                            editor.getName();
+                const iconEl = document.createElement("i");
+                const eyeIconClass = editor.isTargetVisible() ? "fa-eye" : "fa-eye-slash";
+                iconEl.classList.add("fa", "ml-2", eyeIconClass);
+                invisibleEntryEl.appendChild(iconEl);
+                parentEl.appendChild(invisibleEntryEl);
+                this.invisibleDOMMap.set(invisibleEntryEl, invisibleSnippetEl);
+            };
+            // Insert all the invisible snippets contained in "snippetEls" as
+            // well as their descendants in the "parentEl" element. If
+            // "snippetEls" is set to "rootInvisibleSnippetEls" and "parentEl"
+            // is set to "$invisibleDOMPanelEl[0]", then fills the right
+            // invisible panel like this:
+            // rootInvisibleSnippet
+            //     └ descendantInvisibleSnippet
+            //          └ descendantOfDescendantInvisibleSnippet
+            //               └ etc...
+            const createInvisibleElements = async (snippetEls, isDescendant, parentEl) => {
+                for (const snippetEl of snippetEls) {
+                    const descendantSnippetEls = descendantPerSnippet.get(snippetEl);
+                    // An element is considered as "RootParent" if it has one or
+                    // more invisible descendants but is not a descendant.
+                    await createInvisibleElement(snippetEl,
+                        !isDescendant && !!descendantSnippetEls, isDescendant, parentEl);
+                    if (descendantSnippetEls) {
+                        // Insert all the descendant snippets in a list.
+                        const listEntryEl = document.createElement("ul");
+                        await createInvisibleElements(descendantSnippetEls, true, listEntryEl);
+                        parentEl.appendChild(listEntryEl);
+                    }
+                }
+            };
+            return createInvisibleElements(rootInvisibleSnippetEls, false, $invisibleDOMPanelEl[0]);
         }, false);
     },
     /**
