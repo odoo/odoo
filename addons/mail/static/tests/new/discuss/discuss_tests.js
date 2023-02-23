@@ -1905,3 +1905,19 @@ QUnit.test("Message shows up even if channel data is incomplete", async function
     await click(".o-mail-category-chat + .o-mail-category-item:contains(Albert)");
     assert.containsOnce(document.body, ".o-mail-message:contains(hello world)");
 });
+
+QUnit.test(
+    "Create a direct message channel when clicking on start a meeting",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["mail.channel"].create({
+            channel_type: "channel",
+            name: "General",
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        await click("button:contains(Start a meeting)");
+        assert.containsOnce(target, "button:contains(Mitchell Admin)");
+        assert.containsOnce(target, ".o-mail-call");
+    }
+);
