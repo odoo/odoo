@@ -99,6 +99,7 @@ class Applicant(models.Model):
         ('ongoing', 'Ongoing'),
         ('hired', 'Hired'),
         ('refused', 'Refused'),
+        ('archived', 'Archived'),
     ], compute="_compute_application_status")
 
     @api.onchange('job_id')
@@ -192,6 +193,8 @@ class Applicant(models.Model):
         for applicant in self:
             if applicant.refuse_reason_id:
                 applicant.application_status = 'refused'
+            elif not applicant.active:
+                applicant.application_status = 'archived'
             elif applicant.date_closed:
                 applicant.application_status = 'hired'
             else:
@@ -616,9 +619,6 @@ class Applicant(models.Model):
         applicant_active = self.filtered(lambda applicant: applicant.active)
         if applicant_active:
             applicant_active.reset_applicant()
-        applicant_inactive = self.filtered(lambda applicant: not applicant.active)
-        if applicant_inactive:
-            return applicant_inactive.archive_applicant()
         return res
 
     def action_send_email(self):
