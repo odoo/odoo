@@ -38,7 +38,7 @@ import {
 export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     setup() {
         super.setup();
-        useSubEnv(legacyEnv);
+        useSubEnv(Component.env);
 
         let started = false;
         onMounted(() => {

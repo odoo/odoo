@@ -871,6 +871,8 @@ function removeComments(html, removeMsoHide=true) {
 }
 
 return {
+    COLOR_PICKER_TEMPLATE: COLOR_PICKER_TEMPLATE,
+    SNIPPETS_TEMPLATE: SNIPPETS_TEMPLATE,
     wysiwygData: wysiwygData,
     createWysiwyg: createWysiwyg,
     testKeyboard: testKeyboard,
