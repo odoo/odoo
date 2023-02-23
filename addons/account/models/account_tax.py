@@ -81,7 +81,7 @@ class AccountTax(models.Model):
     _description = 'Tax'
     _order = 'sequence,id'
     _check_company_auto = True
-    _rec_names_search = ['name', 'description']
+    _rec_names_search = ['name', 'description', 'invoice_label']
 
     name = fields.Char(string='Tax Name', required=True, translate=True)
     name_searchable = fields.Char(store=False, search='_search_name',
@@ -112,7 +112,8 @@ class AccountTax(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0.0)
-    description = fields.Char(string='Label on Invoices')
+    description = fields.Char(string='Description', translate=True)
+    invoice_label = fields.Char(string='Label on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False,
@@ -355,15 +356,15 @@ class AccountTax(models.Model):
 
     @api.onchange('amount')
     def onchange_amount(self):
-        if self.amount_type in ('percent', 'division') and self.amount != 0.0 and not self.description:
-            self.description = "{0:.4g}%".format(self.amount)
+        if self.amount_type in ('percent', 'division') and self.amount != 0.0 and not self.invoice_label:
+            self.invoice_label = "{0:.4g}%".format(self.amount)
 
     @api.onchange('amount_type')
     def onchange_amount_type(self):
         if self.amount_type != 'group':
             self.children_tax_ids = [(5,)]
         if self.amount_type == 'group':
-            self.description = None
+            self.invoice_label = None
 
     @api.onchange('price_include')
     def onchange_price_include(self):

@@ -130,7 +130,7 @@
                                                 <span class="text-nowrap" t-field="line.discount"/>
                                             </td>
                                             <td t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                                <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))" id="line_tax_ids"/>
+                                                <span t-out="', '.join(map(lambda x: (x.invoice_label or x.name), line.tax_ids))" id="line_tax_ids"/>
                                             </td>
                                             <td class="text-end o_price_total">
                                                 <span class="text-nowrap" t-field="line.price_subtotal"/>
