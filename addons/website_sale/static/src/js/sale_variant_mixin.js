@@ -70,13 +70,13 @@ var VariantMixin = {
                 const $currentOptionalProduct = $(optionalProduct);
                 const childCombination = this.getSelectedVariantValues($currentOptionalProduct);
                 const productTemplateId = parseInt($currentOptionalProduct.find('.product_template_id').val());
-                ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
+                ajax.jsonRpc('/website_sale/get_combination_info', 'call', {
                     'product_template_id': productTemplateId,
                     'product_id': this._getProductId($currentOptionalProduct),
                     'combination': childCombination,
                     'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
-                    'pricelist_id': this.pricelistId || false,
                     'parent_combination': combination,
+                    'context': this.context,
                     ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
                 }).then((combinationData) => {
                     this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
@@ -89,13 +89,13 @@ var VariantMixin = {
             );
         }
 
-        return ajax.jsonRpc(this._getUri('/sale/get_combination_info'), 'call', {
+        return ajax.jsonRpc('/website_sale/get_combination_info', 'call', {
             'product_template_id': parseInt($parent.find('.product_template_id').val()),
             'product_id': this._getProductId($parent),
             'combination': combination,
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
-            'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
+            'context': this.context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
             this._onChangeCombination(ev, $parent, combinationData);

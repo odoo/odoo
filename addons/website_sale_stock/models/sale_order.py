@@ -102,11 +102,12 @@ class SaleOrder(models.Model):
         )
 
     def _all_product_available(self):
+        self.ensure_one()
         for line in self.with_context(website_sale_stock_get_quantity=True).order_line:
             product = line.product_id
             if product.type != 'product' or product.allow_out_of_stock_order:
                 continue
-            combination_info = product._get_combination_info_variant(add_qty=line.product_uom_qty)
-            if combination_info['free_qty'] == 0:
+            free_qty = self.website_id._get_product_available_qty(product)
+            if free_qty == 0:
                 return False
         return True

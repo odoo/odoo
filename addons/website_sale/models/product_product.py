@@ -88,6 +88,15 @@ class Product(models.Model):
         # the template extra images here
         return variant_images + self.product_tmpl_id._get_images()[1:]
 
+    def _get_combination_info_variant(self, **kwargs):
+        """Return the variant info based on its combination.
+        See `_get_combination_info` for more information.
+        """
+        self.ensure_one()
+        return self.product_tmpl_id._get_combination_info(
+            combination=self.product_template_attribute_value_ids,
+            product_id=self.id,
+            **kwargs)
 
     def _website_show_quick_add(self):
         website = self.env['website'].get_current_website()
