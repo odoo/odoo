@@ -1609,6 +1609,43 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1409.95,
         })
 
+    def test_cash_rounding_with_rounding_method_set_to_global(self):
+        """
+        Test that cash roundings are computed correctly when
+        tax calculation rounding method is set to `round_globally`.
+        """
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'add_invoice_line',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': self.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'HALF-UP',
+        })
+
+        tax7_7 = self.env['account.tax'].create({
+            'name': "tax7_7",
+            'amount_type': 'percent',
+            'amount': 7.7,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_cash_rounding_id': cash_rounding.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'test product',
+                    'price_unit': 295.0,
+                    'tax_ids': [(6, 0, tax7_7.ids)],
+                }),
+            ],
+        })
+        self.assertEqual(invoice.amount_total, 317.70)
+
     def test_out_invoice_line_onchange_currency_1(self):
         move_form = Form(self.invoice.with_context(dudu=True))
         move_form.currency_id = self.currency_data['currency']

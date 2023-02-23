@@ -842,8 +842,9 @@ class AccountMove(models.Model):
                 self.date or fields.Date.context_today(self),
             )
             currency_id = taxes_map_entry['grouping_dict']['currency_id']
+            amount_currency = currency.round(taxes_map_entry['amount'])
             to_write_on_line = {
-                'amount_currency': taxes_map_entry['amount'],
+                'amount_currency': amount_currency,
                 'currency_id': currency_id,
                 'debit': self._get_debit_from_balance(balance, currency_id),
                 'credit': self._get_credit_from_balance(balance, currency_id),
