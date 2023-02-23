@@ -21,7 +21,7 @@ ProductScreen.check.isShown();
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains(2, "-0001");
 TicketScreen.do.deleteOrder("-0001");
-FloorScreen.check.isShown();
+TicketScreen.do.clickDiscard();
 
 // Create 2 items in a table. From floorscreen, delete 1 item. Then select the other item.
 // Correct order and screen should be displayed and the BackToFloorButton is shown.
