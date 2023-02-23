@@ -220,6 +220,7 @@ const Wysiwyg = Widget.extend({
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
+            foldSnippets: !!options.foldSnippets,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
