@@ -3657,9 +3657,6 @@ class BaseModel(metaclass=MetaModel):
             ir_model_data_unlink.unlink()
         if ir_attachment_unlink:
             ir_attachment_unlink.unlink()
-        # DLE P93: flush after the unlink, for recompute fields depending on
-        # the modified of the unlink
-        self.env.flush_all()
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', self._uid, self._name, self.ids)
