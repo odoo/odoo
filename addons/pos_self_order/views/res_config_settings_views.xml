@@ -10,18 +10,11 @@
                 <div class="content-group" attrs="{'invisible': [('pos_self_order_kiosk_mode','=',False)]}">
                 </div>
             </setting>
-                <!-- <div id="warning_text_pos_self_order_view" position="replace"/>
-                <setting id="pos_self_order_view_mode" position="inside" >
-                    <div class="content-group" attrs="{'invisible': [('pos_self_order_view_mode','=',False)]}">
-                        <button name="pos_self_order.custom_link_action" type="action" string="Configure Navigation Buttons"/>
-                        <button name="generate_qr_codes_page" type="object" string="Generate Qr Codes"/>
-                    </div>
-                </setting> -->
         </field>
     </record>
 
 
-    <!-- <record id="res_config_settings_view_form_menu" model="ir.ui.view">
+    <record id="res_config_settings_view_form_menu" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.pos_self_order.view</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="pos_restaurant.res_config_settings_view_form"/>
@@ -47,5 +40,5 @@
                 </div>
             </setting>
         </field>
-    </record> -->
+    </record>
 </odoo>

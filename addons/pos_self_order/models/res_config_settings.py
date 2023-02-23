@@ -11,12 +11,12 @@ class ResConfigSettings(models.TransientModel):
         ('each', 'Each Order'),
         ('meal', 'Meal')
         ],
-        compute='_compute_pos_module_pos_self_order', store=True, readonly=False)
+        compute='_compute_pos_self_order_variables', store=True, readonly=False)
 
-    @api.depends('pos_module_pos_self_order', 'pos_config_id')
-    def _compute_pos_module_pos_self_order(self):
+    @api.depends('pos_self_order_kiosk_mode','pos_self_order_view_mode', 'pos_config_id')
+    def _compute_pos_self_order_variables(self):
         for res_config in self:
-            if not res_config.pos_module_pos_self_order:
+            if not (res_config.pos_self_order_kiosk_mode or res_config.pos_self_order_view_mode):
                 res_config.update({
                     'self_order_pay_after': False,
                 })
@@ -25,17 +25,22 @@ class ResConfigSettings(models.TransientModel):
                     'self_order_pay_after': res_config.pos_config_id.self_order_pay_after,
                 })
     def generate_qr_codes_page(self):
+        """
+        Generate the data needed to print the QR codes page
+        """
         business_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         no_of_qr_codes_per_page = 9
         generic_qr_list = [{
                 'id': 0,
                 'url': url_quote(f"{business_url}/pos-self-order?pos_id={self.pos_config_id.id}"),
             } for i in range(0, no_of_qr_codes_per_page)]
-        tables = list(map(lambda table: 
-            {
-                'url': url_quote(f"{business_url}/pos-self-order?pos_id={self.pos_config_id.id}&table_id={table['id']}"), 
-                **table
-            },self.pos_config_id.get_tables_order_count()))
+        tables = [
+                    {
+                        'url': url_quote(f"{business_url}/pos-self-order?pos_id={self.pos_config_id.id}&table_id={table['id']}"), 
+                        **table
+                    }
+            for table in self.pos_config_id.get_tables_order_count()
+            ]
         qr_codes_to_print = generic_qr_list + tables
         data = {
             'pos_name': self.pos_config_id.name,
@@ -44,4 +49,12 @@ class ResConfigSettings(models.TransientModel):
         return self.env.ref('pos_self_order.report_self_order_qr_codes_page').report_action([], data=data)
 
 def splitListIntoNLists(l, n):
+    """
+    Split a list into n lists
+    :param l: list to split
+    :type l: list
+    :param n: number of lists to split into
+    :type n: int
+    :return: list of lists
+    """
     return [l[i:i + n] for i in range(0, len(l), n)]

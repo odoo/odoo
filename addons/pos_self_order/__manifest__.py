@@ -20,7 +20,7 @@
 
     # any module necessary for this one to work correctly
     # 'depends': ['point_of_sale', 'website_sale'],
-    'depends': ['point_of_sale'],
+    'depends': ['point_of_sale', 'pos_restaurant'],
 
     # always loaded
     'data': [
