@@ -31,7 +31,7 @@ class StockMoveLine(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     reserved_qty = fields.Float(
         'Real Reserved Quantity', digits=0, copy=False,
-        compute='_compute_reserved_qty', inverse='_set_product_qty', store=True)
+        compute='_compute_reserved_qty', inverse='_set_reserved_qty', store=True)
     reserved_uom_qty = fields.Float(
         'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
     qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False)
