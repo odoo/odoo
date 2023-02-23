@@ -52,7 +52,7 @@ class TagsSelector(object):
             return False
 
         test_module = test.test_module
-        test_class = test.test_class
+        test_class = test.__class__.__name__
         test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility,
         test_method = test._testMethodName
         test_module_path = test.__module__.removeprefix('odoo.addons').replace('.', '/') + '.py'
