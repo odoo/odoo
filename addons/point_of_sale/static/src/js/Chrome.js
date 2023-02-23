@@ -65,6 +65,7 @@ export class Chrome extends Component {
             "number_buffer",
             "popup",
             "sale_order_fetcher",
+            "orm",
         ]) {
             env.services[service] = this.wowlEnv.services[service];
         }

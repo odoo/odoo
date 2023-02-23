@@ -82,10 +82,10 @@ class PosSelfOrder(http.Controller):
             'currency_id': pos_sudo.currency_id.id,
             'pos_categories': request.env['pos.category'].sudo().search([]).read(['name', 'parent_id', 'child_id']),
             'message_to_display': message_to_display,
-            'self_order_allow_order': pos_sudo.has_active_session and pos_sudo.self_order_allow_order(),
+            'self_order_allow_order': pos_sudo.self_order_allow_order(),
             'show_prices_with_tax_included': True,
             'self_order_location': pos_sudo.compute_self_order_location(),
-            'allow_open_tabs': pos_sudo.self_order_allow_open_tabs(),
+            'allows_ongoing_orders': pos_sudo.self_order_allows_ongoing_orders(),
             'payment_methods': pos_sudo.payment_method_ids.read(['name']),
             'custom_links': custom_links_list,
         }
@@ -94,6 +94,7 @@ class PosSelfOrder(http.Controller):
                 'total_number_of_tables': len(pos_sudo.get_tables_order_count()),
                 'table_id': 0 if len(pos_sudo.get_tables_order_count()) == 0 else table_id,
             })
+        # TODO: make sure it is ok to send session_info to frontend
         session_info = request.env['ir.http'].session_info()
         session_info['pos_self_order'] = context
         response = request.render(
@@ -198,7 +199,7 @@ class PosSelfOrder(http.Controller):
         sequence_number = None
         existing_order_sudo = None
         # Here we determine whether to make a new order or to add items to an existing order
-        if pos_sudo.allow_ongoing_orders and order_id:
+        if pos_sudo.self_order_allows_ongoing_orders() and order_id:
             existing_order_sudo = request.env['pos.order'].sudo().search(
                 [('pos_reference', '=', order_id)], limit=1)
             if existing_order_sudo and existing_order_sudo.state == "draft":
@@ -271,12 +272,12 @@ class PosSelfOrder(http.Controller):
         # When the regular pos writes an order (even if not paid, just draft state),
         # it does not get this error
 
-        order_sudo = request.env['pos.order'].sudo().create_from_ui([order])[0]
+        order_resp = request.env['pos.order'].sudo().create_from_ui([order])[0]
         # is_trusted is set to True by default.
         # We need to set it to False, because we are creating an order from a public route
-        order_sudo.is_trusted = False
-        order_id = order_sudo.get("pos_reference")
-        response_sudo = {
+        request.env['pos.order'].sudo().browse(order_resp.get('id')).is_trusted = False
+        order_id = order_resp.get("pos_reference")
+        response = {
             "order_id": order['data']['name'],
             "order_items": [{"product_id": line[2]["product_id"], "qty": line[2]["qty"]} for line in order["data"]["lines"]],
             "order_total": order['data']['amount_total'],
@@ -285,7 +286,7 @@ class PosSelfOrder(http.Controller):
             "state": "draft",
             "amount_tax": order["data"]["amount_tax"],
         }
-        return response_sudo
+        return response
 
     @http.route('/pos-self-order/view-order', auth='public', type="json", website=True)
     def pos_self_order_view_order(self, order_id=None, access_token=None):
@@ -294,14 +295,13 @@ class PosSelfOrder(http.Controller):
         This is used by the frontend to find the latest state of an order.
         (e.g. if a customer orders something from the self order app and then the waiter adds an item to the order,
         the customer will be able to see the new item in the order)
-
+   
         :parmam order_id: the id of the order that we want to view
         :type order_id: str
         :param access_token: the access token of the order that we want to view -- this is needed 
                              for security reasons, so that only the customer who created the order
                              can view it
         :type access_token: str
-
         """
         if not order_id or not access_token:
             raise werkzeug.exceptions.NotFound()

@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-class PosConfig(models.Model):
+class PosOrder(models.Model):
     _inherit = 'pos.order'
     # When the order is set to not trusted, a warning message will appear POS app.
     # The server will have a button to acknowledge the order.

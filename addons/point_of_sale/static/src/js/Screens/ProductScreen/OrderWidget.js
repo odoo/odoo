@@ -5,7 +5,7 @@ import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 
 import { Orderline } from "./Orderline";
 import { OrderSummary } from "./OrderSummary";
-import { Component, useEffect, useRef } from "@odoo/owl";
+import { Component, useEffect, useRef, onWillStart } from "@odoo/owl";
 
 export class OrderWidget extends Component {
     static components = { Orderline, OrderSummary };
@@ -15,6 +15,7 @@ export class OrderWidget extends Component {
         super.setup();
         this.popup = useService("popup");
         this.numberBuffer = useService("number_buffer");
+        this.orm = useService("orm");
         this.scrollableRef = useRef("scrollable");
         useEffect(
             () => {
@@ -27,7 +28,22 @@ export class OrderWidget extends Component {
             },
             () => [this.order.selected_orderline]
         );
+        onWillStart(this.onWillStart);
     }
+    async onWillStart() {
+        const resp = await this.orm.searchRead(
+            "pos.order",
+            [["pos_reference", "=", this.order.name]],
+            ["is_trusted"]
+        );
+        this.isOrderTrusted = resp.length ? resp[0].is_trusted : true;
+        console.log("is order trusted? :>> ", resp.length ? resp[0].is_trusted : "is trusted");
+    }
+    trustOrder() {
+        this.orm.write("pos.order", [this.order.id], { is_trusted: true });
+        this.order.is_trusted = true;
+    }
+
     get order() {
         return this.env.pos.get_order();
     }
