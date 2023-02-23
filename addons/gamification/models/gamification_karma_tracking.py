@@ -127,9 +127,13 @@ class KarmaTracking(models.Model):
             'reason': _('Consolidation from %s to %s', from_date.date(), end_date.date()),
         })
 
-        self.search([
+        trackings = self.search([
             ('tracking_date', '>=', from_date),
             ('tracking_date', '<=', end_date),
             ('consolidated', '!=', True)]
-        ).with_context(skip_karma_computation=True).unlink()
+        )
+        # HACK: the unlink() AND the flush_all() must have that key in their context!
+        trackings = trackings.with_context(skip_karma_computation=True)
+        trackings.unlink()
+        trackings.env.flush_all()
         return True
