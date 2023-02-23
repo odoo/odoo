@@ -49,8 +49,8 @@ class AnalyticMixin(models.AbstractModel):
 
     def _validate_distribution(self, **kwargs):
         if self.env.context.get('validate_analytic', False):
-            mandatory_plans_ids = [plan['id'] for plan in self.env['account.analytic.plan'].sudo().get_relevant_plans(**kwargs) if plan['applicability'] == 'mandatory']
-            if not mandatory_plans_ids:
+            mandatory_plans = [plan for plan in self.env['account.analytic.plan'].sudo().get_relevant_plans(**kwargs) if plan['applicability'] == 'mandatory']
+            if not mandatory_plans:
                 return
             decimal_precision = self.env['decimal.precision'].precision_get('Percentage Analytic')
             distribution_by_root_plan = {}
@@ -58,9 +58,9 @@ class AnalyticMixin(models.AbstractModel):
                 root_plan = self.env['account.analytic.account'].browse(int(analytic_account_id)).root_plan_id
                 distribution_by_root_plan[root_plan.id] = distribution_by_root_plan.get(root_plan.id, 0) + percentage
 
-            for plan_id in mandatory_plans_ids:
-                if float_compare(distribution_by_root_plan.get(plan_id, 0), 100, precision_digits=decimal_precision) != 0:
-                    raise ValidationError(_("One or more lines require a 100% analytic distribution."))
+            for plan in mandatory_plans:
+                if float_compare(distribution_by_root_plan.get(plan['id'], 0), 100, precision_digits=decimal_precision) != 0:
+                    raise ValidationError(_("'%s' requires 100%% analytic distribution for the '%s' plan." % (self.name, plan['name'])))
 
     def _sanitize_values(self, vals, decimal_precision):
         """ Normalize the float of the distribution """
