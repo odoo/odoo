@@ -405,35 +405,39 @@ class TestNoThread(MailCommon, TestRecipients):
 
     @users('employee')
     def test_message_notify(self):
-        """ Test notifying using model / res_id linking to a model not being
-        mail.thread enabled. """
+        """ Test notifying on non-thread models, using MailThread as an abstract
+        class with model and res_id giving the record used for notification.
+
+        Test default subject computation is also tested. """
         test_record = self.env['mail.test.nothread'].create({
             'customer_id': self.partner_1.id,
             'name': 'Not A Thread',
         })
-        with self.assertPostNotifications([{
-                'content': 'Hello Paulo',
-                'email_values': {
-                    'reply_to': self.company_admin.catchall_formatted,
-                    'subject': 'Test Notify',
-                },
-                'message_type': 'user_notification',
-                'notif': [{
-                    'check_send': True,
-                    'is_read': True,
-                    'partner': self.partner_2,
-                    'status': 'sent',
-                    'type': 'email',
-                }],
-                'subtype': 'mail.mt_note',
-            }]):
-            _message = self.env['mail.thread'].message_notify(
-                body='<p>Hello Paulo</p>',
-                model=test_record._name,
-                partner_ids=self.partner_2.ids,
-                res_id=test_record.id,
-                subject='Test Notify',
-            )
+
+        for subject in ["Test Notify", False]:
+            with self.subTest():
+                with self.assertPostNotifications([{
+                        'content': 'Hello Paulo',
+                        'email_values': {
+                            'reply_to': self.company_admin.catchall_formatted,
+                        },
+                        'message_type': 'user_notification',
+                        'notif': [{
+                            'check_send': True,
+                            'is_read': True,
+                            'partner': self.partner_2,
+                            'status': 'sent',
+                            'type': 'email',
+                        }],
+                        'subtype': 'mail.mt_note',
+                    }]):
+                    _message = self.env['mail.thread'].message_notify(
+                        body='<p>Hello Paulo</p>',
+                        model=test_record._name,
+                        partner_ids=self.partner_2.ids,
+                        res_id=test_record.id,
+                        subject=subject,
+                    )
 
     @users('employee')
     def test_message_notify_composer(self):

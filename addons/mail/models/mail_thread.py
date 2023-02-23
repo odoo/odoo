@@ -3347,7 +3347,7 @@ class MailThread(models.AbstractModel):
         :return: dictionary of values suitable for a <mail.mail> create;
         """
         mail_subject = message.subject
-        if not mail_subject and self:
+        if not mail_subject and self and hasattr(self, '_message_compute_subject'):
             mail_subject = self._message_compute_subject()
         if not mail_subject:
             mail_subject = message.record_name
