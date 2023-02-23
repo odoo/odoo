@@ -2,6 +2,7 @@
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { getFixture } from "@web/../tests/helpers/utils";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
 let target;
 QUnit.module("follower subtype", {
@@ -153,4 +154,53 @@ QUnit.test("toggle follower subtype checkbox", async function (assert) {
         $(".o-mail-follower-subtype-dialog-subtype:contains(TestSubtype) input[type='checkbox']")[0]
             .checked
     );
+});
+
+QUnit.test("follower subtype apply", async function (assert) {
+    const pyEnv = await startServer();
+    const subtypeId = pyEnv["mail.message.subtype"].create({
+        default: true,
+        name: "TestSubtype1",
+    });
+    pyEnv["mail.message.subtype"].create({
+        default: true,
+        name: "TestSubtype2",
+    });
+    const followerId = pyEnv["mail.followers"].create({
+        display_name: "François Perusse",
+        partner_id: pyEnv.currentPartnerId,
+        res_model: "res.partner",
+        res_id: pyEnv.currentPartnerId,
+        subtype_ids: [subtypeId],
+    });
+    pyEnv["res.partner"].write([pyEnv.currentPartnerId], { message_follower_ids: [followerId] });
+    const { openView } = await start({
+        services: {
+            notification: makeFakeNotificationService((message) => {
+                assert.strictEqual(
+                    message,
+                    "The subscription preferences were successfully applied."
+                );
+            }),
+        },
+    });
+    await openView({
+        res_model: "res.partner",
+        res_id: pyEnv.currentPartnerId,
+        views: [[false, "form"]],
+    });
+    await click(".o-mail-chatter-topbar-follower-list-button");
+    await click("button[title='Edit subscription']");
+
+    const subtype1 =
+        ".o-mail-follower-subtype-dialog-subtype:contains(TestSubtype1) input[type='checkbox']";
+    const subtype2 =
+        ".o-mail-follower-subtype-dialog-subtype:contains(TestSubtype2) input[type='checkbox']";
+    assert.ok($(subtype1)[0].checked);
+    assert.notOk($(subtype2)[0].checked);
+    await click(subtype1);
+    assert.notOk($(subtype1)[0].checked);
+    await click(subtype2);
+    assert.ok($(subtype2)[0].checked);
+    await click(".modal-footer button:contains(Apply)");
 });
