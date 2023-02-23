@@ -75,32 +75,10 @@ def determine(needle, records, *args):
     raise TypeError("Determination requires a callable or method name")
 
 
-class MetaField(type):
-    """ Metaclass for field classes. """
-    by_type = {}
-
-    def __init__(cls, name, bases, attrs):
-        super(MetaField, cls).__init__(name, bases, attrs)
-        if not hasattr(cls, 'type'):
-            return
-
-        if cls.type and cls.type not in MetaField.by_type:
-            MetaField.by_type[cls.type] = cls
-
-        # compute class attributes to avoid calling dir() on fields
-        cls.related_attrs = []
-        cls.description_attrs = []
-        for attr in dir(cls):
-            if attr.startswith('_related_'):
-                cls.related_attrs.append((attr[9:], attr))
-            elif attr.startswith('_description_'):
-                cls.description_attrs.append((attr[13:], attr))
-
-
 _global_seq = iter(itertools.count())
 
 
-class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
+class Field(typing.Generic[T]):
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
     attributes may be provided when instantiating a field:
@@ -292,6 +270,8 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
     exportable = True
 
+    by_type = {}
+
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
@@ -306,6 +286,23 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         if self.name is None:
             return f"{'<%s.%s>'!r}" % (__name__, type(self).__name__)
         return f"{'%s.%s'!r}" % (self.model_name, self.name)
+
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+        if not hasattr(cls, 'type'):
+            return
+
+        if cls.type:
+            cls.by_type.setdefault(cls.type, cls)
+
+        # compute class attributes to avoid calling dir() on fields
+        cls.related_attrs = []
+        cls.description_attrs = []
+        for attr in dir(cls):
+            if attr.startswith('_related_'):
+                cls.related_attrs.append((attr[9:], attr))
+            elif attr.startswith('_description_'):
+                cls.description_attrs.append((attr[13:], attr))
 
     ############################################################################
     #
