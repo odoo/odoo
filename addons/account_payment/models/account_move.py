@@ -15,7 +15,8 @@ class AccountMove(models.Model):
         readonly=True, copy=False)
     authorized_transaction_ids = fields.Many2many(
         string="Authorized Transactions", comodel_name='payment.transaction',
-        compute='_compute_authorized_transaction_ids', readonly=True, copy=False)
+        compute='_compute_authorized_transaction_ids', readonly=True, copy=False,
+        compute_sudo=True)
     amount_paid = fields.Monetary(
         string="Amount paid",
         compute='_compute_amount_paid'
@@ -64,7 +65,7 @@ class AccountMove(models.Model):
 
     def get_portal_last_transaction(self):
         self.ensure_one()
-        return self.with_context(active_test=False).transaction_ids._get_last()
+        return self.with_context(active_test=False).transaction_ids.sudo()._get_last()
 
     def payment_action_capture(self):
         """ Capture all transactions linked to this invoice. """
