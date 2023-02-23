@@ -63,11 +63,14 @@ class AccountMoveSend(models.Model):
         # EXTENDS 'account'
         return super()._get_linked_attachments(move) + move.ubl_cii_xml_id
 
+    def _needs_ubl_cii_placeholder(self):
+        return self.enable_ubl_cii_xml and self.checkbox_ubl_cii_xml
+
     def _get_placeholder_mail_attachments_data(self, move):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move)
 
-        if self.enable_ubl_cii_xml and self.checkbox_ubl_cii_xml:
+        if self._needs_ubl_cii_placeholder():
             builder = move.partner_id._get_edi_builder()
             filename = builder._export_invoice_filename(move)
             results.append({
