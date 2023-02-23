@@ -403,19 +403,19 @@ class PricelistItem(models.Model):
 
         return price
 
-    def _compute_base_price(self, product, quantity, uom, date, target_currency):
+    def _compute_base_price(self, product, quantity, uom, date, currency):
         """ Compute the base price for a given rule
 
         :param product: recordset of product (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
-        :param target_currency: pricelist currency
+        :param currency: currency in which the returned price must be expressed
 
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
         """
-        target_currency.ensure_one()
+        currency.ensure_one()
 
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
@@ -430,7 +430,36 @@ class PricelistItem(models.Model):
             src_currency = product.currency_id
             price = product._price_compute(rule_base, uom=uom, date=date)[product.id]
 
-        if src_currency != target_currency:
-            price = src_currency._convert(price, target_currency, self.env.company, date, round=False)
+        if src_currency != currency:
+            price = src_currency._convert(price, currency, self.env.company, date, round=False)
 
         return price
+
+    def _compute_price_before_discount(self, *args, **kwargs):
+        """Compute the base price of the lowest pricelist rule whose pricelist discount_policy
+        is set to show the discount to the customer.
+
+        :param product: recordset of product (product.product/product.template)
+        :param float qty: quantity of products requested (in given uom)
+        :param uom: unit of measure (uom.uom record)
+        :param datetime date: date to use for price computation and currency conversions
+        :param currency: currency in which the returned price must be expressed
+
+        :returns: base price, expressed in provided pricelist currency
+        :rtype: float
+        """
+        pricelist_rule = self
+        if pricelist_rule and pricelist_rule.pricelist_id.discount_policy == 'without_discount':
+            pricelist_item = pricelist_rule
+            # Find the lowest pricelist rule whose pricelist is configured to show the discount
+            # to the customer.
+            while (
+                pricelist_item.base == 'pricelist'
+                and pricelist_item.base_pricelist_id.discount_policy == 'without_discount'
+            ):
+                rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
+                pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+
+            pricelist_rule = pricelist_item
+
+        return pricelist_rule._compute_base_price(*args, **kwargs)

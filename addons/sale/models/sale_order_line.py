@@ -476,14 +476,13 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         self.product_id.ensure_one()
 
-        pricelist_rule = self.pricelist_item_id
-        order_date = self.order_id.date_order or fields.Date.today()
-        product = self.product_id.with_context(**self._get_product_price_context())
-        quantity = self.product_uom_qty or 1.0
-        uom = self.product_uom or self.product_id.uom_id
-
-        price = pricelist_rule._compute_price(
-            product, quantity, uom, order_date, currency=self.currency_id)
+        price = self.pricelist_item_id._compute_price(
+            product=self.product_id.with_context(**self._get_product_price_context()),
+            quantity=self.product_uom_qty or 1.0,
+            uom=self.product_uom,
+            date=self.order_id.date_order,
+            currency=self.currency_id,
+        )
 
         return price
 
@@ -507,33 +506,13 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         self.product_id.ensure_one()
 
-        pricelist_rule = self.pricelist_item_id
-        order_date = self.order_id.date_order or fields.Date.today()
-        product = self.product_id.with_context(**self._get_product_price_context())
-        quantity = self.product_uom_qty or 1.0
-        uom = self.product_uom
-
-        if pricelist_rule:
-            pricelist_item = pricelist_rule
-            if pricelist_item.pricelist_id.discount_policy == 'without_discount':
-                # Find the lowest pricelist rule whose pricelist is configured
-                # to show the discount to the customer.
-                while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
-                    rule_id = pricelist_item.base_pricelist_id._get_product_rule(
-                        product, quantity, currency=self.currency_id, uom=uom, date=order_date)
-                    pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-
-            pricelist_rule = pricelist_item
-
-        price = pricelist_rule._compute_base_price(
-            product,
-            quantity,
-            uom,
-            order_date,
-            target_currency=self.currency_id,
+        return self.pricelist_item_id._compute_price_before_discount(
+            product=self.product_id.with_context(**self._get_product_price_context()),
+            quantity=self.product_uom_qty or 1.0,
+            uom=self.product_uom,
+            date=self.order_id.date_order,
+            currency=self.currency_id,
         )
-
-        return price
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_discount(self):
