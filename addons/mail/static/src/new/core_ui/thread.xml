@@ -3,7 +3,7 @@
 
 <t t-name="mail.thread" owl="1">
     <div class="o-mail-thread overflow-auto pb-4 flex-grow-1 bg-view" t-ref="messages">
-        <t t-if="!props.thread.isEmpty or props.thread.loadMore or props.thread.hasLoadingFailed">
+        <t t-if="!props.thread.isEmpty or props.thread.loadMore or props.thread.hasLoadingFailed" name="content">
             <div class="d-flex flex-column" t-att-class="{'justify-content-end': !env.inChatter and props.thread.type !== 'mailbox'}" style="min-height:100%">
                 <t t-set="currentDay" t-value="0"/>
                 <t t-set="prevMsg" t-value="0"/>

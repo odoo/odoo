@@ -5,7 +5,11 @@ import { assignDefined, createLocalId, nullifyClearCommands } from "../utils/mis
 import { registry } from "@web/core/registry";
 
 export class PersonaService {
-    constructor(env, services) {
+    constructor(...args) {
+        this.setup(...args);
+    }
+
+    setup(env, services) {
         this.env = env;
         this.rpc = services.rpc;
         /** @type {import("@mail/new/core/store_service").Store} */

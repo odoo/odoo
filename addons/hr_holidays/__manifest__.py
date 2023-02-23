@@ -65,20 +65,16 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'mail.assets_messaging': [
             'hr_holidays/static/src/models/*.js',
         ],
-        'mail.assets_discuss_public': [
-            'hr_holidays/static/src/components/*/*',
-        ],
         'web.assets_backend': [
             'hr_holidays/static/src/views/**/*.js',
             'hr_holidays/static/src/views/**/*.scss',
             'hr_holidays/static/src/views/**/*.xml',
-            'hr_holidays/static/src/components/*/*.scss',
-            'hr_holidays/static/src/components/*/*.xml',
             'hr_holidays/static/src/dashboard/**/*.js',
             'hr_holidays/static/src/dashboard/**/*.scss',
             'hr_holidays/static/src/dashboard/**/*.xml',
             'hr_holidays/static/src/leave_stats/**/*.js',
             'hr_holidays/static/src/leave_stats/**/*.xml',
+            'hr_holidays/static/src/new/**/*',
             'hr_holidays/static/src/scss/*.scss',
             'hr_holidays/static/src/tours/*.js',
             'hr_holidays/static/src/radio_image_field/*.js',
@@ -96,7 +92,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
             'hr_holidays/static/tests/helpers/**/*',
         ],
         'web.qunit_suite_tests': [
-            'hr_holidays/static/tests/qunit_suite_tests/**/*.js',
+            'hr_holidays/static/tests/new/**/*.js',
         ],
         'web.assets_tests': [
             '/hr_holidays/static/tests/tours/**/**.js'
