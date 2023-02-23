@@ -283,7 +283,7 @@ class StockRule(models.Model):
 
         return {
             'partner_id': partner.id,
-            'user_id': False,
+            'user_id': partner.buyer_id.id,
             'picking_type_id': self.picking_type_id.id,
             'company_id': company_id.id,
             'currency_id': partner.with_company(company_id).property_purchase_currency_id.id or company_id.currency_id.id,
@@ -305,7 +305,7 @@ class StockRule(models.Model):
             ('state', '=', 'draft'),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', company_id.id),
-            ('user_id', '=', False),
+            ('user_id', '=', partner.buyer_id.id),
         )
         delta_days = self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge')
         if values.get('orderpoint_id') and delta_days is not False:

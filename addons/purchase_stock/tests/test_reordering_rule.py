@@ -44,6 +44,14 @@ class TestReorderingRule(TransactionCase):
         warehouse_1.write({'reception_steps': 'two_steps'})
         warehouse_2 = self.env['stock.warehouse'].create({'name': 'WH 2', 'code': 'WH2', 'company_id': self.env.company.id, 'partner_id': self.env.company.partner_id.id, 'reception_steps': 'one_step'})
 
+        # Create and set specific buyer for partner
+        buyer_id = self.env['res.users'].create({
+            'login': 'buyer1',
+            'name': 'Buyer1',
+            'email': 'buyer1@example.com',
+        })
+        self.partner.buyer_id = buyer_id.id
+
         # create reordering rule
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.warehouse_id = warehouse_1
@@ -79,6 +87,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
         self.assertEqual(purchase_order.order_line.product_qty, 10)
         self.assertEqual(purchase_order.order_line.name, 'Product A')
+        self.assertEqual(purchase_order.user_id, buyer_id)
 
         # Increase the quantity on the RFQ before confirming it
         purchase_order.order_line.product_qty = 12
