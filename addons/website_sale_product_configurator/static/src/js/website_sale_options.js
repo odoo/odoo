@@ -83,26 +83,23 @@ publicWidget.registry.WebsiteSale.include({
      */
     _onModalSubmit: function (goToShop) {
         const self = this;
-        const $product = $('#product_detail');
-        let currency;
-        if ($product.length) {
-            currency = $product.data('product-tracking-info')['currency'];
-        } else {
-            // Add to cart from /shop page
-            currency = this.$('[itemprop="priceCurrency"]').first().text();
-        }
-        const productsTrackingInfo = [];
-        this.$('.js_product.in_cart').each((i, el) => {
-            productsTrackingInfo.push({
-                'item_id': el.getElementsByClassName('product_id')[0].value,
-                'item_name': el.getElementsByClassName('product_display_name')[0].textContent,
-                'quantity': el.getElementsByClassName('js_quantity')[0].value,
-                'currency': currency,
-                'price': el.getElementsByClassName('oe_price')[0].getElementsByClassName('oe_currency_value')[0].textContent,
+        const mainProduct = this.$('.js_product.in_cart.main_product').children('.product_id');
+        const productTrackingInfo = mainProduct.data('product-tracking-info');
+        if (productTrackingInfo) {
+            const currency = productTrackingInfo['currency'];
+            const productsTrackingInfo = [];
+            this.$('.js_product.in_cart').each((i, el) => {
+                productsTrackingInfo.push({
+                    'item_id': el.getElementsByClassName('product_id')[0].value,
+                    'item_name': el.getElementsByClassName('product_display_name')[0].textContent,
+                    'quantity': el.getElementsByClassName('js_quantity')[0].value,
+                    'currency': currency,
+                    'price': el.getElementsByClassName('oe_price')[0].getElementsByClassName('oe_currency_value')[0].textContent,
+                });
             });
-        });
-        if (productsTrackingInfo) {
-            this.$el.trigger('add_to_cart_event', productsTrackingInfo);
+            if (productsTrackingInfo) {
+                this.$el.trigger('add_to_cart_event', productsTrackingInfo);
+            }
         }
 
         this.optionalProductsModal.getAndCreateSelectedProducts()

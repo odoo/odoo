@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
-from odoo import api, fields, models
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import fields, models
 
 
 class Website(models.Model):
@@ -27,3 +28,6 @@ class Website(models.Model):
     def sale_get_order(self, *args, **kwargs):
         so = super().sale_get_order(*args, **kwargs)
         return so.with_context(warehouse=so.warehouse_id.id) if so else so
+
+    def _get_product_available_qty(self, product):
+        return product.with_context(warehouse=self._get_warehouse_available()).free_qty

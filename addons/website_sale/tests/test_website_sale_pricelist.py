@@ -293,7 +293,7 @@ class TestWebsitePriceList(TransactionCase):
             'taxes_id': tax,
         })
 
-        prices = product._get_sales_prices(self.list_christmas)
+        prices = product._get_sales_prices(self.list_christmas, self.env['account.fiscal.position'])
         self.assertFalse('base_price' in prices[product.id])
 
     def test_pricelist_item_based_on_cost_for_templates(self):
@@ -317,7 +317,8 @@ class TestWebsitePriceList(TransactionCase):
             'name': 'Product Template', 'list_price': 10.0, 'standard_price': 5.0
         })
         self.assertEqual(product_template.standard_price, 5)
-        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        price = product_template._get_sales_prices(
+            pricelist, self.env['account.fiscal.position'])[product_template.id]['price_reduce']
         msg = "Template has no variants, the price should be computed based on the template's cost."
         self.assertEqual(price, 4.5, msg)
 
@@ -328,12 +329,14 @@ class TestWebsitePriceList(TransactionCase):
         self.assertEqual(product_template.standard_price, 0, msg)
         self.assertEqual(product_template.product_variant_ids[0].standard_price, 0)
 
-        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        price = product_template._get_sales_prices(
+            pricelist, self.env['account.fiscal.position'])[product_template.id]['price_reduce']
         msg = "Template has variants, the price should be computed based on the 1st variant's cost."
         self.assertEqual(price, 0, msg)
 
         product_template.product_variant_ids[0].standard_price = 20
-        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        price = product_template._get_sales_prices(
+            pricelist, self.env['account.fiscal.position'])[product_template.id]['price_reduce']
         self.assertEqual(price, 18, msg)
 
 def simulate_frontend_context(self, website_id=1):

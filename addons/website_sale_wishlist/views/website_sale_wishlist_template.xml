@@ -176,8 +176,10 @@
                             <body>
                                 <t t-foreach="wishes" t-as="wish">
                                     <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
-                                    <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'
-                                        t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
+                                    <tr t-att-data-wish-id="wish.id"
+                                        t-att-data-product-id="wish.product_id.id"
+                                        t-att-data-product-tracking-info="'product_tracking_info' in combination_info and json.dumps(combination_info['product_tracking_info'])"
+                                    >
                                         <td class='td-img align-middle'>
                                             <a t-att-href="wish.product_id.website_url">
                                                 <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_128" class="img img-fluid" style="margin:auto;" alt="Product image"/>
@@ -192,7 +194,8 @@
                                             <span t-field="website.prevent_zero_price_sale_text"/>
                                         </td>
                                         <td class="align-middle o_wish_price" t-else="">
-                                            <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                            <t t-out="combination_info['price']"
+                                               t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                             <small t-if="combination_info['base_unit_price']" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
                                                 <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='wish.product_id' /></t>
                                             </small>
