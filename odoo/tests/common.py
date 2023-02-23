@@ -243,21 +243,6 @@ class RecordCapturer:
         return self._after
 
 
-class MetaCase(type):
-    """ Metaclass of test case classes to assign default 'test_tags':
-        'standard', 'at_install' and the name of the module.
-    """
-    def __init__(cls, name, bases, attrs):
-        super(MetaCase, cls).__init__(name, bases, attrs)
-        # assign default test tags
-        if cls.__module__.startswith('odoo.addons.'):
-            if getattr(cls, 'test_tags', None) is None:
-                cls.test_tags = {'standard', 'at_install'}
-            cls.test_module = cls.__module__.split('.')[2]
-            cls.test_class = cls.__name__
-            cls.test_sequence = 0
-
-
 def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     """Takes some xml and normalize it to make it comparable to other xml
     in particular, blank text is removed, and the output is pretty-printed
@@ -280,10 +265,20 @@ def _normalize_arch_for_assert(arch_string, parser_method="xml"):
 class BlockedRequest(requests.exceptions.ConnectionError):
     pass
 _super_send = requests.Session.send
-class BaseCase(case.TestCase, metaclass=MetaCase):
+class BaseCase(case.TestCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
     """
+    def __init_subclass__(cls):
+        """Assigns default test tags ``standard`` and ``at_install`` to test
+        cases not having them. Also sets a completely unnecessary
+        ``test_module`` attribute.
+        """
+        super().__init_subclass__()
+        if cls.__module__.startswith('odoo.addons.'):
+            if getattr(cls, 'test_tags', None) is None:
+                cls.test_tags = {'standard', 'at_install'}
+            cls.test_module = cls.__module__.split('.')[2]
 
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
     warm = True             # False during warm-up phase (see :func:`warmup`)
@@ -2251,7 +2246,7 @@ class freeze_time:
         self.time_to_freeze = time_to_freeze
 
     def __call__(self, func):
-        if isinstance(func, MetaCase):
+        if isinstance(func, type) and issubclass(func, case.TestCase):
             func.freeze_time = self.time_to_freeze
             return func
         else:
