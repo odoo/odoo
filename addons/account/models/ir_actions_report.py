@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
-import textwrap
 from collections import OrderedDict
-from PyPDF2.utils import PdfStreamError
+
+try:
+    from PyPDF2.errors import PdfStreamError
+except ImportError:
+    from PyPDF2.utils import PdfStreamError
 
 from odoo import models, _
 from odoo.exceptions import UserError
