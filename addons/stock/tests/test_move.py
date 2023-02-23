@@ -217,6 +217,8 @@ class StockMove(TransactionCase):
         self.assertEqual(move_line.reserved_qty, 100.0)
         self.assertEqual(move_line.qty_done, 0.0)
         move_line.qty_done = 100.0
+        with self.assertRaises(UserError, msg="It should not be possible to write directly to reserved_qty"):
+            move_line.reserved_qty = 1.0
 
         # validation
         move1._action_done()
