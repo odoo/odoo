@@ -16,12 +16,12 @@ from odoo.tests.result import OdooTestResult
 
 _logger = logging.getLogger(__name__)
 
-from odoo.tests import MetaCase
-
 
 # this is mainly to ensure that simple tests will continue to work even if BaseCase should be used
 # this only works if doClassCleanup is available on testCase because of the vendoring of suite.py.
-class TestTestSuite(TestCase, metaclass=MetaCase):
+class TestTestSuite(TestCase):
+    test_tags = {'standard', 'at_install'}
+    test_module = 'base'
 
     def test_test_suite(self):
         """ Check that OdooSuite handles unittest.TestCase correctly. """
