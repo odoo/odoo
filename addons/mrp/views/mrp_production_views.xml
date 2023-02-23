@@ -24,6 +24,7 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="date_start" optional="show" widget="remaining_days"/>
+                    <field name="date_finished" optional="hide" widget="remaining_days"/>
                     <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}" optional="hide"/>
                     <field name="product_id" readonly="1" optional="show"/>
                     <field name="lot_producing_id" optional="hide"/>
@@ -262,13 +263,13 @@
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                             </div>
+                            <field name="date_finished"/>
                             <field name="components_availability_state" invisible="1"/>
                             <field name="components_availability" attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
                                 decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
                                 decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
                             <field name="move_finished_ids" invisible="1" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
@@ -447,6 +448,8 @@
                                         attrs="{'invisible': ['|', ('state', 'in', ('done', 'cancel')), ('date_deadline', '=', False)]}"
                                         decoration-danger="date_deadline and date_deadline &lt; current_date"
                                         decoration-bf="date_deadline and date_deadline &lt; current_date"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
+
                                 </group>
                             </group>
                         </page>
@@ -555,19 +558,19 @@
                         help="Manufacturing Orders which are in confirmed state."/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <filter string="Unbuilt" name="filter_unbuilt" domain="[('unbuild_ids.state', '=', 'done')]"/>
+                    <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
+                    <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
                     <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Confirmed" name="filter_confirmed" domain="[('state', '=', 'confirmed')]"/>
                     <filter string="Planned" name="filter_planned" domain="[('is_planned', '=', True)]" groups="mrp.group_mrp_routings"/>
                     <filter string="In Progress" name="filter_in_progress" domain="[('state', '=', 'progress')]"/>
                     <filter string="To Close" name="filter_to_close" domain="[('state', '=', 'to_close')]"/>
-                    <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
-                    <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
-                    <filter string="Waiting" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
-                    <filter string="Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
+                    <filter string="Awaiting Components" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
+                    <filter string="Ready to Start" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
-                    <filter string="Planning Issues" name="planning_issues" help="Late MO or Late delivery of components"
+                    <filter string="Delays" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
