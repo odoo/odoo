@@ -239,6 +239,32 @@ class One2manyCase(TransactionCase):
         a = parent.child_ids[0]
         parent.write({'child_ids': [Command.link(a.id), Command.create({'name': 'B'})]})
 
+    def test_create_with_commands(self):
+        # create lines and warm up caches
+        order = self.env['test_new_api.order'].create({
+            'line_ids': [Command.create({'product': name}) for name in ('set', 'sept')],
+        })
+        line1, line2 = order.line_ids
+
+        # INSERT, UPDATE of line1
+        with self.assertQueryCount(2):
+            self.env['test_new_api.order'].create({
+                'line_ids': [Command.set(line1.ids)],
+            })
+
+        # INSERT order, INSERT thief, UPDATE of line1+line2
+        with self.assertQueryCount(3):
+            order = self.env['test_new_api.order'].create({
+                'line_ids': [Command.set(line1.ids)],
+            })
+            thief = self.env['test_new_api.order'].create({
+                'line_ids': [Command.set((line1 + line2).ids)],
+            })
+
+        # the lines have been stolen by thief
+        self.assertFalse(order.line_ids)
+        self.assertEqual(thief.line_ids, line1 + line2)
+
     def test_recomputation_ends(self):
         """ Regression test for neverending recomputation. """
         parent = self.env['test_new_api.model_parent_m2o'].create({'name': 'parent'})
