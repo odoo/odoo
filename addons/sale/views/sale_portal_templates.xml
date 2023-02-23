@@ -437,7 +437,7 @@
                         <ul class="list-group mb-4">
                             <t t-foreach="invoices" t-as="i">
                                 <t t-set="report_url" t-value="i.get_portal_url(report_type='pdf', download=True)"/>
-                                <t t-set="authorized_tx_ids" t-value="i.transaction_ids.filtered(lambda tx: tx.state == 'authorized')"/>
+                                <t t-set="authorized_tx_ids" t-value="i.authorized_transaction_ids"/>
                                 <div class="d-flex flex-wrap align-items-center justify-content-between">
                                     <div>
                                         <a t-att-href="report_url">

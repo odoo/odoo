@@ -244,7 +244,8 @@ class SaleOrder(models.Model):
         comodel_name='payment.transaction',
         string="Authorized Transactions",
         compute='_compute_authorized_transaction_ids',
-        copy=False)
+        copy=False,
+        compute_sudo=True)
 
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
@@ -1405,7 +1406,7 @@ class SaleOrder(models.Model):
 
     def get_portal_last_transaction(self):
         self.ensure_one()
-        return self.transaction_ids._get_last()
+        return self.transaction_ids.sudo()._get_last()
 
     def _get_order_lines_to_report(self):
         down_payment_lines = self.order_line.filtered(lambda line:

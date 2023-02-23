@@ -1606,21 +1606,21 @@ class WebsiteSale(http.Controller):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')
 
-        tx = order.get_portal_last_transaction() if order else order.env['payment.transaction']
+        tx_sudo = order.get_portal_last_transaction() if order else order.env['payment.transaction']
 
-        if not order or (order.amount_total and not tx):
+        if not order or (order.amount_total and not tx_sudo):
             return request.redirect('/shop')
 
-        if order and not order.amount_total and not tx:
+        if order and not order.amount_total and not tx_sudo:
             order.with_context(send_email=True).action_confirm()
             return request.redirect(order.get_portal_url())
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()
-        if tx and tx.state == 'draft':
+        if tx_sudo and tx_sudo.state == 'draft':
             return request.redirect('/shop')
 
-        PaymentPostProcessing.remove_transactions(tx)
+        PaymentPostProcessing.remove_transactions(tx_sudo)
         return request.redirect('/shop/confirmation')
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
