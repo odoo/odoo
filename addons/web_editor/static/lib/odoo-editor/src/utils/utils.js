@@ -1990,12 +1990,7 @@ export function unwrapContents(node) {
 export function fillEmpty(el) {
     const fillers = {};
     const blockEl = closestBlock(el);
-    if (isShrunkBlock(blockEl)) {
-        const br = document.createElement('br');
-        blockEl.appendChild(br);
-        fillers.br = br;
-    }
-    if (!isVisible(el) && !el.hasAttribute('oe-zws-empty-inline')) {
+    if (!isVisible(el)) {
         // As soon as there is actual content in the node, the zero-width space
         // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
@@ -2007,6 +2002,11 @@ export function fillEmpty(el) {
             previousSibling.remove();
         }
         setSelection(zws, 0, zws, 0);
+    }
+    if (isShrunkBlock(blockEl)) {
+        const br = document.createElement('br');
+        blockEl.appendChild(br);
+        fillers.br = br;
     }
     return fillers;
 }
