@@ -7,18 +7,7 @@ from odoo.addons.hw_drivers.main import drivers, iot_devices
 from odoo.tools.lru import LRU
 
 
-class DriverMetaClass(type):
-    def __new__(cls, clsname, bases, attrs):
-        newclass = super(DriverMetaClass, cls).__new__(cls, clsname, bases, attrs)
-        if hasattr(newclass, 'priority'):
-            newclass.priority += 1
-        else:
-            newclass.priority = 0
-        drivers.append(newclass)
-        return newclass
-
-
-class Driver(Thread, metaclass=DriverMetaClass):
+class Driver(Thread):
     """
     Hook to register the driver into the drivers list
     """
@@ -38,6 +27,14 @@ class Driver(Thread, metaclass=DriverMetaClass):
 
         # Least Recently Used (LRU) Cache that will store the idempotent keys already seen.
         self._iot_idempotent_ids_cache = LRU(500)
+
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+        if hasattr(cls, 'priority'):
+            cls.priority += 1
+        else:
+            cls.priority = 0
+        drivers.append(cls)
 
     @classmethod
     def supported(cls, device):
