@@ -96,6 +96,8 @@ var localStorage = require('web.local_storage');
 
 var _t = core._t;
 
+const SENTINEL = null;
+
 // field types that can be aggregated in grouped views
 const AGGREGATABLE_TYPES = ['float', 'integer', 'monetary'];
 
@@ -2665,7 +2667,7 @@ var BasicModel = AbstractModel.extend({
             model: model,
             method: 'name_get',
             args: [ids],
-            context: self.localData[parent].getContext({fieldName: fieldName}),
+            context: self.localData[parent].getContext({fieldName: fieldName, withoutRecordData: true}),
         }).then(function (result) {
             _.each(result, function (el) {
                 var parentIDs = datapoints[el[0]];
@@ -2826,7 +2828,7 @@ var BasicModel = AbstractModel.extend({
                 model: field.relation,
                 method: 'read',
                 args: [ids, fieldNames],
-                context: list.getContext() || {},
+                context: list.getContext({withoutRecordData: true}) || {},
             });
         } else {
             def = Promise.resolve(_.map(ids, function (id) {
@@ -3478,6 +3480,10 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.full=false]
      *        if true or nor fieldName or additionalContext given in options,
      *        the element's context is added to the context
+     * @param {boolean} [options.withoutRecordData=false]
+     *        if true the record data will be replaced by a sentinel in the eval
+     *        context (useful for read rpcs, where we don't want the context to
+     *        depend on data)
      * @returns {Object} the evaluated context
      */
     _getContext: function (element, options) {
@@ -3508,7 +3514,7 @@ var BasicModel = AbstractModel.extend({
         }
         if (element.rawContext) {
             var rawContext = new Context(element.rawContext);
-            var evalContext = this._getEvalContext(this.localData[element.parentID]);
+            var evalContext = this._getEvalContext(this.localData[element.parentID], false, options.withoutRecordData);
             evalContext.id = evalContext.id || false;
             rawContext.set_eval_context(evalContext);
             context.add(rawContext);
@@ -3518,8 +3524,23 @@ var BasicModel = AbstractModel.extend({
         }
 
         if (context.__contexts.length > 1) {
-            context.set_eval_context(this._getEvalContext(element));
-            return context.eval();
+            context.set_eval_context(this._getEvalContext(element, false, options.withoutRecordData));
+            const evaluatedContext = context.eval();
+            if (options.withoutRecordData) {
+                for (const key in evaluatedContext) {
+                    if (evaluatedContext[key] === SENTINEL) {
+                        delete evaluatedContext[key];
+                    }
+                }
+                if (evaluatedContext.parent) {
+                    for (const key in evaluatedContext.parent) {
+                        if (evaluatedContext.parent[key] === SENTINEL) {
+                            delete evaluatedContext.parent[key];
+                        }
+                    }
+                }
+            }
+            return evaluatedContext;
         } else {
             return Object.assign({}, session.user_context);
         }
@@ -3694,11 +3715,16 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} element - an element from the localData
      * @param {boolean} [forDomain=false] if true, evaluates x2manys as a list of
      *   ids instead of a list of commands
+     * @param {boolean} [withoutRecordData=false] if true, replaces the record
+     *   values by null (same inside the parent key)
      * @returns {Object}
      */
-    _getEvalContext: function (element, forDomain) {
+    _getEvalContext: function (element, forDomain, withoutRecordData) {
         var evalContext = element.type === 'record' ? this._getRecordEvalContext(element, forDomain) : {};
-
+        if (withoutRecordData) {
+            const entries = Object.keys(evalContext).map((key) => [key, SENTINEL]);
+            evalContext = Object.fromEntries(entries);
+        }
         if (element.parentID) {
             var parent = this.localData[element.parentID];
             if (parent.type === 'list' && parent.parentID) {
@@ -3706,6 +3732,10 @@ var BasicModel = AbstractModel.extend({
             }
             if (parent.type === 'record') {
                 evalContext.parent = this._getRecordEvalContext(parent, forDomain);
+                if (withoutRecordData) {
+                    const entries = Object.keys(evalContext.parent).map((key) => [key, SENTINEL]);
+                    evalContext.parent = Object.fromEntries(entries);
+                }
             }
         }
         // Uses "current_company_id" because "company_id" would conflict with all the company_id fields
@@ -4562,7 +4592,7 @@ var BasicModel = AbstractModel.extend({
                             model: field.relation,
                             method: 'name_get',
                             args: [relRecord.data.id],
-                            context: self._getContext(record, {fieldName: name, viewType: viewType}),
+                            context: self._getContext(record, {fieldName: name, viewType: viewType, withoutRecordData: true}),
                         })
                         .then(function (result) {
                             relRecord.data.display_name = result[0][1];
@@ -4750,7 +4780,7 @@ var BasicModel = AbstractModel.extend({
         var def;
         if (missingIDs.length && fieldNames.length) {
             def = self._performRPC({
-                context: list.getContext(),
+                context: list.getContext({ withoutRecordData: true }),
                 fieldNames: fieldNames,
                 ids: missingIDs,
                 method: 'read',
