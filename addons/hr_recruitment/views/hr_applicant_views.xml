@@ -58,6 +58,7 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" class="o_applicant_form">
             <field name="company_id" invisible="1"/>
+            <field name="application_status" invisible="1"/>
             <field name="emp_id" invisible="1"/>
             <field name="meeting_ids" invisible="1"/>
             <field name="refuse_reason_id" invisible="1"/>
@@ -96,8 +97,9 @@
                         </div>
                     </button>
                 </div>
-                <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=', False)]}"/>
-                <widget name="web_ribbon" title="Hired" attrs="{'invisible': [('date_closed', '=', False)]}" />
+                <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': [('application_status', '!=', 'refused')]}"/>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('application_status', '!=', 'archived')]}"/>
+                <widget name="web_ribbon" title="Hired" attrs="{'invisible': [('application_status', '!=', 'hired')]}" />
                 <field name="active" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
                 <field name="legend_blocked" invisible="1"/>
@@ -316,6 +318,7 @@
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <field name="refuse_reason_id" />
+                <field name="application_status" />
                 <progressbar field="activity_state" colors='{"planned": "success", "overdue": "danger", "today": "warning"}'/>
                 <templates>
                     <t t-name="kanban-menu">
@@ -330,7 +333,8 @@
                             <div class="ribbon ribbon-top-right pe-none" attrs="{'invisible': [('date_closed', '=', False)]}">
                                 <span class="bg-success">Hired</span>
                             </div>
-                            <span class="badge rounded-pill text-bg-danger float-end me-4" attrs="{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=', False)]}">Refused</span>
+                            <span class="badge rounded-pill text-bg-danger float-end me-4" attrs="{'invisible': [('application_status', '!=', 'refused')]}">Refused</span>
+                            <span class="badge rounded-pill text-bg-secondary float-end me-4" attrs="{'invisible': [('application_status', '!=', 'archived')]}">Archived</span>
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
