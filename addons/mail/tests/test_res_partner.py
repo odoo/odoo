@@ -186,7 +186,12 @@ class TestPartner(MailCommon):
         samples_emails = [item[0] for item in new_samples]
         partners = self.env['res.partner'].with_context(lang='en_US')._find_or_create_from_emails(
             samples_emails,
-            additional_values={'company_id': self.env.company.id},
+            additional_values={
+                tools.email_normalize(email): {
+                    'company_id': self.env.company.id,
+                }
+                for email in samples_emails
+            },
         )
         self.assertEqual(len(partners), len(new_samples))
         for (sample, exp_name, exp_email), partner in zip(new_samples, partners):

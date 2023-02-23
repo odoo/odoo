@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import itertools
 import logging
 
 from odoo import _, api, fields, models, tools, Command
@@ -283,6 +284,13 @@ class MailTemplate(models.Model):
         (finding or creating partners). 'partner_to' field is transformed into
         'partner_ids' field.
 
+        Note: for performance reason, information from records are transferred to
+        created partners no matter the company. For example, if we have a record of
+        company A and one of B with the same email and no related partner, a partner
+        will be created with company A or B but populated with information from the 2
+        records. So some info might be leaked from one company to the other through
+        the partner.
+
         :param list res_ids: list of record IDs on which template is rendered;
         :param list render_fields: list of fields to render on template which
           are specific to recipients, e.g. email_cc, email_to, partner_to);
@@ -300,13 +308,12 @@ class MailTemplate(models.Model):
         self.ensure_one()
         if render_results is None:
             render_results = {}
-        records_sudo = None
+        ModelSudo = self.env[self.model].with_prefetch(res_ids).sudo()
 
         # if using default recipients -> ``_message_get_default_recipients`` gives
         # values for email_to, email_cc and partner_ids
         if self.use_default_to and self.model:
-            records_sudo = self.env[self.model].browse(res_ids).sudo()
-            default_recipients = records_sudo._message_get_default_recipients()
+            default_recipients = ModelSudo.browse(res_ids)._message_get_default_recipients()
             for res_id, recipients in default_recipients.items():
                 render_results.setdefault(res_id, {}).update(recipients)
         # render fields dynamically which generates recipients
@@ -316,39 +323,39 @@ class MailTemplate(models.Model):
                 for res_id in res_ids:
                     render_results.setdefault(res_id, {})[field] = generated_field_values[res_id]
 
-        # classify records per company for partner fetch/creation
-        if find_or_create_partners and self.model and 'company_id' in self.env[self.model]._fields:
-            if not records_sudo:
-                records_sudo = self.env[self.model].browse(res_ids).sudo()
-            records_per_company = {}
-            for read_record in records_sudo.read(['company_id']):
-                company_id = read_record['company_id'][0] if read_record['company_id'] else False
-                records_per_company.setdefault(company_id, []).append(read_record['id'])
-        else:
-            records_per_company = {False: res_ids}
-
         # create partners from emails if asked to
         if find_or_create_partners:
-            for company_id, record_ids in records_per_company.items():
-                all_emails = []
-                email_to_res_ids = {}
-                for res_id in record_ids:
-                    record_values = render_results.setdefault(res_id, {})
-                    mails = tools.email_split(record_values.pop('email_to', '')) + \
-                            tools.email_split(record_values.pop('email_cc', ''))
-                    all_emails += mails
-                    for mail in mails:
-                        email_to_res_ids.setdefault(mail, []).append(res_id)
+            res_id_to_company = {}
+            if self.model and 'company_id' in ModelSudo._fields:
+                for read_record in ModelSudo.browse(res_ids).read(['company_id']):
+                    company_id = read_record['company_id'][0] if read_record['company_id'] else False
+                    res_id_to_company[read_record['id']] = company_id
 
-                if not all_emails:
-                    continue
-                additional_values = {}
-                if company_id:
-                    additional_values['company_id'] = company_id
+            all_emails = []
+            email_to_res_ids = {}
+            email_to_company = {}
+            for res_id in res_ids:
+                record_values = render_results.setdefault(res_id, {})
+                mails = tools.email_split(record_values.pop('email_to', '')) + \
+                        tools.email_split(record_values.pop('email_cc', ''))
+                all_emails += mails
+                record_company = res_id_to_company.get(res_id)
+                for mail in mails:
+                    email_to_res_ids.setdefault(mail, []).append(res_id)
+                    if record_company:
+                        email_to_company[mail] = record_company
+
+            if all_emails:
+                customers_information = ModelSudo.browse(res_ids)._get_customer_information()
                 partners = self.env['res.partner']._find_or_create_from_emails(
                     all_emails,
-                    additional_values=additional_values
-                )
+                    additional_values={
+                        email: {
+                            'company_id': email_to_company.get(email),
+                            **customers_information.get(email, {}),
+                        }
+                        for email in itertools.chain(all_emails, [False])
+                    })
                 for original_email, partner in zip(all_emails, partners):
                     if not partner:
                         continue

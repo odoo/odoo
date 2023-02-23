@@ -296,16 +296,6 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_mail_cc_recipient_suggestion(self):
-        record = self.env['mail.test.cc'].create({'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>'})
-        suggestions = record._message_get_suggested_recipients()[record.id]
-        self.assertEqual(sorted(suggestions), [
-            (False, '"cc3" <cc3@example.com>', None, 'CC Email'),
-            (False, 'cc1@example.com', None, 'CC Email'),
-            (False, 'cc2@example.com', None, 'CC Email'),
-        ], 'cc should be in suggestions')
-
     def test_inbox_message_fetch_needaction(self):
         user1 = self.env['res.users'].create({'login': 'user1', 'name': 'User 1'})
         user1.notification_type = 'inbox'
@@ -355,6 +345,40 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         # and the failure from employee's message should not be taken into account for admin
         threads_admin = self.test_record.with_user(self.user_admin).search([('message_has_error', '=', True)])
         self.assertEqual(len(threads_admin), 0)
+
+    @users("employee")
+    def test_suggested_recipients_default_create_value(self):
+        """ Test default creation values returned for suggested recipient. """
+        email = 'newpartner@example.com'
+        data_from_record_mobile = '+33199001015'
+        record = self.env['mail.test.ticket'].create({
+            'email_from': email,
+            'mobile_number': data_from_record_mobile,
+        })
+        suggestions = record._message_get_suggested_recipients()[record.id]
+        self.assertEqual(
+            suggestions,
+            [(False, email, None, 'Customer Email', {'mobile': '+33199001015', 'phone': False})]
+        )
+
+    @users("employee")
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_suggested_recipients_mail_cc(self):
+        """ MailThreadCC mixin adds its own suggested recipients management
+        coming from CC (carbon copy) management. """
+        record = self.env['mail.test.cc'].create({
+            'email_cc': 'cc1@example.com, cc2@example.com, cc3 <cc3@example.com>',
+        })
+        suggestions = record._message_get_suggested_recipients()[record.id]
+        self.assertEqual(
+            sorted(suggestions),
+            [
+                (False, '"cc3" <cc3@example.com>', None, 'CC Email', {}),
+                (False, 'cc1@example.com', None, 'CC Email', {}),
+                (False, 'cc2@example.com', None, 'CC Email', {}),
+            ],
+            'cc should be in suggestions'
+        )
 
     @users("employee")
     def test_unlink_notification_message(self):

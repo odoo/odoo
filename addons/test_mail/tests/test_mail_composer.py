@@ -1494,7 +1494,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     self.assertTrue(all(attach not in message.attachment_ids for attach in attachs), 'Should have copied attachments')
 
 
-
 @tagged('mail_composer', 'mail_blacklist')
 class TestComposerResultsCommentStatus(TestMailComposer):
     """ Test cases involving blacklist, opt-out, state management, ... specific

@@ -10,6 +10,13 @@ Model({
         composerSuggestedRecipientViews: many("ComposerSuggestedRecipientView", {
             inverse: "suggestedRecipientInfo",
         }),
+        /**
+         * Default values for partner creation (empty object if partner is set).
+         */
+        defaultCreateValues: attr({
+            default: {},
+            readonly: true,
+        }),
         dialogText: attr({
             compute() {
                 return this.env._t("Please complete customer's information");
