@@ -376,7 +376,9 @@ export class HtmlField extends Component {
         }
     }
     _isDirty() {
-        return !this.props.readonly && this.props.value.toString() !== this.getEditingValue();
+        const strippedPropValue = stripHistoryIds(String(this.props.value));
+        const strippedEditingValue = stripHistoryIds(this.getEditingValue());
+        return !this.props.readonly && strippedPropValue !== strippedEditingValue;
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
