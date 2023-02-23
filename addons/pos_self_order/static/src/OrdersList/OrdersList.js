@@ -1,14 +1,14 @@
 /** @odoo-module */
 
-const { Component, useState, useEffect, onWillStart } = owl;
-import { _t } from "@web/core/l10n/translation";
+const { Component } = owl;
+import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 import { OrderView } from "../OrderView/OrderView.js";
 
 export class OrdersList extends Component {
     setup() {
+        this.selfOrder = useSelfOrder();
     }
     static components = { OrderView };
 }
-OrdersList.template = 'OrdersList'
+OrdersList.template = "OrdersList";
 export default { OrdersList };
-
