@@ -4,6 +4,7 @@
 import logging
 
 from odoo import api, fields, models
+from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
 
 _logger = logging.getLogger(__name__)
 
@@ -50,20 +51,12 @@ class EventTemplateTicket(models.Model):
     # context_dependent, core part of the pricelist mess
     # This field usage should be restricted to the UX, and any use in effective
     # price computation should be replaced by clear calls to the pricelist API
-    @api.depends_context('uom', 'qty', 'pricelist') # Cf product.price context dependencies
+    @api.depends_context(*PRICE_CONTEXT_KEYS)
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
         for ticket in self:
-            product = ticket.product_id
-            pricelist = product.product_tmpl_id._get_contextual_pricelist()
-            lst_price = product.currency_id._convert(
-                product.lst_price,
-                pricelist.currency_id,
-                self.env.company,
-                fields.Datetime.now()
-            )
-            discount = (lst_price - product._get_contextual_price()) / lst_price if lst_price else 0.0
-            ticket.price_reduce = (1.0 - discount) * ticket.price
+            contextual_discount = ticket.product_id._get_contextual_discount()
+            ticket.price_reduce = (1.0 - contextual_discount) * ticket.price
 
     def _init_column(self, column_name):
         if column_name != "product_id":
