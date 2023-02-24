@@ -576,14 +576,16 @@ class HrExpense(models.Model):
             'name': self.employee_id.name + ': ' + self.name.split('\n')[0][:64],
             'account_id': self.account_id.id,
             'quantity': self.quantity or 1,
-            'price_unit': self.unit_amount if self.unit_amount != 0 else self.total_amount,
+            # 'unit_amount' is there when the product selected has a cost defined.
+            # This cost will always be in company currency.
+            'price_unit': self.unit_amount if self.unit_amount != 0 else self.total_amount_company,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom_id.id,
             'analytic_distribution': self.analytic_distribution,
             'expense_id': self.id,
             'partner_id': False if self.payment_mode == 'company_account' else self.employee_id.sudo().address_home_id.commercial_partner_id.id,
             'tax_ids': [Command.set(self.tax_ids.ids)],
-            'currency_id': self.currency_id.id,
+            'currency_id': self.company_currency_id.id,
         }
 
     @api.model
@@ -868,6 +870,7 @@ class HrExpenseSheet(models.Model):
     accounting_date = fields.Date("Accounting Date")
     account_move_id = fields.Many2one('account.move', string='Journal Entry', ondelete='set null', copy=False, readonly=True)
     journal_id = fields.Many2one('account.journal', compute='_compute_journal_id', string="Expense Journal", store=True)
+    journal_displayed_id = fields.Many2one('account.journal', compute='_compute_journal_displayed_id') # fix in stable TODO: remove
 
     # === Security fields === #
     can_reset = fields.Boolean('Can Reset', compute='_compute_can_reset')
@@ -878,6 +881,12 @@ class HrExpenseSheet(models.Model):
     _sql_constraints = [
         ('journal_id_required_posted', "CHECK((state IN ('post', 'done') AND journal_id IS NOT NULL) OR (state NOT IN ('post', 'done')))", 'The journal must be set on posted expense'),
     ]
+
+    # TODO: remove
+    @api.depends('journal_id')
+    def _compute_journal_displayed_id(self):
+        for sheet in self:
+            sheet.journal_displayed_id = sheet.journal_id
 
     @api.depends('expense_line_ids.total_amount_company', 'expense_line_ids.amount_tax_company')
     def _compute_amount(self):

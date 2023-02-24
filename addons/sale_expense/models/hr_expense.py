@@ -42,17 +42,3 @@ class Expense(models.Model):
         for split_value in vals:
             split_value['sale_order_id'] = self.sale_order_id.id
         return vals
-
-    def action_move_create(self):
-        """ When posting expense, if the AA is given, we will track cost in that
-            If a SO is set, this means we want to reinvoice the expense. But to do so, we
-            need the analytic entries to be generated, so a AA is required to reinvoice. So,
-            we ensure the AA if a SO is given.
-        """
-        for expense in self.filtered(lambda expense: expense.sale_order_id and not expense.analytic_distribution):
-            if not expense.sale_order_id.analytic_account_id:
-                expense.sale_order_id._create_analytic_account()
-            expense.write({
-                'analytic_distribution': {expense.sale_order_id.analytic_account_id.id: 100}
-            })
-        return super(Expense, self).action_move_create()
