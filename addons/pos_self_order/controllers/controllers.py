@@ -275,6 +275,9 @@ class PosSelfOrder(http.Controller):
         order_resp = request.env['pos.order'].sudo().create_from_ui([order])[0]
         # is_trusted is set to True by default.
         # We need to set it to False, because we are creating an order from a public route
+        # FIXME: make it so we only set it to false if it is a new order
+        # if the server already aknowledged the order, we should not set it to false again
+        # every time the user adds a new item to the order
         request.env['pos.order'].sudo().browse(order_resp.get('id')).is_trusted = False
         order_id = order_resp.get("pos_reference")
         response = {
