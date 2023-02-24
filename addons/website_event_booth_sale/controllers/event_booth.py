@@ -10,13 +10,6 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 class WebsiteEventBoothController(WebsiteEventController):
 
     @route()
-    def event_booth_main(self, event, booth_category_id=False, booth_ids=False):
-        pricelist = request.website.pricelist_id
-        if pricelist:
-            event = event.with_context(pricelist=pricelist.id)
-        return super(WebsiteEventBoothController, self).event_booth_main(event, booth_category_id, booth_ids)
-
-    @route()
     def event_booth_registration_confirm(self, event, booth_category_id, event_booth_ids, **kwargs):
         """Override: Doesn't call the parent method because we go through the checkout
         process which will confirm the booths when receiving the payment."""
