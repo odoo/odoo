@@ -4,6 +4,7 @@
 import logging
 
 from odoo import api, fields, models
+from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
 
 _logger = logging.getLogger(__name__)
 
@@ -57,22 +58,14 @@ class EventBoothCategory(models.Model):
             else:
                 category.price_incl = 0
 
-    @api.depends_context('pricelist', 'quantity')
+    @api.depends_context(*PRICE_CONTEXT_KEYS)
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
         for category in self:
-            product = category.product_id
-            pricelist = product.product_tmpl_id._get_contextual_pricelist()
-            lst_price = product.currency_id._convert(
-                product.lst_price,
-                pricelist.currency_id,
-                self.env.company,
-                fields.Datetime.now()
-            )
-            discount = (lst_price - product._get_contextual_price()) / lst_price if lst_price else 0.0
-            category.price_reduce = (1.0 - discount) * category.price
+            contextual_discount = category.product_id._get_contextual_discount()
+            category.price_reduce = (1.0 - contextual_discount) * category.price
 
-    @api.depends_context('pricelist', 'quantity')
+    @api.depends_context(*PRICE_CONTEXT_KEYS)
     @api.depends('product_id', 'price_reduce')
     def _compute_price_reduce_taxinc(self):
         for category in self:

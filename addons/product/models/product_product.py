@@ -726,3 +726,21 @@ class ProductProduct(models.Model):
     def _get_contextual_price(self):
         self.ensure_one()
         return self.product_tmpl_id._get_contextual_price(self)
+
+    def _get_contextual_discount(self):
+        self.ensure_one()
+
+        pricelist = self.product_tmpl_id._get_contextual_pricelist()
+        if not pricelist:
+            # No pricelist = no discount
+            return 0.0
+
+        lst_price = self.currency_id._convert(
+            self.lst_price,
+            pricelist.currency_id,
+            self.env.company,
+            fields.Datetime.now(),
+        )
+        if lst_price:
+            return (lst_price - self._get_contextual_price()) / lst_price
+        return 0.0
