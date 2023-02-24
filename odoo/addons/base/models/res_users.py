@@ -1258,8 +1258,17 @@ class GroupsImplied(models.Model):
         groups = self.filtered(lambda g: implied_group in g.implied_ids)
         if groups:
             groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
-            if groups.users:
-                implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
+            # if user belongs to implied_group thanks to another group, don't remove him
+            # this avoids readding the template user and triggering the mechanism at 121cd0d6084cb28
+            users_to_unlink = [
+                user
+                for user in groups.with_context(active_test=False).users
+                if implied_group not in (user.groups_id - implied_group).trans_implied_ids
+            ]
+            if users_to_unlink:
+                # do not remove inactive users (e.g. default)
+                implied_group.with_context(active_test=False).write(
+                    {'users': [Command.unlink(user.id) for user in users_to_unlink]})
 
 class UsersImplied(models.Model):
     _inherit = 'res.users'
