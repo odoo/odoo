@@ -47,26 +47,21 @@ class AccountMove(models.Model):
     @api.depends('expense_sheet_id')
     def _compute_needed_terms(self):
         # EXTENDS account
-        # The needed terms need to be computed for journal entries, depending on the expense and the currency
-        # since one expense sheet can contain multiple currencies.
+        # We want to set the account destination based on the 'payment_mode'.
         super()._compute_needed_terms()
         for move in self:
             if move.expense_sheet_id:
-                move.needed_terms = {}
-                agg = defaultdict(lambda: {'company': 0.0, 'foreign': 0.0})
-                for line in move.line_ids:
-                    if line.display_type != 'payment_term':
-                        agg[line.expense_id]['company'] += line.balance
-                        agg[line.expense_id]['foreign'] += line.amount_currency
-                for expense in move.line_ids.expense_id:
-                    move.needed_terms[frozendict({
-                        'move_id': move.id,
-                        'date_maturity': expense.sheet_id.accounting_date or expense.date or fields.Date.context_today(expense),
-                        'expense_id': expense.id,
-                    })] = {
-                        'balance': -agg[expense]['company'],
-                        'amount_currency': -agg[expense]['foreign'],
-                        'name': '',
-                        'currency_id': expense.currency_id.id,
-                        'account_id': expense._get_expense_account_destination(),
+                balance = -sum(move.line_ids.filtered(lambda l: l.display_type != 'payment_term').mapped("balance"))
+                move.needed_terms = {
+                    frozendict(
+                        {
+                            "move_id": move.id,
+                            "date_maturity": move.expense_sheet_id.accounting_date
+                            or fields.Date.context_today(move.expense_sheet_id),
+                        }
+                    ): {
+                        "balance": balance,
+                        "name": "",
+                        "account_id": move.expense_sheet_id.expense_line_ids[0]._get_expense_account_destination(),
                     }
+                }
