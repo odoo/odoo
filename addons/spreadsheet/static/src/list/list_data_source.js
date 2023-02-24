@@ -35,13 +35,22 @@ export default class ListDataSource extends OdooViewsDataSource {
      */
     constructor(services, params) {
         super(services, params);
-        this.limit = params.limit;
+        this.maxPosition = params.limit;
+        this.maxPositionFetched = 0;
         this.data = [];
+    }
+
+    /**
+     * Increase the max position of the list
+     * @param {number} position
+     */
+    increaseMaxPosition(position) {
+        this.maxPosition = Math.max(this.maxPosition, position);
     }
 
     async _load() {
         await super._load();
-        if (this.limit === 0) {
+        if (this.maxPosition === 0) {
             this.data = [];
             return;
         }
@@ -52,10 +61,11 @@ export default class ListDataSource extends OdooViewsDataSource {
             this._getFieldsToFetch(),
             {
                 order: orderByToString(orderBy),
-                limit: this.limit,
+                limit: this.maxPosition,
                 context,
             }
         );
+        this.maxPositionFetched = this.maxPosition;
     }
 
     /**
@@ -99,8 +109,8 @@ export default class ListDataSource extends OdooViewsDataSource {
      */
     getListCellValue(position, fieldName) {
         this._assertDataIsLoaded();
-        if (position >= this.limit) {
-            this.limit = position + 1;
+        if (position >= this.maxPositionFetched) {
+            this.increaseMaxPosition(position + 1);
             // A reload is needed because the asked position is not already loaded.
             this._triggerFetching();
             throw new LoadingDataError();
