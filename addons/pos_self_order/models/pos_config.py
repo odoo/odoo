@@ -14,12 +14,12 @@ class PosConfig(models.Model):
         string='Pay After:', default='each', 
         help="Choose when the customer will pay")
 
-    @api.constrains('self_order_location', 'self_order_allows_ongoing_orders')
-    def _check_required_fields(self):
-        if self.module_pos_self_order and not self.self_order_location:
-            raise ValidationError(_('Please select the order location for self order'))
-        if self.self_order_location == 'table' and not self.self_order_allows_ongoing_orders:
-            raise ValidationError(_('Please select a value for "Pay After"'))
+    # @api.constrains('self_order_location', 'self_order_allows_ongoing_orders')
+    # def _check_required_fields(self):
+    #     if self.module_pos_self_order and not self.self_order_location:
+    #         raise ValidationError(_('Please select the order location for self order'))
+    #     if self.self_order_location == 'table' and not self.self_order_allows_ongoing_orders:
+    #         raise ValidationError(_('Please select a value for "Pay After"'))
 
     def self_order_allow_view_menu(self):
         """"""

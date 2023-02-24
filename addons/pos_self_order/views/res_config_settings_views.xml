@@ -15,7 +15,7 @@
     </record>
 
 
-    <record id="res_config_settings_view_form_menu" model="ir.ui.view">
+     <record id="res_config_settings_view_form_menu" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.pos_self_order.view</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="pos_restaurant.res_config_settings_view_form"/>
@@ -36,10 +36,11 @@
         <field name="arch" type="xml">
             <setting id="pos_self_order_phone_mode" position="inside" >
                 <div class="content-group" attrs="{'invisible': [('pos_self_order_phone_mode','=',False)]}">
-                    <field name="self_order_pay_after"/>
+                    <label string="Pay after" for="pos_self_order_pay_after" class="me-2"/>
+                    <field name="pos_self_order_pay_after"/>
                     <button action="a">Configure Payment Providers</button>
                 </div>
             </setting>
         </field>
-    </record>
+    </record> 
 </odoo>

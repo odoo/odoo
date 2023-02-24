@@ -44,8 +44,8 @@
                 after the user has provided a name and table number -->
 <!-- View Menu Button -->
                 <button type="button" t-on-click="props.viewMenu" 
-                t-attf-class="my-2 btn btn-lg {{selfOrder.config.self_order_location === 'table' and this.state.user_name and this.state.table_id ?  'btn-primary' : 'btn-secondary'}}"
-                t-att-disabled="!(selfOrder.config.self_order_location === 'table' and this.state.user_name and this.state.table_id)"
+                t-attf-class="my-2 btn btn-lg {{selfOrder.config.self_order_location != 'table' or  (this.state.user_name and this.state.table_id) ?  'btn-primary' : 'btn-secondary'}}"
+                t-att-disabled="!(selfOrder.config.self_order_location != 'table' or (this.state.user_name and this.state.table_id))"
                 >
                     View Menu
                 </button>

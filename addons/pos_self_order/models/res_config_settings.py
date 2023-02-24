@@ -7,22 +7,22 @@ from werkzeug.urls import url_quote
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
     # FIXME: the select box has three optios: null; table; kiosk 
-    self_order_pay_after = fields.Selection([
+    pos_self_order_pay_after = fields.Selection([
         ('each', 'Each Order'),
         ('meal', 'Meal')
         ],
-        compute='_compute_pos_self_order_variables', store=True, readonly=False)
+        compute='_compute_pos_self_order_variables', store=True, readonly=False, string='Pay After')
 
     @api.depends('pos_self_order_kiosk_mode','pos_self_order_view_mode', 'pos_config_id')
     def _compute_pos_self_order_variables(self):
         for res_config in self:
             if not (res_config.pos_self_order_kiosk_mode or res_config.pos_self_order_view_mode):
                 res_config.update({
-                    'self_order_pay_after': False,
+                    'pos_self_order_pay_after': False,
                 })
             else:
                 res_config.update({
-                    'self_order_pay_after': res_config.pos_config_id.self_order_pay_after,
+                    'pos_self_order_pay_after': res_config.pos_config_id.self_order_pay_after,
                 })
     def generate_qr_codes_page(self):
         """
