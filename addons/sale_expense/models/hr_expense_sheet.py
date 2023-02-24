@@ -34,3 +34,17 @@ class HrExpenseSheet(models.Model):
             'name': _('Reinvoiced Sales Orders'),
             'domain': [('id', 'in', self.expense_line_ids.sale_order_id.ids)],
         }
+
+    def _do_create_moves(self):
+        """ When posting expense, if the AA is given, we will track cost in that
+            If a SO is set, this means we want to reinvoice the expense. But to do so, we
+            need the analytic entries to be generated, so a AA is required to reinvoice. So,
+            we ensure the AA if a SO is given.
+        """
+        for expense in self.expense_line_ids.filtered(lambda expense: expense.sale_order_id and not expense.analytic_distribution):
+            if not expense.sale_order_id.analytic_account_id:
+                expense.sale_order_id._create_analytic_account()
+            expense.write({
+                'analytic_distribution': {expense.sale_order_id.analytic_account_id.id: 100}
+            })
+        return super()._do_create_moves()

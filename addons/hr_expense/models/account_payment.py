@@ -20,6 +20,7 @@ class AccountPayment(models.Model):
         }
 
     def _synchronize_from_moves(self, changed_fields):
+        # EXTENDS account
         if self.expense_sheet_id:
             # Constraints bypass when entry is linked to an expense.
             # Context is not enough, as we want to be able to delete
@@ -28,11 +29,13 @@ class AccountPayment(models.Model):
         return super()._synchronize_from_moves(changed_fields)
 
     def _synchronize_to_moves(self, changed_fields):
+        # EXTENDS account
         if self.expense_sheet_id:
             raise UserError(_("You cannot do this modification since the payment is linked to an expense report."))
         return super()._synchronize_to_moves(changed_fields)
 
     def _creation_message(self):
+        # EXTENDS mail
         self.ensure_one()
         if self.move_id.expense_sheet_id:
             return _("Payment created for: %s", self.move_id.expense_sheet_id._get_html_link())
