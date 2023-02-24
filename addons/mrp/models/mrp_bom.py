@@ -89,6 +89,10 @@ class MrpBom(models.Model):
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_bom_lines(self):
         for bom in self:
+            finished_product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            bom_use_finished_product = self.env['mrp.bom'].search([
+                ("bom_line_ids.product_id", "=", finished_product.id),
+            ])
             for bom_line in bom.bom_line_ids:
                 if bom.product_id:
                     same_product = bom.product_id == bom_line.product_id
@@ -107,6 +111,12 @@ class MrpBom(models.Model):
                             product=ptav.product_tmpl_id.display_name,
                             bom_product=bom_line.parent_product_tmpl_id.display_name
                         ))
+                if any(bom.product_id == bom_line.product_id or bom.product_tmpl_id == bom_line.product_id.product_tmpl_id for bom in bom_use_finished_product):
+                    raise ValidationError(_(
+                        "BoM line product '%(line_product)s' is used as finished product in another BoM which '%(finished_product)s' is used as component",
+                        line_product=bom_line.product_id.display_name,
+                        finished_product=finished_product.display_name,
+                    ))
 
     @api.onchange('bom_line_ids', 'product_qty')
     def onchange_bom_structure(self):
