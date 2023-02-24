@@ -538,21 +538,39 @@ class TestTranslationWrite(TransactionCase):
             translation_importer.load(f, 'po', 'fr_FR')
             translation_importer.save(overwrite=True)
 
-        self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
-        self.category.with_context(lang='en_US').write({'name': 'English Name'})
+        categoryFR = self.category.with_context(lang='fr_FR')
+        categoryEN = self.category.with_context(lang='en_US')
+
+        categoryFR.write({'name': 'French Name'})
+        categoryEN.write({'name': 'English Name'})
 
         # read from the cache first
         self.assertEqual(self.category.with_context(lang=None).name, "English Name")
-        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
-        self.assertEqual(self.category.with_context(lang='en_US').name, "English Name")
+        self.assertEqual(categoryFR.name, "French Name")
+        self.assertEqual(categoryEN.name, "English Name")
 
         # force save to database and clear the cache: force a clean state
         self.category.invalidate_recordset()
 
         # read from database
         self.assertEqual(self.category.with_context(lang=None).name, "English Name")
-        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
-        self.assertEqual(self.category.with_context(lang='en_US').name, "English Name")
+        self.assertEqual(categoryFR.name, "French Name")
+        self.assertEqual(categoryEN.name, "English Name")
+
+        self.category.update_field_translations('name', {'en_US': 'English Name', 'fr_FR': False})
+        # no cache FR
+        categoryFR.name = 'English Name'
+        categoryEN.invalidate_recordset()
+        categoryEN.name = 'New English Name'
+        self.assertEqual(categoryFR.name, 'English Name')
+
+        self.category.update_field_translations('name', {'en_US': 'English Name', 'fr_FR': False})
+        # cache FR
+        self.assertEqual(categoryFR.name, 'English Name')
+        categoryFR.name = 'English Name'
+        categoryEN.invalidate_recordset()
+        categoryEN.name = 'New English Name'
+        self.assertEqual(categoryFR.name, 'English Name')
 
     def test_04_fr_multi_no_en(self):
         self.env['res.lang']._activate_lang('fr_FR')

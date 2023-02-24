@@ -1751,11 +1751,10 @@ class _String(Field):
     def write(self, records, value):
         if not self.translate or value is False or value is None:
             return super().write(records, value)
-        cache = records.env.cache
-        cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
+        cache = records.env.cache
+        cache_value = self.convert_to_cache(value, records)
 
         # flush dirty None values
         dirty_records = records & cache.get_dirty_records(records, self)
