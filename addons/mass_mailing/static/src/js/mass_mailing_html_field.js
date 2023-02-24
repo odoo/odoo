@@ -108,20 +108,22 @@ export class MassMailingHtmlField extends HtmlField {
             const iframe = document.createElement('iframe');
             iframe.style.height = '0px';
             iframe.style.visibility = 'hidden';
+            iframe.setAttribute('sandbox', 'allow-same-origin'); // Make sure no scripts get executed.
             const clonedHtmlNode = $editable[0].closest('html').cloneNode(true);
             // Replace the body to only contain the target as we do not care for
             // other elements (e.g. sidebar, toolbar, ...)
             const clonedBody = clonedHtmlNode.querySelector('body');
             const clonedIframeTarget = clonedHtmlNode.querySelector('#iframe_target');
             clonedBody.replaceChildren(clonedIframeTarget);
-            const editableClone = clonedHtmlNode.querySelector('.note-editable');
+            clonedHtmlNode.querySelectorAll('script').forEach(script => script.remove()); // Remove scripts.
+            iframe.srcdoc = clonedHtmlNode.outerHTML;
             const iframePromise = new Promise((resolve) => {
                 iframe.addEventListener("load", resolve);
             });
             document.body.append(iframe);
-            iframe.contentDocument.firstChild.replaceWith(clonedHtmlNode);
             // Wait for the css and images to be loaded.
             await iframePromise;
+            const editableClone = iframe.contentDocument.querySelector('.note-editable');
             this.cssRules = this.cssRules || getCSSRules($editable[0].ownerDocument);
             await toInline($(editableClone), this.cssRules, $(iframe));
             iframe.remove();
