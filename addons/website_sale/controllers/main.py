@@ -334,9 +334,6 @@ class WebsiteSale(http.Controller):
             request.session['website_sale_pricelist_time'] = now
             request.session['website_sale_current_pl'] = pricelist.id
 
-        partner_sudo = request.env.user.partner_id
-        request.update_context(pricelist=pricelist.id, partner=partner_sudo)
-
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             company_currency = website.company_id.currency_id
@@ -442,7 +439,7 @@ class WebsiteSale(http.Controller):
             request.session['website_sale_shop_layout_mode'] = layout_mode
 
         # Try to fetch geoip based fpos or fallback on partner one
-        fiscal_position_id = website._get_current_fiscal_position_id(partner_sudo)
+        fiscal_position_id = website._get_current_fiscal_position_id(request.env.user.partner_id)
         fiscal_position_sudo = website.env['account.fiscal.position'].sudo().browse(fiscal_position_id)
         products_prices = lazy(lambda: products._get_sales_prices(pricelist, fiscal_position_sudo))
 

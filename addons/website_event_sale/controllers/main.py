@@ -10,14 +10,6 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 class WebsiteEventSaleController(WebsiteEventController):
 
-    @route()
-    def event_register(self, event, **post):
-        if not request.context.get('pricelist'):
-            pricelist = request.website.pricelist_id
-            if pricelist:
-                event = event.with_context(pricelist=pricelist.id)
-        return super().event_register(event, **post)
-
     def _process_tickets_form(self, event, form_details):
         """ Add price information on ticket order """
         res = super()._process_tickets_form(event, form_details)
