@@ -755,6 +755,13 @@ export class ThreadService {
             !thread.serverData.group_based_subscription
         );
     }
+    /**
+     *
+     * @param {Thread} thread
+     */
+    canUnpin(thread) {
+        return thread.type === "chat" && this.getCounter(thread) === 0;
+    }
 
     /**
      * @param {Thread} thread

@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
@@ -437,3 +438,24 @@ QUnit.test(
         assert.containsOnce(target, ".o-mail-category-livechat + .o-mail-category-item");
     }
 );
+
+QUnit.test("Clicking on close button unpins the channel", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start({
+        services: {
+            notification: makeFakeNotificationService((message) => assert.step(message)),
+        },
+    });
+    await openDiscuss();
+    await click(".o-mail-category-item .o-mail-commands *[title='Unpin Conversation']");
+    assert.verifySteps(["You unpinned your conversation with Visitor 11"]);
+});

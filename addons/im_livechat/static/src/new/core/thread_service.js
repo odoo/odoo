@@ -38,8 +38,12 @@ patch(ThreadService.prototype, "im_livechat", {
     },
 
     canLeave(thread) {
-        if (thread.type === "livechat" && this.localMessageUnreadCounter(thread) === 0) {
-            return true;
+        return thread.type !== "livechat" && this._super(thread);
+    },
+
+    canUnpin(thread) {
+        if (thread.type === "livechat") {
+            return this.localMessageUnreadCounter(thread) === 0;
         }
         return this._super(thread);
     },
@@ -59,5 +63,5 @@ patch(ThreadService.prototype, "im_livechat", {
             const thread2 = this.store.threads[localId_2];
             return thread2.lastInterestDateTime.ts - thread1.lastInterestDateTime.ts;
         });
-    }
+    },
 });
