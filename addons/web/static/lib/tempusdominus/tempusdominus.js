@@ -2160,7 +2160,7 @@ var TempusDominusBootstrap4 = function ($) {
 
         TempusDominusBootstrap4.prototype._fillHours = function _fillHours() {
             var table = this.widget.find('.timepicker-hours table'),
-                currentHour = this._viewDate.clone().startOf('d'),
+                currentHour = this._viewDate.clone().startOf('d').locale('en'),
                 html = [];
             var row = $('<tr>');
 
