@@ -10,6 +10,7 @@ class ResourceCalendar(models.Model):
     _inherit = 'resource.calendar'
 
     contracts_count = fields.Integer("# Contracts using it", compute='_compute_contracts_count', groups="hr_contract.group_hr_contract_manager")
+    company_country_id = fields.Many2one('res.country', string='Country', related='company_id.partner_id.country_id')
 
     def transfer_leaves_to(self, other_calendar, resources=None, from_date=None):
         """
