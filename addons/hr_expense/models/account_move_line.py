@@ -40,12 +40,6 @@ class AccountMoveLine(models.Model):
         super(AccountMoveLine, expenses.with_context(force_price_include=True))._compute_totals()
         super(AccountMoveLine, self - expenses)._compute_totals()
 
-    def _compute_term_key(self):
-        super()._compute_term_key()
-        for line in self:
-            if line.expense_id:
-                line.term_key = line.term_key and frozendict(**line.term_key, expense_id=line.expense_id.id)
-
     def _convert_to_tax_base_line_dict(self):
         result = super()._convert_to_tax_base_line_dict()
         if self.expense_id:
