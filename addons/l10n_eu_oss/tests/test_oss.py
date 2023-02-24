@@ -22,7 +22,7 @@ class OssTemplateTestCase(AccountTestInvoicingCommon):
 class TestOSSBelgium(OssTemplateTestCase):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='be'):
+    def setUpClass(cls, chart_template_ref='be_comp'):
         cls.load_specific_chart_template(chart_template_ref)
         cls.company_data['company'].country_id = cls.env.ref('base.be')
         cls.company_data['company']._map_eu_taxes()

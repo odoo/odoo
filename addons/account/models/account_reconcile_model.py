@@ -56,7 +56,7 @@ class AccountReconcileModelLine(models.Model):
     # This field is ignored in a bank statement reconciliation.
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
         domain="[('type', '=', 'general')]", check_company=True)
-    label = fields.Char(string='Journal Item Label')
+    label = fields.Char(string='Journal Item Label', translate=True)
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of balance'),

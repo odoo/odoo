@@ -15,7 +15,7 @@ class AccountChartTemplate(models.AbstractModel):
                 f"account.{cid}_a300": {'tag_ids': [Command.link(self.env.ref('account.demo_stock_account').id)]},
                 f"account.{cid}_a7600": {'tag_ids': [Command.link(self.env.ref('account.demo_sale_of_land_account').id)]},
                 f"account.{cid}_a6201": {'tag_ids': [Command.link(self.env.ref('account.demo_ceo_wages_account').id)]},
-                f"account.{cid}_a242": {'tag_ids': [Command.link(self.env.ref('account.demo_office_furniture_account').id)]},
+                f"account.{cid}_a240000": {'tag_ids': [Command.link(self.env.ref('account.demo_office_furniture_account').id)]},
             })
 
         return demo_data

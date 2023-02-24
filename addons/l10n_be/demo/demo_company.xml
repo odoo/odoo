@@ -6,7 +6,6 @@
         <field name="street">1021 Sint-Bernardsesteenweg</field>
         <field name="city">Antwerpen</field>
         <field name="country_id" ref="base.be"/>
-        
         <field name="zip">2660</field>
         <field name="phone">+32 470 12 34 56</field>
         <field name="email">info@company.beexample.com</field>
@@ -29,7 +28,7 @@
 
     <function model="account.chart.template" name="try_loading">
         <value eval="[]"/>
-        <value>be</value>
+        <value>be_comp</value>
         <value model="res.company" eval="obj().env.ref('l10n_be.demo_company_be')"/>
     </function>
 </odoo>
