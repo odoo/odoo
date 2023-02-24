@@ -12,7 +12,7 @@
                         <field name="pos_is_table_management" attrs="{'readonly': [('pos_has_active_session','=', True)]}"/>
                         <div class="content-group" attrs="{'invisible': [('pos_is_table_management','=',False)]}">
                             <div class="mt16">
-                                <label string="Floors" for="pos_floor_ids" class="o_light_label"/>
+                                <label string="Floors" for="pos_floor_ids" class="o_light_label me-2"/>
                                 <field name="pos_floor_ids" widget="many2many_tags" attrs="{'readonly': [('pos_has_active_session','=', True)]}" />
                             </div>
                             <div>
