@@ -9,7 +9,7 @@ import base64
 class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref="be"):
+    def setUpClass(cls, chart_template_ref="be_comp"):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         # seller

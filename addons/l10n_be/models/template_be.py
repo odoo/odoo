@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, Command
+from odoo import Command, _, models
+
 from odoo.addons.account.models.chart_template import template
 
 
@@ -9,6 +10,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('be')
     def _get_be_template_data(self):
         return {
+            'name': _('Base'),
+            'visible': False,
             'code_digits': '6',
             'property_account_receivable_id': 'a400',
             'property_account_payable_id': 'a440',
@@ -32,6 +35,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'a757000',
                 'account_sale_tax_id': 'attn_VAT-OUT-21-L',
                 'account_purchase_tax_id': 'attn_VAT-IN-V81-21',
+                'default_cash_difference_income_account_id': 'a709000',
+                'default_cash_difference_expense_account_id': 'a709000',
+                'transfer_account_id': 'a58',
             },
         }
 
@@ -46,13 +52,13 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_be_reconcile_model(self):
         return {
             'escompte_template': {
-                'name': 'Cash discount',
+                'name': 'Cash Discount',
                 'line_ids': [
                     Command.create({
                         'account_id': 'a653',
                         'amount_type': 'percentage',
                         'amount_string': '100',
-                        'label': 'Escompte accordé',
+                        'label': 'Cash Discount Granted',
                     }),
                 ],
                 'name@fr': 'Escompte',
@@ -60,21 +66,21 @@ class AccountChartTemplate(models.AbstractModel):
                 'name@de': 'Skonto',
             },
             'frais_bancaires_htva_template': {
-                'name': 'Bank fees VAT excl.',
+                'name': 'Bank Fees (No VAT)',
                 'line_ids': [
                     Command.create({
                         'account_id': 'a6560',
                         'amount_type': 'percentage',
                         'amount_string': '100',
-                        'label': 'Frais bancaires HTVA',
+                        'label': 'Bank Fees (No VAT)',
                     }),
                 ],
-                'name@fr': 'Frais bancaires HTVA',
-                'name@nl': 'Bankkosten exclusief btw',
-                'name@de': 'Bankgebühren exkl. MwSt.',
+                'name@fr': 'Frais bancaires (Hors TVA)',
+                'name@nl': 'Bankkosten (Geen BTW)',
+                'name@de': 'Bankgebühren (Ohne MwSt.)',
             },
             'frais_bancaires_tva21_template': {
-                'name': 'Bank fees VAT 21 incl.',
+                'name': 'Bank Fees (21% VAT)',
                 'line_ids': [
                     Command.create({
                         'account_id': 'a6560',
@@ -85,26 +91,26 @@ class AccountChartTemplate(models.AbstractModel):
                             ]),
                         ],
                         'amount_string': '100',
-                        'label': 'Frais bancaires TVA21',
+                        'label': 'Bank Fees (21% VAT)',
                     }),
                 ],
-                'name@fr': 'Frais bancaires TVA21',
-                'name@nl': 'Bankkosten inclusief 21% btw',
-                'name@de': 'Bankgebühren inkl. MwSt. 21 %',
+                'name@fr': 'Frais bancaires (21% TVA)',
+                'name@nl': 'Bankkosten (21% BTW)',
+                'name@de': 'Bankgebühren (21 % MwSt.)',
             },
             'virements_internes_template': {
-                'name': 'Internal transfers',
+                'name': 'Internal Transfers',
                 'to_check': False,
                 'line_ids': [
                     Command.create({
                         'account_id': 'a58',
                         'amount_type': 'percentage',
                         'amount_string': '100',
-                        'label': 'Virements internes',
+                        'label': 'Internal Transfers',
                     }),
                 ],
                 'name@fr': 'Virements internes',
                 'name@nl': 'Interne overboekingen',
-                'name@de': 'interne Überweisungen',
+                'name@de': 'Interne Überweisungen',
             },
         }
