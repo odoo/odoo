@@ -156,7 +156,8 @@ export class TodoFormController extends FormController {
      * @private
      * @param {InputEvent} ev
      */
-    _onDoneToggled(ev) {
+    async _onDoneToggled(ev) {
+        this.saveButtonClicked();
         this.isDone = !this.isDone;
         //TODO: + orm call to update model state field
     }
