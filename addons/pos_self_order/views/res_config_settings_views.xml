@@ -5,18 +5,58 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
+            <setting id="customer_display" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
             <div id="warning_text_pos_self_order_kiosk" position="replace"/>
             <setting id="pos_self_order_kiosk_mode" position="inside">
                 <div class="content-group" attrs="{'invisible': [('pos_self_order_kiosk_mode','=',False)]}">
                     <button action="a">Configure Payment Methods</button>
                 </div>
             </setting>
+            <setting id="customer_display" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
+            <setting string="Multi Employees per Session" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
+            <setting string="Margins &amp; Costs" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
+            <setting help="Improve navigation for imprecise industrial touchscreens" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
+            <label for="pos_fiscal_position_ids" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </label>
+            <field name="pos_fiscal_position_ids" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </field>
+            <field name="pos_fiscal_position_ids" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </field>
+            <field name="pos_fiscal_position_ids" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </field>
+            <setting class="price_control" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
+            <setting class="price_control" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
+            <setting help="Allow cashiers to set a discount per line" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
+            <setting help="Adds a button to set a global discount" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+            </setting>
+        <!-- TODO: remove the 'down payment' field from the Sales module -->
         </field>
     </record>
 
 <!-- FIXME: when a user that does not have  the pos_restaurant module installed clicks on 
 The 'self ordering station' setting, this self_order module will be installed.
-The problem is that -->
+The problem is that this code will try to access divs that would only exist if the pos_restaurant module was installed -->
      <record id="res_config_settings_view_form_menu" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.pos_self_order.view</field>
         <field name="model">res.config.settings</field>
@@ -29,6 +69,7 @@ The problem is that -->
                     <button name="generate_qr_codes_page" type="object" string="Generate Qr Codes"/>
                 </div>
             </setting>
+
         </field>
     </record>
     <record id="res_config_settings_view_form_phone" model="ir.ui.view">
