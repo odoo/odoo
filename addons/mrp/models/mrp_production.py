@@ -26,6 +26,7 @@ class MrpProduction(models.Model):
     _date_name = 'date_planned_start'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'priority desc, date_planned_start asc,id'
+    _check_company_auto = True
 
     @api.model
     def _get_default_picking_type(self):
@@ -218,7 +219,8 @@ class MrpProduction(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
+        domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)],
+        check_company=True)
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env.company,
         index=True, required=True)
