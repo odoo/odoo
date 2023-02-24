@@ -115,6 +115,7 @@ class TestLinkPreview(MailCommon):
                             'og_mimetype': False,
                             'og_title': self.og_title,
                             'og_type': False,
+                            'og_site_name': False,
                             'source_url': self.source_url,
                         }] for link_preview in message.link_preview_ids
                     }
@@ -134,6 +135,7 @@ class TestLinkPreview(MailCommon):
                 'og_mimetype': None,
                 'og_title': self.og_title,
                 'og_type': None,
+                'og_site_name': None,
                 'source_url': self.source_url,
             },
             {
@@ -142,6 +144,7 @@ class TestLinkPreview(MailCommon):
                 'og_mimetype': None,
                 'og_title': self.title,
                 'og_type': None,
+                'og_site_name': None,
                 'source_url': self.source_url,
             },
             {
