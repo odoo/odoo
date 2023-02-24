@@ -249,7 +249,6 @@ export class ThreadService {
         if (thread.model !== "mail.channel") {
             return;
         }
-        this.remove(this.store.threads[createLocalId("mail.channel", thread.id)]);
         return this.orm.silent.call("mail.channel", "channel_pin", [thread.id], { pinned: false });
     }
 

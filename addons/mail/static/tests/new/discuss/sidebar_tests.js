@@ -10,6 +10,7 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 import { makeDeferred } from "@mail/utils/deferred";
 import { editInput, getFixture } from "@web/../tests/helpers/utils";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
 let target;
 
@@ -1087,4 +1088,19 @@ QUnit.test("Can unpin chat channel", async function (assert) {
     assert.containsOnce(target, ".o-mail-category-item:contains(Mitchell Admin)");
     await click(".o-mail-category-item .o-mail-commands *[title='Unpin Conversation']");
     assert.containsNone(target, ".o-mail-category-item:contains(Mitchell Admin)");
+});
+
+QUnit.test("Unpinning chat should display notification", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        channel_type: "chat",
+    });
+    const { openDiscuss } = await start({
+        services: {
+            notification: makeFakeNotificationService((message) => assert.step(message)),
+        },
+    });
+    await openDiscuss();
+    await click(".o-mail-category-item .o-mail-commands *[title='Unpin Conversation']");
+    assert.verifySteps(["You unpinned your conversation with Mitchell Admin"]);
 });
