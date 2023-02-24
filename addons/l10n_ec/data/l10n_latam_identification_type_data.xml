@@ -14,16 +14,20 @@
             <field name='country_id' ref='base.ec'/>
             <field name='sequence'>20</field>
         </record>
+        <!-- TODO: Remove in master -->
         <record id='ec_passport' model='l10n_latam.identification.type'>
             <field name='name'>Passport</field>
-            <field name='description'>Passport for foreigners with domicile in the country</field>
+            <field name='description'>Passport for foreigners with domicile in the country (Deprecated)</field>
             <field name='country_id' ref='base.ec'/>
+            <field name='active' eval="False"/>
             <field name='sequence'>20</field>
         </record>
+        <!-- TODO: Remove in master -->
         <record id='ec_unknown' model='l10n_latam.identification.type'>
             <field name='name'>Unknown</field>
-            <field name='description'>To identify, useful for quick sales registration</field>
+            <field name='description'>To identify, useful for quick sales registration (Deprecated)</field>
             <field name='country_id' ref='base.ec'/>
+            <field name='active' eval="False"/>
             <field name='sequence'>110</field>
         </record>
     </data>
