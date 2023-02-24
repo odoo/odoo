@@ -724,10 +724,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     break;
                 case 'matrix':
                     if (questionRequired) {
-                        var subQuestionsIds = $questionWrapper.find('table').data('subQuestions');
-                        subQuestionsIds.forEach(function (id) {
-                            if (!((questionId + '_' + id) in data)) {
+                        const subQuestionsIds = $questionWrapper.find('table').data('subQuestions');
+                        // Highlight unanswered rows' header
+                        const questionBodySelector = `div[id="${questionId}"] > .o_survey_question_matrix > tbody`;
+                        subQuestionsIds.forEach((subQuestionId) => {
+                            if (!(`${questionId}_${subQuestionId}` in data)) {
                                 errors[questionId] = constrErrorMsg;
+                                self.el.querySelector(`${questionBodySelector} > tr[id="${subQuestionId}"] > th`).classList.add('bg-danger');
                             }
                         });
                     }
@@ -1196,6 +1199,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     _resetErrors: function () {
         this.$('.o_survey_question_error').empty().removeClass('slide_in');
         this.$('.o_survey_error').addClass('d-none');
+        this.el.querySelectorAll('.o_survey_question_matrix th.bg-danger').forEach((row) => {
+            row.classList.remove('bg-danger');
+        });
     },
 
 });
