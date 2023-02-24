@@ -28,19 +28,21 @@ export class OrderWidget extends Component {
             },
             () => [this.order.selected_orderline]
         );
-        onWillStart(this.onWillStart);
+        onWillStart(this.findIfOrderIsTrusted);
     }
-    async onWillStart() {
+
+    async findIfOrderIsTrusted() {
         const resp = await this.orm.searchRead(
             "pos.order",
             [["pos_reference", "=", this.order.name]],
             ["is_trusted"]
         );
-        this.isOrderTrusted = resp.length ? resp[0].is_trusted : true;
-        console.log("is order trusted? :>> ", resp.length ? resp[0].is_trusted : "is trusted");
+        this.order.is_trusted = resp.length ? resp[0].is_trusted : true;
+        console.log("this.order :>> ", this.order);
     }
+
     trustOrder() {
-        this.orm.write("pos.order", [this.order.id], { is_trusted: true });
+        this.orm.write("pos.order", [this.order.server_id], { is_trusted: true });
         this.order.is_trusted = true;
     }
 
