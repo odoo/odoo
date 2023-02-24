@@ -8,6 +8,7 @@
                 <field name="production_id"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
+                <field name="finished_lot_id"/>
                 <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
                 <filter string="Waiting" name="waiting" domain="[('state','=','waiting')]"/>
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
@@ -258,6 +259,7 @@
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
                 <field name="product_id"/>
+                <field name="finished_lot_id"/>
                 <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
                 <filter string="Ready" name="ready" domain="[('state', '=', 'ready')]"/>
                 <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
@@ -415,6 +417,7 @@
                 <field name="date_start"/>
                 <field name="production_date"/>
                 <field name="product_uom_id" force_save="1"/>
+                <field name="finished_lot_id"/>
                 <field name="operation_id"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -438,7 +441,7 @@
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <h5 class="oe_kanban_bottom_left">
-                                    <span><t t-out="record.product_id.value"/>, </span> <span><t t-out="record.qty_production.value"/> <t t-out="record.product_uom_id.value"/></span>
+                                    <span><t t-out="record.product_id.value"/>, </span> <span><t t-out="record.qty_production.value"/> <t t-out="record.product_uom_id.value"/><t t-if="record.finished_lot_id.value">, </t></span><span t-if="record.finished_lot_id.value" t-out="record.finished_lot_id.value"/>
                                 </h5>
                                 <div class="o_kanban_workorder_status">
                                     <div class="o_kanban_record_bottom">
