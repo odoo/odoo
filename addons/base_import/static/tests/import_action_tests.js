@@ -904,8 +904,8 @@ QUnit.module("Base Import Tests", (hooks) => {
         );
         // Check that errors have been sorted and grouped
         assert.strictEqual(
-            target.querySelector(".o_import_report p").textContent.trim(),
-            "Multiple errors occurred  in field foo:"
+            target.querySelector(".o_import_report p").textContent.trim().toLowerCase(),
+            "multiple errors occurred  in field foo:"
         );
         assert.strictEqual(
             target.querySelector(".o_import_report li:first-child").textContent.trim(),

@@ -6,7 +6,7 @@
                 <p>
                     <t t-if="props.errors[0].value">No matching records found for the following name </t>
                     <t t-else="">Multiple errors occurred </t>
-                      in field <b t-esc="props.fieldInfo.name"/>:
+                      in field <b t-esc="props.fieldInfo.label"/>:
                 </p>
                 <ul>
                     <t t-foreach="props.errors" t-as="error" t-key="error_index">
