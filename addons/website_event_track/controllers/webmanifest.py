@@ -17,7 +17,7 @@ class TrackManifest(http.Controller):
     @http.route('/event/manifest.webmanifest', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
     def webmanifest(self):
         """ Returns a WebManifest describing the metadata associated with a web application.
-        Using this metadata, user agents can provide developers with means to create user 
+        Using this metadata, user agents can provide developers with means to create user
         experiences that are more comparable to that of a native application.
         """
         website = request.website

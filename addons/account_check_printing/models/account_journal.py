@@ -3,6 +3,7 @@
 
 import re
 from odoo import models, fields, api, _
+from odoo.addons.account.models.account_journal_dashboard import ValueGetter
 from odoo.exceptions import ValidationError
 
 
@@ -74,14 +75,16 @@ class AccountJournal(models.Model):
                 'company_id': journal.company_id.id,
             })
 
-    def _get_journal_dashboard_data_batched(self):
-        dashboard_data = super()._get_journal_dashboard_data_batched()
-        self._fill_dashboard_data_count(dashboard_data, 'account.payment', 'num_checks_to_print', [
-            ('payment_method_line_id.code', '=', 'check_printing'),
-            ('state', '=', 'posted'),
-            ('is_move_sent','=', False),
-        ])
-        return dashboard_data
+    def _get_dashboard_fields(self):
+        return super()._get_dashboard_fields() + [ValueGetter(
+            alias='num_checks_to_print',
+            value='COUNT(*)',
+            domain=[
+                ('payment_id.payment_method_line_id.code', '=', 'check_printing'),
+                ('state', '=', 'posted'),
+                ('is_move_sent','=', False),
+            ],
+        )]
 
     def action_checks_to_print(self):
         payment_method_line = self.outbound_payment_method_line_ids.filtered(lambda l: l.code == 'check_printing')
