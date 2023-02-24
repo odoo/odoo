@@ -61,6 +61,13 @@ class EventMailScheduler(models.Model):
 
         return super(EventMailScheduler, self).execute()
 
+    @api.onchange('notification_type')
+    def set_template_ref_model(self):
+        super().set_template_ref_model()
+        mail_model = self.env['sms.template']
+        if self.notification_type == 'sms':
+            self.template_ref = "{},{}".format('sms.template', mail_model.search([('model', '=', 'event.registration')], limit=1).id)
+
 
 class EventMailRegistration(models.Model):
     _inherit = 'event.mail.registration'
