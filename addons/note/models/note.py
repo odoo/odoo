@@ -182,7 +182,7 @@ class Task(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            # Add current user to the assignees for to-do's/private tasks
+            # Add current user to the assignees for to-dos/private tasks
             if self.env.user.id != 1 and not self.env.context.get('onboarding_todo_creation'): # Do not add OdooBot as assignee
                 self._add_default_task_assignees_in_list(vals)
             # user_ids change: update date_assign

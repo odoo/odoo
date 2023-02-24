@@ -158,14 +158,14 @@
         <field name="model">project.task</field>
         <field name="arch" type="xml">
             
-            <tree string="To-do's"
+            <tree string="To-dos"
                   default_group_by="personal_stage_type_ids"
                   editable="bottom"
                   multi_edit="1">
                 <field name="name"/>
                 <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
                 <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                <field name="personal_stage_type_id" string="Stage" optional="show" domain="[('user_id', '=', uid)]"/>
+                <field name="personal_stage_type_id" string="Stage" optional="hide" domain="[('user_id', '=', uid)]"/>
                 <field name="activity_ids" optional="show" widget="list_activity"/>
             </tree>
         </field>
@@ -182,10 +182,12 @@
                 <header>
                     <field name="tag_ids"
                            widget="many2many_tags"
-                           options="{'color_field': 'color'}"
+                           options="{'color_field': 'color', 'no_create_edit':True}"
+                           class="me-2"
                            placeholder="Tags"/>
                     <field name="user_ids"
                            widget="many2many_avatar_user"
+                           options="{'no_quick_create':True}"
                            placeholder="Assignees"/>
                     <field name="personal_stage_type_id"
                            domain="[('user_id','=',uid)]"
@@ -208,7 +210,7 @@
         <field name="name">project.task.todo.activity</field>
         <field name="model">project.task</field>
         <field name="arch" type="xml">
-            <activity string="To-do's">
+            <activity string="To-dos">
                 <field name="user_ids"/>
                 <templates>
                     <div class="justify-content-between" t-name="activity-box">
@@ -236,6 +238,7 @@
         <search string="Notes">
           <field name="name"/>
           <field name="tag_ids"/>
+          <field name="user_ids"/>
           <field name="personal_stage_type_ids" string="Stage"/>
           <filter name="active_true" string="Active" domain="[('active', '=', True)]"/>
           <filter name="active_false" string="Archived" domain="[('active', '=', False)]"/>
@@ -248,15 +251,16 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
           <group expand="0" string="Group By">
-            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'personal_stage_type_ids'}"/>
             <filter string="Tags" name="tags" help="By assigned tags" context="{'group_by':'tag_ids'}"/>
+            <filter string="Assignees" name="user_ids" context="{'group_by': 'user_ids'}"/>
+            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'personal_stage_type_ids'}"/>
           </group>
         </search>
       </field>
     </record>
 
     <record id="action_note_note" model="ir.actions.act_window">
-      <field name="name">To-do's</field>
+      <field name="name">To-dos</field>
       <field name="res_model">project.task</field>
       <field name="domain">[('user_ids', 'in', [uid])]</field>
       <field name="view_mode">kanban,tree,form,activity</field>
