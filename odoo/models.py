@@ -1645,7 +1645,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def name_create(self, name):
-        """ name_create(name) -> record
+        """ name_create(name) -> (int, str)
 
         Create a new record by calling :meth:`~.create` with only one value
         provided: the display name of the new record.
@@ -1658,12 +1658,32 @@ class BaseModel(metaclass=MetaModel):
         :rtype: tuple
         :return: the :meth:`~.name_get` pair value of the created record
         """
-        if self._rec_name:
-            record = self.create({self._rec_name: name})
-            return record.name_get()[0]
-        else:
+        record = self._name_create(name)
+        return record and record.name_get()[0] or False
+
+    @api.model
+    def _name_create(self, name):
+        """ _name_create(name) -> record
+
+        Private implementation of :meth:`~.name_create`.
+
+        :param name: display name of the record to create.
+        :return: the created record.
+        """
+        vals = self._name_create_values(name)
+        if not vals:
             _logger.warning("Cannot execute name_create, no _rec_name defined on %s", self._name)
-            return False
+            return self.browse()
+        return self.create(vals)
+
+    @api.model
+    def _name_create_values(self, name) -> dict:
+        """Return the values to create a record with the given name.
+
+        :param name: display name of the record to create.
+        :return: the values to create a record.
+        """
+        return self._rec_name and {self._rec_name: name} or {}
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
