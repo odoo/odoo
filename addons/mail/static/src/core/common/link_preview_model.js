@@ -39,6 +39,8 @@ export class LinkPreview extends Record {
     /** @type {string} */
     og_type;
     /** @type {string} */
+    og_site_name;
+    /** @type {string} */
     source_url;
 
     get imageUrl() {
@@ -56,6 +58,7 @@ export class LinkPreview extends Record {
     get isCard() {
         return !this.isImage && !this.isVideo;
     }
+
 }
 
 LinkPreview.register();

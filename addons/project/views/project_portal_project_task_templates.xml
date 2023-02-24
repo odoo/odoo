@@ -120,7 +120,29 @@
         </t>
     </template>
 
+    <template id="task_link_preview_front_end" inherit_id="portal.frontend_layout" primary="True">
+        <xpath expr="//t[@t-if='not_uses_default_logo'][1]" position="before">
+            <t t-if="preview_object.displayed_image_id">
+                <meta property="og:image" t-attf-content="/web/image/{{ preview_object.displayed_image_id.id }}/300x200?access_token={{ preview_object.displayed_image_id.generate_access_token()[0] }}"/>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-if='not_uses_default_logo'][2]" position="before">
+            <t t-if="preview_object.displayed_image_id">
+                <meta property="twitter:image" t-attf-content="/web/image/{{ preview_object.displayed_image_id.id }}/300x200?access_token={{ preview_object.displayed_image_id.generate_access_token()[0] }}"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="task_link_preview_portal_layout" inherit_id="portal.portal_layout" primary="True">
+        <xpath expr="//t[@t-call='portal.frontend_layout']" position="attributes">
+            <attribute name="t-call">project.task_link_preview_front_end</attribute>
+        </xpath>
+    </template>
+
     <template id="portal_my_task" name="My Task" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//t[@t-call='portal.portal_layout']" position="attributes">
+            <attribute name="t-call">project.task_link_preview_portal_layout</attribute>
+        </xpath>
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <t t-set="title" t-value="task.name"/>
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">

@@ -73,6 +73,7 @@ def get_link_preview_from_html(url, response):
         return False
     og_description = tree.xpath('//meta[@property="og:description"]/@content')
     og_type = tree.xpath('//meta[@property="og:type"]/@content')
+    og_site_name = tree.xpath('//meta[@property="og:site_name"]/@content')
     og_image = tree.xpath('//meta[@property="og:image"]/@content')
     og_mimetype = tree.xpath('//meta[@property="og:image:type"]/@content')
     return {
@@ -81,5 +82,6 @@ def get_link_preview_from_html(url, response):
         'og_mimetype': og_mimetype[0] if og_mimetype else None,
         'og_title': og_title,
         'og_type': og_type[0] if og_type else None,
+        'og_site_name': og_site_name[0] if og_site_name else None,
         'source_url': url,
     }

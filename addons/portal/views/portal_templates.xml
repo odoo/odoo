@@ -35,6 +35,28 @@
                 </div>
             </div>
         </xpath>
+        <xpath expr="//head/meta" position="after">
+            <t t-if="preview_object">
+                <!-- Remove seo_object to not define og and twitter tags twice when wesbite is installed -->
+                <t t-set="seo_object" t-value="False"/>
+                <t t-set="company" t-value="preview_object.company_id or request.env.company"/>
+                <t t-set="not_uses_default_logo" t-value="company and not company.uses_default_logo"/>
+                <meta property="og:title" t-att-content="preview_object.name"/>
+                <meta property="og:description" t-att-content="preview_object.description.striptags() if preview_object.description else ''"/>
+                <meta property="og:site_name" t-att-content="company.name if company else ''"/>
+                <t t-if="not_uses_default_logo">
+                    <meta property="og:image" t-attf-content="/web/binary/company_logo?company={{ company.id }}"/>
+                </t>
+                <meta property="og:image:width" content="300"/>
+                <meta property="og:image:height" content="200"/>
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta property="twitter:title" t-att-content="preview_object.name"/>
+                <meta property="twitter:description" t-att-content="preview_object.description.striptags() if preview_object.description else ''"/>
+                <t t-if="not_uses_default_logo">
+                    <meta property="twitter:image" t-attf-content="/web/binary/company_logo?company={{ company.id }}"/>
+                </t>
+            </t>
+        </xpath>
     </template>
 
     <!-- Added by another template so that it can be disabled if needed -->
