@@ -221,7 +221,7 @@
                 <field name="stage_id" domain="[]"/>
                 <field name="categ_ids"/>
                 <field name="refuse_reason_id"/>
-                <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
+                <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Resume's content"/>
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>
