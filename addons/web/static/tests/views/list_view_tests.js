@@ -6149,6 +6149,55 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_back_button");
     });
 
+    QUnit.test(
+        "Navigate between the list and kanban view using the command palette",
+        async (assert) => {
+            serverData.views = {
+                "foo,false,search": `<search />`,
+                "foo,false,list": `<list><field name="display_name" /></list>`,
+                "foo,false,kanban": `
+                <kanban class="o_kanban_test">
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            };
+            registry.category("command_categories").add("view_switcher", {});
+
+            const wc = await createWebClient({ serverData });
+            await doAction(wc, {
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "kanban"],
+                ],
+            });
+            assert.containsOnce(target, ".o_cp_switch_buttons");
+            assert.containsN(target, ".o_switch_view", 2);
+            assert.containsOnce(target, ".o_list_view");
+
+            triggerHotkey("control+k");
+            await nextTick();
+            assert.containsOnce(target.querySelector(".o_command_category"), ".o_command");
+            let command = target.querySelector(".o_command_category .o_command");
+            assert.strictEqual(command.textContent, "Show Kanban view");
+
+            await click(command);
+            assert.containsOnce(target, ".o_kanban_view");
+
+            triggerHotkey("control+k");
+            await nextTick();
+            assert.containsOnce(target.querySelector(".o_command_category"), ".o_command");
+            command = target.querySelector(".o_command_category .o_command");
+            assert.strictEqual(command.textContent, "Show List view");
+            await click(command);
+            assert.containsOnce(target, ".o_list_view");
+        }
+    );
+
     QUnit.test("can sort records when clicking on header", async function (assert) {
         serverData.models.foo.fields.foo.sortable = true;
 
