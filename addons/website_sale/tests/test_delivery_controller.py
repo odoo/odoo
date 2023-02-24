@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from odoo.exceptions import UserError
 from odoo.addons.payment.tests.common import PaymentCommon
-from odoo.addons.website_sale.controllers.delivery_main import WebsiteSaleDelivery
+from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import tagged
 

@@ -104,6 +104,7 @@ class Website(models.Model):
                                                default="Not Available For Sale")
     contact_us_button_url = fields.Char(string="Contact Us Button URL", translate=True, default="/contactus")
     enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal")
+    enabled_delivery = fields.Boolean(string="Enable Shipping", compute='_compute_enabled_delivery')
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
@@ -126,6 +127,12 @@ class Website(models.Model):
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = website.pricelist_id.currency_id or website.company_id.currency_id
+
+    def _compute_enabled_delivery(self):
+        for website in self:
+            website.enabled_delivery = bool(website.env['delivery.carrier'].sudo().search_count(
+                [('website_id', 'in', (False, website.id)), ('is_published', '=', True)], limit=1
+            ))
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache(
