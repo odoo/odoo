@@ -191,11 +191,10 @@ var PaymentAdyen = PaymentInterface.extend({
     _convert_receipt_info: function (output_text) {
         return output_text.reduce(function (acc, entry) {
             var params = new URLSearchParams(entry.Text);
-
             if (params.get("name") && !params.get("value")) {
-                return acc + _.str.sprintf("<br/>%s", params.get("name"));
+                return acc + _.str.sprintf("\n%s", params.get("name"));
             } else if (params.get("name") && params.get("value")) {
-                return acc + _.str.sprintf("<br/>%s: %s", params.get("name"), params.get("value"));
+                return acc + _.str.sprintf("\n%s: %s", params.get("name"), params.get("value"));
             }
 
             return acc;
