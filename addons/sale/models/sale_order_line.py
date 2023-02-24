@@ -506,6 +506,16 @@ class SaleOrderLine(models.Model):
             self.product_no_variant_attribute_value_ids,
         )
 
+    def _get_pricelist_price_context(self):
+        """DO NOT USE in new code, this contextual logic should be dropped or heavily refactored soon"""
+        self.ensure_one()
+        return {
+            'pricelist': self.order_id.pricelist_id.id,
+            'uom': self.product_uom.id,
+            'quantity': self.product_uom_qty,
+            'date': self.order_id.date_order,
+        }
+
     def _get_pricelist_price_before_discount(self):
         """Compute the price used as base for the pricelist price computation.
 
