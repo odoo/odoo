@@ -91,6 +91,7 @@
                                 <field name="name">46 - Exempted intra-Community deliveries and ABC sales</field>
                                 <field name="code">c46</field>
                                 <field name="aggregation_formula">c46L.balance + c46T.balance</field>
+                                <field name="foldable" eval="True"/>
                                 <field name="children_ids">
                                     <record id="tax_report_line_46L" model="account.report.line">
                                         <field name="name">46L - Exempted intra-Community deliveries</field>
@@ -131,6 +132,7 @@
                                 <field name="name">48 - Credit notes for operations in grids [44] and [46]</field>
                                 <field name="code">c48</field>
                                 <field name="aggregation_formula">c48s44.balance + c48s46L.balance + c48s46T.balance</field>
+                                <field name="foldable" eval="True"/>
                                 <field name="children_ids">
                                     <record id="tax_report_line_48s44" model="account.report.line">
                                         <field name="name">48s44 - Credit notes for operations in grid [44]</field>
