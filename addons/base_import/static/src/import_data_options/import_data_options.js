@@ -62,14 +62,18 @@ export class ImportDataOptions extends Component {
                 "import_skip_records",
             ].includes(ev.target.value)
         ) {
-            this.props.onOptionChanged(ev.target.value, ev.target.value, this.props.fieldInfo.name);
+            this.props.onOptionChanged(
+                ev.target.value,
+                ev.target.value,
+                this.props.fieldInfo.fieldPath
+            );
         } else {
             const value = {
                 fallback_value: ev.target.value,
                 field_model: this.currentModel,
                 field_type: this.props.fieldInfo.type,
             };
-            this.props.onOptionChanged("fallback_values", value, this.props.fieldInfo.name);
+            this.props.onOptionChanged("fallback_values", value, this.props.fieldInfo.fieldPath);
         }
     }
 }

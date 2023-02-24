@@ -164,7 +164,7 @@ export class BaseImportModel {
         const startRow = this.importOptions.skip;
         const importRes = {
             ids: [],
-            fields: this.columns.map((e) => Boolean(e.fieldInfo) && e.fieldInfo.name),
+            fields: this.columns.map((e) => Boolean(e.fieldInfo) && e.fieldInfo.fieldPath),
             columns: this.columns.map((e) => e.name.trim().toLowerCase()),
             hasError: false,
         };
@@ -179,7 +179,6 @@ export class BaseImportModel {
             }
 
             const error = await this._executeImportStep(isTest, importRes);
-
             if (error) {
                 let message;
                 const errorData = error.data || {};
@@ -308,8 +307,9 @@ export class BaseImportModel {
 
     async _executeImportStep(isTest, importRes) {
         const importArgs = [this.id, importRes.fields, importRes.columns, this.importOptions];
-
         const { ids, messages, nextrow, name, error } = await this._callImport(isTest, importArgs);
+
+        // Handle server errors
         if (error) {
             return error;
         }
@@ -318,51 +318,12 @@ export class BaseImportModel {
             importRes.ids = importRes.ids.concat(ids);
         }
 
+        // Handle import errors
         if (messages && messages.length) {
             importRes.hasError = true;
             this.stopImport();
-
-            if (messages[0].not_matching_error) {
-                this._addMessage(messages[0].type, [messages[0].message]);
+            if (this._handleImportErrors(messages, name)) {
                 return false;
-            }
-
-            const sortedMessages = this._groupErrorsByField(messages);
-            if (sortedMessages[0]) {
-                this._addMessage(sortedMessages[0].type, [sortedMessages[0].message]);
-                delete sortedMessages[0];
-            } else {
-                this._addMessage("danger", [_t("The file contains blocking errors (see below)")]);
-            }
-
-            for (const [columnFieldId, errors] of Object.entries(sortedMessages)) {
-                // Handle errors regarding specific colums.
-                const column = this.columns.find(
-                    (e) => e.fieldInfo && e.fieldInfo.id === columnFieldId
-                );
-                if (column) {
-                    column.resultNames = name;
-                    column.errors = errors;
-                } else {
-                    for (const error of errors) {
-                        // Handle errors regarding specific records.
-                        if (error.record !== undefined) {
-                            this._addMessage("danger", [
-                                error.rows.from === error.rows.to
-                                    ? sprintf(
-                                          _t('Error at row %s: "%s"'),
-                                          error.record,
-                                          error.message
-                                      )
-                                    : sprintf(_t("%s at multiple rows"), error.message),
-                            ]);
-                        }
-                        // Handle global errors.
-                        else {
-                            this._addMessage("danger", [error.message]);
-                        }
-                    }
-                }
             }
         }
 
@@ -387,6 +348,47 @@ export class BaseImportModel {
             // all import errors and showing them inside the top
             // "messages" area.
             return { error };
+        }
+    }
+
+    _handleImportErrors(messages, name) {
+        if (messages[0].not_matching_error) {
+            this._addMessage(messages[0].type, [messages[0].message]);
+            return true;
+        }
+
+        const sortedMessages = this._groupErrorsByField(messages);
+        if (sortedMessages[0]) {
+            this._addMessage(sortedMessages[0].type, [sortedMessages[0].message]);
+            delete sortedMessages[0];
+        } else {
+            this._addMessage("danger", [_t("The file contains blocking errors (see below)")]);
+        }
+
+        for (const [columnFieldId, errors] of Object.entries(sortedMessages)) {
+            // Handle errors regarding specific colums.
+            const column = this.columns.find(
+                (e) => e.fieldInfo && e.fieldInfo.fieldPath === columnFieldId
+            );
+            if (column) {
+                column.resultNames = name;
+                column.errors = errors;
+            } else {
+                for (const error of errors) {
+                    // Handle errors regarding specific records.
+                    if (error.record !== undefined) {
+                        this._addMessage("danger", [
+                            error.rows.from === error.rows.to
+                                ? sprintf(_t('Error at row %s: "%s"'), error.record, error.message)
+                                : sprintf(_t("%s at multiple rows"), error.message),
+                        ]);
+                    }
+                    // Handle global errors.
+                    else {
+                        this._addMessage("danger", [error.message]);
+                    }
+                }
+            }
         }
     }
 
@@ -455,20 +457,6 @@ export class BaseImportModel {
     }
 
     _getColumns(res) {
-        function createColumn(model, id, name, index, previews, preview) {
-            const fields = model._getFields(res, index);
-            return {
-                id,
-                name,
-                preview,
-                previews,
-                fields,
-                fieldInfo: model._findField(fields, id),
-                comments: [],
-                errors: [],
-            };
-        }
-
         function getId(res, index) {
             return res.matches && index in res.matches && res.matches[index].length > 0
                 ? res.matches[index].join("/")
@@ -477,8 +465,8 @@ export class BaseImportModel {
 
         if (this.importOptions.has_headers && res.headers && res.preview.length > 0) {
             return res.headers.flatMap((header, index) => {
-                return createColumn(
-                    this,
+                return this._createColumn(
+                    res,
                     getId(res, index),
                     header,
                     index,
@@ -488,8 +476,8 @@ export class BaseImportModel {
             });
         } else if (res.preview && res.preview.length >= 2) {
             return res.preview.flatMap((preview, index) =>
-                createColumn(
-                    this,
+                this._createColumn(
+                    res,
                     preview[0],
                     this.importOptions.has_headers ? preview[0] : preview.join(", "),
                     index,
@@ -501,10 +489,24 @@ export class BaseImportModel {
         return [];
     }
 
+    _createColumn(res, id, name, index, previews, preview) {
+        const fields = this._getFields(res, index);
+        return {
+            id,
+            name,
+            preview,
+            previews,
+            fields,
+            fieldInfo: this._findField(fields, id),
+            comments: [],
+            errors: [],
+        };
+    }
+
     _findField(fields, id) {
         return Object.entries(fields)
             .flatMap((e) => e[1])
-            .find((field) => field.name === id);
+            .find((field) => field.fieldPath === id);
     }
 
     /**
@@ -584,7 +586,8 @@ export class BaseImportModel {
             column.comments = [];
             column.errors = [];
             column.resultNames = [];
-            column.importOptions = column.fieldInfo && this.fieldsToHandle[column.fieldInfo.id];
+            column.importOptions =
+                column.fieldInfo && this.fieldsToHandle[column.fieldInfo.fieldPath];
 
             if (!column.fieldInfo) {
                 continue;
@@ -603,7 +606,7 @@ export class BaseImportModel {
                 // If multiple columns are mapped on the same field, inform
                 // the user that they will be concatenated.
                 const samefieldColumns = this.columns.filter(
-                    (col) => col.fieldInfo && col.fieldInfo.id === column.fieldInfo.id
+                    (col) => col.fieldInfo && col.fieldInfo.fieldPath === column.fieldInfo.fieldPath
                 );
                 if (samefieldColumns.length >= 2) {
                     column.comments.push({
@@ -615,7 +618,7 @@ export class BaseImportModel {
             } else if (updatedColumn && column.id !== updatedColumn.id && updatedColumn.fieldInfo) {
                 // If column is mapped on an already mapped field, remove that field
                 // from the old column to keep it unique.
-                if (updatedColumn.fieldInfo.id === column.fieldInfo.id) {
+                if (updatedColumn.fieldInfo.fieldPath === column.fieldInfo.fieldPath) {
                     column.fieldInfo = null;
                 }
             }
