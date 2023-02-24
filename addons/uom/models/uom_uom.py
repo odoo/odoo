@@ -178,24 +178,20 @@ class UoM(models.Model):
             ))
 
     @api.model
-    def name_create(self, name):
+    def _name_create_values(self, name):
         """ The UoM category and factor are required, so we'll have to add temporary values
         for imported UoMs """
-        values = {
-            self._rec_name: name,
-            'factor': 1
-        }
+        values = super()._name_create_values(name)
+        values['factor'] = 1
         # look for the category based on the english name, i.e. no context on purpose!
         # TODO: should find a way to have it translated but not created until actually used
         if not self._context.get('default_category_id'):
             EnglishUoMCateg = self.env['uom.category'].with_context({})
             misc_category = EnglishUoMCateg.search([('name', '=', 'Unsorted/Imported Units')])
-            if misc_category:
-                values['category_id'] = misc_category.id
-            else:
-                values['category_id'] = EnglishUoMCateg.name_create('Unsorted/Imported Units')[0]
-        new_uom = self.create(values)
-        return new_uom.name_get()[0]
+            if not misc_category:
+                misc_category = EnglishUoMCateg._name_create('Unsorted/Imported Units')
+            values['category_id'] = misc_category.id
+        return values
 
     def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP', raise_if_failure=True):
         """ Convert the given quantity from the current UoM `self` into a given one

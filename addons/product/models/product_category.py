@@ -47,8 +47,9 @@ class ProductCategory(models.Model):
             raise ValidationError(_('You cannot create recursive categories.'))
 
     @api.model
-    def name_create(self, name):
-        return self.create({'name': name}).name_get()[0]
+    def _name_create_values(self, name):
+        # COMPLETE OVERRIDE as _rec_name is `complete_name` but we want to write on `name` instead
+        return {'name': name}
 
     def name_get(self):
         if not self.env.context.get('hierarchical_naming', True):

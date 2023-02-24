@@ -394,12 +394,10 @@ class Project(models.Model):
         return project
 
     @api.model
-    def name_create(self, name):
-        res = super().name_create(name)
-        if res:
-            # We create a default stage `new` for projects created on the fly.
-            self.browse(res[0]).type_ids += self.env['project.task.type'].sudo().create({'name': _('New')})
-        return res
+    def _name_create_values(self, name):
+        vals = super()._name_create_values(name)
+        vals['type_ids'] = [Command.create({'name': _('New')})]
+        return vals
 
     @api.model_create_multi
     def create(self, vals_list):

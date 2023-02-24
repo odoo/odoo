@@ -455,18 +455,18 @@ class IrFieldsConverter(models.AbstractModel):
             if value == '':
                 return False, field_type, warnings
             flush(model=field.comodel_name)
-            ids = RelatedModel.name_search(name=value, operator='=')
+            ids = list(RelatedModel._name_search(value, operator='='))
             if ids:
                 if len(ids) > 1:
                     warnings.append(ImportWarning(
                         _(u"Found multiple matches for value '%s' in field '%%(field)s' (%d matches)")
                         %(str(value).replace('%', '%%'), len(ids))))
-                id, _name = ids[0]
+                id = ids[0]
             else:
                 name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
                 if name_create_enabled_fields.get(field.name):
                     try:
-                        id, _name = RelatedModel.name_create(name=value)
+                        id = RelatedModel._name_create(value).id
                     except (Exception, psycopg2.IntegrityError):
                         error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:

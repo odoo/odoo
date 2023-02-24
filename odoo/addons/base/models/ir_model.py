@@ -369,13 +369,11 @@ class IrModel(models.Model):
         return res
 
     @api.model
-    def name_create(self, name):
+    def _name_create_values(self, name):
         """ Infer the model from the name. E.g.: 'My New Model' should become 'x_my_new_model'. """
-        vals = {
-            'name': name,
-            'model': 'x_' + '_'.join(name.lower().split(' ')),
-        }
-        return self.create(vals).name_get()[0]
+        vals = super()._name_create_values(name)
+        vals['model'] = 'x_' + '_'.join(name.lower().split(' '))
+        return vals
 
     def _reflect_model_params(self, model):
         """ Return the values to write to the database for the given model. """

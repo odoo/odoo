@@ -126,10 +126,11 @@ class MassMailingContact(models.Model):
         return super().copy(default)
 
     @api.model
-    def name_create(self, name):
+    def _name_create_values(self, name):
         name, email = self.get_name_email(name)
-        contact = self.create({'name': name, 'email': email})
-        return contact.name_get()[0]
+        vals = super()._name_create_values(name)
+        vals['email'] = email
+        return vals
 
     @api.model
     def add_to_list(self, name, list_id):

@@ -238,16 +238,16 @@ class MrpBom(models.Model):
         return res
 
     @api.model
-    def name_create(self, name):
+    def _name_create_values(self, name):
         # prevent to use string as product_tmpl_id
         if isinstance(name, str):
             key = 'default_' + self._rec_name
             if key in self.env.context:
-                result = super().name_create(self.env.context[key])
-                self.browse(result[0]).code = name
-                return result
+                vals = super()._name_create_values(self.env.context[key])
+                vals['code'] = name
+                return vals
             raise UserError(_("You cannot create a new Bill of Material from here."))
-        return super(MrpBom, self).name_create(name)
+        return super()._name_create_values(name)
 
     def toggle_active(self):
         self.with_context({'active_test': False}).operation_ids.toggle_active()

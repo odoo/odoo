@@ -12,10 +12,10 @@ class Bill(models.Model):
     pos_config_ids = fields.Many2many("pos.config", string="Point of Sales")
 
     @api.model
-    def name_create(self, name):
+    def _name_create_values(self, name):
+        vals = super()._name_create_values(name)
         try:
-            value = float(name)
+            vals['value'] = float(name)
         except:
             raise UserError(_("The name of the Coins/Bills must be a number."))
-        result = super().create({"name": name, "value": value})
-        return result.name_get()[0]
+        return vals

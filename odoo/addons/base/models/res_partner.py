@@ -871,13 +871,11 @@ class Partner(models.Model):
         return name, email
 
     @api.model
-    def name_create(self, name):
-        """ Override of orm's name_create method for partners. The purpose is
-            to handle some basic formats to create partners using the
-            name_create.
-            If only an email address is received and that the regex cannot find
-            a name, the name will have the email value.
-            If 'force_email' key in context: must find the email address. """
+    def _name_create_values(self, name):
+        # OVERRIDE to handle some basic formats:
+        # If only an email address is received and that the regex cannot find a name,
+        # the name will have the email value.
+        # If 'force_email' key in context: must find the email address.
         default_type = self._context.get('default_type')
         if default_type and default_type not in self._fields['type'].get_values(self.env):
             context = dict(self._context)
@@ -887,11 +885,10 @@ class Partner(models.Model):
         if self._context.get('force_email') and not email:
             raise ValidationError(_("Couldn't create contact without email address!"))
 
-        create_values = {self._rec_name: name or email}
-        if email:  # keep default_email in context
-            create_values['email'] = email
-        partner = self.create(create_values)
-        return partner.name_get()[0]
+        vals = super()._name_create_values(name or email)
+        if email:
+            vals['email'] = email
+        return vals
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):

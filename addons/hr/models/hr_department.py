@@ -37,8 +37,9 @@ class Department(models.Model):
         return super(Department, self).name_get()
 
     @api.model
-    def name_create(self, name):
-        return self.create({'name': name}).name_get()[0]
+    def _name_create_values(self, name):
+        # COMPLETE OVERRIDE as _rec_name is `complete_name` but we want to write on `name`
+        return {'name': name}
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):

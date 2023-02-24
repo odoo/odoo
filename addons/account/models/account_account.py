@@ -694,14 +694,16 @@ class AccountAccount(models.Model):
         self.env.cr.execute(query, [tuple(self.ids)])
 
     @api.model
-    def name_create(self, name):
+    def _name_create_values(self, name):
         """ Split the account name into account code and account name in import.
         When importing a file with accounts, the account code and name may be both entered in the name column.
         In this case, the name will be split into code and name.
         """
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
-            return self.create({'code': code, 'name': name}).name_get()[0]
+            vals = super()._name_create_values(name)
+            vals['code'] = code
+            return vals
         raise ValidationError(_("Please create new accounts from the Chart of Accounts menu."))
 
     @api.model_create_multi
