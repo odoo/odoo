@@ -5,9 +5,6 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <setting id="customer_display" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
-            </setting>
             <div id="warning_text_pos_self_order_kiosk" position="replace"/>
             <setting id="pos_self_order_kiosk_mode" position="inside">
                 <div class="content-group" attrs="{'invisible': [('pos_self_order_kiosk_mode','=',False)]}">
@@ -15,40 +12,43 @@
                 </div>
             </setting>
             <setting id="customer_display" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </setting>
+            <setting id="customer_display" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
             <setting string="Multi Employees per Session" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
             <setting string="Margins &amp; Costs" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
             <setting help="Improve navigation for imprecise industrial touchscreens" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
             <label for="pos_fiscal_position_ids" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </label>
             <field name="pos_fiscal_position_ids" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </field>
             <field name="pos_fiscal_position_ids" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </field>
             <field name="pos_fiscal_position_ids" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </field>
             <setting class="price_control" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
             <setting class="price_control" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
             <setting help="Allow cashiers to set a discount per line" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
             <setting help="Adds a button to set a global discount" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',False)]}</attribute>
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
         <!-- TODO: remove the 'down payment' field from the Sales module -->
         </field>
