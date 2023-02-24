@@ -611,14 +611,16 @@ class HrExpense(models.Model):
                         'name': expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64],
                         'account_id': expense.account_id.id,
                         'quantity': expense.quantity or 1,
-                        'price_unit': expense.unit_amount if expense.unit_amount != 0 else expense.total_amount,
+                        # 'unit_amount' is there when the product selected has a cost defined.
+                        # This cost will always be in company currency.
+                        'price_unit': expense.unit_amount if expense.unit_amount != 0 else expense.total_amount_company,
                         'product_id': expense.product_id.id,
                         'product_uom_id': expense.product_uom_id.id,
                         'analytic_distribution': expense.analytic_distribution,
                         'expense_id': expense.id,
                         'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
                         'tax_ids': [(6, 0, expense.tax_ids.ids)],
-                        'currency_id': expense.currency_id.id,
+                        'currency_id': expense.company_currency_id.id,
                     })
                     for expense in sheet.expense_line_ids
                 ]
