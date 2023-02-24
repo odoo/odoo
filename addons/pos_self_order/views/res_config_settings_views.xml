@@ -14,7 +14,9 @@
         </field>
     </record>
 
-
+<!-- FIXME: when a user that does not have  the pos_restaurant module installed clicks on 
+The 'self ordering station' setting, this self_order module will be installed.
+The problem is that -->
      <record id="res_config_settings_view_form_menu" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.pos_self_order.view</field>
         <field name="model">res.config.settings</field>
