@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
+import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
 
 /**
  * @typedef {Object} ListDefinition
@@ -143,7 +144,49 @@ export default class ListCorePlugin extends CorePlugin {
             case "REMOVE_GLOBAL_FILTER":
                 this._onFilterDeletion(cmd.id);
                 break;
+
+            case "START":
+                for (const sheetId of this.getters.getSheetIds()) {
+                    const cells = this.getters.getCells(sheetId);
+                    for (const cell of Object.values(cells)) {
+                        if (cell.isFormula) {
+                            this._addListPositionToDataSource(cell.content);
+                        }
+                    }
+                }
+                break;
+            case "UPDATE_CELL":
+                if (cmd.content) {
+                    this._addListPositionToDataSource(cmd.content);
+                }
+                break;
         }
+    }
+
+    /**
+     * Extract the position of the records asked in the given formula and
+     * increase the max position of the corresponding data source.
+     *
+     * @param {string} content Odoo list formula
+     */
+    _addListPositionToDataSource(content) {
+        if (getNumberOfListFormulas(content) !== 1) {
+            return;
+        }
+        const { functionName, args } = getFirstListFunction(content);
+        if (functionName !== "ODOO.LIST") {
+            return;
+        }
+        const [listId, positionArg] = args.map((arg) => arg.value.toString());
+        if (!(listId in this.lists)) {
+            return;
+        }
+        const position = parseInt(positionArg, 10);
+        if (isNaN(position)) {
+            return;
+        }
+        const dataSourceId = this.lists[listId].dataSourceId;
+        this.dataSources.get(dataSourceId).increaseMaxPosition(position);
     }
 
     // -------------------------------------------------------------------------
