@@ -144,7 +144,7 @@ function bootstrapToTable($editable) {
     for (const container of [...containers].filter(n => [...n.children].some(c => c.classList.contains('row')))) {
         // The width of the table was stored in a temporary attribute. Fetch it
         // for use in `_applyColspan` and remove the attribute at the end.
-        const containerWidth = container.getAttribute('o-temp-width');
+        const containerWidth = parseFloat(container.getAttribute('o-temp-width'));
 
         // TABLE
         const table = _createTable(container.attributes);
@@ -713,8 +713,8 @@ function fontToImg($editable) {
             font.style.setProperty('line-height', 'normal');
             const intrinsicWidth = _getWidth(font);
             const intrinsicHeight = _getHeight(font);
-            const hPadding = width && (width - intrinsicWidth) / 2;
-            const vPadding = height && (height - intrinsicHeight) / 2;
+            const hPadding = width && intrinsicWidth && (width - intrinsicWidth) / 2;
+            const vPadding = height && intrinsicHeight && (height - intrinsicHeight) / 2;
             let padding = '';
             if (hPadding || vPadding) {
                 padding = vPadding ? vPadding + 'px ' : '0 ';
@@ -1338,7 +1338,7 @@ function _getStylePropertyValue(element, propertyName) {
  * @returns {Number}
  */
 function _getWidth(element) {
-    return parseFloat(getComputedStyle(element).width.replace('px', ''));
+    return parseFloat(getComputedStyle(element).width.replace('px', '')) || 0;
 }
 /**
  * Equivalent to JQuery's `height` method. Returns the element's visible height.
@@ -1347,7 +1347,7 @@ function _getWidth(element) {
  * @returns {Number}
  */
 function _getHeight(element) {
-    return parseFloat(getComputedStyle(element).height.replace('px', ''));
+    return parseFloat(getComputedStyle(element).height.replace('px', '')) || 0;
 }
 /**
  * Return true if the given element is hidden.
