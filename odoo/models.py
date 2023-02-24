@@ -2739,7 +2739,7 @@ class BaseModel(metaclass=MetaModel):
                 if not translate:
                     # patch the field definition by adding an override
                     _logger.debug("Patching %s.%s with translate=True", cls._name, name)
-                    fields_.append(fields_[0].new(translate=True))
+                    fields_.append(type(fields_[0])(translate=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:
