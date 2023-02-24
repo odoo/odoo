@@ -60,7 +60,7 @@ class AnalyticMixin(models.AbstractModel):
 
             for plan_id in mandatory_plans_ids:
                 if float_compare(distribution_by_root_plan.get(plan_id, 0), 100, precision_digits=decimal_precision) != 0:
-                    raise ValidationError(_("One or more lines require a 100% analytic distribution."))
+                    raise ValidationError(_("Analytic distribution in one or more lines is requried 100% for the analytic plans that set up with the mandatory applicability for this business document."))
 
     def _sanitize_values(self, vals, decimal_precision):
         """ Normalize the float of the distribution """
