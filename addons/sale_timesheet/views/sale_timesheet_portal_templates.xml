@@ -106,7 +106,7 @@
 
     <template id="portal_my_task_inherit" inherit_id="project.portal_my_task">
         <xpath expr="//div[@name='portal_my_task_second_column']" position="inside">
-            <t t-if="task.project_id.allow_billable">
+            <t t-if="task.project_id.allow_billable and env.user.has_group('sales_team.group_sale_salesman')">
                 <div t-if="task.sale_order_id"><strong>Sales Order:</strong>
                     <span t-if="so_accessible"><a t-attf-href="{{ task.sale_order_id.access_url }}" t-field="task.sale_order_id"></a></span>
                     <span t-else="" t-field="task.sale_order_id"></span>
