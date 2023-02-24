@@ -157,7 +157,7 @@ class ProjectCustomerPortal(CustomerPortal):
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-        if project_sudo.with_user(request.env.user)._check_project_sharing_access():
+        if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
             return request.render("project.project_sharing_portal", {'project_id': project_id})
         project_sudo = project_sudo if access_token else project_sudo.with_user(request.env.user)
         values = self._project_get_page_view_values(project_sudo, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kw)
