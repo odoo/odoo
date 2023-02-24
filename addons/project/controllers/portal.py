@@ -46,6 +46,7 @@ class ProjectCustomerPortal(CustomerPortal):
             pager=pager,
             project=project,
             task_url=f'projects/{project.id}/task',
+            preview_object=project,
         )
 
         if not groupby:
@@ -255,6 +256,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'user': request.env.user,
             'project_accessible': project_accessible,
             'task_link_section': [],
+            'preview_object': task,
         }
 
         values = self._get_page_view_values(task, access_token, values, history, False, **kwargs)

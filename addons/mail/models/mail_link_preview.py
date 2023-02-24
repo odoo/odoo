@@ -19,6 +19,7 @@ class LinkPreview(models.Model):
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
     og_title = fields.Char('Title')
+    og_site_name = fields.Char('Site name')
     og_image = fields.Char('Image')
     og_description = fields.Text('Description')
     og_mimetype = fields.Char('MIME type')
@@ -97,5 +98,6 @@ class LinkPreview(models.Model):
             'og_mimetype': preview.og_mimetype,
             'og_title': preview.og_title,
             'og_type': preview.og_type,
+            'og_site_name': preview.og_site_name,
             'source_url': preview.source_url,
         } for preview in self]
