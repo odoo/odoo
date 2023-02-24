@@ -1076,3 +1076,15 @@ QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async 
     assert.strictEqual($($chats[0]).text(), "Demo");
     assert.strictEqual($($chats[1]).text(), "Yoshi");
 });
+
+QUnit.test("Can unpin chat channel", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        channel_type: "chat",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(target, ".o-mail-category-item:contains(Mitchell Admin)");
+    await click(".o-mail-category-item .o-mail-commands *[title='Unpin Conversation']");
+    assert.containsNone(target, ".o-mail-category-item:contains(Mitchell Admin)");
+});

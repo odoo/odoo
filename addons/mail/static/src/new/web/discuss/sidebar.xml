@@ -103,7 +103,7 @@
             <i t-if="thread.type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
             <div t-if="threadService.canLeave(thread)" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
                 t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
-            <div t-if="thread.type === 'chat' and counter === 0" t-attf-class="fa fa-times ms-1" t-on-click.stop="() => threadService.unpin(thread.id)" title="Unpin Conversation" role="img"/>
+            <div t-if="thread.type === 'chat' and counter === 0" t-attf-class="fa fa-times ms-1" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
         </div>
         <div t-if="counter > 0" t-attf-class="o-mail-discuss-sidebar-counter badge rounded-pill text-bg-primary ms-1 me-3">
             <t t-esc="counter"/>
