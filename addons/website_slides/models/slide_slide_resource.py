@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.urls import url_encode
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools.mimetypes import get_extension
 
 
 class SlideResource(models.Model):
@@ -48,3 +51,12 @@ class SlideResource(models.Model):
         for record in self:
             if record.resource_type != 'file' and record.data:
                 raise ValidationError(_("Resource %(resource_name)s is a link and should not contain a data file", resource_name=record.name))
+
+    def _get_download_url(self):
+        self.ensure_one()
+        extension_file_name = get_extension(self.file_name) if self.file_name else ''
+        file_name = self.name if self.name.endswith(extension_file_name) else self.name + extension_file_name
+        return f'/web/content/slide.slide.resource/{self.id}/data?' + url_encode({
+            'download': 'true',
+            'filename': file_name
+        })
