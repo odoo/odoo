@@ -23,24 +23,6 @@
                     <setting string="Kitchen Notes" help="Add internal notes on order lines for the kitchen" id="iface_orderline_notes" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
                         <field name="pos_iface_orderline_notes"/>
                     </setting>
-                    <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
-                        <field name="pos_iface_printbill"/>
-                    </setting>
-                    <setting help="Split total or order lines" id="iface_splitbill" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
-                        <field name="pos_iface_splitbill" string="Allow Bill Splitting"/>
-                    </setting>
-                    <setting string="Kitchen Printers" help="Print orders at the kitchen, at the bar, etc." id="is_order_printer" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
-                        <field name="pos_is_order_printer"/>
-                        <div class="content-group" attrs="{'invisible': [('pos_is_order_printer', '=', False)]}">
-                            <div class="mt16">
-                                <label string="Printers" for="pos_printer_ids" class="o_light_label"/>
-                                <field name="pos_printer_ids" widget="many2many_tags"/>
-                            </div>
-                            <div>
-                                <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
-                            </div>
-                        </div>
-                    </setting>
 <!-- QR Code Menu -->
                     <setting string="QR Code Menu" help="Allow customers to see the menu from their phone" 
                         id="pos_self_order_view_mode"
@@ -63,6 +45,24 @@
                         <field name="pos_self_order_phone_mode" 
                             attrs="{'readonly': [('pos_has_active_session', '=', True)]}"
                         />
+                    </setting>
+                    <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <field name="pos_iface_printbill"/>
+                    </setting>
+                    <setting help="Split total or order lines" id="iface_splitbill" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <field name="pos_iface_splitbill" string="Allow Bill Splitting"/>
+                    </setting>
+                    <setting string="Kitchen Printers" help="Print orders at the kitchen, at the bar, etc." id="is_order_printer" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <field name="pos_is_order_printer"/>
+                        <div class="content-group" attrs="{'invisible': [('pos_is_order_printer', '=', False)]}">
+                            <div class="mt16">
+                                <label string="Printers" for="pos_printer_ids" class="o_light_label"/>
+                                <field name="pos_printer_ids" widget="many2many_tags"/>
+                            </div>
+                            <div>
+                                <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
+                            </div>
+                        </div>
                     </setting>
                 </block>
             </block>
