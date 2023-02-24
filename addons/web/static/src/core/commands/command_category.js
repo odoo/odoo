@@ -8,5 +8,6 @@ commandCategoryRegistry
     .add("smart_action", {}, { sequence: 15 })
     .add("actions", {}, { sequence: 30 })
     .add("navbar", {}, { sequence: 40 })
+    .add("view_switcher", {}, { sequence: 50 })
     .add("default", {}, { sequence: 100 })
     .add("debug", {}, { sequence: 110 });

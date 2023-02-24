@@ -12,6 +12,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { Component, xml } from "@odoo/owl";
+import { commandService } from "@web/core/commands/command_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { ormService } from "@web/core/orm_service";
@@ -32,6 +33,7 @@ export function setupControlPanelServiceRegistry() {
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("orm", ormService);
     serviceRegistry.add("view", viewService);
+    serviceRegistry.add("command", commandService);
 }
 
 export function setupControlPanelFavoriteMenuRegistry() {
