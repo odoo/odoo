@@ -120,7 +120,7 @@ class ProjectCustomerPortal(CustomerPortal):
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-        if project_sudo.with_user(request.env.user)._check_project_sharing_access():
+        if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
             values = {'project_id': project_id}
             if task_id:
                 values['task_id'] = task_id
