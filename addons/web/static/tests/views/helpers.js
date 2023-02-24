@@ -1,25 +1,24 @@
 /** @odoo-module **/
 
-import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
-import { getDefaultConfig, View } from "@web/views/view";
+import { createDebugContext } from "@web/core/debug/debug_context";
+import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import {
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
-} from "../search/helpers";
-import { addLegacyMockEnvironment } from "../webclient/helpers";
+import { popoverService } from "@web/core/popover/popover_service";
+import { registry } from "@web/core/registry";
+import { getDefaultConfig, View } from "@web/views/view";
 import {
     fakeCompanyService,
     makeFakeLocalizationService,
     makeFakeRouterService,
-    makeFakeUserService,
+    makeFakeUserService
 } from "../helpers/mock_services";
-import { commandService } from "@web/core/commands/command_service";
-import { popoverService } from "@web/core/popover/popover_service";
-import { createDebugContext } from "@web/core/debug/debug_context";
+import {
+    setupControlPanelFavoriteMenuRegistry,
+    setupControlPanelServiceRegistry
+} from "../search/helpers";
+import { addLegacyMockEnvironment } from "../webclient/helpers";
 
 import { Component, useSubEnv, xml } from "@odoo/owl";
 
@@ -150,7 +149,6 @@ export function setupViewRegistries() {
     serviceRegistry.add("localization", makeFakeLocalizationService()), { force: true };
     serviceRegistry.add("popover", popoverService), { force: true };
     serviceRegistry.add("company", fakeCompanyService);
-    serviceRegistry.add("command", commandService);
 }
 
 /**
