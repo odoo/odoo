@@ -238,7 +238,7 @@
           <field name="tag_ids"/>
           <field name="personal_stage_type_ids" string="Stage"/>
           <filter name="active_true" string="Active" domain="[('active', '=', True)]"/>
-          <filter name="active_false" string="Archive" domain="[('active', '=', False)]"/>
+          <filter name="active_false" string="Archived" domain="[('active', '=', False)]"/>
           <filter invisible="1" string="Late Activities" name="activities_overdue"
                   domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                   help="Show all records which has next action date is before today"/>

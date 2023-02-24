@@ -71,10 +71,7 @@ PROJECT_TASK_WRITABLE_FIELDS = {
 }
 
 class ProjectTaskType(models.Model):
-    _name = 'project.task.type'
-    _description = 'Task Stage'
-    _order = 'sequence, id'
-    _inherit = ['project.task.type']
+    _inherit = 'project.task.type'
 
     def _get_default_project_ids(self):
         default_project_id = self.env.context.get('default_project_id')

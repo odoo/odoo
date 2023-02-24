@@ -14,7 +14,7 @@ class ProjectTaskType(models.Model):
 
     _name = "project.task.type"
     _description = "Task Stage"
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     name = fields.Char('Stage Name', translate=True, required=True)
     sequence = fields.Integer(default=1)
@@ -143,8 +143,7 @@ class Task(models.Model):
         help="The current user's personal task stage.")
     active = fields.Boolean(string='Active', default=True)
     color = fields.Integer(string='Color Index')
-    tag_ids = fields.Many2many('project.tags', string='Tags',
-        help="You can only see tags that are already present in your project. If you try creating a tag that is already existing in other projects, it won't generate any duplicates.")
+    tag_ids = fields.Many2many('project.tags', string='Tags')
     user_ids = fields.Many2many('res.users', string='Assignees', relation='project_task_user_rel', column1='task_id', column2='user_id',
                                 context={'active_test': False}, tracking=True)
     date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True,
