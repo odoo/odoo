@@ -31,7 +31,7 @@ class AccrualPlanLevel(models.Model):
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True)
     start_count = fields.Integer(
         "Start after",
-        help="The accrual starts after a defined period from the employee start date. This field defines the number of days, months or years after which accrual is used.", default="1")
+        help="The accrual starts after a defined period from the allocation start date. This field defines the number of days, months or years after which accrual is used.", default="1")
     start_type = fields.Selection(
         [('day', 'day(s)'),
          ('month', 'month(s)'),
