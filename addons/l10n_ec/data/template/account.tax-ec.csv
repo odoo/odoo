@@ -43,10 +43,22 @@ tax_vat_441,"VAT 0% (441, Exempt/Non-Object)",sale,percent,110,0,VAT EXEMPT,441,
 ,,,,,,,,,,,,tax,invoice,,ec_sale_vat_zero,,
 ,,,,,,,,,,,,base,refund,-441 (Reporte 104),,,
 ,,,,,,,,,,,,tax,refund,,ec_sale_vat_zero,,
-tax_vat_444,"VAT 12% (444, Reimbursement)",sale,percent,120,12,VAT 12%,444,454,tax_group_vat_12,,,base,invoice,+412 (Reporte 104),,"IVA 12% (444, Reembolsos)",IVA 12%
-,,,,,,,,,,,,tax,invoice,+422 (Reporte 104),ec_other_downpayments,,
+tax_vat_444,"VAT 12% (444, Reimbursement)",sale,percent,120,12,VAT 12%,444,454,tax_group_vat_12,,,base,invoice,+444 (Reporte 104),,"IVA 12% (444, Reembolsos)",IVA 12%
+,,,,,,,,,,,,tax,invoice,+454 (Reporte 104),ec_other_downpayments,,
 ,,,,,,,,,,,,base,refund,-444 (Reporte 104),,,
-,,,,,,,,,,,,tax,refund,-421 (Reporte 104),ec_other_downpayments,,
+,,,,,,,,,,,,tax,refund,-454 (Reporte 104),ec_other_downpayments,,
+tax_vat_444_zero_vat,"VAT 0% (444, Reimbursement)",sale,percent,130,0,VAT 0%,444,454,tax_group_vat0,,,base,invoice,+444 (Reporte 104),,"IVA 0% (444, Reembolsos)",IVA 0%
+,,,,,,,,,,,,tax,invoice,+454 (Reporte 104),ec_other_downpayments,,
+,,,,,,,,,,,,base,refund,-444 (Reporte 104),,,
+,,,,,,,,,,,,tax,refund,-454 (Reporte 104),ec_other_downpayments,,
+tax_vat_444_not_charged_vat,"VAT 0% Non-Subject (444, Reimbursement)",sale,percent,140,0,VAT 0%,444,454,tax_group_vat_not_charged,,,base,invoice,+444 (Reporte 104),,"No Objeto IVA 0% (444, Reembolsos)",IVA 0%
+,,,,,,,,,,,,tax,invoice,+454 (Reporte 104),ec_other_downpayments,,
+,,,,,,,,,,,,base,refund,-444 (Reporte 104),,,
+,,,,,,,,,,,,tax,refund,-454 (Reporte 104),ec_other_downpayments,,
+tax_vat_444_not_exempt_vat,"VAT 0% Exempt (444, Reimbursement)",sale,percent,150,0,VAT EXEMPT,444,454,tax_group_vat_exempt,,,base,invoice,+444 (Reporte 104),,"Exento IVA 0% (444, Reembolsos)",IVA EXENTO
+,,,,,,,,,,,,tax,invoice,+454 (Reporte 104),ec_other_downpayments,,
+,,,,,,,,,,,,base,refund,-444 (Reporte 104),,,
+,,,,,,,,,,,,tax,refund,-454 (Reporte 104),ec_other_downpayments,,
 tax_vat_510_sup_01,"VAT 12% (510, 01 VAT Credit)",purchase,percent,9,12,VAT 12%,510,520,tax_group_vat_12,,100,base,invoice,+510 (Reporte 104),,"IVA 12% (510, 01 Crédito IVA)",IVA 12%
 ,,,,,,,,,,,100,tax,invoice,+520 (Reporte 104),ec_purchase_vat,,
 ,,,,,,,,,,,100,base,refund,-510 (Reporte 104),,,
@@ -119,7 +131,7 @@ tax_vat_518_sup_02,"VAT 0% (518, 02 IR Cost)",purchase,percent,20,0,VAT 0%,518,,
 ,,,,,,,,,,,,tax,invoice,,ec_purchase_vat_zero,,
 ,,,,,,,,,,,,base,refund,-518 (Reporte 104),,,
 ,,,,,,,,,,,100,tax,refund,,ec_purchase_vat_zero,,
-tax_vat_541_sup_02,"VAT 0% (541, 02 IR Cost, No Object)",,percent,30,0,VAT 0%,541,,tax_group_vat_not_charged,,100,base,invoice,+541 (Reporte 104),,"No Objeto IVA 0% (541, 02 Costo IR)",IVA 0%
+tax_vat_541_sup_02,"VAT 0% (541, 02 IR Cost, No Object)",purchase,percent,30,0,VAT 0%,541,,tax_group_vat_not_charged,,100,base,invoice,+541 (Reporte 104),,"No Objeto IVA 0% (541, 02 Costo IR)",IVA 0%
 ,,,,,,,,,,,,tax,invoice,,ec_purchase_vat_zero,,
 ,,,,,,,,,,,100,base,refund,-541 (Reporte 104),,,
 ,,,,,,,,,,,100,tax,refund,,ec_purchase_vat_zero,,
@@ -132,6 +144,18 @@ tax_vat_542_sup_02,"Exento VAT 0% (542, 02 IR Cost)",purchase,percent,40,0,VAT E
 ,,,,,,,,,,,,base,refund,-542 (Reporte 104),,,
 ,,,,,,,,,,,,tax,refund,,ec_purchase_vat_zero,,
 tax_vat_545_sup_08,"VAT 12% (545, 08 Reimbursement)",purchase,percent,10,12,VAT 12%,545,555,tax_group_vat_12,,,base,invoice,+545 (Reporte 104),,"IVA 12% (545, 08 Reembolso)",IVA 12%
+,,,,,,,,,,,,tax,invoice,+555 (Reporte 104),ec_other_downpayments,,
+,,,,,,,,,,,,base,refund,-545 (Reporte 104),,,
+,,,,,,,,,,,,tax,refund,-555 (Reporte 104),ec_other_downpayments,,
+tax_vat_545_sup_08_vat0,"VAT 0% (545, 08 Reimbursement)",purchase,percent,20,0,VAT 0%,545,555,tax_group_vat0,,,base,invoice,+545 (Reporte 104),,"IVA 0% (545, 08 Reembolso)",IVA 0%
+,,,,,,,,,,,,tax,invoice,+555 (Reporte 104),ec_other_downpayments,,
+,,,,,,,,,,,,base,refund,-545 (Reporte 104),,,
+,,,,,,,,,,,,tax,refund,-555 (Reporte 104),ec_other_downpayments,,
+tax_vat_545_sup_08_vat_exempt,"VAT 0% Exempt (545, 08 Reimbursement)",purchase,percent,30,0,VAT EXEMPT,545,555,tax_group_vat_exempt,,,base,invoice,+545 (Reporte 104),,"Exento IVA 0% (545, 08 Reembolso)",IVA EXENTO
+,,,,,,,,,,,,tax,invoice,+555 (Reporte 104),ec_other_downpayments,,
+,,,,,,,,,,,,base,refund,-545 (Reporte 104),,,
+,,,,,,,,,,,,tax,refund,-555 (Reporte 104),ec_other_downpayments,,
+tax_vat_545_sup_08_vat_not_charged,"VAT 0% Non-Subject (545, 08 Reimbursement)",purchase,percent,40,0,VAT 0%,545,555,tax_group_vat_not_charged,,,base,invoice,+545 (Reporte 104),,"No Objeto IVA 0% (545, 08 Reembolso)",IVA 0%
 ,,,,,,,,,,,,tax,invoice,+555 (Reporte 104),ec_other_downpayments,,
 ,,,,,,,,,,,,base,refund,-545 (Reporte 104),,,
 ,,,,,,,,,,,,tax,refund,-555 (Reporte 104),ec_other_downpayments,,
