@@ -10,7 +10,7 @@ from odoo.http import root
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.addons.website_sale.controllers.delivery_main import WebsiteSaleDelivery as WebsiteSaleDeliveryController
+from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery as WebsiteSaleDeliveryController
 
 
 @tagged('post_install', '-at_install')

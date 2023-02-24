@@ -12,22 +12,6 @@ from odoo.exceptions import UserError
 class WebsiteSaleDelivery(WebsiteSale):
     _express_checkout_shipping_route = '/shop/express/shipping_address_change'
 
-    @http.route()
-    def shop_payment(self, **post):
-        order = request.website.sale_get_order()
-        carrier_id = post.get('carrier_id')
-        keep_carrier = post.get('keep_carrier', False)
-        if keep_carrier:
-            keep_carrier = bool(int(keep_carrier))
-        if carrier_id:
-            carrier_id = int(carrier_id)
-        if order:
-            order._check_carrier_quotation(force_carrier_id=carrier_id, keep_carrier=keep_carrier)
-            if carrier_id:
-                return request.redirect("/shop/payment")
-
-        return super(WebsiteSaleDelivery, self).shop_payment(**post)
-
     @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True)
     def update_eshop_carrier(self, **post):
         order = request.website.sale_get_order()
@@ -62,18 +46,6 @@ class WebsiteSaleDelivery(WebsiteSale):
             res['error_message'] = rate['error_message']
         return res
 
-    @http.route()
-    def cart(self, **post):
-        order = request.website.sale_get_order()
-        if order and order.carrier_id:
-            # Express checkout is based on the amout of the sale order. If there is already a
-            # delivery line, Express Checkout form will display and compute the price of the
-            # delivery two times (One already computed in the total amount of the SO and one added
-            # in the form while selecting the delivery carrier)
-            order._remove_delivery_line()
-
-        return super().cart(**post)
-
     @http.route(
         _express_checkout_shipping_route, type='json', auth='public', methods=['POST'],
         website=True, sitemap=False
@@ -103,9 +75,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             # Pricelist are recomputed every time the partner is changed. We don't want to recompute
             # the price with another pricelist at this state since the customer has already accepted
             # the amount and validated the payment.
-            order_sudo.env.remove_to_compute(
-                order_sudo._fields['pricelist_id'], order_sudo
-            )
+            order_sudo.env.remove_to_compute(order_sudo._fields['pricelist_id'], order_sudo)
         elif order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
             self._create_or_edit_partner(
                 partial_shipping_address,
@@ -123,15 +93,12 @@ class WebsiteSaleDelivery(WebsiteSale):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, partial_shipping_address
             )
-            if child_partner_id:
-                order_sudo.partner_shipping_id = child_partner_id
-            else:
-                order_sudo.partner_shipping_id = self._create_or_edit_partner(
+            order_sudo.partner_shipping_id = child_partner_id or self._create_or_edit_partner(
                     partial_shipping_address,
                     type='delivery',
                     parent_id=order_sudo.partner_id.id,
                     name=_('Anonymous express checkout partner for order %s', order_sudo.name),
-                )
+            )
 
         # Returns the list of develivery carrier available for the sale order.
         return sorted([{
@@ -219,46 +186,6 @@ class WebsiteSaleDelivery(WebsiteSale):
                 else:
                     rate['price'] = taxes['total_included']
         return rate
-
-    def order_lines_2_google_api(self, order_lines):
-        """ Transforms a list of order lines into a dict for google analytics """
-        order_lines_not_delivery = order_lines.filtered(lambda line: not line.is_delivery)
-        return super(WebsiteSaleDelivery, self).order_lines_2_google_api(order_lines_not_delivery)
-
-    def order_2_return_dict(self, order):
-        """ Returns the tracking_cart dict of the order for Google analytics """
-        ret = super(WebsiteSaleDelivery, self).order_2_return_dict(order)
-        delivery_line = order.order_line.filtered('is_delivery')
-        if delivery_line:
-            ret['shipping'] = delivery_line.price_unit
-        return ret
-
-    def _get_express_shop_payment_values(self, order, **kwargs):
-        values = super(WebsiteSaleDelivery, self)._get_express_shop_payment_values(order, **kwargs)
-        values['shipping_info_required'] = not order.only_services
-        values['shipping_address_update_route'] = self._express_checkout_shipping_route
-        return values
-
-    def _get_shop_payment_values(self, order, **kwargs):
-        values = super(WebsiteSaleDelivery, self)._get_shop_payment_values(order, **kwargs)
-        has_storable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
-
-        if not order._get_delivery_methods() and has_storable_products:
-            values['errors'].append(
-                (_('Sorry, we are unable to ship your order'),
-                 _('No shipping method is available for your current order and shipping address. '
-                   'Please contact us for more information.')))
-
-        if has_storable_products:
-            if order.carrier_id and not order.delivery_rating_success:
-                order._remove_delivery_line()
-
-            delivery_carriers = order._get_delivery_methods()
-            values['deliveries'] = delivery_carriers.sudo()
-
-        values['delivery_has_storable'] = has_storable_products
-        values['delivery_action_id'] = request.env.ref('delivery.action_delivery_carrier_form').id
-        return values
 
     def _update_website_sale_delivery_return(self, order, **post):
         Monetary = request.env['ir.qweb.field.monetary']
