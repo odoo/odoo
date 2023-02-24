@@ -353,7 +353,7 @@ class MrpWorkcenterProductivityLoss(models.Model):
     _description = "Workcenter Productivity Losses"
     _order = "sequence, id"
 
-    name = fields.Char('Blocking Reason', required=True)
+    name = fields.Char('Blocking Reason', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1)
     manual = fields.Boolean('Is a Blocking Reason', default=True)
     loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=([('loss_type', 'in', ['quality', 'availability'])]), string='Category')
