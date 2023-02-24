@@ -2405,9 +2405,11 @@ class Task(models.Model):
             'target': 'main'
         }
 
+    @api.model
     def get_conversion_view_id(self):
         return self.env.ref('project.project_task_todo_conversion_form').id
 
+    @api.model
     def current_user_has_project_access(self):
         return self.env.user.has_group('project.group_project_user')
 

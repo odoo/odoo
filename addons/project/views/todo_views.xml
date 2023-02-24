@@ -17,7 +17,6 @@
                         <field name="project_id"
                                domain="[('company_id', 'in', context.get('allowed_company_ids'))]"
                                required="1"
-                               placeholder="Select an existing project"
                                default_focus="1"/>
                         <field name="user_ids"
                                class="o_task_user_field"
@@ -26,8 +25,7 @@
                                domain="[('share', '=', False), ('active', '=', True)]"/>
                         <field name="tag_ids" widget="many2many_tags"
                                options="{'color_field': 'color', 'no_create_edit': True}"
-                               context="{'project_id': project_id}"
-                               placeholder="Choose tags from the selected project"/>
+                               context="{'project_id': project_id}"/>
                     </group>
                 </sheet>
                 <footer>

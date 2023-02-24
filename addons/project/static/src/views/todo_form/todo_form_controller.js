@@ -5,7 +5,7 @@ import { TodoFormController } from "@note/views/project_task_form/todo_form_cont
 const { onWillStart } = owl;
 import { omit } from "@web/core/utils/objects";
 
-/** TodoFormController is overrided to add the action to convert a to-do to a (non-private) task */
+/** TodoFormController is overridden to add the action to convert a to-do to a (non-private) task */
 
 export class TodoFormControllerWithConversion extends TodoFormController {
     setup() {
@@ -15,12 +15,12 @@ export class TodoFormControllerWithConversion extends TodoFormController {
             this.conversion_view_id = await this.model.orm.call(
                 'project.task',
                 'get_conversion_view_id',
-                [[]]
+                [],
             );
             this.has_project_access = await this.model.orm.call(
                 'project.task',
                 'current_user_has_project_access',
-                [[]]
+                [],
             );
         });
     }
@@ -41,7 +41,7 @@ export class TodoFormControllerWithConversion extends TodoFormController {
                 callback: () => {
                     this.model.actionService.doAction({
                         type: 'ir.actions.act_window',
-                        name: _lt('Convert to task'),
+                        name: _lt('Convert to Task'),
                         target: 'new',
                         res_model: 'project.task',
                         res_id: this.model.root.data.id,
