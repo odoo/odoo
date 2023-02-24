@@ -12,6 +12,7 @@ import { ErrorPopup } from "./Popups/ErrorPopup";
 import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfiguratorPopup";
 import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 import { markRaw, reactive } from "@odoo/owl";
+import { escape }  from "@web/core/utils/strings";
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -2578,12 +2579,13 @@ export class Payment extends PosModel {
         };
     }
     //exports as JSON for receipt printing
-    export_for_printing() {
+    export_for_printing(){
+        const ticket = escape(this.ticket).replace(/\n/g, "<br />"); // formatting
         return {
             cid: this.cid,
             amount: this.get_amount(),
             name: this.name,
-            ticket: Markup(this.ticket),
+            ticket: Markup(ticket),
         };
     }
     // If payment status is a non-empty string, then it is an electronic payment.
