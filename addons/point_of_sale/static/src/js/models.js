@@ -10,6 +10,7 @@ var time = require('web.time');
 var utils = require('web.utils');
 var { Gui } = require('point_of_sale.Gui');
 const { batched, uuidv4 } = require("point_of_sale.utils");
+const { escape } = require("@web/core/utils/strings");
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -2233,11 +2234,12 @@ class Payment extends PosModel {
     }
     //exports as JSON for receipt printing
     export_for_printing(){
+        const ticket = escape(this.ticket).replace(/\n/g, "<br />"); // formatting
         return {
             cid: this.cid,
             amount: this.get_amount(),
             name: this.name,
-            ticket: Markup(this.ticket),
+            ticket: Markup(ticket),
         };
     }
     // If payment status is a non-empty string, then it is an electronic payment.
