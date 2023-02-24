@@ -788,6 +788,8 @@ class AccountMoveLine(models.Model):
                 audit_str += separator if audit_str else ''
                 audit_str += tag_name + ': ' + formatLang(self.env, tag_amount, currency_obj=currency)
 
+            record.tax_audit = audit_str
+
     @api.depends('product_id')
     def _compute_product_uom_id(self):
         for line in self:

@@ -19,6 +19,7 @@ options.registry.TableOfContent = options.Class.extend({
         const config = {attributes: false, childList: true, subtree: true, characterData: true};
         this.observer = new MutationObserver(() => this._generateNav());
         this.observer.observe(targetNode, config);
+        this.$target.on('content_changed', () => this._generateNav());
         return this._super(...arguments);
     },
     /**
@@ -78,9 +79,10 @@ options.registry.TableOfContent = options.Class.extend({
      */
     _generateNav: function (ev) {
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
-        const $headings = this.$target.find(this.targetedElements);
-        const areHeadingsEqual = this.oldHeadingsEls.length === $headings.length
-            && this.oldHeadingsEls.every((el, i) => el.isEqualNode($headings[i]));
+        const headingsEls = this.$target.find(this.targetedElements).toArray()
+            .filter(el => !el.closest('.o_snippet_desktop_invisible'));
+        const areHeadingsEqual = this.oldHeadingsEls.length === headingsEls.length
+            && this.oldHeadingsEls.every((el, i) => el.isEqualNode(headingsEls[i]));
         if (areHeadingsEqual) {
             // If the content of the navbar before the change of the DOM is
             // equal to the content of the navbar after the change of the DOM,
@@ -96,7 +98,7 @@ options.registry.TableOfContent = options.Class.extend({
         this._disposeScrollSpy();
         const $nav = this.$target.find('.s_table_of_content_navbar');
         $nav.empty();
-        _.each($headings, el => {
+        _.each(headingsEls, el => {
             const $el = $(el);
             const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
             $('<a>').attr('href', "#" + id)
@@ -108,7 +110,7 @@ options.registry.TableOfContent = options.Class.extend({
         });
         const exception = (tocEl) => !tocEl.querySelector('.s_table_of_content_navbar a');
         this._activateScrollSpy(exception);
-        this.oldHeadingsEls = [...($headings.clone())];
+        this.oldHeadingsEls = [...headingsEls.map(el => el.cloneNode(true))];
     },
 });
 

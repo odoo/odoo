@@ -116,13 +116,16 @@ class PaymentTransaction(models.Model):
         confirmed_orders = self._check_amount_and_confirm_order()
         confirmed_orders._send_order_confirmation_mail()
 
-        # invoice the sale orders if needed and send it
-        if str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')):
+        auto_invoice = str2bool(
+            self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
+        if auto_invoice:
             # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
             # even if only a partial payment was made.
             self._invoice_sale_orders()
+        super()._reconcile_after_done()
+        if auto_invoice:
+            # Must be called after the super() call to make sure the invoice are correctly posted.
             self._send_invoice()
-        return super()._reconcile_after_done()
 
     def _send_invoice(self):
         template_id = self.env['ir.config_parameter'].sudo().get_param(

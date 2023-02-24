@@ -78,6 +78,8 @@ class StockPicking(models.Model):
         pickings = super().create(vals_list)
         for picking, vals in zip(pickings, vals_list):
             if vals.get('batch_id'):
+                if not picking.batch_id.picking_type_id:
+                    picking.batch_id.picking_type_id = picking.picking_type_id[0]
                 picking.batch_id._sanity_check()
         return pickings
 

@@ -112,10 +112,11 @@ class GoogleCalendarService():
             's': 'calendar',
             'f': from_url
         }
+        base_url = self.google_service._context.get('base_url') or self.google_service.get_base_url()
         return self.google_service._get_authorize_uri(
             'calendar',
             self._get_calendar_scope(),
-            self.google_service.get_base_url() + '/google_account/authentication',
+            base_url + '/google_account/authentication',
             state=json.dumps(state),
             approval_prompt='force',
             access_type='offline'

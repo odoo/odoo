@@ -2553,6 +2553,15 @@ options.registry.DeviceVisibility = options.Class.extend({
         }
         return await this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (this.$target[0].classList.contains('s_table_of_content_main')) {
+            return false;
+        }
+        return this._super(...arguments);
+    }
 });
 
 /**
