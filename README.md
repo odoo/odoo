@@ -6,7 +6,7 @@
 Odoo
 ----
 
-Odoo is a suite of web based open source business apps.
+Odoo, web tabanlı açık kaynaklı bir iş uygulamaları paketidir.
 
 The main Odoo Apps include an <a href="https://www.odoo.com/page/crm">Open Source CRM</a>,
 <a href="https://www.odoo.com/app/website">Website Builder</a>,
