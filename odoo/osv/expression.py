@@ -462,12 +462,33 @@ def compile_like_regex(pattern, ignorecase=False):
         '%': matches any number of characters
         '_': matches exactly one character
 
+    The special characters can be escaped by prefixing them with a backslash.
+    For this reason, backslashes need to be escaped, too.
+
     :param str pattern: the search string using postgres 'LIKE' syntax
     :param ignorecase: whether the regex should be case insensitive
     """
     if not pattern:
         return re.compile(r"")
-    pattern = re.escape(pattern).replace("%", ".*").replace("_", ".")
+
+    def translate(pattern):
+        res = ""
+        escape_next = False
+        for char in pattern:
+            if escape_next:
+                escape_next = False
+                res += re.escape(char)
+            elif char == '\\':
+                escape_next = True
+            elif char == '%':
+                res += ".*"
+            elif char == '_':
+                res += "."
+            else:
+                res += re.escape(char)
+        return res
+
+    pattern = translate(pattern)
     flags = re.IGNORECASE if ignorecase else 0
     return re.compile(pattern, flags=flags)
 

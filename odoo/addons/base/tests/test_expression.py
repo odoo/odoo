@@ -749,6 +749,17 @@ class TestExpression(SavepointCaseWithUserDemo):
         countries = self._search(Country, [('name', '=ilike', 'z%')])
         self.assertTrue(len(countries) == 2, "Must match only countries with names starting with Z (currently 2)")
 
+        # check that we can escape wildcards
+        p1 = Partner.create({'name': '100% Machinery Inc.'})
+        p2 = Partner.create({'name': '_ underscored _'})
+        p3 = Partner.create({'name': r'/\ Slashed Rooftop Inc.'})
+        partners = self._search(Partner, [('name', 'like', r'\%')])
+        self.assertEqual(partners, p1, "Must match only partners with '%' in their name")
+        partners = self._search(Partner, [('name', 'like', r'\_')])
+        self.assertEqual(partners, p2, "Must match only partners with '_' in their name")
+        partners = self._search(Partner, [('name', 'like', r'\\')])
+        self.assertEqual(partners, p3, "Must match only partners with a backslash in their name")
+
     def test_filtered_limit(self):
         Partner = self.env['res.partner']
         res = self._search(Partner, [('parent_id', '!=', False)], limit=5)
