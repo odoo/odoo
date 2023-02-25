@@ -836,7 +836,7 @@ msgstr "<strong>만료 :</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>회계 위치 참고 :</strong>"
+msgstr "<strong>재정상태 참고사항 :</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1129,7 +1129,7 @@ msgid ""
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
 "예를 들어 서비스 상품을 시간제로 판매하는 경우, Odoo에서는 주문한 전체 시간을\n"
-" 사용한 이후에 추가 시간을 판매하도록 권장하고 있습니다."
+" 소진한 이후에 추가 시간을 판매하도록 추천하고 있습니다."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1932,7 +1932,7 @@ msgstr "FedEx 연결기"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "회계 포지션"
+msgstr "재정 상태"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
@@ -1940,7 +1940,8 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
-msgstr "회계 위치는 특정 고객 또는 판매 주문 /송장에 대한 세금 및 계정을 조정하는 데 사용됩니다. 기본값은 고객이 제공합니다."
+msgstr ""
+"재정 상태는 특정한 고객이나 판매발주서/청구서에 대한 세금 과 계정을 조정하는 데 사용됩니다. 고객이 설정한 값을 기본값으로 합니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -4073,14 +4074,14 @@ msgstr "이 견적을 거절한 이유를 알려 주시면 서비스 개선에 �
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "이용 약관 형식"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "이용 약관: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4090,7 +4091,7 @@ msgstr "이용 약관"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions:"
-msgstr ""
+msgstr "이용약관"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -4684,7 +4685,7 @@ msgstr "회사명을 입력하면 신규 자료를 생성하거나 기존 내용
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "You can invoice them before they are delivered."
-msgstr ""
+msgstr "배송 전에 청구서를 발행할 수 있습니다."
 
 #. module: sale
 #. odoo-python

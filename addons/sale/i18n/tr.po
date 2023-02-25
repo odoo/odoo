@@ -99,8 +99,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
-"'Order - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and 'Teklif - %s' % (object.name)) or "
+"'Sipariş - %s' % (object.name)"
 
 #. module: sale
 #. odoo-javascript
@@ -4966,7 +4966,7 @@ msgid ""
 "object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"(ctx.get('proforma') and 'Proforma' or 'Teklif') or 'Sipariş' }} (Ref {{ "
 "object.name or 'n/a' }})"
 
 #. module: sale

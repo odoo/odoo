@@ -18,8 +18,8 @@
 # Jiří Podhorecký, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Petr Hemza, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Petr Hemza, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3180,7 +3180,7 @@ msgstr "Bankovní pozastavený účet"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank Transaction"
-msgstr ""
+msgstr "Bankovní transakce"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3393,7 +3393,7 @@ msgstr "Přijaté faktury na úhradu"
 #: model:ir.model.fields,field_description:account.field_account_report_column__blank_if_zero
 #: model:ir.model.fields,field_description:account.field_account_report_expression__blank_if_zero
 msgid "Blank if Zero"
-msgstr ""
+msgstr "Prázdná pokud nula"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
@@ -3962,7 +3962,7 @@ msgstr "Kontroly"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__children_ids
 msgid "Child Lines"
-msgstr ""
+msgstr "Podřízené řádky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
@@ -5298,7 +5298,7 @@ msgstr "Výchozí Incoterm vaší společnosti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__default_opening_date_filter
 msgid "Default Opening"
-msgstr ""
+msgstr "Výchozí otevření"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
@@ -12286,7 +12286,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Select specific invoice and delivery addresses"
-msgstr ""
+msgstr "Vyberte konkrétní fakturu a dodací adresy"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15200,7 +15200,7 @@ msgstr ""
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #, python-format
 msgid "Total Rounded"
-msgstr ""
+msgstr "Celkem zaokrouhleno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -16049,6 +16049,9 @@ msgid ""
 "already posted. If you are absolutely sure you want to modify the opening "
 "balance of your accounts, reset the move to draft."
 msgstr ""
+"Nemůžete importovat \"openning_balance\", pokud je úvodní přesun (%s) již "
+"zaúčtován. Pokud jste si naprosto jisti, že chcete upravit počáteční "
+"zůstatek svých účtů, resetujte přesun na koncept."
 
 #. module: account
 #. odoo-python
