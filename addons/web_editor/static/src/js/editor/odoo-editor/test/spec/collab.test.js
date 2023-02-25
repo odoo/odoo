@@ -1,4 +1,4 @@
-import { OdooEditor } from '../../src/OdooEditor.js';
+import { OdooEditor, parseHTML, setSelection } from '../../src/OdooEditor.js';
 import {
     insertCharsAt,
     parseMultipleTextualSelection,
@@ -6,6 +6,7 @@ import {
     setTestSelection,
     targetDeepest,
     undo,
+    unformat,
 } from '../utils.js';
 
 const overridenDomClass = [
@@ -583,6 +584,85 @@ describe('Collaboration', () => {
                     redo(editor);
                 },
                 contentAfter: '<div contenteditable="true">[c1}{c1]<br></div>',
+            });
+        });
+    });
+    describe('data-oe-protected', () => {
+        it('should not share protected mutations and share unprotected ones', () => {
+            testMultiEditor({
+                clientIds: ['c1', 'c2'],
+                contentBefore: '<p>[c1}{c1][c2}{c2]</p>',
+                afterCreate: clientInfos => {
+                    clientInfos.c1.editor.editable.prepend(...parseHTML(unformat(`
+                        <div data-oe-protected="true">
+                            <p id="true"><br></p>
+                            <div data-oe-protected="false">
+                                <p id="false"><br></p>
+                            </div>
+                        </div>
+                    `)).children);
+                    clientInfos.c1.editor.historyStep();
+                    const pTrue = clientInfos.c1.editor.editable.querySelector('#true');
+                    setSelection(pTrue, 0);
+                    clientInfos.c1.editor.execCommand('insert', 'a');
+                    const pFalse = clientInfos.c1.editor.editable.querySelector('#false');
+                    setSelection(pFalse, 0);
+                    clientInfos.c1.editor.execCommand('insert', 'a');
+                    clientInfos.c2.editor.onExternalHistorySteps(clientInfos.c1.editor._historySteps);
+                    testSameHistory(clientInfos);
+                },
+                afterCursorInserted:  clientInfos => {
+                    chai.expect(clientInfos.c1.editable.innerHTML).to.equal(unformat(`
+                        <div data-oe-protected="true">
+                            <p id="true">a<br></p>
+                            <div data-oe-protected="false">
+                                <p id="false">a[c1}{c1]<br></p>
+                            </div>
+                        </div>
+                        <p>[c2}{c2]</p>
+                    `));
+                    chai.expect(clientInfos.c2.editable.innerHTML).to.equal(unformat(`
+                        <div data-oe-protected="true">
+                            <p id="true"><br></p>
+                            <div data-oe-protected="false">
+                                <p id="false">a[c1}{c1]<br></p>
+                            </div>
+                        </div>
+                        <p>[c2}{c2]</p>
+                    `));
+                },
+            });
+        });
+    });
+    describe('data-oe-transient-content', () => {
+        it('should send an empty transient-content element', () => {
+            testMultiEditor({
+                clientIds: ['c1', 'c2'],
+                contentBefore: '<p>[c1}{c1][c2}{c2]</p>',
+                afterCreate: clientInfos => {
+                    clientInfos.c1.editor.editable.prepend(...parseHTML(unformat(`
+                        <div data-oe-transient-content="true">
+                            <p>secret</p>
+                        </div>
+                    `)).children);
+                    clientInfos.c1.editor.historyStep();
+                    clientInfos.c2.editor.onExternalHistorySteps(
+                        clientInfos.c1.editor._historySteps
+                    );
+                    testSameHistory(clientInfos);
+                },
+                afterCursorInserted:  clientInfos => {
+                    chai.expect(clientInfos.c1.editable.innerHTML).to.equal(unformat(`
+                        <div data-oe-transient-content="true">
+                            <p>secret</p>
+                        </div>
+                        <p>[c1}{c1][c2}{c2]</p>
+                    `));
+                    chai.expect(clientInfos.c2.editable.innerHTML).to.equal(unformat(`
+                        <div data-oe-transient-content="true"></div>
+                        <p>[c1}{c1][c2}{c2]</p>
+                    `));
+                },
             });
         });
     });
