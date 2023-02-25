@@ -53,6 +53,17 @@ class IrActionsReport(models.Model):
                     'mimetype': 'application/xml',
                 })
 
+    def _should_embed_facturx(self, invoice):
+        edi_doc_codes = invoice.edi_document_ids.edi_format_id.mapped("code")
+        return (
+            invoice.is_sale_document()
+            and invoice.state == "posted"
+            and "facturx_1_0_05" not in edi_doc_codes
+            and self.env.ref(
+                "account_edi_ubl_cii.edi_facturx_1_0_05", raise_if_not_found=False
+            )
+        )
+
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # EXTENDS base
         # Add the pdf report in the XML as base64 string.
@@ -68,12 +79,8 @@ class IrActionsReport(models.Model):
             # If Factur-X isn't already generated, generate and embed it inside the PDF
             if len(res_ids) == 1:
                 invoice = self.env['account.move'].browse(res_ids)
-                edi_doc_codes = invoice.edi_document_ids.edi_format_id.mapped('code')
-                # If Factur-X hasn't been generated, generate and embed it anyway
-                if invoice.is_sale_document() \
-                        and invoice.state == 'posted' \
-                        and 'facturx_1_0_05' not in edi_doc_codes \
-                        and self.env.ref('account_edi_ubl_cii.edi_facturx_1_0_05', raise_if_not_found=False):
+                # If Factur-X hasn't been generated, generate and embed it if needed
+                if self._should_embed_facturx(invoice):
                     # Add the attachments to the pdf file
                     pdf_stream = collected_streams[invoice.id]['stream']
 
