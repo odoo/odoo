@@ -1338,6 +1338,24 @@ export function isMediaElement(node) {
             (node.classList.contains('o_image') || node.classList.contains('media_iframe_video')))
     );
 }
+/**
+ * A "protected" node will have its mutations filtered and not be registered
+ * in an history step. Some editor features like selection handling, command
+ * hint, toolbar, tooltip, etc. are also disabled. Protected roots have their
+ * data-oe-protected attribute set to either "" or "true". If the closest parent
+ * with a data-oe-protected attribute has the value "false", it is not
+ * protected. Unknown values are ignored.
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isProtected(node) {
+    const closestProtectedElement = closestElement(node, '[data-oe-protected]');
+    if (closestProtectedElement) {
+        return ["", "true"].includes(closestProtectedElement.dataset.oeProtected);
+    }
+    return false;
+}
 export function isVoidElement(node) {
     return isMediaElement(node) || node.tagName === 'HR';
 }
