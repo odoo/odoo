@@ -38,8 +38,9 @@ class SaleOrder(models.Model):
             return True
         else:
             self = self.with_company(self.company_id)
+            keep_carrier = self.env.context.get('keep_carrier', False)
             # attempt to use partner's preferred carrier
-            if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id:
+            if not force_carrier_id and self.partner_shipping_id.property_delivery_carrier_id and not keep_carrier:
                 force_carrier_id = self.partner_shipping_id.property_delivery_carrier_id.id
 
             carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id

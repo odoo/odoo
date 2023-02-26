@@ -7,6 +7,7 @@
 # Martin Trigaux, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
 # Arash Tarighati <arash.tgi@gmail.com>, 2022
+# Hanna Kheradroosta, 2022
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
 # 
 msgid ""
@@ -427,7 +428,7 @@ msgstr "تایید"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr "تائید گذرواژه"
+msgstr "تائید رمز"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
@@ -533,7 +534,7 @@ msgstr "گذرواژه مطابقت ندارد؛ دوباره تلاش کنید.
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
 msgid "Reminder for unregistered users"
-msgstr ""
+msgstr "یادآوری برای کاربران ثبت نام نشده"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -550,7 +551,7 @@ msgstr "بازنشانی گذرواژه: نام کاربری یا ایمیل ن�
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr ""
+msgstr "ارسال دستورالعمل بازنشانی گذرواژه"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -614,19 +615,19 @@ msgstr "توکن ثبت نام '%s' معتبر نیست"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "ثبت نام: کاربر قالب نامعتبر"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr ""
+msgstr "ثبت نام: هیچ لاگینی برای کاربر جدید داده نشده است"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "ثبت نام: هیچ نام یا شریکی برای کاربر جدید داده نشده است"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -657,6 +658,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"برای ارسال دعوت‌نامه‌ها در حالت B2B، یک مخاطب را باز کنید یا چندین مورد را "
+"در نمای فهرست انتخاب کنید و روی گزینه \"مدیریت دسترسی پورتال\" در منوی کشویی"
+" *اقدام* کلیک کنید."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -668,18 +672,18 @@ msgstr "کاربران"
 #: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 #: model:ir.cron,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 msgid "Users: Notify About Unregistered Users"
-msgstr ""
+msgstr "کاربران: در مورد کاربران ثبت نام نشده اطلاع رسانی کنید"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "به {{ object.company_id.name }} خوش آمدید!"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr ""
+msgstr "شما نمی توانید این اقدام را روی یک کاربر بایگانی شده انجام دهید."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -690,7 +694,7 @@ msgstr "ایمیل شما"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "نام شما"
+msgstr "نام"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -703,3 +707,5 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
+"${object.create_uid.name} از ${object.company_id.name} شما را دعوت می کند تا"
+" به اودو متصل شوید"

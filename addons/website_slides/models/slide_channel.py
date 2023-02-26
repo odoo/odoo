@@ -6,6 +6,7 @@ import uuid
 from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
+import ast
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
@@ -153,8 +154,8 @@ class Channel(models.Model):
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True, tracking=100)
-    description = fields.Html('Description', translate=True, help="The description that is displayed on top of the course page, just below the title")
-    description_short = fields.Html('Short Description', translate=True, help="The description that is displayed on the course card")
+    description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on top of the course page, just below the title")
+    description_short = fields.Html('Short Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('training', 'Training'), ('documentation', 'Documentation')],
@@ -688,7 +689,7 @@ class Channel(models.Model):
     def action_view_ratings(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
         action['name'] = _('Rating of %s') % (self.name)
-        action['domain'] = [('res_id', 'in', self.ids)]
+        action['domain'] = expression.AND([ast.literal_eval(action.get('domain', '[]')), [('res_id', 'in', self.ids)]])
         return action
 
     def action_request_access(self):

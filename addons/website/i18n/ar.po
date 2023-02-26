@@ -7,8 +7,8 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2021
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2021
 # Amjad Qassas <q_amjad@msn.com>, 2021
-# Martin Trigaux, 2021
 # Rachid Al Assir <rachidalassir@gmail.com>, 2021
+# Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
@@ -639,14 +639,8 @@ msgstr "<b>اسحب</b> هذا الزر لتغيير حجم العمود. "
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
-"<br/><br/>\n"
-"                    مثال على قاعدة:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1442,6 +1436,16 @@ msgid "A Chart Title"
 msgstr "عنوان المخطط البياني "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr ""
+"حدث خطأ ما في خرائط Google. تأكد من قراءة مفتاح التهيئة المنبثق بتأنٍ. "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
 msgstr "عنوان فرعي للقسم"
@@ -1799,8 +1803,11 @@ msgid "After"
 msgstr "بعد"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Alert"
 msgstr "تنبيه"
 
@@ -2080,7 +2087,7 @@ msgstr "Arch Blob"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
-msgstr "اسم ملف البناء "
+msgstr "اسم ملف Arch "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__arch_fs
@@ -2230,8 +2237,11 @@ msgid "Background Shape"
 msgstr "شكل الخلفية "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Badge"
 msgstr "الشارة"
 
@@ -2325,6 +2335,13 @@ msgstr "سترات "
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Block"
 msgstr "كتلة برمجية إنشائية "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Blockquote"
+msgstr "Blockquote"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -2584,8 +2601,11 @@ msgid "Cannot load google map."
 msgstr "تعذر تحميل خريطة Google. "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
+#, python-format
 msgid "Card"
 msgstr "البطاقة"
 
@@ -2695,7 +2715,10 @@ msgstr ""
 "الألوان، سوف يتم إعادة تعيين كافة تخصيصات الألوان التي قمت بها سابقاً. "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#, python-format
 msgid "Chart"
 msgstr "مخطط بياني "
 
@@ -3644,7 +3667,7 @@ msgstr "الأقسام"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:0
+#: code:addons/website/static/src/js/menu/content.js:0
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #, python-format
 msgid "Dependencies"
@@ -4211,6 +4234,14 @@ msgstr "فعّل خاصية مصمم الاستمارات لهذا النموذ�
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr ""
+"قم بتمكين الواجهات البرمجية الصحيحة لخرائط Google في حساب Google الخاص بك "
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Enter an API Key"
@@ -4641,7 +4672,7 @@ msgstr "انعكاس عمودي "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Float"
-msgstr "عائم "
+msgstr "فاصلة عشرية "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -4974,6 +5005,23 @@ msgstr "مفتاح الواجهة البرمجية للتطبيق لخرائط G
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
 msgstr "أداة بحث Google "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+"تخلص Google من الواجهات البرمجية لكل من \"Universal Analytics\" و \"تسجيل "
+"دخول Google\". هذا يعني أن الحسابات والمفاتيح المنشأة قبل 2020 فقط هي التي "
+"سيكون من الممكن دمج لوحة بيانات التحليلات الخاصة بها في أودو (أو أي موقع "
+"إلكتروني آخر). سيكون ذلك ممكناً فقط حتى منتصف عام 2023، وبعد ذلك، لن تعمل "
+"تلك الخوادم على الإطلاق بعد الآن. "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -5636,6 +5684,76 @@ msgstr "نوع المدخلات "
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Inputs"
 msgstr "المدخلات"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a badge snippet."
+msgstr "إدراج قصاصة شارة. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a blockquote snippet."
+msgstr "إدراج قصاصة \"blockquote\". "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a card snippet."
+msgstr "إدراج قصاصة بطاقة. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a chart snippet."
+msgstr "إدراج قصاصة المخطط البياني. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a progress bar snippet."
+msgstr "إدراج قصاصة شريط التقدم. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a rating snippet."
+msgstr "إدراج قصاصة التقييم. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a share snippet."
+msgstr "إدراج قصاصة المشاركة. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert a text Highlight snippet."
+msgstr "إدراج قصاصة تحديد النص. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert an alert snippet."
+msgstr "إدراج قصاصة تنبيه. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Insert an horizontal separator sippet."
+msgstr "إدراج قصاصة فاصل أفقي. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -6428,6 +6546,31 @@ msgid "Main actions"
 msgstr "الإجراءات الرئيسية "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr "تأكد من أن الفوترة مفعّلة "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+"انتظر قليلاً إذا استمرت الأخطاء بالظهور: أحياناً، يسمح تمكين الواجهة "
+"البرمجية باستخدامه مباشرة ولكن يستمر Google بتشغيل الأخطاء لفترة  "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr "تأكد من أن إعداداتك مهيأة بشكل صحيح: "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr "إدارة الصفحات"
@@ -6446,6 +6589,20 @@ msgstr "إدارة صفحات موقعك الإلكتروني "
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
 msgstr "إدارة هذه الصفحة"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr "الواجهة البرمجية للخرائط على JavaScript "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
+msgstr "الواجهة البرمجية للخرائط الثابتة "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -6594,6 +6751,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Middle"
 msgstr "الوسط"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Min-Height"
+msgstr "الارتفاع الأدنى "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -6887,6 +7051,17 @@ msgstr "الشبكات "
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
 msgstr "جديد"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
+"تستخدم حسابات تحليلات Google الجديدة والمفاتيح الآن تحليلات Google 4، والذي "
+"لا يمكن دمجه/تضمينه في المواقع الإلكترونية الخارجية في الوقت الراهن. "
 
 #. module: website
 #. openerp-web
@@ -7614,6 +7789,13 @@ msgid "Placeholder"
 msgstr "عنصر نائب "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr "الواجهة البرمجية للأماكن "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Plain"
 msgstr "سادة "
@@ -7790,6 +7972,13 @@ msgid "Profile"
 msgstr "الملف الشخصي"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Progress Bar"
+msgstr "شريط التقدم "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Progress Bar Color"
 msgstr "لون شريط التقدم "
@@ -7920,6 +8109,13 @@ msgstr "رادار "
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Radio Buttons"
 msgstr "أزرار اختيار"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Rating"
+msgstr "التقييم"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -8526,6 +8722,13 @@ msgid "Separated link"
 msgstr "رابط منفصل"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#, python-format
+msgid "Separator"
+msgstr "الفاصل"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__sequence
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__sequence
 #: model:ir.model.fields,field_description:website.field_website__sequence
@@ -8535,6 +8738,13 @@ msgstr "رابط منفصل"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "سلسلة "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Serve font from Google servers"
+msgstr "تقديم الخط من خوادم Google "
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -8591,8 +8801,11 @@ msgid "Shake"
 msgstr "اهتزاز "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_share
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
+#, python-format
 msgid "Share"
 msgstr "مشاركة"
 
@@ -9228,7 +9441,10 @@ msgid "Text Color"
 msgstr "لون النص "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+#, python-format
 msgid "Text Highlight"
 msgstr "تمييز النص "
 
@@ -9488,6 +9704,13 @@ msgid "There is no data currently available."
 msgstr "لا توجد بيانات متاحة حاليًا."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "There is no field available for this option."
+msgstr "لا يوجد حقل متاح لهذا الخيار "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "There is no website available for this company. You could create a new one."
@@ -9574,6 +9797,13 @@ msgstr ""
 "                                                                         مفيد عندما تقوم بإعادة تشغيل عرض به خلل. "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "This font is hosted and served to your visitors by Google servers"
+msgstr "هذا الخط مستضاف ويتم تقديمه إلى زائريك بواسطة خوادم Google "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "This is a \""
@@ -9639,6 +9869,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
 msgstr "تم تعديل بناء هذا العرض. "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+"يجب أن تتفقد تلك الحسابات لوحات البيانات التحليلية الخاصة بها، مباشرة على "
+"منصة Google. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -10599,6 +10840,16 @@ msgstr "زائري الويب "
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #: model:ir.actions.act_url,name:website.action_website
 #: model:ir.model,name:website.model_website
@@ -10741,7 +10992,7 @@ msgstr "عامل تصفية قصاصات الموقع الإلكتروني "
 #. module: website
 #: model:ir.model,name:website.model_theme_website_menu
 msgid "Website Theme Menu"
-msgstr "قاءمة سمات الموقع الإلكتروني "
+msgstr "قائمة سمات الموقع الإلكتروني "
 
 #. module: website
 #: model:ir.model,name:website.model_theme_website_page
@@ -11035,6 +11286,13 @@ msgstr "لا يمكنك إزالة حقل مطلوب من قِبَل النمو�
 #, python-format
 msgid "You can't remove the submit button of the form"
 msgstr "لا يمكنك إزالة زر الإرسال من الاستمارة "
+
+#. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
 
 #. module: website
 #: code:addons/website/controllers/backend.py:0
@@ -11599,6 +11857,14 @@ msgid "menu, pricing"
 msgstr "القائمة، التسعير "
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "no value"
+msgstr "لا توجد قيمة "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "o-color-"
@@ -11957,3 +12223,10 @@ msgstr "⌙ الفيديو "
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Width"
 msgstr "⌙ العرض "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "└ Height"
+msgstr "└ الارتفاع "

@@ -62,9 +62,14 @@
                             <field name='company_id' groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <label for="inventory_quantity" string="Quantity On Hand"/>
+                            <label for="quantity" string="Quantity On Hand"/>
                             <div class="o_row">
-                                <field name="inventory_quantity"/>
+                                <field name="quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                            <label for="available_quantity" string="Available Quantity"/>
+                            <div class="o_row">
+                                <field name="available_quantity"/>
                                 <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <label for="reserved_quantity" string="Quantity Reserved"/>
@@ -176,9 +181,10 @@
     </record>
 
     <record model="ir.actions.act_window" id="dashboard_open_quants"> <!-- Used in dashboard -->
-        <field name="name">Stock On Hand</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
+        <field name="name">Update Quantity</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1, 'inventory_mode':True}</field>
         <field name="res_model">stock.quant</field>
+        <field name="view_id" ref="view_stock_quant_tree_editable"/>
     </record>
 
     <record model="ir.actions.act_window" id="location_open_quants"> <!-- Used in location -->

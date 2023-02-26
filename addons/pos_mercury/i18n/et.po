@@ -11,6 +11,8 @@
 # Maidu Targama <m.targama@gmail.com>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
+# Anna, 2023
+# Leaanika Randmets, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Egon Raamat <egon@avalah.ee>, 2022\n"
+"Last-Translator: Leaanika Randmets, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +31,7 @@ msgstr ""
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Osta kaardilugeja"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -53,7 +55,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "APPROVAL CODE:"
-msgstr ""
+msgstr "KINNITUSKOOD:"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
@@ -77,23 +79,23 @@ msgstr "Tühista"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_brand
 msgid "Card Brand"
-msgstr ""
+msgstr "Kaardi bränd"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_number
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_order
 msgid "Card Number"
-msgstr ""
+msgstr "Kaardi number"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_prefixed_card_number
 msgid "Card Number Prefix"
-msgstr ""
+msgstr "Kaardi numbri eesliide"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_owner_name
 msgid "Card Owner Name"
-msgstr ""
+msgstr "Kaardiomaniku nimi"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -185,6 +187,8 @@ msgid ""
 "If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"Kui teil ei ole veel Vantiv-kontot, võtke ühendust Vantiviga telefonil +1 (800) 846-4472.\n"
+"                            konto loomiseks."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
@@ -212,12 +216,12 @@ msgstr "Viimati uuendatud"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_id
 msgid "Merchant ID"
-msgstr ""
+msgstr "Kaupmehe ID"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__merchant_pwd
 msgid "Merchant Password"
-msgstr ""
+msgstr "Kaupmehe salasõna"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__name
@@ -295,7 +299,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Pay with: "
-msgstr ""
+msgstr "Maksa:"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
@@ -312,7 +316,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr ""
+msgstr "Palun seadistage oma Vantiv kaupmehe konto."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -332,12 +336,12 @@ msgstr "Müügikoha maksed"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Vantiv Configuration"
-msgstr ""
+msgstr "Vanitiv'i seadistus kassas"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Vantiv Transaction"
-msgstr ""
+msgstr "Vantivi tehing kassas"
 
 #. module: pos_mercury
 #. openerp-web
@@ -392,7 +396,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr ""
+msgstr "Maksmiseks kasutatud kaardi 4 viimast numbrit."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_owner_name
@@ -407,13 +411,15 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
+"Selle põhjuseks võib olla halvasti tehtud viipamine või see, et klaviatuuri "
+"paigutus ei ole seadistatud USA QWERTY (mitte USA rahvusvaheline)."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Transaction approved"
-msgstr ""
+msgstr "Tehing kinnitati"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_barcode_rule__type
@@ -428,37 +434,41 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Vantivi integratsiooni kasutamine kassas on lihtne: vajutage lihtsalt nuppu\n"
+"                               seotud makseviisile. Pärast seda saab summat kohandada (nt cashbacki puhul).\n"
+"                                nagu mis tahes muu makseliini puhul. Iga kord, kui makserida makserea, saab kaardi\n"
+"                                läbi kaardilugeja tõmmata."
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
-msgstr ""
+msgstr "Vantiv kontod"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Vantiv Configurations"
-msgstr ""
+msgstr "Vantiv seadistused"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Vantiv Credentials"
-msgstr ""
+msgstr "Vantiv volitused"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Vantiv invoice number"
-msgstr ""
+msgstr "Vantiv arve number"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Vantiv record number"
-msgstr ""
+msgstr "Vantiv kirje number"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Vantiv reference number"
-msgstr ""
+msgstr "Vantiv viitenumber"
 
 #. module: pos_mercury
 #. openerp-web
@@ -472,7 +482,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/xml/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr ""
+msgstr "OOTAB KAARDI VIIPAMIST"
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -480,10 +490,12 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the IoTBox."
 msgstr ""
+"Praegu toetame MagTek Dynamag kaardilugejat. Seda saab ühendada\n"
+"                        otse kassasse või ühendada IoTBoxiga."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "X______________________________"
-msgstr ""
+msgstr "X______________________________"

@@ -8,9 +8,9 @@
 # Sergio Pinilla Ávila <serjudo@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # Pruebas, 2022
 # marcescu, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3208,6 +3208,13 @@ msgid "Maximum Exceeded"
 msgstr "Se excedió el máximo"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "Valor máximo alcanzado"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Error de Envío de Mensaje"
@@ -4140,6 +4147,8 @@ msgid "Picking POS"
 msgstr "Seleccionar punto de venta"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -4954,7 +4963,7 @@ msgstr "restantes"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Remaining unsynced orders"
-msgstr "Órdenes restantes sin sincronizar"
+msgstr "Pedidos restantes sin sincronizar"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5892,6 +5901,17 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+"El importe no puede ser superior al importe adeudado si no tiene un método "
+"de pago de efectivo configurado."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
@@ -6205,7 +6225,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "There are unsynced orders. Do you want to sync these orders?"
-msgstr "Hay órdenes no sincronizadas. ¿Desea sincronizar estos pedidos?"
+msgstr "Hay pedidos no sincronizados. ¿Desea sincronizarlos?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6233,6 +6253,19 @@ msgid ""
 msgstr ""
 "No hay un plan de cuentas configurado en la empresa. Vaya a la configuración"
 " de facturación para instalar un Plan de cuentas."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
+msgstr ""
+"No hay ningún método de pago de efectivo en este punto de venta para manejar el cambio.\n"
+"\n"
+"Por favor añada un método de pago de efectivo en la configuración del punto de venta."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6652,6 +6685,17 @@ msgid "Type of the exception activity on record."
 msgstr "Tipo de actividad de excepción registrada."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Este pedido no está sincronizado con el servidor. Asegúrese de que esté "
+"sincronizado, e inténtelo de nuevo."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6839,9 +6883,10 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "CIF/NIF:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr "Pedido no sincronizado"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6989,6 +7034,12 @@ msgid ""
 msgstr ""
 "Está intentando vender productos con números de serie/lote, pero algunos de ellos no están configurados.\n"
 "¿Quiere proceder de todos modos?"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -7321,3 +7372,9 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "eran duplicados de órdenes existentes"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""

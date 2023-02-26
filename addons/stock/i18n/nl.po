@@ -8,7 +8,8 @@
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
 # Martin Trigaux, 2022
 # Pauline Thiry <pth@odoo.com>, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1405,6 +1406,12 @@ msgstr "Hoeveelheid aanpassen"
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
 msgid "Change to a better name"
 msgstr "Verander naar een betere naam"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr "Wijzigen van %s is beperkt, je kunt deze bewerking niet uitvoeren."
 
 #. module: stock
 #: code:addons/stock/models/product_strategy.py:0
@@ -3557,6 +3564,15 @@ msgid "Invalid domain right operand %s"
 msgstr "Ongeldige rechter operand %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Ongeldige regel configuratie, de volgende regel veroorzaakt een eindeloze "
+"lus: %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr "Getelde hoeveelheid"
@@ -4343,7 +4359,7 @@ msgstr "Maart"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr "Zet op gereed voor uitvoeren"
+msgstr "Marker als nog te doen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -8104,9 +8120,8 @@ msgid ""
 msgstr ""
 "Deze levering lijkt aan een andere bewerking gekoppeld te zijn. Zorg er "
 "laten voor, als je de goederen ontvangt die je nu terugstuurt, dat de "
-"teruggekeerde levering <b>omgekeerd</b> wordt om te vermeiden da t "
-"logistieke regels niet opnieuw worden toegepast (wat dubbele bewerkingen zou"
-" aanmaken)"
+"teruggekeerde levering <b>omgekeerd</b> wordt om te vermijden dat logistieke"
+" regels niet opnieuw worden toegepast (wat dubbele bewerkingen zou aanmaken)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8121,6 +8136,16 @@ msgstr ""
 "aangeraden om het producttype te wijzigen, aangezien dit tot inconsistenties"
 " kan leiden. Een betere oplossing zou kunnen zijn om het product te "
 "archiveren en in plaats daarvan een nieuw product te maken."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"Het bedrijf van dit product kan niet worden gewijzigd zolang er hoeveelheden"
+" van een ander bedrijf zijn."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9146,6 +9171,12 @@ msgstr ""
 "reservering voor deze voorraad beweging eerst ongedaan moeten maken."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr "Je kunt het soort product dat al in gebruik is niet wijzigen."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9320,6 +9351,14 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Het is niet mogelijk om van een voorraadverplaatsing de reservering ongedaan"
 " te maken welke in de 'Gereed' fase is."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"Je kan een geannuleerde voorraadbeweging niet wijzigen, maak liever een "
+"nieuwe regel aan."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9657,3 +9696,10 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Pakbon (Ref {{ object.name or 'n/b' }})"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Globale zichtbaarheidsdagen"

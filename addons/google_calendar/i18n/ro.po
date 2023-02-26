@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Dorin Hongu <dhongu@gmail.com>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Claudia Baisan, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
+"Last-Translator: Claudia Baisan, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
-msgstr ""
+msgstr "%(id)s și %(length)s următoare"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
@@ -85,6 +86,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
+"A apărut o eroare în timpul generării token-ului. Codul tău de autorizare "
+"poate fi invalid sau a expirat deja [%s]. Ar trebui să verificațiID-ul și "
+"secretul clientului pe platforma Google APIs sau să încercați să opriți și "
+"să reporniți sincronizarea calendarului."
 
 #. module: google_calendar
 #. openerp-web
@@ -230,7 +235,7 @@ msgstr "Calendar Google"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_credentials
 msgid "Google Calendar Account Data"
-msgstr ""
+msgstr "Datele contului Calendar Google"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
@@ -260,13 +265,13 @@ msgstr "Google Calendar: sincronizare"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__synchronization_stopped
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 msgid "Google Synchronization stopped"
-msgstr ""
+msgstr "Sincronizarea Google a fost oprită"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
-msgstr ""
+msgstr "Google a dat următoarea explicație: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -409,18 +414,20 @@ msgid ""
 "The following event could not be synced with Google Calendar. </br>It will "
 "not be synced as long at it is not updated.</br>%(reason)s"
 msgstr ""
+"Următorul eveniment nu a putut fi sincronizat cu Google Calendar. </br>Nu va"
+" fi sincronizat până când nu este actualizat.</br>%(reason)s"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr ""
+msgstr "Sincronizarea cu Google calendar a fost oprită cu succes."
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
 msgid "The user has already a google account"
-msgstr ""
+msgstr "Utilizatorul are deja un cont Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -465,6 +472,8 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
 msgstr ""
+"Sunteți pe cale să opriți sincronizarea calendarului dvs. cu Google. Sunteți"
+" sigur că doriți să continuați?"
 
 #. module: google_calendar
 #. openerp-web
@@ -480,7 +489,7 @@ msgstr ""
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
-msgstr ""
+msgstr "timp nedefinit"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -488,3 +497,4 @@ msgstr ""
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
 msgstr ""
+"se pare că nu aveți permisiunea de a modifica acest eveniment pe Google "

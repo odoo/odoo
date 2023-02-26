@@ -195,7 +195,9 @@ class Lead(models.Model):
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
     website = fields.Char('Website', index=True, help="Website of the contact", compute="_compute_website", readonly=False, store=True)
-    lang_id = fields.Many2one('res.lang', string='Language')
+    lang_id = fields.Many2one(
+        'res.lang', string='Language',
+        compute='_compute_lang_id', readonly=False, store=True)
     # Address fields
     street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True)
     street2 = fields.Char('Street2', compute='_compute_partner_address_values', readonly=False, store=True)
@@ -299,14 +301,15 @@ class Lead(models.Model):
                    (not lead.partner_id or lead.partner_id.company_id != proposal):
                     proposal = False
 
-            # propose a new company based on responsible, limited by team
+            # propose a new company based on team > user (respecting context) > partner
             if not proposal:
-                if lead.user_id and lead.team_id.company_id:
+                if lead.team_id.company_id:
                     proposal = lead.team_id.company_id
                 elif lead.user_id:
-                    proposal = lead.user_id.company_id & self.env.companies
-                elif lead.team_id:
-                    proposal = lead.team_id.company_id
+                    if self.env.company in lead.user_id.company_ids:
+                        proposal = self.env.company
+                    else:
+                        proposal = lead.user_id.company_id & self.env.companies
                 elif lead.partner_id:
                     proposal = lead.partner_id.company_id
                 else:
@@ -399,6 +402,21 @@ class Lead(models.Model):
         for lead in self:
             if not lead.website or lead.partner_id.website:
                 lead.website = lead.partner_id.website
+
+    @api.depends('partner_id')
+    def _compute_lang_id(self):
+        """ compute the lang based on partner when partner_id has changed """
+        wo_lang = self.filtered(lambda lead: not lead.lang_id and lead.partner_id)
+        if not wo_lang:
+            return
+        # prepare cache
+        lang_codes = [code for code in wo_lang.mapped('partner_id.lang') if code]
+        lang_id_by_code = dict(
+            (code, self.env['res.lang']._lang_get_id(code))
+            for code in lang_codes
+        )
+        for lead in wo_lang:
+            lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
 
     @api.depends('partner_id')
     def _compute_partner_address_values(self):
@@ -593,6 +611,8 @@ class Lead(models.Model):
 
         # For other fields, get the info from the partner, but only if set
         values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC})
+        if partner.lang:
+            values['lang_id'] = self.env['res.lang']._lang_get_id(partner.lang)
 
         # Fields with specific logic
         values.update(self._prepare_contact_name_from_partner(partner))
@@ -680,26 +700,31 @@ class Lead(models.Model):
     def write(self, vals):
         if vals.get('website'):
             vals['website'] = self.env['res.partner']._clean_website(vals['website'])
-        stage_is_won = False
+
+        stage_updated, stage_is_won = vals.get('stage_id'), False
         # stage change: update date_last_stage_update
-        if 'stage_id' in vals:
-            stage_id = self.env['crm.stage'].browse(vals['stage_id'])
-            if stage_id.is_won:
+        if stage_updated:
+            stage = self.env['crm.stage'].browse(vals['stage_id'])
+            if stage.is_won:
                 vals.update({'probability': 100, 'automated_probability': 100})
                 stage_is_won = True
+
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
         elif vals.get('probability', 0) > 0:
             vals['date_closed'] = False
+        elif stage_updated and not stage_is_won and not 'probability' in vals:
+            vals['date_closed'] = False
 
         if any(field in ['active', 'stage_id'] for field in vals):
             self._handle_won_lost(vals)
+
         if not stage_is_won:
             return super(Lead, self).write(vals)
 
         # stage change between two won stages: does not change the date_closed
-        leads_already_won = self.filtered(lambda r: r.stage_id.is_won)
+        leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
         remaining = self - leads_already_won
         if remaining:
             result = super(Lead, remaining).write(vals)
@@ -841,6 +866,20 @@ class Lead(models.Model):
             default['recurring_plan'] = False
         return super(Lead, self.with_context(context)).copy(default=default)
 
+    def unlink(self):
+        """ Update meetings when removing opportunities, otherwise you have
+        a link to a record that does not lead anywhere. """
+        meetings = self.env['calendar.event'].search([
+            ('res_id', 'in', self.ids),
+            ('res_model', '=', self._name),
+        ])
+        if meetings:
+            meetings.write({
+                'res_id': False,
+                'res_model_id': False,
+            })
+        return super(Lead, self).unlink()
+
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if self._context.get('opportunity_id'):
@@ -869,7 +908,7 @@ class Lead(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
-    def _stage_find(self, team_id=False, domain=None, order='sequence', limit=1):
+    def _stage_find(self, team_id=False, domain=None, order='sequence, id', limit=1):
         """ Determine the stage of the current lead with its teams, the given domain and the given team_id
             :param team_id
             :param domain : base search domain for stage
@@ -1362,7 +1401,7 @@ class Lead(models.Model):
 
         # check if the stage is in the stages of the Sales Team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            team_stage_ids = self.env['crm.stage'].search(['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence')
+            team_stage_ids = self.env['crm.stage'].search(['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence, id')
             if merged_data.get('stage_id') not in team_stage_ids.ids:
                 merged_data['stage_id'] = team_stage_ids[0].id if team_stage_ids else False
 
@@ -1792,9 +1831,6 @@ class Lead(models.Model):
             defaults['priority'] = msg_dict.get('priority')
         defaults.update(custom_values)
 
-        # assign right company
-        if 'company_id' not in defaults and 'team_id' in defaults:
-            defaults['company_id'] = self.env['crm.team'].browse(defaults['team_id']).company_id.id
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
     def _message_post_after_hook(self, message, msg_vals):
@@ -1907,9 +1943,9 @@ class Lead(models.Model):
                 if field == 'stage_id' and value in won_stage_ids:
                     won_leads.add(lead_id)
                 leads_fields.add(field)
-
+        leads_fields = sorted(leads_fields)
         # get all variable related records from frequency table, no matter the team_id
-        frequencies = self.env['crm.lead.scoring.frequency'].search([('variable', 'in', list(leads_fields))], order="team_id asc")
+        frequencies = self.env['crm.lead.scoring.frequency'].search([('variable', 'in', list(leads_fields))], order="team_id asc, id")
 
         # get all team_ids from frequencies
         frequency_teams = frequencies.mapped('team_id')
@@ -2192,7 +2228,7 @@ class Lead(models.Model):
                 else:
                     lead_frequency_values[field] = value
             leads_frequency_values_by_team[team_id].append(lead_frequency_values)
-        leads_pls_fields = list(leads_pls_fields)
+        leads_pls_fields = sorted(leads_pls_fields)
 
         # get new frequencies
         new_frequencies_by_team = {}
@@ -2301,7 +2337,7 @@ class Lead(models.Model):
         :return: won count, lost count and total count for all records in frequencies
         """
         # TODO : check if we need to handle specific team_id stages [for lost count] (if first stage in sequence is team_specific)
-        first_stage_id = self.env['crm.stage'].search([('team_id', '=', False)], order='sequence', limit=1)
+        first_stage_id = self.env['crm.stage'].search([('team_id', '=', False)], order='sequence, id', limit=1)
         if str(first_stage_id.id) not in team_results.get('stage_id', []):
             return 0, 0, 0
         stage_result = team_results['stage_id'][str(first_stage_id.id)]
@@ -2315,7 +2351,7 @@ class Lead(models.Model):
         pls_fields = leads_pls_fields.copy()
         frequencies = dict((field, {}) for field in pls_fields)
 
-        stage_ids = self.env['crm.stage'].search_read([], ['sequence', 'name', 'id'], order='sequence')
+        stage_ids = self.env['crm.stage'].search_read([], ['sequence', 'name', 'id'], order='sequence, id')
         stage_sequences = {stage['id']: stage['sequence'] for stage in stage_ids}
 
         # Increment won / lost frequencies by criteria (field / value couple)
@@ -2396,7 +2432,7 @@ class Lead(models.Model):
             self.flush(['probability'])
             query = """SELECT id, probability, %s
                         FROM %s
-                        WHERE %s order by team_id asc"""
+                        WHERE %s order by team_id asc, id desc"""
             query = sql.SQL(query % (str_fields, from_clause, where_clause)).format(*args)
             self._cr.execute(query, where_params)
             lead_results = self._cr.dictfetchall()
@@ -2407,7 +2443,7 @@ class Lead(models.Model):
                             FROM %s
                             LEFT JOIN crm_tag_rel rel ON crm_lead.id = rel.lead_id
                             LEFT JOIN crm_tag t ON rel.tag_id = t.id
-                            WHERE %s order by crm_lead.team_id asc"""
+                            WHERE %s order by crm_lead.team_id asc, crm_lead.id"""
                 args.append(sql.Identifier('tag_id'))
                 query = sql.SQL(query % (from_clause, where_clause)).format(*args)
                 self._cr.execute(query, where_params)

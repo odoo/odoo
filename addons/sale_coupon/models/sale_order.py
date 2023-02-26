@@ -44,7 +44,9 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
-        self.generated_coupon_ids.write({'state': 'new'})
+        valid_coupon_ids = self.generated_coupon_ids.filtered(lambda coupon: coupon.state not in ['expired', 'cancel'])
+        valid_coupon_ids.write({'state': 'new', 'partner_id': self.partner_id})
+        (self.generated_coupon_ids - valid_coupon_ids).write({'state': 'cancel', 'partner_id': self.partner_id})
         self.applied_coupon_ids.write({'state': 'used'})
         self._send_reward_coupon_mail()
         return super(SaleOrder, self).action_confirm()
@@ -154,6 +156,10 @@ class SaleOrder(models.Model):
         # This allow manual overwrite of taxes for promotion.
         if program.discount_line_product_id.taxes_id:
             line_taxes = self.fiscal_position_id.map_tax(program.discount_line_product_id.taxes_id) if self.fiscal_position_id else program.discount_line_product_id.taxes_id
+            lines = self._get_base_order_lines(program)
+            discount_amount = min(
+                sum(lines.mapped(lambda l: l.price_reduce * l.product_uom_qty)), discount_amount
+            )
             return [{
                 'name': _("Discount: %s", program.name),
                 'product_id': program.discount_line_product_id.id,
@@ -188,14 +194,12 @@ class SaleOrder(models.Model):
 
             discount_amount -= discount_line_amount_price * lines_total / lines_price
 
-            tax_name = ""
-            if len(tax_ids) == 1:
-                tax_name = " - " + _("On product with following tax: ") + ', '.join(tax_ids.mapped('name'))
-            elif len(tax_ids) > 1:
-                tax_name = " - " + _("On product with following taxes: ") + ', '.join(tax_ids.mapped('name'))
-
             reward_lines[tax_ids] = {
-                'name': _("Discount: ") + program.name + tax_name,
+                'name': _(
+                    "Discount: %(program)s - On product with following taxes: %(taxes)s",
+                    program=program.name,
+                    taxes=", ".join(tax_ids.mapped('name')),
+                ),
                 'product_id': program.discount_line_product_id.id,
                 'price_unit': -discount_line_amount_price,
                 'product_uom_qty': 1.0,
@@ -290,10 +294,15 @@ class SaleOrder(models.Model):
         self.ensure_one()
         self = self.with_context(lang=self.partner_id.lang)
         program = program.with_context(lang=self.partner_id.lang)
+        values = []
         if program.reward_type == 'discount':
-            return self._get_reward_values_discount(program)
+            values = self._get_reward_values_discount(program)
         elif program.reward_type == 'product':
-            return [self._get_reward_values_product(program)]
+            values = [self._get_reward_values_product(program)]
+        seq = max(self.order_line.mapped('sequence'), default=10) + 1
+        for value in values:
+            value['sequence'] = seq
+        return values
 
     def _create_reward_line(self, program):
         self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
@@ -324,7 +333,7 @@ class SaleOrder(models.Model):
         template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
             for order in self:
-                for coupon in order.generated_coupon_ids:
+                for coupon in order.generated_coupon_ids.filtered(lambda coupon: coupon.state == 'new'):
                     order.message_post_with_template(
                         template.id, composition_mode='comment',
                         model='coupon.coupon', res_id=coupon.id,
@@ -395,6 +404,9 @@ class SaleOrder(models.Model):
         def update_line(order, lines, values):
             '''Update the lines and return them if they should be deleted'''
             lines_to_remove = self.env['sale.order.line']
+            # move coupons to the end of the SO
+            values['sequence'] = max(order.order_line.mapped('sequence')) + 1
+
             # Check commit 6bb42904a03 for next if/else
             # Remove reward line if price or qty equal to 0
             if values['product_uom_qty'] and values['price_unit']:

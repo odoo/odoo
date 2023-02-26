@@ -29,7 +29,6 @@ from werkzeug import urls
 import odoo.modules
 
 from odoo import _, api, models, fields
-from odoo.exceptions import ValidationError
 from odoo.tools import ustr, posix_to_ldml, pycompat
 from odoo.tools import html_escape as escape
 from odoo.tools.misc import get_lang, babel_locale_parse
@@ -80,11 +79,16 @@ class QWeb(models.AbstractModel):
         view_id = View.get_view_id(key)
         name = View.browse(view_id).name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
-        div = '<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s">' % (
+        # Forbid sanitize contains the specific reason:
+        # - "true": always forbid
+        # - "form": forbid if forms are sanitized
+        forbid_sanitize = el.attrib.get('t-forbid-sanitize')
+        div = '<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s" %s>' % (
             escape(pycompat.to_text(name)),
             escape(pycompat.to_text(thumbnail)),
             escape(pycompat.to_text(view_id)),
-            escape(pycompat.to_text(el.findtext('keywords')))
+            escape(pycompat.to_text(el.findtext('keywords'))),
+            f'data-oe-forbid-sanitize="{forbid_sanitize}"' if forbid_sanitize else '',
         )
         self._appendText(div, options)
         code = self._compile_node(el, options, indent)
@@ -167,7 +171,11 @@ class Integer(models.AbstractModel):
     _description = 'Qweb Field Integer'
     _inherit = 'ir.qweb.field.integer'
 
-    value_from_string = int
+    @api.model
+    def from_html(self, model, field, element):
+        lang = self.user_lang()
+        value = element.text_content().strip()
+        return int(value.replace(lang.thousands_sep, ''))
 
 
 class Float(models.AbstractModel):
@@ -179,11 +187,8 @@ class Float(models.AbstractModel):
     def from_html(self, model, field, element):
         lang = self.user_lang()
         value = element.text_content().strip()
-        try:
-            return float(value.replace(lang.thousands_sep, '')
-                              .replace(lang.decimal_point, '.'))
-        except:
-            raise ValidationError(_('You entered an invalid value, please try again.'))
+        return float(value.replace(lang.thousands_sep, '')
+                          .replace(lang.decimal_point, '.'))
 
 
 class ManyToOne(models.AbstractModel):
@@ -369,6 +374,15 @@ class HTML(models.AbstractModel):
     _inherit = 'ir.qweb.field.html'
 
     @api.model
+    def attributes(self, record, field_name, options, values=None):
+        attrs = super().attributes(record, field_name, options, values)
+        if options.get('inherit_branding'):
+            field = record._fields[field_name]
+            if field.sanitize:
+                attrs['data-oe-sanitize'] = 1 if field.sanitize_form else 'allow_form'
+        return attrs
+
+    @api.model
     def from_html(self, model, field, element):
         content = []
         if element.text:
@@ -480,11 +494,8 @@ class Monetary(models.AbstractModel):
 
         value = element.find('span').text.strip()
 
-        try:
-            return float(value.replace(lang.thousands_sep, '')
-                              .replace(lang.decimal_point, '.'))
-        except:
-            raise ValidationError(_('You entered an invalid value, please try again.'))
+        return float(value.replace(lang.thousands_sep, '')
+                          .replace(lang.decimal_point, '.'))
 
 
 class Duration(models.AbstractModel):

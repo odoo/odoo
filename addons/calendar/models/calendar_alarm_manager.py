@@ -3,6 +3,7 @@
 
 import logging
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.tools import plaintext2html
@@ -146,6 +147,7 @@ class AlarmManager(models.AbstractModel):
         design. The attendees receive an invitation for any new event
         already.
         """
+        lastcall = self.env.context.get('lastcall', False) or fields.date.today() - relativedelta(weeks=1)
         self.env.cr.execute('''
             SELECT "alarm"."id", "event"."id"
               FROM "calendar_event" AS "event"
@@ -158,7 +160,7 @@ class AlarmManager(models.AbstractModel):
                AND "event"."active"
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
-             )''', [alarm_type, self.env.context['lastcall']])
+             )''', [alarm_type, lastcall])
 
         events_by_alarm = {}
         for alarm_id, event_id in self.env.cr.fetchall():

@@ -257,3 +257,24 @@ class TestProductPricelist(TransactionCase):
         })
         # product price use the currency of the pricelist
         self.assertEqual(product.price, 10090)
+
+    def test_23_diff_curr_rounding(self):
+        """ Make sure rounding is applied after the currency conversion"""
+        pricelist = self.ProductPricelist.create({
+            'name': 'Currency Pricelist',
+            'currency_id': self.new_currency.id,
+            'item_ids': [(0, 0, {
+                'compute_price': 'formula',
+                'base': 'list_price',
+                'price_discount': 42.328745867,
+                'price_round': 1.00,
+            })]
+        })
+
+        product = self.computer_SC234
+        product.lst_price = 450.0
+        product = product.with_context({
+            'pricelist': pricelist.id, 'quantity': 1
+        })
+
+        self.assertEqual(product.price, 2595)

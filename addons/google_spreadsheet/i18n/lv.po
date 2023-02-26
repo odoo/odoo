@@ -1,13 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * google_spreadsheet
+# 	* google_spreadsheet
+# 
+# Translators:
+# ievaputnina <ievai.putninai@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2022\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,10 +21,15 @@ msgstr ""
 
 #. module: google_spreadsheet
 #. openerp-web
-#: code:addons/google_spreadsheet/static/src/xml/addtospreadsheet.xml:3
+#: code:addons/google_spreadsheet/static/src/xml/addtospreadsheet.xml:0
 #, python-format
 msgid "Add to Google Spreadsheet"
 msgstr ""
+
+#. module: google_spreadsheet
+#: model:ir.model,name:google_spreadsheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurācijas iestatījumi"
 
 #. module: google_spreadsheet
 #: model:ir.model,name:google_spreadsheet.model_google_drive_config
@@ -28,9 +37,9 @@ msgid "Google Drive templates config"
 msgstr ""
 
 #. module: google_spreadsheet
-#: model_terms:ir.actions.act_window,help:google_spreadsheet.action_ir_attachment_google_spreadsheet_tree
 #: model:ir.actions.act_window,name:google_spreadsheet.action_ir_attachment_google_spreadsheet_tree
 #: model:ir.ui.menu,name:google_spreadsheet.menu_reporting_dashboard_google_spreadsheets
+#: model_terms:ir.actions.act_window,help:google_spreadsheet.action_ir_attachment_google_spreadsheet_tree
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.view_ir_attachment_google_spreadsheet_form
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.view_ir_attachment_google_spreadsheet_tree
 msgid "Google Spreadsheets"
@@ -40,7 +49,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.view_ir_attachment_google_spreadsheet_form
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.view_ir_attachment_google_spreadsheet_tree
 msgid "Name"
-msgstr ""
+msgstr "Nosaukums"
 
 #. module: google_spreadsheet
 #: model_terms:ir.ui.view,arch_db:google_spreadsheet.res_config_settings_view_form
@@ -50,16 +59,11 @@ msgid ""
 msgstr ""
 
 #. module: google_spreadsheet
-#: model:ir.model.fields,help:google_spreadsheet.field_res_config_settings_google_drive_uri_copy
+#: model:ir.model.fields,help:google_spreadsheet.field_res_config_settings__google_drive_uri_copy
 msgid "The URL to generate the authorization code from Google"
 msgstr ""
 
 #. module: google_spreadsheet
-#: model:ir.model.fields,field_description:google_spreadsheet.field_res_config_settings_google_drive_uri_copy
-msgid "URI"
-msgstr ""
-
-#. module: google_spreadsheet
-#: model:ir.model,name:google_spreadsheet.model_res_config_settings
-msgid "res.config.settings"
+#: model:ir.model.fields,field_description:google_spreadsheet.field_res_config_settings__google_drive_uri_copy
+msgid "URI Copy"
 msgstr ""

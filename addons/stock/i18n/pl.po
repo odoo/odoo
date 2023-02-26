@@ -9,7 +9,7 @@
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2021
 # Piotr Strębski <strebski@gmail.com>, 2021
 # Slawomir Adamus <melthalion@gmail.com>, 2021
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2021
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2021
 # Maja Stawicka <mjstwck@wp.pl>, 2021
 # DanielDemedziuk <daniel.demedziuk@gmail.com>, 2021
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
@@ -32,6 +32,9 @@
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
 # IT WEDOO, 2022
 # Martin Trigaux, 2022
+# Jacek Michalski <michalski.jck@gmail.com>, 2022
+# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
+# Przemek Jaroc, 2023
 # 
 msgid ""
 msgstr ""
@@ -39,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Przemek Jaroc, 2023\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,6 +127,8 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
+"Jeżeli ilość dni jest różna od 0, dla danego miejsca zostanie ustawiona data"
+" inwentaryzacji zgodna z ustawioną częstotliwością. "
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -150,12 +155,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "&gt;"
-msgstr ""
+msgstr "&gt;"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
-msgstr ""
+msgstr "'Arkusz spisowy'"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -378,6 +383,8 @@ msgid ""
 "<span class=\"d-none d-sm-block o_print_label_text\">Print Labels</span>\n"
 "                                        <span class=\"d-block d-sm-none fa fa-print\"/>"
 msgstr ""
+"<span class=\"d-none d-sm-block o_print_label_text\">Drukuj Etykiety</span>\n"
+"                                        <span class=\"d-block d-sm-none fa fa-print\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -974,7 +981,10 @@ msgid "As soon as possible"
 msgstr "Jak najszybciej to możliwe"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Przypisz"
 
@@ -1331,6 +1341,12 @@ msgid "Change to a better name"
 msgstr "Użyj lepszej nazwy"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -1390,7 +1406,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "Wybierz Układ Etykiet"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -2775,7 +2791,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Prognozowane zapasy"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -2817,12 +2833,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Forecasted with Pending"
-msgstr ""
+msgstr "Prognozowane z oczekującymi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 msgid "Forecasted<br/>+ Pending"
-msgstr ""
+msgstr "Prognozowane<br/>+ Oczekujące"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__print_format
@@ -2832,7 +2848,7 @@ msgstr "Format"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Free Stock"
-msgstr ""
+msgstr "Ilość dostępna"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -3413,6 +3429,13 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
 
 #. module: stock
@@ -5320,6 +5343,8 @@ msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
 msgstr ""
+"Naciśnij przycisk UTWÓRZ, aby zdefiniować ilości dla każdego produktu w "
+"magazynie lub zaimportuj ilość z arkusza kalkulacyjnego przez Ulubione "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5337,7 +5362,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Print Labels"
-msgstr ""
+msgstr "Drukuj Etykiety"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
@@ -6171,7 +6196,7 @@ msgstr "Uzupełnij kreatora"
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Replenishment"
-msgstr ""
+msgstr "Uzupełnianie zapasów"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_replenishment_info
@@ -6275,7 +6300,7 @@ msgstr "Ilość zarezerwowana"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Reserved from stock"
-msgstr ""
+msgstr "Zarezerwowane z magazynu"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7565,7 +7590,7 @@ msgstr "Nazwa magazynu musi być unikalna w firmie!"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
+msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr ""
 
 #. module: stock
@@ -7858,6 +7883,14 @@ msgid ""
 "advised to change the Product Type since it can lead to inconsistencies. A "
 "better solution could be to archive the product and create a new one "
 "instead."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
 msgstr ""
 
 #. module: stock
@@ -8189,7 +8222,10 @@ msgid "USPS Connector"
 msgstr "Łącznik USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -8332,7 +8368,7 @@ msgstr "Aktualizuj ilość"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #, python-format
 msgid "Update Quantity"
-msgstr ""
+msgstr "Zaktualizuj Ilość"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -8437,7 +8473,7 @@ msgstr "Widok"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "View Diagram"
-msgstr ""
+msgstr "Zobacz schemat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -8853,6 +8889,12 @@ msgstr ""
 "rezerwację przesunięcia towaru."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9012,6 +9054,12 @@ msgstr ""
 "ustawione na „Gotowe”."
 
 #. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
@@ -9129,15 +9177,6 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
@@ -9171,7 +9210,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
-msgstr ""
+msgstr "Twoje zapasy są obecnie puste"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
@@ -9335,4 +9374,11 @@ msgstr ""
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
 msgstr ""

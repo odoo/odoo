@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
         """Check if there is another sale order line which already contains the requested event_booth_pending_ids
         to overwrite it with the newly requested booths to avoid having multiple so_line related to the same booths"""
         self.ensure_one()
-        lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id)
+        lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id, **kwargs)
         if line_id:
             return lines
         event_booth_pending_ids = kwargs.get('event_booth_pending_ids')

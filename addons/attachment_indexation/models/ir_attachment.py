@@ -6,6 +6,7 @@ import xml.dom.minidom
 import zipfile
 
 from odoo import api, models
+from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
@@ -20,6 +21,8 @@ except ImportError:
 
 FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
 
+
+index_content_cache = LRU(1)
 
 def textToString(element):
     buff = u""
@@ -121,10 +124,19 @@ class IrAttachment(models.Model):
         return buf
 
     @api.model
-    def _index(self, bin_data, mimetype):
+    def _index(self, bin_data, mimetype, checksum=None):
+        if checksum:
+            cached_content = index_content_cache.get(checksum)
+            if cached_content:
+                return cached_content
+        res = False
         for ftype in FTYPES:
             buf = getattr(self, '_index_%s' % ftype)(bin_data)
             if buf:
-                return buf.replace('\x00', '')
+                res = buf.replace('\x00', '')
+                break
 
-        return super(IrAttachment, self)._index(bin_data, mimetype)
+        res = res or super(IrAttachment, self)._index(bin_data, mimetype, checksum=checksum)
+        if checksum:
+            index_content_cache[checksum] = res
+        return res

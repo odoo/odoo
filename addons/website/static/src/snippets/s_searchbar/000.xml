@@ -5,15 +5,19 @@
 <div t-name="website.s_searchbar.autocomplete"
     class="dropdown-menu show w-100">
     <t t-if="fuzzySearch and results.length">
+        <!-- TODO adapt in master, this is patched in JS so that text-muted -->
+        <!-- is not on the same element as dropdown-item-text -->
         <span class="dropdown-item-text text-muted">No results found for '<t t-esc="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-esc="fuzzySearch"/>'.</span>
     </t>
     <t t-elif="!results.length">
+        <!-- TODO adapt in master, this is patched in JS so that text-muted -->
+        <!-- is not on the same element as dropdown-item-text -->
         <span class="dropdown-item-text text-muted">No results found. Please try another search.</span>
     </t>
     <a t-foreach="results" t-as="result"
         t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
         <div class="media align-items-center o_search_result_item">
-            <t t-if="parts['image_url'] and widget.displayImage">
+            <t t-if="widget.displayImage">
                 <img t-if="result['image_url']" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>
                 <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
             </t>

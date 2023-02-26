@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
@@ -77,13 +77,13 @@ msgstr "Proveedor"
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
-msgstr "Datos recibidos sin referencia (%(ref)s) o SHASIGN (%(sign)s)"
+msgstr "Se recibieron datos sin referencia (%(ref)s) o SHASIGN (%(sign)s)"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing transaction keys"
-msgstr "Datos recibidos sin claves de transacción"
+msgstr "Se recibieron datos sin claves de transacción"
 
 #. module: payment_buckaroo
 #: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
@@ -100,7 +100,8 @@ msgstr ""
 #: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
 msgid "The key solely used to identify the website with Buckaroo"
 msgstr ""
-"La clave utilizada únicamente para identificar el sitio web con Buckaroo"
+"La clave que se utiliza únicamente para identificar el sitio web con "
+"Buckaroo"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0

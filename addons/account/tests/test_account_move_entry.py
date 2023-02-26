@@ -135,6 +135,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
         with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
+
+        with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
 
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -242,6 +245,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can't remove the journal entry from a locked period.
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.date = fields.Date.from_string('2018-01-01')
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.name = "Othername"
 
         with self.assertRaises(UserError), self.cr.savepoint():
             self.test_move.unlink()
@@ -533,6 +539,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
             tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({

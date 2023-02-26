@@ -197,8 +197,8 @@ odoo.define('/web/static/src/js/libs/fullcalendar.js', function () {
                     el.classList.remove('fc-has-event');
                 }
                 for (const event of Object.values(this.events)) {
-                    let currentDate = moment(event._instance.range.start);
-                    while (currentDate.isBefore(event._instance.range.end, 'day')) {
+                    let currentDate = moment(event.start);
+                    while (currentDate.isBefore(event.end, 'day')) {
                         const formattedDate = currentDate.format('YYYY-MM-DD');
                         const el = this.el.querySelector(`.fc-day-top[data-date="${formattedDate}"]`);
                         if (el) {

@@ -3,10 +3,11 @@
 # 	* google_gmail
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2022
 # Geoffrey_GMF <gmf@odoo.com>, 2022
 # Ludvig Auvens <lau@odoo.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,18 +15,18 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-25 14:36+0000\n"
 "PO-Revision-Date: 2022-03-03 13:58+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Gmail Credentials</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Identifiants Gmail</span>"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token
@@ -37,7 +38,7 @@ msgstr "Clé d'accès"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_access_token_expiration
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_access_token_expiration
 msgid "Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Access Token Expiration Timestamp"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
@@ -69,28 +70,28 @@ msgstr "Nom affiché"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid "Gmail"
-msgstr ""
+msgstr "Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__use_google_gmail_service
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__use_google_gmail_service
 msgid "Gmail Authentication"
-msgstr ""
+msgstr "Authentification Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
 msgid "Gmail Client Id"
-msgstr ""
+msgstr "Id Client Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Secret Client Gmail"
 
 #. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
-msgstr ""
+msgstr "Mixin Google Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__id
@@ -116,7 +117,7 @@ msgstr "Actualiser le jeton"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Send and receive email with your Gmail account."
-msgstr ""
+msgstr "Envoyez et recevez des emails avec votre compte Gmail."
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -124,6 +125,8 @@ msgid ""
 "Setup your Gmail API credentials in the general settings to link a Gmail "
 "account."
 msgstr ""
+"Configurez vos informations d'identification de l'API Gmail dans les "
+"paramètres généraux pour lier un compte Gmail."
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri

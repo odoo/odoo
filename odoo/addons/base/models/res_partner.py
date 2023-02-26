@@ -10,6 +10,7 @@ import threading
 import re
 
 import requests
+from collections import defaultdict
 from lxml import etree
 from random import randint
 from werkzeug import urls
@@ -313,8 +314,9 @@ class Partner(models.Model):
             Partner = self.with_context(active_test=False).sudo()
             domain = [
                 ('vat', '=', partner.vat),
-                ('company_id', 'in', [False, partner.company_id.id]),
             ]
+            if partner.company_id:
+                domain += [('company_id', 'in', [False, partner.company_id.id])]
             if partner_id:
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
             partner.same_vat_partner_id = bool(partner.vat) and not partner.parent_id and Partner.search(domain, limit=1)
@@ -478,7 +480,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'credit_limit']
+        return ['vat', 'credit_limit', 'industry_id']
 
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
@@ -487,6 +489,7 @@ class Partner(models.Model):
         if commercial_partner != self:
             sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
+            self._commercial_sync_to_children()
 
     def _commercial_sync_to_children(self):
         """ Handle sync of commercial fields to descendants """
@@ -735,8 +738,7 @@ class Partner(models.Model):
             name = partner._display_address(without_company=True)
         if self._context.get('show_address'):
             name = name + "\n" + partner._display_address(without_company=True)
-        name = name.replace('\n\n', '\n')
-        name = name.replace('\n\n', '\n')
+        name = re.sub(r'\s+\n', '\n', name)
         if self._context.get('partner_show_db_id'):
             name = "%s (%s)" % (name, partner.id)
         if self._context.get('address_inline'):
@@ -748,7 +750,7 @@ class Partner(models.Model):
             name = name.replace('\n', '<br/>')
         if self._context.get('show_vat') and partner.vat:
             name = "%s ‒ %s" % (name, partner.vat)
-        return name
+        return name.strip()
 
     def name_get(self):
         res = []
@@ -825,7 +827,7 @@ class Partner(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        self = self.with_user(name_get_uid or self.env.uid)
+        self = self.with_user(name_get_uid) if name_get_uid else self
         # as the implementation is in SQL, we force the recompute of fields if necessary
         self.recompute(['display_name'])
         self.flush()
@@ -991,13 +993,13 @@ class Partner(models.Model):
         # get the information that will be injected into the display format
         # get the address format
         address_format = self._get_address_format()
-        args = {
+        args = defaultdict(str, {
             'state_code': self.state_id.code or '',
             'state_name': self.state_id.name or '',
             'country_code': self.country_id.code or '',
             'country_name': self._get_country_name(),
             'company_name': self.commercial_company_name or '',
-        }
+        })
         for field in self._formatting_address_fields():
             args[field] = getattr(self, field) or ''
         if without_company:

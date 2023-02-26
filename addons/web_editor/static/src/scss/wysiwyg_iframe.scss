@@ -64,12 +64,17 @@ body.o_in_iframe {
         }
     }
     textarea.o_codeview {
-        width: 100%;
-        height: 100%;
+        position: absolute;
         font-family: 'Courier New', Courier, monospace;
-        padding: 5px;
         outline: none;
         resize: none;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 291px;
+        width: calc(100% - 291px);
+        height: 100%;
+        border: none;
     }
 
     .o_height_400 {

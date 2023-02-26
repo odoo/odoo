@@ -8,6 +8,8 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Etren Leo <475851879@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 16:40+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,13 +48,13 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), object.name.replace('/',''))"
 msgstr ""
-"‘可折叠徽章 - %s - %s' % ((object.event_id.name or 'Event').replace('/','), "
+"‘可折叠徽标 - %s - %s' % ((object.event_id.name or 'Event').replace('/','), "
 "object.name.replace('/','))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr "‘可折叠徽章 - %s' % (object.name or 'Event').replace('/',')"
+msgstr "‘可折叠徽标 - %s' % (object.name or 'Event').replace('/',')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -141,7 +143,7 @@ msgid ""
 "                                            <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
 "<br/>\n"
-"                                            <span class=\"text-muted\">通过Youtube集成在线播放曲目</span>"
+"                                            <span class=\"text-muted\">通过Youtube集成线上播放曲目</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -150,7 +152,7 @@ msgid ""
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
 "<br/>\n"
-"                                            <span class=\"text-muted\">曲目结束后，与您的参与者分享测验</span>"
+"                                            <span class=\"text-muted\">环节结束后，向您的参与者发送问卷</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -170,11 +172,11 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    亲爱的<t t-out=\"object.name or ''\">Oscar Morgan</t><br/>\n"
-"    谢谢你的询问。<br/>\n"
+"    谢谢您的询问。<br/>\n"
 "    这是您的<t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>活动的胸卡。<br/>\n"
 "    如果您有任何问题，请告诉我们。\n"
 "   <br/><br/>\n"
-"    谢谢你。\n"
+"    谢谢您。\n"
 "    <t t-if=\"object.event_id.user_id.signature\">\n"
 "        <br/>\n"
 "        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell 管理</t>\n"
@@ -1533,7 +1535,7 @@ msgstr "配置设置"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1727,7 +1729,7 @@ msgstr "完成"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr "在该会议中，我们的团队将会非常详细的介绍我们的业务应用。你将会了解到使用该应用的优点。"
+msgstr "在该会议中，我们的团队将会非常详细的介绍我们的业务应用。您将会了解到使用该应用的优点。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
@@ -1937,7 +1939,7 @@ msgid ""
 msgstr ""
 "活动模板结合了您经常使用的配置，并且通常是基于您组织的活动类型（如 \"研讨会\"）。\n"
 "                    通常基于您组织的活动类型（如 \"研讨会\"。\n"
-"                    \"路演\"、\"在线网络研讨会 \"等）。"
+"                    \"路演\"、\"线上网络研讨会 \"等）。"
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1988,7 +1990,7 @@ msgstr "活动：注册"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr "活动:登记徽章"
+msgstr "活动:登记徽标"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -2087,18 +2089,18 @@ msgstr "体验现场音乐，当地美食和饮料。"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
 msgid "Foldable Badge"
-msgstr "折叠式徽章"
+msgstr "折叠式徽标"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
-msgstr "可折叠徽章 - {{ (object.event_id.name or 'Event').replace('/', '_') }}}"
+msgstr "可折叠徽标 - {{ (object.event_id.name or 'Event').replace('/', '_') }}}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
 msgid "Foldable Badge Example"
-msgstr "折叠式徽章实例"
+msgstr "折叠式徽标实例"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -2138,7 +2140,7 @@ msgstr "对于任何额外的信息，请和我们取得联系"
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr "对于每一个事件，你可以定义一个注册人数的最大值（与会者的人数），高于这个数字的注册将不被接受。"
+msgstr "对于每一个事件，您可以定义一个注册人数的最大值（与会者的人数），高于这个数字的注册将不被接受。"
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -2171,7 +2173,7 @@ msgstr "刚创建的"
 msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your"
 " event registrations."
-msgstr "从这个仪表板，你可以报告、分析和检测有关你的活动注册的趋势。"
+msgstr "从这个仪表板，您可以报告、分析和检测有关您的活动注册的趋势。"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
@@ -2355,7 +2357,7 @@ msgstr "如果使用票务，则包含门票的最早开始销售日期。"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr "如果你没有这张票，你将<b>不</b>被允许进入!"
+msgstr "如果您没有这张票，您将<b>不</b>被允许进入!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -2448,7 +2450,7 @@ msgstr "正在进行"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr "当你选择这个活动，将选择默认最大值"
+msgstr "当您选择这个活动，将选择默认最大值"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2798,7 +2800,7 @@ msgstr "无"
 #: model:ir.model.fields,field_description:event.field_event_type__note
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Note"
-msgstr "便签"
+msgstr "笔记"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2822,7 +2824,7 @@ msgstr "现在您的活动已准备就绪，请单击此处将其移至另一个
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction_counter
 msgid "Number of Actions"
-msgstr "动作个数"
+msgstr "动作数量"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
@@ -2882,17 +2884,17 @@ msgstr "正在进行的活动"
 #. module: event
 #: model:event.tag,name:event.event_tag_category_3_tag_1
 msgid "Online"
-msgstr "在线"
+msgstr "线上"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Online Exhibitors"
-msgstr "网上参展商"
+msgstr "线上参展商"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
 msgid "Online Ticketing"
-msgstr "在线票务"
+msgstr "线上票务"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2906,7 +2908,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr "OpenWood系列在线展示"
+msgstr "OpenWood系列线上展示"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -2925,7 +2927,7 @@ msgstr "组织者"
 msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
-msgstr "我们的最新收藏将在网上显示！ 在直播中与我们互动！"
+msgstr "我们的最新收藏将线上上显示！ 在直播中与我们互动！"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_blocked
@@ -2996,7 +2998,7 @@ msgstr "采购、销售和采购管理、财务会计。"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr "测验的曲目"
+msgstr "环节问卷"
 
 #. module: event
 #: code:addons/event/models/event_stage.py:0
@@ -3160,7 +3162,7 @@ msgstr "短信发送错误"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Scan badges to confirm attendances"
-msgstr "扫描工牌确认出勤"
+msgstr "扫描徽标确认出勤"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3177,7 +3179,7 @@ msgstr "预定日期"
 msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
-msgstr "安排和组织你的活动：处理注册，发送自动确认电子邮件，销售门票等。"
+msgstr "安排和组织您的活动：处理注册，发送自动确认电子邮件，销售门票等。"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -3203,7 +3205,7 @@ msgstr "有限坐席"
 #. module: event
 #: model:event.type,name:event.event_type_data_ticket
 msgid "Sell Online"
-msgstr "网上销售"
+msgstr "线上销售"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3477,14 +3479,14 @@ msgid ""
 "This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br>\n"
 "        It will require a good Internet connection to get the best video quality."
 msgstr ""
-"此活动完全在线且免费，如果您已购买门票，则应获得退款。<br>\n"
+"此活动完全线上且免费，如果您已购买门票，则应获得退款。<br>\n"
 " 为了获得最佳的视频质量，您将需要良好的Internet连接。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr "这些信息将印在你的门票上。"
+msgstr "这些信息将印在您的门票上。"
 
 #. module: event
 #. openerp-web
@@ -3563,7 +3565,7 @@ msgstr "服务单"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Tickets can be printed or scanned directly from your phone."
-msgstr "门票可以直接从你的手机上打印或扫描。"
+msgstr "门票可以直接从您的手机上打印或扫描。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -3591,7 +3593,7 @@ msgstr "活动的总注册"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr "耿宗并计划"
+msgstr "环节和议程"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -3649,7 +3651,7 @@ msgstr "未确认的席位"
 msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
-msgstr "在这个技术菜单下，你会发现所有与你的活动有关的预定通信。"
+msgstr "在这个技术菜单下，您会发现所有与您的活动有关的预定通信。"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3791,7 +3793,7 @@ msgstr "有什么新消息？"
 msgid ""
 "When will your event take place? <b>Select</b> the start and end dates "
 "<b>and click Apply</b>."
-msgstr "什么时候会开始你的活动？<b>选择</b>开始至结束日期<b>然后点击确定</b>。"
+msgstr "什么时候会开始您的活动？<b>选择</b>开始至结束日期<b>然后点击确定</b>。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -3822,7 +3824,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr "您为{{ object.event_id.name }}的徽章。"
+msgstr "您为{{ object.event_id.name }}的徽标。"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
@@ -3838,7 +3840,7 @@ msgstr "例如 建筑师会议"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr "例如：在线会议"
+msgstr "例如：线上会议"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view

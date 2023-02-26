@@ -143,6 +143,26 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
         confirmOpeningPopup() {
             return [{ trigger: '.opening-cash-control .button:contains("Open session")' }];
         }
+        clickPricelistButton() {
+            return [{ trigger: '.o_pricelist_button' }];
+        }
+        selectPriceList(name) {
+            return [
+                {
+                    content: `select price list '${name}'`,
+                    trigger: `.selection-item:contains("${name}")`,
+                },
+            ];
+        }
+        enterOpeningAmount(amount) {
+            return [
+                {
+                    content: 'enter opening amount',
+                    trigger: '.cash-input-sub-section > .pos-input',
+                    run: 'text ' + amount,
+                },
+            ];
+        }
     }
 
     class Check {
@@ -235,6 +255,24 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     run: function () {}, // it's a check
                 },
             ]
+        }
+        checkSecondCashClosingDetailsLineAmount(amount, sign) {
+            return [
+                {
+                    content: 'Click close session button',
+                    trigger: '.fa-sign-out',
+                },
+                {
+                    content: 'Check closing details',
+                    trigger: `.cash-overview tr:nth-child(2) td:contains("${amount}")`,
+                    run: () => {}, // it's a check
+                },
+                {
+                    content: 'Check closing details',
+                    trigger: `.cash-overview tr:nth-child(2) .cash-sign:contains("${sign}")`,
+                    run: () => {}, // it's a check
+                },
+            ];
         }
     }
 

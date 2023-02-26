@@ -205,7 +205,7 @@ class ProductTemplate(models.Model):
 
             combination_info.update(
                 base_unit_name=product.base_unit_name,
-                base_unit_price=product.base_unit_price,
+                base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
                 price=price,
                 list_price=list_price,
                 price_extra=price_extra,
@@ -213,18 +213,6 @@ class ProductTemplate(models.Model):
             )
 
         return combination_info
-
-    def _create_first_product_variant(self, log_warning=False):
-        """Create if necessary and possible and return the first product
-        variant for this template.
-
-        :param log_warning: whether a warning should be logged on fail
-        :type log_warning: bool
-
-        :return: the first product variant or none
-        :rtype: recordset of `product.product`
-        """
-        return self._create_product_variant(self._get_first_possible_combination(), log_warning)
 
     def _get_image_holder(self):
         """Returns the holder of the image to use as default representation.

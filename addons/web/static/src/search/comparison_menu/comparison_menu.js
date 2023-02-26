@@ -2,6 +2,7 @@
 
 import { FACET_ICONS } from "../utils/misc";
 import { useBus } from "@web/core/utils/hooks";
+import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 
 const { Component } = owl;
 
@@ -29,5 +30,5 @@ export class ComparisonMenu extends Component {
         this.env.searchModel.toggleSearchItem(itemId);
     }
 }
-
+ComparisonMenu.components = { DropdownItem: SearchDropdownItem };
 ComparisonMenu.template = "web.ComparisonMenu";

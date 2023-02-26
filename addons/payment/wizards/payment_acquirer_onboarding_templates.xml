@@ -28,15 +28,10 @@
                         <div class="col" name="right-column">
                             <div attrs="{'invisible': [('payment_method', '!=', 'paypal')]}">
                                 <group>
-                                    <field name="paypal_user_type" widget="radio" nolabel="1"/>
                                     <field name="paypal_email_account" attrs="{'required': [('payment_method', '=', 'paypal')]}" string="Email"/>
-                                    <field name="paypal_seller_account" attrs="{'invisible': [('paypal_user_type', '=', 'new_user')], 'required': [('paypal_user_type', '!=', 'new_user'), ('payment_method', '=', 'paypal')]}" />
-                                    <field name="paypal_pdt_token" password="True" attrs="{'invisible': [('paypal_user_type', '=', 'new_user')], 'required': [('paypal_user_type', '!=', 'new_user'), ('payment_method', '=', 'paypal')]}" />
+                                    <field name="paypal_pdt_token" password="True" attrs="{'required': [('payment_method', '=', 'paypal')]}" />
                                 </group>
-                                <p attrs="{'invisible': [('paypal_user_type', '!=', 'new_user')]}">
-                                    <span>Start selling directly without an account; an email will be sent by Paypal to create your new account and collect your payments.</span>
-                                </p>
-                                <p attrs="{'invisible': [('paypal_user_type', '=', 'new_user')]}">
+                                <p>
                                     <a href="https://www.odoo.com/documentation/15.0/applications/general/payment_acquirers/paypal.html" target="_blank">
                                         <span><i class="fa fa-arrow-right"/> How to configure your PayPal account</span>
                                     </a>

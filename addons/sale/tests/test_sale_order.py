@@ -176,6 +176,20 @@ class TestSaleOrder(TestSaleCommon):
         self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Sale: author should be in composer recipients thanks to "partner_to" field set on template')
         self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Sale: author should receive mail due to presence in composer recipients')
 
+    def test_invoice_state_when_ordered_quantity_is_negative(self):
+        """When you invoice a SO line with a product that is invoiced on ordered quantities and has negative ordered quantity,
+        this test ensures that the  invoicing status of the SO line is 'invoiced' (and not 'upselling')."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.company_data['product_order_no'].id,
+                'product_uom_qty': -1,
+            })]
+        })
+        sale_order.action_confirm()
+        sale_order._create_invoices(final=True)
+        self.assertTrue(sale_order.invoice_status == 'invoiced', 'Sale: The invoicing status of the SO should be "invoiced"')
+
     def test_sale_sequence(self):
         self.env['ir.sequence'].search([
             ('code', '=', 'sale.order'),
@@ -839,3 +853,53 @@ class TestSaleOrder(TestSaleCommon):
         name_search_data = self.env['sale.order.line'].name_search(name=self.sale_order.name)
         sol_ids_found = dict(name_search_data).keys()
         self.assertEqual(list(sol_ids_found), self.sale_order.order_line.ids)
+
+    def test_sale_order_analytic_tag_change(self):
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+
+        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account'})
+        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account'})
+        analytic_tag_super = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
+        analytic_tag_great = self.env['account.analytic.tag'].create({'name': 'Great Tag'})
+        super_product = self.env['product.product'].create({'name': 'Super Product'})
+        great_product = self.env['product.product'].create({'name': 'Great Product'})
+        product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
+        self.env['account.analytic.default'].create([
+            {
+                'analytic_id': analytic_account_super.id,
+                'product_id': super_product.id,
+                'analytic_tag_ids': [analytic_tag_super.id],
+            },
+            {
+                'analytic_id': analytic_account_great.id,
+                'product_id': great_product.id,
+                'analytic_tag_ids': [analytic_tag_great.id],
+            },
+        ])
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': sale_order.id,
+        })
+
+        self.assertEqual(sol.analytic_tag_ids.id, analytic_tag_super.id, "The analytic tag should be set to 'Super Tag'")
+        sol.write({'product_id': great_product.id})
+        self.assertEqual(sol.analytic_tag_ids.id, analytic_tag_great.id, "The analytic tag should be set to 'Great Tag'")
+        sol.write({'product_id': product_no_account.id})
+        self.assertFalse(sol.analytic_tag_ids.id, "The analytic account should not be set")
+
+        so_no_analytic_account = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sol_no_analytic_account = self.env['sale.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': so_no_analytic_account.id,
+            'analytic_tag_ids': False,
+        })
+        so_no_analytic_account.action_confirm()
+        self.assertFalse(sol_no_analytic_account.analytic_tag_ids.id, "The compute should not overwrite what the user has set.")

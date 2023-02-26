@@ -26,7 +26,7 @@ class StockMoveLine(models.Model):
         check_company=True,
         help="Change to a better name", index=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True, index=True)
-    product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_qty = fields.Float(
@@ -207,12 +207,14 @@ class StockMoveLine(models.Model):
                 packaging=self.move_id.product_packaging_id)
 
     def _apply_putaway_strategy(self):
+        if self._context.get('avoid_putaway_rules'):
+            return
         self = self.with_context(do_not_unreserve=True)
         for package, smls in groupby(self, lambda sml: sml.result_package_id):
             smls = self.env['stock.move.line'].concat(*smls)
             excluded_smls = smls
             if package.package_type_id:
-                best_loc = smls.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(self.env['product.product'], package=package)
+                best_loc = smls.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids, products=smls.product_id)._get_putaway_strategy(self.env['product.product'], package=package)
                 smls.location_dest_id = smls.package_level_id.location_dest_id = best_loc
             elif package:
                 used_locations = set()
@@ -228,8 +230,9 @@ class StockMoveLine(models.Model):
                     smls.package_level_id.location_dest_id = smls.location_dest_id
             else:
                 for sml in smls:
+                    qty = max(sml.product_uom_qty, sml.qty_done)
                     sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(
-                        sml.product_id, quantity=sml.product_uom_qty, packaging=sml.move_id.product_packaging_id,
+                        sml.product_id, quantity=qty, packaging=sml.move_id.product_packaging_id,
                     )
                     excluded_smls -= sml
 
@@ -292,7 +295,7 @@ class StockMoveLine(models.Model):
                     ml.move_id.picking_id.immediate_transfer and \
                     ml.move_id.state != 'done' and \
                     'qty_done' in vals:
-                ml.move_id.product_uom_qty = ml.move_id.quantity_done
+                ml.move_id.with_context(avoid_putaway_rules=True).product_uom_qty = ml.move_id.quantity_done
             if ml.state == 'done':
                 if 'qty_done' in vals:
                     ml.move_id.product_uom_qty = ml.move_id.quantity_done
@@ -346,7 +349,9 @@ class StockMoveLine(models.Model):
                     # TODO: make package levels less of a pain and fix this
                     package_level = ml.package_level_id
                     ml.package_level_id = False
-                    package_level.unlink()
+                    # Only need to unlink the package level if it's empty. Otherwise will unlink it to still valid move lines.
+                    if not package_level.move_line_ids:
+                        package_level.unlink()
 
         # When we try to write on a reserved move line any fields from `triggers` or directly
         # `product_uom_qty` (the actual reserved quantity), we need to make sure the associated
@@ -383,6 +388,8 @@ class StockMoveLine(models.Model):
                         new_product_uom_qty = ml.product_id.uom_id._compute_quantity(reserved_qty, ml.product_uom_id, rounding_method='HALF-UP')
                         moves_to_recompute_state |= ml.move_id
                         ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
+                        # we don't want to override the new reserved quantity
+                        vals.pop('product_uom_qty', None)
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         if updates or 'qty_done' in vals:
@@ -465,7 +472,7 @@ class StockMoveLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for ml in self:
             # Unlinking a move line should unreserve.
-            if ml.product_id.type == 'product' and not ml.move_id._should_bypass_reservation(ml.location_id) and not float_is_zero(ml.product_qty, precision_digits=precision):
+            if ml.product_id.type == 'product' and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id) and not float_is_zero(ml.product_qty, precision_digits=precision):
                 self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
         moves = self.mapped('move_id')
         res = super(StockMoveLine, self).unlink()
@@ -546,7 +553,7 @@ class StockMoveLine(models.Model):
             raise UserError(_('You need to supply a Lot/Serial Number for product: \n - ') +
                               '\n - '.join(mls_tracked_without_lot.mapped('product_id.display_name')))
         ml_to_create_lot = self.env['stock.move.line'].browse(ml_ids_to_create_lot)
-        ml_to_create_lot._create_and_assign_production_lot()
+        ml_to_create_lot.with_context(bypass_reservation_update=True)._create_and_assign_production_lot()
 
         mls_to_delete = self.env['stock.move.line'].browse(ml_ids_to_delete)
         mls_to_delete.unlink()
@@ -595,6 +602,14 @@ class StockMoveLine(models.Model):
             lines |= picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
+    def _get_value_production_lot(self):
+        self.ensure_one()
+        return {
+            'company_id': self.company_id.id,
+            'name': self.lot_name,
+            'product_id': self.product_id.id
+        }
+
     def _create_and_assign_production_lot(self):
         """ Creates and assign new production lots for move lines."""
         lot_vals = []
@@ -607,11 +622,7 @@ class StockMoveLine(models.Model):
             key_to_mls[key] |= ml
             if ml.tracking != 'lot' or key not in key_to_index:
                 key_to_index[key] = len(lot_vals)
-                lot_vals.append({
-                    'company_id': ml.company_id.id,
-                    'name': ml.lot_name,
-                    'product_id': ml.product_id.id
-                })
+                lot_vals.append(ml._get_value_production_lot())
 
         lots = self.env['stock.production.lot'].create(lot_vals)
         for key, mls in key_to_mls.items():
@@ -796,6 +807,7 @@ class StockMoveLine(models.Model):
                     'qty_done': False,
                     'qty_ordered': qty_ordered,
                     'product_uom': uom.name,
+                    'product_uom_rec': uom,
                     'product': empty_move.product_id,
                 }
             else:
@@ -823,4 +835,5 @@ class StockMoveLine(models.Model):
             'picking_type_id': self.picking_id.picking_type_id.id,
             'restrict_partner_id': self.picking_id.owner_id.id,
             'company_id': self.picking_id.company_id.id,
+            'partner_id': self.picking_id.partner_id.id,
         }

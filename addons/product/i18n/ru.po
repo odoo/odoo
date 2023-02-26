@@ -161,6 +161,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"Дополнительные цены\n"
+"</span>\n"
+"<span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"Дополнительная цена\n"
+"</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -693,13 +699,13 @@ msgstr "заполненная количество"
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr "Угловой письменный стол(левая сторона)"
+msgstr "Угловой офисный стол (в левую сторону)"
 
 #. module: product
 #: model:product.product,name:product.product_product_5
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
-msgstr "Угловой письменный стол(правая сторона)"
+msgstr "Угловой офисный стол (в правую сторону)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__standard_price
@@ -885,7 +891,7 @@ msgstr "Описание"
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr "комбинация стола"
+msgstr "Комбинированный стол"
 
 #. module: product
 #: model:product.product,name:product.product_product_22
@@ -1664,6 +1670,14 @@ msgid "Next Activity Type"
 msgstr "Тип следующего действия"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr ""
@@ -2103,7 +2117,7 @@ msgstr "Упаковка товара (PDF)"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "упаковка товара"
+msgstr "Товары в упаковках"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -3219,6 +3233,12 @@ msgstr ""
 "чем коэффициент округления основной валюты компании"
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr ""
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3343,7 +3363,7 @@ msgstr "напр., Продавцы в долларах США"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "за"
 
 #. module: product
 #: code:addons/product/models/product.py:0

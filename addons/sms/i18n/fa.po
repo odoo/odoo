@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2022
+# Far Har <fhari1234@gmail.com>, 2022
 # fardin fa <fardin2689@gmail.com>, 2022
 # Hamid Darabi, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
@@ -11,8 +12,8 @@
 # arya sadeghi <aryasadeghy@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Arash Sardari <arashss77@gmail.com>, 2022
-# Far Har <fhari1234@gmail.com>, 2022
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,18 +93,20 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">بدون رکورد</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
 msgid "Action Needed"
-msgstr "عملیات مورد نیاز است"
+msgstr "اقدام مورد نیاز است"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_base_automation__state
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:sms.field_ir_cron__state
 msgid "Action To Do"
-msgstr "کنش برای انجام"
+msgstr "عمل برای انجام"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain
@@ -156,12 +159,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "تلفن لیست‌سیاه شده، موبایل است"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "تلفن لیست سیاه شده، تلفن است"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -242,7 +245,7 @@ msgstr "محتوا"
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
 msgid "Created by"
-msgstr "ایجادشده توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__create_date
@@ -279,7 +282,7 @@ msgstr "مقدار پیش‌فرض"
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Discard"
-msgstr "انصراف"
+msgstr "رها کردن"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_cancel_action
@@ -374,6 +377,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"فیلد مورد استفاده برای نگهداری شماره تلفن مدنظر. به بالا بردن جستجوها و "
+"مقایسه‌ها کمک می‌کند."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__copyvalue
@@ -390,7 +395,7 @@ msgstr "دنبال‌کنندگان"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "دنبال کنندگان (طرف حساب ها)"
+msgstr "پیروان (شرکاء)"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -411,7 +416,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "دارای پیام"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
@@ -450,7 +455,8 @@ msgstr "شناسه"
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction
 #: model:ir.model.fields,help:sms.field_res_partner__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "در صورت علامت‌گذاری، پیام‌های جدید نیاز به توجه شما دارند."
+msgstr ""
+"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
@@ -486,7 +492,7 @@ msgstr "در صورت علامت‌گذاری، پیام‌های جدید نی�
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
+msgstr "در صورت علامت‌گذاری، برخی پیام ها خطای تحویل دارند."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
@@ -494,6 +500,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"اگر شماره تلفن مدنظر در لیست سیاه باشد، مخاطب‌ دیگر پیامک‌های پستی انبوه را "
+"از هیچ لیستی، دریافت نخواهد کرد"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -520,6 +528,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"نشان می دهد که آیا شماره تلفن ثبت شده در لیست سیاه، یک شماره تلفن همراه است."
+" هنگامی که در یک مدل هم فیلد تلفن همراه و هم تلفن وجود دارد، می توان تشخیص "
+"داد که کدام شماره در لیست سیاه قرار می گیرد."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -528,6 +539,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"نشان می دهد که آیا شماره تلفن ثبت شده در لیست سیاه، یک شماره تلفن همراه است."
+" هنگامی که در یک مدل هم فیلد تلفن همراه و هم تلفن وجود دارد، می توان تشخیص "
+"داد که کدام شماره در لیست سیاه قرار می گیرد."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -591,7 +605,7 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به‌روز‌رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__write_date
@@ -683,7 +697,7 @@ msgstr "نام"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "بدون رکورد"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -709,7 +723,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
 msgid "Number of Actions"
-msgstr "تعداد عملیات"
+msgstr "تعداد اقدامات"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
@@ -719,7 +733,7 @@ msgstr "تعداد خطاها"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به اقدام دارد"
+msgstr "تعداد پیام ها که نیاز به عمل"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
@@ -780,12 +794,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "تلفن در لیست سیاه"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "تلفن/موبایل"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
@@ -800,12 +814,12 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Preview"
-msgstr "پیش نمایش"
+msgstr "پیش‌نمایش"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Preview of"
-msgstr "پیشنمایشِ"
+msgstr "پیش‌نمایش"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -869,7 +883,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Resend"
-msgstr ""
+msgstr "ارسال مجدد"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
@@ -950,7 +964,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS Preview"
-msgstr ""
+msgstr "پیش‌نمایش پیامک"
 
 #. module: sms
 #. openerp-web
@@ -976,7 +990,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "SMS Template"
-msgstr ""
+msgstr "قالب پیامک"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
@@ -1096,7 +1110,7 @@ msgstr "ارسال شد"
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
 msgid "Server Action"
-msgstr "کنش سرور"
+msgstr "کنش کارپذیر"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
@@ -1160,7 +1174,7 @@ msgstr "موفق"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
 msgid "Template Preview"
-msgstr "پیشنمایش قالب"
+msgstr "پیش‌نمایش قالب"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
@@ -1201,6 +1215,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"این شماره تلفن برای بازاریابی پیامکی در لیست سیاه قرار گرفته است. برای لغو "
+"لیست سیاه کلیک کنید."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
@@ -1222,6 +1238,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"نوع عملکرد سرور مقادیر زیر در دسترس هستند:\n"
+"- 'Execute Python Code': بلوکی از کد پایتون که اجرا خواهد شد\n"
+"- \"ایجاد\": یک رکورد جدید با مقادیر جدید ایجاد کنید\n"
+"- 'به روز رسانی یک رکورد': مقادیر یک رکورد را به روز کنید\n"
+"- \"اجرای چندین اقدام\": اقدامی را تعریف کنید که چندین اقدام دیگر سرور را راه اندازی کند\n"
+"- \"ارسال ایمیل\": به طور خودکار یک ایمیل ارسال کنید (بحث)\n"
+"- \"افزودن فالوور\": اضافه کردن دنبال کنندگان به یک رکورد (بحث)\n"
+"- \"ایجاد فعالیت بعدی\": ایجاد یک فعالیت (بحث)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
@@ -1233,12 +1257,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_unread
 msgid "Unread Messages"
-msgstr "پیام‌های خوانده‌‌نشده"
+msgstr "پیام های ناخوانده"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "شمارنده پیام‌های خوانده‌ نشده"
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
@@ -1280,7 +1304,7 @@ msgstr "پیام‌های وب‌سایت"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
 msgid "Website communication history"
-msgstr "تاریخچه ارتباطات با وبسایت"
+msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_model_object_field
@@ -1368,7 +1392,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
-msgstr ""
+msgstr "رکورد:"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

@@ -63,13 +63,14 @@ Master Data:
         "data/l10n_latam_identification_type_data.xml",
         "data/res_partner_data.xml",
         # Other data
-        "data/account_chart_template_configure_data.xml",
         "data/l10n_latam.document.type.csv",
+        "data/account_chart_template_configure_data.xml",
         "data/l10n_ec.sri.payment.csv",
         "views/account_tax_view.xml",
         "views/l10n_latam_document_type_view.xml",
         "views/l10n_ec_sri_payment.xml",
         "views/account_journal_view.xml",
+        # Security
         "security/ir.model.access.csv",
     ],
     "demo": [

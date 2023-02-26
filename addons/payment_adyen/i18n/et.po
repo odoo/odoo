@@ -6,17 +6,19 @@
 # Marek Pontus, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
+# Leaanika Randmets, 2022
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2022-11-10 15:12+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2022\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +65,7 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "Could not establish the connection to the API."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_hmac_key
@@ -229,13 +231,19 @@ msgid "The unique reference of the partner owning this token"
 msgstr ""
 
 #. module: payment_adyen
+#: code:addons/payment_adyen/utils.py:0
+#, python-format
+msgid "Unrecognized field %s in street format."
+msgstr "Tänava formaadis on väli %s, mida ei õnnestu tuvastada."
+
+#. module: payment_adyen
 #. openerp-web
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr ""
+msgstr "Me ei saa teie makset töödelda."
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0

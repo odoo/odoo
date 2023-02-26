@@ -72,6 +72,16 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(answers.mapped('partner_id'), self.customer)
         self.assertEqual(set(answers.mapped('deadline')), set([deadline]))
 
+        with self.subTest('Warning when inviting an already invited partner'):
+            action = self.survey.action_send_survey()
+            invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+            invite_form.partner_ids.add(self.customer)
+
+            self.assertIn(self.customer, invite_form.existing_partner_ids)
+            self.assertEqual(invite_form.existing_text,
+                             'The following customers have already received an invite: Caroline Customer.')
+
+
     @users('survey_manager')
     def test_survey_invite_authentication_nosignup(self):
         Answer = self.env['survey.user_input']

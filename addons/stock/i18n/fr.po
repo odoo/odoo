@@ -10,6 +10,8 @@
 # Thomas Deleval <thd@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Moka Tourisme <hello@mokatourisme.fr>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,7 +157,7 @@ msgstr "&gt;"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
-msgstr "Feuille de comptage"
+msgstr "'Feuille de comptage'"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -1403,6 +1405,14 @@ msgid "Change to a better name"
 msgstr "Choisir un meilleur nom"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
+"Le changement de %s n'est pas autorisé, vous ne pouvez pas réaliser cette "
+"opération."
+
+#. module: stock
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -1736,7 +1746,7 @@ msgstr "Feuille de comptage"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Counted Quantity"
-msgstr "Quantités Comptés"
+msgstr "Quantités Comptées"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2140,8 +2150,8 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Définissez un règle de stock minimum afin qu' Odoo crée automatiquement des "
-"achats ou des ordres de fabrications pour réapprovisionner  votre stock"
+"Définissez un règle de stock minimum afin qu'Odoo crée automatiquement des "
+"achats ou des ordres de fabrication pour réapprovisionner votre stock"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2175,6 +2185,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Définit la méthode par défaut utilisée pour suggérer l'emplacement exact (étagère) où prendre les produits, quel lot, etc. pour cet emplacement. Cette méthode peut être appliquée au niveau de la catégorie de produits, et un repli est effectué sur les emplacements parents si aucun n'est défini ici.\n"
+"\n"
+"FIFO : les produits/lots stockés en premier seront sortis en premier.\n"
+"LIFO : les produits/lots stockés en dernier seront sortis en premier.\n"
+"Emplacement du placard : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
+"FEFO : les produits/lots dont la date de retrait est la plus proche seront retirés en premier (la disponibilité de cette méthode dépend du paramètre \"Dates d'expiration\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2447,12 +2463,12 @@ msgstr "Différence"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Discard"
-msgstr "Annuler"
+msgstr "Ignorer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid "Discard and manually resolve the conflict"
-msgstr "Annuler et résoudre le conflit manuellement"
+msgstr "Ignorer et résoudre le conflit manuellement"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
@@ -3541,6 +3557,15 @@ msgstr "Opérateur du domaine non valide : %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Opérande droit du domaine non valide : %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Configuration de règles non valide, la règle suivante entraîne une boucle "
+"infinie : %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -4735,7 +4760,7 @@ msgstr "Aucun mouvement de stock trouvé"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "No Stock On Hand"
-msgstr ""
+msgstr "Pas de stock disponible"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -5486,6 +5511,9 @@ msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
 msgstr ""
+"Appuyez sur le bouton CRÉER pour définir la quantité de chaque produit de "
+"votre stock ou importez-les à partir d'une feuille de calcul dans les "
+"Favoris"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6489,7 +6517,7 @@ msgstr "Réapprovisionner depuis"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
 msgid "Resupply Routes"
-msgstr "Routes de réapprovisionement"
+msgstr "Routes de réassort"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6957,6 +6985,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Définissez une stratégie de sortie spécifique qui sera utilisée quel que soit l'emplacement d'origine pour cette catégorie de produits.\n"
+"\n"
+"FIFO : les produits/lots stockés en premier seront sortis en premier.\n"
+"LIFO : les produits/lots stockés en dernier seront sortis en premier.\n"
+"Emplacement du placard : les produits/lots les plus proches de l'emplacement cible seront déplacés en premier.\n"
+"FEFO : les produits/lots dont la date de retrait est la plus proche seront retirés en premier (la disponibilité de cette méthode dépend du paramètre \"Dates d'expiration\")."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7590,8 +7624,8 @@ msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
 msgstr ""
-"Champ technique utilisé pour les routes de réapprovisionnement entre "
-"entrepôts appartenant à cette société"
+"Champ technique utilisé pour les routes de réassort entre entrepôts "
+"appartenant à cette société"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
@@ -7796,7 +7830,7 @@ msgstr "Le nom de l'entrepôt doit être unique par société !"
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
+msgstr "Le nombre de numéros de série à générer doit être supérieur à zéro."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -7852,6 +7886,10 @@ msgid ""
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
 msgstr ""
+"La quantité renseignée pour l' article \"%s\" ne respecte pas les règles "
+"d'arrondissement définies dans l'unité de mesure \"%s\". Veuillez changer la"
+" quantité renseignée ou les règles d'arrondissement de votre unité de "
+"mesure."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7934,7 +7972,7 @@ msgid ""
 msgstr ""
 "L'entrepôt à propager au mouvement/approvisionnement créé, qui peut être "
 "différent de l'entrepôt pour lequel on fait cette règle (ex. : pour les "
-"règles de réapprovisionnement depuis un autre entrepôt)"
+"règles de réassort depuis un autre entrepôt)"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -7948,6 +7986,8 @@ msgid ""
 "This analysis gives you an overview of the current stock level of your "
 "products."
 msgstr ""
+"Cette analyse vous donne un aperçu du niveau de stock actuel de vos "
+"produits."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -8106,6 +8146,16 @@ msgstr ""
 " et à en créer un nouveau à la place."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"La société de ce produit ne peut être modifiée tant qu'il existe des "
+"quantités de ce produit appartenant à une autre société."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8164,7 +8214,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 msgid "This will discard all unapplied counts, do you want to proceed?"
 msgstr ""
-"Ceci va effacer tous les comptages non appliqués, est-ce vraiment ce que "
+"Ceci va ignorer tous les comptages non appliqués, est-ce vraiment ce que "
 "vous voulez faire ?"
 
 #. module: stock
@@ -9132,6 +9182,13 @@ msgstr ""
 " la réservation du mouvement de stock."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+"Vous ne pouvez pas modifier le type d'un produit qui a déjà été utilisé."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9303,6 +9360,14 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Vous ne pouvez pas décommander un mouvement de stock dont l'état est "
 "\"Terminé."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"Vous ne pouvez pas modifier un mouvement de stock annulé, créez plutôt une "
+"nouvelle ligne."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9477,7 +9542,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
-msgstr ""
+msgstr "Votre stock est actuellement vide"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
@@ -9645,3 +9710,10 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Jours de visibilité globale"

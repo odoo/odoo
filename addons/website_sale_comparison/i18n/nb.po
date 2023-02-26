@@ -3,23 +3,33 @@
 # 	* website_sale_comparison
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jorunn D. Newth, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
+# Jorunn D. Newth, 2022
+# Martin Trigaux, 2022
+# Marius Stedjan <marius@stedjan.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:28+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_sale_comparison
+#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_8
+msgid "134.7 x 200 x 7.2 mm"
+msgstr "134.7 x 200 x 7.2 mm"
+
+#. module: website_sale_comparison
+#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_7
+msgid "308 g"
+msgstr "308 g"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -35,8 +45,8 @@ msgstr "<i class=\"fa fa-exchange\"/> Sammenlikne"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
-msgid "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Add to Cart"
-msgstr "<i class=\"fa fa-shopping-cart\"/>&amp;nbsp;Legg i handlevogn"
+msgid "<i class=\"fa fa-shopping-cart mr-2\"/>Add to Cart"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
@@ -44,8 +54,8 @@ msgid "<i class=\"fa fa-trash\" role=\"img\" aria-label=\"Remove\"/>"
 msgstr ""
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
-msgid "<span class=\"fa fa-exchange\"/> Add to compare"
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare_button
+msgid "<span class=\"fa fa-exchange mr-2\"/>Add to compare"
 msgstr ""
 
 #. module: website_sale_comparison
@@ -57,6 +67,16 @@ msgstr "<span class=\"h3\">Foreslåtte alternativer: </span>"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "<strong>Price:</strong>"
 msgstr "<strong>Pris:</strong>"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
+msgid "<strong>x</strong>"
+msgstr ""
+
+#. module: website_sale_comparison
+#: model:product.attribute.value,name:website_sale_comparison.product_attribute_value_1
+msgid "Apple"
+msgstr "Apple"
 
 #. module: website_sale_comparison
 #: model:ir.actions.act_window,name:website_sale_comparison.product_attribute_category_action
@@ -79,7 +99,7 @@ msgstr "Kategorinavn"
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_add_to_compare
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.add_to_compare_button
 #, python-format
 msgid "Compare"
 msgstr "Sammenlikne"
@@ -103,9 +123,25 @@ msgid "Created on"
 msgstr "Opprettet"
 
 #. module: website_sale_comparison
+#: model:product.attribute,name:website_sale_comparison.product_attribute_8
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_2
+msgid "Dimensions"
+msgstr "Dimensjoner"
+
+#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
+
+#. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_duration
+msgid "Duration"
+msgstr "Varighet"
+
+#. module: website_sale_comparison
+#: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_general_features
+msgid "General Features"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__id
@@ -130,6 +166,7 @@ msgstr "Sist oppdatert"
 #. module: website_sale_comparison
 #. openerp-web
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #: model:ir.model,name:website_sale_comparison.model_product_product
 #, python-format
 msgid "Product"
@@ -149,7 +186,7 @@ msgstr "Produktattributt-kategori"
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Attributtlinje for Produktmal"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -160,7 +197,7 @@ msgstr "Produktbilde"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__attribute_ids
 msgid "Related Attributes"
-msgstr ""
+msgstr "Relaterte attributter"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_product
@@ -188,8 +225,8 @@ msgstr "Sammenlikner"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "Specifications for"
-msgstr "Spesifikasjoner for"
+msgid "Specifications"
+msgstr ""
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
@@ -200,9 +237,15 @@ msgstr "Ukategorisert"
 #. module: website_sale_comparison
 #. openerp-web
 #: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
+#: code:addons/website_sale_comparison/static/src/xml/comparison.xml:0
 #, python-format
 msgid "Warning"
 msgstr "Advarsel"
+
+#. module: website_sale_comparison
+#: model:product.attribute,name:website_sale_comparison.product_attribute_7
+msgid "Weight"
+msgstr "Vekt"
 
 #. module: website_sale_comparison
 #. openerp-web

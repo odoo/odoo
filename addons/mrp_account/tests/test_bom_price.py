@@ -3,6 +3,7 @@
 
 from odoo.exceptions import UserError
 from odoo.tests import common, Form
+
 from odoo.tools.float_utils import float_round, float_compare
 
 
@@ -107,11 +108,11 @@ class TestBomPrice(common.TransactionCase):
         """Test calcuation of bom cost with operations."""
         workcenter_from1 = Form(self.env['mrp.workcenter'])
         workcenter_from1.name = 'Workcenter'
-        workcenter_from1.time_efficiency = 100
+        workcenter_from1.time_efficiency = 80
         workcenter_from1.capacity = 2
         workcenter_from1.oee_target = 100
-        workcenter_from1.time_start = 0
-        workcenter_from1.time_stop = 0
+        workcenter_from1.time_start = 15
+        workcenter_from1.time_stop = 15
         workcenter_from1.costs_hour = 100
         workcenter_1 = workcenter_from1.save()
 
@@ -171,11 +172,11 @@ class TestBomPrice(common.TransactionCase):
         # Dinning Table Operation Cost(1 Unit)
         # -----------------------------------------------------------------
         # Operation cost calculate for 1 units
-        # Cutting        (20 / 60) * 100 =  33.33
-        # Drilling       (25 / 60) * 100 =  41.67
-        # Fitting        (30 / 60) * 100 =  50.00
+        # Cutting        (15 + 15 + (20 * 100/80) / 60) * 100 =   91.67
+        # Drilling       (15 + 15 + (25 * 100/80) / 60) * 100 =  102.08
+        # Fitting        (15 + 15 + (30 * 100/80) / 60) * 100 =  112.50
         # ----------------------------------------
-        # Operation Cost  1 unit = 125
+        # Operation Cost  1 unit = 306.25
         # -----------------------------------------------------------------
 
 
@@ -183,21 +184,21 @@ class TestBomPrice(common.TransactionCase):
         # Table Head Operation Cost (1 Dozen)
         # --------------------------------------------------------------------------
         # Operation cost calculate for 1 dozens
-        # Cutting        (20 * 1 / 60) * 100 =  33,33
-        # Drilling       (25 * 1 / 60) * 100 =  41,67
-        # Fitting        (30 * 1 / 60) * 100 =  50
+        # Cutting        (15 + 15 + (20 * 1 * 100/80) / 60) * 100 =   91.67
+        # Drilling       (15 + 15 + (25 * 1 * 100/80) / 60) * 100 =  102.08
+        # Fitting        (15 + 15 + (30 * 1 * 100/80) / 60) * 100 =  112.50
         # ----------------------------------------
-        # Operation Cost 1 dozen (125 per dozen) and 10.42 for 1 Unit
+        # Operation Cost 1 dozen (306.25 per dozen) and 25.52 for 1 Unit
         # --------------------------------------------------------------------------
 
 
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
         self.dining_table.button_bom_cost()
-        # Total cost of Dining Table = (550) + Total cost of operations (125) = 675.0
-        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 675.0, "After computing price from BoM price should be 612.5")
+        # Total cost of Dining Table = (550) + Total cost of operations (306.25) = 856.25
+        self.assertEqual(float_round(self.dining_table.standard_price, precision_digits=2), 856.25, "After computing price from BoM price should be 856.25")
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
-        # Total cost of Dining Table = (718.75) + Total cost of all operations (125 + 10.42) = 854.17
-        self.assertEqual(float_compare(self.dining_table.standard_price, 854.17, precision_digits=2), 0, "After computing price from BoM price should be 786.46")
+        # Total cost of Dining Table = (718.75) + Total cost of all operations (306.25 + 25.52) = 1050.52
+        self.assertEqual(float_compare(self.dining_table.standard_price, 1050.52, precision_digits=2), 0, "After computing price from BoM price should be 1050.52")
 
     def test_02_compute_byproduct_price(self):
         """Test BoM cost when byproducts with cost share"""

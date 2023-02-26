@@ -1,13 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_expiry
+# 	* product_expiry
+# 
+# Translators:
+# laznikd <laznik@mentis.si>, 2022
+# Jasmina Macur <jasmina@hbs.si>, 2022
+# Grega Vavtar <grega@hbs.si>, 2022
+# matjaz k <matjaz@mentis.si>, 2022
+# Martin Trigaux, 2022
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2022\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,44 +27,81 @@ msgstr ""
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid ""
-"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
-msgid "<span class=\"pull-right\">Expiry Date</span>"
-msgstr ""
-
-#. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
-msgid "<span>days</span>"
-msgstr ""
+msgid "<span> days</span>"
+msgstr "<span> dni</span>"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
+msgstr "Datum opozorila"
+
+#. module: product_expiry
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_use_date
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
+msgid "Alert Time"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
+msgid "Best Before Time"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
+msgstr "Najboljše za uporabo do"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Best before:"
 msgstr ""
 
 #. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_pain
-#: model:product.template,name:product_expiry.product_product_pain_product_template
-msgid "Bread"
+#: model:ir.model,name:product_expiry.model_res_config_settings
+msgid "Config Settings"
+msgstr "Uredi nastavitve"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirm"
+msgstr "Potrdi"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
 msgstr ""
 
 #. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_lait
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr ""
+#: code:addons/product_expiry/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+#, python-format
+msgid "Confirmation"
+msgstr "Potrditev"
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
 msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
@@ -65,134 +111,271 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
+msgstr "Datumi"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__description
+msgid "Description"
+msgstr "Opis"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Discard"
+msgstr "Opusti"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
+msgid "Display Expiration Dates on Delivery Slips"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_life_date
-msgid "End of Life Date"
-msgstr ""
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
 
 #. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
-msgid "Expiration alerts"
+msgid "Expiration Alerts"
 msgstr ""
 
 #. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_jambon
-#: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camembert"
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
+msgid "Expiration Date"
+msgstr "Datum izteka"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
+msgid "Expiration Time"
 msgstr ""
 
 #. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_from
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
+#: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
+msgid "Expiration dates will appear on the delivery slip"
 msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Expired Lot(s)"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_expiry
+#: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
+msgid "Include expiration dates on delivery slip"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
+msgid "Lot"
+msgstr "Sklop"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Lot/serijska številka"
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product_alert_time
-#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__expiration_time
 msgid ""
-"Number of days before an alert should be raised on the lot/serial number."
+"Number of days after the receipt of the products (from the vendor or in "
+"stock after production) after which the goods may become dangerous and must "
+"not be consumed. It will be computed on the lot/serial number."
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product_life_time
-#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
 msgid ""
-"Number of days before the goods may become dangerous and must not be "
-"consumed. It will be computed on the lot/serial number."
+"Number of days before the Expiration Date after which an alert should be "
+"raised on the lot/serial number. It will be computed on the lot/serial "
+"number."
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product_removal_time
-#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
 msgid ""
-"Number of days before the goods should be removed from the stock. It will be"
-" computed on the lot/serial number."
+"Number of days before the Expiration Date after which the goods should be "
+"removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product_use_time
-#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
-"Number of days before the goods starts deteriorating, without being "
-"dangerous yet. It will be computed on the lot/serial number."
+"Number of days before the Expiration Date after which the goods starts "
+"deteriorating, without being dangerous yet. It will be computed on the "
+"lot/serial number."
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product_alert_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
-msgid "Product Alert Time"
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
+msgid "Picking"
+msgstr "Prevzem"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Proceed except for expired one"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_product_expiry_alert
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "Oskrbovalna skupina"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "Product Expiry Alert"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product_life_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
-msgid "Product Life Time"
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product_removal_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template_removal_time
-msgid "Product Removal Time"
+#: model:ir.model,name:product_expiry.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
 msgstr ""
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product_use_time
-#: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
-msgid "Product Use Time"
-msgstr ""
+msgstr "Predloga izdelka"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "Kvanti"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_removal_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
+msgstr "Datum umika izdelka"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
+msgid "Removal Time"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_product_expiry_alert
-msgid "The Alert Date has been reached."
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
+msgid "Show Lots"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
+#: model:ir.model,name:product_expiry.model_stock_move
+msgid "Stock Move"
+msgstr "Premik zaloge"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "The Expiration Date has been reached."
+msgstr ""
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/production_lot.py:0
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__expiration_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr ""
+msgstr "Datum , ko izdelek postane nevaren."
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
-#: model:ir.model.fields,help:product_expiry.field_stock_quant_removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
+"removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
+msgstr "Datum , ko izdelek postane manj vreden , ne pa še nevaren."
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_picking
+msgid "Transfer"
+msgstr "Prenos"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_expiration_date
+msgid "Use Expiration Date"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Use by:"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
+msgid ""
+"When this box is ticked, you have the possibility to specify dates to manage"
+" product expiration, on the product and on the corresponding lot/serial "
+"numbers"
+msgstr ""
+
+#. module: product_expiry
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver some product expired lots.\n"
+"Do you confirm you want to proceed ?"
+msgstr ""
+
+#. module: product_expiry
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"Do you confirm you want to proceed ?"
 msgstr ""

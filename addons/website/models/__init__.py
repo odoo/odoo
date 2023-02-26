@@ -11,6 +11,7 @@ from . import ir_model_data
 from . import ir_module_module
 from . import ir_qweb
 from . import ir_qweb_fields
+from . import mail_thread
 from . import mixins
 from . import website
 from . import website_menu

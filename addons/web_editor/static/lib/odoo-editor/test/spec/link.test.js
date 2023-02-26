@@ -2,11 +2,15 @@ import { URL_REGEX, URL_REGEX_WITH_INFOS } from '../../src/OdooEditor.js';
 import {
     BasicEditor,
     click,
+    deleteForward,
+    deleteBackward,
+    deleteBackwardMobile,
     insertText,
     insertParagraphBreak,
     insertLineBreak,
     testEditor,
     createLink,
+    undo
 } from '../utils.js';
 
 const convertToLink = createLink;
@@ -20,7 +24,7 @@ const testUrlRegex = (url) => {
     });
 }
 const testNotUrlRegex = (url) => {
-    it(`should be a link: ${url}`, () => {
+    it(`should NOT be a link: ${url}`, () => {
         window.chai.assert.notExists(url.match(URL_REGEX));
         window.chai.assert.notExists(url.match(URL_REGEX_WITH_INFOS));
     });
@@ -28,14 +32,25 @@ const testNotUrlRegex = (url) => {
 
 describe('Link', () => {
     describe('regex', () => {
+        testUrlRegex('google.com');
+        testUrlRegex('google.co.uk');
         testUrlRegex('http://google.com');
         testUrlRegex('https://google.com');
+        testUrlRegex('https://www.google.com');
+        testNotUrlRegex('google.shop');
+        testUrlRegex('google.com/');
+        testUrlRegex('http://google.com/');
+        testUrlRegex('https://google.com/');
+        testUrlRegex('https://google.co.uk/');
+        testUrlRegex('https://www.google.com/');
+        testNotUrlRegex('google.shop/');
         testUrlRegex('http://google.com/foo#test');
         testUrlRegex('a.bcd.ef');
         testUrlRegex('a.bc.de');
-        testNotUrlRegex('google.com');
         testNotUrlRegex('a.bc.d');
         testNotUrlRegex('a.b.bc');
+        testNotUrlRegex('20.08.2022');
+        testNotUrlRegex('31.12');
     });
     describe('insert Link', () => {
         // This fails, but why would the cursor stay inside the link
@@ -162,6 +177,121 @@ describe('Link', () => {
             });
         });
     });
+    describe('edit link label', () => {
+        describe('range collapsed', () => {
+            it('should not change the url when a link is not edited', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.co">google.com</a>b</p>',
+                    contentAfter: '<p>a<a href="https://google.co">google.com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.xx">google.com</a>b<a href="https://google.co">cd[]</a></p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'e');
+                    },
+                    contentAfter: '<p>a<a href="https://google.xx">google.com</a>b<a href="https://google.co">cde[]</a></p>',
+                });
+            });
+            it('should change the url when the label change', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.co">google.co[]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'm');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.com[]</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://gogle.com">go[]gle.com</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'o');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">goo[]gle.com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://else.com">go[]gle.com</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'o');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">goo[]gle.com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://else.com">http://go[]gle.com</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'o');
+                    },
+                    contentAfter: '<p>a<a href="http://google.com">http://goo[]gle.com</a>b</p>',
+                });
+            });
+            it('should change the url in one step', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.co">google.co[]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'm');
+                        await undo(editor);
+                    },
+                    contentAfter: '<p>a<a href="https://google.co">google.co[]</a>b</p>',
+                });
+            });
+            it('should not change the url when the label change', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">google.com[]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'u');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.comu[]</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">google.com[]</a></p>',
+                    stepFunction: async editor => {
+                        await insertLineBreak(editor);
+                        await insertText(editor, 'odoo.com')
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.com<br>odoo.com[]</a></p>',
+                });
+            });
+        });
+        describe('range not collapsed', () => {
+            it('should change the url when the label change', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">google.[com]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'be');
+                    },
+                    contentAfter: '<p>a<a href="https://google.be">google.be[]</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://gogle.com">[yahoo].com</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'google');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google[].com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://else.com">go[gle.c]om</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '.c');
+                    },
+                    contentAfter: '<p>a<a href="https://go.com">go.c[]om</a>b</p>',
+                });
+            });
+            it('should not change the url when the label change', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">googl[e.com]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'e');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google[]</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.com">google.[com]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'vvv');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.vvv[]</a>b</p>',
+                });
+            });
+        });
+    });
     describe('remove link', () => {
         describe('range collapsed', () => {
             it('should remove the link if collapsed range at the end of a link', async () => {
@@ -250,6 +380,103 @@ describe('Link', () => {
             });
         });
     });
+    describe('isolated link', () => {
+        const clickOnLink = async editor => {
+            const a = editor.editable.querySelector('a');
+            await click(a, { clientX: a.getBoundingClientRect().left + 5 });
+            return a;
+        };
+        it('should restrict editing to link when clicked', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.isContentEditable).to.be.equal(true);
+                },
+                contentAfter: '<p>a<a href="#/"><span>b</span></a></p>',
+            });
+            // The following is a regression test, checking that the link
+            // remains non-editable whenever the editable zone is contained by
+            // the link.
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.isContentEditable).to.be.equal(false);
+                },
+                contentAfter: '<p>a<a href="#/"><span contenteditable="true">b</span></a></p>',
+            }, {
+                isRootEditable: false,
+                getContentEditableAreas: function (editor) {
+                    return [...editor.editable.querySelectorAll('a span')];
+                }
+            });
+        });
+        it('should keep isolated link after a keyboard delete', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    await deleteBackward(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" oe-zws-empty-inline="">[]\u200B</a>c</p>',
+                contentAfter: '<p>a[]c</p>',
+            });
+        });
+        it('should keep isolated link after a mobile delete', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    await deleteBackwardMobile(editor);
+                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" oe-zws-empty-inline="">[]\u200B</a>c</p>',
+                contentAfter: '<p>a[]c</p>',
+            });
+        });
+        it('should keep isolated link after a delete and typing', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackward(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '1');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '2');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '3');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
+            });
+        });
+        it('should keep isolated link after a mobile delete and typing', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackwardMobile(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '1');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '2');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await insertText(editor, '3');
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                },
+                contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
+            });
+        });
+    });
     describe('existing link', () => {
         it('should parse correctly a span inside a Link', async () => {
             await testEditor(BasicEditor, {
@@ -317,6 +544,15 @@ describe('Link', () => {
                 contentAfter: '<p>a<a href="exist">bc[]</a>d</p>',
             });
         });
+        it('should add two character after the link', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<a href="exist">b[]</a>e</p>',
+                stepFunction: async editor => {
+                    await insertText(editor, 'cd');
+                },
+                contentAfter: '<p>a<a href="exist">bcd[]</a>e</p>',
+            });
+        });
         it('should add a character after the link if range just after link', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="exist">b</a>[]d</p>',
@@ -342,32 +578,6 @@ describe('Link', () => {
                     await insertText(editor, 'c');
                 },
                 contentAfter: '<p>a<a href="exist">b</a></p><p>c[]d</p>',
-            });
-        });
-        it('should restrict editing to link when clicked', async () => {
-            const initialContent = '<p>a<a href="#/"><span>b</span></a></p>';
-            const editFunction = editableLink => async editor => {
-                const a = editor.editable.querySelector('a');
-                await click(a, { clientX: a.getBoundingClientRect().left + 5 });
-                window.chai.expect(a.isContentEditable).to.be.equal(editableLink);
-            };
-            await testEditor(BasicEditor, {
-                contentBefore: initialContent,
-                stepFunction: editFunction(true),
-                contentAfter: '<p>a<a href="#/" contenteditable="true"><span>b</span></a></p>',
-            });
-            // The following is a regression test, checking that the link
-            // remains non-editable whenever the editable zone is contained by
-            // the link.
-            await testEditor(BasicEditor, {
-                contentBefore: initialContent,
-                stepFunction: editFunction(false),
-                contentAfter: '<p>a<a href="#/"><span contenteditable="true">b</span></a></p>',
-            }, {
-                isRootEditable: false,
-                getContentEditableAreas: function (editor) {
-                    return editor.editable.querySelectorAll('a span');
-                }
             });
         });
         // it('should select and replace all text and add the next char in bold', async () => {

@@ -7,6 +7,7 @@ import logging
 import requests
 from werkzeug.urls import url_quote
 from base64 import b64encode
+from urllib3.util.ssl_ import create_urllib3_context
 
 from odoo import api, models, _
 from odoo.tools.float_utils import json_float_round
@@ -20,6 +21,21 @@ ETA_DOMAINS = {
     'token.preproduction': 'https://id.preprod.eta.gov.eg',
     'token.production': 'https://id.eta.gov.eg',
 }
+
+
+class L10nEgHTTPAdapter(requests.adapters.HTTPAdapter):
+    """ An adapter to allow unsafe legacy renegotiation necessary to connect to
+    gravely outdated ETA production servers.
+    """
+
+    def init_poolmanager(self, *args, **kwargs):
+        # This is not defined before Python 3.12
+        # cfr. https://github.com/python/cpython/pull/93927
+        # Origin: https://github.com/openssl/openssl/commit/ef51b4b9
+        OP_LEGACY_SERVER_CONNECT = 0x04
+        context = create_urllib3_context(options=OP_LEGACY_SERVER_CONNECT)
+        kwargs["ssl_context"] = context
+        return super().init_poolmanager(*args, **kwargs)
 
 
 class AccountEdiFormat(models.Model):
@@ -38,7 +54,9 @@ class AccountEdiFormat(models.Model):
         api_domain = is_access_token_req and self._l10n_eg_get_eta_token_domain(production_enviroment) or self._l10n_eg_get_eta_api_domain(production_enviroment)
         request_url = api_domain + request_url
         try:
-            request_response = requests.request(method, request_url, data=request_data.get('body'), headers=request_data.get('header'), timeout=(5, 10))
+            session = requests.session()
+            session.mount("https://", L10nEgHTTPAdapter())
+            request_response = session.request(method, request_url, data=request_data.get('body'), headers=request_data.get('header'), timeout=(5, 10))
         except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as ex:
             return {
                 'error': str(ex),
@@ -220,6 +238,10 @@ class AccountEdiFormat(models.Model):
             'extraDiscountAmount': 0.0,
             'totalItemsDiscountAmount': 0.0,
         })
+        if invoice.ref:
+            eta_invoice['purchaseOrderReference'] = invoice.ref
+        if invoice.invoice_origin:
+            eta_invoice['salesOrderReference'] = invoice.invoice_origin
         return eta_invoice
 
     @api.model
@@ -298,8 +320,8 @@ class AccountEdiFormat(models.Model):
         if issuer:
             address['address']['branchID'] = invoice.journal_id.l10n_eg_branch_identifier or ''
         individual_type = self._l10n_eg_get_partner_tax_type(partner, issuer)
+        address['type'] = individual_type or ''
         if invoice.amount_total >= invoice.company_id.l10n_eg_invoicing_threshold or individual_type != 'P':
-            address['type'] = individual_type or ''
             address['id'] = partner.vat or ''
         return address
 
@@ -348,7 +370,7 @@ class AccountEdiFormat(models.Model):
             return {
                 invoice: {
                     'error':  _("An error occured in created the ETA invoice, please retry signing"),
-                    'blocking_level': 'info'
+                    'blocking_level': 'error'
                 }
             }
         invoice_json = json.loads(invoice.l10n_eg_eta_json_doc_id.raw)['request']
@@ -356,7 +378,7 @@ class AccountEdiFormat(models.Model):
             return {
                 invoice: {
                     'error':  _("Please make sure the invoice is signed"),
-                    'blocking_level': 'info'
+                    'blocking_level': 'error'
                 }
             }
         return {invoice: self._l10n_eg_edi_post_invoice_web_service(invoice)}

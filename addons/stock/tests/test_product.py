@@ -5,6 +5,7 @@
 # Copyright 2015 Camptocamp SA
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.exceptions import UserError
 from odoo.tests.common import Form
 
 
@@ -105,6 +106,74 @@ class TestVirtualAvailable(TestStockCommon):
         self.assertTrue(orderpoint.active)
         self.product_3.active = False
         self.assertFalse(orderpoint.active)
+
+    def test_change_product_company(self):
+        """ Checks we can't change the product's company if this product has
+        quant in another company. """
+        company1 = self.env.ref('base.main_company')
+        company2 = self.env['res.company'].create({'name': 'Second Company'})
+        product = self.env['product.product'].create({
+            'name': 'Product [TEST - Change Company]',
+            'type': 'product',
+        })
+        # Creates a quant for productA in the first company.
+        self.env['stock.quant'].create({
+            'product_id': product.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.location_1.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        # Assigns a company: should be OK for company1 but should raise an error for company2.
+        product.company_id = company1.id
+        with self.assertRaises(UserError):
+            product.company_id = company2.id
+        # Checks we can assing company2 for the product once there is no more quant for it.
+        quant = self.env['stock.quant'].search([('product_id', '=', product.id)])
+        quant.quantity = 0
+        self.env['stock.quant']._unlink_zero_quants()
+        product.company_id = company2.id  # Should work this time.
+
+    def test_change_product_company_exclude_vendor_and_customer_location(self):
+        """ Checks we can change product company where only exist single company
+        and exist quant in vendor/customer location"""
+        company1 = self.env.ref('base.main_company')
+        customer_location = self.env.ref('stock.stock_location_customers')
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        product = self.env['product.product'].create({
+            'name': 'Product Single Company',
+            'type': 'product',
+        })
+        # Creates a quant for company 1.
+        self.env['stock.quant'].create({
+            'product_id': product.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.location_1.id,
+            'quantity': 5,
+        })
+        # Creates a quant for vendor location.
+        self.env['stock.quant'].create({
+            'product_id': product.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': supplier_location.id,
+            'quantity': -15,
+        })
+        # Creates a quant for customer location.
+        self.env['stock.quant'].create({
+            'product_id': product.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': customer_location.id,
+            'quantity': 10,
+        })
+        # Assigns a company: should be ok because only exist one company (exclude vendor and customer location)
+        product.company_id = company1.id
+
+        # Reset product company to empty
+        product.company_id = False
+        company2 = self.env['res.company'].create({'name': 'Second Company'})
+        # Assigns to another company: should be not okay because exist quants in defferent company (exclude vendor and customer location)
+        with self.assertRaises(UserError):
+            product.company_id = company2.id
 
     def test_search_qty_available(self):
         product = self.env['product.product'].create({

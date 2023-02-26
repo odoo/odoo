@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from stdnum.it import codicefiscale, iva
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -32,7 +33,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _l10n_it_normalize_codice_fiscale(self, codice):
-        if re.match(r'^IT[0-9]{11}$', codice):
+        if codice and re.match(r'^IT[0-9]{11}$', codice):
             return codice[2:13]
         return codice
 
@@ -45,7 +46,6 @@ class ResPartner(models.Model):
 
     @api.constrains('l10n_it_codice_fiscale')
     def validate_codice_fiscale(self):
-        p = re.compile(r'^([A-Za-z]{6}[0-9]{2}[A-Za-z]{1}[0-9]{2}[A-Za-z]{1}[0-9]{3}[A-Za-z]{1}$)|([0-9]{11})|(IT[0-9]{11})$')
         for record in self:
-            if record.l10n_it_codice_fiscale and not p.match(record.l10n_it_codice_fiscale):
-                raise UserError(_("Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345678901' or 'IT12345678901' for businesses.", record.l10n_it_codice_fiscale))
+            if record.l10n_it_codice_fiscale and (not codicefiscale.is_valid(record.l10n_it_codice_fiscale) and not iva.is_valid(record.l10n_it_codice_fiscale)):
+                raise UserError(_("Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345670546' or 'IT12345670546' for businesses.", record.l10n_it_codice_fiscale))

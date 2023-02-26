@@ -20,12 +20,9 @@ class CouponRule(models.Model):
         ('tax_included', 'Tax Included'),
         ('tax_excluded', 'Tax Excluded')], default="tax_excluded")
 
-    @api.constrains('rule_date_to', 'rule_date_from')
-    def _check_rule_date_from(self):
-        if any(applicability for applicability in self
-               if applicability.rule_date_to and applicability.rule_date_from
-               and applicability.rule_date_to < applicability.rule_date_from):
-            raise ValidationError(_('The start date must be before the end date'))
+    _sql_constraints = [
+        ('check_coupon_rule_dates', 'check(rule_date_from < rule_date_to)', 'The start date must be before the end date!'),
+    ]
 
     @api.constrains('rule_minimum_amount')
     def _check_rule_minimum_amount(self):

@@ -118,12 +118,13 @@ var ProductConfiguratorFormController = FormController.extend({
         var initialProduct = this.initialState.data.product_template_id;
         var changed = initialProduct && initialProduct.data.id !== productTemplateId;
         var data = this.renderer.state.data;
+        var quantity = initialProduct.context && initialProduct.context.default_quantity ? initialProduct.context.default_quantity : data.quantity;
         return this._rpc({
             route: '/sale_product_configurator/configure',
             params: {
                 product_template_id: productTemplateId,
                 pricelist_id: this.renderer.pricelistId,
-                add_qty: data.quantity,
+                add_qty: quantity,
                 product_template_attribute_value_ids: changed ? [] : this._getAttributeValueIds(
                     data.product_template_attribute_value_ids
                 ),

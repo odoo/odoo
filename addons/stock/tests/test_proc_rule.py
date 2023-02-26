@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
+from odoo.exceptions import UserError
 
 
 class TestProcRule(TransactionCase):
@@ -18,6 +19,40 @@ class TestProcRule(TransactionCase):
             'type': 'consu',
         })
         self.partner = self.env['res.partner'].create({'name': 'Partner'})
+
+    def test_endless_loop_rules_from_location(self):
+        """ Creates and configure a rule the way, when trying to get rules from
+        location, it goes in a state where the found rule tries to trigger another
+        rule but finds nothing else than itself and so get stuck in a recursion error."""
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        reception_route = warehouse.reception_route_id
+        self.product.type = 'product'
+
+        # Creates a delivery for this product, that way, this product will be to resupply.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = warehouse.out_type_id
+        with picking_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 10
+        delivery = picking_form.save()
+        delivery.action_confirm()
+        self.product._compute_quantities()  # Computes `outgoing_qty` to have the orderpoint.
+
+        # Then, creates a rule and adds it into the route's rules.
+        reception_route.rule_ids.action_archive()
+        self.env['stock.rule'].create({
+            'name': 'Looping Rule',
+            'route_id': reception_route.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_src_id': warehouse.lot_stock_id.id,
+            'action': 'pull_push',
+            'procure_method': 'make_to_order',
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+
+        # Tries to open the Replenishment view -> It should raise an UserError.
+        with self.assertRaises(UserError):
+            self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
     def test_proc_rule(self):
         # Create a product route containing a stock rule that will

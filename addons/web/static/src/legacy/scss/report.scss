@@ -103,6 +103,36 @@ ol {
     padding-left: 0;
 }
 
+/* Checklist */
+ul {
+    .o_checklist {
+        > li {
+            list-style: none;
+            position: relative;
+            margin-left: 20px;
+        }
+        > li:not(.oe-nested):before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            display: block;
+            height: 14px;
+            width: 14px;
+            top: 1px;
+            border: 1px solid;
+            cursor: pointer;
+        }
+        > li.o_checked:after {
+            content: "✓";
+            transition: opacity .5s;
+            position: absolute;
+            left: -18px;
+            top: -1px;
+            opacity: 1;
+        }
+    }
+}
+
 // Wkhtmltopdf doesn't handle flexbox properly, both the content
 // of columns and columns themselves does not wrap over new lines
 // when needed: the font of the pdf will reduce to make the content

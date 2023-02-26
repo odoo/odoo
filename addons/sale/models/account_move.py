@@ -74,7 +74,7 @@ class AccountMove(models.Model):
     def action_post(self):
         #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
         res = super(AccountMove, self).action_post()
-        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
+        line_ids = self.mapped('line_ids').filtered(lambda line: any(line.sale_line_ids.mapped('is_downpayment')))
         for line in line_ids:
             try:
                 line.sale_line_ids.tax_id = line.tax_ids
@@ -130,3 +130,8 @@ class AccountMove(models.Model):
             send_invoice_cron._trigger()
 
         return res
+
+    def _is_downpayment(self):
+        # OVERRIDE
+        self.ensure_one()
+        return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False

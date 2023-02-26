@@ -213,10 +213,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             // The order that will contain the refund orderlines.
             // Use the destinationOrder from props if the order to refund has the same
             // customer as the destinationOrder.
-            const destinationOrder =
-                this.props.destinationOrder && customer === this.props.destinationOrder.get_client()
-                    ? this.props.destinationOrder
-                    : this.env.pos.add_new_order({ silent: true });
+            const destinationOrder = this._setDestinationOrder(this.props.destinationOrder, customer);
 
             // Add orderline for each toRefundDetail to the destinationOrder.
             for (const refundDetail of allToRefundDetails) {
@@ -233,6 +230,14 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             }
 
             this._onCloseScreen();
+        }
+        _setDestinationOrder(order, customer) {
+            if(order && customer === order.get_client() && !this.env.pos.doNotAllowRefundAndSales())
+                return order;
+            else if(this.env.pos.get_order() && !this.env.pos.get_order().orderlines.length)
+                return this.env.pos.get_order();
+            else
+                return this.env.pos.add_new_order({ silent: true });
         }
         //#endregion
         //#region PUBLIC METHODS
@@ -568,8 +573,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     args: [idsNotInCache],
                     context: this.env.session.user_context,
                 });
-                // Check for missing products and load them in the PoS
+                // Check for missing products and partners and load them in the PoS
                 await this.env.pos._loadMissingProducts(fetchedOrders);
+                await this.env.pos._loadMissingPartners(fetchedOrders);
                 // Cache these fetched orders so that next time, no need to fetch
                 // them again, unless invalidated. See `_onInvoiceOrder`.
                 fetchedOrders.forEach((order) => {

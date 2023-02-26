@@ -4,30 +4,37 @@
 
 <template id="account_invoice_line_it_FatturaPA">
                 <DettaglioLinee>
-                    <NumeroLinea t-esc="line_counter"/>
+                    <NumeroLinea t-esc="line_dict['line_number']"/>
                     <CodiceArticolo t-if="line.product_id.barcode">
                         <CodiceTipo>EAN</CodiceTipo>
-                        <CodiceValore t-esc="format_alphanumeric(line.product_id.barcode)"/>
+                        <CodiceValore t-esc="format_alphanumeric(line.product_id.barcode)[:35]"/>
                     </CodiceArticolo>
                     <CodiceArticolo t-elif="line.product_id.default_code">
                         <CodiceTipo>INTERNAL</CodiceTipo>
-                        <CodiceValore t-esc="format_alphanumeric(line.product_id.default_code)"/>
+                        <CodiceValore t-esc="format_alphanumeric(line.product_id.default_code)[:35]"/>
                     </CodiceArticolo>
-                    <Descrizione>
-                        <t t-esc="format_alphanumeric(line.name[:1000])"/>
-                        <t t-if="not line.name" t-esc="'NO NAME'"/>
-                    </Descrizione>
-                    <Quantita t-esc="format_numbers(line.quantity)"/>
-                    <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"  t-esc="format_alphanumeric(line.product_uom_id.name)"/>
-                    <PrezzoUnitario t-esc="'%.06f' % (line.price_subtotal / (( 1 - (line.discount or 0.0) / 100.0) * line.quantity) if line.quantity and line.discount != 100.0 else line.price_unit)"/>
+                    <Descrizione t-esc="format_alphanumeric(line_dict['description'])[:1000]"/>
+                    <Quantita t-esc="format_numbers(abs(line.quantity))"/>
+                    <UnitaMisura t-if="line.product_uom_id and line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')" t-esc="format_alphanumeric(line.product_uom_id.name)[:10]"/>
+                    <PrezzoUnitario t-esc="'%.06f' % (line_dict['unit_price'])"/>
                     <ScontoMaggiorazione t-if="line.discount != 0">
                         <Tipo t-esc="discount_type(line.discount)"/>
                         <Percentuale t-esc="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
-                    <PrezzoTotale t-esc="format_monetary(line.price_subtotal, currency)"/>
+                    <PrezzoTotale t-esc="format_monetary(line_dict['subtotal_price'], currency)"/>
                     <AliquotaIVA t-if="line.tax_ids.amount_type == 'percent'" t-esc="format_numbers(line.tax_ids.amount)"/>
                     <AliquotaIVA t-elif="line.tax_ids.amount_type != 'percent'" t-esc="'0.00'"/>
                     <Natura t-if="line.tax_ids.l10n_it_has_exoneration" t-esc="line.tax_ids.l10n_it_kind_exoneration"/>
+                    <AltriDatiGestionali t-if="conversion_rate">
+                        <TipoDato>Currency</TipoDato>
+                        <RiferimentoTesto t-esc="format_alphanumeric(record.currency_id.name)"/>
+                        <RiferimentoNumero t-esc="'%.06f' % line.price_subtotal"/>
+                    </AltriDatiGestionali>
+                    <AltriDatiGestionali t-if="conversion_rate">
+                        <TipoDato>Exch.Rate</TipoDato>
+                        <RiferimentoNumero t-esc="conversion_rate"/>
+                        <RiferimentoData t-esc="format_date(record.invoice_date)"/>
+                    </AltriDatiGestionali>
                 </DettaglioLinee>
 </template>
 
@@ -45,15 +52,23 @@
             <ContattiTrasmittente>
                 <Telefono t-if="sender_partner.phone" t-esc="format_alphanumeric(format_phone(sender_partner.phone))"/>
                 <Telefono t-elif="sender_partner.mobile" t-esc="format_alphanumeric(format_phone(sender_partner.mobile))"/>
-                <Email t-if="sender_partner.email" t-esc="sender_partner.email"/>
+                <Email t-if="sender_partner.email" t-esc="sender_partner.email[:256]"/>
             </ContattiTrasmittente>
-            <PECDestinatario t-if="not is_self_invoice and partner.l10n_it_pec_email" t-esc="partner.l10n_it_pec_email"/>
+            <PECDestinatario t-if="not is_self_invoice and partner.l10n_it_pec_email" t-esc="partner.l10n_it_pec_email[:256]"/>
         </DatiTrasmissione>
         <CedentePrestatore>
             <DatiAnagrafici>
-                <IdFiscaleIVA>
+                <IdFiscaleIVA t-if="seller.vat and in_eu(seller)">
                     <IdPaese t-esc="get_vat_country(seller.vat)"/>
                     <IdCodice t-esc="get_vat_number(seller.vat)"/>
+                </IdFiscaleIVA>
+                <IdFiscaleIVA t-if="seller.vat and not in_eu(seller)">
+                    <IdPaese t-esc="seller.country_id.code"/>
+                    <IdCodice t-esc="'OO99999999999'"/>
+                </IdFiscaleIVA>
+                <IdFiscaleIVA t-if="not seller.vat and seller.country_id.code != 'IT'">
+                    <IdPaese t-esc="seller.country_id.code"/>
+                    <IdCodice t-esc="'0000000'"/>
                 </IdFiscaleIVA>
                 <CodiceFiscale t-if="seller.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(seller.l10n_it_codice_fiscale)"/>
                 <Anagrafica>
@@ -72,36 +87,6 @@
                 <StatoLiquidazione t-esc="company.l10n_it_eco_index_liquidation_state"/>
             </IscrizioneREA>
         </CedentePrestatore>
-        <CessionarioCommittente>
-            <DatiAnagrafici>
-                <IdFiscaleIVA t-if="buyer.vat and in_eu(buyer)">
-                    <IdPaese t-esc="get_vat_country(buyer.vat)"/>
-                    <IdCodice t-esc="get_vat_number(buyer.vat)"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="buyer.vat and not in_eu(buyer)">
-                    <IdPaese t-esc="buyer.country_id.code"/>
-                    <IdCodice t-esc="'OO99999999999'"/>
-                </IdFiscaleIVA>
-                <IdFiscaleIVA t-if="not buyer.vat and buyer.country_id.code != 'IT'">
-                    <IdPaese t-esc="buyer.country_id.code"/>
-                    <IdCodice t-esc="'0000000'"/>
-                </IdFiscaleIVA>
-                <CodiceFiscale t-if="not buyer.vat and buyer.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(buyer.l10n_it_codice_fiscale)"/>
-                <CodiceFiscale t-elif="not buyer.vat and not buyer.l10n_it_codice_fiscale" t-esc="99999999999"/>
-                <Anagrafica>
-                    <t t-if="buyer_is_company">
-                        <Denominazione t-esc="format_alphanumeric(buyer.display_name[:80])"/>
-                    </t>
-                    <t t-else="">
-                        <Nome t-esc="format_alphanumeric(' '.join(buyer.name.split()[:1])[:60])"/>
-                        <Cognome t-esc="format_alphanumeric(' '.join(buyer.name.split()[1:])[:60])"/>
-                    </t>
-                </Anagrafica>
-            </DatiAnagrafici>
-            <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
-                <t t-set="partner" t-value="buyer_partner"/>
-            </t>
-        </CessionarioCommittente>
         <RappresentanteFiscale t-if="not is_self_invoice and representative">
             <DatiAnagrafici>
                 <IdFiscaleIVA>
@@ -120,6 +105,35 @@
                 </Anagrafica>
             </DatiAnagrafici>
         </RappresentanteFiscale>
+        <CessionarioCommittente>
+            <DatiAnagrafici>
+                <IdFiscaleIVA t-if="buyer.vat and in_eu(buyer)">
+                    <IdPaese t-esc="get_vat_country(buyer.vat)"/>
+                    <IdCodice t-esc="get_vat_number(buyer.vat)"/>
+                </IdFiscaleIVA>
+                <IdFiscaleIVA t-if="buyer.vat and not in_eu(buyer)">
+                    <IdPaese t-esc="buyer.country_id.code"/>
+                    <IdCodice t-esc="'OO99999999999'"/>
+                </IdFiscaleIVA>
+                <IdFiscaleIVA t-if="not buyer.vat and buyer.country_id.code != 'IT'">
+                    <IdPaese t-esc="buyer.country_id.code"/>
+                    <IdCodice t-esc="'0000000'"/>
+                </IdFiscaleIVA>
+                <CodiceFiscale t-if="buyer.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(buyer.l10n_it_codice_fiscale)"/>
+                <Anagrafica>
+                    <t t-if="buyer_is_company">
+                        <Denominazione t-esc="format_alphanumeric(buyer.display_name[:80])"/>
+                    </t>
+                    <t t-else="">
+                        <Nome t-esc="format_alphanumeric(' '.join(buyer.name.split()[:1])[:60])"/>
+                        <Cognome t-esc="format_alphanumeric(' '.join(buyer.name.split()[1:])[:60])"/>
+                    </t>
+                </Anagrafica>
+            </DatiAnagrafici>
+            <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
+                <t t-set="partner" t-value="buyer_partner"/>
+            </t>
+        </CessionarioCommittente>
     </FatturaElettronicaHeader>
     <FatturaElettronicaBody>
         <DatiGenerali>
@@ -132,7 +146,7 @@
                     <BolloVirtuale>SI</BolloVirtuale>
                     <ImportoBollo t-esc="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
-                <ImportoTotaleDocumento t-esc="format_monetary(record.amount_total, currency)"/>
+                <ImportoTotaleDocumento t-esc="format_monetary(document_total, currency)"/>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto t-if="record.ref">
                 <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
@@ -143,10 +157,8 @@
             </DatiDDT>
         </DatiGenerali>
         <DatiBeniServizi>
-            <t t-set="line_counter" t-value="0"/>
-            <t t-foreach="record.invoice_line_ids.filtered(lambda l: not l.display_type)" t-as="line">
-                <t t-set="line_counter" t-value="line_counter + 1"/>
-                <t t-set="taxes" t-value="line.tax_ids.compute_all(line.price_unit)"/>
+            <t t-foreach="invoice_lines" t-as="line_dict">
+                <t t-set="line" t-value="line_dict['line']"/>
                 <t t-call="l10n_it_edi.account_invoice_line_it_FatturaPA"/>
             </t>
             <t t-foreach="tax_details['tax_details']" t-as="tax_name">
@@ -156,12 +168,12 @@
                 <t t-set="kind_exoneration" t-value="tax.l10n_it_kind_exoneration"/>
                 <DatiRiepilogo>
                     <AliquotaIVA t-esc="format_numbers(tax.amount)"/>
-                    <Arrotondamento t-if="tax_dict.get('rounding')" t-esc="format_numbers(tax_dict['rounding'])"/>
-                    <ImponibileImporto t-esc="format_monetary(abs(tax_dict['base_amount_currency']), currency)"/>
-                    <Imposta t-esc="format_monetary(abs(tax_dict['tax_amount_currency']), currency)"/>
-                    <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
                     <Natura t-if="has_exoneration" t-esc="kind_exoneration"/>
-                    <RiferimentoNormativo t-if="has_exoneration" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
+                    <Arrotondamento t-if="(tax_dict.get('rounding') and currency.name != 'EUR') or (tax_dict.get('rounding_euros') and currency.name == 'EUR')" t-esc="format_numbers(tax_dict['rounding'] if currency.name != 'EUR' else tax_dict['rounding_euros'])"/>
+                    <ImponibileImporto t-esc="format_monetary(tax_dict['base_amount'] if currency.name == 'EUR' else tax_dict['base_amount_currency'], currency)"/>
+                    <Imposta t-esc="format_monetary(tax_dict['tax_amount'] if currency.name == 'EUR' else tax_dict['base_amount_currency'], currency)"/>
+                    <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
+                    <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
                 </DatiRiepilogo>
             </t>
         </DatiBeniServizi>
@@ -176,7 +188,7 @@
                     <IstitutoFinanziario t-if="partner_bank.bank_id" t-esc="format_alphanumeric(partner_bank.bank_id.name[:80])"/>
                     <IBAN t-if="partner_bank.acc_type == 'iban'" t-esc="partner_bank.sanitized_acc_number"/>
                     <BIC t-elif="partner_bank.acc_type == 'bank' and partner_bank.bank_id.bic" t-esc="partner_bank.bank_id.bic"/>
-                    <CodicePagamento t-esc="format_alphanumeric(record.payment_reference[:60])"/>
+                    <CodicePagamento t-if="record.payment_reference" t-esc="format_alphanumeric(record.payment_reference[:60])"/>
                 </DettaglioPagamento>
             </t>
         </DatiPagamento>
@@ -191,10 +203,10 @@
 
 <template id="account_invoice_it_FatturaPA_sede">
             <Sede>
-                <Indirizzo><t t-if="partner.street" t-esc="format_alphanumeric(partner.street)"/> <t t-if="partner.street2" t-esc="format_alphanumeric(partner.street2)"/></Indirizzo>
-                <CAP><t t-if="partner.country_id.code != 'IT'" t-esc="'00000'"/><t t-else="" t-esc="partner.zip"/></CAP>
-                <Comune t-esc="format_alphanumeric(partner.city)"/>
-                <Provincia t-if="partner.country_id.code == 'IT'" t-esc="partner.state_id.code"/>
+                <Indirizzo><t t-if="partner.street or partner.street2" t-esc="format_alphanumeric((partner.street or '') + ' ' + (partner.street2 or ''))[:60]"/></Indirizzo>
+                <CAP><t t-if="partner.country_id.code != 'IT'" t-esc="'00000'"/><t t-elif="partner.zip" t-esc="partner.zip"/></CAP>
+                <Comune t-esc="format_alphanumeric(partner.city[:60])"/>
+                <Provincia t-if="partner.country_id.code == 'IT' and partner.state_id" t-esc="partner.state_id.code[:2]"/>
                 <Nazione t-esc="partner.country_id.code"/>
             </Sede>
 </template>

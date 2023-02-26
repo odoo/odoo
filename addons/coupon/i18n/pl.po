@@ -12,7 +12,7 @@
 # Tomasz Leppich <t.leppich@gmail.com>, 2021
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2021
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2021
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2021
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2021
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2021
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2021
 # Paweł Wodyński <pw@myodoo.pl>, 2021
@@ -1122,6 +1122,14 @@ msgstr "Okres obowiązywania kuponu po jego wygenerowaniu"
 #, python-format
 msgid "You can not delete a program in active state"
 msgstr "Nie można usunąć programu w stanie aktywnym"
+
+#. module: coupon
+#: code:addons/coupon/models/product_product.py:0
+#, python-format
+msgid ""
+"You cannot delete a product that is linked with Coupon or Promotion program."
+" Archive it instead."
+msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form

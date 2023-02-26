@@ -97,7 +97,10 @@ class View(models.Model):
         # We need to consider inactive views when handling multi-website cow
         # feature (to copy inactive children views, to search for specific
         # views, ...)
-        for view in self.with_context(active_test=False):
+        # Website-specific views need to be updated first because they might
+        # be relocated to new ids by the cow if they are involved in the
+        # inheritance tree.
+        for view in self.with_context(active_test=False).sorted(key='website_id', reverse=True):
             # Make sure views which are written in a website context receive
             # a value for their 'key' field
             if not view.key and not vals.get('key'):
@@ -420,9 +423,9 @@ class View(models.Model):
             # in edit mode ir.ui.view will tag nodes
             if not translatable and not self.env.context.get('rendering_bundle'):
                 if editable:
-                    new_context = dict(self._context, inherit_branding=True)
+                    new_context.setdefault("inherit_branding", True)
                 elif request.env.user.has_group('website.group_website_publisher'):
-                    new_context = dict(self._context, inherit_branding_auto=True)
+                    new_context.setdefault("inherit_branding_auto", True)
             if values and 'main_object' in values:
                 if request.env.user.has_group('website.group_website_publisher'):
                     func = getattr(values['main_object'], 'get_backend_menu_id', False)
@@ -522,6 +525,14 @@ class View(models.Model):
             if website_specific_view:
                 self = website_specific_view
         super(View, self).save(value, xpath=xpath)
+
+    @api.model
+    def _get_allowed_root_attrs(self):
+        # Related to these options:
+        # background-video, background-shapes, parallax
+        return super()._get_allowed_root_attrs() + [
+            'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
+        ]
 
     # --------------------------------------------------------------------------
     # Snippet saving

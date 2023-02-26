@@ -40,6 +40,7 @@ class Partner(models.Model):
         replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
+                <field name="type" invisible="1"/>
                 <field name='city' placeholder="%(placeholder)s" class="o_address_city"
                     attrs="{
                         'invisible': [('country_enforce_cities', '=', True), '|', ('city_id', '!=', False), ('city', 'in', ['', False ])],

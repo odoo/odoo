@@ -22,8 +22,8 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
 			<group id="other_tab_group" position="inside">
-                <group name="afip_group" string="AFIP">
-                    <field name='l10n_ar_afip_concept' attrs="{'invisible': ['|', ('country_code', '!=', 'AR'), ('l10n_latam_use_documents', '=', False)]}"/>
+                <group name="afip_group" string="AFIP" attrs="{'invisible': [('country_code', '!=', 'AR')]}">
+                    <field name='l10n_ar_afip_concept' attrs="{'invisible': [('l10n_latam_use_documents', '=', False)]}"/>
                     <label for="l10n_ar_afip_service_start" attrs="{'invisible':[('l10n_ar_afip_concept','not in',['2', '3', '4'])]}" string="Service Date"/>
                     <div attrs="{'invisible':[('l10n_ar_afip_concept','not in',['2', '3', '4'])]}">
                         <field name="l10n_ar_afip_service_start" class="oe_inline"/> to <field name="l10n_ar_afip_service_end" class="oe_inline"/>

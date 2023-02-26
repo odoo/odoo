@@ -15,7 +15,7 @@ from base64 import b64decode, b64encode
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules.module import get_resource_path
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_data_uri, base64_to_image
@@ -25,6 +25,38 @@ from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_M
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
+
+diverging_history_regex = 'data-last-history-steps="([0-9,]*?)"'
+
+def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
+    server_history_matches = re.search(diverging_history_regex, record[html_field_name])
+    # Do not check old documents without data-last-history-steps.
+    if server_history_matches:
+        server_last_history_id = server_history_matches[1].split(',')[-1]
+        if server_last_history_id not in incoming_history_ids:
+            logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
+            raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
+
+def handle_history_divergence(record, html_field_name, vals):
+    # Do not handle history divergence if the field is not in the values.
+    if html_field_name not in vals:
+        return
+    incoming_html = vals[html_field_name]
+    incoming_history_matches = re.search(diverging_history_regex, incoming_html)
+    # When there is no incoming history id, it means that the value does not
+    # comes from the odoo editor or the collaboration was not activated. In
+    # project, it could come from the collaboration pad. In that case, we do not
+    # handle history divergences.
+    if incoming_history_matches is None:
+        return
+    incoming_history_ids = incoming_history_matches[1].split(',')
+    incoming_last_history_id = incoming_history_ids[-1]
+
+    if record[html_field_name]:
+        ensure_no_history_divergence(record, html_field_name, incoming_history_ids)
+
+    # Save only the latest id.
+    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + incoming_last_history_id + incoming_html[incoming_history_matches.end(1):]
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -126,65 +158,26 @@ class Web_Editor(http.Controller):
 
         li = htmlelem.find(".//li[@id='checklist-id-" + str(checklistId) + "']")
 
-        if not li or not self._update_checklist_recursive(li, checked, children=True, ancestors=True):
+        if li is None:
             return value
 
-        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
+        classname = li.get('class', '')
+        if ('o_checked' in classname) != checked:
+            if checked:
+                classname = '%s o_checked' % classname
+            else:
+                classname = re.sub(r"\s?o_checked\s?", '', classname)
+            li.set('class', classname)
+        else:
+            return value
+
+        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6].decode("utf-8")
         record.write({filename: value})
 
         return value
 
-    def _update_checklist_recursive (self, li, checked, children=False, ancestors=False):
-        if 'checklist-id-' not in li.get('id', ''):
-            return False
-
-        classname = li.get('class', '')
-        if ('o_checked' in classname) == checked:
-            return False
-
-        # check / uncheck
-        if checked:
-            classname = '%s o_checked' % classname
-        else:
-            classname = re.sub(r"\s?o_checked\s?", '', classname)
-        li.set('class', classname)
-
-        # propagate to children
-        if children:
-            node = li.getnext()
-            ul = None
-            if node is not None:
-                if node.tag == 'ul':
-                    ul = node
-                if node.tag == 'li' and len(node.getchildren()) == 1 and node.getchildren()[0].tag == 'ul':
-                    ul = node.getchildren()[0]
-
-            if ul is not None:
-                for child in ul.getchildren():
-                    if child.tag == 'li':
-                        self._update_checklist_recursive(child, checked, children=True)
-
-        # propagate to ancestors
-        if ancestors:
-            allSelected = True
-            ul = li.getparent()
-            if ul.tag == 'li':
-                ul = ul.getparent()
-
-            for child in ul.getchildren():
-                if child.tag == 'li' and 'checklist-id' in child.get('id', '') and 'o_checked' not in child.get('class', ''):
-                    allSelected = False
-
-            node = ul.getprevious()
-            if node is None:
-                node = ul.getparent().getprevious()
-            if node is not None and node.tag == 'li':
-                self._update_checklist_recursive(node, allSelected, ancestors=True)
-
-        return True
-
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', generate_access_token=False, **kwargs):
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
             try:
@@ -200,7 +193,7 @@ class Web_Editor(http.Controller):
                 return {'error': e.args[0]}
 
         self._clean_context()
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, generate_access_token=generate_access_token)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
@@ -272,7 +265,7 @@ class Web_Editor(http.Controller):
             'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', generate_access_token=False):
         """Create and return a new attachment."""
         if name.lower().endswith('.bmp'):
             # Avoid mismatch between content type and mimetype, see commit msg
@@ -304,6 +297,9 @@ class Web_Editor(http.Controller):
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
         attachment = request.env['ir.attachment'].create(attachment_data)
+        if generate_access_token:
+            attachment.generate_access_token()
+
         return attachment
 
     def _clean_context(self):
@@ -343,7 +339,7 @@ class Web_Editor(http.Controller):
             dict: views, scss, js
         """
         # Related views must be fetched if the user wants the views and/or the style
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
+        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
         scss_files_data_by_bundle = []
@@ -732,3 +728,11 @@ class Web_Editor(http.Controller):
         channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
+
+    @http.route("/web_editor/ensure_common_history", type="json", auth="user")
+    def ensure_common_history(self, model_name, field_name, res_id, history_ids):
+        record = request.env[model_name].browse([res_id])
+        try:
+            ensure_no_history_divergence(record, field_name, history_ids)
+        except ValidationError:
+            return record[field_name]

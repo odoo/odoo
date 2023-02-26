@@ -280,6 +280,8 @@ class Repair(models.Model):
         return True
 
     def action_repair_cancel(self):
+        if any(repair.state == 'done' for repair in self):
+            raise UserError(_("You cannot cancel a completed repair order."))
         invoice_to_cancel = self.filtered(lambda repair: repair.invoice_id.state == 'draft').invoice_id
         if invoice_to_cancel:
             invoice_to_cancel.button_cancel()
@@ -378,7 +380,7 @@ class Repair(models.Model):
                 else:
                     name = operation.name
 
-                account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
+                account = operation.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['income']
                 if not account:
                     raise UserError(_('No account defined for product "%s".', operation.product_id.name))
 
@@ -420,7 +422,7 @@ class Repair(models.Model):
                 if not fee.product_id:
                     raise UserError(_('No product defined on fees.'))
 
-                account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
+                account = fee.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['income']
                 if not account:
                     raise UserError(_('No account defined for product "%s".', fee.product_id.name))
 

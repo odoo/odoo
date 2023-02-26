@@ -140,8 +140,8 @@ const baseNotificationMethods = {
         if (clientInfos.iceCandidateBuffer.length) {
             for (const candidate of clientInfos.iceCandidateBuffer) {
                 await this._addIceCandidate(clientInfos, candidate);
-                clientInfos.iceCandidateBuffer.splice(0);
             }
+            clientInfos.iceCandidateBuffer.splice(0);
         }
         if (description.type === 'offer') {
             const answerDescription = await pc.createAnswer();
@@ -379,6 +379,7 @@ export class PeerToPeer {
         this.clientsInfos[clientId] = {
             makingOffer: false,
             iceCandidateBuffer: [],
+            backoffFactor: 0,
         };
         const pc = new RTCPeerConnection(this.options.peerConnectionConfig);
 
@@ -425,9 +426,12 @@ export class PeerToPeer {
                     break;
                 case 'disconnected':
                     await this._recoverConnection(clientId, {
-                        delay: 1000,
+                        delay: 3000,
                         reason: 'ice connection disconnected',
                     });
+                    break;
+                case 'connected':
+                    this.clientsInfos[clientId].backoffFactor = 0;
                     break;
             }
         };
@@ -442,9 +446,13 @@ export class PeerToPeer {
                     break;
                 case 'disconnected':
                     await this._recoverConnection(clientId, {
-                        delay: 500,
+                        delay: 3000,
                         reason: 'connection disconnected',
                     });
+                    break;
+                case 'connected':
+                case 'completed':
+                    this.clientsInfos[clientId].backoffFactor = 0;
                     break;
             }
         };
@@ -460,7 +468,7 @@ export class PeerToPeer {
                 console.trace(error);
                 console.groupEnd();
             }
-            this._recoverConnection(clientId, { delay: 15000, reason: 'ice candidate error' });
+            this._recoverConnection(clientId, { delay: 3000, reason: 'ice candidate error' });
         };
         const dataChannel = pc.createDataChannel('notifications', { negotiated: true, id: 1 });
         let message = [];
@@ -505,7 +513,7 @@ export class PeerToPeer {
         if (!dataChannel || dataChannel.readyState !== 'open') {
             if (clientInfo && !clientInfo.zombieTimeout) {
                 if (debugShowLog) console.warn(
-                    `Impossible to communicate with client ${clientId}. The connection be killed in 10 seconds if the datachannel state has not changed.`,
+                    `Impossible to communicate with client ${clientId}. The connection will be killed in 10 seconds if the datachannel state has not changed.`,
                 );
                 this._killPotentialZombie(clientId);
             }
@@ -563,6 +571,18 @@ export class PeerToPeer {
         }
         const clientInfos = this.clientsInfos[clientId];
         if (!clientInfos || clientInfos.fallbackTimeout) return;
+        const backoffFactor = this.clientsInfos[clientId].backoffFactor;
+        const backoffDelay = delay * Math.pow(2, backoffFactor);
+        // Stop trying to recover the connection after 10 attempts.
+        if (backoffFactor > 10) {
+            if (debugShowLog) {
+                console.log(
+                    `%c STOP RTC RECOVERY: impossible to connect to client ${clientId}: ${reason}`,
+                    'background: darkred; color: white;',
+                );
+            }
+            return;
+        }
 
         clientInfos.fallbackTimeout = setTimeout(async () => {
             clientInfos.fallbackTimeout = undefined;
@@ -576,12 +596,13 @@ export class PeerToPeer {
             // hard reset: recreating a RTCPeerConnection
             if (debugShowLog)
                 console.log(
-                    `%c RTC RECOVERY: calling back client ${clientId} to salvage the connection ${pc.iceConnectionState}, reason: ${reason}`,
+                    `%c RTC RECOVERY: calling back client ${clientId} to salvage the connection ${pc.iceConnectionState} after ${backoffDelay}ms, reason: ${reason}`,
                     'background: darkorange; color: white;',
                 );
             this.removeClient(clientId);
-            await this._createClient(clientId);
-        }, delay);
+            const newClientInfos = this._createClient(clientId);
+            newClientInfos.backoffFactor = backoffFactor + 1;
+        }, backoffDelay);
     }
     // todo: do we try to salvage the connection after killing the zombie ?
     // Maybe the salvage should be done when the connection is dropped.

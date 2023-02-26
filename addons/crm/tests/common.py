@@ -123,8 +123,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'is_won': True,
         })
 
+        # countries and langs
         base_us = cls.env.ref('base.us')
+        cls.lang_en = cls.env['res.lang']._lang_get('en_US')
 
+        # leads
         cls.lead_1 = cls.env['crm.lead'].create({
             'name': 'Nibbler Spacecraft Request',
             'type': 'lead',

@@ -4,6 +4,7 @@ from odoo import _, models
 from odoo.tools import float_repr
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_round
 
 from zeep import Client
 
@@ -40,6 +41,7 @@ UOM_TO_UNECE_CODE = {
 # -------------------------------------------------------------------------
 COUNTRY_EAS = {
     'HU': 9910,
+    'AT': 9915,
     'ES': 9920,
     'AD': 9922,
     'AL': 9923,
@@ -51,7 +53,7 @@ COUNTRY_EAS = {
     'CZ': 9929,
     'DE': 9930,
     'EE': 9931,
-    'UK': 9932,
+    'GB': 9932,
     'GR': 9933,
     'HR': 9934,
     'IE': 9935,
@@ -76,6 +78,9 @@ COUNTRY_EAS = {
     'SE': 9955,
     'FR': 9957,
     'NO': '0192',
+    'SG': '0195',
+    'AU': '0151',
+    'FI': '0213',
 }
 
 
@@ -90,7 +95,7 @@ class AccountEdiCommon(models.AbstractModel):
     def format_float(self, amount, precision_digits):
         if amount is None:
             return None
-        return float_repr(amount, precision_digits)
+        return float_repr(float_round(amount, precision_digits), precision_digits)
 
     def _get_uom_unece_code(self, line):
         """
@@ -173,7 +178,11 @@ class AccountEdiCommon(models.AbstractModel):
                     tax_exemption_reason_code='VATEX-EU-IC',
                     tax_exemption_reason=_('Intra-Community supply'),
                 )
-        return create_dict()
+
+        if tax.amount != 0:
+            return create_dict(tax_category_code='S')
+        else:
+            return create_dict(tax_category_code='E', tax_exemption_reason=_('Articles 226 items 11 to 15 Directive 2006/112/EN'))
 
     def _get_tax_category_list(self, invoice, taxes):
         """ Full list: https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred5305.htm
@@ -241,8 +250,16 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_invoice(self, journal, filename, tree, existing_invoice=None):
-        move_type, qty_factor = self._get_import_document_amount_sign(filename, tree)
-        if not move_type or (existing_invoice and existing_invoice.move_type != move_type):
+        move_types, qty_factor = self._get_import_document_amount_sign(filename, tree)
+        if not move_types:
+            return
+        if journal.type == 'purchase':
+            move_type = move_types[0]
+        elif journal.type == 'sale':
+            move_type = move_types[1]
+        else:
+            return
+        if existing_invoice and existing_invoice.move_type != move_type:
             return
 
         invoice = existing_invoice or self.env['account.move']
@@ -343,7 +360,7 @@ class AccountEdiCommon(models.AbstractModel):
                         ('company_id', '=', journal.company_id.id),
                         ('amount', '=', float(tax_categ_percent_el.text)),
                         ('amount_type', '=', 'percent'),
-                        ('type_tax_use', '=', 'purchase'),
+                        ('type_tax_use', '=', journal.type),
                     ], limit=1)
                     if tax:
                         invoice_line_form.tax_ids.add(tax)
@@ -391,7 +408,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         with (UBL | CII):
             * net_unit_price = 'Price/PriceAmount' | 'NetPriceProductTradePrice' (mandatory) (BT-146)
-            * gross_unit_price = 'GrossPriceProductTradePrice' | 'GrossPriceProductTradePrice' (optional) (BT-148)
+            * gross_unit_price = 'Price/AllowanceCharge/BaseAmount' | 'GrossPriceProductTradePrice' (optional) (BT-148)
             * basis_qty = 'Price/BaseQuantity' | 'BasisQuantity' (optional, either below net_price node or
                 gross_price node) (BT-149)
             * billed_qty = 'InvoicedQuantity' | 'BilledQuantity' (mandatory) (BT-129)
@@ -433,6 +450,12 @@ class AccountEdiCommon(models.AbstractModel):
         }
         :params: invoice_line_form
         :params: qty_factor
+        :returns: {
+            'quantity': float,
+            'product_uom_id': (optional) uom.uom,
+            'price_unit': float,
+            'discount': float,
+        }
         """
         # basis_qty (optional)
         basis_qty = 1
@@ -454,10 +477,9 @@ class AccountEdiCommon(models.AbstractModel):
         rebate_node = tree.find(xpath_dict['rebate'])
         net_price_unit_node = tree.find(xpath_dict['net_price_unit'])
         if rebate_node is not None:
-            if net_price_unit_node is not None and gross_price_unit_node is not None:
-                rebate = float(gross_price_unit_node.text) - float(net_price_unit_node.text)
-            else:
-                rebate = float(rebate_node.text)
+            rebate = float(rebate_node.text)
+        elif net_price_unit_node is not None and gross_price_unit_node is not None:
+            rebate = float(gross_price_unit_node.text) - float(net_price_unit_node.text)
 
         # net_price_unit (mandatory)
         net_price_unit = None
@@ -502,9 +524,7 @@ class AccountEdiCommon(models.AbstractModel):
         ####################################################
 
         # quantity
-        invoice_line_form.quantity = billed_qty * qty_factor
-        if product_uom_id is not None:
-            invoice_line_form.product_uom_id = product_uom_id
+        quantity = billed_qty * qty_factor
 
         # price_unit
         if gross_price_unit is not None:
@@ -513,17 +533,59 @@ class AccountEdiCommon(models.AbstractModel):
             price_unit = (net_price_unit + rebate) / basis_qty
         else:
             raise UserError(_("No gross price nor net price found for line in xml"))
-        invoice_line_form.price_unit = price_unit
 
         # discount
+        discount = 0
         if billed_qty * price_unit != 0 and price_subtotal is not None:
-            invoice_line_form.discount = 100 * (1 - price_subtotal / (billed_qty * price_unit))
+            discount = 100 * (1 - price_subtotal / (billed_qty * price_unit))
 
         # Sometimes, the xml received is very bad: unit price = 0, qty = 1, but price_subtotal = -200
         # for instance, when filling a down payment as an invoice line. The equation in the docstring is not
         # respected, and the result will not be correct, so we just follow the simple rule below:
         if net_price_unit == 0 and price_subtotal != net_price_unit * (billed_qty / basis_qty) - allow_charge_amount:
-            invoice_line_form.price_unit = price_subtotal / billed_qty
+            price_unit = price_subtotal / billed_qty
+
+        return {
+            'quantity': quantity,
+            'price_unit': price_unit,
+            'discount': discount,
+            'product_uom_id': product_uom_id,
+        }
+
+    def _import_fill_invoice_line_taxes(self, journal, tax_nodes, invoice_line_form, inv_line_vals, logs):
+        # Taxes: all amounts are tax excluded, so first try to fetch price_include=False taxes,
+        # if no results, try to fetch the price_include=True taxes. If results, need to adapt the price_unit.
+        inv_line_vals['taxes'] = []
+        for tax_node in tax_nodes:
+            amount = float(tax_node.text)
+            domain = [
+                ('company_id', '=', journal.company_id.id),
+                ('amount_type', '=', 'percent'),
+                ('type_tax_use', '=', journal.type),
+                ('amount', '=', amount),
+            ]
+            tax_excl = self.env['account.tax'].search(domain + [('price_include', '=', False)], limit=1)
+            tax_incl = self.env['account.tax'].search(domain + [('price_include', '=', True)], limit=1)
+            if tax_excl:
+                inv_line_vals['taxes'].append(tax_excl)
+            elif tax_incl:
+                inv_line_vals['taxes'].append(tax_incl)
+                inv_line_vals['price_unit'] *= (1 + tax_incl.amount / 100)
+            else:
+                logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", amount, invoice_line_form.name))
+        # Set the values on the line_form
+        invoice_line_form.quantity = inv_line_vals['quantity']
+        if inv_line_vals.get('product_uom_id'):
+            invoice_line_form.product_uom_id = inv_line_vals['product_uom_id']
+        else:
+            logs.append(
+                _("Could not retrieve the unit of measure for line with label '%s'.", invoice_line_form.name))
+        invoice_line_form.price_unit = inv_line_vals['price_unit']
+        invoice_line_form.discount = inv_line_vals['discount']
+        invoice_line_form.tax_ids.clear()
+        for tax in inv_line_vals['taxes']:
+            invoice_line_form.tax_ids.add(tax)
+        return logs
 
     # -------------------------------------------------------------------------
     # Check xml using the free API from Ph. Helger, don't abuse it !

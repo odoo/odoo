@@ -3013,6 +3013,14 @@ msgstr ""
 " Löschung des Arbeitsplatzes empfohlen."
 
 #. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
@@ -4619,6 +4627,17 @@ msgstr "Die zu produzierende Menge muss ein positiver Wert sein."
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
 msgstr "Die Datensatz ID mit der dies verknüpft ist. "
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
+"Die gewählte Seriennummer stimmt nicht mit der im Fertigungsauftrag "
+"verwendeten überein, bitte wählen Sie eine andere Nummer."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

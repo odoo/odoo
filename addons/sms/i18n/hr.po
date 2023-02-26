@@ -14,6 +14,7 @@
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2022
 # Bole <bole@dajmi5.com>, 2022
 # Martin Trigaux, 2022
+# Matej Mijoč, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Matej Mijoč, 2022\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -784,7 +785,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Telefon je stavljen na crnu listu"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
@@ -1012,7 +1013,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Sanirani broj"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -1228,6 +1229,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Vrsta akcije poslužitelja. Dostupne su sljedeće vrijednosti:\n"
+"- \"Izvršite Python code\": blok piton koda koji će se izvršiti\n"
+"- \"Stvori\": stvaranje novog zapisa s novim vrijednostima\n"
+"- \"Ažuriranje zapisa\": ažuriranje vrijednosti zapisa\n"
+"- \"Izvršavanje nekoliko radnji\": definiranje akcije koja pokreće nekoliko drugih akcija poslužitelja\n"
+"- \"Pošalji e-poštu\": automatski pošaljite e-poštu (Razgovarajte)\n"
+"- \"Dodaj sljedbenike\": dodajte sljedbenike u zapis (Razgovarajte)\n"
+"- \"Stvori sljedeću aktivnost\": stvaranje aktivnosti (rasprava)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf

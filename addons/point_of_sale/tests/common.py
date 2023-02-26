@@ -332,19 +332,16 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'outstanding_account_id': cls.outstanding_bank.id,
         })
 
-        new_config = Form(cls.env['pos.config'])
-        new_config.name = 'Shop Other'
-        new_config.invoice_journal_id = other_invoice_journal
-        new_config.journal_id = other_sales_journal
-        new_config.use_pricelist = True
-        new_config.available_pricelist_ids.clear()
-        new_config.available_pricelist_ids.add(other_pricelist)
-        new_config.pricelist_id = other_pricelist
-        new_config.payment_method_ids.clear()
-        new_config.payment_method_ids.add(cls.cash_pm2)
-        new_config.payment_method_ids.add(cls.bank_pm2)
-        config = new_config.save()
-        return config
+        new_config = cls.env['pos.config'].create({
+            'name': 'Shop Other',
+            'invoice_journal_id': other_invoice_journal.id,
+            'journal_id': other_sales_journal.id,
+            'use_pricelist': True,
+            'available_pricelist_ids': [(6, 0, [other_pricelist.id])],
+            'pricelist_id': other_pricelist.id,
+            'payment_method_ids': [(6, 0, [cls.cash_pm2.id, cls.bank_pm2.id])],
+        })
+        return new_config
 
     @classmethod
     def _create_categ_anglo(cls):

@@ -197,7 +197,7 @@ class PosOrder(models.Model):
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
-            'name': order_line.full_product_name or order_line.product_id.display_name,
+            'name': order_line.product_id.display_name or order_line.full_product_name,
             'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
         }
@@ -206,7 +206,7 @@ class PosOrder(models.Model):
         invoice_lines = []
         for line in self.lines:
             invoice_lines.append((0, None, self._prepare_invoice_line(line)))
-            if line.order_id.pricelist_id.discount_policy == 'without_discount' and line.price_unit != line.product_id.lst_price:
+            if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %s -> %s',
                               float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
@@ -268,7 +268,7 @@ class PosOrder(models.Model):
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
         'Status', readonly=True, copy=False, default='draft')
 
-    account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False)
+    account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index=True)
     picking_ids = fields.One2many('stock.picking', 'pos_order_id')
     picking_count = fields.Integer(compute='_compute_picking_count')
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
@@ -369,6 +369,8 @@ class PosOrder(models.Model):
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
         for order in self:
+            if not order.pricelist_id.currency_id:
+                raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
             currency = order.pricelist_id.currency_id
             order.amount_paid = sum(payment.amount for payment in order.payment_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
@@ -440,6 +442,7 @@ class PosOrder(models.Model):
     def action_stock_picking(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action['display_name'] = _('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -605,6 +608,7 @@ class PosOrder(models.Model):
             'invoice_date': self.date_order.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
+            'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
             'invoice_cash_rounding_id': self.config_id.rounding_method.id
             if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
             else False
@@ -615,7 +619,7 @@ class PosOrder(models.Model):
     def action_pos_order_invoice(self):
         self.write({'to_invoice': True})
         res = self._generate_pos_order_invoice()
-        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing:
+        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and not self.to_ship:
             self._create_order_picking()
         return res
 
@@ -660,13 +664,12 @@ class PosOrder(models.Model):
 
     def _apply_invoice_payments(self):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).property_account_receivable_id
-        payment_moves = self.payment_ids._create_payment_moves()
-        invoice_receivable = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account)
-        # Reconcile the invoice to the created payment moves.
-        # But not when the invoice's total amount is zero because it's already reconciled.
-        if not invoice_receivable.reconciled and receivable_account.reconcile:
-            payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account)
-            (invoice_receivable | payment_receivables).reconcile()
+        payment_moves = self.payment_ids.sudo().with_company(self.company_id)._create_payment_moves()
+        if receivable_account.reconcile:
+            invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
+            if invoice_receivables:
+                payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account and line.partner_id)
+                (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
 
     @api.model
     def create_from_ui(self, orders, draft=False):
@@ -732,6 +735,18 @@ class PosOrder(models.Model):
             'is_total_cost_computed': False
         }
 
+    def _prepare_mail_values(self, name, client, ticket):
+        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
+
+        return {
+            'subject': _('Receipt %s', name),
+            'body_html': message,
+            'author_id': self.env.user.partner_id.id,
+            'email_from': self.env.company.email or self.env.user.email_formatted,
+            'email_to': client['email'],
+            'attachment_ids': self._add_mail_attachment(name, ticket),
+        }
+
     def refund(self):
         """Create a copy of order  for refund order"""
         refund_orders = self.env['pos.order']
@@ -795,18 +810,7 @@ class PosOrder(models.Model):
         if not client.get('email'):
             return False
 
-        message = _("<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>") % (client['name'], name)
-
-        mail_values = {
-            'subject': _('Receipt %s', name),
-            'body_html': message,
-            'author_id': self.env.user.partner_id.id,
-            'email_from': self.env.company.email or self.env.user.email_formatted,
-            'email_to': client['email'],
-            'attachment_ids': self._add_mail_attachment(name, ticket),
-        }
-
-        mail = self.env['mail.mail'].sudo().create(mail_values)
+        mail = self.env['mail.mail'].sudo().create(self._prepare_mail_values(name, client, ticket))
         mail.send()
 
     @api.model
@@ -865,6 +869,10 @@ class PosOrder(models.Model):
     def _get_fields_for_order_line(self):
         """This function is here to be overriden"""
         return []
+
+    def _prepare_order_line(self, order_line):
+        """This function is here to be overriden"""
+        return order_line
 
     def export_for_ui(self):
         """ Returns a list of dict with each item having similar signature as the return of
@@ -1036,6 +1044,7 @@ class PosOrderLine(models.Model):
             'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
             'customer_note': orderline.customer_note,
             'refunded_qty': orderline.refunded_qty,
+            'refunded_orderline_id': orderline.refunded_orderline_id,
         }
 
     def export_for_ui(self):

@@ -1206,3 +1206,113 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(so.order_line[1].product_id, self.product_b)
         self.assertEqual(so.order_line[1].qty_delivered, 1)
         self.assertEqual(so.order_line[1].product_uom.id, uom_km_id)
+
+    def test_return_with_mto_and_multisteps(self):
+        """
+        Suppose a product P and a 3-steps delivery.
+        Sell 5 x P, process pick & pack pickings and then decrease the qty on
+        the SO line:
+        - the ship picking should be updated
+        - there should be a return R1 for the pack picking
+        - there should be a return R2 for the pick picking
+        - it should be possible to reserve R1
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+        stock_location = warehouse.lot_stock_id
+        pack_location, out_location, custo_location = warehouse.delivery_route_id.rule_ids.location_id
+
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'type': 'product',
+        })
+
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 5)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = product
+            line.product_uom_qty = 5
+        so = so_form.save()
+        so.action_confirm()
+
+        pick_picking, pack_picking, _ = so.picking_ids
+        (pick_picking + pack_picking).move_lines.quantity_done = 5
+        (pick_picking + pack_picking).button_validate()
+
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 3
+
+        move_lines = so.picking_ids.move_lines.sorted('id')
+        ship_sm, pack_sm, pick_sm, ret_pack_sm, ret_pick_sm = move_lines
+        self.assertRecordValues(move_lines, [
+            {'location_id': out_location.id, 'location_dest_id': custo_location.id, 'move_orig_ids': pack_sm.ids, 'move_dest_ids': []},
+            {'location_id': pack_location.id, 'location_dest_id': out_location.id, 'move_orig_ids': pick_sm.ids, 'move_dest_ids': ship_sm.ids},
+            {'location_id': stock_location.id, 'location_dest_id': pack_location.id, 'move_orig_ids': [], 'move_dest_ids': pack_sm.ids},
+            {'location_id': out_location.id, 'location_dest_id': pack_location.id, 'move_orig_ids': [], 'move_dest_ids': ret_pick_sm.ids},
+            {'location_id': pack_location.id, 'location_dest_id': stock_location.id, 'move_orig_ids': ret_pack_sm.ids, 'move_dest_ids': []},
+        ])
+
+        ret_pack_sm.picking_id.action_assign()
+        self.assertEqual(ret_pack_sm.state, 'assigned')
+        self.assertEqual(ret_pack_sm.move_line_ids.product_uom_qty, 2)
+
+    def test_mtso_and_qty_decreasing(self):
+        """
+        First, confirm a SO that has a line with the MTO route (the product
+        should already be available in stock). Then, decrease the qty on the SO
+        line:
+        - The delivery should be updated
+        - There should not be any other picking
+        """
+        warehouse = self.company_data['default_warehouse']
+        customer_location = self.env.ref('stock.stock_location_customers')
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+
+        self.product_a.type = 'product'
+        self.env['stock.quant']._update_available_quantity(self.product_a, warehouse.lot_stock_id, 10)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id': warehouse.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': 1,
+                'route_id': mto_route.id,
+            })],
+        })
+        so.action_confirm()
+        self.assertRecordValues(so.picking_ids, [{'location_id': warehouse.lot_stock_id.id, 'location_dest_id': customer_location.id}])
+
+        so.order_line.product_uom_qty = 8
+        self.assertRecordValues(so.picking_ids, [{'location_id': warehouse.lot_stock_id.id, 'location_dest_id': customer_location.id}])
+        self.assertEqual(so.picking_ids.move_lines.product_uom_qty, 8)
+
+    def test_packaging_and_qty_decrease(self):
+        packaging = self.env['product.packaging'].create({
+            'name': "Super Packaging",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+        })
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_uom_qty = 10
+        so = so_form.save()
+        so.action_confirm()
+
+        self.assertEqual(so.order_line.product_packaging_id, packaging)
+
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 8
+
+        self.assertEqual(so.picking_ids.move_lines.product_uom_qty, 8)

@@ -5,6 +5,22 @@
         <DropdownItem class="o_add_to_spreadsheet dropdown-item" t-on-click="addToGoogleSpreadsheet">
             Add to Google Spreadsheet
         </DropdownItem>
+
+        <Dialog
+            title="'Google Spreadsheet'"
+            t-if="state.showDialog"
+            t-on-dialog-closed="state.showDialog = false">
+            <div>
+                <p>To insert this data inside of a Google Sheet:</p>
+                <ul>
+                    <li>Duplicate the <a t-att-href="state.url" target="_blank">Spreadsheet Template</a></li>
+                    <li>Setup your Odoo credentials in the sheet via the <code>Odoo &gt; Settings</code> menu</li>
+                    <li>Paste the following formula in your spreadsheet:<br/>
+                        <code><t t-esc="state.formula"/></code>
+                    </li>
+                </ul>
+            </div>
+        </Dialog>
     </t>
 
 </templates>

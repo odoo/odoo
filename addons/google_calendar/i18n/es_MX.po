@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -30,19 +30,19 @@ msgstr "%(id)s y %(length)s siguientes"
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Days"
-msgstr "%(reminder_type)s - %(duration)s Días"
+msgstr "%(reminder_type)s - %(duration)s días"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Hours"
-msgstr "%(reminder_type)s - %(duration)s Horas"
+msgstr "%(reminder_type)s - %(duration)s horas"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Minutes"
-msgstr "%(reminder_type)s - %(duration)s Minutos"
+msgstr "%(reminder_type)s - %(duration)s minutos"
 
 #. module: google_calendar
 #. openerp-web
@@ -85,7 +85,7 @@ msgid ""
 " synchronisation."
 msgstr ""
 "Ocurrió un error al generar el token. Su código de autorización puede ser "
-"inválido o ya caducó [%s]. Debe comprobar su ID de cliente y su secreto en "
+"inválido o ya expiró [%s]. Debe comprobar su ID de cliente y su secreto en "
 "la plataforma de las API de Google o intentar detener y reiniciar la "
 "sincronización del calendario."
 
@@ -104,7 +104,7 @@ msgstr "Información en el calendario de los asistentes"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr "Calendario de eventos"
+msgstr "Evento de calendario"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_cal_id
@@ -244,7 +244,7 @@ msgstr "Restablecer cuenta de Calendario de Google"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
 msgid "Google Calendar Event Id"
-msgstr "Id del evento de Calendario de Google"
+msgstr "ID del evento de Calendario de Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
@@ -283,8 +283,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Si el campo activo es falso, le permitirá ocultar la notificación de aviso "
-"del evento sin eliminarlo."
+"Si el campo activo se establece como False, le permitirá ocultar la "
+"notificación de aviso del evento sin eliminarlo."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
@@ -396,7 +396,7 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
-"La sincronización de Google necesita ser configurada antes de poder usarla, "
+"Necesita configurar la sincronización de Google antes de poder usarla, "
 "¿desea hacerlo ahora?"
 
 #. module: google_calendar

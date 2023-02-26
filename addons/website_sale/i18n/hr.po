@@ -16,18 +16,19 @@
 # Mario Jureša <mario.juresa@uvid.hr>, 2022
 # Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
 # Milan Tribuson <one.mile.code@gmail.com>, 2022
-# Bole <bole@dajmi5.com>, 2022
 # Tina Milas, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
 # Martin Trigaux, 2022
+# Matej Mijoč, 2022
+# Bole <bole@dajmi5.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -330,6 +331,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
 msgstr "<span>Završi kupovinu</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -896,7 +904,7 @@ msgstr ""
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Category:"
-msgstr ""
+msgstr "Kategorija:"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -929,9 +937,19 @@ msgid "Children Categories"
 msgstr "Dječje kategorije"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Promjena naziva nije dozvoljena jednom kad je napravljen račun za Vas. "
+"molimo kontaktirajte nas za ovu radnju."
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Odaberi metodu plaćanja"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1295,7 +1313,7 @@ msgstr "Povucite ovaj blok i pustite ga na Vašoj stranici. "
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Drawer"
-msgstr ""
+msgstr "Ladica"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers
@@ -1584,7 +1602,7 @@ msgstr "Računovodstvo"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_website_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
 msgid "Is Published"
-msgstr ""
+msgstr "je objavljeno"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1772,9 +1790,8 @@ msgstr "Moja košarica"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.sort
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr "Naziv"
 
@@ -2321,7 +2338,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Predložak proizvoda"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
@@ -2988,6 +3005,18 @@ msgid "The #1"
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Token pristupa nije ispravan."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3011,6 +3040,12 @@ msgstr ""
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
 msgstr ""
 
 #. module: website_sale

@@ -88,6 +88,12 @@ const _DialogLinkWidget = Link.extend({
     /**
      * @override
      */
+    _getIsNewWindowFormRow() {
+        return this.$('input[name="is_new_window"]').closest('.form-group');
+    },
+    /**
+     * @override
+     */
     _getLinkOptions: function () {
         const options = [
             'input[name="link_style_color"]',
@@ -175,6 +181,7 @@ const _DialogLinkWidget = Link.extend({
     _onURLInput: function () {
         this._super(...arguments);
         this.$('#o_link_dialog_url_input').closest('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        this._adaptPreview();
     },
 });
 

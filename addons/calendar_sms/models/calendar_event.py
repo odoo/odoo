@@ -11,7 +11,7 @@ class CalendarEvent(models.Model):
         """ Method overridden from mail.thread (defined in the sms module).
             SMS text messages will be sent to attendees that haven't declined the event(s).
         """
-        return self.mapped('attendee_ids').filtered(lambda att: att.state != 'declined').mapped('partner_id')
+        return self.mapped('attendee_ids').filtered(lambda att: att.state != 'declined' and att.partner_id.phone_sanitized).mapped('partner_id')
 
     def _do_sms_reminder(self, alarm):
         """ Send an SMS text reminder to attendees that haven't declined the event """
@@ -36,7 +36,7 @@ class CalendarEvent(models.Model):
                 'default_composition_mode': 'mass',
                 'default_res_model': 'res.partner',
                 'default_res_ids': self.partner_ids.ids,
-                'default_sms_mass_keep_log': True,
+                'default_mass_keep_log': True,
             },
         }
 

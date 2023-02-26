@@ -168,8 +168,8 @@
                         <field name="country_code" invisible="1"/>
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
-                            <field id="company" class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
-                            <field id="individual" class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact'), ('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
+                            <field id="company" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact'),('is_company', '=', True)], 'invisible': [('is_company','=', False)]}"/>
+                            <field id="individual" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact'), ('is_company', '=', False)], 'invisible': [('is_company','=', True)]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"

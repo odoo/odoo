@@ -198,6 +198,100 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             },
         ])
 
+    def test_payment_move_sync_update_journal_custom_accounts(self):
+        """The objective is to edit the journal of a payment in order to check if the accounts are updated."""
+
+        company = self.company_data['company']
+        # Create two different inbound accounts
+        outstanding_payment_A = company.account_journal_payment_debit_account_id
+        outstanding_payment_B = company.account_journal_payment_debit_account_id.copy()
+        # Create two different journals with a different account
+        journal_A = self.company_data['default_journal_bank']
+        journal_A.inbound_payment_method_line_ids.payment_account_id = outstanding_payment_A
+        journal_B = self.company_data['default_journal_bank'].copy()
+        journal_B.inbound_payment_method_line_ids.payment_account_id = outstanding_payment_B
+
+        # Fill the form payment
+        pay_form = Form(self.env['account.payment'].with_context(default_journal_id=self.company_data['default_journal_bank'].id))
+        pay_form.amount = 50.0
+        pay_form.payment_type = 'inbound'
+        pay_form.partner_type = 'customer'
+        pay_form.partner_id = self.partner_a
+        pay_form.journal_id = journal_A
+        # Save the form (to create move and move line)
+        payment = pay_form.save()
+
+        # Check the payment
+        self.assertRecordValues(payment, [{
+            'amount': 50.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'payment_reference': False,
+            'is_reconciled': False,
+            'currency_id': self.company_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': journal_A.id
+        }])
+        self.assertRecordValues(payment.move_id, [{
+            'currency_id': self.company_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': journal_A.id,
+        }])
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            {
+                'debit': 0.0,
+                'credit': 50.0,
+                'amount_currency': -50.0,
+                'currency_id': self.company_data['currency'].id,
+                'account_id': self.company_data['default_account_receivable'].id,
+            },
+            {
+                'debit': 50.0,
+                'credit': 0.0,
+                'amount_currency': 50.0,
+                'currency_id': self.company_data['currency'].id,
+                'account_id': outstanding_payment_A.id,
+            },
+        ])
+
+        # Change the journal on the form
+        pay_form.journal_id = journal_B
+        # Save the form (to write move and move line)
+        payment = pay_form.save()
+
+        # Check the payment
+        self.assertRecordValues(payment, [{
+            'amount': 50.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'payment_reference': False,
+            'is_reconciled': False,
+            'currency_id': self.company_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': journal_B.id
+        }])
+        self.assertRecordValues(payment.move_id, [{
+            'currency_id': self.company_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': journal_B.id,
+        }])
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            {
+                'debit': 0.0,
+                'credit': 50.0,
+                'amount_currency': -50.0,
+                'currency_id': self.company_data['currency'].id,
+                'account_id': self.company_data['default_account_receivable'].id,
+            },
+            {
+                'debit': 50.0,
+                'credit': 0.0,
+                'amount_currency': 50.0,
+                'currency_id': self.company_data['currency'].id,
+                'account_id': outstanding_payment_B.id,
+            },
+        ])
+
     def test_payment_move_sync_onchange(self):
 
         pay_form = Form(self.env['account.payment'].with_context(default_journal_id=self.company_data['default_journal_bank'].id))

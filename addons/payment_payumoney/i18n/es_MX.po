@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
@@ -29,7 +29,7 @@ msgstr "SHASIGN inválido: %(sign)s recibido, %(computed)s calculado."
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "Merchant Key"
-msgstr "Clave del comerciante"
+msgstr "Clave de comerciante"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
@@ -72,7 +72,7 @@ msgstr "Proveedor"
 #: code:addons/payment_payumoney/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference (%(ref)s) or shasign (%(sign)s)"
-msgstr "Datos recibidos sin referencia (%(ref)s) o SHASIGN (%(sign)s)"
+msgstr "Se recibieron datos sin referencia (%(ref)s) o SHASIGN (%(sign)s)"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__provider
@@ -83,7 +83,8 @@ msgstr ""
 #. module: payment_payumoney
 #: model:ir.model.fields,help:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "The key solely used to identify the account with PayU money"
-msgstr "La clave utilizada únicamente para identificar la cuenta con PayU"
+msgstr ""
+"La clave utilizada únicamente para identificar la cuenta con PayU Money"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment_transaction.py:0

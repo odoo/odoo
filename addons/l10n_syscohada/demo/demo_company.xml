@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="partner_demo_company_syscohada" model="res.partner">
-        <field name="name">SY Company</field>
-        <field name="vat"></field>
-        <field name="street"></field>
-        <field name="city"></field>
-        <field name="country_id" ref="base.sy"/>
+        <field name="name">SN Company</field>
+        <field name="vat">0001462 2G3</field>
+        <field name="street">Rue SC 98</field>
+        <field name="city">Dakar</field>
+        <field name="country_id" ref="base.sn"/>
         
-        <field name="zip"></field>
+        <field name="zip">10200</field>
         <field name="phone">+963 944 567 890</field>
         <field name="email">info@company.syscohadaexample.com</field>
         <field name="website">www.syscohadaexample.com</field>
     </record>
 
     <record id="demo_company_syscohada" model="res.company">
-        <field name="name">SY Company</field>
+        <field name="name">SN Company</field>
         <field name="partner_id" ref="partner_demo_company_syscohada"/>
     </record>
 

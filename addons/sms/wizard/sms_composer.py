@@ -127,7 +127,7 @@ class SendSMS(models.TransientModel):
                 continue
             records.ensure_one()
             res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
-            composer.recipient_single_description = res[records.id]['partner'].name or records.display_name
+            composer.recipient_single_description = res[records.id]['partner'].name or records._sms_get_default_partners().display_name
             composer.recipient_single_number = res[records.id]['number'] or ''
             if not composer.recipient_single_number_itf:
                 composer.recipient_single_number_itf = res[records.id]['number'] or ''
@@ -239,9 +239,12 @@ class SendSMS(models.TransientModel):
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         messages = self.env['mail.message']
+        all_bodies = self._prepare_body_values(records)
+
         for record in records:
-            messages |= record._message_sms(
-                self.body, subtype_id=subtype_id,
+            messages += record._message_sms(
+                all_bodies[record.id],
+                subtype_id=subtype_id,
                 number_field=self.number_field_name,
                 sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None)
         return messages

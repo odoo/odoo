@@ -88,7 +88,7 @@ class ContractHistory(models.Model):
                 WHERE  contract.state <> 'cancel'
                 AND contract.active = true
                 WINDOW w_partition AS (
-                    PARTITION BY contract.employee_id
+                    PARTITION BY contract.employee_id, contract.company_id
                     ORDER BY
                         CASE
                             WHEN contract.state = 'open' THEN 0

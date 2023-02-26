@@ -22,7 +22,10 @@ class StockRule(models.Model):
         message_dict = super(StockRule, self)._get_message_dict()
         dummy, destination, dummy = self._get_message_values()
         message_dict.update({
-            'buy': _('When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need.') % (destination)
+            'buy': _('When products are needed in <b>%s</b>, <br/> '
+                     'a request for quotation is created to fulfill the need.<br/>'
+                     'Note: This rule will be used in combination with the rules<br/>'
+                     'of the reception route(s)') % (destination)
         })
         return message_dict
 
@@ -272,10 +275,7 @@ class StockRule(models.Model):
         params values: values of procurements
         params origins: procuremets origins to write on the PO
         """
-        dates = [fields.Datetime.from_string(value['date_planned']) for value in values]
-
-        procurement_date_planned = min(dates)
-        supplier_delay = max([int(value['supplier'].delay) for value in values])
+        purchase_date = min([fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
 
         # Since the procurements are grouped if they share the same domain for
         # PO but the PO does not exist. In this case it will create the PO from
@@ -283,7 +283,6 @@ class StockRule(models.Model):
         # arbitrary procurement. In this case the first.
         values = values[0]
         partner = values['supplier'].name
-        purchase_date = procurement_date_planned - relativedelta(days=supplier_delay)
 
         fpos = self.env['account.fiscal.position'].with_company(company_id).get_fiscal_position(partner.id)
 
@@ -317,9 +316,10 @@ class StockRule(models.Model):
             ('company_id', '=', company_id.id),
             ('user_id', '=', False),
         )
-        if values.get('orderpoint_id'):
+        delta_days = self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge')
+        if values.get('orderpoint_id') and delta_days is not False:
             procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
-            delta_days = int(self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge') or 0)
+            delta_days = int(delta_days)
             domain += (
                 ('date_order', '<=', datetime.combine(procurement_date + relativedelta(days=delta_days), datetime.max.time())),
                 ('date_order', '>=', datetime.combine(procurement_date - relativedelta(days=delta_days), datetime.min.time()))

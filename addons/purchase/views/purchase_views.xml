@@ -252,6 +252,8 @@
                                     <field name="price_unit" attrs="{'readonly': [('qty_invoiced', '!=', 0)]}"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase'), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show"/>
                                     <field name="price_subtotal" widget="monetary"/>
+                                    <field name="price_total" invisible="1"/>
+                                    <field name="price_tax" invisible="1"/>
                                 </tree>
                                 <form string="Purchase Order Line">
                                         <field name="state" invisible="1"/>

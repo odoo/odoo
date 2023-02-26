@@ -1,13 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_tax_python
+# 	* account_tax_python
+# 
+# Translators:
+# Kristine Timoskina <kristine.timoskina@gmail.com>, 2022
+# Arnis Putniņš <arnis@allegro.lv>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,13 +22,37 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
+msgid ""
+"\n"
+"    - Group of Taxes: The tax is a set of sub taxes.\n"
+"    - Fixed: The tax amount stays the same whatever the price.\n"
+"    - Percentage of Price: The tax amount is a % of the price:\n"
+"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 110 / (1 + 10%) = 100 (price included)\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"        e.g 180 / (1 - 10%) = 200 (not price included)\n"
+"        e.g 200 * (1 - 10%) = 180 (price included)\n"
+"        "
+msgstr ""
+"\n"
+"Nodokļu grupa: nodoklis ir apakšnodokļu kopums.\n"
+"- Fiksēts: Nodokļa summa nemainās neatkarīgi no cenas.\n"
+"- Cenas procentuālā daļa: Nodokļa summa ir% no cenas:\n"
+"piem., 100 * (1 + 10%) = 110 (bez cenas)\n"
+"piem., 110 / (1 + 10%) = 100 (iekļauta cena)\n"
+"- Cenā iekļautā procentuālā daļa: nodokļa summa ir cenas dalījums:\n"
+"piemēram, 180 / (1 - 10%) = 200 (nav iekļauta cena)\n"
+"piem., 200 * (1 - 10%) = 180 (iekļauta cena)"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "Attiecināmais kods"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -35,7 +65,7 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -47,7 +77,7 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
@@ -59,7 +89,7 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
@@ -70,17 +100,25 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
+#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr ""
+msgstr "Python Code"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "Nodoklis"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
+msgid "Tax Computation"
+msgstr "Nodokļu aprēķins"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "Nodokļu sagataves?"

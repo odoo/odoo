@@ -573,8 +573,8 @@ class AccountJournal(models.Model):
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
-                journal_entry = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
-                if len(journal_entry) > 0:
+                journal_entry = self.env['account.move'].sudo().search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
+                if journal_entry:
                     field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
                     raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
         result = super(AccountJournal, self).write(vals)
@@ -722,17 +722,16 @@ class AccountJournal(models.Model):
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
 
-    def create_invoice_from_attachment(self, attachment_ids=[]):
-        ''' Create the invoices from files.
-         :return: A action redirecting to account.move tree/form view.
-        '''
+    def _create_invoice_from_attachment(self, attachment_ids=None):
+        """
+        Create invoices from the attachments (for instance a Factur-X XML file)
+        """
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             raise UserError(_("No attachment was provided"))
 
         invoices = self.env['account.move']
         for attachment in attachments:
-            attachment.write({'res_model': 'mail.compose.message'})
             decoders = self.env['account.move']._get_create_invoice_from_attachment_decoders()
             invoice = False
             for decoder in sorted(decoders, key=lambda d: d[0]):
@@ -742,8 +741,18 @@ class AccountJournal(models.Model):
             if not invoice:
                 invoice = self.env['account.move'].create({})
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
+            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
             invoices += invoice
+        return invoices
 
+    def create_invoice_from_attachment(self, attachment_ids=None):
+        """
+        Create invoices from the attachments (for instance a Factur-X XML file)
+        and redirect the user to the newly created invoice(s).
+        :param attachment_ids: list of attachment ids
+        :return: action to open the created invoices
+        """
+        invoices = self._create_invoice_from_attachment(attachment_ids)
         action_vals = {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],
@@ -923,8 +932,8 @@ class AccountJournal(models.Model):
         '''
         self.ensure_one()
         last_statement_domain = (domain or []) + [('journal_id', '=', self.id)]
-        last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
-        return last_st_line.statement_id
+        last_statement = self.env['account.bank.statement'].search(last_statement_domain, order='date desc, id desc', limit=1)
+        return last_statement
 
     def _get_available_payment_method_lines(self, payment_type):
         """

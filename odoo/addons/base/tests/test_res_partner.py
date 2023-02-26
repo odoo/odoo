@@ -3,7 +3,7 @@
 
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 
 class TestPartner(TransactionCase):
@@ -20,6 +20,13 @@ class TestPartner(TransactionCase):
         ns_res = self.env['res.partner'].name_search('Vlad', args=[('user_ids.email', 'ilike', 'vlad')])
         self.assertEqual(set(i[0] for i in ns_res), set(test_user.partner_id.ids))
 
+        # Check a partner may be searched when current user has no access but sudo is used
+        public_user = self.env.ref('base.public_user')
+        with self.assertRaises(AccessError):
+            test_partner.with_user(public_user).check_access_rule('read')
+        ns_res = self.env['res.partner'].with_user(public_user).sudo().name_search('Vlad', args=[('user_ids.email', 'ilike', 'vlad')])
+        self.assertEqual(set(i[0] for i in ns_res), set(test_user.partner_id.ids))
+
     def test_name_get(self):
         """ Check name_get on partner, especially with different context
         Check name_get correctly return name with context. """
@@ -27,9 +34,9 @@ class TestPartner(TransactionCase):
         test_partner_bhide = self.env['res.partner'].create({'name': 'Atmaram Bhide'})
 
         res_jetha = test_partner_jetha.with_context(show_address=1).name_get()
-        self.assertEqual(res_jetha[0][1], "Jethala\nPowder gali\nGokuldham Society\n  \n", "name should contain comma separated name and address")
+        self.assertEqual(res_jetha[0][1], "Jethala\nPowder gali\nGokuldham Society", "name should contain comma separated name and address")
         res_bhide = test_partner_bhide.with_context(show_address=1).name_get()
-        self.assertEqual(res_bhide[0][1], "Atmaram Bhide\n  \n", "name should contain only name if address is not available, without extra commas")
+        self.assertEqual(res_bhide[0][1], "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
         res_jetha = test_partner_jetha.with_context(show_address=1, address_inline=1).name_get()
         self.assertEqual(res_jetha[0][1], "Jethala, Powder gali, Gokuldham Society", "name should contain comma separated name and address")
@@ -57,6 +64,29 @@ class TestPartner(TransactionCase):
 
         with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"), self.cr.savepoint():
             test_partner_company.write({'company_id': company_2.id})
+
+    def test_commercial_field_sync(self):
+        """Check if commercial fields are synced properly: testing with VAT field"""
+        Partner = self.env['res.partner']
+        company_1 = Partner.create({'name': 'company 1', 'is_company': True, 'vat': 'BE0123456789'})
+        company_2 = Partner.create({'name': 'company 2', 'is_company': True, 'vat': 'BE9876543210'})
+
+        partner = Partner.create({'name': 'someone', 'is_company': False, 'parent_id': company_1.id})
+        Partner.flush()
+        self.assertEqual(partner.vat, company_1.vat, "VAT should be inherited from the company 1")
+
+        # create a delivery address for the partner
+        delivery = Partner.create({'name': 'somewhere', 'type': 'delivery', 'parent_id': partner.id})
+        self.assertEqual(delivery.commercial_partner_id.id, company_1.id, "Commercial partner should be recomputed")
+        self.assertEqual(delivery.vat, company_1.vat, "VAT should be inherited from the company 1")
+
+        # move the partner to another company
+        partner.write({'parent_id': company_2.id})
+        partner.flush()
+        self.assertEqual(partner.commercial_partner_id.id, company_2.id, "Commercial partner should be recomputed")
+        self.assertEqual(partner.vat, company_2.vat, "VAT should be inherited from the company 2")
+        self.assertEqual(delivery.commercial_partner_id.id, company_2.id, "Commercial partner should be recomputed on delivery")
+        self.assertEqual(delivery.vat, company_2.vat, "VAT should be inherited from the company 2 to delivery")
 
     def test_lang_computation_code(self):
         """ Check computation of lang: coming from installed languages, forced
@@ -147,3 +177,22 @@ class TestPartner(TransactionCase):
         partner_merge_wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
             {'partner_show_db_id': True, 'default_dst_partner_id': test_partner}).new()
         self.assertEqual(partner_merge_wizard.dst_partner_id.display_name, expected_partner_name, "'Destination Contact' name should contain db ID in brackets")
+
+    def test_display_address_missing_key(self):
+        """ Check _display_address when some keys are missing. As a defaultdict is used, missing keys should be
+        filled with empty strings. """
+        country = self.env["res.country"].create({"name": "TestCountry", "address_format": "%(city)s %(zip)s"})
+        partner = self.env["res.partner"].create({
+            "name": "TestPartner",
+            "country_id": country.id,
+            "city": "TestCity",
+            "zip": "12345",
+        })
+        before = partner._display_address()
+        # Manually update the country address_format because placeholders are checked by create
+        self.env.cr.execute(
+            "UPDATE res_country SET address_format ='%%(city)s %%(zip)s %%(nothing)s' WHERE id=%s",
+            [country.id]
+        )
+        self.env["res.country"].invalidate_cache()
+        self.assertEqual(before, partner._display_address().strip())

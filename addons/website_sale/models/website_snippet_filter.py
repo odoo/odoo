@@ -72,7 +72,8 @@ class WebsiteSnippetFilter(models.Model):
         limit = context.get('limit')
         domain = expression.AND([
             [('website_published', '=', True)],
-            website.get_current_website().website_domain(),
+            website.website_domain(),
+            [('company_id', 'in', [False, website.company_id.id])],
             search_domain or [],
         ])
         products = handler(website, limit, domain, context)

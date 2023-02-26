@@ -117,6 +117,8 @@ class PurchaseOrder(models.Model):
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
                     line._product_id_change()
                     line._onchange_quantity()
+                    line._onchange_suggest_packaging()
+                    line._onchange_update_product_packaging_qty()
                     res = line.onchange_product_id_warning() or res
                 return res
 

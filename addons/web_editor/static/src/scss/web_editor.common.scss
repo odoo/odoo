@@ -80,6 +80,9 @@ html, body {
 *[contenteditable=true] {
     outline: none;
 }
+[contenteditable] {
+    overflow-wrap: unset !important;
+}
 
 .css_non_editable_mode_hidden {
     display: none !important;
@@ -670,6 +673,35 @@ blockquote {
                     color: $dropdown-link-disabled-color !important;
                 }
             }
+            .btn-link {
+                // Some search autocomplete results use btn-link for extra
+                // information that can be navigated to. (e.g. products give
+                // access to their categories)
+                // These need to be reset in case a dark palette is applied.
+                color: $link-color;
+
+                &:hover {
+                    color: $link-hover-color;
+                }
+                &:disabled {
+                    color: $btn-link-disabled-color;
+                }
+            }
+        }
+        .dropdown-menu .dropdown-item-text .text-muted {
+            // Search autocomplete messages are shown as text-muted entries.
+            // These need to be reset in case a dark palette is applied.
+            color: $text-muted !important;
+
+            a {
+                // Search autocomplete's fuzzy matched term is shown as a link
+                // within an information message.
+                color: $link-color;
+
+                &:hover {
+                    color: $link-hover-color;
+                }
+            }
         }
     }
 }
@@ -857,6 +889,20 @@ section, .oe_img_bg, [data-oe-shape-data] {
     }
 }
 
+// Background Images
+.oe_img_bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &.o_bg_img_opt_repeat {
+        background-size: auto;
+        background-repeat: repeat;
+    }
+    &.o_bg_img_center {
+        background-position: center;
+    }
+}
+
 // Gradient
 // TODO should be in the editor lib since it is handled there... but could not
 // find the right place for it.
@@ -865,10 +911,11 @@ section, .oe_img_bg, [data-oe-shape-data] {
     -webkit-text-fill-color: transparent;
 
     // FIXME (or wait for a fix in Chrome): the code below is needed to make
-    // animated text work with gradient background on Chrome. But the side
-    // effect is that text node wrapping by a span (e.g. bold, italic) no longer
-    // have the "gradient crossing all the text" on it but its own gradient.
-    * {
+    // animated text work with gradient background on Chrome. It is not based
+    // on ".text-gradient *" only to avoid a side effect that makes text nodes
+    // wrapped in a span (e.g. bold, italic) no longer have the "gradient
+    // crossing the whole text" on them but their own gradient.
+    .o_animated_text, .o_animated_text *, &.o_animated_text * {
         background-image: inherit;
         -webkit-background-clip: inherit;
         -webkit-text-fill-color: inherit;

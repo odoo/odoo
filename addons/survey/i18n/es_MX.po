@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_1_choice_4
@@ -249,7 +249,7 @@ msgstr ""
 "    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                <p>Estimado <span t-out=\"object.partner_id.name or 'participant'\">participante</span></p>\n"
+"                <p>Apreciable<span t-out=\"object.partner_id.name or 'participant'\">participante</span></p>\n"
 "                <p>\n"
 "                    A continuación encontrará como archivo adjunto su documento de certificación para\n"
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Formulario de retroalimentación</strong>\n"
@@ -293,7 +293,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado <t t-out=\"object.partner_id.name or 'participant'\">participante</t><br/><br/>\n"
+"        Apreciable <t t-out=\"object.partner_id.name or 'participant'\">participante</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Se le invitó a tomar una nueva certificación.\n"
 "        </t>\n"
@@ -311,7 +311,7 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Por favor, conteste la encuesta para el <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Realice la encuesta antes del <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
 "        </t>\n"
 "        Gracias por su participación.\n"
 "    </p>\n"
@@ -647,7 +647,7 @@ msgid ""
 msgstr ""
 "<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
 "left py-0 pl-2\"><span class=\"text-primary text-center text-center w-100 "
-"position-relative\">Llave</span></span>"
+"position-relative\">Tecla</span></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -736,7 +736,7 @@ msgstr "<span>Límite de tiempo para contestar esta encuesta:</span>"
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid "<span>Waiting for attendees...</span>"
-msgstr "<span>Esperando asistentes ...</span>"
+msgstr "<span>Esperando asistentes...</span>"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q4
@@ -747,7 +747,7 @@ msgstr "Un \"cítrico\" podría dar..."
 #: code:addons/survey/models/survey_question.py:0
 #, python-format
 msgid "A label must be attached to only one question."
-msgstr "Una etiqueta debe estar vinculada a solo una pregunta."
+msgstr "Una etiqueta se debe vincular a una sola pregunta."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_len_max
@@ -1368,7 +1368,7 @@ msgstr "Número de certificaciones de la empresa"
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__done
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Completed"
-msgstr "Completada"
+msgstr "Terminadas"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1564,7 +1564,7 @@ msgid ""
 "authentication."
 msgstr ""
 "Solo las personas internas pueden crear tokens para las encuestas que "
-"soliciten autentificación."
+"soliciten autenticación."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_id
@@ -2280,7 +2280,7 @@ msgstr ""
 #: model:survey.question,comments_message:survey.vendor_certification_page_3_question_6
 #, python-format
 msgid "If other, please specify:"
-msgstr "Si marcó \"otro\", por favor, especifíque:"
+msgstr "Si marcó \"otro\", especifíque:"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__questions_selection
@@ -4219,7 +4219,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description_done
 msgid "This message will be displayed when survey is completed"
-msgstr "Este mensaje aparecerá cuando se complete la encuesta"
+msgstr "Este mensaje aparecerá cuando se termine la encuesta"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -4798,8 +4798,8 @@ msgid ""
 "You can only create certifications for surveys that have a scoring "
 "mechanism."
 msgstr ""
-"Solo puede crear certificaciones para encuestas que tengan un mecanismo de "
-"evaluación."
+"Solo se pueden crear certificaciones para encuestas que tengan un mecanismo "
+"de evaluación."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -4837,7 +4837,7 @@ msgstr "No puede enviar invitaciones para una encuesta terminada."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "You received the badge"
-msgstr "Recibiste la insignia"
+msgstr "Recibió la insignia"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done

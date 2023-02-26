@@ -171,6 +171,17 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
                 fuzzySearch: res['fuzzy_search'],
                 widget: this,
             }));
+
+            // TODO adapt directly in the template in master
+            const mutedItemTextEl = this.$menu.find('span.dropdown-item-text.text-muted')[0];
+            if (mutedItemTextEl) {
+                const newItemTextEl = document.createElement('span');
+                newItemTextEl.classList.add('dropdown-item-text');
+                mutedItemTextEl.after(newItemTextEl);
+                mutedItemTextEl.classList.remove('dropdown-item-text');
+                newItemTextEl.appendChild(mutedItemTextEl);
+            }
+
             this.$menu.css('min-width', this.autocompleteMinWidth);
 
             // Handle the case where the searchbar is in a mega menu by making

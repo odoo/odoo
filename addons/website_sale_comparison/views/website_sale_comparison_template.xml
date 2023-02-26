@@ -134,7 +134,7 @@
                                                 </small>
                                             </span>
 
-                                            <form action="/shop/cart/update" method="post" class="text-center">
+                                            <form action="/shop/cart/update" method="post" class="text-center o_add_cart_form_compare">
                                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                                 <input name="product_id" t-att-value="product.id" type="hidden"
                                                        t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))"/>

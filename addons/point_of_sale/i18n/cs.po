@@ -13,7 +13,8 @@
 # Michal Veselý <michal@veselyberanek.net>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# Jiří Podhorecký <jirka.p@volny.cz>, 2021
+# Jiří Podhorecký, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Jiří Podhorecký <jirka.p@volny.cz>, 2021\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr "%(pos_name)s (nepoužito)"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s POS payment of %s in %s"
-msgstr ""
+msgstr "%s POS platba %s v %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -55,21 +56,21 @@ msgstr ""
 #, python-format
 msgid ""
 "%s has a total amount of %s, are you sure you want to delete this order ?"
-msgstr ""
+msgstr "%s má celkovou částku %s, opravdu chcete smazat tuto objednávku ?"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "& invoice"
-msgstr ""
+msgstr "& faktura"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "(Both will be sent by email)"
-msgstr ""
+msgstr "(Obě budou zaslány e-mailem)"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -82,7 +83,7 @@ msgstr "(ZÁCHRANA PRO %(session)s)"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "(as of opening)"
-msgstr ""
+msgstr "(od otevření)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -114,6 +115,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-label=\"Shopping "
+"cart\" title=\"Nákupní košík\"/>"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -129,6 +132,8 @@ msgid ""
 "<p>Ready to have a look at the <b>POS Interface</b>? Let's start our first "
 "session.</p>"
 msgstr ""
+"<p>Jste připraveni se podívat na <b>POS rozhraní</b>? Pojďme začít naše "
+"první sezení.</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -136,6 +141,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_total_cost_computed','=', "
 "True)]}\">TBD</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_total_cost_computed','=', True)]}\">bude "
+"rozhodnuto</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -284,7 +291,7 @@ msgstr "Krátký text, který bude vložen jako hlavička do vytištěné stvrze
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #, python-format
 msgid "AMOUNT"
-msgstr ""
+msgstr "ČÁSTKA"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -873,7 +880,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Popups/ProductInfoPopup.js:0
 #, python-format
 msgid "Cannot access product information screen if offline."
-msgstr ""
+msgstr "Nelze otevřít obrazovku informací o produktu, pokud jste offline."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1327,7 +1334,7 @@ msgstr "Potvrdit"
 #: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
 #, python-format
 msgid "Confirm ?"
-msgstr ""
+msgstr "Potvrdit ?"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1376,7 +1383,7 @@ msgstr "Připojování k IoT Boxu"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Connection Error"
-msgstr ""
+msgstr "Chyba připojení"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1800,19 +1807,19 @@ msgstr "Smazat neplacené objednávky?"
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
 msgid "Deselect Customer"
-msgstr ""
+msgstr "Zrušit výběr zákazníka"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.desk_organizer
 #: model:product.template,name:point_of_sale.desk_organizer_product_template
 msgid "Desk Organizer"
-msgstr ""
+msgstr "Organizátor stolu"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.desk_pad
 #: model:product.template,name:point_of_sale.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "Deska stolu"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_desks
@@ -2160,7 +2167,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Existing orderlines"
-msgstr ""
+msgstr "Existující řádky objednávek"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2199,7 +2206,7 @@ msgstr "Další informace"
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.fabric_attribute
 msgid "Fabric"
-msgstr ""
+msgstr "Tkanina"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
@@ -2243,7 +2250,7 @@ msgstr "Mapování daní"
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
-msgstr ""
+msgstr "Chyba modulu fiskálních dat"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2282,14 +2289,14 @@ msgstr "Vynutit ukončení relace"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Force Done"
-msgstr ""
+msgstr "Vynutit hotovo"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Force done"
-msgstr ""
+msgstr "Vynutit hotovo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
@@ -2896,7 +2903,7 @@ msgstr "Naposled upraveno"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_leather
 msgid "Leather"
-msgstr ""
+msgstr "Kůže"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -2936,7 +2943,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.letter_tray
 #: model:product.template,name:point_of_sale.letter_tray_product_template
 msgid "Letter Tray"
-msgstr ""
+msgstr "Zásobník na listy"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_amount
@@ -3147,6 +3154,13 @@ msgid "Maximum Exceeded"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#, python-format
+msgid "Maximum value reached"
+msgstr "Maximální dosažená hodnota"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
 msgstr "Chyba při doručování zpráv"
@@ -3169,7 +3183,7 @@ msgstr "Účetní zápisy"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
-msgstr ""
+msgstr "Hr modul místa prodeje"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.monitor_stand
@@ -3261,7 +3275,7 @@ msgstr "Nové sezení"
 #: model:product.product,name:point_of_sale.newspaper_rack
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
-msgstr ""
+msgstr "Stojan na noviny"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
@@ -3294,6 +3308,7 @@ msgstr "Seznam dalších objednávek"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "No"
 msgstr "Ne"
@@ -3331,7 +3346,7 @@ msgstr "Zatím žádná data!"
 #: code:addons/point_of_sale/report/pos_invoice.py:0
 #, python-format
 msgid "No link to an invoice for %s."
-msgstr ""
+msgstr "Žádný odkaz na fakturu pro %s."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3652,6 +3667,8 @@ msgid ""
 "Operation type used to record product pickings <br/>\n"
 "                                    Products will be taken from the default source location of this operation type"
 msgstr ""
+"Typ operace používaný k evidenci odběrů produktů <br/>\n"
+"                                    Produkty budou převzaty z výchozího zdrojového umístění tohoto typu operace"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3681,7 +3698,7 @@ msgstr "Objednávka %s"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Order %s is not fully paid."
-msgstr ""
+msgstr "Objednávka %s není plně zaplacena."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_count
@@ -3703,7 +3720,7 @@ msgstr "Posloupnost ID objednávky"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
 msgid "Order Line IDs Sequence"
-msgstr ""
+msgstr "Posloupnost řádků ID objednávky"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
@@ -3739,7 +3756,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
-msgstr ""
+msgstr "Řádky objednávky"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
@@ -3790,7 +3807,7 @@ msgstr "Ostatní"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid "Outstanding Account"
-msgstr ""
+msgstr "Nesplacený účet"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
@@ -3806,12 +3823,12 @@ msgstr "POS Objednávka %s"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
 msgid "POS Order line"
-msgstr ""
+msgstr "POS řádek objednávky"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "POS Order lines"
-msgstr ""
+msgstr "POS řádky objednávky"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -3821,7 +3838,7 @@ msgstr "Objednávky prod. místa"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr ""
+msgstr "POS řádky objednávek"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_method_id
@@ -3849,7 +3866,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "Řádek objednávky POS %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3935,7 +3952,7 @@ msgstr "Platební podmínky"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr ""
+msgstr "Info o potvrzení platby"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -3962,7 +3979,7 @@ msgstr "Platební terminály"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr ""
+msgstr "ID platební transakce"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3974,14 +3991,14 @@ msgstr "Dostupné platební podmínky"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Payment request pending"
-msgstr ""
+msgstr "Žádost o platbu čeká na vyřízení"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Payment reversed"
-msgstr ""
+msgstr "Platba přijata"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4059,15 +4076,17 @@ msgstr "Dodání"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "Množství na výběr"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "Dodání POS"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -4084,7 +4103,7 @@ msgstr "Obrázek"
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
 msgid "Plastic"
-msgstr ""
+msgstr "Plast"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4114,7 +4133,7 @@ msgstr "Zkontrolujte, zda je tiskárna stále připojená."
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Please check your internet connection and try again."
-msgstr ""
+msgstr "Zkontrolujte prosím připojení k internetu a zkuste to znovu."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -4123,6 +4142,8 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
+"Před uzavřením prosím zavřete všechny relace prodejního místa v tomto "
+"období. Otevřená sezení jsou: %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4142,7 +4163,7 @@ msgstr "Nastavte prosím výnosový účet pro tento produkt: \"%s\" (id: %d)."
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Please print the invoice from the backend"
-msgstr ""
+msgstr "Vytiskněte prosím fakturu z objednávky"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -4167,12 +4188,12 @@ msgstr "Zvolte prosím zákazníka"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
 msgid "PoS Category"
-msgstr ""
+msgstr "Kategorie místa prodeje"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Interface"
-msgstr ""
+msgstr "Rozhraní PoS"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
@@ -4180,19 +4201,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_pivot
 #, python-format
 msgid "PoS Orders"
-msgstr ""
+msgstr "Objednávky prod. místa"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Product Categories"
-msgstr ""
+msgstr "Kategorie produktu místa prodeje"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr ""
+msgstr "Kategorie výrobku PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -4273,17 +4294,17 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Průvodce provedením platby v místě prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "Správcovská skupina místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "Typ operace místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -4324,7 +4345,7 @@ msgstr "Sezení Prodejního místa"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.qunit_suite
 msgid "Point of Sale Tests"
-msgstr ""
+msgstr "Testy místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_user_id
@@ -4335,7 +4356,7 @@ msgstr "Skupina uživatelů Místa Prodeje"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
 msgid "Pos Config"
-msgstr ""
+msgstr "Konfigurace místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_ids
@@ -4345,18 +4366,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_order_id
 msgid "Pos Order"
-msgstr ""
+msgstr "Objednávka prod. místa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_count
 msgid "Pos Order Count"
-msgstr ""
+msgstr "Počet objednávek místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "Řádek objednávky místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_payment_ids
@@ -4368,7 +4389,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Product Categories"
-msgstr ""
+msgstr "Kategorie produktu místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_session_id
@@ -4378,27 +4399,27 @@ msgstr "Relace Místa Prodeje"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
 msgid "Pos Session Duration"
-msgstr ""
+msgstr "Trvání relace místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_state
 msgid "Pos Session State"
-msgstr ""
+msgstr "Stav relace místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_username
 msgid "Pos Session Username"
-msgstr ""
+msgstr "Uživatel místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr ""
+msgstr "Relace místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
 msgid "PosBox"
-msgstr ""
+msgstr "Poštovní schránka"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4445,7 +4466,7 @@ msgstr "Řízení cen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Price Unit"
-msgstr ""
+msgstr "Jednotka ceny"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -4603,7 +4624,7 @@ msgstr "Ceny produktu"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr ""
+msgstr "Produktové kategorie produktu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_qty
@@ -4642,7 +4663,7 @@ msgstr "Varianty výrobku"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Product information"
-msgstr ""
+msgstr "Informace o výrobku"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4680,7 +4701,7 @@ msgstr "Produkty"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Connected"
-msgstr ""
+msgstr "Proxy připojené"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4688,7 +4709,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Disconnected"
-msgstr ""
+msgstr "Proxy odpojené"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4696,7 +4717,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
 #, python-format
 msgid "Proxy Warning"
-msgstr ""
+msgstr "Varování proxy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4719,14 +4740,14 @@ msgstr "Množství"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #, python-format
 msgid "REASON"
-msgstr ""
+msgstr "DŮVOD"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Read Weighing Scale"
-msgstr ""
+msgstr "Čtení měrky váhy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4734,7 +4755,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/tours/point_of_sale.js:0
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>?"
-msgstr ""
+msgstr "Jste připraveni spustit vaše <b>místo prodeje</b>?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4754,12 +4775,12 @@ msgstr "Účtenka"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
-msgstr ""
+msgstr "Účtenka %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
 msgid "Receipt Footer"
-msgstr ""
+msgstr "Zápatí potvrzenky"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_header
@@ -4789,7 +4810,7 @@ msgstr "V tomto deníku zaznamenávejte platby pomocí terminálu."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
 msgid "Recovery Session"
-msgstr ""
+msgstr "Obnovení relace"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4877,7 +4898,7 @@ msgstr "Zbývá"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Remaining unsynced orders"
-msgstr ""
+msgstr "Zbývající nesynchronizované objednávky"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4911,7 +4932,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Request sent"
-msgstr ""
+msgstr "Požadavek odeslán"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4969,7 +4990,7 @@ msgstr "Vráceno"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr ""
+msgstr "Požadavek na zrušení byl odeslán do terminálu"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5017,7 +5038,7 @@ msgstr "Chyba zaokrouhlování v řádcích plateb"
 #: code:addons/point_of_sale/static/src/js/debug_manager.js:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr ""
+msgstr "Spustit JS testy místa prodeje"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -5035,14 +5056,14 @@ msgstr "SN"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
-msgstr ""
+msgstr "Počet řádků prodeje"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
-msgstr ""
+msgstr "Řádek prodeje"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -5083,19 +5104,19 @@ msgstr "Měřítko"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Scan"
-msgstr ""
+msgstr "Skenování"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Scan EAN-13"
-msgstr ""
+msgstr "Skenování EAN-13"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
 msgid "Scan via Proxy"
-msgstr ""
+msgstr "Skenování přes proxy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5109,7 +5130,7 @@ msgstr "Skener"
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
 #, python-format
 msgid "Search Customers"
-msgstr ""
+msgstr "Hledat zákazníky"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5142,7 +5163,7 @@ msgstr "Vybrat"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.js:0
 #, python-format
 msgid "Select Fiscal Position"
-msgstr ""
+msgstr "Vybrat fiskální pozici"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5207,7 +5228,7 @@ msgstr "Odeslat"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Send Payment Request"
-msgstr ""
+msgstr "Odeslat žádost o platbu"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5222,7 +5243,7 @@ msgstr "Odeslat e-mailem"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "Odeslání e-mailu selhalo. Zkuste to znovu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -5276,14 +5297,14 @@ msgstr "ID sezení"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr ""
+msgstr "Záznam relace do deníku"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "Session ids:"
-msgstr ""
+msgstr "ID relace:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5295,7 +5316,7 @@ msgstr "Relace je uzavřena"
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
 msgid "Session open over 7 days"
-msgstr ""
+msgstr "Relace otevřena po dobu 7 dnů"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
@@ -5311,7 +5332,7 @@ msgstr "Sezení"
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
 msgid "Set Customer"
-msgstr ""
+msgstr "Nastavit zákazníka"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_maximum_difference
@@ -5360,7 +5381,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set shop-specific prices, seasonal discounts, etc."
-msgstr ""
+msgstr "Nastavit ceny specifické pro obchod, sezonní slevy atd."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5412,7 +5433,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
+msgstr "Zobrazit zákazníkům pokladnu pomocí vzdáleně připojené obrazovky."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
@@ -5422,17 +5443,17 @@ msgstr "Zobrazit pokladnu zákazníkům."
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 msgid "Show employee login screen"
-msgstr ""
+msgstr "Zobrazit přihlašovací obrazovku zaměstnance"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Six"
-msgstr ""
+msgstr "Šest"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_six
 msgid "Six Payment Terminal"
-msgstr ""
+msgstr "Platební terminál Six"
 
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.size_attribute
@@ -5462,7 +5483,7 @@ msgstr "Rozřezat"
 #: model:product.product,name:point_of_sale.small_shelf
 #: model:product.template,name:point_of_sale.small_shelf_product_template
 msgid "Small Shelf"
-msgstr ""
+msgstr "Malá police"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -5471,6 +5492,15 @@ msgid ""
 "Some Cash Registers are already posted. Please reset them to new in order to close the session.\n"
 "Cash Registers: %r"
 msgstr ""
+"Některé pokladny jsou již zveřejněny. Chcete-li relaci ukončit, resetujte je na nové.\n"
+"Registrační pokladny: %r"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid "Some Serial/Lot Numbers are missing"
+msgstr "Některá sériová čísla/čísla šarží chybí"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5513,7 +5543,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "Určete šarži/sériové číslo na řádku objednávky PoS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
@@ -5533,7 +5563,7 @@ msgstr "Počáteční datum"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
-msgstr ""
+msgstr "Začněte prodej z přednastavené kategorie produktu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -5695,7 +5725,7 @@ msgstr "Výše daně"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tax_included
 msgid "Tax Display"
-msgstr ""
+msgstr "Zobrazení daně"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5713,7 +5743,7 @@ msgstr "Daňový režim"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr ""
+msgstr "Hodnota výběru daňového režimu"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__subtotal
@@ -5723,7 +5753,7 @@ msgstr "Cena bez daně"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__total
 msgid "Tax-Included Price"
-msgstr ""
+msgstr "Cena včetně daně"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
@@ -5739,7 +5769,7 @@ msgstr "Daně"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids_after_fiscal_position
 msgid "Taxes to Apply"
-msgstr ""
+msgstr "Daně k uplatnění"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5756,6 +5786,8 @@ msgid ""
 "Technical field which is used to hide use_payment_terminal when no payment "
 "interfaces are installed."
 msgstr ""
+"Technické pole používané ke skrytí use_payment_terminal, pokud nejsou "
+"nainstalována žádná platební rozhraní."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5782,6 +5814,17 @@ msgid ""
 msgstr ""
 "Místo Prodeje podporuje pouze strategii zaokrouhlování \"přidat "
 "zaokrouhlovací řádek\"."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"The amount cannot be higher than the due amount if you don't have a cash "
+"payment method configured."
+msgstr ""
+"Částka nemůže být vyšší než splatná částka, pokud nemáte nakonfigurován "
+"způsob platby v hotovosti."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5820,7 +5863,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The fiscal data module encountered an error while receiving your order."
-msgstr ""
+msgstr "Modul fiskálních dat zaznamenal chybu při příjmu objednávky."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -6073,6 +6116,8 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
+"V relaci jsou stále objednávky ve stavu konceptu. Zaplaťte nebo zrušte následující objednávky pro ověření relace:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6108,6 +6153,19 @@ msgid ""
 msgstr ""
 "Ve společnosti není nakonfigurována žádná účtová osnova. Přejděte do "
 "nastavení fakturace a nainstalujte účtovou osnovu."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is no cash payment method available in this point of sale to handle the change.\n"
+"\n"
+" Please add a cash payment method in the point of sale configuration."
+msgstr ""
+"V tomto prodejním místě není k dispozici žádná hotovostní platební metoda, která by přijímala drobné. \n"
+"\n"
+" Přidejte prosím platbu v hotovosti v místě prodeje."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6188,6 +6246,8 @@ msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Tato faktura byla vytvořena z následující relace místa prodeje: <a href=# "
+"data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__customer_note
@@ -6213,7 +6273,7 @@ msgstr ""
 #, python-format
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
-msgstr ""
+msgstr "Tento deník je spojen se způsobem platby. Nemůžete změnit jeho typ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6308,7 +6368,7 @@ msgstr "Výše spropitného"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Tip Product"
-msgstr ""
+msgstr "Produktový tip"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.product_product_tip
@@ -6345,7 +6405,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__to_weight
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "Pro vážení s měrkou"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -6356,13 +6416,13 @@ msgstr "Fakturovat"
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "To record new orders, start a new session."
-msgstr ""
+msgstr "Pro nové objednávky začněte novou relaci."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr ""
+msgstr "Vrácené produkt(y), které potřebují otevřít relaci v místě prodeje %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_ship
@@ -6415,7 +6475,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Total Paid (with rounding)"
-msgstr ""
+msgstr "Celkem zaplaceno (zaokrouhleně)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
@@ -6454,7 +6514,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_total_entry_encoding
 msgid "Total of all paid sales orders"
-msgstr ""
+msgstr "Celkem zaplacené prodejní objednávky"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end_real
@@ -6464,7 +6524,7 @@ msgstr "Součet uzavíracích řádků kontroly hotovosti."
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Total of opening cash control lines."
-msgstr ""
+msgstr "Součet počátečních řádků kontroly hotovosti."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -6491,7 +6551,7 @@ msgstr "Transakce"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Transaction cancelled"
-msgstr ""
+msgstr "Transakce byla uzavřena"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking
@@ -6515,6 +6575,17 @@ msgid "Type of the exception activity on record."
 msgstr "Typ zaznamenané výjimečné aktivity."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Tato objednávka ještě není synchronizována se serverem. Ujistěte se, že je "
+"synchronizována, a zkuste to znovu."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6522,6 +6593,9 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
+"Nelze zavřít a ověřit relaci.\n"
+"Nastavte prosím odpovídající daňový účet v každém řádku přerozdělení následujících daní: \n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6544,13 +6618,15 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
+"Tuto konfiguraci PoS nelze upravit, protože nemůžete upravovat %s, když je "
+"relace otevřená."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
 msgid "Unable to save changes."
-msgstr ""
+msgstr "Nelze uložit změny."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6564,7 +6640,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unable to sync order"
-msgstr ""
+msgstr "Nelze synchronizovat objednávku"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
@@ -6643,7 +6719,7 @@ msgstr "UoM"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "Aktualizovat množství na skladě"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
@@ -6653,7 +6729,7 @@ msgstr "Použijte platební terminál"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Use a default specific tax regime"
-msgstr ""
+msgstr "Použijte výchozí daňový režim"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_pricelist
@@ -6695,9 +6771,10 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "DPH:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr "Nesynchronizovaná objednávka"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6705,7 +6782,7 @@ msgstr "DPH:"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "Valid product lot"
-msgstr ""
+msgstr "Platná šarže produktu"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6730,13 +6807,13 @@ msgstr "Vantiv platební terminál"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Waiting for card"
-msgstr ""
+msgstr "Čekání na kartu"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.wall_shelf
 #: model:product.template,name:point_of_sale.wall_shelf_product_template
 msgid "Wall Shelf Unit"
-msgstr ""
+msgstr "Jednotka nástěnné police"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
@@ -6787,7 +6864,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.whiteboard
 #: model:product.template,name:point_of_sale.whiteboard_product_template
 msgid "Whiteboard"
-msgstr ""
+msgstr "Bílá tabule"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.whiteboard_pen
@@ -6807,11 +6884,13 @@ msgstr "S"
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Would you like to load demo data?"
-msgstr ""
+msgstr "Chcete načíst demo data?"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Yes"
 msgstr "Ano"
@@ -6834,6 +6913,23 @@ msgid "You are not allowed to change this quantity"
 msgstr "Toto množství nesmíte měnit"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
+#, python-format
+msgid ""
+"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"Would you like to proceed anyway?"
+msgstr ""
+"Pokoušíte se prodávat produkty se sériovými čísly/čísly šarží, ale některá z nich nejsou nastavena.\n"
+"Chcete přesto pokračovat?"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
+msgstr "Můžete mít pouze jeden způsob platby v hotovosti."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -6851,12 +6947,14 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
+"Nemůžete zavřít místo prodeje, pokud nejsou faktury odeslány.\n"
+"Faktury: %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "Nemůžete zavřít POS, pokud jsou objednávky stále v konceptu"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6876,6 +6974,7 @@ msgstr "Bankovní výpis spojený s relací Místa prodeje nelze vymazat."
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
 msgstr ""
+"Když je relace stále otevřená, nemůžete odstranit kategorii místa prodeje."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -6895,6 +6994,8 @@ msgid ""
 "You cannot delete contacts while there are active PoS sessions. Close the "
 "session(s) %s first."
 msgstr ""
+"Když jsou aktivní relace místa prodeje, nelze kontakty smazat. Nejprve "
+"relaci (relace) %s zavřete."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6926,7 +7027,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "You have to round your payments lines. is not rounded."
-msgstr ""
+msgstr "Řádky plateb musíte zaokrouhlit. Není zaokrouhleno."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -6942,7 +7043,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "You have to select a pricelist in the sale form."
-msgstr ""
+msgstr "Musíte zvolit ceník ve formuláři prodeje."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -6989,6 +7090,8 @@ msgid ""
 "Your PoS Session is open since %(date)s, we advise you to close it and to "
 "create a new one."
 msgstr ""
+"Vaše relace PoS je otevřena od %(date)s, doporučujeme vám ji zavřít a "
+"vytvořit novou."
 
 #. module: point_of_sale
 #. openerp-web
@@ -7017,7 +7120,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "belong to another session:"
-msgstr ""
+msgstr "patří k jiné relaci:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7049,7 +7152,7 @@ msgstr "např. Podmínky vrácení zboží, díky že nakupujete u nás."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
-msgstr ""
+msgstr "např. nealkoholické nápoje"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7077,12 +7180,12 @@ msgstr "v "
 #: code:addons/point_of_sale/static/src/xml/Misc/MobileOrderWidget.xml:0
 #, python-format
 msgid "items"
-msgstr ""
+msgstr "položky"
 
 #. module: point_of_sale
 #: model:mail.activity.type,summary:point_of_sale.mail_activity_old_session
 msgid "note"
-msgstr ""
+msgstr "poznámka"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -7149,3 +7252,9 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "byly duplikáty existujících objednávek"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr "K nastavení pokladny v místě prodeje nemáte přístupová práva."

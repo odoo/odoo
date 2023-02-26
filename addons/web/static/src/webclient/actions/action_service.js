@@ -297,6 +297,12 @@ function makeActionManager(env) {
                 const storedAction = browser.sessionStorage.getItem("current_action");
                 const lastAction = JSON.parse(storedAction || "{}");
                 if (lastAction.res_model === state.model) {
+                    if (lastAction.context) {
+                        // If this method is called because of a company switch, the
+                        // stored allowed_company_ids is incorrect.
+                        // (Fix will be improved in master)
+                        delete lastAction.context.allowed_company_ids;
+                    }
                     actionRequest = lastAction;
                     options.viewType = state.view_type;
                 }
@@ -429,8 +435,8 @@ function makeActionManager(env) {
             }
         }
 
-        if (context.active_id || context.active_ids || context.search_disable_custom_filters) {
-            viewProps.activateFavorite = false; // not sure --> check logic
+        if (context.search_disable_custom_filters) {
+            viewProps.activateFavorite = false;
         }
 
         // view specific

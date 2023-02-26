@@ -32,19 +32,19 @@ class StockProductionLot(models.Model):
     def _get_dates(self, product_id=None):
         """Returns dates based on number of days configured in current lot's product."""
         mapped_fields = {
-            'expiration_date': 'expiration_time',
             'use_date': 'use_time',
             'removal_date': 'removal_time',
             'alert_date': 'alert_time'
         }
-        res = dict.fromkeys(mapped_fields, False)
+        res = {}
         product = self.env['product.product'].browse(product_id) or self.product_id
-        if product:
+        if product.use_expiration_date:
+            expiration_date = datetime.datetime.now() + datetime.timedelta(days=product.expiration_time)
+            res['expiration_date'] = fields.Datetime.to_string(expiration_date)
             for field in mapped_fields:
                 duration = getattr(product, mapped_fields[field])
-                if duration:
-                    date = datetime.datetime.now() + datetime.timedelta(days=duration)
-                    res[field] = fields.Datetime.to_string(date)
+                date = expiration_date - datetime.timedelta(days=duration)
+                res[field] = fields.Datetime.to_string(date)
         return res
 
     # Assign dates according to products data

@@ -133,7 +133,8 @@ options.registry.ImageOptimize.include({
         // feature.
         const imgShapeContainerEl = this.el.querySelector('.o_we_image_shape');
         if (imgShapeContainerEl) {
-            imgShapeContainerEl.classList.toggle('d-none', !odoo.debug);
+            // Hidden from view as the feature is not yet supported in emails
+            imgShapeContainerEl.classList.add('d-none');
         }
     },
 

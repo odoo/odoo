@@ -121,7 +121,7 @@
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
+                <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5" quick_add="False">
                     <field name="currency_id" invisible="1"/>
                     <field name="partner_id" avatar_field="avatar_128"/>
                     <field name="amount_total" widget="monetary"/>

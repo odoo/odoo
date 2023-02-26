@@ -10,6 +10,7 @@
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
 # Martin Trigaux, 2022
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
 msgid "Action Description"
-msgstr "توضیحات کنش"
+msgstr "توضیحات عمل"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
@@ -47,12 +48,12 @@ msgstr "نام کنش"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
-msgstr "کنش برای انجام"
+msgstr "عمل برای انجام"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
 msgid "Action Type"
-msgstr "نوع کنش"
+msgstr "نوع واکنش"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -67,12 +68,12 @@ msgstr "فعالیت"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
-msgstr "نوع فعالیت کاربر"
+msgstr "نوع کاربر فعالیت"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
 msgid "Add Followers"
-msgstr "اضافه کردن فالوور"
+msgstr "افزودن دنبال کننده"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -82,7 +83,7 @@ msgstr "اعمال روی"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
-msgstr "بایگانی‌شده"
+msgstr "بایگانی شده"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -153,7 +154,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
 msgid "Created by"
-msgstr "ایجادشده توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
@@ -163,7 +164,7 @@ msgstr "ایجاد شده در"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
 msgid "Days"
-msgstr "روزها"
+msgstr "روز"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
@@ -221,7 +222,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "ویرایش اقدام"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -231,7 +232,7 @@ msgstr "قالب ایمیل"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
-msgstr "شناسه خارجی"
+msgstr "آیدی خارجی"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
@@ -285,7 +286,7 @@ msgstr "آخرین اجرا"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به‌روز‌رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
@@ -305,7 +306,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
 msgid "Minutes"
-msgstr "دقیقه"
+msgstr "دقیقه‌"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
@@ -405,7 +406,7 @@ msgstr "دنباله"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "کنش سرور"
+msgstr "کنش کارپذیر"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -418,11 +419,12 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"تنظیم یک مقدار این اقدام را در نوار کناری مدل داده شده در دسترس قرار می دهد."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "یک اتوماسیون خودکار جدید راه اندازی کنید"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -432,12 +434,12 @@ msgstr "چکیده"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Target Model"
-msgstr ""
+msgstr "مدل هدف"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Target Model Name"
-msgstr ""
+msgstr "نام مدل هدف"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
@@ -458,6 +460,8 @@ msgid ""
 "The action will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"اگر و تنها در صورتی که یکی از این فیلدها به‌روزرسانی شود، این اقدام فعال "
+"می‌شود. اگر خالی باشد، همه فیلدها مشاهده می‌شوند."
 
 #. module: base_automation
 #. openerp-web
@@ -471,7 +475,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger"
-msgstr "رهاساز"
+msgstr "راه اندازی"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
@@ -496,6 +500,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"نوع عملکرد سرور مقادیر زیر در دسترس هستند:\n"
+"- 'Execute Python Code': بلوکی از کد پایتون که اجرا خواهد شد\n"
+"- \"ایجاد\": یک رکورد جدید با مقادیر جدید ایجاد کنید\n"
+"- 'به روز رسانی یک رکورد': مقادیر یک رکورد را به روز کنید\n"
+"- \"اجرای چندین اقدام\": اقدامی را تعریف کنید که چندین اقدام دیگر سرور را راه اندازی کند\n"
+"- \"ارسال ایمیل\": به طور خودکار یک ایمیل ارسال کنید (بحث)\n"
+"- \"افزودن فالوور\": اضافه کردن دنبال کنندگان به یک رکورد (بحث)\n"
+"- \"ایجاد فعالیت بعدی\": ایجاد یک فعالیت (بحث)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -511,6 +523,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"از «کاربر خاص» استفاده کنید تا همیشه همان کاربر را در فعالیت بعدی اختصاص "
+"دهید. از «کاربر عمومی از رکورد» برای تعیین نام فیلد کاربر برای انتخاب در "
+"رکورد استفاده کنید."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -526,11 +541,15 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"از کنش‌های خودکار برای راه‌اندازی خودکار اقدامات برای صفحه‌های مختلف\n"
+"              استفاده کنید. مثال: یک سرنخ ایجاد شده توسط یک کاربر خاص ممکن است\n"
+"              به طور خودکار روی یک تیم فروش خاص تنظیم شود، یا فرصتی که پس از 14 روز\n"
+"              هنوز وضعیت معلق دارد ممکن است باعث ایجاد یک ایمیل یادآوری خودکار شود."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "نام فیلد کاربر"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -550,6 +569,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"هنگام محاسبه یک شرط زمان بندی شده بر اساس روز، می توان از یک تقویم برای "
+"محاسبه تاریخ بر اساس روزهای کاری استفاده کرد."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
@@ -557,6 +578,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+"هنگامی که با اقدامات متعدد سروکار دارید، ترتیب اجرا بر اساس توالی است. تعداد"
+" کم یعنی اولویت بالا."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -564,11 +587,13 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"چه زمانی باید این شرایط ایجاد شود.\n"
+"                                   در صورت وجود، توسط زمانبندی بررسی می شود. اگر خالی باشد، هنگام ایجاد و به‌روزرسانی بررسی می‌شود."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "وقتی تیک آن را بردارید، قانون پنهان است و اجرا نخواهد شد."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
@@ -576,6 +601,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"کد پایتون را بنویسید که عمل اجرا شود. برخی از متغیرها برای استفاده در دسترس "
+"هستند. کمک در مورد بیان پایتون در تب help آورده شده است."
 
 #. module: base_automation
 #. openerp-web
@@ -584,6 +611,7 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
+"می‌توانید از یک سرپرست بخواهید این عملکرد خودکار را غیرفعال یا تصحیح کند."
 
 #. module: base_automation
 #. openerp-web
@@ -591,6 +619,8 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+"می توانید این اقدام خودکار را غیرفعال کنید یا آن را ویرایش کنید تا مشکل حل "
+"شود."
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -599,3 +629,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"شما نمی توانید ایمیل بفرستید، فالوور اضافه کنید یا فعالیتی برای یک رکورد حذف"
+" شده ایجاد کنید. این به سادگی کار نمی کند."

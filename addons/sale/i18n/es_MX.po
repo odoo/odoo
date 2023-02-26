@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale
 #. openerp-web
@@ -274,7 +274,7 @@ msgstr ""
 "        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"/>\n"
 "        Su orden <strong t-out=\"object.name or ''\">S00049</strong> con un importe de <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
 "        <t t-if=\"object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))\">\n"
-"            ha sido confirmada.<br/>\n"
+"            se ha confirmado.<br/>\n"
 "            ¡Gracias por su confianza!\n"
 "        </t>\n"
 "        <t t-elif=\"transaction and transaction.state == 'pending'\">\n"
@@ -412,7 +412,7 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
-"                    <strong>Anviar a:</strong>\n"
+"                    <strong>Enviar a:</strong>\n"
 "                    <t t-out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
@@ -471,7 +471,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'cotización' if object.state in ('draft', 'sent') else 'orden'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'cotización' if object.state in ('borrador', 'enviado') else 'orden'\"/>\n"
 "        Hola,\n"
 "        <br/><br/>\n"
 "        Su\n"
@@ -1370,7 +1370,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "Tarjetas de crédito y débito (por Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1716,6 +1716,12 @@ msgstr "Anticipo: %s"
 #, python-format
 msgid "Down Payments"
 msgstr "Anticipos"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr "Anticipo"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -4027,8 +4033,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
-"Por favor cuéntenos por qué rechaza esta cotización. Nos ayudará a mejorar "
-"nuestro servicio."
+"Cuéntenos por qué rechaza esta cotización. Nos ayudará a mejorar nuestro "
+"servicio."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -4091,13 +4097,13 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
-"La orden de venta %s vinculada a la cuenta analítica%s debe validarse antes "
-"de registrar gastos."
+"La orden de venta %s vinculada a la cuenta analítica%s se debe validar antes"
+" de registrar gastos."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
 msgid "The analytic account related to a sales order."
-msgstr "La cuenta analítica relacionada con una orden de venta."
+msgstr "La cuenta analítica relacionada a una orden de venta."
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4113,7 +4119,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
 msgstr ""
-"El importe fijo que se facturará por adelantado, impuestos no incluidos."
+"El importe fijo que se facturará por adelantado, sin incluir impuestos."
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -4186,7 +4192,7 @@ msgstr "La comunicación de pago de esta orden de venta."
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
 msgstr ""
-"El porcentaje del importe a facturar por adelantado, impuestos no incluidos."
+"El porcentaje del importe a facturar por adelantado, sin incluir impuestos."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4196,7 +4202,7 @@ msgid ""
 "Please use another product or update this product."
 msgstr ""
 "El producto usado para facturar un anticipo de pago debe de ser de tipo "
-"'Servicio'. Por favor use otro producto o actualice este."
+"'Servicio'. Use otro producto o actualice este."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4207,8 +4213,8 @@ msgid ""
 " create a deposit invoice."
 msgstr ""
 "El producto usado para facturar un anticipo de pago debe tener una política "
-"de facturación configurada como \"Cantidad ordenada\". Por favor, actualice "
-"su producto de depósito para poder crear su factura."
+"de facturación configurada como \"Cantidad ordenada\". Actualice su producto"
+" de depósito para poder crear su factura."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -4714,6 +4720,17 @@ msgstr ""
 "Puede establecer aquí el tipo de comunicación que aparecerá en las órdenes "
 "de venta, el cual se le comunicará al cliente cuando elija el método de "
 "pago."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+"No puede cambiar el tipo de producto porque ya se está utilizando en alguna "
+"orden de venta."
 
 #. module: sale
 #: code:addons/sale/models/sale_order_line.py:0

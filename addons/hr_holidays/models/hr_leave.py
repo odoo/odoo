@@ -4,17 +4,18 @@
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
 import logging
+import pytz
 
 from collections import namedtuple, defaultdict
 
 from datetime import datetime, timedelta, time
 from pytz import timezone, UTC
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, format_date
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import _
 from odoo.osv import expression
@@ -71,6 +72,13 @@ class HolidaysRequest(models.Model):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
         defaults = self._default_get_request_parameters(defaults)
 
+        employee = self.env['hr.employee'].browse(defaults['employee_id']) if defaults.get('employee_id') else self.env.user.employee_id
+        # In some cases, the context does not contain the employee's working time for the day requested
+        if defaults.get('request_date_from') and defaults.get('request_date_to'):
+            default_attendance_from, default_attendance_to = self._get_attendances(employee, defaults['request_date_from'], defaults['request_date_to'])
+            defaults['date_from'] = self._get_start_or_end_from_attendance(default_attendance_from.hour_from, defaults['request_date_from'], employee)
+            defaults['date_to'] = self._get_start_or_end_from_attendance(default_attendance_to.hour_to, defaults['request_date_to'], employee)
+
         if 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
             lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1)
 
@@ -87,7 +95,64 @@ class HolidaysRequest(models.Model):
             defaults.update({'date_from': now})
         if 'date_to' not in defaults:
             defaults.update({'date_to': now})
+        default_start_time = self._get_start_or_end_from_attendance(7, datetime.now().date(), employee).time()
+        default_end_time = self._get_start_or_end_from_attendance(19, datetime.now().date(), employee).time()
+        if defaults['date_from'].time() == default_start_time and defaults['date_to'].time() == default_end_time:
+            date_from = defaults['date_from'].date()
+            date_to = defaults['date_to'].date()
+            attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
+            defaults['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
+            defaults['date_to'] = self._get_start_or_end_from_attendance(attendance_to.hour_to, date_to, employee)
+
         return defaults
+
+    def _get_start_or_end_from_attendance(self, hour, date, employee):
+        hour = float_to_time(float(hour))
+        holiday_tz = timezone(employee.tz or self.env.user.tz)
+        return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
+
+    def _get_attendances(self, employee, request_date_from, request_date_to):
+        resource_calendar_id = employee.resource_calendar_id or self.env.company.resource_calendar_id
+        domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
+        attendances = self.env['resource.calendar.attendance'].read_group(domain,
+            ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)',
+             'week_type', 'dayofweek', 'day_period'],
+            ['week_type', 'dayofweek', 'day_period'], lazy=False)
+
+        # Must be sorted by dayofweek ASC and day_period DESC
+        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period'], group['week_type']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
+
+        default_value = DummyAttendance(0, 0, 0, 'morning', False)
+
+        if resource_calendar_id.two_weeks_calendar:
+            # find week type of start_date
+            start_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_from)
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
+            # First, add days of actual week coming after date_from
+            attendance_filtred = [att for att in attendance_actual_week if int(att.dayofweek) >= request_date_from.weekday()]
+            # Second, add days of the other type of week
+            attendance_filtred += list(attendance_actual_next_week)
+            # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
+            attendance_filtred += list(attendance_actual_week)
+            end_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_to)
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
+            attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= request_date_to.weekday()]))
+            attendance_filtred_reversed += list(reversed(attendance_actual_next_week))
+            attendance_filtred_reversed += list(reversed(attendance_actual_week))
+
+            # find first attendance coming after first_day
+            attendance_from = attendance_filtred[0]
+            # find last attendance coming before last_day
+            attendance_to = attendance_filtred_reversed[0]
+        else:
+            # find first attendance coming after first_day
+            attendance_from = next((att for att in attendances if int(att.dayofweek) >= request_date_from.weekday()), attendances[0] if attendances else default_value)
+            # find last attendance coming before last_day
+            attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= request_date_to.weekday()), attendances[-1] if attendances else default_value)
+
+        return attendance_from, attendance_to
 
     def _default_get_request_parameters(self, values):
         new_values = dict(values)
@@ -294,9 +359,9 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('holiday_status_id', 'number_of_days')
     def _check_allocation_duration(self):
-        for holiday in self:
-            if holiday.holiday_status_id.requires_allocation == 'yes' and holiday.holiday_allocation_id and holiday.number_of_days > holiday.holiday_allocation_id.number_of_days:
-                raise ValidationError(_("You have several allocations for those type and period.\nPlease split your request to fit in their number of days."))
+        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
+        # TODO: remove in master
+        return
 
     @api.depends_context('uid')
     def _compute_description(self):
@@ -335,49 +400,9 @@ class HolidaysRequest(models.Model):
 
     @api.depends('holiday_status_id.requires_allocation', 'validation_type', 'employee_id', 'date_from', 'date_to')
     def _compute_from_holiday_status_id(self):
-        invalid_self = self.filtered(lambda leave: not leave.date_to or not leave.date_from)
-        if invalid_self:
-            invalid_self.update({'holiday_allocation_id': False})
-            self = self - invalid_self
-        if not self:
-            return
-        allocations = self.env['hr.leave.allocation'].search_read(
-            [
-                ('holiday_status_id', 'in', self.holiday_status_id.ids),
-                ('employee_id', 'in', self.employee_id.ids),
-                ('state', '=', 'validate'),
-                '|',
-                ('date_to', '>=', min(self.mapped('date_to'))),
-                '&',
-                ('date_to', '=', False),
-                ('date_from', '<=', max(self.mapped('date_from'))),
-            ], ['id', 'date_from', 'date_to', 'holiday_status_id', 'employee_id', 'max_leaves', 'taken_leave_ids'], order="date_to, id"
-        )
-        allocations_dict = defaultdict(lambda: [])
-        for allocation in allocations:
-            allocation['taken_leaves'] = self.env['hr.leave'].browse(allocation.pop('taken_leave_ids'))\
-                .filtered(lambda leave: leave.state in ['confirm', 'validate', 'validate1'])
-            allocations_dict[(allocation['holiday_status_id'][0], allocation['employee_id'][0])].append(allocation)
-
-        for leave in self:
-            if leave.holiday_status_id.requires_allocation == 'yes' and leave.date_from and leave.date_to:
-                found_allocation = False
-                date_to = leave.date_to.replace(tzinfo=UTC).astimezone(timezone(leave.tz)).date()
-                date_from = leave.date_from.replace(tzinfo=UTC).astimezone(timezone(leave.tz)).date()
-                leave_unit = 'number_of_%s_display' % ('hours' if leave.leave_type_request_unit == 'hour' else 'days')
-                for allocation in allocations_dict[(leave.holiday_status_id.id, leave.employee_id.id)]:
-                    date_to_check = allocation['date_to'] >= date_to if allocation['date_to'] else True
-                    date_from_check = allocation['date_from'] <= date_from
-                    if (date_to_check and date_from_check):
-                        allocation_taken_leaves = allocation['taken_leaves'] - leave
-                        allocation_taken_number_of_units = sum(allocation_taken_leaves.mapped(leave_unit))
-                        leave_number_of_units = leave[leave_unit]
-                        if allocation['max_leaves'] >= allocation_taken_number_of_units + leave_number_of_units:
-                            found_allocation = allocation['id']
-                            break
-                leave.holiday_allocation_id = self.env['hr.leave.allocation'].browse(found_allocation) if found_allocation else False
-            else:
-                leave.holiday_allocation_id = False
+        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
+        # TODO: remove in master
+        self.holiday_allocation_id = False
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
                 'request_unit_half', 'request_unit_hours', 'request_unit_custom', 'employee_id')
@@ -644,9 +669,7 @@ class HolidaysRequest(models.Model):
 
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
-            holiday.supported_attachment_ids.write({
-                'res_id': holiday.id,
-            })
+            holiday.attachment_ids = holiday.supported_attachment_ids
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
@@ -667,14 +690,30 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
+        mapped_days = self.holiday_status_id.get_employees_days((self.employee_id | self.employee_ids).ids)
         for holiday in self:
-            if holiday.holiday_type != 'employee' or not holiday.employee_id or not holiday.holiday_status_id or holiday.holiday_status_id.requires_allocation == 'no':
+            if holiday.holiday_type != 'employee'\
+                    or not holiday.employee_id and not holiday.employee_ids\
+                    or holiday.holiday_status_id.requires_allocation == 'no':
                 continue
-            mapped_days = holiday.holiday_status_id.get_employees_days([holiday.employee_id.id], holiday.date_from)
-            leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
-            if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
-                raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
-                                        'Please also check the time off waiting for validation.') + '\n- %s' % holiday.display_name)
+            if holiday.employee_id:
+                leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
+                if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1\
+                        or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
+                    raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
+                                            'Please also check the time off waiting for validation.'))
+            else:
+                unallocated_employees = []
+                for employee in holiday.employee_ids:
+                    leave_days = mapped_days[employee.id][holiday.holiday_status_id.id]
+                    if float_compare(leave_days['remaining_leaves'], self.number_of_days, precision_digits=2) == -1\
+                            or float_compare(leave_days['virtual_remaining_leaves'], self.number_of_days, precision_digits=2) == -1:
+                        unallocated_employees.append(employee.name)
+                if unallocated_employees:
+                    raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
+                                            'Please also check the time off waiting for validation.')
+                                        + _('\nThe employees that lack allocation days are:\n%s',
+                                            (', '.join(unallocated_employees))))
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
@@ -733,6 +772,9 @@ class HolidaysRequest(models.Model):
     def name_get(self):
         res = []
         for leave in self:
+            user_tz = timezone(leave.tz)
+            date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
+            date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
             if self.env.context.get('short_name'):
                 if leave.leave_type_request_unit == 'hour':
                     res.append((leave.id, _("%s : %.2f hours") % (leave.name or leave.holiday_status_id.name, leave.number_of_hours_display)))
@@ -749,6 +791,7 @@ class HolidaysRequest(models.Model):
                     target = leave.employee_id.name
                 else:
                     target = ', '.join(leave.employee_ids.mapped('name'))
+                display_date = format_date(self.env, date_from_utc) or ""
                 if leave.leave_type_request_unit == 'hour':
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
@@ -757,7 +800,7 @@ class HolidaysRequest(models.Model):
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=display_date,
                             )
                         ))
                     else:
@@ -767,13 +810,12 @@ class HolidaysRequest(models.Model):
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=display_date,
                             )
                         ))
                 else:
-                    display_date = fields.Date.to_string(leave.date_from)
-                    if leave.number_of_days > 1:
-                        display_date += ' / %s' % fields.Date.to_string(leave.date_to)
+                    if leave.number_of_days > 1 and date_from_utc and date_to_utc:
+                        display_date += ' / %s' % format_date(self.env, date_to_utc) or ""
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
                             leave.id,
@@ -802,43 +844,15 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('holiday_allocation_id')
     def _check_allocation_id(self):
-        for leave in self:
-            if leave.holiday_type == 'employee' and not leave.multi_employee and\
-                leave.holiday_status_id.requires_allocation == 'yes' and not leave.holiday_allocation_id:
-                raise ValidationError(_(
-                    'Could not find an allocation of type %(leave_type)s for the requested time period.',
-                    leave_type=leave.holiday_status_id.display_name,
-                ) + '\n- %s' % (leave.employee_id.name))
+        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
+        # TODO: remove in master
+        return
 
     @api.constrains('holiday_allocation_id', 'date_to', 'date_from')
     def _check_leave_type_validity(self):
-        for leave in self:
-            vstart = leave.holiday_allocation_id.date_from
-            vstop = leave.holiday_allocation_id.date_to
-            dfrom = leave.date_from
-            dto = leave.date_to
-            if vstart and vstop:
-                if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
-                    raise ValidationError(_(
-                        '%(leave_type)s are only valid between %(start)s and %(end)s',
-                        leave_type=leave.holiday_status_id.display_name,
-                        start=vstart,
-                        end=vstop
-                    ))
-            elif vstart:
-                if dfrom and (dfrom.date() < vstart):
-                    raise ValidationError(_(
-                        '%(leave_type)s are only valid starting from %(date)s',
-                        leave_type=leave.holiday_status_id.display_name,
-                        date=vstart
-                    ))
-            elif vstop:
-                if dto and (dto.date() > vstop):
-                    raise ValidationError(_(
-                        '%(leave_type)s are only valid until %(date)s',
-                        leave_type=leave.holiday_status_id.display_name,
-                        date=vstop
-                    ))
+        # Deprecated as part of https://github.com/odoo/odoo/pull/96545
+        # TODO: remove in master
+        return
 
     def _check_double_validation_rules(self, employees, state):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
@@ -881,8 +895,6 @@ class HolidaysRequest(models.Model):
 
         holidays = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
-        holidays.filtered(lambda holiday: not holiday.holiday_allocation_id).with_user(SUPERUSER_ID)._compute_from_holiday_status_id()
-
         for holiday in holidays:
             if not self._context.get('leave_fast_create'):
                 # Everything that is done here must be done using sudo because we might
@@ -904,7 +916,7 @@ class HolidaysRequest(models.Model):
 
     def write(self, values):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
-        if not is_officer and values.keys() - {'supported_attachment_ids', 'message_main_attachment_id'}:
+        if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 
@@ -1009,6 +1021,7 @@ class HolidaysRequest(models.Model):
             Meeting = self.env['calendar.event']
             for user_id, meeting_values in meeting_values_for_user_id.items():
                 meetings += Meeting.with_user(user_id or self.env.uid).with_context(
+                                allowed_company_ids=[],
                                 no_mail_to_attendees=True,
                                 calendar_no_videocall=True,
                                 active_model=self._name
@@ -1104,11 +1117,13 @@ class HolidaysRequest(models.Model):
 
         # Post a second message, more verbose than the tracking message
         for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
+            user_tz = timezone(holiday.tz)
+            utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
             holiday.message_post(
                 body=_(
                     'Your %(leave_type)s planned on %(date)s has been accepted',
                     leave_type=holiday.holiday_status_id.display_name,
-                    date=holiday.date_from
+                    date=utc_tz.replace(tzinfo=None)
                 ),
                 partner_ids=holiday.employee_id.user_id.partner_id.ids)
 

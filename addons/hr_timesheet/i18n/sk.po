@@ -3,7 +3,7 @@
 # 	* hr_timesheet
 # 
 # Translators:
-# sakodoo <sak@odoo.com>, 2022
+# SAKodoo <sak@odoo.com>, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # Martin Trigaux, 2022
@@ -1183,6 +1183,12 @@ msgid "Timesheets can be logged on this task."
 msgstr "Na túto úlohu môžu byť poúžité pracovné výkazy."
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
 msgstr ""
@@ -1338,6 +1344,12 @@ msgstr ""
 "Na tomto projekte nemôžete zaznamenávať pracovné výkazy, pretože je "
 "prepojený s neaktívnym analytickým účtom. Zmeňte tento účet alebo znova "
 "aktivujte aktuálny účet podľa časového rozvrhu projektu."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0

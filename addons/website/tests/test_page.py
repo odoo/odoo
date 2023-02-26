@@ -284,3 +284,10 @@ class WithContext(HttpCase):
         root_html = html.fromstring(r.content)
         canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
         self.assertEqual(canonical_url, website.domain + "/")
+
+    def test_page_url_case_insensitive_match(self):
+        r = self.url_open('/page_1')
+        self.assertEqual(r.status_code, 200, "Reaching page URL, common case")
+        r2 = self.url_open('/Page_1', allow_redirects=False)
+        self.assertEqual(r2.status_code, 303, "URL exists only in different casing, should redirect to it")
+        self.assertTrue(r2.headers.get('Location').endswith('/page_1'), "Should redirect /Page_1 to /page_1")

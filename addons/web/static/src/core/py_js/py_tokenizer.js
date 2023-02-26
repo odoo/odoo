@@ -210,8 +210,12 @@ const Name = "[a-zA-Z_]\\w*";
 const Whitespace = "[ \\f\\t]*";
 const DecNumber = "\\d+(L|l)?";
 const IntNumber = DecNumber;
-const PointFloat = group("\\d+\\.\\d*", "\\.\\d+");
-const FloatNumber = PointFloat;
+
+const Exponent = "[eE][+-]?\\d+";
+const PointFloat = group(`\\d+\\.\\d*(${Exponent})?`, `\\.\\d+(${Exponent})?`);
+// Exponent not optional when no decimal point
+const FloatNumber = group(PointFloat, `\\d+${Exponent}`);
+
 const Number = group(FloatNumber, IntNumber);
 const Operator = group("\\*\\*=?", ">>=?", "<<=?", "<>", "!=", "//=?", "[+\\-*/%&|^=<>]=?", "~");
 const Bracket = "[\\[\\]\\(\\)\\{\\}]";

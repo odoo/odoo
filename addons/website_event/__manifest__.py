@@ -53,6 +53,7 @@
             'website_event/static/src/scss/event_templates_common.scss',
             'website_event/static/src/scss/event_templates_list.scss',
             'website_event/static/src/scss/event_templates_page.scss',
+            'website_event/static/src/snippets/s_country_events_list/000.scss',
             'website_event/static/src/js/display_timer_widget.js',
             'website_event/static/src/js/register_toaster_widget.js',
             'website_event/static/src/js/website_geolocation.js',

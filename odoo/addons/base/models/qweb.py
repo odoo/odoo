@@ -1187,7 +1187,8 @@ class QWeb(object):
         code_options = self._compile_directive(el, options, 'options', indent) or [self._indent("t_field_t_options = {}", indent)]
         code.extend(code_options)
         code.append(self._indent(f"attrs, content, force_display = self._get_field({self._compile_expr(record, raise_on_missing=True)}, {repr(field_name)}, {repr(expression)}, {repr(tagName)}, t_field_t_options, compile_options, values)", indent))
-        code.append(self._indent("content = self._compile_to_str(content)", indent))
+        code.append(self._indent("if content is not None and content is not False:", indent))
+        code.append(self._indent("content = self._compile_to_str(content)", indent + 1))
         code.extend(self._compile_widget_value(el, options, indent))
         return code
 
@@ -1222,7 +1223,7 @@ class QWeb(object):
         else:
             content = (self._compile_tag_open(el, options, indent + 1, not without_attributes) +
                 self._compile_tag_close(el, options) +
-                self._flushText(options, indent + 2))
+                self._flushText(options, indent + 1))
             if content:
                 code.append(self._indent("elif force_display:", indent))
                 code.extend(content)

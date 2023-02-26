@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web_tour
 #. openerp-web
@@ -28,6 +28,13 @@ msgid ""
 "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
 msgstr ""
 "<strong><b>Bel lavoro!</b> Hai completato tutte le fasi del tour.</strong>"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/js/tip.js:0
+#, python-format
+msgid "Click here to go to the next step."
+msgstr ""
 
 #. module: web_tour
 #. openerp-web

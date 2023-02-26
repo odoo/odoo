@@ -71,6 +71,24 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(JSON.stringify(evaluateExpr(expr)), `"2021-09-16 18:00:00"`);
         });
 
+        QUnit.test("to_utc in october with winter/summer change", (assert) => {
+            patchDate(2021, 9, 17, 10, 0, 0);
+            patchWithCleanup(Date.prototype, {
+                getTimezoneOffset() {
+                    const month = this.getMonth() // starts at 0;
+                    if (10 <= month || month <= 2) {
+                        //rough approximation
+                        return -60;
+                    } else {
+                        return -120;
+                    }
+                },
+            });
+            const expr =
+                "datetime.datetime(2022, 10, 17).to_utc()";
+            assert.strictEqual(JSON.stringify(evaluateExpr(expr)), `"2022-10-16 22:00:00"`);
+        });
+
         QUnit.test("datetime.datetime.combine", (assert) => {
             const expr =
                 "datetime.datetime.combine(context_today(), datetime.time(23,59,59)).strftime('%Y-%m-%d %H:%M:%S')";

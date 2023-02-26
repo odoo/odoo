@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -70,7 +70,7 @@ msgid ""
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
 "Bloquea la operación actual del documento dependiendo de la severidad del error:\n"
-"* Info: el documento no está bloqueado y todo trabaja como debería-\n"
+"* Info: el documento no está bloqueado y todo trabaja como debería.\n"
 "* Advertencia: hay un error que no impide el funcionamiento de la operación actual de facturación electrónica.\n"
 "* Error: hay un error que bloquea la operación actual de facturación electrónica."
 
@@ -103,7 +103,7 @@ msgstr "Código"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr "Compatible con EDI"
+msgstr "EDI compatible"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
@@ -183,7 +183,7 @@ msgstr "Conteo de errores en el EDI"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr "Mensaje de error de Edi"
+msgstr "Mensaje de error de EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id

@@ -64,7 +64,7 @@ class PaymentAcquirer(models.Model):
                 self.payulatam_api_key,
                 self.payulatam_merchant_id,
                 values['referenceCode'],
-                float_repr(float(values['amount']), 1),
+                float_repr(float(values['amount']), 2),
                 values['currency'],
             ])
         return md5(data_string.encode('utf-8')).hexdigest()

@@ -402,6 +402,7 @@
             'slide_to_complete': '_onSlideToComplete',
             'slide_completed': '_onSlideCompleted',
             'slide_go_next': '_onSlideGoToNext',
+            'join_course': '_onJoinCourse',
         },
         /**
         * @override
@@ -699,6 +700,16 @@
             this.$('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
             this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
         },
+        /**
+         * Triggered when user join a course via a subwidget.
+         * User is already logged in.
+         * Update all slides frontend for fullscreen mode.
+         *
+         * @private
+         */
+         _onJoinCourse: function () {
+            this.slides.forEach((slide) => slide.isMember = true);
+        },
     });
 
     publicWidget.registry.websiteSlidesFullscreenPlayer = publicWidget.Widget.extend({
@@ -711,6 +722,7 @@
             proms.push(fullscreen.attachTo(".o_wslides_fs_main"));
             return Promise.all(proms).then(function () {
                 $('#edit-page-menu a[data-action="edit"]').on('click', self._onWebEditorClick.bind(self));
+                $('a[data-action="translate"]').on('click', self._onTranslateClick.bind(self));
             });
         },
 
@@ -730,7 +742,22 @@
 
             window.location = `${window.location.pathname}?fullscreen=0&enable_editor=1`;
         },
+        /**
+         * The translate button does not work well with the e-learning fullscreen view.
+         * It actually completely closes the fullscreen view and opens the edition on a blank page.
+         *
+         * To avoid this, we intercept the click on the 'translate' button and redirect to the
+         * non-fullscreen view of this slide with the translation mode enabled, which is more suited to translate
+         * in-place anyway.
+         *
+         * @param {MouseEvent} e
+         */
+        _onTranslateClick : function (e) {
+            e.preventDefault();
+            e.stopPropagation();
 
+            window.location = `${window.location.pathname}?fullscreen=0&edit_translations=1`;
+        },
         _extractChannelData: function (){
             return this.$el.data();
         },

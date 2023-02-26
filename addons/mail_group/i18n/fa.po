@@ -10,6 +10,8 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Hanna Kheradroosta, 2022
+# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +95,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -371,7 +373,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Configure a custom domain"
-msgstr ""
+msgstr "پیکربندی یک دامنه سفارشی"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -425,7 +427,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "پیام برگشتی سفارشی"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
@@ -476,7 +478,7 @@ msgstr "مستعار ایمیل"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
 msgid "Email From"
-msgstr ""
+msgstr "ایمیل از"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
@@ -575,6 +577,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"شناسه پرونده اصلی دارای نام مستعار (مثال: پروژه نگهداری ایجاد کار نام "
+"مستعار)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
@@ -582,6 +586,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"در صورت تنظیم، این محتوا به طور خودکار به جای پیام پیش‌فرض برای کاربران غیر "
+"مجاز فرستاده خواهد شد."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
@@ -971,6 +977,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"ID اختیاری یک رشته (رکورد) که همه پیامهای دریافتی به آن ضمیمه می شوند، حتی "
+"اگر به آن پاسخ نداده باشند. اگر تنظیم شود، این کار ایجاد رکوردهای جدید را به"
+" طور کامل غیرفعال می کند."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_user_id
@@ -990,7 +999,7 @@ msgstr "مدل والد"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "شناسه موضوع رکورد والد"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
@@ -999,6 +1008,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"مدل والد نام مستعار را در دست دارد. مدلی که مرجع نام مستعار را در خود دارد "
+"الزاماً مدلی نیست که توسط alias_model_id ارائه شده است (مثال: project "
+"(parent_model) و task (model)))"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
@@ -1075,7 +1087,7 @@ msgstr "پاسخ: %s"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "شناسه موضوع رکورد"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -1140,7 +1152,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
 msgid "Selected group of users"
-msgstr ""
+msgstr "انتخاب گروهی مشخص از کاربران"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -1260,6 +1272,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"مدل (Odoo Document Kind) که با نام مستعار مطابقت دارد. هرگونه ایمیل دریافتی "
+"که به رکورد موجود پاسخ ندهد، باعث ایجاد رکورد جدیدی از این مدل می شود (به "
+"عنوان مثال یک وظیفه پروژه)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1267,6 +1282,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"نام مستعار ایمیل، به عنوان مثال  \"jobs\" (مشاغل) اگر می خواهید ایمیل های "
+"<jobs@example.odoo.com> را دریافت کنید"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
@@ -1282,6 +1299,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"به محض در یافت ایمیل در این نام مستعار، مالک رکورد ایجاد می شود. اگر این "
+"فیلد تنظیم نشده باشد، سیستم سعی می کند مالک مناسب را بر اساس آدرس فرستنده "
+"(از) پیدا کند یا اگر کاربری برای آن آدرس پیدا نشود، از اکانت مدیر سیستم "
+"استفاده می کند."
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0

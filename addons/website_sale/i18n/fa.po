@@ -6,21 +6,22 @@
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2022
 # Arash Tarighati <arash.tgi@gmail.com>, 2022
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
-# Far Har <fhari1234@gmail.com>, 2022
+# Farid Hariri <fhari1234@gmail.com>, 2022
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2022
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2022
 # Hamid Darabi, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2022\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -338,6 +339,13 @@ msgstr "<span>سفارش</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -902,7 +910,7 @@ msgstr "توضیحات دسته بندی"
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Category:"
-msgstr ""
+msgstr "دسته بندی:"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -933,6 +941,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "دسته بندی‌ های فرزند"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"زمانی که فاکتورهایی برای حساب شما صادر شده باشد، تغییر نام شرکت شما مجاز "
+"نیست. لطفا برای این عملیات مستقیما با ما تماس بگیرید."
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
@@ -1463,12 +1481,13 @@ msgstr "تولید خودکار فاکتور وقتی پرداخت تایید ش
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_gift_card
 msgid "Gift Card"
-msgstr ""
+msgstr "کارت هدیه"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
 msgid "Gives the sequence order when displaying a list of product categories."
 msgstr ""
+"هنگام نمایش لیستی از دسته بندی محصولات، ترتیب سفارشات را نمایش می دهد."
 
 #. module: website_sale
 #. openerp-web
@@ -1749,7 +1768,7 @@ msgstr "متوسط"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "شناسه حساب تجاری"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
@@ -1774,9 +1793,8 @@ msgstr "سبد من"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.sort
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr "نام"
 
@@ -2057,7 +2075,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "رمز شناسایی PDT"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_page
@@ -2323,7 +2341,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "قالب محصول"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
@@ -2460,32 +2478,32 @@ msgstr "رتبه دهی"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
 msgid "Rating Average"
-msgstr ""
+msgstr "میانگین رتبه بندی"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "رتبه بندی آخرین بازخورد"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "رتبه بندی آخرین تصویر"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "رتبه آخرین ارزش"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "تعداد رتبه بندی"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__rating_last_feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "دلیل رتبه بندی"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
@@ -2924,12 +2942,12 @@ msgstr "خیابان <span class=\"d-none d-md-inline\"> و شماره</span>"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "کلید قابل انتشار Stripe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "کلید مخفی Stripe"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2990,6 +3008,18 @@ msgid "The #1"
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has been updated. Please refresh the page."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3013,6 +3043,12 @@ msgstr ""
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
 msgstr ""
 
 #. module: website_sale

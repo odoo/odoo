@@ -950,7 +950,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             taxes = line.taxes_id.compute_all(**line._prepare_compute_all_values())
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
@@ -984,7 +984,7 @@ class PurchaseOrderLine(models.Model):
             # compute qty_invoiced
             qty = 0.0
             for inv_line in line._get_invoice_lines():
-                if inv_line.move_id.state not in ['cancel']:
+                if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
                     if inv_line.move_id.move_type == 'in_invoice':
                         qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
                     elif inv_line.move_id.move_type == 'in_refund':
@@ -1057,11 +1057,16 @@ class PurchaseOrderLine(models.Model):
             raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for line in self:
-                if line.order_id.state == 'purchase':
+                if (
+                    line.order_id.state == "purchase"
+                    and float_compare(line.product_qty, values["product_qty"], precision_digits=precision) != 0
+                ):
                     line.order_id.message_post_with_view('purchase.track_po_line_template',
                                                          values={'line': line, 'product_qty': values['product_qty']},
                                                          subtype_id=self.env.ref('mail.mt_note').id)
+
         if 'qty_received' in values:
             for line in self:
                 line._track_qty_received(values['qty_received'])
@@ -1096,7 +1101,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id', 'date_order')
     def _compute_account_analytic_id(self):
         for rec in self:
-            if not rec.account_analytic_id:
+            if not rec.display_type:
                 default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
                     product_id=rec.product_id.id,
                     partner_id=rec.order_id.partner_id.id,
@@ -1109,7 +1114,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id', 'date_order')
     def _compute_analytic_tag_ids(self):
         for rec in self:
-            if not rec.analytic_tag_ids:
+            if not rec.display_type:
                 default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
                     product_id=rec.product_id.id,
                     partner_id=rec.order_id.partner_id.id,
@@ -1168,7 +1173,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):
-        if not self.product_id:
+        if not self.product_id or self.invoice_lines:
             return
         params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(
@@ -1228,7 +1233,7 @@ class PurchaseOrderLine(models.Model):
             self.product_packaging_id = False
         # suggest biggest suitable packaging
         if self.product_id and self.product_qty and self.product_uom:
-            self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom)
+            self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom) or self.product_packaging_id
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):

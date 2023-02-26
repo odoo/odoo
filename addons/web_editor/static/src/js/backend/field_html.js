@@ -11,6 +11,7 @@ const {QWebPlugin} = require('@web_editor/js/backend/QWebPlugin');
 require('web._field_registry');
 
 var _lt = core._lt;
+var _t = core._t;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
 
@@ -230,25 +231,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _toggleCodeView: function ($codeview) {
         this.wysiwyg.odooEditor.observerUnactive();
-        $codeview.height(this.$content.height());
         $codeview.toggleClass('d-none');
         this.$content.toggleClass('d-none');
         if ($codeview.hasClass('d-none')) {
-            if (this.resizerHandleObserver) {
-                this.resizerHandleObserver.disconnect();
-                delete this.resizerHandleObserver;
-            }
             this.wysiwyg.odooEditor.observerActive();
             this.wysiwyg.setValue($codeview.val());
         } else {
-            this.resizerHandleObserver = new MutationObserver((mutations, observer) => {
-                for (let mutation of mutations) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                        $codeview[0].style.height = this.$content[0].style.height;
-                    }
-                }
-            });
-            this.resizerHandleObserver.observe(this.$content[0], {attributes: true});
             $codeview.val(this.$content.html());
             this.wysiwyg.odooEditor.observerActive();
         }
@@ -263,17 +251,18 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * when closing the wizard.
      *
      * @private
-     * @param {Object} attachments
+     * @param {Object} event the event containing attachment data
      */
-    _onAttachmentChange: function (attachments) {
-        if (!this.fieldNameAttachment) {
+    _onAttachmentChange: function (event) {
+        // This only needs to happen for the composer for now
+        if (!this.fieldNameAttachment || this.model !== 'mail.compose.message') {
             return;
         }
         this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: _.object([this.fieldNameAttachment], [{
                 operation: 'ADD_M2M',
-                ids: attachments
+                ids: event.data
             }])
         });
     },
@@ -551,13 +540,19 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _onLoadWysiwyg: function () {
         var $button = this._renderTranslateButton();
-        $button.css({
-            'font-size': '15px',
-            position: 'absolute',
-            right: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
-            top: '5px',
-        });
-        this.$el.append($button);
+        var $container;
+        if (this.nodeOptions.cssEdit && this.wysiwyg) {
+            $container = this.wysiwyg.$iframeBody.find('.email_designer_top_actions');
+        } else {
+            $container = this.$el;
+            $button.css({
+                'font-size': '15px',
+                position: 'absolute',
+                top: '5px',
+                [_t.database.parameters.direction === 'rtl' ? 'left' : 'right']: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
+            });
+        }
+        $container.append($button);
         if (odoo.debug && this.nodeOptions.codeview) {
             const $codeviewButtonToolbar = $(`
                 <div id="codeview-btn-group" class="btn-group">

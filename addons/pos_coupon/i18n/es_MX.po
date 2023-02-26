@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_coupon
 #: model:coupon.program,name:pos_coupon.15_pc_on_next_order
@@ -213,8 +213,8 @@ msgid ""
 "A technical field used as an alternative to the promo_code. This is "
 "automatically generated when promo_code is changed."
 msgstr ""
-"Un campo técnico utilizado como alternativa para el promo_code. Se genera "
-"automáticamente cuando se cambia el promo_code."
+"Un campo técnico que se utiliza como alternativa para el promo_code. Se "
+"genera automáticamente cuando se cambia el promo_code."
 
 #. module: pos_coupon
 #. openerp-web
@@ -318,7 +318,7 @@ msgstr ""
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
-msgstr "Ingresar código"
+msgstr "Introducir código"
 
 #. module: pos_coupon
 #. openerp-web
@@ -382,7 +382,7 @@ msgstr "Órdenes de PdV"
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_coupon_program_form
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_promo_program_form
 msgid "PoS Sales"
-msgstr "Ventas del PdV"
+msgstr "Ventas de PdV"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_coupon__pos_order_id
@@ -441,7 +441,7 @@ msgstr "Programas de cupones y promociones para utilizar."
 #: model:ir.ui.menu,name:pos_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:pos_coupon.res_config_view_form_inherit_pos_coupon
 msgid "Promotion Programs"
-msgstr "Programa de promociones"
+msgstr "Programas de promociones"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__program_id
@@ -550,4 +550,4 @@ msgstr "Cupón [PdV]: Enviar por correo electrónico"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr "sin caducidad"
+msgstr "sin fecha de expiración"

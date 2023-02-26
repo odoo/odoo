@@ -1,13 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_mass_mailing
+# 	* website_mass_mailing
+# 
+# Translators:
+# matjaz k <matjaz@mentis.si>, 2022
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
+# Boris Kodelja <boris@hbs.si>, 2022
+# Jasmina Macur <jasmina@hbs.si>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:28+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,162 +24,114 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid ", .o_newsletter_popup"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "&amp;times;"
+msgid "Always <b>First</b>."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
+msgid "Always First."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
+msgid "Be the first to find out all the latest news, products, and trends."
 msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid ""
-"<strong>Newsletter Popup!</strong> The newsletter popup snippet effect is "
-"active on this page. Click"
+"Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:15
+#: code:addons/website_mass_mailing/static/src/xml/website_mass_mailing.xml:0
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 #, python-format
-msgid "Add a Newsletter Subscribe Button"
-msgstr ""
+msgid "Close"
+msgstr "Zaključi"
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
-#, python-format
-msgid "Add a Newsletter Subscribe Popup"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
-msgid "Change Newsletter"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-msgid "Choose your mailing subscriptions."
-msgstr ""
+#: model:ir.model,name:website_mass_mailing.model_res_company
+msgid "Companies"
+msgstr "Podjetja"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
-msgstr ""
+msgstr "Stik"
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
-msgid "Encourage to subscribe to mailing lists with a popup"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "Here To Edit Dialog Content"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
-msgid "Mailing List"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "Mailing Subscriptions"
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid "Display Thanks Button"
 msgstr ""
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
+msgid "Error"
+msgstr "Napaka"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Newsletter"
+msgstr "Novice"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid ""
+"No mailing list found, do you want to create a new one? This will save all "
+"your changes, are you sure you want to proceed?"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
-msgid "Popup Content"
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid "Show reCaptcha Policy"
 msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Subscribe"
+msgstr "Naroči se"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Success"
+msgstr "Uspešno"
+
+#. module: website_mass_mailing
+#: code:addons/website_mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
 msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks"
-msgstr ""
+msgstr "Hvala"
+
+#. module: website_mass_mailing
+#: code:addons/website_mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Thanks for subscribing!"
+msgstr "Hvala za prijavo!"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-msgid "Thanks for your subscription!"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
-msgid ""
-"This adds a new Newsletter Popup snippet to drag & drop on on your website "
-"pages. It triggers a popup when visitors land on the page. This popup "
-"prompts them to enter their email address to join a mailing list."
-msgstr ""
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
-#, python-format
-msgid "Type Here ..."
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
-msgid "Use subscription pop up on the website"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_res_config_settings_group_website_popup_on_exit
-msgid "Website Popup"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
-msgid "Website Popup Content"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
-msgid "Website Popup Redirect URL"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-msgid "You are not subscribed to any of our mailing list."
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "You have been successfully <strong>unsubscribed</strong>!"
-msgstr ""
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
-#, python-format
-msgid "Your changes have been saved."
-msgstr ""
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
-#, python-format
-msgid "Your changes have not been saved, try again later."
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
-msgstr ""
+msgstr "vaša e-pošta..."
