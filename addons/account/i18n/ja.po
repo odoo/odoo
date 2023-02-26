@@ -16,6 +16,7 @@
 # Martin Trigaux, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Andy Yiu, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Andy Yiu, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -671,6 +672,9 @@ msgid ""
 "                                        Taxes\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        税金\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -4539,7 +4543,7 @@ msgstr "流動資産"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
 msgid "Current Balance"
-msgstr ""
+msgstr "現在残高"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -4590,6 +4594,7 @@ msgid "Customer Invoice"
 msgstr "顧客請求書"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9367,7 +9372,7 @@ msgstr "未消込支払勘定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr ""
+msgstr "未消込支払勘定"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9383,7 +9388,7 @@ msgstr "未消込入金勘定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr ""
+msgstr "未消込入金勘定"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10659,7 +10664,7 @@ msgstr "関連ドキュメントモデル"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__related_taxes_amount
 msgid "Related Taxes Amount"
-msgstr ""
+msgstr "関連税金数"
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -13952,6 +13957,14 @@ msgid "There was an error processing this page."
 msgstr "このページの処理中にエラーが発生しました。"
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "これらの税金は、作成されたすべての新製品に設定されます。"
@@ -14567,6 +14580,12 @@ msgid "Unposted"
 msgstr "未記帳"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "未記帳仕訳"
@@ -14901,6 +14920,7 @@ msgid "Vendor Bill Created"
 msgstr "仕入先請求書が作成されました"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15391,6 +15411,12 @@ msgid ""
 msgstr "いくつかのジャーナル項目がすでに存在しているので、会社の通貨を変更することはできません。"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15467,9 +15493,10 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
-msgstr "ジャーナル上で活性化されているモードを制限することにより、次のフィールドを編集することはできません:%s。"
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15999,7 +16026,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "税"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id

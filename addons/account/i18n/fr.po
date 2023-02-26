@@ -8,7 +8,6 @@
 # Rémi CAZENAVE, 2021
 # Lucas Deliege <lud@odoo.com>, 2021
 # Alexandra Jubert, 2021
-# Jonathan Castillo <jcs@odoo.com>, 2021
 # Cyrille de Lambert <cyrille.delambert@auguria.fr>, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
 # SAKodoo <sak@odoo.com>, 2021
@@ -29,6 +28,7 @@
 # Christophe Klopfert, 2022
 # HASSAN ABDELLAH <aitabdellahhassan@gmail.com>, 2022
 # Jolien De Paepe, 2023
+# Jonathan Castillo <jcs@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Jonathan Castillo <jcs@odoo.com>, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -200,7 +200,7 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". Les écritures de journal doivent être calculées par Odoo avant d'être "
+". Les pièces comptables doivent être calculées par Odoo avant d'être "
 "enregistrées dans la devise de votre entreprise."
 
 #. module: account
@@ -710,7 +710,7 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
-"<span class=\"o_form_label\">Toutes les écritures sélectionnées seront "
+"<span class=\"o_form_label\">Toutes les pièces sélectionnées seront "
 "directement validés et comptabilisées. Vous ne serez pas en mesure de les "
 "modifier par la suite.</span>"
 
@@ -811,7 +811,7 @@ msgstr "<span class=\"o_stat_text\">Facturé</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "Entrée comptable"
+msgstr "<span class=\"o_stat_text\">Pièce comptable</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1275,8 +1275,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Une pièce de journal consiste en plusieurs écritures de journaux, dont "
-"chacune est soit une transaction au débit ou au crédit."
+"Une pièce comptable consiste en plusieurs écritures comptables, dont chacune"
+" est soit une transaction au débit ou au crédit."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -4357,7 +4357,7 @@ msgstr "Créer des Ecritures Automatiques"
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Create Automatic Entries for selected Journal Items"
 msgstr ""
-"Créer des Ecritures Automatiques pour les Postes Comptables Sélectionnés"
+"Créer des pièces automatiques pour les écritures comptables sélectionnées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -4377,7 +4377,7 @@ msgstr "Créer des Factures depuis les Emails"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
-msgstr "Créer des Ecritures Comptables"
+msgstr "Créer des pièces comptables"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4408,7 +4408,7 @@ msgstr "Créer une facture client"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Créer une écriture de journal"
+msgstr "Créer une pièce comptable"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -5050,8 +5050,8 @@ msgid ""
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
 "Date (incluse) à partir de laquelle les numéros sont reséquencés. Si elle "
-"n'est pas définie, toutes les entrées de journal jusqu'à la fin de la "
-"période sont reséquencées."
+"n'est pas définie, toutes les pièces comptables jusqu'à la fin de la période"
+" sont reséquencées."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
@@ -7776,8 +7776,8 @@ msgid ""
 "It seems that the taxes have been modified since the creation of the journal"
 " entry. You should create the credit note manually instead."
 msgstr ""
-"Il semble que les taxes aient été modifiées depuis la création de l'écriture"
-" de journal. Vous devriez plutôt créer la note de crédit manuellement."
+"Il semble que les taxes aient été modifiées depuis la création de la pièce "
+"de journal. Vous devriez plutôt créer la note de crédit manuellement."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7940,7 +7940,7 @@ msgstr "Info de la pièce comptable"
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
-msgstr "N° écriture dans le journal"
+msgstr "N° de pièce comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
@@ -10581,7 +10581,7 @@ msgstr "Comptabiliser la différence dans"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Comptabiliser les écritures"
+msgstr "Comptabiliser les pièces"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -10617,7 +10617,7 @@ msgstr "Entrées publiées seulement"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Écritures comptabilisées"
+msgstr "Pièces comptabilisées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -10680,8 +10680,8 @@ msgstr "Prépaiements"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
-"Préconfigurer pour créer une écriture pendant la correspondance entre des "
-"factures et des paiements"
+"Préconfigurer pour créer des pièces comptables pendant la correspondance "
+"entre des factures et des paiements"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11221,7 +11221,7 @@ msgstr "Montant des taxes liées"
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "Refaire la séquence des écritures comptables."
+msgstr "Refaire la séquence des pièces comptables."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__render_model
@@ -11794,7 +11794,7 @@ msgstr "Chercher des taxes"
 msgid ""
 "Search in the Statement's Label to find the Invoice/Payment's reference"
 msgstr ""
-"Rechercher dans l'étiquette du relevé pour trouver la référence de la "
+"Rechercher dans le libellé du relevé pour trouver la référence de la "
 "facture/du paiement"
 
 #. module: account
@@ -12246,7 +12246,7 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
 msgstr ""
-"Nom abrégé utilisé pour l'affichage. Les écritures comptables de ce journal "
+"Nom abrégé utilisé pour l'affichage. Les pièces comptables de ce journal "
 "seront également nommées en utilisant ce préfixe par défaut."
 
 #. module: account
@@ -13974,8 +13974,8 @@ msgid ""
 " There is nothing left to process."
 msgstr ""
 "Le statut actuel de votre relevé bancaire :- Nouveau : Entièrement éditable "
-"avec des écritures comptables en brouillon.- En cours de traitement : N'est "
-"plus éditable avec les écritures comptables enregistrées, prêt pour la "
+"avec des pièces comptables en brouillon.- En cours de traitement : N'est "
+"plus éditable avec les pièces comptables enregistrées, prêt pour la "
 "réconciliation.- Validé : Toutes les lignes sont réconciliées. Il n'y a plus"
 " rien à traiter."
 
@@ -14176,8 +14176,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
-"L'écriture comptable %s a atteint un statut non valide en ce qui concerne sa ligne de relevé associée.\n"
-"Pour être cohérent, l'écriture comptable doit toujours avoir exactement une imputation comptable impliquant le compte bancaire/de trésorerie."
+"La pièce comptable %s a atteint un statut non valide en ce qui concerne sa ligne de relevé associée.\n"
+"Pour être cohérent, la pièce comptable doit toujours avoir exactement une imputation comptable impliquant le compte bancaire/de trésorerie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14196,7 +14196,7 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
-"L'écriture comptable à partir de laquelle cette écriture de journal de la "
+"La pièce comptable à partir de laquelle cette écriture de journal de la "
 "comptabilité de trésorerie a été créée."
 
 #. module: account
@@ -14297,7 +14297,7 @@ msgid ""
 "settings (%s) to proceed."
 msgstr ""
 "L'opération est refusée car elle impacterait une déclaration fiscale déjà "
-"émise. Veuillez modifier la date de l'écriture comptable ou la date de "
+"émise. Veuillez modifier la date de la pièce comptable ou la date de "
 "verrouillage fiscal définie dans les paramètres (%s) pour continuer."
 
 #. module: account
@@ -15118,7 +15118,7 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
-"Ce produit est déjà utilisé dans les écritures comptables comptabilisées.\n"
+"Ce produit est déjà utilisé dans les pièces comptables comptabilisées.\n"
 "Si vous voulez changer son unité de mesure, veuillez archiver ce produit et en créer un nouveau."
 
 #. module: account
@@ -15133,7 +15133,7 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
 msgstr ""
-"Cet assistant validera toutes les écritures de journal pour un journal "
+"Cet assistant validera toutes les pièces comptables pour un journal "
 "particulier. Une fois validées, celles-ci ne peuvent plus être modifiées."
 
 #. module: account
@@ -15505,7 +15505,7 @@ msgstr "Écritures non comptabilisées"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Écritures non validées"
+msgstr "Pièces comptables non comptabilisées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16186,7 +16186,7 @@ msgstr "Vous ne pouvez réconcilier que des Ecritures postées"
 #, python-format
 msgid "You can only register payment for posted journal entries."
 msgstr ""
-"Vous ne pouvez enregistrer le paiement que pour les écritures comptables "
+"Vous ne pouvez enregistrer le paiement que pour les pièces comptables "
 "reportées."
 
 #. module: account
@@ -16317,8 +16317,8 @@ msgid ""
 "You can't manually change the state of journal entry %s, as it has been "
 "created by bank statement %s."
 msgstr ""
-"Vous ne pouvez pas modifier manuellement l'état de l'écriture au journal %s "
-", car elle a été créée par le relevé bancaire %s."
+"Vous ne pouvez pas modifier manuellement l'état de la pièce comptable %s , "
+"car elle a été créée par le relevé bancaire %s."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -16512,11 +16512,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Vous ne pouvez pas modifier les champs suivants car le mode restreint est "
-"activé sur le journal : %s."
+"Vous ne pouvez pas éditer les champs suivants : %s.\n"
+"Les écritures suivantes sont déjà hashées :\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16584,7 +16586,7 @@ msgid ""
 "reset the journal entry to draft to do so."
 msgstr ""
 "Vous ne pouvez pas modifier les taxes liées à une pièce comptable postée, il"
-" faut remettre l'écriture comptable en Brouilon pour ce faire."
+" faut remettre la pièce comptable en Brouilon pour ce faire."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16725,7 +16727,7 @@ msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
-"Vous ne pouvez pas utiliser ce wizard sur les Ecritures Comptables d'autres "
+"Vous ne pouvez pas utiliser ce wizard sur les pièces comptables d'autres "
 "sociétés."
 
 #. module: account

@@ -20,6 +20,7 @@
 # David Kliment <daklime@gmail.com>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
+# Petr Hemza, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
@@ -16208,6 +16209,7 @@ msgstr ""
 #, python-format
 msgid "Please contact your accountant to print the Hash integrity result."
 msgstr ""
+"Chcete-li vytisknout výsledek Hash integrity, kontaktujte svého účetního."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -16299,11 +16301,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Následující pole nemůžete upravit z důvodu aktivace režimu omezení v deníku:"
-" %s."
+"Nemůžete upravovat následující pole: %s.\n"
+"Následující záznamy obsahují již hash:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

@@ -13,7 +13,6 @@
 # Desausoi Laurent, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Walid Hanniche, 2022
 # Martin Trigaux, 2022
 # Moka Tourisme <hello@mokatourisme.fr>, 2023
 # Jolien De Paepe, 2023
@@ -4855,6 +4854,6 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.state in ('brouillon', 'envoyé') and "
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "(ctx.get('proforma') and 'Pro forma' or 'Devis') or 'Commande' }} (Ref {{ "
 "object.name or 'n/a' }})"

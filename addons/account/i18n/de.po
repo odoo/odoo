@@ -4851,6 +4851,7 @@ msgid "Customer Invoice"
 msgstr "Ausgangsrechnung"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14779,6 +14780,14 @@ msgid "There was an error processing this page."
 msgstr "Es gab einen Fehler bei der Bearbeitung der Seite."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "Diese Steuern werden bei jedem neu erstellten Produkt festgelegt."
@@ -15459,6 +15468,12 @@ msgid "Unposted"
 msgstr "Nicht gebucht"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "Buchungssatz-Vorschläge"
@@ -15810,6 +15825,7 @@ msgid "Vendor Bill Created"
 msgstr "Lieferantenrechnung erstellt"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16370,6 +16386,12 @@ msgstr ""
 "Journalposten gebucht sind."
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -16465,11 +16487,10 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields: %s.\n"
+"The following entries are already hashed:\n"
+"%s"
 msgstr ""
-"Sie können die folgenden Felder nicht bearbeiten, da der Einschränkungsmodus"
-" auf dem Journal aktiviert ist: %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

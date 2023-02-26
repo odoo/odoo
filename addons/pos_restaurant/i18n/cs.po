@@ -11,6 +11,7 @@
 # Michal Veselý <michal@veselyberanek.net>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # Jiří Podhorecký, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Jiří Podhorecký, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr "Použití tiskárny připojené k zařízení IoT Box"
+msgstr "Použít tiskárnu připojenou k zařízení IoT Box"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -44,6 +45,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-cutlery\" title=\"For bars and restaurants\" "
 "role=\"img\" aria-label=\"For bars and restaurants\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-cutlery\" title=\"Pro bary a restaurace\" "
+"role=\"img\" aria-label=\"Pro bary a restaurace\"/>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -120,7 +123,7 @@ msgstr "Přidat tlačítko"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Add internal notes on order lines"
-msgstr ""
+msgstr "Přidat interní poznámky k řádkům objednávky"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -330,7 +333,7 @@ msgstr "Barva"
 #: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
 #, python-format
 msgid "Connection Error"
-msgstr ""
+msgstr "Chyba připojení"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
@@ -439,7 +442,7 @@ msgstr "Plán lokálu"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "Floor: %s - PoS Config: %s \n"
-msgstr ""
+msgstr "Podlaží: %s - Konfigurace místa prodeje: %s \n"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -608,7 +611,7 @@ msgstr "Logo"
 #: model:product.product,name:pos_restaurant.pos_food_maki
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
 msgid "Lunch Maki 18pc"
-msgstr ""
+msgstr "Oběd Maki 18pc"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_salmon
@@ -632,7 +635,7 @@ msgstr "Margherita"
 #: model:product.product,name:pos_restaurant.minute_maid
 #: model:product.template,name:pos_restaurant.minute_maid_product_template
 msgid "Minute Maid"
-msgstr ""
+msgstr "Minutová pokojská"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_mozza
@@ -643,12 +646,12 @@ msgstr "Sendvič s Mozzarelou"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_dirty
 msgid "Mp Dirty"
-msgstr ""
+msgstr "Mp špinavý"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Multiprint Resume"
-msgstr ""
+msgstr "Vícetiskový životopis"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -822,7 +825,7 @@ msgstr "Tisk"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Print orders at the kitchen, at the bar, etc."
-msgstr ""
+msgstr "Vytisknout objednávky v kuchyni, v baru atd."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__product_categories_ids
@@ -1011,7 +1014,7 @@ msgstr "Nastavení spropitného po zaplacení"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Settle"
-msgstr ""
+msgstr "Sedlo"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -1203,7 +1206,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Tint"
-msgstr ""
+msgstr "Nádech"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1225,7 +1228,7 @@ msgstr "Spropitné:"
 #: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #, python-format
 msgid "Tipping"
-msgstr ""
+msgstr "Zadávání"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1329,7 +1332,7 @@ msgstr "Nesynchronizovaná objednávka"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
 msgid "Used to sort Floors"
-msgstr ""
+msgstr "Používané na třídění podlaží"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1382,7 +1385,7 @@ msgstr "Žlutý"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "You cannot put a number that exceeds %s "
-msgstr ""
+msgstr "Nemůžete zadat číslo, které přesahuje %s "
 
 #. module: pos_restaurant
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
@@ -1458,4 +1461,4 @@ msgstr "env.pos.config.set_tip_after_payment and !currentOrder.is_paid()"
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Bar"
-msgstr ""
+msgstr "Peněžní bar"
