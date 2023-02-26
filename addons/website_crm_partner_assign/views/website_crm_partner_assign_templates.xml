@@ -33,7 +33,7 @@
                 <li class="nav-header nav-item"><h3>Filter by Level</h3></li>
                 <t t-foreach="grades" t-as="grade">
                     <li class="nav-item">
-                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['object']) or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
                            t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
                             <span class="badge rounded-pill float-end" t-esc="grade['grade_id_count'] or ''"/>
                             <t t-esc="grade['grade_id'][1]"/>

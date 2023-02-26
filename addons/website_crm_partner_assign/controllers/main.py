@@ -191,7 +191,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
                         ('grade_id.website_published', '=', True), ('country_id', '!=', False)]
         dom += sitemap_qs2dom(qs=qs, route='/partners/country/')
         countries = env['res.partner'].sudo().read_group(partners_dom, fields=['id', 'country_id'], groupby='country_id')
-        for country in env['res.country'].sudo().browse([cid['country_id'] for cid in countries]):
+        for country in env['res.country'].sudo().browse([cid['country_id'][0] for cid in countries]):
             loc = '/partners/country/%s' % slug(country)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
@@ -213,6 +213,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         country_all = post.pop('country_all', False)
         partner_obj = request.env['res.partner']
         country_obj = request.env['res.country']
+        grade_obj = request.env['res.partner.grade']
         search = post.get('search', '')
 
         base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
@@ -233,9 +234,16 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             grade_domain, ["id", "grade_id"],
             groupby="grade_id")
         grades_partners = partner_obj.sudo().search_count(grade_domain)
+
+        # TODO: cleanup with new group_by API of v17
+        grade_obj = grade_obj.browse([gid['grade_id'][0] for gid in grades])
+        gobj = {grade.id: grade for grade in grade_obj}
+
         # flag active grade
         for grade_dict in grades:
             grade_dict['active'] = grade and grade_dict['grade_id'][0] == grade.id
+            grade_dict['object'] = gobj[grade_dict['grade_id'][0]]
+
         grades.insert(0, {
             'grade_id_count': grades_partners,
             'grade_id': (0, _("All Categories")),
