@@ -46,7 +46,7 @@
                 <li class="nav-header nav-item"><h3>Filter by Country</h3></li>
                 <t t-foreach="countries" t-as="country">
                     <li t-if="country['country_id']" class="nav-item">
-                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and ('/country/' + slug(country['object'])) or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
                            t-attf-class="nav-link#{country['active'] and ' active' or ''}">
                             <span class="badge rounded-pill float-end" t-esc="country['country_id_count'] or ''"/>
                             <t t-esc="country['country_id'][1]"/>
