@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="general_announcement_seq" model="ir.sequence">
+            <field name="name">Announcement</field>
+            <field name="code">hr.announcement.general</field>
+            <field name="prefix">GA</field>
+            <field eval="4" name="padding" />
+        </record>
+
+        <record id="announcement_seq" model="ir.sequence">
+            <field name="name">Announcement</field>
+            <field name="code">hr.announcement</field>
+            <field name="prefix">AN</field>
+            <field eval="4" name="padding" />
+        </record>
+
+        <record id="view_hr_announcement_form" model="ir.ui.view">
+            <field name="name">hr.announcement.form</field>
+            <field name="model">hr.announcement</field>
+            <field name="arch" type="xml">
+                <form string="Announcements">
+                    <header>
+                        <button string="Send For Approval" class="btn-primary" type="object" name="sent"
+                                groups="hr.group_hr_user"
+                                attrs="{'invisible': [('state','not in',('draft'))]}"/>
+                        <button string="Approve" class="btn-primary" groups="hr.group_hr_manager" type="object" name="approve"
+                                attrs="{'invisible': [('state','not in',('to_approve'))]}"/>
+                        <button  string="Refuse" groups="hr.group_hr_manager" type="object"
+                                name="reject" states="to_approve"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" class="oe_inline" readonly="1"/>
+                            </h1>
+                            <div name="options_active">
+                                <div>
+                                    <label for="is_announcement" class="oe_inline" string="General Announcement "/>
+                                    <field name="is_announcement" class="oe_inline oe_input_align"
+                                           attrs="{'readonly': [('name', '!=', False)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <group>
+                            <label for="announcement_reason"/>
+                            <div>
+                                <field name="announcement_reason"/>
+                            </div>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="date_start"/>
+                                <field name="announcement_type" attrs="{'invisible': [('is_announcement', '!=', False)]}"/>
+                                <field name="attachment_id" widget="many2many_binary" class="oe_inline"/>
+                            </group>
+                            <group>
+                                <field name="date_end"/>
+                                <field name="employee_ids" widget="many2many_tags"
+                                       attrs="{'invisible': ['|',('is_announcement', '!=', False), ('announcement_type', '!=', 'employee')]}"/>
+                                <field name="department_ids" widget="many2many_tags"
+                                       attrs="{'invisible': ['|',('is_announcement', '!=', False), ('announcement_type', '!=', 'department')]}"/>
+                                <field name="position_ids" widget="many2many_tags"
+                                       attrs="{'invisible': ['|',('is_announcement', '!=', False), ('announcement_type', '!=', 'job_position')]}"/>
+
+                                <field name="requested_date" readonly="1"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="announcement" string="Letter">
+                                <field name="announcement"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_announcement_tree" model="ir.ui.view">
+            <field name="name">hr.announcement.tree</field>
+            <field name="model">hr.announcement</field>
+            <field name="arch" type="xml">
+<!--                <tree decoration-info="state == 'draft'" colors="grey:state == 'rejected';green:state == 'approved';red:state == 'to_approve';">-->
+                <tree>
+                    <field name="name"/>
+                    <field name="announcement_reason"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_announcement_search" model="ir.ui.view">
+            <field name="name">hr.announcement.search</field>
+            <field name="model">hr.announcement</field>
+            <field name="arch" type="xml">
+                <search string="Announcements">
+                    <field name="name" string="Name"/>
+                    <field name="is_announcement" string="Is a General Announcement"/>
+                    <field name="announcement_reason" string="Announcement Reason"/>
+                    <field name="state" string="State"/>
+                    <separator/>
+                    <filter name="approved_rewards" string="Approved Letters" domain="[('state', '=', 'approved')]"/>
+                    <filter name="general_announcements" string="General Announcements" domain="[('is_announcement', '=',True)]"/>
+                    <filter string="Status" name="Status" domain="[]" context="{'group_by':'state'}"/>
+
+                </search>
+            </field>
+        </record>
+
+        <record id="action_hr_announcement" model="ir.actions.act_window">
+            <field name="name">Announcements</field>
+            <field name="res_model">hr.announcement</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_hr_announcement_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to Create a New Record.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="hr_announcement"
+                  name="Announcements"
+                  groups="hr.group_hr_user,hr.group_hr_manager"
+                  web_icon="hr_reward_warning,static/description/announcement_icon.png"
+                  sequence="-6"/>
+
+        <menuitem id="hr_announcement_sub_menu"
+                  name="Announcements"
+                  action="action_hr_announcement"
+                  parent="hr_announcement"
+                  groups="hr.group_hr_user,hr.group_hr_manager"
+                  sequence="1"/>
+
+        <record model="ir.ui.view" id="announcement_inherit_form_view">
+            <field name="name">hr.employee.form.inherit.view</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <div class="oe_button_box" position="inside">
+                    <button class="oe_stat_button" name="announcement_view" type="object" icon="fa-bullhorn" attrs="{'invisible':[('announcement_count','=', 0)]}">
+                        <field string="Announcements" name="announcement_count" widget="statinfo"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+
+         <record model="ir.cron" id="hr_announcement_expiry_date">
+            <field name="name">HR Announcement Expiry Date</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model_id" ref="model_hr_announcement"/>
+            <field name="state">code</field>
+            <field name="code">model.get_expiry_state()</field>
+        </record>
+
+    </data>
+</odoo>

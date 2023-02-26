@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_leave_configuration" model="ir.ui.view">
+            <field name="name">Configure Leave</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="30"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Leaves" data-key="hr_leave_request_aliasing" groups="hr_holidays.group_hr_holidays_manager">
+                    <h2>Leaves</h2>
+                    <div class="row mt16 o_settings_container" name="config_leave">
+                        <div class="col-xs-12 col-md-6 o_setting_box" name="config_leave_alias">
+                            <div class="o_setting_right_pane">
+                                <label for="alias_prefix" string="Leave Email Alias"/>
+                                <div class="text-muted">
+                                You can setup a generic email alias to create
+                                incoming leave request easily. Write an email with the desired
+                                format to create leave request in one click.
+                                Format:- Start subject with 'LEAVE REQUEST'. After your mail content mention
+                                'Date From:' and 'Date To:'.
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="alias_prefix" string="Prefix" class="col-md-3"/>
+                                        <field name="alias_prefix"/>
+                                    </div>
+                                    <div class="row mt16">
+                                        <label for="alias_domain" string="Domain" class="col-md-3"/>
+                                        <field name="alias_domain"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_hr_general_config" model="ir.actions.act_window">
+            <field name="name">Leaves Config</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'hr_leave_request_aliasing'}</field>
+        </record>
+
+        <menuitem id="menu_hr_leave_global_settings"
+                  name="Settings"
+            parent="hr_holidays.menu_hr_holidays_configuration"
+                  sequence="96"
+                  action="action_hr_general_config"
+                  groups="base.group_system"/>
+    </data>
+</odoo>

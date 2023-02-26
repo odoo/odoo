@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_general_config_advanced_features" model="ir.ui.view">
+        <field name="name">Hr Advanced Features</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='hr']" position="inside">
+                <style>
+                    .label {
+                    color: Red;
+                    padding: 8px;
+                    font-family: Arial;
+                    font-size: 12px;
+                    }
+                    .danger /* Red */
+                </style>
+                <h2>Advanced Features</h2>
+                <div class="row mt16 o_settings_container" title="Advanced Features">
+                    <div id="module_hr_custody" class="col-xs-12 col-md-6 o_setting_box" title="Custody Management">
+                        <div class="o_setting_left_pane">
+                            <field name="module_hr_custody"/>
+                        </div>
+                        <div class="o_setting_right_pane" name="module_hr_custody">
+                            <div class="text-muted">
+                                Custody Management
+                            </div>
+                            <label for="module_hr_custody"/>
+                            <field name="test_module_hr_custody" invisible="True"/>
+                            <span class="label danger"
+                                  attrs="{'invisible':[('test_module_hr_custody','=', False)]}">
+                                Module is not Present in Your Repository.
+                                <a href="https://www.odoo.com/apps/modules/13.0/hr_custody/" target="_blank">Get
+                                    This App
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_oh_employee_check_list"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="text-muted">
+                                Employee Checklist
+                            </div>
+                            <label for="module_oh_employee_check_list"/>
+                            <field name="test_oh_employee_check_list" invisible="True"/>
+                            <span class="label danger"
+                                  attrs="{'invisible':[('test_oh_employee_check_list','=', False)]}">
+                                Module is not Present in Your Repository.
+                                <a href="https://www.odoo.com/apps/modules/13.0/oh_employee_check_list/"
+                                   target="_blank">Get This App
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_hr_insurance"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="text-muted">
+                                Employee Insurance
+                            </div>
+                            <label for="module_hr_insurance"/>
+                            <field name="test_module_hr_insurance" invisible="True"/>
+                            <span class="label danger"
+                                  attrs="{'invisible':[('test_module_hr_insurance','=', False)]}">
+                                Module is not Present in Your Repository.
+                                <a href="https://www.odoo.com/apps/modules/13.0/hr_insurance/" target="_blank">Get
+                                    This App
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_oh_hr_lawsuit_management"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="text-muted">
+                                Lawsuit Management
+                            </div>
+                            <label for="module_oh_hr_lawsuit_management"/>
+                            <field name="test_module_oh_hr_lawsuit_management" invisible="True"/>
+                            <span class="label danger"
+                                  attrs="{'invisible':[('test_module_oh_hr_lawsuit_management','=', False)]}">
+                                Module is not Present in Your Repository.
+                                <a href="https://www.odoo.com/apps/modules/13.0/oh_hr_lawsuit_management/"
+                                   target="_blank">Get This App
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_hr_resignation"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="text-muted">
+                                Resignation Process
+                            </div>
+                            <label for="module_hr_resignation"/>
+                            <field name="test_module_hr_resignation" invisible="True"/>
+                            <span class="label danger"
+                                  attrs="{'invisible':[('test_module_hr_resignation','=', False)]}">
+                                Module is not Present in Your Repository.
+                                <a href="https://www.odoo.com/apps/modules/13.0/hr_resignation/" target="_blank">Get
+                                    This App
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_oh_hr_zk_attendance"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="text-muted">
+                                Biometric Device Integration
+                            </div>
+                            <label for="module_oh_hr_zk_attendance"/>
+                            <field name="test_module_oh_hr_zk_attendance" invisible="True"/>
+                            <span class="label danger"
+                                  attrs="{'invisible':[('test_module_oh_hr_zk_attendance','=', False)]}">
+                                Module is not Present in Your Repository.
+                                <a href="https://www.odoo.com/apps/modules/13.0/oh_hr_zk_attendance/"
+                                   target="_blank">Get This App
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_hr_leave_configuration_inherited" model="ir.ui.view">
+        <field name="name">Leave Advanced Features</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_leave_request_aliasing.view_hr_leave_configuration"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='hr_leave_request_aliasing']" position="inside">
+                <style>
+                    .label {
+                    color: Red;
+                    padding: 8px;
+                    font-family: Arial;
+                    font-size: 12px;
+                    }
+                    .danger /* Red */
+                </style>
+                <h2>Advanced Features</h2>
+                <div class="row mt16 o_settings_container" title="Advanced Features">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_hr_employee_shift"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="text-muted">
+                                Employee Shift
+                            </div>
+                            <label for="module_hr_employee_shift"/>
+                            <field name="test_module_hr_employee_shift" invisible="True"/>
+                            <span class="label danger"
+                                  attrs="{'invisible':[('test_module_hr_employee_shift','=', False)]}">
+                                Module is not Present in Your Repository.
+                                <a href="https://www.odoo.com/apps/modules/13.0/hr_employee_shift/"
+                                   target="_blank">Get This App
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_hr_vacation_mngmt"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="text-muted">
+                                Vacation Management
+                            </div>
+                            <label for="module_hr_vacation_mngmt"/>
+                            <field name="test_module_hr_vacation_mngmt" invisible="True"/>
+                            <span class="label danger"
+                                  attrs="{'invisible':[('test_module_hr_vacation_mngmt','=', False)]}">
+                                Module is not Present in Your Repository.
+                                <a href="https://www.odoo.com/apps/modules/13.0/hr_vacation_mngmt/"
+                                   target="_blank">Get This App
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.view.tree.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="replace">
+                <field name="name" optional="show"/>
+                <field name="work_phone" optional="show"/>
+                <field name="work_email" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="department_id" optional="show"/>
+                <field name="job_id" optional="show"/>
+                <field name="parent_id" optional="show"/>
+                <field name="coach_id" invisible="1"/>
+            </field>
+        </field>
+    </record>
+    <record id="view_sorted_menus" model="ir.ui.view">
+        <field name="name">Sort Menu Alphabet order</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='statistics']" position="after">
+                <h2>Menu Management</h2>
+                <div class="row mt16 o_settings_container" title="Menu Management">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="order_menu"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="order_menu"/>
+                            <div class="text-muted">
+                                Menu With Alphabetic Order
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

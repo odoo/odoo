@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_form_inherit_view" model="ir.ui.view">
+        <field name="name">hr.payslip.inherit.form1</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll_community.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='input_line_ids']//tree//field[@name='sequence']" position="after">
+                <field name="loan_line_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

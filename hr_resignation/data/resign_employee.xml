@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="ir_cron_data_employee_resignation" model="ir.cron">
+            <field name="name">HR Resignation: update employee</field>
+            <field name="model_id" ref="model_hr_resignation"/>
+            <field name="state">code</field>
+            <field name="code">model.update_employee_status()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+    </data>
+</odoo>

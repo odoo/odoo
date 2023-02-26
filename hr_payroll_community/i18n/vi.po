@@ -1,0 +1,1644 @@
+# Translation of Odoo Server.
+ # This file contains the translation of the following modules:
+ # * hr_payroll_community
+ # 
+ # Translators:
+ # Martin Trigaux, 2018
+ # fanha99 <fanha99@hotmail.com>, 2018
+ # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+ # Minh Nguyen <ndminh210994@gmail.com>, 2018
+ # Duy BQ <duybq86@gmail.com>, 2019
+ # 
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: Odoo Server 13.0\n"
+ "Report-Msgid-Bugs-To: \n"
+ "POT-Creation-Date: 2019-01-09 10:31+0000\n"
+ "PO-Revision-Date: 2018-08-24 09:19+0000\n"
+ "Last-Translator: Duy BQ <duybq86@gmail.com>, 2019\n"
+ "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: \n"
+ "Language: vi\n"
+ "Plural-Forms: nplurals=1; plural=0;\n"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:42
+ #, python-format
+ msgid "%s (copy)"
+ msgstr "%s (bản sao)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__state
+ msgid ""
+ "* When the payslip is created the status is 'Draft'\n"
+ "                \n"
+ "* If the payslip is under verification, the status is 'Waiting'.\n"
+ "                \n"
+ "* If the payslip is confirmed then status is set to 'Done'.\n"
+ "                \n"
+ "* When user cancel payslip the status is 'Rejected'."
+ msgstr ""
+ "* Khi phiếu lương được tạo, trạng thái là 'Dự thảo'.\n"
+ "* Nếu phiếu lương đang thẩm định, trạng thái là 'Chờ'.\n"
+ "* Nếu phiếu lương được xác nhận, trạng thái là 'Hoàn thành'.\n"
+ "* Khi người dùng hủy phiếu lương, trạng thái là 'Bị từ chối'."
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid ""
+ "<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+ " selected employee(s) based on the dates and credit note specified on "
+ "Payslips Run.</span>"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Address</strong>"
+ msgstr "<strong>Địa chỉ</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Authorized signature</strong>"
+ msgstr "<strong>Chữ ký Người có Thẩm quyền</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Bank Account</strong>"
+ msgstr "<strong>Tài khoản Ngân hàng</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Date From:</strong>"
+ msgstr "<strong>Từ ngày:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Date From</strong>"
+ msgstr "<strong>Từ ngày</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Date To:</strong>"
+ msgstr "<strong>Đến ngày:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Date To</strong>"
+ msgstr "<strong>Đến ngày</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Designation</strong>"
+ msgstr "<strong>Bổ nhiệm</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Email</strong>"
+ msgstr "<strong>Email</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Identification No</strong>"
+ msgstr "<strong>Số CMND</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Name</strong>"
+ msgstr "<strong>Tên</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Reference</strong>"
+ msgstr "<strong>Tham chiếu</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Register Name:</strong>"
+ msgstr "<strong>Tên Ghi nhận Đóng góp:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Total</strong>"
+ msgstr "<strong>Tổng</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.actions.act_window,help:hr_payroll_community.action_contribution_register_form
+ msgid ""
+ "A contribution register is a third party involved in the salary\n"
+ "            payment of the employees. It can be the social security, the\n"
+ "            state or anyone that collect or inject money on payslips."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_account_accountant
+ msgid "Account Accountant"
+ msgstr "Tài khoản kế toán"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Accounting"
+ msgstr "Kế toán"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Accounting Information"
+ msgstr "Thông tin kế toán"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__active
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__active
+ msgid "Active"
+ msgstr "Có hiệu lực"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.actions.act_window,help:hr_payroll_community.action_contribution_register_form
+ msgid "Add a new contribution register"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Add an internal note..."
+ msgstr "Thêm ghi chú nội bộ..."
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contract_advantage_template_view_form
+ msgid "Advantage Name"
+ msgstr "Tên Chế độ Đãi ngộ"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_children_salary_rules
+ msgid "All Children Rules"
+ msgstr "Tất cả Quy tắc Con"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.ALW
+ msgid "Allowance"
+ msgstr "Phụ cấp"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Always True"
+ msgstr "Luôn đúng"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__amount
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Amount"
+ msgstr "Tổng tiền"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_select
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_select
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Amount Type"
+ msgstr "Loại tiền"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Annually"
+ msgstr "Hàng năm"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__appears_on_payslip
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__appears_on_payslip
+ msgid "Appears on Payslip"
+ msgstr "Xuất hiện trong Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_python
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_python
+ msgid ""
+ "Applied this rule for calculation if condition is true. You can specify "
+ "condition like basic > 1000."
+ msgstr ""
+ "Quy tắc này được áp dụng cho việc tính toán nếu điều kiện là đúng. Bạn có "
+ "thể chỉ ra điều kiện như luong_co_ban > 10000000."
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.BASIC
+ msgid "Basic"
+ msgstr "Cơ sở"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_basic
+ msgid "Basic Salary"
+ msgstr "Lương Cơ bản"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_be_hr_payroll_community
+ msgid "Belgium Payroll"
+ msgstr "Bảng Lương Vương Quốc Bỉ"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Bi-monthly"
+ msgstr "Hai tháng một"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Bi-weekly"
+ msgstr "Hai tuần một"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_form
+ msgid "Calculations"
+ msgstr "Tính toán"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Cancel"
+ msgstr "Hủy"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Cancel Payslip"
+ msgstr "Hủy Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:96
+ #, python-format
+ msgid "Cannot cancel a payslip that is done."
+ msgstr "Không thể huỷ phiếu lương mà đã hoàn thành."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__category_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__category_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Category"
+ msgstr "Danh mục"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Child Rules"
+ msgstr "Quy tắc con"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__child_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__child_ids
+ msgid "Child Salary Rule"
+ msgstr "Quy tắc con"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__children_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__children_ids
+ msgid "Children"
+ msgstr "Con"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Children Definition"
+ msgstr "Định nghĩa các Quy tắc con"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Choose a Payroll Localization"
+ msgstr "Chọn Quy tắc Tiền lương Bản địa"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.run,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ msgid "Close"
+ msgstr "Đóng"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__code
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Code"
+ msgstr "Mã"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payroll_community_structure_view_kanban
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_view_kanban
+ msgid "Code:"
+ msgstr "Mã:"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Companies"
+ msgstr "Công ty"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__company_id
+ msgid "Company"
+ msgstr "Công ty"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.COMP
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Company Contribution"
+ msgstr "Đóng góp Công ty"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Computation"
+ msgstr "Tính toán"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Compute Sheet"
+ msgstr "Tính toán Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_select
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_select
+ msgid "Condition Based on"
+ msgstr "Điều kiện Dựa trên"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Conditions"
+ msgstr "Điều kiện"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_res_config_settings
+ msgid "Config Settings"
+ msgstr "Cấu hình thiết lập"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_configuration
+ msgid "Configuration"
+ msgstr "Cấu hình"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Confirm"
+ msgstr "Xác nhận"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__contract_id
+ msgid "Contract"
+ msgstr "Hợp đồng"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.hr_contract_advantage_template_action
+ #: model:ir.ui.menu,name:hr_payroll_community.hr_contract_advantage_template_menu_action
+ msgid "Contract Advantage Templates"
+ msgstr "Mẫu Chế độ Đãi ngộ cho Hợp đồng"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_form
+ msgid "Contribution"
+ msgstr "Đóng góp"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contribution_register
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__register_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__register_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Contribution Register"
+ msgstr "Ghi nhận đóng góp"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Contribution Register's Payslip Lines"
+ msgstr "Dòng Phiếu lương liên quan đến Ghi nhận Đóng góp"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_contribution_register_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_action_hr_contribution_register_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_tree
+ msgid "Contribution Registers"
+ msgstr "Ghi nhận Đóng góp"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_convanceallowance1
+ msgid "Conveyance Allowance"
+ msgstr "Trợ cấp chuyển nhượng"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_ca_gravie
+ msgid "Conveyance Allowance For Gravie"
+ msgstr "Trợ cấp chuyển nhượng cho Gravie"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__create_uid
+ msgid "Created by"
+ msgstr "Được tạo bởi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__create_date
+ msgid "Created on"
+ msgstr "Thời điểm tạo"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__credit_note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__credit_note
+ msgid "Credit Note"
+ msgstr "Giấy báo có"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__date_from
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__date_start
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__date_from
+ msgid "Date From"
+ msgstr "Từ ngày"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__date_to
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__date_end
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__date_to
+ msgid "Date To"
+ msgstr "Đến ngày"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.DED
+ msgid "Deduction"
+ msgstr "Giảm trừ"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__default_value
+ msgid "Default value for this advantage"
+ msgstr "Giá trị mặc định cho Chế độ đãi ngộ này"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract__schedule_pay
+ msgid "Defines the frequency of the wage payment."
+ msgstr "Xác định tần suất thanh toán khoản lương này."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__struct_id
+ msgid ""
+ "Defines the rules that have to be applied to this payslip, accordingly to "
+ "the contract chosen. If you let empty the field contract, this field isn't "
+ "mandatory anymore and thus the rules applied will be all the rules set on "
+ "the structure of all contracts of the employee valid for the chosen period"
+ msgstr ""
+ "Định nghĩa một quy tắc mà được áp dụng cho phiếu lương này, tùy theo hợp "
+ "đồng lao động được chọn. Nếu bạn để trống trường hợp đồng lao động, trường "
+ "này sẽ không còn bắt buộc nữa và do đó quy tắc được áp dụng  sẽ là tất cả "
+ "quy tắc trên cấu trúc lương của tất cả các hợp đồng lao động của nhân viên "
+ "trong kỳ được chọn"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__note
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Description"
+ msgstr "Miêu tả"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Details By Salary Rule Category"
+ msgstr "Chi tiết theo nhóm quy tắc lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__details_by_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Details by Salary Rule Category"
+ msgstr "Chi tiết theo nhóm quy tắc lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails__display_name
+ msgid "Display Name"
+ msgstr "Tên hiển thị"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Done"
+ msgstr "Hoàn thành"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Done Payslip Batches"
+ msgstr "Hoàn thành Bảng lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Done Slip"
+ msgstr "Phiếu lương đã hoàn thành"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Draft"
+ msgstr "Nháp"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Draft Payslip Batches"
+ msgstr "Bảng lương dự thảo"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Draft Slip"
+ msgstr "Phiếu lương dự thảo"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_employee
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__employee_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__employee_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Employee"
+ msgstr "Người lao động"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contract
+ msgid "Employee Contract"
+ msgstr "Hợp đồng Nhân viên"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_employee_grade_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_list_view
+ msgid "Employee Function"
+ msgstr "Chức năng Nhân viên"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_view_hr_payslip_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_department_tree
+ msgid "Employee Payslips"
+ msgstr "Phiếu lương nhân viên"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contract_advantage_template
+ msgid "Employee's Advantage on Contract"
+ msgstr "Chế độ Đãi ngộ Nhân viên trên Hợp đồng"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract__resource_calendar_id
+ msgid "Employee's working schedule."
+ msgstr "Khung giờ làm việc của Nhân viên"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__employee_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Employees"
+ msgstr "Nhân viên"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:92
+ #, python-format
+ msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+ msgstr "Lỗi! Bạn không thể tạo phân cấp đệ quy của Danh mục quy tắc lương."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:179
+ #, python-format
+ msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+ msgstr "Lỗi! Bạn không thể tạo phân cấp đệ quy của Quy tắc Lương."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__register_id
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__register_id
+ msgid "Eventual third party involved in the salary payment of the employees."
+ msgstr "Bên thứ ba mà có liên quan đến việc thanh toán lương của nhân viên."
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_fix
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_fix
+ msgid "Fixed Amount"
+ msgstr "Giá trị cố định"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_percentage
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_percentage
+ msgid "For example, enter 50.0 to apply a percentage of 50%"
+ msgstr "Ví dụ, nhập 50,0 để sử dụng 50%"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/report/report_contribution_register.py:35
+ #, python-format
+ msgid "Form content is missing, this report cannot be printed."
+ msgstr "Nội dung trong mẫu đang thiếu, báo cáo này không thể in được."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_fr_hr_payroll_community
+ msgid "French Payroll"
+ msgstr "French Payroll"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "General"
+ msgstr "Chung"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid "Generate"
+ msgstr "Tạo"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payslip_by_employees
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ msgid "Generate Payslips"
+ msgstr "Tạo Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_employees
+ msgid "Generate payslips for all selected employees"
+ msgstr "Tạo phiếu lương cho toàn bộ nhân viên được chọn"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_sales_commission
+ msgid "Get 1% of sales"
+ msgstr "Nhận 1% Doanh số bán hàng"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:182
+ #, python-format
+ msgid "Global Leaves"
+ msgstr "Nghỉ Toàn cục"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_taxable
+ #: model:hr.salary.rule.category,name:hr_payroll_community.GROSS
+ msgid "Gross"
+ msgstr "Tổng"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Group By"
+ msgstr "Nhóm theo"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_houserentallowance1
+ msgid "House Rent Allowance"
+ msgstr "Phụ cấp Thuê nhà"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails__id
+ msgid "ID"
+ msgstr "ID"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_run__credit_note
+ msgid ""
+ "If its checked, indicates that all payslips generated from here are refund "
+ "payslips."
+ msgstr ""
+ "Nếu được đánh dấu kiểm, chỉ ra rằng tất cả các phiếu lương được tạo từ đây "
+ "là các phiếu hoàn tiền."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__active
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__active
+ msgid ""
+ "If the active field is set to false, it will allow you to hide the salary "
+ "rule without removing it."
+ msgstr ""
+ "Nếu bỏ chọn trường Hiệu lực, nó sẽ cho phép bạn ẩn quy tắc tính lương mà "
+ "không cần xóa bỏ nó."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_in_hr_payroll_community
+ msgid "Indian Payroll"
+ msgstr "Indian Payroll"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__credit_note
+ msgid "Indicates this payslip has a refund of another"
+ msgstr "Chỉ ra rằng phiếu lương này có một khoản hoàn tiền từ một phiếu khác"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Input Data"
+ msgstr "Dữ liệu nhập ngoài"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__input_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__input_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Inputs"
+ msgstr "Đầu vào"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__note
+ msgid "Internal Note"
+ msgstr "Ghi chú nội bộ"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_view_kanban
+ msgid "Is a Blocking Reason?"
+ msgstr "Là một Lý do Phong toả?"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__quantity
+ msgid ""
+ "It is used in computation for percentage and fixed amount. For e.g. A rule "
+ "for Meal Voucher having fixed amount of 1€ per worked day can have its "
+ "quantity defined in expression like worked_days.WORK100.number_of_days."
+ msgstr ""
+ "Được sử dụng để tính toán tổng số theo phần trăm và cố định. Ví dụ, một quy "
+ "tắc Phiếu Ăn trưa có giá trị cố định 30000đ mỗi ngày làm việc có thể có số "
+ "lượng được xác định bằng biểu thức kiểu như "
+ "worked_days.WORK100.number_of_days."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__amount
+ msgid ""
+ "It is used in computation. For e.g. A rule for sales having 1% commission of"
+ " basic salary for per product can defined in expression like result = "
+ "inputs.SALEURO.amount * contract.wage*0.01."
+ msgstr ""
+ "Được sử dụng trong tính toán. Ví dụ, môt quy tắc cho nhân viên bán hàng có "
+ "hoa hồng bằng 1% lương cơ bản nhân giá trị sản phẩm bán ra có thể được thể "
+ "hiện bằng biểu thức result = inputs.SALEURO.amount * contract.wage*0.01."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails____last_update
+ msgid "Last Modified on"
+ msgstr "Sửa lần cuối vào"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__write_uid
+ msgid "Last Updated by"
+ msgstr "Cập nhật lần cuối bởi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__write_date
+ msgid "Last Updated on"
+ msgstr "Cập nhật lần cuối vào"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule_category__parent_id
+ msgid ""
+ "Linking a salary category to its parent is used only for the reporting "
+ "purpose."
+ msgstr ""
+ "Liên kết một nhóm lương đến cấp cha của nó chỉ được sử dụng cho mục đích báo"
+ " cáo"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__lower_bound
+ msgid "Lower Bound"
+ msgstr "Giới hạn Thấp"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract_advantage_template__lower_bound
+ msgid "Lower bound authorized by the employer for this advantage"
+ msgstr "Mức ràng buộc thấp hơn được nhà tuyển dụng ủy quyền vì lợi thế này"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__paid
+ msgid "Made Payment Order ? "
+ msgstr "Đã tạo Lệnh thanh toán/UNC?"
+ 
+ #. module: hr_payroll_community
+ #: model:res.groups,name:hr_payroll_community.group_hr_payroll_community_manager
+ msgid "Manager"
+ msgstr "Quản lý"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range_max
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range_max
+ msgid "Maximum Range"
+ msgstr "Phạm vi tối đa"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_meal_voucher
+ msgid "Meal Voucher"
+ msgstr "Phiếu Ăn"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range_min
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range_min
+ msgid "Minimum Range"
+ msgstr "Phạm vi tối thiểu"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Miscellaneous"
+ msgstr "Khác"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Monthly"
+ msgstr "Hàng tháng"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__name
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Name"
+ msgstr "Tên"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.NET
+ msgid "Net"
+ msgstr "Lợi nhuận ròng"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_net
+ msgid "Net Salary"
+ msgstr "Lương Thực Lĩnh"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:201
+ #, python-format
+ msgid "Normal Working Days paid at 100%"
+ msgstr "Ngày làm việc thông thường được trả 100%"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_form
+ msgid "Notes"
+ msgstr "Ghi chú"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__number_of_days
+ msgid "Number of Days"
+ msgstr "Số ngày"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__number_of_hours
+ msgid "Number of Hours"
+ msgstr "Số giờ"
+ 
+ #. module: hr_payroll_community
+ #: model:res.groups,name:hr_payroll_community.group_hr_payroll_community_user
+ msgid "Officer"
+ msgstr "Cán bộ"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Other Inputs"
+ msgstr "Dữ liệu nhập ngoài khác"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__parent_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__parent_id
+ msgid "Parent"
+ msgstr "Dự án cha"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__parent_rule_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__parent_rule_id
+ msgid "Parent Salary Rule"
+ msgstr "Quy tắc Lương Cấp cha"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__partner_id
+ msgid "Partner"
+ msgstr "Đối tác"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__payslip_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__slip_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__payslip_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Pay Slip"
+ msgstr "Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "PaySlip Batch"
+ msgstr "Bảng lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.payslip_details_report
+ msgid "PaySlip Details"
+ msgstr "Chi tiết phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_payslip_lines_contribution_register
+ msgid "PaySlip Lines"
+ msgstr "Chi tiết phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.action_contribution_register
+ msgid "PaySlip Lines By Conribution Register"
+ msgstr "Chi tiết phiếu lương theo Conribution Register"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "PaySlip Lines by Contribution Register"
+ msgstr "Chi tiết phiếu lương theo Contribution Register"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "PaySlip Name"
+ msgstr "Tên phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.open_payroll_modules
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_root
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll"
+ msgstr "Bảng lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_report_hr_payroll_community_report_contributionregister
+ msgid "Payroll Contribution Register Report"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll Entries"
+ msgstr "Kế toán Lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_filter
+ msgid "Payroll Structures"
+ msgstr "Cấu trúc lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll rules that apply to your country"
+ msgstr "Các quy tắc tiền lương mà áp dụng ở đất nước bạn"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.action_report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Payslip"
+ msgstr "Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:82
+ #, python-format
+ msgid "Payslip 'Date From' must be earlier 'Date To'."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_run
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__payslip_run_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Payslip Batches"
+ msgstr "Bảng lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_payslip_lines
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__payslip_count
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Payslip Computation Details"
+ msgstr "Chi tiết phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_employee__payslip_count
+ msgid "Payslip Count"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_report_hr_payroll_community_report_payslipdetails
+ msgid "Payslip Details Report"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_input
+ msgid "Payslip Input"
+ msgstr "Dữ liệu phiếu lương nhập ngoài"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__input_line_ids
+ msgid "Payslip Inputs"
+ msgstr "Dữ liệu phiếu lương nhập ngoài"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_line
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_form
+ msgid "Payslip Line"
+ msgstr "Dòng Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_contribution_reg_payslip_lines
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__line_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Payslip Lines"
+ msgstr "Dòng Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Payslip Lines by Contribution Register"
+ msgstr "Dòng Phiếu lương theo Contribution Register"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_payslip_lines_contribution_register
+ msgid "Payslip Lines by Contribution Registers"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__name
+ msgid "Payslip Name"
+ msgstr "Tên phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_worked_days
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__worked_days_line_ids
+ msgid "Payslip Worked Days"
+ msgstr "Ngày làm việc trên Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_hr_employee_payslip_list
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_employee__slip_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__slip_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.payroll_hr_employee_view_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_tree
+ msgid "Payslips"
+ msgstr "Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payslip_run_tree
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payslip_run
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_tree
+ msgid "Payslips Batches"
+ msgstr "Bảng lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid "Payslips by Employees"
+ msgstr "Phiếu lương theo Nhân viên"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_percentage
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_percentage
+ msgid "Percentage (%)"
+ msgstr "Phần trăm (%)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_percentage_base
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_percentage_base
+ msgid "Percentage based on"
+ msgstr "Phần trăm dựa trên"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Period"
+ msgstr "Chu kỳ"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Post payroll slips in accounting"
+ msgstr "Tự động tạo các bút toán lương cho kế toán"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Print"
+ msgstr "In"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_professionaltax1
+ msgid "Professional Tax"
+ msgstr "Thuế Nhà thầu"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_providentfund1
+ msgid "Provident Fund"
+ msgstr "Quỹ Dự phòng"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_python_compute
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_python_compute
+ msgid "Python Code"
+ msgstr "Mã Python"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_python
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_python
+ msgid "Python Condition"
+ msgstr "Điều kiện Python"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Python Expression"
+ msgstr "Biểu thức Python"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__quantity
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__quantity
+ msgid "Quantity"
+ msgstr "Số lượng"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "Quantity/Rate"
+ msgstr "Số lượng/Tỷ lệ"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Quantity/rate"
+ msgstr "Số lượng/Tỷ lệ"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Quarterly"
+ msgstr "Hàng Quý"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Range"
+ msgstr "Phạm vi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range
+ msgid "Range Based on"
+ msgstr "Phạm vi dựa trên"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__rate
+ msgid "Rate (%)"
+ msgstr "Tỷ lệ (%)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__number
+ msgid "Reference"
+ msgstr "Tham chiếu"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Refund"
+ msgstr "Hoàn trả"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:102
+ #, python-format
+ msgid "Refund: "
+ msgstr "Hoàn trả: "
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__register_line_ids
+ msgid "Register Line"
+ msgstr "Đăng ký Line"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ msgid "Rejected"
+ msgstr "Bị từ chối"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__salary_rule_id
+ msgid "Rule"
+ msgstr "Quy tắc"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_form
+ msgid "Salary Categories"
+ msgstr "Nhóm lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Salary Computation"
+ msgstr "Tính toán Lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_salary_rule
+ msgid "Salary Rule"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_salary_rule_category
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_salary_rule_category_filter
+ msgid "Salary Rule Categories"
+ msgstr "Nhóm Quy tắc Lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Salary Rule Category"
+ msgstr "Nhóm Quy tắc Lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_rule_input
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__input_id
+ msgid "Salary Rule Input"
+ msgstr "Đầu vào Quy tắc Lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_salary_rule_form
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__rule_ids
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_action_hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_list
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_employee_grade_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Salary Rules"
+ msgstr "Quy tắc lương"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:403
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:453
+ #, python-format
+ msgid "Salary Slip of %s for %s"
+ msgstr "Phiếu lương của %s cho %s"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payroll_community_structure
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__struct_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_tree
+ msgid "Salary Structure"
+ msgstr "Cấu trúc lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_view_hr_payroll_community_structure_list_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_structure_view
+ msgid "Salary Structures"
+ msgstr "Cấu trúc lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__schedule_pay
+ msgid "Scheduled Pay"
+ msgstr "Thanh toán"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Search Payslip Batches"
+ msgstr "Tìm kiếm Bảng lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Search Payslip Lines"
+ msgstr "Tìm Các dòng phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Search Payslips"
+ msgstr "Tìm Phiếu lương"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Search Salary Rule"
+ msgstr "Tìm Quy tắc lương"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Semi-annually"
+ msgstr "Nửa năm một"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__sequence
+ msgid "Sequence"
+ msgstr "Trình tự"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Set to Draft"
+ msgstr "Thiết lập về dự thảo"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payroll_community_configuration
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_global_settings
+ msgid "Settings"
+ msgstr "Thiết lập"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "States"
+ msgstr "Trạng thái"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__state
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__state
+ msgid "Status"
+ msgstr "Trạng thái"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__struct_id
+ msgid "Structure"
+ msgstr "Cấu trúc lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__code
+ msgid ""
+ "The code of salary rules can be used as reference in computation of other "
+ "rules. In that case, it is case sensitive."
+ msgstr ""
+ "Mã của quy tắc lương có thể được sử dụng như tham chiếu trong việc tính toán"
+ " các quy tắc khác."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_worked_days__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_rule_input__code
+ msgid "The code that can be used in the salary rules"
+ msgstr "Mã được sử dụng trong quy tắc lương"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_select
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_select
+ msgid "The computation method for the rule amount."
+ msgstr "Phương pháp tính toán cho tổng tiền của một quy tắc."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__contract_id
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_worked_days__contract_id
+ msgid "The contract for which applied this input"
+ msgstr "Hợp đồng mà input này áp dụng cho"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range_max
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range_max
+ msgid "The maximum amount, applied for this rule."
+ msgstr "Tổng tiền tối đa được áp dụng trên quy tắc này."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range_min
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range_min
+ msgid "The minimum amount, applied for this rule."
+ msgstr "Tổng tiền tối thiểu được áp dụng trên quy tắc này."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range
+ msgid ""
+ "This will be used to compute the % fields values; in general it is on basic,"
+ " but you can also use categories code fields in lowercase as a variable "
+ "names (hra, ma, lta, etc.) and the variable basic."
+ msgstr ""
+ "Cái này sẽ được sử dụng để tính toán giá trị trường %; in general it is on "
+ "basic, but you can also use categories code fields in lowercase as a "
+ "variable names (hra, ma, lta, etc.) and the variable basic."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__total
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Total"
+ msgstr "Tổng"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Total Working Days"
+ msgstr "Tổng số ngày làm việc"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__upper_bound
+ msgid "Upper Bound"
+ msgstr "Giới hạn Trên"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract_advantage_template__upper_bound
+ msgid "Upper bound authorized by the employer for this advantage"
+ msgstr "Giới hạn trên được ủy quyền bởi nhà tuyển dụng vì lợi thế này"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__sequence
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__sequence
+ msgid "Use to arrange calculation sequence"
+ msgstr "Sử dụng để sắp xếp trình tự tính toán"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__appears_on_payslip
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__appears_on_payslip
+ msgid "Used to display the salary rule on payslip."
+ msgstr "Được sử dụng để hiển thị quy tắc lương trên phiếu lương."
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ msgid "Waiting"
+ msgstr "Chờ"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Weekly"
+ msgstr "Hàng tuần"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Day"
+ msgstr "Ngày làm việc"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Days"
+ msgstr "Ngày làm việc"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Days & Inputs"
+ msgstr "Ngày làm việc & Dữ liệu nhập ngoài"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__resource_calendar_id
+ msgid "Working Schedule"
+ msgstr "Thời gian làm việc"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:211
+ #, python-format
+ msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+ msgstr ""
+ "Sai cơ sở lấy phần trăm hoặc số lượng định nghĩa trong quy tắc lương %s "
+ "(%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:217
+ #, python-format
+ msgid "Wrong python code defined for salary rule %s (%s)."
+ msgstr "Sai mã python định nghĩa trong quy tắc lương %s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:240
+ #, python-format
+ msgid "Wrong python condition defined for salary rule %s (%s)."
+ msgstr "Sai điều kiện python định nghĩa trong quy tắc lương %s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:204
+ #, python-format
+ msgid "Wrong quantity defined for salary rule %s (%s)."
+ msgstr "Sai số lượng định nghĩa trong quy tắc lương %s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:234
+ #, python-format
+ msgid "Wrong range condition defined for salary rule %s (%s)."
+ msgstr "Sai phạm vi định nghĩa trong quy tắc lương %s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:36
+ #, python-format
+ msgid "You cannot create a recursive salary structure."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:127
+ #, python-format
+ msgid "You cannot delete a payslip which is not draft or cancelled!"
+ msgstr ""
+ "Bạn không thể xoá một phiếu lương mà không ở trạng thái dự thảo hoặc huỷ!"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/wizard/hr_payroll_community_payslips_by_employees.py:24
+ #, python-format
+ msgid "You must select employee(s) to generate payslip(s)."
+ msgstr "Bạn phải chọn ít nhất một nhân viên để tạo (các) phiếu lương."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:525
+ #, python-format
+ msgid "You must set a contract to create a payslip line."
+ msgstr "Bạn phải thiết lập một hợp đồng để có thể tạo chi tiết phiếu lương."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_percentage_base
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_percentage_base
+ msgid "result will be affected to a variable"
+ msgstr "kết quả sẽ bị ảnh hưởng tới một biến số"
+ 

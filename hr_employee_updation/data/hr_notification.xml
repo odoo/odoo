@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.cron" id="employee_data_reminder">
+            <field name="name">HR Employee Data Expiration</field>
+            <field name="interval_number">12</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">model.mail_reminder()</field>
+        </record>
+    </data>
+</odoo>

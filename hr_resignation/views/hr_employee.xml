@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="hr_employee_resign_form_view">
+        <field name="name">hr.employee.form.view</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="joining_date" position="after">
+                <field name="resign_date" attrs="{'invisible': [('active', '!=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+        <record model="ir.ui.view" id="hr_employee_resigned_filter">
+        <field name="name">hr.employee.form.filter</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <field name="job_id" position="after">
+                <filter string="Resigned Employees" name="resigned" domain="['&amp;',('resigned', '=', True),('active', '=', False)]"/>
+                <filter string="Fired Employees" name="fired" domain="['&amp;',('fired', '=', True),('active', '=', False)]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

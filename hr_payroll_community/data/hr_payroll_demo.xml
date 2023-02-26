@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Contribution Register -->
+
+        <record id="hr_houserent_register" model="hr.contribution.register">
+            <field name="name">House Rent Allowance Register</field>
+        </record>
+
+        <record id="hr_provident_fund_register" model="hr.contribution.register">
+            <field name="name">Provident Fund Register</field>
+        </record>
+
+        <record id="hr_professional_tax_register" model="hr.contribution.register">
+            <field name="name">Professional Tax Register</field>
+        </record>
+
+        <record id="hr_meal_voucher_register" model="hr.contribution.register">
+            <field name="name">Meal Voucher Register</field>
+        </record>
+
+        <!-- Salary Rules -->
+
+        <record id="hr_salary_rule_houserentallowance1" model="hr.salary.rule">
+            <field name="amount_select">percentage</field>
+            <field eval="40.0" name="amount_percentage"/>
+            <field name="amount_percentage_base">contract.wage</field>
+            <field name="code">HRA</field>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="register_id" ref="hr_houserent_register"/>
+            <field name="name">House Rent Allowance</field>
+            <field name="sequence" eval="5"/>
+        </record>
+
+        <record id="hr_salary_rule_convanceallowance1" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field eval="800.0" name="amount_fix"/>
+            <field name="code">CA</field>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="name">Conveyance Allowance</field>
+            <field name="sequence" eval="10"/>
+        </record>
+
+        <record id="hr_salary_rule_professionaltax1" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field eval="150" name="sequence"/>
+            <field eval="-200.0" name="amount_fix"/>
+            <field name="code">PT</field>
+            <field name="category_id" ref="hr_payroll_community.DED"/>
+            <field name="register_id" ref="hr_professional_tax_register"/>
+            <field name="name">Professional Tax</field>
+        </record>
+
+        <record id="hr_salary_rule_providentfund1" model="hr.salary.rule">
+            <field name="amount_select">percentage</field>
+            <field eval="120" name="sequence"/>
+            <field eval="-12.5" name="amount_percentage"/>
+            <field name="amount_percentage_base">contract.wage</field>
+            <field name="code">PF</field>
+            <field name="category_id" ref="hr_payroll_community.DED"/>
+            <field name="register_id" ref="hr_provident_fund_register"/>
+            <field name="name">Provident Fund</field>
+        </record>
+
+        <record id="hr_salary_rule_ca_gravie" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field eval="600.0" name="amount_fix"/>
+            <field name="code">CAGG</field>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="name">Conveyance Allowance For Gravie</field>
+            <field name="sequence" eval="15"/>
+        </record>
+
+        <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field eval="10" name="amount_fix"/>
+            <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
+            <field name="code">MA</field>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="register_id" ref="hr_meal_voucher_register"/>
+            <field name="name">Meal Voucher</field>
+            <field name="sequence" eval="16"/>
+         </record>
+
+        <record id="hr_salary_rule_sales_commission" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">SALE</field>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="name">Get 1% of sales</field>
+            <field name="sequence" eval="17"/>
+            <field name="amount_python_compute">result = ((inputs.SALEURO and inputs.SALEURO.amount) + (inputs.SALASIA and inputs.SALASIA.amount)) * 0.01</field>
+         </record>
+
+        <!-- Rule Inputs -->
+
+        <record id="hr_rule_input_sale_a" model="hr.rule.input">
+            <field name="code">SALEURO</field>
+            <field name="name">Sales to Europe</field>
+            <field name="input_id" ref="hr_salary_rule_sales_commission"/>
+        </record>
+
+        <record id="hr_rule_input_sale_b" model="hr.rule.input">
+            <field name="code">SALASIA</field>
+            <field name="name">Sales to Asia</field>
+            <field name="input_id" ref="hr_salary_rule_sales_commission"/>
+        </record>
+
+        <!-- Salary Structure -->
+
+         <record id="structure_001" model="hr.payroll.structure">
+            <field name="code">ME</field>
+            <field name="name">Marketing Executive</field>
+            <field eval="[(6, 0, [ref('hr_salary_rule_houserentallowance1'), ref('hr_salary_rule_convanceallowance1'),ref('hr_salary_rule_professionaltax1'),ref('hr_salary_rule_providentfund1')])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="parent_id" ref="structure_base"/>
+        </record>
+
+        <record id="structure_002" model="hr.payroll.structure">
+            <field name="code">MEGG</field>
+            <field name="name">Marketing Executive for Gilles Gravie</field>
+            <field eval="[(6, 0, [ref('hr_salary_rule_ca_gravie'), ref('hr_salary_rule_meal_voucher')])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="parent_id" ref="structure_001"/>
+        </record>
+
+        <!--Employeee Work Location-->
+        <record id="work_data" model="hr.work.location">
+            <field name="name">Building 3, Third Floor</field>
+            <field name="address_id" ref="base.main_partner"/>
+        </record>
+
+        <!-- Employee -->
+
+        <record id="hr_employee_payroll" model="hr.employee">
+            <field name="name">Roger Scott</field>
+             <field name="job_title">Manager</field>
+            <field name="work_location_id" ref="work_data"/>
+            <field name="work_phone">+3282823500</field>
+            <field name="work_email">Roger123@example.com</field>
+            <field name="image_1920" type="base64" file="hr_payroll_community/static/img/hr_employee_payroll-image.jpg"/>
+        </record>
+
+
+</odoo>

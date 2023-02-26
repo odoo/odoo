@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="property_rule_department" model="ir.rule">
+        <field name="name">Department Create, Write, Unlink</field>
+        <field name="model_id" ref="hr.model_hr_department"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_salary_rules_company" model="ir.rule">
+        <field name="name">Salary rules of my Company</field>
+        <field name="model_id" ref="hr_payroll_community.model_hr_salary_rule"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_payroll_structure_company" model="ir.rule">
+        <field name="name">Salary structures of my Company</field>
+        <field name="model_id" ref="hr_payroll_community.model_hr_payroll_structure"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_payroll_batches_company" model="ir.rule">
+        <field name="name">Payslips batches of my Company</field>
+        <field name="model_id" ref="hr_payroll_community.model_hr_payslip"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_payroll_payslip_company" model="ir.rule">
+        <field name="name">Payslips of my Company</field>
+        <field name="model_id" ref="hr_payroll_community.model_hr_payslip_run"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_payroll_salary_category_company" model="ir.rule">
+        <field name="name">Salary Category of my Company</field>
+        <field name="model_id" ref="hr_payroll_community.model_hr_salary_rule_category"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_payroll_contribution_company" model="ir.rule">
+        <field name="name">Payslips Contribution of my Company</field>
+        <field name="model_id" ref="hr_payroll_community.model_hr_contribution_register"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_payroll_attendance_company" model="ir.rule">
+        <field name="name">Attendance of my Company</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_holidays_company" model="ir.rule">
+        <field name="name">Holidays of my Company</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_expense_company" model="ir.rule">
+        <field name="name">Expense of my Company</field>
+        <field name="model_id" ref="hr_expense.model_hr_expense"/>
+        <field eval="False" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+</odoo>

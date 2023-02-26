@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.actions.act_window" id="view_approved_resignation">
+            <field name="name">Approved Resignation</field>
+            <field name="res_model">hr.resignation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'approved')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Approved Resignation
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="employee_resignation_approved"
+                  parent="employee_resignation"
+                  name="Approved Resignation"
+                  action="view_approved_resignation"
+                  groups="hr.group_hr_user"
+                  sequence="4"/>
+    </data>
+</odoo>
+
+

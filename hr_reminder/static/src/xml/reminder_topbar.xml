@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="reminder_menu" owl="1">
+
+        <div class="o_mail_navbar_item">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+               href="#" title="Reminders" role="button">
+                <i class="fa fa-bell"/>
+                <span class="o_notification_counter"/>
+            </a>
+            <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
+                <li class="o_mail_navbar_dropdown_top">
+                    <h2>Reminders</h2>
+                    <div>
+                        <li></li>
+                        <select id="reminder_select" name="Reminder"
+                                class='reminders_list form-control'>
+                            <t t-foreach='widget.all_reminder' t-as='val'>
+                                <option class="dropdown-options">
+                                    <t t-esc="val.name"/>
+
+                                </option>
+
+                            </t>
+                        </select>
+                    </div>
+
+                </li>
+
+            </ul>
+        </div>
+    </t>
+</templates>

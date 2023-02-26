@@ -1,0 +1,269 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_employee_transfer
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-27 09:29+0000\n"
+"PO-Revision-Date: 2022-06-27 09:29+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__state
+msgid ""
+" * The 'Draft' status is used when a transfer is created and unconfirmed Transfer.\n"
+" * The 'Transferred' status is used when the user confirm the transfer. It stays in the open status till the other branch/company receive the employee.\n"
+" * The 'Done' status is set automatically when the employee is Joined/Received.\n"
+" * The 'Cancelled' status is used when user cancel Transfer."
+msgstr ""
+" * يتم استخدام حالة 'المسودة' عند إنشاء عملية نقل ونقل غير مؤكد.\n"
+" * يتم استخدام الحالة 'المنقولة' عندما يؤكد المستخدم عملية النقل. يبقى في وضع مفتوح حتى يستقبل الفرع / الشركة الأخرى الموظف.\n"
+" * يتم تعيين حالة 'تم' تلقائيًا عند انضمام / تلقي الموظف.\n"
+" * يتم استخدام حالة 'تم الإلغاء' عندما يقوم المستخدم بإلغاء النقل."
+
+#. module: hr_employee_transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.employee_transfer
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields.selection,name:hr_employee_transfer.selection__employee_transfer__state__cancel
+msgid "Cancelled"
+msgstr "ملغي"
+
+#. module: hr_employee_transfer
+#: model_terms:ir.actions.act_window,help:hr_employee_transfer.action_employee_transfer
+msgid "Click to create a new Employee Transfer."
+msgstr ".انقر لإنشاء نقل موظف جديد"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__company_id
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__company_id
+msgid "Company"
+msgstr "الشركة"
+
+#. module: hr_employee_transfer
+#: code:addons/hr_employee_transfer/models/employee_transfer.py:0
+#: model:ir.model,name:hr_employee_transfer.model_hr_contract
+#, python-format
+msgid "Contract"
+msgstr "عقد"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__create_uid
+msgid "Created by"
+msgstr "انشأ من قبل"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__create_date
+msgid "Created on"
+msgstr "تم إنشاؤها على"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__date
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__date
+msgid "Date"
+msgstr "تاريخ"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields.selection,name:hr_employee_transfer.selection__employee_transfer__state__done
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.view_employee_transfer_filter
+msgid "Done"
+msgstr "منجز"
+
+#. module: hr_employee_transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.view_employee_transfer_filter
+msgid "Draft"
+msgstr "مشروع"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.view_employee_transfer_filter
+msgid "Employee"
+msgstr "الموظف"
+
+#. module: hr_employee_transfer
+#: model:ir.model,name:hr_employee_transfer.model_employee_transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.employee_transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.employee_transfer_tree
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.view_employee_transfer_filter
+msgid "Employee Transfer"
+msgstr "نقل الموظف"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__name
+msgid "Give a name to the Transfer"
+msgstr "إعطاء اسم للنقل"
+
+#. module: hr_employee_transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.view_employee_transfer_filter
+msgid "Group By"
+msgstr "مجموعة من"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__id
+msgid "ID"
+msgstr "هوية شخصية"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__note
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.employee_transfer
+msgid "Internal Notes"
+msgstr "ملاحظات داخلية"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer____last_update
+msgid "Last Modified on"
+msgstr "آخر تعديل في"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__name
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.employee_transfer
+msgid "Name"
+msgstr "اسم"
+
+#. module: hr_employee_transfer
+#: code:addons/hr_employee_transfer/models/employee_transfer.py:0
+#: model:ir.model.fields.selection,name:hr_employee_transfer.selection__employee_transfer__state__draft
+#, python-format
+msgid "New"
+msgstr "جديد"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__old_employee_id
+msgid "Old Employee"
+msgstr "موظف قديم"
+
+#. module: hr_employee_transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.employee_transfer
+msgid "Receive"
+msgstr "تسلم"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__responsible
+msgid "Responsible"
+msgstr "مسؤول"
+
+#. module: hr_employee_transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.view_employee_transfer_filter
+msgid "Responsible Person"
+msgstr "شخص مسؤول"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__responsible
+msgid "Responsible person for the transfer"
+msgstr "الشخص المسؤول عن التحويل"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__employee_id
+msgid "Select the employee you are going to transfer"
+msgstr "حدد الموظف الذي ستنقله"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__note
+msgid "Specify notes for the transfer if any"
+msgstr "حدد ملاحظات للتحويل إن وجدت"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__state
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.view_employee_transfer_filter
+msgid "Status"
+msgstr "الحالة"
+
+#. module: hr_employee_transfer
+#: code:addons/hr_employee_transfer/models/employee_transfer.py:0
+#, python-format
+msgid ""
+"This employee will remains on the same company until the Transferred Branch "
+"accept this transfer request"
+msgstr ""
+"سيبقى هذا الموظف في نفس الشركة حتى الفرع المحول"
+"قبول طلب النقل هذا"
+
+#. module: hr_employee_transfer
+#: model:ir.actions.act_window,name:hr_employee_transfer.action_employee_transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.employee_transfer
+msgid "Transfer"
+msgstr "نقل"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__branch
+msgid "Transfer To"
+msgstr "حول إلى"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_employee_transfer__transferred
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__transferred
+#: model:ir.model.fields.selection,name:hr_employee_transfer.selection__employee_transfer__state__transfer
+#: model_terms:ir.ui.view,arch_db:hr_employee_transfer.view_employee_transfer_filter
+msgid "Transferred"
+msgstr "نقل"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,field_description:hr_employee_transfer.field_hr_contract__emp_transfer
+msgid "Transferred Employee"
+msgstr "الموظف المحول"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,help:hr_employee_transfer.field_hr_contract__emp_transfer
+msgid "Transferred employee"
+msgstr "موظف منقول"
+
+#. module: hr_employee_transfer
+#: model:ir.model.fields,help:hr_employee_transfer.field_employee_transfer__branch
+msgid "Transferring Branch / Company"
+msgstr "تحويل فرع / شركة"
+
+#. module: hr_employee_transfer
+#: model:ir.ui.menu,name:hr_employee_transfer.menu_employee_transfer
+msgid "Transfers"
+msgstr "نقل"
+
+#. module: hr_employee_transfer
+#: model_terms:ir.actions.act_window,help:hr_employee_transfer.action_employee_transfer
+msgid ""
+"Use this menu to browse previous transfer. To record new\n"
+"                transfer, you may use the create button."
+msgstr ""
+"استخدم هذه القائمة لتصفح النقل السابق. لتسجيل جديد\n"
+"                نقل ، يمكنك استخدام زر إنشاء."
+
+#. module: hr_employee_transfer
+#: code:addons/hr_employee_transfer/models/employee_transfer.py:0
+#, python-format
+msgid "Warning"
+msgstr "تحذير"
+
+#. module: hr_employee_transfer
+#: code:addons/hr_employee_transfer/models/employee_transfer.py:0
+#, python-format
+msgid "You cannot transfer to the same company."
+msgstr "لا يمكنك التحويل لنفس الشركة."
+
+#. module: hr_employee_transfer
+#: code:addons/hr_employee_transfer/models/employee_transfer.py:0
+#, python-format
+msgid "You should select the branch/company."
+msgstr "يجب عليك تحديد الفرع / الشركة."

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.cron" id="employee_data_reminder">
+        <field name="name">Employee Document Expiration</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_hr_employee_document"/>
+        <field name="state">code</field>
+        <field name="code">model.mail_reminder()</field>
+    </record>
+
+    <record model="ir.ui.view" id="hr_employee_document_inherit_form_view">
+        <field name="name">hr.employee.form.view</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button class="oe_stat_button" name="document_view" type="object" icon="fa-list-ol">
+                    <field string="Documents" name="document_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='employee_document_form_view'>
+        <field name="name">hr.employee.document.form</field>
+        <field name="model">hr.employee.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="employee_ref" string="Employee"/>
+                            <field name="document_type"/>
+                            <field name="doc_attachment_id" widget="many2many_binary" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="notification_type"/>
+                            <field name="before_days" attrs="{'invisible' : [('notification_type', '=', 'single')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='employee_documents_tree_view'>
+        <field name="name">hr.employee.document.tree</field>
+        <field name="model">hr.employee.document</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="employee_ref" string="Employee"/>
+                <field name="document_type"/>
+                <field name="expiry_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="search_employee_documents" model="ir.ui.view">
+            <field name="name">hr.employee.document.search</field>
+            <field name="model">hr.employee.document</field>
+            <field name="arch" type="xml">
+                <search string="Employee Documents">
+                    <group expand="0" string="Group By">
+                        <filter name="Employee" string="Employee" domain="[]" context="{'group_by':'employee_ref'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <record id="hr_employee_document_action" model="ir.actions.act_window">
+        <field name="name">Employee Documents</field>
+        <field name="res_model">hr.employee.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="employee_documents_tree_view"/>
+        <field name="context">{'search_default_Employee': 1}</field>
+    </record>
+
+    <menuitem id="employe_document_menuitem"
+              name="Documents"
+              parent="hr.menu_hr_employee_payroll"
+              action="oh_employee_documents_expiry.hr_employee_document_action"
+              groups="hr.group_hr_manager" />
+</odoo>

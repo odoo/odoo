@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <record model="ir.module.category" id="module_category_hr_payroll_community">
+        <field name="name">Payroll</field>
+        <field name="description">Helps you manage your payrolls.</field>
+        <field name="sequence">16</field>
+    </record>
+
+    <record id="group_hr_payroll_community_user" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="category_id" ref="hr_payroll_community.module_category_hr_payroll_community"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user')), (4, ref('hr_contract.group_hr_contract_manager'))]"/>
+    </record>
+
+    <record id="group_hr_payroll_community_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="hr_payroll_community.module_category_hr_payroll_community"/>
+        <field name="implied_ids" eval="[(4, ref('hr_payroll_community.group_hr_payroll_community_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('hr_payroll_community.group_hr_payroll_community_manager'))]"/>
+    </record>
+
+    <record id="hr_payroll_rule_officer" model="ir.rule">
+        <field name="name">Officer and subordinates Payslip</field>
+        <field name="model_id" ref="model_hr_payslip"/>
+        <field name="domain_force">['|','|', ('employee_id.user_id', '=', user.id), ('employee_id.department_id', '=', False), ('employee_id.department_id.manager_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('hr_payroll_community.group_hr_payroll_community_user'))]"/>
+    </record>
+
+    <record id="hr_payslip_rule_manager" model="ir.rule">
+        <field name="name">All Payslip</field>
+        <field name="model_id" ref="model_hr_payslip"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('hr_payroll_community.group_hr_payroll_community_manager'))]"/>
+    </record>
+    <record model="ir.rule" id="payroll_multi_company_rule">
+        <field name="name">Payroll multi company</field>
+        <field name="model_id" ref="model_hr_payslip"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
+    </record>
+</data>
+</odoo>

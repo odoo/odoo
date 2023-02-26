@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="view_salary_advance_form" model="ir.ui.view">
+            <field name="name">salary.advance.form</field>
+            <field name="model">salary.advance</field>
+            <field name="arch" type="xml">
+                <form string="Salary Advance">
+                    <header>
+                        <button name="submit_to_manager" string="Submit" type="object" states="draft" class="oe_highlight"/>
+                        <button name="approve_request" string="Approve" type="object" states="submit" class="oe_highlight" groups="hr.group_hr_manager,hr.group_hr_user"/>
+                        <button name="approve_request_acc_dept" string="Approve" type="object" states="waiting_approval" class="oe_highlight" groups="account.group_account_manager,account.group_account_user"/>
+                        <button name="cancel" string="Cancel" type="object" states="draft,submit"/>
+                        <button name="reject" string="Reject" type="object" states="waiting_approval"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submit,waiting_approval,approve,cancel,reject"/>
+                    </header>
+                	<sheet>
+                        <div class="oe_title oe_left">
+                            <h2>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                            </h2>
+                        </div>
+                		<group>
+	                		<group>
+	                        	<field name="employee_id" attrs="{'readonly':[('state','in',['approve','cancel','reject'])]}"/>
+                                <field name="department" attrs="{'readonly':[('state','in',['approve','cancel','reject'])]}"/>
+                                <field name="date" attrs="{'readonly':[('state','in',['approve','cancel','reject'])]}"/>
+	                        	<field name="reason" attrs="{'readonly':[('state','in',['approve','cancel','reject'])]}"/>
+                                <field name="exceed_condition" attrs="{'readonly':[('state','in',['approve','cancel','reject'])]}" groups="hr.group_hr_manager,hr.group_hr_user"/>
+		                    </group>
+		                    <group>
+                    			<field name="advance" attrs="{'readonly':[('state','in',['approve','cancel','reject'])]}"/>
+                                <field name="currency_id" attrs="{'readonly':[('state','in',['approve','cancel','reject'])]}" groups="base.group_multi_currency"/>
+                                <field name="company_id" attrs="{'readonly':[('state','in',['approve','cancel','reject'])]}"  groups="base.group_multi_currency"/>
+                                <field name="credit"  attrs="{'invisible':[('state', '=', 'draft'), ('state', '=', 'submit')], 'readonly':[('state','in',['approve','cancel','reject'])]}" groups="account.group_account_manager"/>
+                                <field name="debit" attrs="{'invisible':[('state', '=', 'draft'), ('state', '=', 'submit')], 'readonly':[('state','in',['approve','cancel','reject'])]}" groups="account.group_account_manager"/>
+                                <field name="journal" attrs="{'invisible': [('state', '=', 'draft'), ('state', '=', 'submit')], 'readonly':[('state','in',['approve','cancel','reject'])]}" groups="account.group_account_manager"/>
+                                <field name="employee_contract_id"  attrs="{'invisible': ['|', ('state', '=', 'draft'), ('state', '=', 'approve')], 'readonly':[('state','in',['approve','cancel','reject'])]}" groups="hr.group_hr_manager,hr.group_hr_user"/>
+	                    	</group>
+                    	</group>
+		            </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_salary_advance_tree">
+            <field name="name">salary.advance.tree</field>
+            <field name="model">salary.advance</field>
+            <field name="arch" type="xml">
+                <tree string="Salary Advance">
+                    <field name="employee_id"/>
+                    <field name="date"/>
+                    <field name="advance"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_salary_advance_filter" model="ir.ui.view">
+            <field name="name">salary.advance.select</field>
+            <field name="model">salary.advance</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="name" string="Salary Advance" filter_domain="['|',('name','ilike',self)]"/>
+                    <field name="employee_id"/>
+                    <field name="state"/>
+                    <filter string="My Requests" domain="[('employee_id.user_id.id','=',uid)]" name="my_requests_filter"/>
+                     <filter domain="[('state', '=', 'draft')]" string="To Submit" name="to_report" help="New Requests"/>
+                    <filter domain="[('state','in',('submit','waiting_approval'))]" string="To Approve" name="submitted" help="Submitted Requests"/>
+                    <filter domain="[('state', '=', 'approve')]" string="Approved" name="approved" help="Approved Requests"/>
+                    <separator/>
+                        <filter string="Employee" name="employee_id" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter name="State" string="State" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Date" domain="[]" name="date" context="{'group_by':'date'}"/>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_my_salary_advance" model="ir.actions.act_window">
+            <field name="name">Salary Advance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">salary.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_salary_advance_filter"/>
+            <field name="context">{'search_default_my_requests_filter':1}</field>
+            <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create Requests.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_my_salary_advance_request_approved" model="ir.actions.act_window">
+            <field name="name">Salary Advance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">salary.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_salary_advance_filter"/>
+            <field name="context">{'search_default_approved':1}</field>
+            <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create Requests.
+                </p>
+            </field>
+        </record>
+
+         <record id="action_salary_advance_to_approve" model="ir.actions.act_window">
+            <field name="name">Salary Advance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">salary.advance</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_salary_advance_filter"/>
+            <field name="context">{'search_default_submitted': 1}</field>
+            <field name="domain"></field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create Requests.
+                </p>
+            </field>
+        </record>
+
+        <record id="ir_seq_hr_advance" model="ir.sequence">
+			<field name="name">Salary Advance Request</field>
+			<field name="code">salary.advance.seq</field>
+			<field name="prefix">SAR</field>
+			<field name="padding">4</field>
+			<field name="number_increment">1</field>
+			<field name="number_next_actual">1</field>
+			<field name="implementation">standard</field>
+            <field name="company_id" eval="False"/>
+		</record>
+
+        <menuitem id="parent_menu_salary_advance" name="Advance" parent="ohrms_loan.menu_hr_loans_and_advances" sequence="7"/>
+        <menuitem id="menu_my_salary_advance" action="action_my_salary_advance" parent="parent_menu_salary_advance" name="Request Salary Advance" sequence="1" />
+        <menuitem id="menu_salary_advance" action="action_salary_advance_to_approve" parent="parent_menu_salary_advance" name="Salary Advance To Approve" sequence="3" groups="hr.group_hr_manager,hr.group_hr_user,account.group_account_manager"/>
+        <menuitem id="menu_my_salary_advance_approved" action="action_my_salary_advance_request_approved" parent="parent_menu_salary_advance" name="My Approved Salary Advance" sequence="2" />
+    </data>
+</odoo>

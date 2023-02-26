@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="employee_report_menu" name="Reports" sequence="30"
+                  groups="hr.group_hr_manager,hr.group_hr_user"/>
+        <menuitem id="menu_hr_management" name="HR Management" parent="hr.menu_hr_root" sequence="5"
+                  groups="hr.group_hr_manager,hr.group_hr_user"/>
+        <record model="ir.ui.view" id="hr_employee_inherit_form_view">
+
+            <field name="name">hr.employee.form.view</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='personal_information']/group" position="after">
+                    <group name="fam_ids" colspan="4" string="Dependence Details">
+                        <field name="fam_ids">
+                            <tree editable="bottom">
+                                <field name="member_name" required="1"/>
+                                <field name="relation_id" required="1"/>
+                                <field name="member_contact"/>
+                                <field name="birth_date"/>
+                            </tree>
+                        </field>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='employee_type']" position="after">
+                    <field name="joining_date"/>
+                </xpath>
+                <field name="identification_id" position="replace"/>
+                <field name="passport_id" position="replace"/>
+                <xpath expr="//page[@name='personal_information']/group/group[1]" position="after">
+                    <group name="identification_id" string="Identification ID">
+                        <field name="identification_id"/>
+                        <field name="id_expiry_date"  groups="hr.group_hr_user" attrs="{'invisible': [('identification_id', 'in', [None,False])]}"/>
+                        <field name="id_attachment_id" groups="hr.group_hr_user" widget="many2many_binary" class="oe_inline" attrs="{'invisible': [('identification_id', 'in', [None,False])]}"/>
+                    </group>
+                    <group name="passport_id" string="Passport ID">
+                        <field name="passport_id"/>
+                        <field name="passport_expiry_date" groups="hr.group_hr_user" attrs="{'invisible': [('passport_id', 'in', [None,False])]}"/>
+                        <field name="passport_attachment_id" groups="hr.group_hr_user" widget="many2many_binary" class="oe_inline" attrs="{'invisible': [('passport_id', 'in', [None,False])]}"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="hr_gamification.hr_hr_employee_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='public']" position="after">
+                    <page string="Received Badges" attrs="{'invisible': [('user_id', '=', False)]}">
+                        <div name="badges" groups="hr.group_hr_user">
+                            <field name="has_badges" invisible="1"/>
+                            <button string="Grant a Badge" type="action" name="%(hr_gamification.action_reward_wizard)d"/> to reward this employee for a good action
+                            <div class="oe_view_nocontent" attrs="{'invisible': [('has_badges', '=', True)]}">
+                                <p class="oe_view_nocontent_create">
+                                    Click to grant this employee his first badge
+                                </p><p class="oe_grey">
+                                    Badges are rewards of good work. Give them to people you believe deserve it.
+                                </p>
+                            </div>
+                        </div>
+                        <field name="badge_ids" widget="many2many_kanban" />
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='hr_document_template_form_view'>
+        <field name="name">hr.document.form</field>
+        <field name="model">hr.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="attach_id" widget="many2many_binary" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='hr_document_template_tree_view'>
+        <field name="name">hr.document.tree</field>
+        <field name="model">hr.document</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="note" string="Note"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_document_template_action" model="ir.actions.act_window">
+        <field name="name">Document Templates</field>
+        <field name="res_model">hr.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref=""/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Create First Document Template
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="hr_document_template_menuitem"
+              name="Document Templates"
+              parent="hr.menu_hr_root"
+              sequence="4"
+              action="oh_employee_documents_expiry.hr_document_template_action"
+              groups="hr.group_hr_manager"/>
+</odoo>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="view_hr_payslip_inherit_form">
+            <field name="name">hr.payslip.inherit.form</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll_community.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <field name="paid" position="after">
+                    <field name="date"/>
+                    <field name="journal_id" required="1"/>
+                    <field name="move_id" readonly="1"/>
+                </field>
+            </field>
+        </record>
+
+    <!-- Adding Account fields to the Salary Rules -->
+
+        <record id="hr_salary_rule_form_inherit" model="ir.ui.view">
+            <field name="name">hr.salary.rule.form.inherit</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="inherit_id" ref="hr_payroll_community.hr_salary_rule_form"/>
+            <field name="arch" type="xml">
+              <xpath expr="/form/notebook/page[@name='rules']" position="after">
+                    <page string="Accounting">
+                        <group colspan="4">
+                            <field name="account_debit" />
+                            <field name="account_credit"/>
+                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="account_tax_id"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    <!-- Contract View -->
+
+        <record id="hr_contract_form_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='top_info_right']" position="after">
+                   <group string="Accounting">
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="journal_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    <!-- Payslip Run View -->
+
+        <record id="hr_payslip_run_search_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.search.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll_community.hr_payslip_run_filter"/>
+            <field name="arch" type="xml">
+                <filter name='done_filter' position="after">
+                    <field name="journal_id"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="hr_payslip_run_tree_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.tree.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll_community.hr_payslip_run_tree"/>
+            <field name="arch" type="xml">
+                <field name="date_end" position="after">
+                    <field name="journal_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_payslip_run_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.run.form.inherit</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll_community.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+                <field name="credit_note" position="before">
+                    <field name="journal_id"/>
+                </field>
+            </field>
+        </record>
+</odoo>
