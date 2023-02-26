@@ -3,12 +3,6 @@
 # 	* coupon
 # 
 # Translators:
-# Ermin Trevisan <trevi@twanda.com>, 2020
-# Leon Grill <leg@odoo.com>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
-# Oliver Roch <oliver.roch@d9t.de>, 2020
-# Kevin Harrings <kha@odoo.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
 # 
 msgid ""
@@ -16,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:06+0000\n"
-"PO-Revision-Date: 2020-08-21 13:31+0000\n"
+"PO-Revision-Date: 2022-06-17 09:49+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1081,6 +1075,14 @@ msgstr "Gültigkeitsdauer für einen Gutschein nach dessen Erstellung"
 #, python-format
 msgid "You can not delete a program in active state"
 msgstr "Sie können ein Programm im aktiven Zustand nicht löschen"
+
+#. module: coupon
+#: code:addons/coupon/models/product_product.py:0
+#, python-format
+msgid ""
+"You cannot delete a product that is linked with Coupon or Promotion program."
+" Archive it instead."
+msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
