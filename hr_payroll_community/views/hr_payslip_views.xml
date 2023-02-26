@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payslip Line -->
+    <record id="view_hr_payslip_line_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.line.tree</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Structure" editable="bottom" decoration-info="total == 0">
+                <field name="category_id"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="quantity"/>
+                <field name="rate"/>
+                <field name="amount"/>
+                <field name="total"/>
+                <field name="amount_select" invisible="1"/>
+                <field name="register_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_hr_payslip_line_form" model="ir.ui.view">
+        <field name="name">hr.payslip.line.form</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <form string="Payslip Line">
+            <group>
+                <group>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="slip_id"/>
+                    <field name="employee_id"/>
+                </group>
+                <group string="Calculations">
+                    <field name="category_id"/>
+                    <field name="amount_select"/>
+                    <field name="amount_fix"  attrs="{'readonly':[('amount_select','!=','fix')]}"/>
+                    <field name="amount_percentage"  attrs="{'readonly':[('amount_select','!=','percentage')]}"/>
+                    <field name="sequence"/>
+                </group>
+                <field name="note"/>
+            </group>
+            </form>
+        </field>
+    </record>
+    <record id="view_hr_payslip_line_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.line.select</field>
+        <field name="model">hr.payslip.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslip Lines">
+                <field name="name" string="Payslip Lines" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                <field name="amount_select"/>
+                <field name="slip_id"/>
+                <field name="category_id"/>
+                <group col="8" colspan="4" expand="0" string="Group By">
+                    <filter string="Salary Rule Category" name="category_id" context="{'group_by':'category_id'}"/>
+                    <filter string="Contribution Register" name="register_id" context="{'group_by':'register_id'}"/>
+                    <filter string="Amount Type" name="amount_select" context="{'group_by':'amount_select'}"/>
+                    <filter string="Employees" name="employee_id" context="{'group_by':'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- payslip -->
+
+    <record id="view_hr_payslip_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.tree</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state in ('confirm','hr_check','accont_check')" decoration-muted="state == 'cancel'" string="Payslips">
+                <field name="number"/>
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <field name="payslip_run_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="hr_payslip_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payslip.kanban</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong><field name="employee_id"/></strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="float-right badge badge-secondary">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <span>
+                                        <field name="date_from"/> - <field name="date_to"/>
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <span><field name="name"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+<!--    removed src_model="hr.payslip" -->
+
+    <record id="act_payslip_lines" model="ir.actions.act_window">
+            <field name="name">Payslip Computation Details</field>
+            <field name="res_model">hr.payslip.line</field>
+            <field name="context">{'default_slip_id': active_id,'search_default_slip_id': active_id}</field>
+    </record>
+
+    <record id="view_hr_payslip_form" model="ir.ui.view">
+        <field name="name">hr.payslip.form</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <form string="Payslip">
+            <header>
+                <button string="Confirm" name="action_payslip_done" type="object" states="draft" class="oe_highlight"/>
+                <button string="Refund" name="refund_sheet" states="confirm,done" type='object' />
+                <button string="Set to Draft" name="action_payslip_draft" type="object" states="cancel"/>
+                <button string="Compute Sheet" name="compute_sheet" type="object" states="draft" class="oe_highlight"/>
+                <button string="Cancel Payslip" name="action_payslip_cancel" type="object" states="draft,hr_check,confirm,verify"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+            </header>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="%(act_payslip_lines)d"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        type="action">
+                        <field name="payslip_count" widget="statinfo" string="Payslip" help="Payslip Computation Details"/>
+                    </button>
+                </div>
+                <div class="oe_title">
+                    <label for="employee_id" class="oe_edit_only"/>
+                    <h1><field name="employee_id" placeholder="Employee"/></h1>
+                </div>
+                <group col="4">
+                    <label for="date_from" string="Period"/>
+                    <div>
+                        <field name="date_from" class="oe_inline"/> - <field name="date_to" class="oe_inline"/>
+                    </div>
+                    <field name="contract_id" domain="[('employee_id','=',employee_id),('date_start','&lt;=',date_to),'|',('date_end','&gt;=',date_from),('date_end','=',False)]" context="{'default_employee_id': employee_id}"/>
+                    <field name="number"/>
+                    <field name="struct_id" attrs="{'required':[('contract_id','!=',False)]}"/>
+                    <field name="name"/>
+                    <field name="credit_note"/>
+                </group>
+                <notebook>
+                    <page string="Worked Days &amp; Inputs">
+                        <separator string="Worked Days"/>
+                        <field name="worked_days_line_ids">
+                            <tree string="Worked Days" editable="bottom">
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="number_of_days" sum="Total Working Days"/>
+                                <field name="number_of_hours"/>
+                                <field name="contract_id"/>
+                                <field name="sequence" invisible="True"/>
+                            </tree>
+                            <form string="Worked Day">
+                                <group col="4">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="sequence"/>
+                                    <field name="number_of_days"/>
+                                    <field name="number_of_hours"/>
+                                    <field name="contract_id"/>
+                                </group>
+                            </form>
+                        </field>
+                        <separator string="Other Inputs"/>
+                        <field name="input_line_ids" colspan="4" nolabel="1">
+                            <tree string="Input Data" editable="bottom">
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="amount"/>
+                                <field name="contract_id"/>
+                                <field name="sequence" invisible="True"/>
+                            </tree>
+                            <form string="Payslip Line">
+                                <group col="4">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="sequence"/>
+                                    <field name="amount"/>
+                                    <field name="contract_id"/>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                    <page string="Salary Computation" >
+                        <field name="line_ids" colspan="4" nolabel="1">
+                            <tree string="Salary Structure" editable="bottom" decoration-info="total == 0">
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="category_id"/>
+                                <field name="sequence" invisible="1"/>
+                                <field name="quantity"/>
+                                <field name="rate"/>
+                                <field name="salary_rule_id"/>
+                                <field name="amount"/>
+                                <field name="total"/>
+                            </tree>
+                            <form string="Payslip Line">
+                                <group col="4">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="category_id"/>
+                                    <field name="sequence"/>
+                                    <field name="quantity"/>
+                                    <field name="rate"/>
+                                    <field name="amount"/>
+                                    <field name="total"/>
+                                    <field name="salary_rule_id"/>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                    <page string="Details By Salary Rule Category">
+
+                        <field name="details_by_salary_rule_category"  context="{'search_default_category_id':1}" domain="[('appears_on_payslip', '=', True)]">
+                            <tree string="Payslip Lines" decoration-info="total == 0">
+                                <field name="category_id"/>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="total"/>
+                            </tree>
+                        </field>
+                   </page>
+                   <page string="Accounting Information">
+                        <group>
+                            <group string="Miscellaneous">
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="payslip_run_id" domain="[('state','=','draft')]"/>
+                            </group>
+                            <group name="accounting" string="Accounting">
+                                <field name="paid" readonly="1"/>
+                            </group>
+                        </group>
+                        <div colspan="4">
+                            <field name="note" placeholder="Add an internal note..."/>
+                        </div>
+                   </page>
+                </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.select</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslips">
+                <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
+                <field name="date_from"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Slip"/>
+                <filter string="Done" name="done" domain="[('state','=','done')]" help="Done Slip"/>
+                <field name="employee_id"/>
+                <field name="payslip_run_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employees" name="employee_id" context="{'group_by':'employee_id'}"/>
+                    <filter string="PaySlip Batch" name="payslip_run_id" context="{'group_by':'payslip_run_id'}"/>
+                    <filter string="Companies" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="States" name="state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_view_hr_payslip_form" model="ir.actions.act_window">
+        <field name="name">Employee Payslips</field>
+        <field name="res_model">hr.payslip</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_hr_payslip_filter"/>
+    </record>
+
+    <menuitem action="action_view_hr_payslip_form"
+              id="menu_department_tree"
+              parent="menu_hr_payroll_community_root"
+              groups="hr_payroll_community.group_hr_payroll_community_user"/>
+
+    <record id="act_hr_employee_payslip_list" model="ir.actions.act_window">
+        <field name="res_model">hr.payslip</field>
+        <field name="name">Payslips</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
+    </record>
+
+    <!-- payslip runs -->
+
+    <record id="hr_payslip_run_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.run.search</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslip Batches">
+                <field name="name" string="Payslip Batches"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
+                <filter name="done_filter" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_payslip_run_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.tree</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <tree string="Payslips Batches">
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="credit_note"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payslip_run_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payslip.run.kanban</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="float-right badge badge-secondary">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                                <div class="col-12">
+                                    <span>
+                                        <field name="date_start"/> - <field name="date_end"/>
+                                    </span>
+                                    <span class="float-right" title="Is a Blocking Reason?">
+                                        <field name="credit_note" widget="boolean"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_payslip_run_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <form string="Payslips Batches">
+            <header>
+                <button name="close_payslip_run" type="object" string="Close" states="draft" class="oe_highlight"/>
+                <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" class="oe_highlight"/>
+                <button string="Set to Draft" name="draft_payslip_run" type="object" states="close" />
+                <field name="state" widget="statusbar"/>
+            </header>
+            <sheet>
+                <label for="name" class="oe_edit_only"/>
+                <h1>
+                    <field name="name"/>
+                </h1>
+                <group col="4">
+                    <label for="date_start" string="Period"/>
+                     <div>
+                           <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"/>
+                     </div>
+                    <field name="credit_note"/>
+                </group>
+                <separator string="Payslips"/>
+                <field name="slip_ids"/>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_payslip_run_tree" model="ir.actions.act_window">
+        <field name="name">Payslips Batches</field>
+        <field name="res_model">hr.payslip.run</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="hr_payslip_run_filter"/>
+    </record>
+    <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_payroll_community_root"/>
+
+    <!--  Shortcuts -->
+
+    <record id="act_contribution_reg_payslip_lines" model="ir.actions.act_window">
+            <field name="name">Payslip Lines</field>
+            <field name="res_model">hr.payslip.line</field>
+            <field name="domain">[('register_id', '=', active_id)]</field>
+            <field name="context">{'default_register_id': active_id, 'search_default_register_id': 1}</field>
+    </record>
+
+</odoo>

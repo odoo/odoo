@@ -1,0 +1,1653 @@
+# Translation of Odoo Server.
+ # This file contains the translation of the following modules:
+ # * hr_payroll_community
+ # 
+ # Translators:
+ # gezza <geza.nagy@oregional.hu>, 2018
+ # Martin Trigaux, 2018
+ # krnkris, 2018
+ # Ákos Nagy <akos.nagy@oregional.hu>, 2018
+ # Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+ # 
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: Odoo Server 13.0\n"
+ "Report-Msgid-Bugs-To: \n"
+ "POT-Creation-Date: 2019-01-09 10:31+0000\n"
+ "PO-Revision-Date: 2018-08-24 09:19+0000\n"
+ "Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
+ "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: \n"
+ "Language: hu\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:42
+ #, python-format
+ msgid "%s (copy)"
+ msgstr "%s (másolat)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__state
+ msgid ""
+ "* When the payslip is created the status is 'Draft'\n"
+ "                \n"
+ "* If the payslip is under verification, the status is 'Waiting'.\n"
+ "                \n"
+ "* If the payslip is confirmed then status is set to 'Done'.\n"
+ "                \n"
+ "* When user cancel payslip the status is 'Rejected'."
+ msgstr ""
+ "* Fizetési jegyzék létrehozásakor annak állapota 'Tervezet'.           \n"
+ "* Ha a fizetési jegyzék ellenőrzés alatt van akkor annak az állapota 'Várakozó'.            \n"
+ "* Ha a fizetési jegyzék visszaigazolt akkor annak állapota 'Elvégezve'.           \n"
+ "* amikor egy fizetési jegyzéket visszavon akkor annak az állapota 'Elutasítva'."
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid ""
+ "<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+ " selected employee(s) based on the dates and credit note specified on "
+ "Payslips Run.</span>"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Address</strong>"
+ msgstr "<strong>Cím</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Authorized signature</strong>"
+ msgstr "<strong>Cégszerű aláírás</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Bank Account</strong>"
+ msgstr "<strong>Bank számla</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Date From:</strong>"
+ msgstr "<strong>Kezdő dátum:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Date From</strong>"
+ msgstr "<strong>Kezdő dátum:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Date To:</strong>"
+ msgstr "<strong>Befejezés dátuma:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Date To</strong>"
+ msgstr "<strong>Befejezés dátuma:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Designation</strong>"
+ msgstr "<strong>Rendeltetés</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Email</strong>"
+ msgstr "<strong>Email</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Identification No</strong>"
+ msgstr "<strong>Azonosító szám</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Name</strong>"
+ msgstr "<strong>Név</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Reference</strong>"
+ msgstr "<strong>Hivatkozás</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Register Name:</strong>"
+ msgstr "<strong>Regisztrációs név:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Total</strong>"
+ msgstr "<strong>Összesen</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.actions.act_window,help:hr_payroll_community.action_contribution_register_form
+ msgid ""
+ "A contribution register is a third party involved in the salary\n"
+ "            payment of the employees. It can be the social security, the\n"
+ "            state or anyone that collect or inject money on payslips."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_account_accountant
+ msgid "Account Accountant"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Accounting"
+ msgstr "Könyvelés"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Accounting Information"
+ msgstr "Könyvelési információ"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__active
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__active
+ msgid "Active"
+ msgstr "Aktív"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.actions.act_window,help:hr_payroll_community.action_contribution_register_form
+ msgid "Add a new contribution register"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Add an internal note..."
+ msgstr "Belső jegyzet hozzáadása..."
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contract_advantage_template_view_form
+ msgid "Advantage Name"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_children_salary_rules
+ msgid "All Children Rules"
+ msgstr "Az összes alárendelt szabály"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.ALW
+ msgid "Allowance"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Always True"
+ msgstr "Mindíg igaz"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__amount
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Amount"
+ msgstr "Összeg"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_select
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_select
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Amount Type"
+ msgstr "Összeg típusa"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Annually"
+ msgstr "Évente"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__appears_on_payslip
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__appears_on_payslip
+ msgid "Appears on Payslip"
+ msgstr "Fizetési jegyzéken feltüntetve"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_python
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_python
+ msgid ""
+ "Applied this rule for calculation if condition is true. You can specify "
+ "condition like basic > 1000."
+ msgstr ""
+ "Ezt a szabályt érvényesítse a számításoknál ha a feltételek igazak. Olyan "
+ "feltételeket köthet ki mint alap > 1000."
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.BASIC
+ msgid "Basic"
+ msgstr "Alap"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_basic
+ msgid "Basic Salary"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_be_hr_payroll_community
+ msgid "Belgium Payroll"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Bi-monthly"
+ msgstr "Kéthavonta"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Bi-weekly"
+ msgstr "Kétheti"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_form
+ msgid "Calculations"
+ msgstr "Számítások"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Cancel"
+ msgstr "Mégsem"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Cancel Payslip"
+ msgstr "Fizetési jegyzék visszavonása"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:96
+ #, python-format
+ msgid "Cannot cancel a payslip that is done."
+ msgstr "Nem törölhet befejezett fizetési jegyzéket."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__category_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__category_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Category"
+ msgstr "Kategória"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Child Rules"
+ msgstr "Alárendelt szabályok"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__child_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__child_ids
+ msgid "Child Salary Rule"
+ msgstr "Alárendelt fizetési szabály"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__children_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__children_ids
+ msgid "Children"
+ msgstr "Alárendelt"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Children Definition"
+ msgstr "Alárendeltek meghatározása"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Choose a Payroll Localization"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.run,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ msgid "Close"
+ msgstr "Bezárás"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__code
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Code"
+ msgstr "Kód"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payroll_community_structure_view_kanban
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_view_kanban
+ msgid "Code:"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Companies"
+ msgstr "Vállalatok"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__company_id
+ msgid "Company"
+ msgstr "Vállalat"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.COMP
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Company Contribution"
+ msgstr "Vállalati közreműködő"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Computation"
+ msgstr "Számítás"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Compute Sheet"
+ msgstr "Táblázat kiszámítása"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_select
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_select
+ msgid "Condition Based on"
+ msgstr "Körülmény ezen feltételek alapján"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Conditions"
+ msgstr "Feltételek"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_res_config_settings
+ msgid "Config Settings"
+ msgstr "Konfigurációs beállítások"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_configuration
+ msgid "Configuration"
+ msgstr "Konfiguráció"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Confirm"
+ msgstr "Megerősítés"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__contract_id
+ msgid "Contract"
+ msgstr "Szerződés"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.hr_contract_advantage_template_action
+ #: model:ir.ui.menu,name:hr_payroll_community.hr_contract_advantage_template_menu_action
+ msgid "Contract Advantage Templates"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_form
+ msgid "Contribution"
+ msgstr "Közreműködés"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contribution_register
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__register_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__register_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Contribution Register"
+ msgstr "Közreműködő nyilvántartó"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Contribution Register's Payslip Lines"
+ msgstr "Közreműködő nyilvántartó fizetési-bérjegyzés tételsorok"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_contribution_register_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_action_hr_contribution_register_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_tree
+ msgid "Contribution Registers"
+ msgstr "Közreműködő nyilvántartók"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_convanceallowance1
+ msgid "Conveyance Allowance"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_ca_gravie
+ msgid "Conveyance Allowance For Gravie"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__create_uid
+ msgid "Created by"
+ msgstr "Létrehozta"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__create_date
+ msgid "Created on"
+ msgstr "Létrehozva"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__credit_note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__credit_note
+ msgid "Credit Note"
+ msgstr "Jóváírás"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__date_from
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__date_start
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__date_from
+ msgid "Date From"
+ msgstr "Dátumtól"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__date_to
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__date_end
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__date_to
+ msgid "Date To"
+ msgstr "Dátumig"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.DED
+ msgid "Deduction"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__default_value
+ msgid "Default value for this advantage"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract__schedule_pay
+ msgid "Defines the frequency of the wage payment."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__struct_id
+ msgid ""
+ "Defines the rules that have to be applied to this payslip, accordingly to "
+ "the contract chosen. If you let empty the field contract, this field isn't "
+ "mandatory anymore and thus the rules applied will be all the rules set on "
+ "the structure of all contracts of the employee valid for the chosen period"
+ msgstr ""
+ "Szabályok létrehozása mely erre a fizetési jegyzékre lesz érvényes, a "
+ "kiválasztott szerződés alapján. Ha a szerződésen ezt a mezőt üresen hagyja, "
+ "akkor ez a mező nem lesz kötelező többé és így azok a szabályok fognak "
+ "érvényesülni, melyek az összes szerződés szerkezetére és alkalmazottjára "
+ "érvényes a kiválasztott időintervallumban"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__note
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Description"
+ msgstr "Leírás"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Details By Salary Rule Category"
+ msgstr "Részletek a fizetési szabály kategóriánként"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__details_by_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Details by Salary Rule Category"
+ msgstr "Részletek fizetési szabályok szerint"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails__display_name
+ msgid "Display Name"
+ msgstr "Megjelenített név"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Done"
+ msgstr "Kész"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Done Payslip Batches"
+ msgstr "Elvégzett fizetési jegyzék kötegek"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Done Slip"
+ msgstr "Fizetési jegyzék létrehozva"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Draft"
+ msgstr "Tervezet"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Draft Payslip Batches"
+ msgstr "Fizetési jegyzék vázlatok"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Draft Slip"
+ msgstr "Jegyzék tervezet"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_employee
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__employee_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__employee_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Employee"
+ msgstr "Alkalmazott"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contract
+ msgid "Employee Contract"
+ msgstr "Munkavállalói szerződés"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_employee_grade_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_list_view
+ msgid "Employee Function"
+ msgstr "Alkalmazotti funkció"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_view_hr_payslip_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_department_tree
+ msgid "Employee Payslips"
+ msgstr "Fizetési jegyzékek"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contract_advantage_template
+ msgid "Employee's Advantage on Contract"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract__resource_calendar_id
+ msgid "Employee's working schedule."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__employee_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Employees"
+ msgstr "Alkalmazottak"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:92
+ #, python-format
+ msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:179
+ #, python-format
+ msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__register_id
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__register_id
+ msgid "Eventual third party involved in the salary payment of the employees."
+ msgstr ""
+ "Esetleg harmadik személy is be van vonva ennek az alkalmazottnak a fizetés "
+ "kifizetéséhez."
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_fix
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_fix
+ msgid "Fixed Amount"
+ msgstr "Fix összeg"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_percentage
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_percentage
+ msgid "For example, enter 50.0 to apply a percentage of 50%"
+ msgstr "Például, az 50.0 beírása 50% -ot jelent"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/report/report_contribution_register.py:35
+ #, python-format
+ msgid "Form content is missing, this report cannot be printed."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_fr_hr_payroll_community
+ msgid "French Payroll"
+ msgstr "Francia bérszámfelytés"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "General"
+ msgstr "Általános"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid "Generate"
+ msgstr "Létrehozás"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payslip_by_employees
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ msgid "Generate Payslips"
+ msgstr "Fizetési jegyzék generálás"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_employees
+ msgid "Generate payslips for all selected employees"
+ msgstr "Fizetési jegyzék létrehozása az összes kijelölt alkalmazottnak"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_sales_commission
+ msgid "Get 1% of sales"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:182
+ #, python-format
+ msgid "Global Leaves"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_taxable
+ #: model:hr.salary.rule.category,name:hr_payroll_community.GROSS
+ msgid "Gross"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Group By"
+ msgstr "Csoportosítás ezzel"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_houserentallowance1
+ msgid "House Rent Allowance"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails__id
+ msgid "ID"
+ msgstr "Azonosító"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_run__credit_note
+ msgid ""
+ "If its checked, indicates that all payslips generated from here are refund "
+ "payslips."
+ msgstr ""
+ "Ha be van jelölve, mutatja, hogy az összes innen létrehozott fizetési "
+ "jegyzék az visszatérítési fizetési jegyzék."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__active
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__active
+ msgid ""
+ "If the active field is set to false, it will allow you to hide the salary "
+ "rule without removing it."
+ msgstr ""
+ "Ha az aktív mező hamisra állított, akkor lehetővé teszi a fizetési szabály "
+ "elrejtését annak eltávolítása nélkül."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_in_hr_payroll_community
+ msgid "Indian Payroll"
+ msgstr "Indiai bérszámfejtés"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__credit_note
+ msgid "Indicates this payslip has a refund of another"
+ msgstr ""
+ "Mutatja, hogy ennek a fizetési jegyzéknek visszatérítése van a többiből"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Input Data"
+ msgstr "Adatbevitel"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__input_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__input_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Inputs"
+ msgstr "Hozzávalók"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__note
+ msgid "Internal Note"
+ msgstr "Belső jegyzet"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_view_kanban
+ msgid "Is a Blocking Reason?"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__quantity
+ msgid ""
+ "It is used in computation for percentage and fixed amount. For e.g. A rule "
+ "for Meal Voucher having fixed amount of 1€ per worked day can have its "
+ "quantity defined in expression like worked_days.WORK100.number_of_days."
+ msgstr ""
+ "Ezt használja a százalékos és a fix ár számítására. Például, az Ebéd jegy-"
+ "nek fix ára van, aminek 1€ per munkanap lehet  meghatározva mint "
+ "ledolgozott_napok.WORK100.napok_száma."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__amount
+ msgid ""
+ "It is used in computation. For e.g. A rule for sales having 1% commission of"
+ " basic salary for per product can defined in expression like result = "
+ "inputs.SALEURO.amount * contract.wage*0.01."
+ msgstr ""
+ "Egy számításhoz használja. Például, egy szabály az értékesítéshez 1% "
+ "jutalékot ad az alap eladásra egy terméknél akkor a ennek a kifejezésnek a "
+ "végeredménye = inputs.SALEURO.amount * contract.wage*0.01.  -  "
+ "bevitt.ELADÁSIEURO.összeg * szerződés.fizetés*0.01."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails____last_update
+ msgid "Last Modified on"
+ msgstr "Legutóbb frissítve"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__write_uid
+ msgid "Last Updated by"
+ msgstr "Legutóbb frissítette"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__write_date
+ msgid "Last Updated on"
+ msgstr "Legutóbb frissítve "
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule_category__parent_id
+ msgid ""
+ "Linking a salary category to its parent is used only for the reporting "
+ "purpose."
+ msgstr ""
+ "A fizetési kategória szülőhöz való csatolása csak jelentés készítéshez "
+ "használt."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__lower_bound
+ msgid "Lower Bound"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract_advantage_template__lower_bound
+ msgid "Lower bound authorized by the employer for this advantage"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__paid
+ msgid "Made Payment Order ? "
+ msgstr "Fizetési meghagyás létrehozása? "
+ 
+ #. module: hr_payroll_community
+ #: model:res.groups,name:hr_payroll_community.group_hr_payroll_community_manager
+ msgid "Manager"
+ msgstr "Menedzser"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range_max
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range_max
+ msgid "Maximum Range"
+ msgstr "Maximum kiterjedés"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_meal_voucher
+ msgid "Meal Voucher"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range_min
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range_min
+ msgid "Minimum Range"
+ msgstr "Minimum tartomány"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Miscellaneous"
+ msgstr "Egyéb"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Monthly"
+ msgstr "Havi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__name
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Name"
+ msgstr "Név"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.NET
+ msgid "Net"
+ msgstr "Nettó"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_net
+ msgid "Net Salary"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:201
+ #, python-format
+ msgid "Normal Working Days paid at 100%"
+ msgstr "Normál munkanap 100%-an fizetve"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_form
+ msgid "Notes"
+ msgstr "Megjegyzések"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__number_of_days
+ msgid "Number of Days"
+ msgstr "Napok száma"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__number_of_hours
+ msgid "Number of Hours"
+ msgstr "Órák száma"
+ 
+ #. module: hr_payroll_community
+ #: model:res.groups,name:hr_payroll_community.group_hr_payroll_community_user
+ msgid "Officer"
+ msgstr "Hivatalnok"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Other Inputs"
+ msgstr "Egyéb bevitel"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__parent_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__parent_id
+ msgid "Parent"
+ msgstr "Szülő"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__parent_rule_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__parent_rule_id
+ msgid "Parent Salary Rule"
+ msgstr "Szülö fizetési szabályok"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__partner_id
+ msgid "Partner"
+ msgstr "Partner"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__payslip_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__slip_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__payslip_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Pay Slip"
+ msgstr "Fizetési jegyzék"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "PaySlip Batch"
+ msgstr "Fizetési jegyzék köteg"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.payslip_details_report
+ msgid "PaySlip Details"
+ msgstr "Fizetési jegyzék részletei"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_payslip_lines_contribution_register
+ msgid "PaySlip Lines"
+ msgstr "Fizetési jegyzék sor"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.action_contribution_register
+ msgid "PaySlip Lines By Conribution Register"
+ msgstr "Fizetési jegyzék a Hozzájárulások iktatása szerint"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "PaySlip Lines by Contribution Register"
+ msgstr "Fizetési jegyzék sorok közreműködő nyilvántartókként"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "PaySlip Name"
+ msgstr "Fizetési jegyzék neve"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.open_payroll_modules
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_root
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll"
+ msgstr "Bérszámfejtés"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_report_hr_payroll_community_report_contributionregister
+ msgid "Payroll Contribution Register Report"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll Entries"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_filter
+ msgid "Payroll Structures"
+ msgstr "Fizetési jegyzék szerkezet"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll rules that apply to your country"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.action_report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Payslip"
+ msgstr "Fizetési jegyzék"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:82
+ #, python-format
+ msgid "Payslip 'Date From' must be earlier 'Date To'."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_run
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__payslip_run_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Payslip Batches"
+ msgstr "Fizetési jegyzék kötegek"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_payslip_lines
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__payslip_count
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Payslip Computation Details"
+ msgstr "Fizetési jegyzék számításának részletei"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_employee__payslip_count
+ msgid "Payslip Count"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_report_hr_payroll_community_report_payslipdetails
+ msgid "Payslip Details Report"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_input
+ msgid "Payslip Input"
+ msgstr "Fizetési jegyzék adatbevitel"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__input_line_ids
+ msgid "Payslip Inputs"
+ msgstr "Fizetési jegyzék bevitel"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_line
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_form
+ msgid "Payslip Line"
+ msgstr "Fizetési jegyzék sor"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_contribution_reg_payslip_lines
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__line_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Payslip Lines"
+ msgstr "Fizetési jegyzék sorai"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Payslip Lines by Contribution Register"
+ msgstr "Bérjegyzék tételsorok, közreműködő nyilvántartókként"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_payslip_lines_contribution_register
+ msgid "Payslip Lines by Contribution Registers"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__name
+ msgid "Payslip Name"
+ msgstr "Bérjegyzék neve"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_worked_days
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__worked_days_line_ids
+ msgid "Payslip Worked Days"
+ msgstr "Fizetési jegyzék ledolgozott napjai"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_hr_employee_payslip_list
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_employee__slip_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__slip_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.payroll_hr_employee_view_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_tree
+ msgid "Payslips"
+ msgstr "Fizetési jegyzékek"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payslip_run_tree
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payslip_run
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_tree
+ msgid "Payslips Batches"
+ msgstr "Fizetési jegyzék kötegek"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid "Payslips by Employees"
+ msgstr "Fizetési jegyzékek alkalmazottak szerint"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_percentage
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_percentage
+ msgid "Percentage (%)"
+ msgstr "Százalék (%)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_percentage_base
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_percentage_base
+ msgid "Percentage based on"
+ msgstr "Százalék ez alapján"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Period"
+ msgstr "Időszak"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Post payroll slips in accounting"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Print"
+ msgstr "Nyomtatás"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_professionaltax1
+ msgid "Professional Tax"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_providentfund1
+ msgid "Provident Fund"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_python_compute
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_python_compute
+ msgid "Python Code"
+ msgstr "Python kód"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_python
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_python
+ msgid "Python Condition"
+ msgstr "Python körülmény"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Python Expression"
+ msgstr "Python kifejezés"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__quantity
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__quantity
+ msgid "Quantity"
+ msgstr "Mennyiség"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "Quantity/Rate"
+ msgstr "Mennyiség / Arány"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Quantity/rate"
+ msgstr "Mennyiség/mérték"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Quarterly"
+ msgstr "Negyedévente"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Range"
+ msgstr "Tartomány"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range
+ msgid "Range Based on"
+ msgstr "Tartomány ez alapján"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__rate
+ msgid "Rate (%)"
+ msgstr "Arány (%)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__number
+ msgid "Reference"
+ msgstr "Hivatkozás"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Refund"
+ msgstr "Visszatérítés"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:102
+ #, python-format
+ msgid "Refund: "
+ msgstr "Visszatérítés: "
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__register_line_ids
+ msgid "Register Line"
+ msgstr "Nyilvántartási sor"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ msgid "Rejected"
+ msgstr "Elutasított"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__salary_rule_id
+ msgid "Rule"
+ msgstr "Szabály"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_form
+ msgid "Salary Categories"
+ msgstr "Fizetési kategóriák"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Salary Computation"
+ msgstr "Bér kiszámítása"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_salary_rule
+ msgid "Salary Rule"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_salary_rule_category
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_salary_rule_category_filter
+ msgid "Salary Rule Categories"
+ msgstr "Fizetési szabály kategóriák"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Salary Rule Category"
+ msgstr "Fizetési kategória szabálya"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_rule_input
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__input_id
+ msgid "Salary Rule Input"
+ msgstr "Fizetés szabály bevitel"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_salary_rule_form
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__rule_ids
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_action_hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_list
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_employee_grade_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Salary Rules"
+ msgstr "Fizetési szabályok"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:403
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:453
+ #, python-format
+ msgid "Salary Slip of %s for %s"
+ msgstr "%s fizetési jegyzéke, időszak: %s"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payroll_community_structure
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__struct_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_tree
+ msgid "Salary Structure"
+ msgstr "Bérszerkezet"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_view_hr_payroll_community_structure_list_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_structure_view
+ msgid "Salary Structures"
+ msgstr "Bérszerkezetek"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__schedule_pay
+ msgid "Scheduled Pay"
+ msgstr "Tervezett fizetés"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Search Payslip Batches"
+ msgstr "Fizetési jegyzék kötegek keresése"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Search Payslip Lines"
+ msgstr "Fizetési jegyzék sorok keresése"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Search Payslips"
+ msgstr "Fizetési jegyzékek keresése"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Search Salary Rule"
+ msgstr "Fizetési szabály keresése"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Semi-annually"
+ msgstr "Félév(enkénti)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__sequence
+ msgid "Sequence"
+ msgstr "Sorszám"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Set to Draft"
+ msgstr "Beállítás tervezetnek"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payroll_community_configuration
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_global_settings
+ msgid "Settings"
+ msgstr "Beállítások"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "States"
+ msgstr "Állapotok"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__state
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__state
+ msgid "Status"
+ msgstr "Állapot"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__struct_id
+ msgid "Structure"
+ msgstr "Szerkezet"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__code
+ msgid ""
+ "The code of salary rules can be used as reference in computation of other "
+ "rules. In that case, it is case sensitive."
+ msgstr ""
+ "A fizetési szabály kódját hivatkozásnak lehet használni a többi szabály "
+ "számításához. Ebben az esetben, ez esetekre érzékeny."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_worked_days__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_rule_input__code
+ msgid "The code that can be used in the salary rules"
+ msgstr "A kód ami használható a fizetési szabályokra"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_select
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_select
+ msgid "The computation method for the rule amount."
+ msgstr "A számítási mód az előírt mennyiségre."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__contract_id
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_worked_days__contract_id
+ msgid "The contract for which applied this input"
+ msgstr "A szerződés amire ezt a bevitelt használja"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range_max
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range_max
+ msgid "The maximum amount, applied for this rule."
+ msgstr "A maximum összeg ami erre a szabályra vonatkozik."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range_min
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range_min
+ msgid "The minimum amount, applied for this rule."
+ msgstr "A minimum mennyiség, amit erre a szabályra alkalmaz."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range
+ msgid ""
+ "This will be used to compute the % fields values; in general it is on basic,"
+ " but you can also use categories code fields in lowercase as a variable "
+ "names (hra, ma, lta, etc.) and the variable basic."
+ msgstr ""
+ "Ez a % mező értékeinek a számítására használt; általánosan ez van alapban, "
+ "de tud kategorizált kód mezőket is használni kisbetűvel mint változó nevek "
+ "(hra, ma, lta, stb.) és az alap  változókat."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__total
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Total"
+ msgstr "Összesen"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Total Working Days"
+ msgstr "Összes munka nap"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__upper_bound
+ msgid "Upper Bound"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract_advantage_template__upper_bound
+ msgid "Upper bound authorized by the employer for this advantage"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__sequence
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__sequence
+ msgid "Use to arrange calculation sequence"
+ msgstr "Számítási sorrend beállítására szolgál"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__appears_on_payslip
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__appears_on_payslip
+ msgid "Used to display the salary rule on payslip."
+ msgstr "A fizetési szabály fizetési jegyzéken történő kijelzésére használt."
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ msgid "Waiting"
+ msgstr "Várakozó"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Weekly"
+ msgstr "Hetente"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Day"
+ msgstr "Ledolgozott nap"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Days"
+ msgstr "Ledolgozott nap"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Days & Inputs"
+ msgstr "Ledolgozott napok és adatbevitelek"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__resource_calendar_id
+ msgid "Working Schedule"
+ msgstr "Munkabeosztás"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:211
+ #, python-format
+ msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+ msgstr ""
+ "Nem megfelelően lett a százalék alapja vagy mennyisége meghatározva ennek a "
+ "fizetési szabálynak %s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:217
+ #, python-format
+ msgid "Wrong python code defined for salary rule %s (%s)."
+ msgstr "Téves python kód meghatározás erre a fizetési szabályra %s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:240
+ #, python-format
+ msgid "Wrong python condition defined for salary rule %s (%s)."
+ msgstr "Téves python feltétel meghatározás erre a fizetési szabályra %s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:204
+ #, python-format
+ msgid "Wrong quantity defined for salary rule %s (%s)."
+ msgstr ""
+ "Nem megfelelően lett a mennyisége meghatározva ennek a fizetési szabálynak "
+ "%s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:234
+ #, python-format
+ msgid "Wrong range condition defined for salary rule %s (%s)."
+ msgstr ""
+ "Rosszúl lett a tartomány meghatározva ehhez a fizetési szabályhoz %s (%s)."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:36
+ #, python-format
+ msgid "You cannot create a recursive salary structure."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:127
+ #, python-format
+ msgid "You cannot delete a payslip which is not draft or cancelled!"
+ msgstr ""
+ "Nem tud olyan fizetési jegyzéket törölni mely nem tervezet vagy visszavont!"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/wizard/hr_payroll_community_payslips_by_employees.py:24
+ #, python-format
+ msgid "You must select employee(s) to generate payslip(s)."
+ msgstr ""
+ "Alkalmazotta(ka)t kell kiválasztani a fizetési jegyzék(ek) generálásához."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:525
+ #, python-format
+ msgid "You must set a contract to create a payslip line."
+ msgstr ""
+ "Ki kell választania egy szerződést a fizetési jegyzék tételsor "
+ "létrehozásához."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_percentage_base
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_percentage_base
+ msgid "result will be affected to a variable"
+ msgstr "az eredmény egy változóhoz lesz rendelve"
+ 

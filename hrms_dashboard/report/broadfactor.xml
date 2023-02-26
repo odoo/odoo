@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_broadfactor">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Broad Factor Report</h2>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th></th>
+                                <th class="text-right">Broad Factor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="lines" t-as="line">
+                                <t t-if="line['broad_factor']">
+                                    <t t-set="broad_factor" t-value="line['broad_factor']"/>
+                                </t>
+                                <t t-if="not line['broad_factor']">
+                                    <t t-set="broad_factor" t-value="0"/>
+                                </t>
+                                <td>
+                                    <span t-esc="line['name']"/>
+                                </td>
+                                <td></td>
+                                <td class="text-right">
+                                    <span t-esc="broad_factor"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+    
+          <record id="action_report_broad_factor" model="ir.actions.report">
+            <field name="name">Broad Factor</field>
+            <field name="model">hr.employee.broad.factor</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hrms_dashboard.report_broadfactor</field>
+            <field name="report_file">hrms_dashboard.report_broadfactor</field>
+        </record>
+
+
+</odoo>

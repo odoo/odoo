@@ -1,0 +1,1651 @@
+# Translation of Odoo Server.
+ # This file contains the translation of the following modules:
+ # * hr_payroll_community_v13
+ # 
+ # Translators:
+ # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
+ # falexandresilva <falexandresilva@gmail.com>, 2018
+ # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
+ # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+ # danimaribeiro <danimaribeiro@gmail.com>, 2018
+ # Martin Trigaux, 2018
+ # Mateus Lopes <mateus1@gmail.com>, 2018
+ # grazziano <gra.negocia@gmail.com>, 2018
+ # Silmar <pinheirosilmar@gmail.com>, 2018
+ # 
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: Odoo Server 13.0\n"
+ "Report-Msgid-Bugs-To: \n"
+ "POT-Creation-Date: 2019-01-09 10:31+0000\n"
+ "PO-Revision-Date: 2018-08-24 09:19+0000\n"
+ "Last-Translator: Silmar <pinheirosilmar@gmail.com>, 2018\n"
+ "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: \n"
+ "Language: pt_BR\n"
+ "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:42
+ #, python-format
+ msgid "%s (copy)"
+ msgstr "%s (copy)"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip__state
+ msgid ""
+ "* When the payslip is created the status is 'Draft'\n"
+ "                \n"
+ "* If the payslip is under verification, the status is 'Waiting'.\n"
+ "                \n"
+ "* If the payslip is confirmed then status is set to 'Done'.\n"
+ "                \n"
+ "* When user cancel payslip the status is 'Rejected'."
+ msgstr ""
+ "* Quando o holerite é criado o estado é 'Provisório'.\n"
+ "* Se o holerite está sob verificação, a situação 'Aguardando'.\n"
+ "* Se o holerite é confirmado em seguida a situação é definida como 'Concluído'.\n"
+ "* Quando o usuário cancelar o holerite a situação é 'Rejeitado'."
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.res_config_settings_view_form
+ msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_by_employees
+ msgid ""
+ "<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+ " selected employee(s) based on the dates and credit note specified on "
+ "Payslips Run.</span>"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Address</strong>"
+ msgstr "<strong>Endereço</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Authorized signature</strong>"
+ msgstr "<strong>Assinatura autorizada</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Bank Account</strong>"
+ msgstr "<strong>Conta Bancária</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ msgid "<strong>Date From:</strong>"
+ msgstr "<strong>Data De:</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Date From</strong>"
+ msgstr "<strong>Data De</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ msgid "<strong>Date To:</strong>"
+ msgstr "<strong>Data Para:</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Date To</strong>"
+ msgstr "<strong>Data Para</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Designation</strong>"
+ msgstr "<strong>Designação</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Email</strong>"
+ msgstr "<strong>E-mail</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Identification No</strong>"
+ msgstr "<strong>No de Identificação</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Name</strong>"
+ msgstr "<strong>Nome</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "<strong>Reference</strong>"
+ msgstr "<strong>Referência</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ msgid "<strong>Register Name:</strong>"
+ msgstr "<strong>Nome de Registro:</strong>"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ msgid "<strong>Total</strong>"
+ msgstr "Total"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.actions.act_window,help:hr_payroll_community_v13.action_contribution_register_form
+ msgid ""
+ "A contribution register is a third party involved in the salary\n"
+ "            payment of the employees. It can be the social security, the\n"
+ "            state or anyone that collect or inject money on payslips."
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_res_config_settings__module_account_accountant
+ msgid "Account Accountant"
+ msgstr "Contador Conta"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.res_config_settings_view_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Accounting"
+ msgstr "Contabilidade"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Accounting Information"
+ msgstr "Informação Contábil"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__active
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__active
+ msgid "Active"
+ msgstr "Ativo"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.actions.act_window,help:hr_payroll_community_v13.action_contribution_register_form
+ msgid "Add a new contribution register"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Add an internal note..."
+ msgstr "Adicionar nota interna..."
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_contract_advantage_template_view_form
+ msgid "Advantage Name"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.act_children_salary_rules
+ msgid "All Children Rules"
+ msgstr "Todas as Regras Subordinadas"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule.category,name:hr_payroll_community_v13.ALW
+ msgid "Allowance"
+ msgstr "Abono"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Always True"
+ msgstr "Sempre Verdadeiro"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__amount
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__amount
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "Amount"
+ msgstr "Montante"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__amount_select
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__amount_select
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_filter
+ msgid "Amount Type"
+ msgstr "Tipo de Montante"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Annually"
+ msgstr "Anual"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__appears_on_payslip
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__appears_on_payslip
+ msgid "Appears on Payslip"
+ msgstr "Aparece em Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__condition_python
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__condition_python
+ msgid ""
+ "Applied this rule for calculation if condition is true. You can specify "
+ "condition like basic > 1000."
+ msgstr ""
+ "Aplicada esta regra para o cálculo se a condição é verdadeira. Você pode "
+ "especificar como condição básica> 1000."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule.category,name:hr_payroll_community_v13.BASIC
+ msgid "Basic"
+ msgstr "Básico"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_rule_basic
+ msgid "Basic Salary"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_res_config_settings__module_l10n_be_hr_payroll_community
+ msgid "Belgium Payroll"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Bi-monthly"
+ msgstr "Bimestral"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Bi-weekly"
+ msgstr "Quinzenal"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_form
+ msgid "Calculations"
+ msgstr "Cálculos"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_payslip_lines_contribution_register
+ msgid "Cancel"
+ msgstr "Cancelar"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Cancel Payslip"
+ msgstr "Cancelar Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:96
+ #, python-format
+ msgid "Cannot cancel a payslip that is done."
+ msgstr "Não é possível cancelar um holerite que está feito."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__category_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__category_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_rule_filter
+ msgid "Category"
+ msgstr "Categoria"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ msgid "Child Rules"
+ msgstr "Regras Subordinadas"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__child_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__child_ids
+ msgid "Child Salary Rule"
+ msgstr "Regra de Salário Subordinado"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__children_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__children_ids
+ msgid "Children"
+ msgstr "Filhos"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ msgid "Children Definition"
+ msgstr "Definição do subdiretório"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.res_config_settings_view_form
+ msgid "Choose a Payroll Localization"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip.run,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_form
+ msgid "Close"
+ msgstr "Fechar"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__code
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__code
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__code
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__code
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__code
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__code
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__code
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "Code"
+ msgstr "Código"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payroll_community_structure_view_kanban
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_view_kanban
+ msgid "Code:"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ msgid "Companies"
+ msgstr "Empresas"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__company_id
+ msgid "Company"
+ msgstr "Empresa"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule.category,name:hr_payroll_community_v13.COMP
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ msgid "Company Contribution"
+ msgstr "Contribuição da Empresa"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ msgid "Computation"
+ msgstr "Calcular"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Compute Sheet"
+ msgstr "Calcular Folha"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__condition_select
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__condition_select
+ msgid "Condition Based on"
+ msgstr "Com base na condição"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ msgid "Conditions"
+ msgstr "Condições"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_res_config_settings
+ msgid "Config Settings"
+ msgstr "Ajuste de configurações"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_hr_payroll_community_configuration
+ msgid "Configuration"
+ msgstr "Configuração"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Confirm"
+ msgstr "Confirmar"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__contract_id
+ msgid "Contract"
+ msgstr "Contrato"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.hr_contract_advantage_template_action
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.hr_contract_advantage_template_menu_action
+ msgid "Contract Advantage Templates"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_contribution_register_form
+ msgid "Contribution"
+ msgstr "Contribuição"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_contribution_register
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__register_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__register_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_filter
+ msgid "Contribution Register"
+ msgstr "Contribuição do Registro"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_payslip_lines_contribution_register
+ msgid "Contribution Register's Payslip Lines"
+ msgstr "Contribuição para Registrar linhas dos Holerites"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_contribution_register_form
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_action_hr_contribution_register_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_contribution_register_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_contribution_register_tree
+ msgid "Contribution Registers"
+ msgstr "Registro de Contribuição"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_salary_rule_convanceallowance1
+ msgid "Conveyance Allowance"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_salary_rule_ca_gravie
+ msgid "Conveyance Allowance For Gravie"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_employees__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register__create_uid
+ msgid "Created by"
+ msgstr "Criado por"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_employees__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register__create_date
+ msgid "Created on"
+ msgstr "Criado em"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__credit_note
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__credit_note
+ msgid "Credit Note"
+ msgstr "Anotação de crédito"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__date_from
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__date_start
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register__date_from
+ msgid "Date From"
+ msgstr "Data de"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__date_to
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__date_end
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register__date_to
+ msgid "Date To"
+ msgstr "Dados do Pará"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule.category,name:hr_payroll_community_v13.DED
+ msgid "Deduction"
+ msgstr "Dedução"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__default_value
+ msgid "Default value for this advantage"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_contract__schedule_pay
+ msgid "Defines the frequency of the wage payment."
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip__struct_id
+ msgid ""
+ "Defines the rules that have to be applied to this payslip, accordingly to "
+ "the contract chosen. If you let empty the field contract, this field isn't "
+ "mandatory anymore and thus the rules applied will be all the rules set on "
+ "the structure of all contracts of the employee valid for the chosen period"
+ msgstr ""
+ "Define as regras que têm de ser aplicadas a este holerite, de acordo com o "
+ "contrato escolhido. Se você deixar em branco o campo contrato, este campo "
+ "não é obrigatório e, portanto, as regras aplicadas serão as regras definidas"
+ " na estrutura de todos os contratos do funcionário válida para o período "
+ "escolhido"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__note
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__note
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__note
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__note
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__note
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_contribution_register_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ msgid "Description"
+ msgstr "Descrição"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Details By Salary Rule Category"
+ msgstr "Detalhes por Categoria de Regra de Salário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__details_by_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "Details by Salary Rule Category"
+ msgstr "Detalhes por Categoria de Regras de Salário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_employees__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_report_hr_payroll_community_report_contributionregister__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_report_hr_payroll_community_report_payslipdetails__display_name
+ msgid "Display Name"
+ msgstr "Nome exibido"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ msgid "Done"
+ msgstr "Concluído"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_filter
+ msgid "Done Payslip Batches"
+ msgstr "Lotes de Holerites Concluídos"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ msgid "Done Slip"
+ msgstr "Holerite Concluído"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ msgid "Draft"
+ msgstr "Provisório"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_filter
+ msgid "Draft Payslip Batches"
+ msgstr "Lotes de Holerites Provisórios"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ msgid "Draft Slip"
+ msgstr "Holerites Provisórios"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_employee
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__employee_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__employee_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Employee"
+ msgstr "Funcionário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_contract
+ msgid "Employee Contract"
+ msgstr "Contrato do Funcionário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_employee_grade_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payroll_community_structure_list_view
+ msgid "Employee Function"
+ msgstr "Função do Funcionário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_view_hr_payslip_form
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_department_tree
+ msgid "Employee Payslips"
+ msgstr "Holerites do Funcionário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_contract_advantage_template
+ msgid "Employee's Advantage on Contract"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_contract__resource_calendar_id
+ msgid "Employee's working schedule."
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_employees__employee_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_by_employees
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_filter
+ msgid "Employees"
+ msgstr "Funcionários"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:92
+ #, python-format
+ msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:179
+ #, python-format
+ msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__register_id
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__register_id
+ msgid "Eventual third party involved in the salary payment of the employees."
+ msgstr ""
+ "Eventual de terceiros envolvidos no pagamento de salário dos funcionários."
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__amount_fix
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__amount_fix
+ msgid "Fixed Amount"
+ msgstr "Quantidade fixa"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__amount_percentage
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__amount_percentage
+ msgid "For example, enter 50.0 to apply a percentage of 50%"
+ msgstr "Por exemplo, digite 50.0 para aplicar um percentual de 50%"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/report/report_contribution_register.py:35
+ #, python-format
+ msgid "Form content is missing, this report cannot be printed."
+ msgstr ""
+ "Conteúdo do formulário está em branco, esse relatório não pode ser impresso."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_res_config_settings__module_l10n_fr_hr_payroll_community
+ msgid "French Payroll"
+ msgstr "Folha de Pagamento - França"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ msgid "General"
+ msgstr "Geral"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_by_employees
+ msgid "Generate"
+ msgstr "Gerar"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_hr_payslip_by_employees
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_form
+ msgid "Generate Payslips"
+ msgstr "Gerar Holerites"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_payslip_employees
+ msgid "Generate payslips for all selected employees"
+ msgstr "Gerar holerites para todos os funcionários selecionados"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_salary_rule_sales_commission
+ msgid "Get 1% of sales"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:182
+ #, python-format
+ msgid "Global Leaves"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_rule_taxable
+ #: model:hr.salary.rule.category,name:hr_payroll_community_v13.GROSS
+ msgid "Gross"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_rule_filter
+ msgid "Group By"
+ msgstr "Agrupar Por"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_salary_rule_houserentallowance1
+ msgid "House Rent Allowance"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_employees__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_report_hr_payroll_community_report_contributionregister__id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_report_hr_payroll_community_report_payslipdetails__id
+ msgid "ID"
+ msgstr "ID"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_run__credit_note
+ msgid ""
+ "If its checked, indicates that all payslips generated from here are refund "
+ "payslips."
+ msgstr ""
+ "Se marcado, indica que todos os holerites gerados a partir daqui são "
+ "holerites de reembolso."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__active
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__active
+ msgid ""
+ "If the active field is set to false, it will allow you to hide the salary "
+ "rule without removing it."
+ msgstr ""
+ "Se o campo ativo é definido com falso, ela permitirá que você esconda a "
+ "regra de salário sem removê-lo."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_res_config_settings__module_l10n_in_hr_payroll_community
+ msgid "Indian Payroll"
+ msgstr "Folha de pagamento (Índia)"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip__credit_note
+ msgid "Indicates this payslip has a refund of another"
+ msgstr "Indica que este holerite tem um reembolso de outro"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Input Data"
+ msgstr "Dados de Entrada"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__input_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__input_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ msgid "Inputs"
+ msgstr "Entradas"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__note
+ msgid "Internal Note"
+ msgstr "Anotação Interna"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_view_kanban
+ msgid "Is a Blocking Reason?"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__quantity
+ msgid ""
+ "It is used in computation for percentage and fixed amount. For e.g. A rule "
+ "for Meal Voucher having fixed amount of 1€ per worked day can have its "
+ "quantity defined in expression like worked_days.WORK100.number_of_days."
+ msgstr ""
+ "Ele é usado no cálculo da percentagem e, por uma porcentagem de valor fixo ."
+ " Por exemplo A regra vale-refeição para ter valor fixo de R$ 10 por dia de "
+ "trabalho pode ter sua quantidade definida na expressão como "
+ "worked_days.WORK100.number_of_days."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_input__amount
+ msgid ""
+ "It is used in computation. For e.g. A rule for sales having 1% commission of"
+ " basic salary for per product can defined in expression like result = "
+ "inputs.SALEURO.amount * contract.wage*0.01."
+ msgstr ""
+ "É utilizado no cálculo. Para por exemplo, A regra para as vendas com "
+ "comissão de 1% do salário base por produto podem definido na expressão como "
+ "resultado = inputs.SALEURO.amount * contract.wage * 0,01."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_employees____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_report_hr_payroll_community_report_contributionregister____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_report_hr_payroll_community_report_payslipdetails____last_update
+ msgid "Last Modified on"
+ msgstr "Última modificação em"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_employees__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register__write_uid
+ msgid "Last Updated by"
+ msgstr "Última atualização por"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_employees__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_payslip_lines_contribution_register__write_date
+ msgid "Last Updated on"
+ msgstr "Última atualização em"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule_category__parent_id
+ msgid ""
+ "Linking a salary category to its parent is used only for the reporting "
+ "purpose."
+ msgstr ""
+ "Ligando uma categoria de salário para seu diretório é usado apenas para fins"
+ " de relatórios."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__lower_bound
+ msgid "Lower Bound"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_contract_advantage_template__lower_bound
+ msgid "Lower bound authorized by the employer for this advantage"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__paid
+ msgid "Made Payment Order ? "
+ msgstr "Feito Ordem de Pagamento? "
+ 
+ #. module: hr_payroll_community_v13
+ #: model:res.groups,name:hr_payroll_community_v13.group_hr_payroll_community_manager
+ msgid "Manager"
+ msgstr "Gerente"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__condition_range_max
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__condition_range_max
+ msgid "Maximum Range"
+ msgstr "Faixa Máxima"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_salary_rule_meal_voucher
+ msgid "Meal Voucher"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__condition_range_min
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__condition_range_min
+ msgid "Minimum Range"
+ msgstr "Faixa Mínima"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Miscellaneous"
+ msgstr "Diversos"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Monthly"
+ msgstr "Mensal"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__name
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__name
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "Name"
+ msgstr "Nome"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule.category,name:hr_payroll_community_v13.NET
+ msgid "Net"
+ msgstr "Líquido"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_rule_net
+ msgid "Net Salary"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:201
+ #, python-format
+ msgid "Normal Working Days paid at 100%"
+ msgstr "Dias normais trabalhados pagos 100%"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_category_form
+ msgid "Notes"
+ msgstr "Observações"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__number_of_days
+ msgid "Number of Days"
+ msgstr "Numero de dias"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__number_of_hours
+ msgid "Number of Hours"
+ msgstr "Número de Horas"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:res.groups,name:hr_payroll_community_v13.group_hr_payroll_community_user
+ msgid "Officer"
+ msgstr "Oficial"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Other Inputs"
+ msgstr "Outras Entradas"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__parent_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule_category__parent_id
+ msgid "Parent"
+ msgstr "Superior (Conta-pai)"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__parent_rule_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__parent_rule_id
+ msgid "Parent Salary Rule"
+ msgstr "Regra de Salário Principal"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__partner_id
+ msgid "Partner"
+ msgstr "Parceiro"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_payslip
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__payslip_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__slip_id
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__payslip_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "Pay Slip"
+ msgstr "Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ msgid "PaySlip Batch"
+ msgstr "Lote de Holerites"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.report,name:hr_payroll_community_v13.payslip_details_report
+ msgid "PaySlip Details"
+ msgstr "Detalhes holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_payslip_lines_contribution_register
+ msgid "PaySlip Lines"
+ msgstr "Linhas do Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.report,name:hr_payroll_community_v13.action_contribution_register
+ msgid "PaySlip Lines By Conribution Register"
+ msgstr "Holerites por linhas de Contribuições Registrada"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ msgid "PaySlip Lines by Contribution Register"
+ msgstr "Linhas do Holerite por Contribuição de Registro"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ msgid "PaySlip Name"
+ msgstr "Nome do Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.open_payroll_modules
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_hr_payroll_community_root
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.res_config_settings_view_form
+ msgid "Payroll"
+ msgstr "Folha de Pagamento"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_report_hr_payroll_community_report_contributionregister
+ msgid "Payroll Contribution Register Report"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.res_config_settings_view_form
+ msgid "Payroll Entries"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payroll_community_structure_filter
+ msgid "Payroll Structures"
+ msgstr "Estruturas de folha de pagamento"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.res_config_settings_view_form
+ msgid "Payroll rules that apply to your country"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.report,name:hr_payroll_community_v13.action_report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Payslip"
+ msgstr "Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:82
+ #, python-format
+ msgid "Payslip 'Date From' must be earlier 'Date To'."
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_payslip_run
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__payslip_run_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_filter
+ msgid "Payslip Batches"
+ msgstr "Lotes holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.act_payslip_lines
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__payslip_count
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Payslip Computation Details"
+ msgstr "Detalhes do Cálculo de Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_employee__payslip_count
+ msgid "Payslip Count"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_report_hr_payroll_community_report_payslipdetails
+ msgid "Payslip Details Report"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_payslip_input
+ msgid "Payslip Input"
+ msgstr "Entrada de Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__input_line_ids
+ msgid "Payslip Inputs"
+ msgstr "Entradas de Holerites"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_payslip_line
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_form
+ msgid "Payslip Line"
+ msgstr "Linha de Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.act_contribution_reg_payslip_lines
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__line_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_filter
+ msgid "Payslip Lines"
+ msgstr "Linhas do Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "Payslip Lines by Contribution Register"
+ msgstr "Linhas de Recibo de Pagamento por Contribuição Registrar"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_payslip_lines_contribution_register
+ msgid "Payslip Lines by Contribution Registers"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__name
+ msgid "Payslip Name"
+ msgstr "Nome Recibo de Pagamento"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_payslip_worked_days
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__worked_days_line_ids
+ msgid "Payslip Worked Days"
+ msgstr "Holerites de Dias Trabalhados"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.act_hr_employee_payslip_list
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_employee__slip_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__slip_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.payroll_hr_employee_view_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_tree
+ msgid "Payslips"
+ msgstr "Holerites"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_hr_payslip_run_tree
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_hr_payslip_run
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_tree
+ msgid "Payslips Batches"
+ msgstr "Lote de Holerites"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_by_employees
+ msgid "Payslips by Employees"
+ msgstr "Holerites por Funcionários"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__amount_percentage
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__amount_percentage
+ msgid "Percentage (%)"
+ msgstr "Porcentagem (%)"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__amount_percentage_base
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__amount_percentage_base
+ msgid "Percentage based on"
+ msgstr "Porcentagem baseada na"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Period"
+ msgstr "Período"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.res_config_settings_view_form
+ msgid "Post payroll slips in accounting"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_payslip_lines_contribution_register
+ msgid "Print"
+ msgstr "Imprimir"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_salary_rule_professionaltax1
+ msgid "Professional Tax"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:hr.salary.rule,name:hr_payroll_community_v13.hr_salary_rule_providentfund1
+ msgid "Provident Fund"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__amount_python_compute
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__amount_python_compute
+ msgid "Python Code"
+ msgstr "Código python"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__condition_python
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__condition_python
+ msgid "Python Condition"
+ msgstr "Condição Python"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Python Expression"
+ msgstr "Expressão Python"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__quantity
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__quantity
+ msgid "Quantity"
+ msgstr "Quantidade"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ msgid "Quantity/Rate"
+ msgstr "Quantidade / Taxa"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "Quantity/rate"
+ msgstr "Quantidade / taxa"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Quarterly"
+ msgstr "Trimestralmente"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Range"
+ msgstr "Intervalo"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__condition_range
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__condition_range
+ msgid "Range Based on"
+ msgstr "Com base na Faixa de"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__rate
+ msgid "Rate (%)"
+ msgstr "Taxa (%)"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__code
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__number
+ msgid "Reference"
+ msgstr "Referência"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Refund"
+ msgstr "Devolução"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:102
+ #, python-format
+ msgid "Refund: "
+ msgstr "Reembolso: "
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contribution_register__register_line_ids
+ msgid "Register Line"
+ msgstr "Registrar Linha"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip,state:0
+ msgid "Rejected"
+ msgstr "Rejeitado"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__salary_rule_id
+ msgid "Rule"
+ msgstr "Regra"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_category_form
+ msgid "Salary Categories"
+ msgstr "Categorias de Salário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Salary Computation"
+ msgstr "Calculo do Salário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_salary_rule
+ msgid "Salary Rule"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_hr_salary_rule_category
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_hr_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_category_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_salary_rule_category_filter
+ msgid "Salary Rule Categories"
+ msgstr "Categoria de Regras de Salário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_filter
+ msgid "Salary Rule Category"
+ msgstr "Salário Categoria Rule"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_rule_input
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_rule_input__input_id
+ msgid "Salary Rule Input"
+ msgstr "Regra de Entrada de Salário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_salary_rule_form
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payroll_community_structure__rule_ids
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_action_hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_list
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_salary_rule_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_employee_grade_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_rule_filter
+ msgid "Salary Rules"
+ msgstr "Regras de Salários"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:403
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:453
+ #, python-format
+ msgid "Salary Slip of %s for %s"
+ msgstr "Folha de Pagamento de %s para %s"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model,name:hr_payroll_community_v13.model_hr_payroll_community_structure
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract__struct_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payroll_community_structure_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_tree
+ msgid "Salary Structure"
+ msgstr "Estrutura do Salário"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_view_hr_payroll_community_structure_list_form
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_hr_payroll_community_structure_view
+ msgid "Salary Structures"
+ msgstr "Estrutura de Salários"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract__schedule_pay
+ msgid "Scheduled Pay"
+ msgstr "Pagamento Agendado"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_filter
+ msgid "Search Payslip Batches"
+ msgstr "Procurar Lote de Holerites"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_line_filter
+ msgid "Search Payslip Lines"
+ msgstr "Linhas de Pesquisa do Holerite"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ msgid "Search Payslips"
+ msgstr "Procurar Holerites"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_rule_filter
+ msgid "Search Salary Rule"
+ msgstr "Pesquisa de Regra de Salário"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Semi-annually"
+ msgstr "Semestralmente"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_input__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_worked_days__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_salary_rule__sequence
+ msgid "Sequence"
+ msgstr "Seqüência"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Set to Draft"
+ msgstr "Definir como Provisório"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.actions.act_window,name:hr_payroll_community_v13.action_hr_payroll_community_configuration
+ #: model:ir.ui.menu,name:hr_payroll_community_v13.menu_hr_payroll_community_global_settings
+ msgid "Settings"
+ msgstr "Configurações"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_filter
+ msgid "States"
+ msgstr "Situações"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__state
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_run__state
+ msgid "Status"
+ msgstr "Situação"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip__struct_id
+ msgid "Structure"
+ msgstr "Estrutura"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__code
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__code
+ msgid ""
+ "The code of salary rules can be used as reference in computation of other "
+ "rules. In that case, it is case sensitive."
+ msgstr ""
+ "O código de regras salariais podem ser usados como referência no cálculo de "
+ "outras regras. Nesse caso, ele diferencia maiúsculas de minúsculas."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_input__code
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_worked_days__code
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_rule_input__code
+ msgid "The code that can be used in the salary rules"
+ msgstr "O código que pode ser usado nas regras de salários"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__amount_select
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__amount_select
+ msgid "The computation method for the rule amount."
+ msgstr "O método de cálculo para a quantidade de regras."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_input__contract_id
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_worked_days__contract_id
+ msgid "The contract for which applied this input"
+ msgstr "O contrato a que se aplica esta entrada"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__condition_range_max
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__condition_range_max
+ msgid "The maximum amount, applied for this rule."
+ msgstr "A quantidade máxima, aplicada para esta regra."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__condition_range_min
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__condition_range_min
+ msgid "The minimum amount, applied for this rule."
+ msgstr "A quantidade mínima, aplicada para esta regra"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__condition_range
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__condition_range
+ msgid ""
+ "This will be used to compute the % fields values; in general it is on basic,"
+ " but you can also use categories code fields in lowercase as a variable "
+ "names (hra, ma, lta, etc.) and the variable basic."
+ msgstr ""
+ "Isso será usado para calcular os valores de campos %  em geral é básico, mas"
+ " você também pode usar os campos de código de categorias em letras "
+ "minúsculas como um nomes de variáveis ​​(HRA, ma, lta, etc) e básicos "
+ "variável."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_payslip_line__total
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.report_payslipdetails
+ msgid "Total"
+ msgstr "Total"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Total Working Days"
+ msgstr "Total de Dias de Trabalhados"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract_advantage_template__upper_bound
+ msgid "Upper Bound"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_contract_advantage_template__upper_bound
+ msgid "Upper bound authorized by the employer for this advantage"
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__sequence
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__sequence
+ msgid "Use to arrange calculation sequence"
+ msgstr "Usar para organizar seqüência de cálculo"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__appears_on_payslip
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__appears_on_payslip
+ msgid "Used to display the salary rule on payslip."
+ msgstr "Usado para mostrar a regra do salário no holerite."
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.payslip,state:0
+ msgid "Waiting"
+ msgstr "Aguardando"
+ 
+ #. module: hr_payroll_community_v13
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Weekly"
+ msgstr "Semanalmente"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Worked Day"
+ msgstr "Dia Trabalhado"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Worked Days"
+ msgstr "Dias trabalhados :"
+ 
+ #. module: hr_payroll_community_v13
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community_v13.view_hr_payslip_form
+ msgid "Worked Days & Inputs"
+ msgstr "Dias Trabalhados & Entradas"
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,field_description:hr_payroll_community_v13.field_hr_contract__resource_calendar_id
+ msgid "Working Schedule"
+ msgstr "Horário de Trabalho"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:211
+ #, python-format
+ msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+ msgstr ""
+ "Percentual base errada ou quantidade definida para a regra salário %s (%s)."
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:217
+ #, python-format
+ msgid "Wrong python code defined for salary rule %s (%s)."
+ msgstr "Código Python errado definido para a regra de salário %s (%s)."
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:240
+ #, python-format
+ msgid "Wrong python condition defined for salary rule %s (%s)."
+ msgstr "Condição python errada definida para a regra de salário %s (%s)."
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:204
+ #, python-format
+ msgid "Wrong quantity defined for salary rule %s (%s)."
+ msgstr "Quantidade errada definida para a regra de salário %s (%s)."
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:234
+ #, python-format
+ msgid "Wrong range condition defined for salary rule %s (%s)."
+ msgstr ""
+ "Condição de intervalo errada definido para a regra de salário %s (%s)."
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_salary_rule.py:36
+ #, python-format
+ msgid "You cannot create a recursive salary structure."
+ msgstr ""
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:127
+ #, python-format
+ msgid "You cannot delete a payslip which is not draft or cancelled!"
+ msgstr ""
+ "Você não pode excluir um holerite que não está como provisório ou cancelado!"
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/wizard/hr_payroll_community_payslips_by_employees.py:24
+ #, python-format
+ msgid "You must select employee(s) to generate payslip(s)."
+ msgstr "Você precisa selecionar o funcionário para gerar o holerite."
+ 
+ #. module: hr_payroll_community_v13
+ #: code:addons/hr_payroll_community_v13/models/hr_payslip.py:525
+ #, python-format
+ msgid "You must set a contract to create a payslip line."
+ msgstr "Você deve definir um contrato para criar uma linha de salários."
+ 
+ #. module: hr_payroll_community_v13
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_payslip_line__amount_percentage_base
+ #: model:ir.model.fields,help:hr_payroll_community_v13.field_hr_salary_rule__amount_percentage_base
+ msgid "result will be affected to a variable"
+ msgstr "resultado irá afetar uma variável"
+ 

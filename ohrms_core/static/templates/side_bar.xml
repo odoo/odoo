@@ -1,0 +1,104 @@
+<templates id="template" xml:space="preserve">
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//Dropdown" position="replace">
+<!--            <li class="dropdown d-flex justify-content-center align-items-center">-->
+<!--                <a class="full" data-bs-toggle="dropdown" data-display="static" href="#" aria-expanded="false">-->
+<!--                    <i class="fa fa-th-large" style="font-size: 18px !important; color: white; margin-top: 3px;"/>-->
+<!--                </a>-->
+<!--                <div class="dropdown-menu fullscreen-menu" role="menu">-->
+<!--                    <div class="search-container form-row align-items-center m-auto mb-5 col-12">-->
+<!--                        <div class="search-input col-md-10 ml-auto mr-auto mb-5"-->
+<!--                             t-on-input="_searchMenusSchedule">-->
+<!--                            <div class="input-group">-->
+<!--                                <div class="input-group-prepend">-->
+<!--                                    <div class="input-group-text">-->
+<!--                                        <i class="fa fa-search"/>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <input type="search"-->
+<!--                                       autocomplete="off"-->
+<!--                                       placeholder="Search menus..."-->
+<!--                                       class="form-control"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="search-results col-md-10 ml-auto mr-auto"/>-->
+<!--                    </div>-->
+
+<!--                    <div class="nav-container">-->
+<!--                        <div class="app-menu">-->
+<!--                            <t t-foreach="menuService.getApps()" t-as="app" t-key="app_index">-->
+<!--                                <a role="menuitem"-->
+<!--                                   t-attf-href="#menu_id={{app.id}}"-->
+<!--                                   class="dropdown-item o_app mt0"-->
+<!--                                   t-att-data-menu-id="app.menuID"-->
+<!--                                   t-att-data-menu-xmlid="app.xmlID"-->
+<!--                                   t-att-data-action-id="app.actionID">-->
+<!--                                    <img t-if="app.webIcon.includes('.png')" t-att-title="app.name"-->
+<!--                                         style="width: 70px !important;height: 70px !important;border-radius: 10px !important;margin: 5px 5px 5px 5px;"-->
+<!--                                         t-attf-src="data:image/png;base64,{{app.webIconData}}"/>-->
+<!--                                         <img t-if="app.webIcon.includes('.svg')" t-att-title="app.name"-->
+<!--                                                   style="width: 70px !important;height: 70px !important;border-radius: 10px !important;margin: 5px 5px 5px 5px;"-->
+<!--                                                   t-attf-src="data:image/svg+xml;base64,{{app.webIconData}}"/>-->
+<!--                                        <b class="a_app_menu_title"><t t-esc="app.name"/>-->
+<!--                                    </b>-->
+<!--                                </a>-->
+<!--                            </t>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </li>-->
+
+
+
+
+                        <li class="dropdown d-flex justify-content-center align-items-center">
+                <a class="full" data-bs-toggle="dropdown" data-display="static"
+                   href="#">
+                    <i class="fa fa-th-large"
+                       style="font-size: 18px !important; color: white; margin-top: 3px;"/>
+                </a>
+                <div class="dropdown-menu fullscreen-menu" role="menu">
+                        <div class="search-container form-row align-items-center m-auto mb-5 col-12">
+                            <div class="search-input col-md-10 ml-auto mr-auto mb-5"
+                                 t-on-input="_searchMenusSchedule">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fa fa-search"/>
+                                            </div>
+                                        </div>
+                                        <input type="search"
+                                               autocomplete="off"
+                                               placeholder="Search menus..."
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                            <div class="search-results col-md-10 ml-auto mr-auto"/>
+                        </div>
+
+                    <div class="nav-container">
+                            <div class="app-menu">
+                                <t t-foreach="menuService.getApps()" t-as="app" t-key="app_index">
+                                          <a role="menuitem"
+                                             t-attf-href="#menu_id={{app.id}}"
+                                             class="dropdown-item o_app mt0"
+                                             t-att-data-menu-id="app.menuID"
+                                             t-att-data-menu-xmlid="app.xmlID"
+                                             t-att-data-action-id="app.actionID">
+                                        <img t-if="app.webIcon.includes('.png')" t-att-title="app.name"
+                                             style="width: 70px !important;height: 70px !important;border-radius: 10px !important;margin: 5px 5px 5px 5px;"
+                                             t-attf-src="data:image/png;base64,{{app.webIconData}}"/>
+                                              <img t-if="app.webIcon.includes('.svg')" t-att-title="app.name"
+                                                   style="width: 70px !important;height: 70px !important;border-radius: 10px !important;margin: 5px 5px 5px 5px;"
+                                                   t-attf-src="data:image/svg+xml;base64,{{app.webIconData}}"/>
+                                              <b class="a_app_menu_title"><t t-esc="app.name"/></b>
+                                    </a>
+
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+            </li>
+        </xpath>
+    </t>
+</templates>

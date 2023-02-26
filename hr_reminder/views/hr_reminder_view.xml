@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="ir_cron_scheduler_reminder_action" model="ir.cron">
+            <field name="name">Reminder scheduler</field>
+            <field name="model_id" ref="model_hr_reminder"/>
+            <field name="state">code</field>
+            <field name="code">model.reminder_scheduler()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <!--<field eval="'hr.reminder'" name="model"/>-->
+            <!--<field eval="'reminder_scheduler'" name="function"/>-->
+        </record>
+
+        <record model="ir.ui.view" id="hr_reminder_form_view">
+            <field name="name">hr.reminder.form.view</field>
+            <field name="model">hr.reminder</field>
+            <field name="arch" type="xml">
+                <form string="HR Reminder">
+                    <sheet>
+                   <div class="oe_title">
+                    <h1 class="o_row">
+                    <field name="name" placeholder="Reminder Title..." />
+                    </h1>
+                    </div>
+                     <group>
+                            <group>
+                                <field name="model_name" />
+                                <field name="search_by"/>
+                               <field name="date_from" attrs="{'invisible': [('search_by','not in','set_period')], 'required': [('search_by', '=', 'set_period')]}"/>
+                                <field name="date_set" attrs="{'invisible': [('search_by','not in','set_date')], 'required': [('search_by', '=', 'set_date')]}"/>
+                                <field name="date_to" attrs="{'invisible': [('search_by','not in','set_period')], 'required': [('search_by', '=', 'set_period')]}"/>
+                                <!--<field name="exclude_year" attrs="{'invisible': [('search_by','in','set_period')]}"/>-->
+                                <field name="company_id"/>
+                            </group>
+                            <group>
+                                <field name="model_field"/>
+                                <field name="days_before" attrs="{'invisible': [('search_by','=','today')]}"/>
+                                <field name="expiry_date" attrs="{'invisible': [('search_by','=','today')]}"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_reminder_tree_view">
+            <field name="name">hr.reminder.tree.view</field>
+            <field name="model">hr.reminder</field>
+            <field name="arch" type="xml">
+                <tree string="Pop-Up Reminder">
+                    <field name="name"/>
+                    <field name="model_name" />
+                     <field name="model_field"/>
+                     <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+         <record model="ir.actions.act_window" id="action_hr_reminder">
+            <field name="name">Reminders</field>
+            <field name="res_model">hr.reminder</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click here to configure new periodic reminder.
+              </p>
+            </field>
+        </record>
+
+         <menuitem name ="Reminders" id="hr_reminder_menu" web_icon="hr_reminder,static/description/reminder_icon.png"
+		action="action_hr_reminder" sequence="8"/>
+</data>
+</openerp>

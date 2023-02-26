@@ -1,0 +1,1645 @@
+# Translation of Odoo Server.
+ # This file contains the translation of the following modules:
+ # * hr_payroll_community
+ # 
+ # Translators:
+ # Wanradt Koell <wanradt@gmail.com>, 2018
+ # Helen Sulaoja <helen@avalah.ee>, 2018
+ # Rivo Zängov <eraser@eraser.ee>, 2018
+ # Martin Trigaux, 2018
+ # Arma Gedonsky <armagedonsky@hot.ee>, 2018
+ # Egon Raamat <egon@avalah.ee>, 2018
+ # Martin Aavastik <martin@avalah.ee>, 2018
+ # Eneli Õigus <enelioigus@gmail.com>, 2019
+ # 
+ msgid ""
+ msgstr ""
+ "Project-Id-Version: Odoo Server 13.0\n"
+ "Report-Msgid-Bugs-To: \n"
+ "POT-Creation-Date: 2019-01-09 10:31+0000\n"
+ "PO-Revision-Date: 2018-08-24 09:19+0000\n"
+ "Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2019\n"
+ "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+ "MIME-Version: 1.0\n"
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: \n"
+ "Language: et\n"
+ "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:42
+ #, python-format
+ msgid "%s (copy)"
+ msgstr "%s (koopia)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__state
+ msgid ""
+ "* When the payslip is created the status is 'Draft'\n"
+ "                \n"
+ "* If the payslip is under verification, the status is 'Waiting'.\n"
+ "                \n"
+ "* If the payslip is confirmed then status is set to 'Done'.\n"
+ "                \n"
+ "* When user cancel payslip the status is 'Rejected'."
+ msgstr ""
+ "* Kui palgaleht on loodud, siis on staatus \"Mustand\".\n"
+ "* Kui palgaleht on ülevaatamisel, siis on staatus \"Ootel\".\n"
+ "* Kui palgaleht on kinnitatud, siis on staatus \"Valmis\".\n"
+ "* Kui kasutaja tühistab palgalehe, siis on staatus \"Tagasi lükatud\"."
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid ""
+ "<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+ " selected employee(s) based on the dates and credit note specified on "
+ "Payslips Run.</span>"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Address</strong>"
+ msgstr "<strong>Aadress</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Authorized signature</strong>"
+ msgstr "<strong>Volitatud allkiri</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Bank Account</strong>"
+ msgstr "<strong>Pangakonto</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Date From:</strong>"
+ msgstr "<strong>Alguskuupäev:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Date From</strong>"
+ msgstr "<strong>Kuupäev alates</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Date To:</strong>"
+ msgstr "<strong>Lõppkuupäev:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Date To</strong>"
+ msgstr "<strong>Kuupäev kuni</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Designation</strong>"
+ msgstr "<strong>Määratud ametisse</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Email</strong>"
+ msgstr "<strong>E-post</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Identification No</strong>"
+ msgstr "<strong>Isikukood</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Name</strong>"
+ msgstr "<strong>Nimi</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "<strong>Reference</strong>"
+ msgstr "<strong>Viide</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Register Name:</strong>"
+ msgstr "<strong>Registri nimi:</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "<strong>Total</strong>"
+ msgstr "<strong>Kokku</strong>"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.actions.act_window,help:hr_payroll_community.action_contribution_register_form
+ msgid ""
+ "A contribution register is a third party involved in the salary\n"
+ "            payment of the employees. It can be the social security, the\n"
+ "            state or anyone that collect or inject money on payslips."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_account_accountant
+ msgid "Account Accountant"
+ msgstr "Konto raamatupidaja"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Accounting"
+ msgstr "Raamatupidamine"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Accounting Information"
+ msgstr "Raamatupidamise informatsioon"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__active
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__active
+ msgid "Active"
+ msgstr "Aktiivne"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.actions.act_window,help:hr_payroll_community.action_contribution_register_form
+ msgid "Add a new contribution register"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Add an internal note..."
+ msgstr "Lisa märkus"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contract_advantage_template_view_form
+ msgid "Advantage Name"
+ msgstr "Vaikeväärtuse nimi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_children_salary_rules
+ msgid "All Children Rules"
+ msgstr "Kõik alamreeglid"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.ALW
+ msgid "Allowance"
+ msgstr "Elatusraha"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Always True"
+ msgstr "Alati tõene"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__amount
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Amount"
+ msgstr "Summa"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_select
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_select
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Amount Type"
+ msgstr "Arvutuse liik"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Annually"
+ msgstr "Kord aastas"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__appears_on_payslip
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__appears_on_payslip
+ msgid "Appears on Payslip"
+ msgstr "Ilmub palgalehel"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_python
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_python
+ msgid ""
+ "Applied this rule for calculation if condition is true. You can specify "
+ "condition like basic > 1000."
+ msgstr ""
+ "Seda reeglit kasutatakse arvutamiseks, kui tingimus on tõene. Te saate "
+ "määrata tingimused nagu põhiline > 1000."
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.BASIC
+ msgid "Basic"
+ msgstr "Põhitasu"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_basic
+ msgid "Basic Salary"
+ msgstr "Põhipalk"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_be_hr_payroll_community
+ msgid "Belgium Payroll"
+ msgstr "Belgia palgaarvestus"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Bi-monthly"
+ msgstr "Kaks korda kuus"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Bi-weekly"
+ msgstr "Kaks korda nädalas"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_form
+ msgid "Calculations"
+ msgstr "Arvutused"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Cancel"
+ msgstr "Tühista"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Cancel Payslip"
+ msgstr "Tühista palgaleht"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:96
+ #, python-format
+ msgid "Cannot cancel a payslip that is done."
+ msgstr "Tehtud palgalehte ei saa tühistada."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__category_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__category_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Category"
+ msgstr "Kategooria"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Child Rules"
+ msgstr "Alamreeglid"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__child_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__child_ids
+ msgid "Child Salary Rule"
+ msgstr " alam palgareegel"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__children_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__children_ids
+ msgid "Children"
+ msgstr "Alam"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Children Definition"
+ msgstr "Alamreeglite nimekiri"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Choose a Payroll Localization"
+ msgstr "Valige palgaarvestuse lokaliseerimine"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.run,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ msgid "Close"
+ msgstr "Kinnitatud"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__code
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Code"
+ msgstr "Kood"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payroll_community_structure_view_kanban
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_view_kanban
+ msgid "Code:"
+ msgstr "Kood:"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Companies"
+ msgstr "Ettevõtted"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__company_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__company_id
+ msgid "Company"
+ msgstr "Ettevõte"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.COMP
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Company Contribution"
+ msgstr "Ettevõtte tasud/maksud"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Computation"
+ msgstr "Arvutus"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Compute Sheet"
+ msgstr "Arvuta"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_select
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_select
+ msgid "Condition Based on"
+ msgstr "Tingimuse tüüp"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Conditions"
+ msgstr "Tingimused"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_res_config_settings
+ msgid "Config Settings"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_configuration
+ msgid "Configuration"
+ msgstr "Seadistused"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Confirm"
+ msgstr "Kinnita"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__contract_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__contract_id
+ msgid "Contract"
+ msgstr "Leping"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.hr_contract_advantage_template_action
+ #: model:ir.ui.menu,name:hr_payroll_community.hr_contract_advantage_template_menu_action
+ msgid "Contract Advantage Templates"
+ msgstr "Vaikeväärtused"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_form
+ msgid "Contribution"
+ msgstr "Sissemaks"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contribution_register
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__register_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__register_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Contribution Register"
+ msgstr "Tasude/maksude haldur"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Contribution Register's Payslip Lines"
+ msgstr "Tasude/maksude haldurid palgalehtede ridadel"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_contribution_register_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_action_hr_contribution_register_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_tree
+ msgid "Contribution Registers"
+ msgstr "Tasude/maksude haldurid"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_convanceallowance1
+ msgid "Conveyance Allowance"
+ msgstr "Sõidukompensatsioon"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_ca_gravie
+ msgid "Conveyance Allowance For Gravie"
+ msgstr "Sõidukompensatsioon Gravie jaoks"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__create_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__create_uid
+ msgid "Created by"
+ msgstr "Loonud"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__create_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__create_date
+ msgid "Created on"
+ msgstr "Loomise kuupäev"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__credit_note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__credit_note
+ msgid "Credit Note"
+ msgstr "Kreedit"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__date_from
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__date_start
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__date_from
+ msgid "Date From"
+ msgstr "Kuupäev alates"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__date_to
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__date_end
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__date_to
+ msgid "Date To"
+ msgstr "Kuupäevani"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.DED
+ msgid "Deduction"
+ msgstr "Kinnipidamine"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__default_value
+ msgid "Default value for this advantage"
+ msgstr "Vaikeväärtus"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract__schedule_pay
+ msgid "Defines the frequency of the wage payment."
+ msgstr "Määrab palgamakse sageduse."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__struct_id
+ msgid ""
+ "Defines the rules that have to be applied to this payslip, accordingly to "
+ "the contract chosen. If you let empty the field contract, this field isn't "
+ "mandatory anymore and thus the rules applied will be all the rules set on "
+ "the structure of all contracts of the employee valid for the chosen period"
+ msgstr ""
+ "Defineerib reeglid, mida tuleb kohaldada palgalehel vastavalt valitud "
+ "lepingule. Kui jätate lepinguvälja tühjaks, siis pole see väli enam "
+ "kohustuslik ning seega rakendatakse reegleid, mis kehtivad kõigi töölepingu "
+ "struktuuride puhul töötajale valitud aja jooksul."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__note
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__note
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_contribution_register_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Description"
+ msgstr "Kirjeldus"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Details By Salary Rule Category"
+ msgstr "Andmed palgareegli koodide järgi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__details_by_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Details by Salary Rule Category"
+ msgstr "Andmed palgareegli koodide järgi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister__display_name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails__display_name
+ msgid "Display Name"
+ msgstr "Näidatav nimi"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Done"
+ msgstr "Tehtud"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Done Payslip Batches"
+ msgstr "Valmis palgalehtede komplektid"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Done Slip"
+ msgstr "Valmis lehed"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Draft"
+ msgstr "Mustand"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Draft Payslip Batches"
+ msgstr "Palgalehtede komplektide mustandid"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Draft Slip"
+ msgstr "Lehe mustand"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_employee
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__employee_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__employee_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Employee"
+ msgstr "Töötaja"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contract
+ msgid "Employee Contract"
+ msgstr "Tööleping"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_employee_grade_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_list_view
+ msgid "Employee Function"
+ msgstr "Töötaja funktsioon"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_view_hr_payslip_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_department_tree
+ msgid "Employee Payslips"
+ msgstr "Töötajate palgalehed"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_contract_advantage_template
+ msgid "Employee's Advantage on Contract"
+ msgstr "Töötaja eelised lepingu põhjal"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract__resource_calendar_id
+ msgid "Employee's working schedule."
+ msgstr "Töötaja tööplaan."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__employee_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Employees"
+ msgstr " töötajad"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:92
+ #, python-format
+ msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+ msgstr "Viga! Te ei saa luua rekursiivset palgareegli kategooriat"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:179
+ #, python-format
+ msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+ msgstr "Viga! Te ei saa luua rekursiivset palgareeglit"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__register_id
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__register_id
+ msgid "Eventual third party involved in the salary payment of the employees."
+ msgstr "Võimalik kolmas osapool töötajale palga maksmisel."
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_fix
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_fix
+ msgid "Fixed Amount"
+ msgstr "Kindel summa"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_percentage
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_percentage
+ msgid "For example, enter 50.0 to apply a percentage of 50%"
+ msgstr "Näiteks, 50% sisestamiseks sisestage 50.0 "
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/report/report_contribution_register.py:35
+ #, python-format
+ msgid "Form content is missing, this report cannot be printed."
+ msgstr "Vormi sisu on puudu, ei saa trükkida aruannet."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_fr_hr_payroll_community
+ msgid "French Payroll"
+ msgstr "Prantsuse palgaarvestus"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "General"
+ msgstr "Üldine"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid "Generate"
+ msgstr "Loo"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payslip_by_employees
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ msgid "Generate Payslips"
+ msgstr "Loo palgalehed"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_employees
+ msgid "Generate payslips for all selected employees"
+ msgstr "Loo palgalehed kõigile valitud töötajatele"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_sales_commission
+ msgid "Get 1% of sales"
+ msgstr "Saa 1% müügist"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:182
+ #, python-format
+ msgid "Global Leaves"
+ msgstr "Globaalsed puudumised"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_taxable
+ #: model:hr.salary.rule.category,name:hr_payroll_community.GROSS
+ msgid "Gross"
+ msgstr "Bruto"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Group By"
+ msgstr "Rühmitamine"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_houserentallowance1
+ msgid "House Rent Allowance"
+ msgstr "Toetus - maja rent"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister__id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails__id
+ msgid "ID"
+ msgstr "ID"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_run__credit_note
+ msgid ""
+ "If its checked, indicates that all payslips generated from here are refund "
+ "payslips."
+ msgstr ""
+ "Kui see on märgitud, siis see näitab, et kõik siit loodud palgalehed on "
+ "tagastamistasud."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__active
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__active
+ msgid ""
+ "If the active field is set to false, it will allow you to hide the salary "
+ "rule without removing it."
+ msgstr ""
+ "Kui see väli on määratud kui väär, siis on teil võimalik peita palgereeglid "
+ "ilma neid kustutamata."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_res_config_settings__module_l10n_in_hr_payroll_community
+ msgid "Indian Payroll"
+ msgstr "India palgaarvestus"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip__credit_note
+ msgid "Indicates this payslip has a refund of another"
+ msgstr "Viitab, et see palgaleht on teise hüvitamiseks"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Input Data"
+ msgstr "Sisendinfo"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__input_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__input_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ msgid "Inputs"
+ msgstr "Sisendid"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__note
+ msgid "Internal Note"
+ msgstr "Sisemised märkused"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_view_kanban
+ msgid "Is a Blocking Reason?"
+ msgstr "Kas see on blokeerimise põhjus?"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__quantity
+ msgid ""
+ "It is used in computation for percentage and fixed amount. For e.g. A rule "
+ "for Meal Voucher having fixed amount of 1€ per worked day can have its "
+ "quantity defined in expression like worked_days.WORK100.number_of_days."
+ msgstr ""
+ "Seda kasutatakse protsentide ja kindlate summadega arvutamiseks. Nt "
+ "toidutalongide reeglites 1€ töötatud päeva kohta, saab koguse määratleda "
+ "nii: worked_days.WORK100.number_of_days."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__amount
+ msgid ""
+ "It is used in computation. For e.g. A rule for sales having 1% commission of"
+ " basic salary for per product can defined in expression like result = "
+ "inputs.SALEURO.amount * contract.wage*0.01."
+ msgstr ""
+ "Seda kasutatakse arvutustes. Nt müügireeglites, mille puhul 1% komisjonitasu"
+ " on põhipalk toote kohta, võib olla kirjeldatud väljendina "
+ "result=inputs.SALEURO.amount * contract.wage*0.01."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_contributionregister____last_update
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_report_hr_payroll_community_report_payslipdetails____last_update
+ msgid "Last Modified on"
+ msgstr "Viimati muudetud (millal)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__write_uid
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__write_uid
+ msgid "Last Updated by"
+ msgstr "Viimati uuendatud (kelle poolt)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_employees__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__write_date
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_payslip_lines_contribution_register__write_date
+ msgid "Last Updated on"
+ msgstr "Viimati uuendatud (millal)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule_category__parent_id
+ msgid ""
+ "Linking a salary category to its parent is used only for the reporting "
+ "purpose."
+ msgstr ""
+ "Palgakategooria sidumist ülemaga kasutatakse ainult aruandluse eesmärgil."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__lower_bound
+ msgid "Lower Bound"
+ msgstr "Alampiir"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract_advantage_template__lower_bound
+ msgid "Lower bound authorized by the employer for this advantage"
+ msgstr "Tööandja poolt volitatud alampiir selle eelise jaoks"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__paid
+ msgid "Made Payment Order ? "
+ msgstr "Maksekorraldus tehtud"
+ 
+ #. module: hr_payroll_community
+ #: model:res.groups,name:hr_payroll_community.group_hr_payroll_community_manager
+ msgid "Manager"
+ msgstr "Juhataja"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range_max
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range_max
+ msgid "Maximum Range"
+ msgstr "Vahemiku maksimum"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_meal_voucher
+ msgid "Meal Voucher"
+ msgstr "Toidutalong"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range_min
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range_min
+ msgid "Minimum Range"
+ msgstr "Vahemiku miinimum"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Miscellaneous"
+ msgstr "Muu"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Monthly"
+ msgstr "Igakuine"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__name
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__name
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Name"
+ msgstr "Nimi"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule.category,name:hr_payroll_community.NET
+ msgid "Net"
+ msgstr "Neto"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_rule_net
+ msgid "Net Salary"
+ msgstr "Netopalk"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:201
+ #, python-format
+ msgid "Normal Working Days paid at 100%"
+ msgstr "Normaalsed tööpäevad maksta 100% ulatuses"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_form
+ msgid "Notes"
+ msgstr "Märkused"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__number_of_days
+ msgid "Number of Days"
+ msgstr "Päevade arv"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__number_of_hours
+ msgid "Number of Hours"
+ msgstr "Tundide arv"
+ 
+ #. module: hr_payroll_community
+ #: model:res.groups,name:hr_payroll_community.group_hr_payroll_community_user
+ msgid "Officer"
+ msgstr "Ametnik"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Other Inputs"
+ msgstr "Muud sisendid"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__parent_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule_category__parent_id
+ msgid "Parent"
+ msgstr "Ülem"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__parent_rule_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__parent_rule_id
+ msgid "Parent Salary Rule"
+ msgstr "Ülem palgalehe kood"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__partner_id
+ msgid "Partner"
+ msgstr "Partner"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__payslip_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__slip_id
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__payslip_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Pay Slip"
+ msgstr "Palgaleht"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "PaySlip Batch"
+ msgstr "Palgalehe kogumik"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.payslip_details_report
+ msgid "PaySlip Details"
+ msgstr "Palgalehe detailid"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_payslip_lines_contribution_register
+ msgid "PaySlip Lines"
+ msgstr "Palgalehe read"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.action_contribution_register
+ msgid "PaySlip Lines By Conribution Register"
+ msgstr "Palgalehe read sissemaksete registri järgi"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "PaySlip Lines by Contribution Register"
+ msgstr "Palgalehe read tasude/maksude halduri järgi"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "PaySlip Name"
+ msgstr "Palgalehe nimi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.open_payroll_modules
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_root
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll"
+ msgstr "Palgaarvestus"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_report_hr_payroll_community_report_contributionregister
+ msgid "Payroll Contribution Register Report"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll Entries"
+ msgstr "Palga kanded"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_filter
+ msgid "Payroll Structures"
+ msgstr "Palgaarvestus liigid"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Payroll rules that apply to your country"
+ msgstr "Teie riigis kehtivad palgaarvestuse koodid."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.report,name:hr_payroll_community.action_report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Payslip"
+ msgstr "Palgaleht"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:82
+ #, python-format
+ msgid "Payslip 'Date From' must be earlier 'Date To'."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_run
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__payslip_run_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Payslip Batches"
+ msgstr "Igakuised palgalehed"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_payslip_lines
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__payslip_count
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Payslip Computation Details"
+ msgstr "Palgalehe arvutusandmed"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_employee__payslip_count
+ msgid "Payslip Count"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_report_hr_payroll_community_report_payslipdetails
+ msgid "Payslip Details Report"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_input
+ msgid "Payslip Input"
+ msgstr "Palgalehe sisend"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__input_line_ids
+ msgid "Payslip Inputs"
+ msgstr "Palgalehe sisendid"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_line
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_form
+ msgid "Payslip Line"
+ msgstr "Palgalehe rida"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_contribution_reg_payslip_lines
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__line_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Payslip Lines"
+ msgstr "Palgalehe read"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Payslip Lines by Contribution Register"
+ msgstr "Palgalehe read tasude/maksude halduri järgi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_payslip_lines_contribution_register
+ msgid "Payslip Lines by Contribution Registers"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__name
+ msgid "Payslip Name"
+ msgstr "Palgalehe nimi"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payslip_worked_days
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__worked_days_line_ids
+ msgid "Payslip Worked Days"
+ msgstr "Palgalehe töötatud päevad"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.act_hr_employee_payslip_list
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_employee__slip_ids
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__slip_ids
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.payroll_hr_employee_view_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_tree
+ msgid "Payslips"
+ msgstr "Palgalehed"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payslip_run_tree
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payslip_run
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_tree
+ msgid "Payslips Batches"
+ msgstr "Igakuised palgalehed"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_by_employees
+ msgid "Payslips by Employees"
+ msgstr "Palgalehed töötajate järgi"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_percentage
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_percentage
+ msgid "Percentage (%)"
+ msgstr "Protsent (%)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_percentage_base
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_percentage_base
+ msgid "Percentage based on"
+ msgstr "Protsendi baasmuutuja"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Period"
+ msgstr "Periood"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.res_config_settings_view_form
+ msgid "Post payroll slips in accounting"
+ msgstr "Postita palgaarvestuse kanded raamatupidamisse"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_payslip_lines_contribution_register
+ msgid "Print"
+ msgstr "Prindi"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_professionaltax1
+ msgid "Professional Tax"
+ msgstr "Kutseala maks"
+ 
+ #. module: hr_payroll_community
+ #: model:hr.salary.rule,name:hr_payroll_community.hr_salary_rule_providentfund1
+ msgid "Provident Fund"
+ msgstr "Abistamisfond"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,amount_select:0
+ #: selection:hr.salary.rule,amount_select:0
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__amount_python_compute
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__amount_python_compute
+ msgid "Python Code"
+ msgstr "Pythoni kood"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_python
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_python
+ msgid "Python Condition"
+ msgstr "Pythoni tingimus"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Python Expression"
+ msgstr "Pyhtoni väljend"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__quantity
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__quantity
+ msgid "Quantity"
+ msgstr "Kogus"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ msgid "Quantity/Rate"
+ msgstr "Kogus/määr"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Quantity/rate"
+ msgstr "Kogus/määr"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Quarterly"
+ msgstr "Kord kvartalis"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip.line,condition_select:0
+ #: selection:hr.salary.rule,condition_select:0
+ msgid "Range"
+ msgstr "Vahemik"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__condition_range
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__condition_range
+ msgid "Range Based on"
+ msgstr "Vahemiku baasmuutuja"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__rate
+ msgid "Rate (%)"
+ msgstr "Määr (%)"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__code
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__number
+ msgid "Reference"
+ msgstr "Viide"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Refund"
+ msgstr "Tagasimaksmine"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:102
+ #, python-format
+ msgid "Refund: "
+ msgstr "Kuluhüvitis:"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contribution_register__register_line_ids
+ msgid "Register Line"
+ msgstr "Registreeri rida"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ msgid "Rejected"
+ msgstr "Tagasi lükatud"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__salary_rule_id
+ msgid "Rule"
+ msgstr "Reegel"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_form
+ msgid "Salary Categories"
+ msgstr "Palgakategooria"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Salary Computation"
+ msgstr "Palgaarvestus"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_salary_rule
+ msgid "Salary Rule"
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_salary_rule_category
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_category_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_salary_rule_category_filter
+ msgid "Salary Rule Categories"
+ msgstr "Palgareeglite kategooriad"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_salary_rule_category
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Salary Rule Category"
+ msgstr "Palgareeglite kategooriad"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_rule_input
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_rule_input__input_id
+ msgid "Salary Rule Input"
+ msgstr "Palgareeglite sisend"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_salary_rule_form
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payroll_community_structure__rule_ids
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_action_hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_list
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_salary_rule_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_employee_grade_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Salary Rules"
+ msgstr "Palgareeglid"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:403
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:453
+ #, python-format
+ msgid "Salary Slip of %s for %s"
+ msgstr "%s palgaleht %s"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model,name:hr_payroll_community.model_hr_payroll_community_structure
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__struct_id
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payroll_community_structure_tree
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_tree
+ msgid "Salary Structure"
+ msgstr "Töölepingu liik"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_view_hr_payroll_community_structure_list_form
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_structure_view
+ msgid "Salary Structures"
+ msgstr "Palgaliigid"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__schedule_pay
+ msgid "Scheduled Pay"
+ msgstr "Maksete regulaarsus"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_filter
+ msgid "Search Payslip Batches"
+ msgstr "Otsi palgalehe komplekte"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_line_filter
+ msgid "Search Payslip Lines"
+ msgstr "Otsi palgalehe ridu"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "Search Payslips"
+ msgstr "Otsi palgalehti"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_rule_filter
+ msgid "Search Salary Rule"
+ msgstr "Otsi palgalehe koode"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Semi-annually"
+ msgstr "Kord poolaastas"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_input__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_worked_days__sequence
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_salary_rule__sequence
+ msgid "Sequence"
+ msgstr "Järjestus"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.hr_payslip_run_form
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Set to Draft"
+ msgstr "Määra mustandiks"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.actions.act_window,name:hr_payroll_community.action_hr_payroll_community_configuration
+ #: model:ir.ui.menu,name:hr_payroll_community.menu_hr_payroll_community_global_settings
+ msgid "Settings"
+ msgstr "Seaded"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_filter
+ msgid "States"
+ msgstr "Maakonnad"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__state
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_run__state
+ msgid "Status"
+ msgstr "Staatus"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip__struct_id
+ msgid "Structure"
+ msgstr "Palgaliik"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__code
+ msgid ""
+ "The code of salary rules can be used as reference in computation of other "
+ "rules. In that case, it is case sensitive."
+ msgstr ""
+ "Palgalehe koode võib kasutada teiste reeglite koostamisel viitena. Sellisel "
+ "juhul on tegemist tõstutundliku tekstiga."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_worked_days__code
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_rule_input__code
+ msgid "The code that can be used in the salary rules"
+ msgstr "Kood, mida võib kasutada palgareeglites"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_select
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_select
+ msgid "The computation method for the rule amount."
+ msgstr "Arvutamise meetod summareegli jaoks"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_input__contract_id
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_worked_days__contract_id
+ msgid "The contract for which applied this input"
+ msgstr "Leping, milles kasutati seda sisendit"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range_max
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range_max
+ msgid "The maximum amount, applied for this rule."
+ msgstr "Maksimaalne summa, mida taotletakse selle reegli jaoks."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range_min
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range_min
+ msgid "The minimum amount, applied for this rule."
+ msgstr "Minimaalne summa, mida taotletakse selle reegli jaoks."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__condition_range
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__condition_range
+ msgid ""
+ "This will be used to compute the % fields values; in general it is on basic,"
+ " but you can also use categories code fields in lowercase as a variable "
+ "names (hra, ma, lta, etc.) and the variable basic."
+ msgstr ""
+ "Seda kasutatakse % väärtustega väljade arvutamisel; üldiselt on see "
+ "põhiline, kuid teil on võimalik kasutada kategooria koodi väljasid ka "
+ "väiketähtede (hra, ma, lta jne) kui muutujate nimesid ja baasmuutujat."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_payslip_line__total
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_contributionregister
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslip
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.report_payslipdetails
+ msgid "Total"
+ msgstr "Kokku"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Total Working Days"
+ msgstr "Tööpäevi kokku"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract_advantage_template__upper_bound
+ msgid "Upper Bound"
+ msgstr "Ülempiir"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_contract_advantage_template__upper_bound
+ msgid "Upper bound authorized by the employer for this advantage"
+ msgstr "Tööandja poolt volitatud ülempiir selle eelise jaoks"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__sequence
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__sequence
+ msgid "Use to arrange calculation sequence"
+ msgstr "Kasutage ümberkorraldamiseks  arvutusjärjekorda"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__appears_on_payslip
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__appears_on_payslip
+ msgid "Used to display the salary rule on payslip."
+ msgstr "Kasutatakse palgaarvestuse koodide näitamiseks palgalehel."
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.payslip,state:0
+ msgid "Waiting"
+ msgstr "Ootel"
+ 
+ #. module: hr_payroll_community
+ #: selection:hr.contract,schedule_pay:0
+ msgid "Weekly"
+ msgstr "Iganädalane"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Day"
+ msgstr "Töötatud päev"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Days"
+ msgstr "Töötatud päevad"
+ 
+ #. module: hr_payroll_community
+ #: model_terms:ir.ui.view,arch_db:hr_payroll_community.view_hr_payslip_form
+ msgid "Worked Days & Inputs"
+ msgstr "Töötatud päevad ja sisendid"
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,field_description:hr_payroll_community.field_hr_contract__resource_calendar_id
+ msgid "Working Schedule"
+ msgstr "Töögraafik"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:211
+ #, python-format
+ msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+ msgstr ""
+ "Palgareeglite %s (%s) jaoks on kirjeldatud vale protsentuaalne baas või "
+ "kogus."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:217
+ #, python-format
+ msgid "Wrong python code defined for salary rule %s (%s)."
+ msgstr "Defineeritud Pythoni kood on vale antud palgareegli %s (%s) jaoks."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:240
+ #, python-format
+ msgid "Wrong python condition defined for salary rule %s (%s)."
+ msgstr ""
+ "Defineeritud Pythoni tingimus on vale antud palgareegli %s (%s) jaoks."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:204
+ #, python-format
+ msgid "Wrong quantity defined for salary rule %s (%s)."
+ msgstr "Defineeritud kogus on vale antud palgareegli %s (%s) jaoks."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:234
+ #, python-format
+ msgid "Wrong range condition defined for salary rule %s (%s)."
+ msgstr ""
+ "Defineeritud vahemiku tingimus on vale antud palgareegli %s (%s) jaoks."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_salary_rule.py:36
+ #, python-format
+ msgid "You cannot create a recursive salary structure."
+ msgstr ""
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:127
+ #, python-format
+ msgid "You cannot delete a payslip which is not draft or cancelled!"
+ msgstr "Palgalehte ei saa kustutada, kui see pole mustand või tühistatud!"
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/wizard/hr_payroll_community_payslips_by_employees.py:24
+ #, python-format
+ msgid "You must select employee(s) to generate payslip(s)."
+ msgstr "Te peate valima töötaja(d) palgaleh(ted)e genereerimiseks."
+ 
+ #. module: hr_payroll_community
+ #: code:addons/hr_payroll_community/models/hr_payslip.py:525
+ #, python-format
+ msgid "You must set a contract to create a payslip line."
+ msgstr "Te peate määrama lepingu, et luua palgalehe rida."
+ 
+ #. module: hr_payroll_community
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_payslip_line__amount_percentage_base
+ #: model:ir.model.fields,help:hr_payroll_community.field_hr_salary_rule__amount_percentage_base
+ msgid "result will be affected to a variable"
+ msgstr "tulemus mõjutab muutujat"
+ 

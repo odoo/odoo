@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Employee View -->
+    <record id="payroll_hr_employee_view_form" model="ir.ui.view">
+        <field name="name">payroll.hr.employee.view.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(act_hr_employee_payslip_list)d"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        type="action"
+                        groups="hr_payroll_community.group_hr_payroll_community_user">
+                        <field name="payslip_count" widget="statinfo" string="Payslips"/>
+                    </button>
+                </xpath>
+        </field>
+    </record>
+</odoo>

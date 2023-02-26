@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        <record id="hr_action_dashboard" model="ir.actions.client">
+            <field name="name">Dashboard</field>
+            <field name="tag">hr_dashboard</field>
+        </record>
+
+<!--        <record id="dashboard_employee_broad_factor" model="ir.ui.view">-->
+<!--            <field name="name">dashboard.employee.broad.factor</field>-->
+<!--            <field name="model">hr.leave.type</field>-->
+<!--            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//field[@name='request_unit']" position="after">-->
+<!--                    <field name="emp_broad_factor"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <menuitem id="menu_hrms_dashboard"
+                  name="Dashboard"
+                  action="hr_action_dashboard"
+                  web_icon="hrms_dashboard,static/description/dashboard_icon.png"
+                  sequence="-100" groups="base.group_user"/>
+    </data>
+
+
+
+    <record id="broad_factor_sort_order" model="ir.ui.view">
+        <field name="name">hr.holidays.view.tree</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
+        <field name="arch" type="xml">
+             <xpath expr="//tree" position="attributes">
+                <attribute name="default_order">duration_display</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

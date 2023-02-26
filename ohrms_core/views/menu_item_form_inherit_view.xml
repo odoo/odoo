@@ -1,0 +1,13 @@
+<odoo>
+    <record id="menu_item_form_inherit" model="ir.ui.view">
+        <field name="name">menu.item.form.inherit</field>
+        <field name="model">ir.ui.menu</field>
+        <field name="inherit_id" ref="base.edit_menu_access"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sequence']" position="after">
+                <field name="recent_menu_sequence" invisible="1"/>
+                <field name="order_changed" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
