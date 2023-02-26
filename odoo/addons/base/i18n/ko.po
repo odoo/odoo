@@ -898,7 +898,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        사용자가 간편하게 회계 데이터를 내보내기를 통해 1099 e-filing을 수행하는 외부인이 가져와서 작업할 수 있도록 합니다.\n"
+"        간편하게 사용자가 회계 데이터를 내보내면 1099 e-filing을 수행하는 외부인이 가져와서 작업할 수 있습니다.\n"
 "    "
 
 #. module: base
@@ -2806,7 +2806,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"회계 보고서\n"
+"회계 가져오기\n"
 "==================\n"
 "    "
 
@@ -5177,6 +5177,24 @@ msgid ""
 "Pro rules and show the errors.\n"
 "    "
 msgstr ""
+"\n"
+"전자 청구서 발행 모듈\n"
+"===========================\n"
+"\n"
+"내보내기 및 가져오기 파일 형식: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"청구서를 PDF 파일로 생성할 경우 PDF는 모든 UBL 형식의 xml 로 내장되어 생성됩니다. 이를 통해 \n"
+"수신된 파일에서 xml 파일만으로도 PDF 검색이 가능합니다. UBL Bis 3를 통해서 **EHF3을 완전히 구현 가능함을 참고하시기 바랍니다 (`참조 <https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).\n"
+"\n"
+"청구서에 연결된 분개장 (분개장 > 고급 설정)에서 형식을 선택할 수 있습니다. \n"
+"\n"
+"E-FFF, NLCIUS 및 XRechnung(UBL)은 각각 벨기에, 네덜란드 및 독일 회사에서만 사용할 수 있음을 참고하십시오.\n"
+"UBL Bis 3는 `EAS 목록에 있는 국가가 있는 회사에서만 사용할 수 있습니다.\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
+"\n"
+"또한 Chorus Pro가 \"PDF/A-3(Factur-X)\" 형식을 자동으로 감지하려면 분개장 항목에서\n"
+"\"Factur-X PDF/A-3\" 옵션을 활성화해야 합니다. 이 옵션을 통해서 Factur-X 및 Chorus Pro 규칙에 대해 xml을\n"
+"검증하고 오류를 표시할 수 있도록 하는 것도 가능합니다.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -5705,6 +5723,10 @@ msgid ""
 "=======================================================\n"
 "    "
 msgstr ""
+"\n"
+"GCC POS 현지화\n"
+"=======================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_gstr
@@ -5861,6 +5883,8 @@ msgid ""
 "\n"
 "Germany TSS Regulation\n"
 msgstr ""
+"\n"
+"독일 TSS 규정\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_de_pos_res_cert
@@ -5941,6 +5965,8 @@ msgid ""
 "\n"
 "Helpdesk integration with knowledge\n"
 msgstr ""
+"\n"
+"헬프데스크를 지식센터와 통합\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_holidays
@@ -5948,6 +5974,8 @@ msgid ""
 "\n"
 "Helpdesk integration with time off\n"
 msgstr ""
+"\n"
+"헬프데스크를 휴가관리와 통합\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
@@ -6046,6 +6074,28 @@ msgid ""
 "correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 "    "
 msgstr ""
+"\n"
+"Includes the following data for the Chinese localization\n"
+"========================================================\n"
+"\n"
+"Account Type/科目类型\n"
+"\n"
+"State Data/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"We added the option to print a voucher which will also \n"
+"print the amount in words (special Chinese characters for numbers)\n"
+"correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -6253,6 +6303,10 @@ msgid ""
 "=======================================================\n"
 "    "
 msgstr ""
+"\n"
+"K.S.A. POS 현지화\n"
+"=======================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr_recruitment
@@ -8705,6 +8759,15 @@ msgid ""
 " - Multiple Fiscal positions\n"
 " "
 msgstr ""
+"\n"
+"이 내용은 이스라엘에서 Odoo를 실행하기 위해 필요한 최신 기본 이스라엘 현지화 항목입니다:\n"
+"================================================================================\n"
+"\n"
+"이 모듈은 다음을 포함하고 있습니다:\n"
+" - 일반적인 이스라엘 계정과목표\n"
+" - 세금 및 세무 보고서\n"
+" - 다중 재정 상태\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -10983,6 +11046,11 @@ msgid ""
 "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- 연락처: 해당 회사의 임직원 (예: CEO나 CFO 등)의 연락처 세부 정보를 구성하는데 사용합니다.\n"
+"- 청구서 주소 : 전체 청구서 관련 기본 주소입니다. 이 회사와 관련된 주문서에 대한 청구서 발행 시 기본 주소로 선택됩니다..\n"
+"- 배송지 주소 : 전체 배송 관련 기본 주소입니다. 이 회사와 관련된 주문 배송 시 기본 주소로 선택됩니다.\n"
+"- 개인 주소: 비공개 개인 주소는 권한이 있는 사용자만 열람이 가능하며 민감한 정보가 포함되어 있습니다 (임직원 자택 주소 등).\n"
+"- 기타: 회사의 기타 주소입니다 (예: 자회사 등)"
 
 #. module: base
 #. odoo-python
@@ -11278,6 +11346,8 @@ msgid ""
 "<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
 "label=\"Info\" title=\"Info\"/>"
 msgstr ""
+"<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -11307,7 +11377,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "<span class=\"bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-danger\">보관 처리됨</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -12549,7 +12619,7 @@ msgstr "활성화 및 번역"
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Active"
-msgstr "활성"
+msgstr "활성화"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__active_lang_count
@@ -15672,7 +15742,7 @@ msgstr "회사용 파비콘"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry
 msgid "Company ID"
-msgstr ""
+msgstr "회사 ID"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
@@ -17877,7 +17947,7 @@ msgstr "회사를 복제할 수 없습니다. 대신 새 회사를 만들어 주
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__duration
 msgid "Duration"
-msgstr "기간"
+msgstr "소요시간"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -20035,7 +20105,7 @@ msgstr "구글 캘린더"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_gmail
 msgid "Google Gmail"
-msgstr ""
+msgstr "구글 지메일"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
@@ -20050,7 +20120,7 @@ msgstr "구글 사용자"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_autocomplete
 msgid "Google places autocompletion"
-msgstr ""
+msgstr "구글 장소 자동 완성"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_recaptcha
@@ -34598,7 +34668,7 @@ msgstr "화면 유형"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
 msgid "View and create reports"
-msgstr "보고서 작성 및 보기"
+msgstr "보고서 보기 및 작성"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode

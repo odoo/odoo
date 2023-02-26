@@ -6,10 +6,10 @@
 # 江口和志 <sandwhale1010@gmail.com>, 2023
 # Tim Siu Lai <tl@roomsfor.hk>, 2023
 # Noma Yuki, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Andy Yiu, 2023
 # Martin Trigaux, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Andy Yiu, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 06:41+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023\n"
+"Last-Translator: Andy Yiu, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +36,11 @@ msgid ""
 "The total of debits equals %s and the total of credits equals %s.\n"
 "You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"この移動 (%s)はバランスしてません。\n"
+"借方の総額は%s、貸方の総額は%sです。\n"
+"仕訳帳「%s」にデフォルト勘定科目を特定して、自動的に全ての移動をバランスします。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -52,14 +57,14 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"-税金のグループ：より細かい税のひとまとまりです。\n"
-"-固定：税額は価格に関係なく同額です。\n"
-"-外税率：税額は価格に基づき比率で加算されます：\n"
-"例：100 *（1 + 10％）= 110（課税後の価格）\n"
-"例：110 /（1 + 10％）= 100（課税前の価格）\n"
-"-内税率：税額は価格に含まれています：\n"
-"例：180 /（1-10％）= 200（課税後の価格）\n"
-"例：200 *（1-10％）= 180（課税前の価格）"
+"-税金グループ: 他のより細かい税が含まれています。\n"
+"-固定: 税額は価格に関係なく同額です。\n"
+"-外税率: 税額は価格に基づいて、比率で加算されます:\n"
+"例: 100 *（1 + 10％）= 110 (課税後の価格)\n"
+"例: 110 /（1 + 10％）= 100 (課税前の価格)\n"
+"-内税率: 税額は価格に含まれています:\n"
+"例: 180 / (1-10％) = 200 (課税後の価格)\n"
+"例: 200 * (1-10％) = 180 (課税前の価格)"
 
 #. module: account
 #. odoo-python
@@ -564,6 +569,9 @@ msgid ""
 "clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\"><i class=\"fa fa-fw fa-"
+"clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> 支払待ち</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -667,6 +675,9 @@ msgid ""
 "                                        Taxes\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        税金\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -891,15 +902,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
-msgstr "<span>税</span>"
+msgstr "<span>税金</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
-msgstr ""
-"<span>この入力はAccountingをインストールする以前に請求アプリで生成されました。残高は個別にインポートされました。</span>"
+msgstr "<span>この入力は、会計アプリがインストールされる前に、請求アプリで生成されました。残高は個別にインポートされました。</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -2125,7 +2135,7 @@ msgstr "現金基準での税計上ができるようにする"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr "利用可能な仕訳表"
+msgstr "利用可能な仕訳帳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
@@ -3091,7 +3101,7 @@ msgstr "阻止メッセージ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__include_initial_balance
 msgid "Bring Accounts Balance Forward"
-msgstr "アカウントの残高を前倒しする"
+msgstr "残高繰越"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -3170,7 +3180,7 @@ msgstr "COST, INSURANCE AND FREIGHT"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "CSV, XLS, and XLSX Import"
-msgstr ""
+msgstr "CSV、XLS、及びXLSXインポート"
 
 #. module: account
 #. odoo-python
@@ -3647,7 +3657,7 @@ msgstr "子供税"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr "商品のデフォルト販売税を選択してください。"
+msgstr "商品にデフォルト売上税を選択してください。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__refund_method
@@ -4313,7 +4323,7 @@ msgstr "最初の請求書を作成します。"
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__create_uid
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_uid
 msgid "Created by"
-msgstr "作成者: "
+msgstr "作成者"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -4371,7 +4381,7 @@ msgstr "作成者: "
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__create_date
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_date
 msgid "Created on"
-msgstr "作成日: "
+msgstr "作成日"
 
 #. module: account
 #. odoo-python
@@ -4561,7 +4571,7 @@ msgstr "流動資産"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
 msgid "Current Balance"
-msgstr ""
+msgstr "現在高"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_current
@@ -4969,7 +4979,7 @@ msgstr "POS受領可能なデフォルトの勘定"
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__purchase_tax_id
 msgid "Default Purchase Tax"
-msgstr "デフォルト購買税"
+msgstr "デフォルト購入税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
@@ -5019,13 +5029,13 @@ msgstr "ローカル取引に適用されるデフォルト税"
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
-msgstr "商品購買時に適用されるデフォルト税"
+msgstr "商品を購入時に適用されるデフォルト税。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr "商品販売時に適用されるデフォルト税"
+msgstr "商品を販売時に適用されるデフォルト税。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__allowed_journal_ids
@@ -5116,7 +5126,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
-msgstr "廃止済"
+msgstr "廃止"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
@@ -6232,7 +6242,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr "会計ポジションは、特定の顧客または受注/請求書の税金と勘定を調整するために使用されます。デフォルト値は顧客からのものです。"
+msgstr "会計ポジションは、特定の顧客、又は特定の受注・請求書に、税金と勘定を調整するために使用されます。デフォルト値は顧客から取得します。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -6997,31 +7007,31 @@ msgstr "即時払い"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_qif
 msgid "Import .qif files"
-msgstr ".qif ファイルをインポート"
+msgstr ".qifファイルをインポート"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Import Template for Chart of Accounts"
-msgstr ""
+msgstr "勘定科目表にテンプレートをインポート"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Import Template for Journal Items"
-msgstr ""
+msgstr "仕訳項目にテンプレートをインポート"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
 msgid "Import in .csv, .xls, and .xlsx format"
-msgstr ""
+msgstr ".csv、.xls、及び.xlsx形式でインポート"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_ofx
 msgid "Import in .ofx format"
-msgstr ".ofx 形式でインポート"
+msgstr ".ofx形式でインポート"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_camt
@@ -7031,29 +7041,29 @@ msgstr "CAMT.053形式でインポート"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CAMT.053"
-msgstr "銀行取引明細書をCAMT.053でインポート"
+msgstr "CAMT.053で銀行取引明細書をインポート"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CSV, XLS, and XLSX"
-msgstr ""
+msgstr "CSV、XLS、及びXLSXで銀行取引明細書をインポート"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in OFX"
-msgstr "銀行取引明細書をOFXでインポート"
+msgstr "OFXで銀行取引明細書をインポート"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in QIF"
-msgstr "銀行取引明細書をQIFでインポート"
+msgstr "QIFで銀行取引明細書をインポート"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Import your first bill"
-msgstr "最初の手形をインポート"
+msgstr "最初の請求書をインポート"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__in_payment
@@ -7275,7 +7285,7 @@ msgstr "内部グループ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__note
 msgid "Internal Notes"
-msgstr "内部注記"
+msgstr "内部メモ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__internal_index
@@ -8252,7 +8262,7 @@ msgstr "前四半期"
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__write_uid
 #: model:ir.model.fields,field_description:account.field_validate_account_move__write_uid
 msgid "Last Updated by"
-msgstr "最終更新者:"
+msgstr "最終更新者"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__write_date
@@ -8310,7 +8320,7 @@ msgstr "最終更新者:"
 #: model:ir.model.fields,field_description:account.field_account_unreconcile__write_date
 #: model:ir.model.fields,field_description:account.field_validate_account_move__write_date
 msgid "Last Updated on"
-msgstr "最終更新日:"
+msgstr "最終更新日"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__last_year
@@ -9162,7 +9172,7 @@ msgstr "アカウントコードのために使用される数字の桁数"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr ""
+msgstr "取引外"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9318,7 +9328,7 @@ msgstr "番号"
 #: model:ir.model.fields,field_description:account.field_res_company__message_needaction_counter
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_needaction_counter
 msgid "Number of Actions"
-msgstr "アクションの数"
+msgstr "アクション数"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_days
@@ -9820,7 +9830,7 @@ msgstr "未消込支払勘定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr ""
+msgstr "未消込支払勘定"
 
 #. module: account
 #. odoo-python
@@ -9837,7 +9847,7 @@ msgstr "未消込入金勘定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr ""
+msgstr "未消込入金勘定"
 
 #. module: account
 #. odoo-python
@@ -10770,7 +10780,7 @@ msgstr "購買担当者"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
-msgstr "購買税"
+msgstr "購入税"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_purchase
@@ -11083,7 +11093,7 @@ msgstr "関連ドキュメントモデル"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__related_taxes_amount
 msgid "Related Taxes Amount"
-msgstr ""
+msgstr "関連税金数"
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -11518,12 +11528,12 @@ msgstr "販売領収書が作成された"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
-msgstr "販売税"
+msgstr "売上税"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sale_tax
 msgid "Sales tax"
-msgstr "販売税"
+msgstr "売上税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_user_id
@@ -11988,7 +11998,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Set default Taxes for sales and purchase transactions."
-msgstr "販売及び購買トランザクションのデフォルトの税を設定。"
+msgstr "販売及び購買取引にデフォルト税を設定。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
@@ -12028,7 +12038,7 @@ msgstr "セットアップ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "勘定科目表を設定して開始残高を記録。"
+msgstr "勘定科目表を設定して、初期残高を記録。"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -12894,7 +12904,7 @@ msgstr "TaxCloud"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Taxes"
-msgstr "税"
+msgstr "税金"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12935,7 +12945,7 @@ msgstr "販売で使用する税"
 msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
-msgstr ""
+msgstr "所在国の税金、会計ポジション、勘定科目一覧表及び法務書類"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -15199,8 +15209,8 @@ msgid ""
 "We cannot find a chart of accounts for this company, you should configure it. \n"
 "Please go to Account Configuration and select or install a fiscal localization."
 msgstr ""
-"この会社の勘定科目表が見つかりません。構成する必要があります。\n"
-"アカウント設定に移動し、会計ローカリゼーションを選択またはインストールしてください。"
+"この会社に勘定科目一覧表が見つかりませんでした。設定する必要があります。\n"
+"勘定科目設定に移動し、会計ローカリゼーションを選択、又はインストールしてください。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -15221,7 +15231,7 @@ msgstr "仕入先請求書は自動で処理されるので、必要な処理は
 #: model:ir.model.fields,field_description:account.field_res_company__website_message_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__website_message_ids
 msgid "Website Messages"
-msgstr "ウェブサイトメッセージ"
+msgstr "Webサイトメッセージ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__website_message_ids
@@ -16287,7 +16297,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "税"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
