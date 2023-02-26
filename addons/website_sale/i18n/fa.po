@@ -427,6 +427,13 @@ msgid "<strong>Add to Cart</strong>"
 msgstr "<strong>افزودن به سبد</strong>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                    If you believe that it is an error, please contact the website administrator."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Payment Information:</strong>"
 msgstr "<strong>اطلاعات پرداخت:</strong>"
@@ -1712,6 +1719,14 @@ msgid "No abandoned carts found"
 msgstr "هیچ سبد رها شده‌ای یافت نشد"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"No payment method is available for your current order. Please contact us for"
+" more information."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined"
 msgstr "هیچ محصولی تعریف نشده"
@@ -2676,6 +2691,12 @@ msgstr "فروخته شده"
 #, python-format
 msgid "Some required fields are empty."
 msgstr "بعضی فیلدهای اجباری خالی هستند."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Sorry, we are unable to find a Payment Method"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort

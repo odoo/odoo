@@ -31,7 +31,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
 msgid "# emails to send"
-msgstr ""
+msgstr "# อีเมลที่ส่ง"
 
 #. module: hr
 #: code:addons/hr/models/hr_job.py:0
@@ -47,7 +47,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Print Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'พิมพ์ป้าย - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -58,7 +58,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr ""
+msgstr "12 วัน/ ปี รวมถึง <br>6 ของตัวเลือกของคุณ"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -67,6 +67,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
+"<b>ขอแสดงความยินดี!</b> ขอแนะนำให้คุณตั้งค่าและ<a "
+"href=\"%s\">แผนเริ่มต้นการทำงาน</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -91,6 +93,8 @@ msgid ""
 "<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"แสดง\" title=\"แสดง\" name=\"presence_present\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -99,6 +103,8 @@ msgid ""
 "<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"เพื่อระบุ\" title=\"เพื่อระบุ\" name=\"presence_to_define\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -107,6 +113,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"ขาด\" title=\"ขาด\" name=\"presence_absent\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -115,6 +123,8 @@ msgid ""
 "<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"แสดงแต่ไม่ทำงาน\" title=\"แสดงแต่ไม่ทำงาน\" name=\"presence_absent_active\">\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -123,21 +133,24 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"ค่าที่ตั้งไว้นี้เป็นค่าเฉพาะบริษัท\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">IP Addresses (comma-separated)</span>"
-msgstr ""
+msgstr "<span class=\"ml8 mr-2\">ที่อยู่ IP (คั่นด้วยเครื่องหมายจุลภาค)</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
-msgstr ""
+msgstr "<span class=\"ml8 mr-2\">จำนวนอีเมลขั้นต่ำที่จะส่ง</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Presence Control</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">การควบคุมสถานะ</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -146,6 +159,9 @@ msgid ""
 "                                        Not Connected\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        ไม่เชื่อมต่อ\n"
+"                                    </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -154,26 +170,29 @@ msgid ""
 "                                    Not Connected\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                   ไม่เชื่อมต่อ\n"
+"                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "<span class=\"o_stat_text\">Connected Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">เชื่อมต่อตั้งแต่</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span class=\"o_stat_text\">Present Since</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">แสดงตั้งแต่</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
-msgstr ""
+msgstr "<span>Km</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<strong><span>Reporting</span></strong>"
-msgstr ""
+msgstr "<strong><span>การรายงาน</span></strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -184,12 +203,12 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A full-time position <br>Attractive salary package."
-msgstr ""
+msgstr "ตำแหน่งงานเต็มเวลา <br>แพ็คเกจเงินเดือนที่น่าดึงดูด"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
-msgstr ""
+msgstr "ผู้ใช้ไม่สามารถเชื่อมโยงกับพนักงานหลายคนในบริษัทเดียวกัน"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
@@ -199,7 +218,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
 msgid "Absent"
-msgstr ""
+msgstr "ขาด"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -249,7 +268,7 @@ msgstr "การตกแต่งข้อยกเว้นกิจกรร
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan
 msgid "Activity Planning"
-msgstr ""
+msgstr "การวางแผนกิจกรรม"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
@@ -271,7 +290,7 @@ msgstr "ไอคอนประเภทกิจกรรม"
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "เพิ่มพนักงานใหม่"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -283,7 +302,7 @@ msgstr "ข้อมูลเพิ่มเติม"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 #: model:ir.model.fields,field_description:hr.field_res_users__additional_note
 msgid "Additional Note"
-msgstr ""
+msgstr "โน๊ตเพิ่มเติม"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -321,12 +340,12 @@ msgstr "ผู้ดูแลระบบ"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
 msgid "Advanced Presence Control"
-msgstr ""
+msgstr "การควบคุมสถานะขั้นสูง"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Advanced presence of employees"
-msgstr ""
+msgstr "สถานะพนักงานขั้นสูง"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
@@ -338,24 +357,24 @@ msgstr "Alias Contact Security"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update their own data"
-msgstr ""
+msgstr "อนุญาตให้พนักงานอัปเดตข้อมูลของตนเอง"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update their own data."
-msgstr ""
+msgstr "อนุญาตให้พนักงานอัปเดตข้อมูลของตนเอง"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Approvers"
-msgstr ""
+msgstr "ผู้อนุมัติ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
 msgid "Archive Private Address"
-msgstr ""
+msgstr "เก็บถาวรที่อยู่ส่วนตัว"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -386,6 +405,13 @@ msgid ""
 "                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
 "                                you will have solid solving problem skills."
 msgstr ""
+"ในฐานะพนักงานของบริษัทของเรา คุณจะ <b>cร่วมมือกับแต่ละแผนกเพื่อสร้างและปรับใช้\n"
+"                                ผลิตภัณฑ์ที่ก่อกวน</b> มาทำงานในบริษัทที่กำลังเติบโตซึ่งให้ประโยชน์มหาศาลพร้อมโอกาส\n"
+"                                ก้าวไปข้างหน้าและเรียนรู้ควบคู่ไปกับผู้นำที่ประสบความสำเร็จ เรากำลังมองหาพนักงานที่มีประสบการณ์และโดดเด่น\n"
+"                                <br><br>\n"
+"                                ตำแหน่งนี้เป็นทั้ง<b>creative and rigorous</b> โดยธรรมชาติ คุณต้องคิดนอกกรอบ\n"
+"                                เราคาดหวังให้ผู้สมัครมีความกระตือรือร้นและมีจิตวิญญาณ \"ทำมันให้สำเร็จ\" ประสบความสำเร็จ,\n"
+"                              คุณจะมีทักษะการแก้ปัญหาที่มั่นคง"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -403,17 +429,17 @@ msgstr "เวลาเข้าออกงาน"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
 msgid "Authenticated Employees"
-msgstr ""
+msgstr "พนักงานที่ได้รับการรับรอง"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "แผนกสมัครสมาชิกอัตโนมัติ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
+msgstr "สมัครรับข้อมูลจากแผนกต่างๆ ในช่องโดยอัตโนมัติ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -436,12 +462,12 @@ msgstr "พร้อมใช้"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Away"
-msgstr ""
+msgstr "ห่างออกไป"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__bachelor
 msgid "Bachelor"
-msgstr ""
+msgstr "ปริญญาตรี"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -458,7 +484,7 @@ msgstr "ปริญญาตรีหรือสูงกว่า"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
 #: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
-msgstr ""
+msgstr "ไอดีป้าย"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
@@ -473,27 +499,27 @@ msgstr "พื้นฐาน"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
 msgid "Based on IP Address"
-msgstr ""
+msgstr "อิงตามที่อยู่ IP"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_attendance
 msgid "Based on attendances"
-msgstr ""
+msgstr "อิงตามการเข้างาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
 msgid "Based on number of emails sent"
-msgstr ""
+msgstr "อิงตามจำนวนอีเมลที่ส่ง"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
 msgid "Based on user status in system"
-msgstr ""
+msgstr "อิงตามสถานะผู้ใช้ในระบบ"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "พนักงานทั่วไป"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__can_edit
@@ -509,12 +535,12 @@ msgstr "ยกเลิก"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 #: model:ir.model.fields,field_description:hr.field_res_users__certificate
 msgid "Certificate Level"
-msgstr ""
+msgstr "ระดับใบรับรอง"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.res_users_action_my
 msgid "Change my Preferences"
-msgstr ""
+msgstr "เปลี่ยนความต้องการของฉัน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -527,12 +553,12 @@ msgstr "สนทนา"
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
 msgid "Chief Executive Officer"
-msgstr ""
+msgstr "กรรมการผู้จัดการ"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr ""
+msgstr "หัวหน้าเจ้าหน้าที่ฝ่ายเทคนิค"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -543,7 +569,7 @@ msgstr "หน่วยงานในสังกัด"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship"
-msgstr ""
+msgstr "สัญชาติ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
@@ -558,7 +584,7 @@ msgstr "โค้ช"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "Coach of employee %s is not set."
-msgstr ""
+msgstr "โค้ชของพนักงาน %sยังไม่ได้ตั้งค่า "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
@@ -594,12 +620,12 @@ msgstr "โลโก้"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
-msgstr ""
+msgstr "ชั่วโมงการทำงานของบริษัท"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_id
 msgid "Company employee"
-msgstr ""
+msgstr "พนักงานบริษัท"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
@@ -620,7 +646,7 @@ msgstr "การกำหนดค่า"
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
 msgid "Consultant"
-msgstr ""
+msgstr "ที่ปรึกษา"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
@@ -636,7 +662,7 @@ msgstr "ข้อมูลการติดต่อ"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 #: model:ir.model.fields,field_description:hr.field_res_users__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "ประเทศที่เกิด"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
@@ -647,7 +673,7 @@ msgstr "วันที่สร้าง"
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
-msgstr ""
+msgstr "สร้างแผนกใหม่"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -663,7 +689,7 @@ msgstr "สร้างเนื้อหาที่จะช่วยเหล
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Create employee"
-msgstr ""
+msgstr "สร้างพนักงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
@@ -715,7 +741,7 @@ msgstr "วันเกิด"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "ระบุการกำหนดเวลาของทรัพยากร"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -748,14 +774,14 @@ msgstr "แผนก"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Departure"
-msgstr ""
+msgstr "การออกงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Departure Date"
-msgstr ""
+msgstr "วันที่ออกงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -766,24 +792,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason
 msgid "Departure Reason"
-msgstr ""
+msgstr "สาเหตุการออก"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr ""
+msgstr "ตัวช่วยการออกกงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Dependant"
-msgstr ""
+msgstr "ขึ้นอยู่กับ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_ids
 msgid "Direct subordinates"
-msgstr ""
+msgstr "ลูกน้องโดยตรง"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -847,6 +873,11 @@ msgid ""
 "                        Several activities are often organized all over the year, such as weekly\n"
 "                        sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"พนักงานแต่ละคนมีโอกาสที่จะเห็นผลกระทบจากการทำงานของเขา\n"
+"                        คุณสามารถมีส่วนร่วมอย่างแท้จริงต่อความสำเร็จของบริษัท\n"
+"                        <br>\n"
+"                        มักมีการจัดกิจกรรมต่างๆ ตลอดทั้งปี เช่น รายสัปดาห์\n"
+"                       เซสชันกีฬา กิจกรรมสร้างทีม เครื่องดื่มรายเดือน และอื่นๆ อีกมากมาย"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -874,25 +905,25 @@ msgstr "อีเมล"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
-msgstr ""
+msgstr "อีเมลนามแฝง"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Emergency"
-msgstr ""
+msgstr "ฉุกเฉิน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
 #: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
 msgid "Emergency Contact"
-msgstr ""
+msgstr "ผู้ติดต่อฉุกเฉิน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
 msgid "Emergency Phone"
-msgstr ""
+msgstr "โทรศัพท์ฉุกเฉิน"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -914,7 +945,7 @@ msgstr "หมวดบุคลากร"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_count
 msgid "Employee Count"
-msgstr ""
+msgstr "จำนวนพนักงาน"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_employee
@@ -924,12 +955,12 @@ msgstr "สมุดรายชื่อบุคลากร"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
 msgid "Employee Editing"
-msgstr ""
+msgstr "ตัวแก้ไขพนักงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Employee Image"
-msgstr ""
+msgstr "รูปภาพพนักงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
@@ -946,7 +977,7 @@ msgstr "ป้ายกำกับบุคลากร"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Employee Update Rights"
-msgstr ""
+msgstr "การอัปเดตสิทธิ์พนักงาน"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
@@ -957,12 +988,12 @@ msgstr "หมายเลขบัญชีธนาคารบุคลาก
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
 msgid "Employee's Bank Account Number"
-msgstr ""
+msgstr "เลขที่บัญชีธนาคารของพนักงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
 msgid "Employee's Country"
-msgstr ""
+msgstr "ประเทศของพนักงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -1012,7 +1043,7 @@ msgstr "ป้ายกำกับบุคลากร"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Enrich employee profiles with skills and resumes"
-msgstr ""
+msgstr "เพิ่มจำนวนโปรไฟล์พนักงานด้วยทักษะและประวัติย่อ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
@@ -1020,7 +1051,7 @@ msgstr ""
 msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
-msgstr ""
+msgstr "ป้อนที่อยู่ส่วนตัวของพนักงานที่นี่ ที่ไม่ได้เชื่อมโยงกับบริษัทของคุณ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1036,7 +1067,7 @@ msgstr "ขยายความรู้ของคุณในอุตสา
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
 msgid "Expected New Employees"
-msgstr ""
+msgstr "พนักงานใหม่ที่คาดการณ์"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
@@ -1058,7 +1089,7 @@ msgstr "ประสบการณ์เขียนคอนเทนต์อ
 #. module: hr
 #: model:hr.job,name:hr.job_developer
 msgid "Experienced Developer"
-msgstr ""
+msgstr "นักพัฒนาที่มากประสบการณ์"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
@@ -1069,13 +1100,13 @@ msgstr "หญิง"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 #: model:ir.model.fields,field_description:hr.field_res_users__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "สาขาวิชา"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__fired
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__fired
 msgid "Fired"
-msgstr ""
+msgstr "ไล่ออก"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -1112,7 +1143,7 @@ msgstr "ไอคอนแบบอักษรที่ยอดเยี่ย
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Fruit, coffee and <br>snacks provided."
-msgstr ""
+msgstr "มีผลไม้ กาแฟ และ<br>ของว่าง"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1144,7 +1175,7 @@ msgstr "ประสบการณ์ Google Adwords"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
 msgid "Graduate"
-msgstr ""
+msgstr "สำเร็จการศึกษา"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1167,7 +1198,7 @@ msgstr "จัดกลุ่มตาม"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "แผนกทรัพยากรบุคคล"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1204,14 +1235,14 @@ msgstr "บุคลากรที่ว่าจ้าง"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance"
-msgstr ""
+msgstr "ระยะห่างระหว่างบ้าน-ที่ทำงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
 msgid "Hr Icon Display"
-msgstr ""
+msgstr "แสดงไอคอน Hr"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1219,7 +1250,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr ""
+msgstr "สถานะการมาของ Hr "
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1256,7 +1287,7 @@ msgstr "รหัส"
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
 #: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
-msgstr ""
+msgstr "ไอดีที่ใช้ในการระบุตัวตนของพนักงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
@@ -1297,6 +1328,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น เท็จ "
+"ฟิลด์นี้จะอนุญาตให้คุณซ่อนการบันทึกทรัพยากรโดยไม่ต้องลบออก"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1331,7 +1364,7 @@ msgstr "รูปภาพ 512"
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "Import Template for Employees"
-msgstr ""
+msgstr "นำเข้าเทมเพลตสำหรับพนักงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -1411,7 +1444,7 @@ msgstr "กิจกรรมล่าสุด"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
 #: model:ir.model.fields,field_description:hr.field_res_users__last_activity_time
 msgid "Last Activity Time"
-msgstr ""
+msgstr "เวลากิจกรรมล่าสุด"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -1470,7 +1503,7 @@ msgstr "กิจกรรม"
 #: model_terms:ir.ui.view,arch_db:hr.plan_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Launch Plan"
-msgstr ""
+msgstr "เปิดตัวแผน"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1486,12 +1519,12 @@ msgstr "เป็นผู้นำในด้านวงจรการขา
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "การอยู่กินฉันสามีภริยา"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
-msgstr ""
+msgstr "มาสร้างตำแหน่งงานกันเถอะ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -1528,7 +1561,7 @@ msgstr "ผู้จัดการ"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "Manager of employee %s is not set."
-msgstr ""
+msgstr "ผู้จัดการของพนักงาน %s ยังไม่ได้ตั้งค่า"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -1541,7 +1574,7 @@ msgstr "สถานภาพ"
 #. module: hr
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
-msgstr ""
+msgstr "ผู้จัดการฝ่ายการตลาดและชุมชน"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
@@ -1551,7 +1584,7 @@ msgstr "แต่งงาน"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
 msgid "Master"
-msgstr ""
+msgstr "ปริญญาโท"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1599,7 +1632,7 @@ msgstr "ต้องมี"
 #: code:addons/hr/static/src/xml/hr_templates.xml:0
 #, python-format
 msgid "My Profile"
-msgstr ""
+msgstr "โปรไฟล์ของฉัน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
@@ -1665,7 +1698,7 @@ msgstr "ไม่มีผู้จัดการที่โง่ ไม่�
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "No specific user given on activity %s."
-msgstr ""
+msgstr "ไม่มีการระบุผู้ใช้เฉพาะในกิจกรรม%s"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1684,13 +1717,13 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_job__state__open
 msgid "Not Recruiting"
-msgstr ""
+msgstr "ไม่รับสมัคร"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not available"
-msgstr ""
+msgstr "ไม่ว่าง"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -1767,6 +1800,9 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
+"โครงสร้างแผนกของ Odoo ใช้สำหรับจัดการเอกสารทั้งหมด\n"
+"                    ที่เกี่ยวข้องกับพนักงานตามแผนก: ค่าใช้จ่าย, ใบบันทึกเวลา,\n"
+"                    ใบงาน การรับสมัคร ฯลฯ"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -1775,6 +1811,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
+"โครงสร้างแผนกของ Odoo ใช้สำหรับจัดการเอกสารทั้งหมด\n"
+"                ที่เกี่ยวข้องกับพนักงานตามแผนก: ค่าใช้จ่าย, ใบบันทึกเวลา,\n"
+"                เวลาว่าง การรับสมัคร ฯลฯ"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -1813,12 +1852,12 @@ msgstr "ผลิตภัณฑ์ของเรา"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
 #: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "PIN"
-msgstr ""
+msgstr "PIN"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "PIN Code"
-msgstr ""
+msgstr "โค้ด PIN"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__pin
@@ -1908,12 +1947,12 @@ msgstr "แผน"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
 msgid "Plan Wizard"
-msgstr ""
+msgstr "ตัวช่วยแผน"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_activity_type
 msgid "Plan activity type"
-msgstr ""
+msgstr "ประเภทแผนกิจกรรม"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_plan_action
@@ -1926,12 +1965,12 @@ msgstr "การวางแผน"
 #: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
 #: model:ir.ui.menu,name:hr.menu_config_plan_types
 msgid "Planning Types"
-msgstr ""
+msgstr "ประเภทการวางแผน"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "Plans"
-msgstr ""
+msgstr "แผน"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1942,7 +1981,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Play any sport with colleagues, <br>the bill is covered."
-msgstr ""
+msgstr "เล่นกีฬากับเพื่อนร่วมงาน <br>บิลได้ครอบคลุมแล้ว"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
@@ -1962,12 +2001,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence of employees"
-msgstr ""
+msgstr "การมาของพนักงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence reporting screen, email and IP address control."
-msgstr ""
+msgstr "หน้าจอการรายงานสถานะ การควบคุมอีเมลและที่อยู่ IP"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
@@ -1977,48 +2016,48 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_present
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
 msgid "Present"
-msgstr ""
+msgstr "ปรากฎ"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent_active
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
 msgid "Present but not active"
-msgstr ""
+msgstr "ปรากฎแต้ไม่ทำงาน"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Print Badge"
-msgstr ""
+msgstr "พิมพ์ป้าย"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Contact"
-msgstr ""
+msgstr "ติดต่อส่วนตัว"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
 #: model:ir.model.fields,field_description:hr.field_res_users__private_email
 msgid "Private Email"
-msgstr ""
+msgstr "อีเมลส่วนตัว"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr ""
+msgstr "ข้อมูลส่วนตัว"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__phone
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
 msgid "Private Phone"
-msgstr ""
+msgstr "โทรศัพท์ส่วนตัว"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "ข้าราชการ"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2034,7 +2073,7 @@ msgstr "ตอบโจทย์ความต้องการของลู
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr ""
+msgstr "พร้อมที่จะสรรหาบุคลากรอย่างมีประสิทธิภาพมากขึ้นแล้วหรือยัง?"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2062,7 +2101,7 @@ msgstr "อยู่ในระหว่างการสรรหาพนั
 #: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
 #, python-format
 msgid "Register Departure"
-msgstr ""
+msgstr "ลงทะเบียนการออก"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2072,13 +2111,13 @@ msgstr "ผู้ใช้งานที่เกี่ยวข้อง"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
 msgid "Related employee"
-msgstr ""
+msgstr "พนักงานที่เกี่ยวข้อง"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "ชื่อผู้ใช้ที่เกี่ยวข้องสำหรับทรัพยากรเพื่อจัดการการเข้าถึง"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -2095,7 +2134,7 @@ msgstr "ความต้องการ"
 #: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__resigned
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__resigned
 msgid "Resigned"
-msgstr ""
+msgstr "ลาออก"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
@@ -2108,7 +2147,7 @@ msgstr "ทรัพยากร"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_calendar_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
 msgid "Resource Calendar"
-msgstr ""
+msgstr "ปฏิทินทรัพยากร"
 
 #. module: hr
 #: model:ir.model,name:hr.model_resource_resource
@@ -2145,7 +2184,7 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #: model:ir.model.fields.selection,name:hr.selection__hr_departure_wizard__departure_reason__retired
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__departure_reason__retired
 msgid "Retired"
-msgstr ""
+msgstr "เกษียณ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
@@ -2172,7 +2211,7 @@ msgstr "กำหนดเวลา"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 #: model:ir.model.fields,field_description:hr.field_res_users__study_school
 msgid "School"
-msgstr ""
+msgstr "โรงเรียน"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -2183,17 +2222,19 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
+"เลือก \"พนักงาน\" ที่เป็นโค้ชของพนักงานคนนี้\n"
+"\"โค้ช\" ไม่มีสิทธิ์หรือความรับผิดชอบเฉพาะตามค่าเริ่มต้น"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
-msgstr ""
+msgstr "ตั้งค่ากำหนดการเริ่มต้นของบริษัทเพื่อจัดการเวลาทำงานของพนักงานของคุณ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
-msgstr ""
+msgstr "ตั้งค่าว่ากระบวนการสรรหาจะเปิดหรือปิดสำหรับตำแหน่งงานนี้"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -2224,7 +2265,7 @@ msgstr "หมายเลขประกันสังคม"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
 msgid "Specific responsible of activity if not linked to the employee."
-msgstr ""
+msgstr "ความรับผิดชอบเฉพาะของกิจกรรมถ้าไม่เชื่อมโยงกับพนักงาน"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2241,18 +2282,18 @@ msgstr "กิจกรรมกีฬา"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 #: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr ""
+msgstr "วันเกิดของคู่สมรส"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 #: model:ir.model.fields,field_description:hr.field_res_users__spouse_complete_name
 msgid "Spouse Complete Name"
-msgstr ""
+msgstr "ชื่อ-นามสกุล คู่สมรส"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
-msgstr ""
+msgstr "เริ่มรับสมัคร"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
@@ -2329,19 +2370,19 @@ msgstr "ผู้เชี่ยวชาญด้านเทคนิค"
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
-msgstr ""
+msgstr "รหัสป้ายต้องไม่ซ้ำกัน รหัสนี้ถูกกำหนดให้กับพนักงานคนอื่นแล้ว"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid "The PIN must be a sequence of digits."
-msgstr ""
+msgstr "PIN ต้องเป็นลำดับของตัวเลข"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
 #: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
 msgid "The employee address has a company linked"
-msgstr ""
+msgstr "ที่อยู่พนักงานมีบริษัทที่เชื่อมโยงอยู่"
 
 #. module: hr
 #: code:addons/hr/models/hr_employee.py:0
@@ -2349,7 +2390,7 @@ msgstr ""
 msgid ""
 "The fields \"%s\" you try to read is not available on the public employee "
 "profile."
-msgstr ""
+msgstr "ฟิลด์ \"%s\" คุณพยายามอ่านไม่พร้อมใช้งานในโปรไฟล์พนักงานสาธารณะ"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
@@ -2359,14 +2400,14 @@ msgstr "ชื่อของตำแหน่งงานจะต้องไ
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
-msgstr ""
+msgstr "ผู้ใช้จะสามารถอนุมัติเอกสารที่สร้างโดยพนักงานได้"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
 msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
-msgstr ""
+msgstr "ผู้ใช้จะมีสิทธิ์เข้าถึงการกำหนดค่าทรัพยากรบุคคลและรายงานสถิติ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -2375,7 +2416,7 @@ msgstr ""
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr ""
+msgstr "ฟิลด์นี้ใช้เพื่อกำหนดเขตเวลาที่ทรัพยากรจะทำงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -2389,14 +2430,14 @@ msgstr "เขตเวลา"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__to_define
 msgid "To Define"
-msgstr ""
+msgstr "ระบุ"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
 msgid "To define"
-msgstr ""
+msgstr "ระบุ"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2434,7 +2475,7 @@ msgstr "พิมพ์กิจกรรมข้อยกเว้นบนบ
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
 msgid "Undetermined"
-msgstr ""
+msgstr "ไม่ได้กำหนด"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -2465,25 +2506,25 @@ msgstr "ผู้ใช้งาน"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User linked to employee %s is required."
-msgstr ""
+msgstr "ผู้ใช้ที่เชื่อมโยงกับพนักงาน %s จำเป็น"
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User of coach of employee %s is not set."
-msgstr ""
+msgstr "ผู้ใช้ของโค้ชของพนักงาน %s ไม่ได้ตั้งค่า"
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "User of manager of employee %s is not set."
-msgstr ""
+msgstr "ผู้ใช้ของผู้จัดการของพนักงาน %s ไม่ได้ตั้งค่า"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
 msgid "User's partner"
-msgstr ""
+msgstr "พาร์ทเนอร์ของผู้ใช้"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -2493,13 +2534,13 @@ msgstr "ผู้ใช้งาน"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "ตำแหน่งงานว่าง :"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip_list
 msgid "Valid IP addresses"
-msgstr ""
+msgstr "ที่อยู่ IP ที่ถูกต้อง"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2559,6 +2600,9 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
+"เพียงแค่เหลือบมองบนหน้าจอพนักงานของ Odoo คุณก็จะ\n"
+"                สามารถค้นหาข้อมูลทั้งหมดที่คุณต้องการสำหรับแต่ละคนได้อย่างง่ายดาย\n"
+"                ข้อมูลการติดต่อ ตำแหน่งงาน ความพร้อม ฯลฯ"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -2567,6 +2611,9 @@ msgid ""
 "               can easily find all the information you need for each person;\n"
 "               contact data, job position, availability, etc."
 msgstr ""
+"เพียงแค่เหลือบมองบนหน้าจอพนักงานของ Odoo คุณก็จะ\n"
+"               สามารถค้นหาข้อมูลทั้งหมดที่คุณต้องการสำหรับแต่ละคนได้อย่างง่ายดาย\n"
+"               ข้อมูลการติดต่อ ตำแหน่งงาน ความพร้อม ฯลฯ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -2574,7 +2621,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
 #: model:ir.model.fields,field_description:hr.field_res_users__address_id
 msgid "Work Address"
-msgstr ""
+msgstr "ที่อยู่งาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
@@ -2589,7 +2636,7 @@ msgstr "อีเมลที่ทำงาน"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr ""
+msgstr "ข้อมูลงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location
@@ -2610,7 +2657,7 @@ msgstr "มือถือที่ทำงาน"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "องค์การงาน"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2644,19 +2691,21 @@ msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
 msgstr ""
+"คุณได้รับอนุญาตให้อัปเดตการตั้งค่าของคุณเท่านั้น "
+"โปรดติดต่อเจ้าหน้าที่ฝ่ายทรัพยากรบุคคลเพื่ออัปเดตข้อมูลอื่น ๆ"
 
 #. module: hr
 #. openerp-web
 #: code:addons/hr/static/src/models/employee/employee.js:0
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
-msgstr ""
+msgstr "คุณสามารถพูดคุยกับพนักงานที่มีผู้ใช้เฉพาะเท่านั้น"
 
 #. module: hr
 #: code:addons/hr/models/hr_department.py:0
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "คุณไม่สามารถสร้างแผนกแบบเรียกซ้ำได้"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -2671,15 +2720,15 @@ msgstr "แผนก"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr ""
+msgstr "เช่น ผู้จัดการฝ่ายขาย"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan
 msgid "plan"
-msgstr ""
+msgstr "แผน"
 
 #. module: hr
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"
-msgstr ""
+msgstr "จำกัดเฉพาะพนักงาน"

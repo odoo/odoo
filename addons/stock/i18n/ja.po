@@ -3030,6 +3030,13 @@ msgid "Invalid domain right operand %s"
 msgstr "無効なドメイン右オペランド%s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
 msgstr "棚卸資産数量"
@@ -6752,6 +6759,14 @@ msgstr ""
 "この製品は、少なくともひとつの在庫移動があります。不整合が起きる可能性があるので、プロダクトタイプの変更はお勧めできません。解決策としては、このプロダクトをアーカイブし、新しいプロダクトを作成する方法があります。"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -7644,6 +7659,12 @@ msgid ""
 msgstr "在庫移動に引き当てられたプロダクトのタイプは変更できません。タイプの変更が必要な場合、先に在庫移動の引当を解除してください。"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -7809,6 +7830,12 @@ msgstr "タイプ'ビュー'(%s)の場所から商品を受け取ったり、商
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr "完了'に設定されている在庫移動を予約解除することはできません。"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

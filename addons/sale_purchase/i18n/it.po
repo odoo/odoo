@@ -3,10 +3,8 @@
 # 	* sale_purchase
 # 
 # Translators:
-# Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -91,10 +89,9 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
-"Se selezionato, ogni volta che vendi questo prodotto con un ordine di "
-"vendita, viene creata automaticamente una richiesta di preventivo per "
-"acquistare il prodotto. Suggerimento: non dimenticare di impostare un "
-"fornitore sul prodotto."
+"Se selezionata, ogni volta che il prodotto viene venduto tramite un OdV, "
+"viene creata in modo automatico una RdP per acquistarlo. Suggerimento: non "
+"dimenticarsi di impostare un fornitore per il prodotto."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template____last_update
@@ -118,7 +115,7 @@ msgstr "Numero di ordini di acquisto generati"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
 msgid "Number of Source Sale"
-msgstr "Numero di vendita di fonti"
+msgstr "Numero vendite alla fonte"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
@@ -129,12 +126,12 @@ msgstr "Numero di voci acquisto generate"
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "Quantità ordinata ridotta!"
+msgstr "È diminuita la quantità ordinata!"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
-msgstr "Articolo di vendita di origine"
+msgstr "Voce di vendita originaria"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -150,7 +147,7 @@ msgstr "Impossibile creare una RdP se il prodotto non è un servizio."
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Purchase Automatically"
-msgstr "Acquistare automaticamente"
+msgstr "Acquisto automatico"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -180,7 +177,7 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
-msgstr "Riordino"
+msgstr "Riordini"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
@@ -201,7 +198,7 @@ msgstr "Riga ordine di vendita"
 #: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
 msgid "Sources Sale Orders %s"
-msgstr ""
+msgstr "Ordini di vendita alla fonte %s"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -218,14 +215,14 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
-"Hai ridotto la quantità ordinata! Non dimenticare di aggiornare l'ordine di "
-"acquisto se è necessario. "
+"È stata ridotta la quantità ordinata. Non dimenticarsi, se necessario, di "
+"aggiornare manualmente l'ordine di acquisto."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "cancelled"
-msgstr "annullato"
+msgstr "annullati"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation

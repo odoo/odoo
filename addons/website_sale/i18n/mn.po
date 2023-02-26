@@ -539,6 +539,13 @@ msgid "<strong>Add to Cart</strong>"
 msgstr "<strong>Сагсанд нэмэх</strong>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                    If you believe that it is an error, please contact the website administrator."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Payment Information:</strong>"
 msgstr "<strong>Төлбөрийн мэдээлэл:</strong>"
@@ -1879,6 +1886,14 @@ msgid "No abandoned carts found"
 msgstr "Орхигдсон сагс олдсонгүй"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"No payment method is available for your current order. Please contact us for"
+" more information."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined"
 msgstr "Тодорхойлсон бүтээгдэхүүн алга."
@@ -2859,6 +2874,12 @@ msgstr "Зарагдсан"
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Зарим шаардлагатай талбарууд хоосон байна."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Sorry, we are unable to find a Payment Method"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort

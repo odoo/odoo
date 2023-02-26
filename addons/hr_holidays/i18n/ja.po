@@ -16,7 +16,7 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Noma Yuki, 2021
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2021
-# Ryoko Tsuda <ryoko@quartile.co>, 2021
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +40,7 @@ msgid ""
 "and allocations; \tSet by Time Off Officer: allocated by HR and cannot be "
 "bypassed; users can request time off;"
 msgstr ""
-"制限なし:デフォルトでは割り当てはありません。ユーザーは自由に休暇をリクエストできます。従業員の要求を許可する:人事部によって割り当てられ、ユーザーは休暇と割り当てを要求できます。タイムオフオフィサーによって設定:HRによって割り当てられ、バイパスすることはできません。ユーザーは休暇をリクエストできます。"
+"制限なし:デフォルトでは割り当てはありません。ユーザーは自由に休暇をリクエストできます。従業員の要求を許可する:人事部によって割り当てられ、ユーザーは休暇と割り当てを要求できます。休暇担当者によって設定:HRによって割り当てられ、バイパスすることはできません。ユーザーは休暇をリクエストできます。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -537,7 +537,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "<span class=\"ml8\">of time off every</span>"
-msgstr "<span class=\"ml8\">毎回の休暇</span>"
+msgstr "<span class=\"ml8\">間隔</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1097,7 +1097,7 @@ msgstr "従業員のマネージャーによる"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Manager and Time Off Officer"
-msgstr "従業員のマネージャーと休暇役員による"
+msgstr "従業員のマネージャーと休暇担当者による"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1112,7 +1112,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "休暇担当官による"
+msgstr "休暇担当者による"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1828,7 +1828,7 @@ msgstr "休暇タイプ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Leave Validation"
-msgstr "検証を残す"
+msgstr "休暇の検証"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
@@ -2282,7 +2282,7 @@ msgstr "マネージャーの休暇のみが他の人の割り当てをリセッ
 msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
-msgstr "休暇の要求を承認または拒否できるのは、休暇担当役員/責任者またはマネージャーのみです。"
+msgstr "休暇の要求を承認または拒否できるのは、休暇担当者/責任者またはマネージャーのみです。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2482,7 +2482,7 @@ msgstr "担当者"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Run until"
-msgstr "まで実行"
+msgstr "有効期限"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_sms_error
@@ -2544,7 +2544,7 @@ msgstr "付番"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Set by Time Off Officer"
-msgstr "タイムオフオフィサーによる設定"
+msgstr "休暇担当者による設定"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2652,7 +2652,7 @@ msgstr "日数は0より大きくなければなりません。"
 msgid ""
 "The number of remaining time off is not sufficient for this time off type.\n"
 "Please also check the time off waiting for validation."
-msgstr "この休みタイプでは、残り休みの回数が足りません。検証待ちの時間も確認してください。"
+msgstr "この休みタイプでは、残りの休暇数が足りません。検証待ちの休暇も確認してください。"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_number_per_interval_check
@@ -2834,7 +2834,7 @@ msgid ""
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
 "休暇担当者は、従業員に休暇日を割り当てます(例:有給休暇)。<br>\n"
-"従業員は、休暇担当者への割り当てを要求します(例:回復日)。"
+"従業員は、休暇担当者へ割り当てを要求します(例:回復日)。"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_leave
@@ -3275,6 +3275,8 @@ msgid ""
 msgstr "この休暇を承認するには、%sのマネージャーまたは休暇マネージャーのいずれかである必要があります"
 
 #. module: hr_holidays
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""

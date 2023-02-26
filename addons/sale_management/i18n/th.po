@@ -27,12 +27,12 @@ msgstr ""
 #. module: sale_management
 #: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
 msgid "4 Person Desk"
-msgstr ""
+msgstr "โต๊ะทำงานสำหรับ 4 ท่าน"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
-msgstr ""
+msgstr "<span>ตัวเลือก</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -68,12 +68,12 @@ msgstr "เพิ่มในรถเข็น"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Add to order lines"
-msgstr ""
+msgstr "เพิ่มไลน์คำสั่ง"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
 msgid "All Sales"
-msgstr ""
+msgstr "ขายทั้งหมด"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -118,7 +118,7 @@ msgstr "ยืนยัน"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
+msgstr "เมลยืนยัน"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
@@ -134,12 +134,12 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "สร้างข้อเสนอมาตรฐานด้วยค่าสินค้าเริ่มต้น"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "สร้างเทมเพลตใบเสนอราคาของคุณ"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -160,12 +160,12 @@ msgstr "สร้างเมื่อ"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
 msgid "Default Sale Template"
-msgstr ""
+msgstr "เทมเพลตการขายเริ่มต้น"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__company_so_template_id
 msgid "Default Template"
-msgstr ""
+msgstr "ค่าเริ่มต้นเทมเพลต"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
@@ -182,6 +182,8 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
+"ออกแบบเทมเพลตใบเสนอราคาของคุณโดยใช้บล็อกสำเร็จรูป<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">คำเตือน: ตัวเลือกนี้จะติดตั้งแอปเว็บไซต์</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -235,16 +237,18 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+"สินค้าต้องห้าม ราคาต่อหน่วย จำนวน และ UoM "
+"ในไลน์ใบเสนอราคาขายที่ไม่ต้องรับผิดชอบ"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr ""
+msgstr "ให้ลำดับคำสั่งเมื่อแสดงรายการของสินค้าเสริม"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
+msgstr "ให้ลำดับของลำดับเมื่อแสดงรายการของรายการใบเสนอราคาขาย"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__id
@@ -264,12 +268,12 @@ msgstr "รหัส"
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
-msgstr ""
+msgstr "หากไม่เลือก จะอนุญาตให้คุณซ่อนเทมเพลตใบเสนอราคาโดยไม่ต้องลบออก"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "ค่ารวมการขาย Kpi ทั้งหมด"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest____last_update
@@ -314,7 +318,7 @@ msgstr "เส้น"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
+msgstr "ผลิตภัณฑ์ที่จำเป็นและ UoM ในรายการใบเสนอราคาขายที่รับผิดชอบ"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -325,12 +329,12 @@ msgstr "โน้ต"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "จำนวนวันสำหรับการคำนวณวันที่มีผลบังคับใช้ของใบเสนอราคา"
 
 #. module: sale_management
 #: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
 msgid "Office Chair"
-msgstr ""
+msgstr "เก้าอี้สำนักงาน"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -353,7 +357,7 @@ msgstr "สินค้าทางเลือก"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__sale_order_option_ids
 msgid "Optional Products Lines"
-msgstr ""
+msgstr "ไลน์สินค้าที่ให้เลือก"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -363,7 +367,7 @@ msgstr "ตัวเลือก"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
-msgstr ""
+msgstr "แสดงบนใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
@@ -393,7 +397,7 @@ msgstr "Opportunity to Quotation"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "ระยะเวลาใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
@@ -402,28 +406,28 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
 msgid "Quotation Template"
-msgstr ""
+msgstr "เทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "ไลน์เทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr ""
+msgstr "ไลน์เทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "ตัวเลือกเทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "อ้างอิงเทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
@@ -432,12 +436,12 @@ msgstr ""
 #: model:res.groups,name:sale_management.group_sale_order_template
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Quotation Templates"
-msgstr ""
+msgstr "เทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation expires after"
-msgstr ""
+msgstr "ใบเสนอราคาหมดอายุหลังจาก"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -466,7 +470,7 @@ msgstr "ขอชำระเงินออนไลน์ให้กับล
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "ตัวเลือกการขาย"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
@@ -486,17 +490,17 @@ msgstr "รายการคำสั่งขาย"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "การอ้างอิงคำสั่งขาย"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Sales Quotation Template Lines"
-msgstr ""
+msgstr "ไลน์เทมเพลตใบเสนอราคาขาย"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
-msgstr ""
+msgstr "ค้นหาเทมเพลตใบเสนอราคา"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_section
@@ -511,6 +515,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"ขายสินค้าตัวเดียวกันในขนาดหรือสีต่างกัน? "
+"ลองใช้ตารางผลิตภัณฑ์และเติมคำสั่งซื้อของคุณด้วยปริมาณที่หลากหลายสำหรับรายละเอียดปลีกย่อยแต่ละรายการ"
+" คุณลักษณะนี้มีอยู่ในแอปพลิเคชันการซื้อด้วย"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -525,6 +532,9 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"ดิ้นรนกับแคตตาล็อกผลิตภัณฑ์ที่ซับซ้อน? ลองใช้ Product Configurator "
+"เพื่อช่วยฝ่ายขายกำหนดค่าผลิตภัณฑ์ด้วยตัวเลือกต่างๆ เช่น สี ขนาด ความจุ ฯลฯ "
+"ทำให้การเข้ารหัสคำสั่งซื้อขายง่ายขึ้นและป้องกันข้อผิดพลาด"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
@@ -542,13 +552,15 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"ผู้ดูแลระบบสามารถกำหนดข้อกำหนดและเงื่อนไขเริ่มต้นในการตั้งค่าการขาย "
+"ข้อกำหนดที่ตั้งไว้ที่นี่จะปรากฏขึ้นแทนหากคุณเลือกเทมเพลตใบเสนอราคานี้"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
-msgstr ""
+msgstr "เทมเพลตอีเมลนี้จะถูกส่งไปเมื่อยืนยัน ปล่อยไว้ถ้าไม่ส่งอะไร"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -556,18 +568,19 @@ msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
 msgstr ""
+"ฟิลด์นี้จะถูกตรวจสอบหากผลิตภัณฑ์ของรายการตัวเลือกมีอยู่แล้วในใบเสนอราคา"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "เคล็ดลับ: Odoo รองรับสินค้าที่กำหนดค่าได้"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "เคล็ดลับ: ขายหรือซื้อสินค้าจำนวนมากด้วยเมทริกซ์"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -604,12 +617,15 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"ใช้เทมเพลตเพื่อสร้างใบเสนอราคาที่เป็นมืออาชีพและสวยงามในไม่กี่นาที\n"
+"  ส่งใบเสนอราคาเหล่านี้ทางอีเมลและให้ลูกค้าของคุณลงชื่อออนไลน์\n"
+"ใช้การขายต่อเนื่องและส่วนลดเพื่อผลักดันและเพิ่มยอดขายของคุณ"
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "คุณไม่สามารถเพิ่มตัวเลือกให้กับคำสั่งที่ยืนยันแล้ว"
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -618,6 +634,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนประเภทของรายการใบเสนอราคาขายได้ "
+"คุณควรลบบรรทัดปัจจุบันและสร้างบรรทัดใหม่ในประเภทที่เหมาะสมแทน"
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -633,7 +651,7 @@ msgstr ""
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Your template cannot contain products from multiple companies."
-msgstr ""
+msgstr "เทมเพลตของคุณต้องไม่มีสินค้าจากหลายบริษัท"
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -642,6 +660,8 @@ msgid ""
 "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"เทมเพลตของคุณมีผลิตภัณฑ์จากบริษัท %(product_company)s ในขณะที่เทมเพลตของคุณเป็นของ บริษัท %(template_company)s\n"
+"โปรดเปลี่ยนบริษัทของแม่แบบของคุณหรือลบผลิตภัณฑ์ออกจากบริษัทอื่น"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

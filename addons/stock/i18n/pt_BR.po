@@ -52,7 +52,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -3191,6 +3191,13 @@ msgstr "Operador de domínio inválido %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Operando de direito de domínio inválido%s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -6810,14 +6817,9 @@ msgstr "O produto não está disponível em quantidade suficiente"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"A quantidade feita para o produto \"%s\" não respeita a precisão de "
-"arredondamento definida na unidade de medida \"%s\". Por favor, altere a "
-"quantidade feita ou a precisão de arredondamento da sua unidade de medida."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7051,6 +7053,14 @@ msgstr ""
 "aconselhável alterar o Tipo de Produto, pois isso pode levar a "
 "inconsistências. Uma solução melhor seria arquivar o produto e criar um "
 "novo."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7999,6 +8009,12 @@ msgstr ""
 "a reserva da movimentação de estoque."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8194,6 +8210,12 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Você não pode cancelar a reserva de uma movimentação de estoque definida "
 "como 'Concluído'."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

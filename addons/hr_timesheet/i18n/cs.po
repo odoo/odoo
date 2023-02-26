@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Chris <krystof.reklamy13@gmail.com>, 2020
+# Chris, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
+# Jiří Podhorecký, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
@@ -1012,6 +1012,12 @@ msgid "Timesheets for sub-task:"
 msgstr "Pracovní výkazy dílčích úkolů:"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr ""
+
+#. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid ""
@@ -1133,6 +1139,12 @@ msgstr ""
 "U tohoto projektu nelze zaznamenávat časové rozvrhy, protože je propojen s "
 "neaktivním analytickým účtem. Změňte prosím tento účet nebo znovu aktivujte "
 "aktuální do časového rozvrhu projektu."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet

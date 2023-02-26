@@ -11,7 +11,8 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
-# trendspotter <jirka.p@volny.cz>, 2022
+# Jiří Podhorecký, 2022
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8920,7 +8921,7 @@ msgstr "<code>dateutil</code> (Python modul)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: Odoo Environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: Odoo prostředí, ve kterém je spuštěná akce"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -9097,6 +9098,10 @@ msgid ""
 "                                <span colspan=\"2\">Month: %(month)s</span>\n"
 "                                <span colspan=\"2\">Day: %(day)s</span>"
 msgstr ""
+"<span colspan=\"2\">Aktuální rok (4 místa): %(year)s</span>\n"
+"                                <span colspan=\"2\">Aktuální rok (2 místa): %(y)s</span>\n"
+"                                <span colspan=\"2\">Měsíc: %(month)s</span>\n"
+"                                <span colspan=\"2\">Den: %(day)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -20989,6 +20994,9 @@ msgid ""
 "'%%(field)s' and the following error was encountered when we attempted to "
 "create one: %(error_message)s"
 msgstr ""
+"Žádné odpovídající záznamy pro %(field_type)s '%(value)s' v poli "
+"'%%(field)s' a následující chyba se vyskytla při pokuse vytvořit záznam: "
+"%(error_message)s"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
@@ -27791,6 +27799,10 @@ msgid ""
 "                                                the field must be assigned to each record with a dictionary-like\n"
 "                                                assignment."
 msgstr ""
+"Pole <strong>Vypočítat</strong> je kód Pythonu\n"
+"                                                k výpočtu hodnoty pole na sadě záznamů. Hodnota\n"
+"                                                pole musí být každému záznamu přiřazeno jako položka\n"
+"                                                ve slovníku."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -30299,6 +30311,8 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
+"Pokud jsou použity podsekvence podle časového období, můžete přidat k proměnné předponu \"range_\"\n"
+"pro použití začátku období místo aktuálního datumu, např. %(range_year)s místo %(year)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
@@ -30375,6 +30389,8 @@ msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
 "number of subprocess reached. Message : %s"
 msgstr ""
+"Wkhtmltopdf selhal (chybový kód: %s). Příliš nízký limit paměti nebo dosažen"
+" maximální počet souborů podprocesu. Zpráva : %s"
 
 #. module: base
 #: code:addons/base/models/ir_actions_report.py:0
