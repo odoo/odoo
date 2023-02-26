@@ -548,10 +548,10 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
-        "ProgressBarField: write float instead of int works, in locale",
+        "ProgressBarField: write float in progressbar, in locale",
         async function (assert) {
             assert.expect(5);
-            serverData.models.partner.records[0].int_field = 99;
+            serverData.models.partner.records[0].float_field = 99;
 
             await makeView({
                 serverData,
@@ -559,13 +559,13 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 arch: `
                     <form>
-                        <field name="int_field" widget="progressbar" options="{'editable': true}"/>
+                        <field name="float_field" widget="progressbar" options="{'editable': true}"/>
                     </form>`,
                 resId: 1,
                 mockRPC: function (route, { method, args }) {
                     if (method === "write") {
                         assert.strictEqual(
-                            args[1].int_field,
+                            args[1].float_field,
                             1037,
                             "New value of progress bar saved"
                         );
@@ -650,4 +650,27 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps(["Show error message"], "The error message was shown correctly");
         }
     );
+
+    QUnit.test(
+        "ProgressBarField: writing overflowing int throws warning",
+        async function (assert) {
+            serverData.models.partner.records[0].int_field = 99;
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
+                arch: `
+                    <form>
+                        <field name="int_field" widget="progressbar" options="{'editable': true}"/>
+                    </form>`,
+                resId: 1,
+            });
+
+            await click(target.querySelector(".o_progress"));
+            await editInput(target, ".o_field_widget input", "1037000000000000000000000000000");
+            assert.hasClass(target.querySelector("div.o_field_progressbar"),'o_field_invalid', "Integer field should be displayed as invalid");
+
+        }
+    );
+
 });

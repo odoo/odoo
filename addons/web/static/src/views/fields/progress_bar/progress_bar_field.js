@@ -4,7 +4,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
-import { parseFloat } from "../parsers";
+import { parseInteger, parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component, onWillUpdateProps, useRef, useState, useExternalListener } from "@odoo/owl";
@@ -73,7 +73,11 @@ export class ProgressBarField extends Component {
     onCurrentValueChange(ev) {
         let parsedValue;
         try {
-            parsedValue = parseFloat(ev.target.value);
+            if (this.props.type === 'integer') {
+                parsedValue = parseInteger(ev.target.value);
+            } else {
+                parsedValue = parseFloat(ev.target.value);
+            }
         } catch {
             this.props.record.setInvalidField(this.props.name);
             return;
@@ -91,7 +95,11 @@ export class ProgressBarField extends Component {
     onMaxValueChange(ev) {
         let parsedValue;
         try {
-            parsedValue = parseFloat(ev.target.value);
+            if (this.props.type === 'integer') {
+                parsedValue = parseInteger(ev.target.value);
+            } else {
+                parsedValue = parseFloat(ev.target.value);
+            }
         } catch {
             this.props.record.setInvalidField(this.props.name);
             return;
