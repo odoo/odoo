@@ -6,7 +6,7 @@ from odoo.fields import Command
 from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
-from odoo.osv.expression import OR, AND
+from odoo.osv.expression import OR
 
 from lxml import etree
 from datetime import datetime
@@ -408,31 +408,32 @@ class AccountEdiFormat(models.Model):
                 return self._import_fattura_pa(decoded_content, invoice)
         return super()._update_invoice_from_binary(filename, content, extension, invoice)
 
-    def _l10n_it_get_partner_invoice(self, tree, company):
-        # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
-        elements = tree.xpath('//CedentePrestatore//IdCodice')
-        partner = elements and self.env['res.partner'].search(
-            ['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)],
-            limit=1)
-        if not partner:
-            elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
-            if elements:
-                codice = elements[0].text
-                domains = [[('l10n_it_codice_fiscale', '=', codice)]]
-                if re.match(r'^[0-9]{11}$', codice):
-                    domains.append([('l10n_it_codice_fiscale', '=', 'IT' + codice)])
-                elif re.match(r'^IT[0-9]{11}$', codice):
-                    domains.append([('l10n_it_codice_fiscale', '=',
-                                     self.env['res.partner']._l10n_it_normalize_codice_fiscale(codice))])
-                partner = elements and self.env['res.partner'].search(
-                    AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
-        if not partner:
-            elements = tree.xpath('//DatiTrasmissione//Email')
-            partner = elements and self.env['res.partner'].search(
-                ['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|',
-                 ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
+    def _l10n_it_get_partner_invoice(self, tree, xml_vat, xml_taxcode, xml_sender_email):
+        Partners = self.env['res.partner']
+        Companies = self.env['res.company']
 
-        return partner
+        domains = []
+        if xml_vat:
+            domains.append([('vat', 'ilike', xml_vat)])
+        if xml_taxcode:
+            if not re.match(r'^(IT)?[0-9]{11}$', xml_taxcode):
+                domains.append([('l10n_it_codice_fiscale', '=', xml_taxcode)])
+            else:
+                normalized_taxcode = Partners._l10n_it_normalize_codice_fiscale(xml_taxcode)
+                domains.append([('l10n_it_codice_fiscale', 'in', (normalized_taxcode, 'IT' + normalized_taxcode))])
+        if xml_sender_email:
+            domains.append([('email', '=', xml_sender_email)])
+
+        for Model in (Companies, Partners):
+            records = Model.search(OR(domains))
+            records.read(['id', 'vat', 'l10n_it_codice_fiscale', 'email'])
+
+            # Return the first record that satisfies the domain in order of importance
+            for domain in domains:
+                record = records.filtered_domain(domain)
+                if record:
+                    return record[0]
+        return Partners
 
     def _convert_date_from_xml(self, xsdate_str):
         """ Dates in FatturaPA are ISO 8601 date format, pattern '[-]CCYY-MM-DD[Z|(+|-)hh:mm]' """
@@ -476,178 +477,191 @@ class AccountEdiFormat(models.Model):
         :returns:       the invoice where the fattura_pa data was imported.
         """
         invoices = self.env['account.move']
-        first_run = True
+        all_values = {
+            'vals': [],
+            'attachments': {},
+            'chatter_messages': {},
+        }
+
+        def gettext_maker(tree):
+            def gettext(xpath):
+                nodes = tree.xpath(xpath)
+                return nodes[0].text.strip() if nodes else ''
+            return gettext
 
         # possible to have multiple invoices in the case of an invoice batch, the batch itself is repeated for every invoice of the batch
-        for body_tree in tree.xpath('//FatturaElettronicaBody'):
-            if not first_run or not invoice:
-                # make sure all the iterations create a new invoice record (except the first which could have already created one)
-                invoice = self.env['account.move']
-            first_run = False
+        for i, body_tree in enumerate(tree.xpath('//FatturaElettronicaBody')):
 
-            # Type must be present in the context to get the right behavior of the _default_journal method (account.move).
-            # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
-            elements = tree.xpath('//CessionarioCommittente//IdCodice')
-            company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
+            vals = {}
+            chatter_messages = []
+
+            is_bill = True
+            gettext = gettext_maker(body_tree)
+            company = self.env['res.company']
+            partner = self.env['res.partner']
+
+            xml_sender_email = gettext('//DatiTrasmissione/ContattiTrasmittente/Email')
+
+            # Buyer (CessionarioCommittente)
+            buyer_vat = gettext('//CessionarioCommittente/DatiAnagrafici/IdCodice')
+            buyer_taxcode = gettext('//CessionarioCommittente/DatiAnagrafici/CodiceFiscale')
+            buyer = self._l10n_it_get_partner_invoice(body_tree, buyer_vat, buyer_taxcode, xml_sender_email)
+            if buyer and buyer._name == company._name:
+                company = buyer
+            elif buyer:
+                partner = buyer
+
+            # Seller (CedentePrestatore)
+            seller_vat = gettext('//CedentePrestatore/DatiAnagrafici/IdCodice')
+            seller_taxcode = gettext('//CedentePrestatore/DatiAnagrafici/CodiceFiscale')
+            seller = self._l10n_it_get_partner_invoice(body_tree, seller_vat, seller_taxcode, xml_sender_email)
+            if seller and not company and seller._name == company._name:
+                is_bill = False
+                company = seller
+            elif seller:
+                partner = seller
+
+            # Company
             if not company:
-                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
-                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
-                if not company:
-                    # Only invoices with a correct VAT or Codice Fiscale can be imported
-                    _logger.warning('No company found with VAT or Codice Fiscale like %r.', elements[0].text)
-                    continue
+                _logger.warning('No company found. Buyer VAT is %s, CodiceFiscale %s, Seller VAT is %s, CodiceFiscale %s',
+                    buyer_vat, buyer_taxcode, seller_vat, seller_taxcode)
+                continue
+            vals['company_id'] = company.id
 
-            # Refund type.
-            # TD01 == invoice
-            # TD02 == advance/down payment on invoice
-            # TD03 == advance/down payment on fee
-            # TD04 == credit note
-            # TD05 == debit note
-            # TD06 == fee
-            # TD07 == simplified invoice
-            # TD08 == simplified credit note
-            # TD09 == simplified debit note
-            # For unsupported document types, just assume in_invoice, and log that the type is unsupported
-            elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento')
-            document_type = elements[0].text if elements else ''
-            move_type = self._l10n_it_document_type_mapping().get(document_type, {}).get('import_type', False)
-            if not move_type:
+            # Partner
+            if not partner:
+                partner_type = 'Vendor' if is_bill else 'Customer'
+                partner_xpath = './/CedentePrestatore' if is_bill else './/CessionarioCommittente'
+                chatter_messages.append("%s<br/>%s" % (
+                    _("%s not found, useful informations from XML file:", partner_type),
+                    invoices._compose_info_message(body_tree, partner_xpath)))
+            vals['partner_id'] = partner.id
+
+            # Document Type (TipoDocumento)
+            xml_document_type = gettext('//DatiGeneraliDocumento/TipoDocumento')
+            move_type_data = self._l10n_it_document_type_mapping().get(xml_document_type, {})
+            if is_bill:
+                move_type = move_type_data.get('import_type', False)
+            else:
+                move_type = move_type_data.get('move_types', [False])[0]
+            if move_type:
+                vals['move_type'] = move_type
+            else:
                 move_type = "in_invoice"
-                _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
-
-            vals = {
-                'company_id': company.id,
-                'move_type': move_type,
-            }
+                _logger.info('Document type not managed: %s. Invoice type %s is set by default.',
+                             xml_document_type, move_type)
 
             # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
-            extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, body_tree)
+            extra_info, chatter_messages = self._l10n_it_edi_get_extra_info(company, xml_document_type, body_tree)
 
-            partner = self._l10n_it_get_partner_invoice(tree, company)
-            if partner:
-                vals['partner_id'] = partner.id
-            else:
-                message_to_log.append("%s<br/>%s" % (
-                    _("Vendor not found, useful informations from XML file:"),
-                    invoice._compose_info_message(
-                        tree, './/CedentePrestatore')))
+            # Payment Reference (ProgressivoInvio)
+            xml_payment_reference = gettext('//ProgressivoInvio')
+            if xml_payment_reference:
+                vals['payment_reference'] = xml_payment_reference
 
-            # Numbering attributed by the transmitter. <1.1.2>
-            elements = tree.xpath('//ProgressivoInvio')
-            if elements:
-                vals['payment_reference'] = elements[0].text
+            # Ref (Numero)
+            xml_ref = gettext('.//DatiGeneraliDocumento//Numero')
+            if xml_ref:
+                vals['ref'] = xml_ref
 
-            elements = body_tree.xpath('.//DatiGeneraliDocumento//Numero')
-            if elements:
-                vals['ref'] = elements[0].text
-
-            # Currency. <2.1.1.2>
+            # Currency (Divisa)
             currency = self.env.ref('base.EUR')
-            elements = body_tree.xpath('.//DatiGeneraliDocumento/Divisa')
-            if elements:
-                currency_str = elements[0].text
-                currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                if currency != self.env.company.currency_id and currency.active:
+            xml_currency = gettext('.//DatiGeneraliDocumento/Divisa').upper()
+            if xml_currency:
+                currency = self.env.ref('base.%s' % xml_currency, raise_if_not_found=False)
+                if currency != company.currency_id and currency.active:
                     vals['currency_id'] = currency.id
 
-            # Date. <2.1.1.3>
-            elements = body_tree.xpath('.//DatiGeneraliDocumento/Data')
-            if elements:
-                document_date = self._convert_date_from_xml(elements[0].text)
+            # Date (Data)
+            xml_date = gettext('.//DatiGeneraliDocumento/Data')
+            if xml_date:
+                document_date = self._convert_date_from_xml(xml_date)
                 if document_date:
                     vals['invoice_date'] = document_date
                 else:
-                    message_to_log.append("%s<br/>%s" % (
+                    chatter_messages.append("%s<br/>%s" % (
                         _("Document date invalid in XML file:"),
-                        invoice._compose_info_message(elements[0], '.')
+                        invoices._compose_info_message(body_tree, './/DatiGeneraliDocumento/Data')
                     ))
 
-            #  Dati Bollo. <2.1.1.6>
-            elements = body_tree.xpath('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
-            if elements:
-                vals['l10n_it_stamp_duty'] = float(elements[0].text)
+            # Stamp Duty (ImportoBollo)
+            xml_stamp_duty = gettext('.//DatiGeneraliDocumento/DatiBollo/ImportoBollo')
+            if xml_stamp_duty:
+                vals['l10n_it_stamp_duty'] = float(xml_stamp_duty)
 
-
-            # Comment. <2.1.1.11>
-            elements = body_tree.xpath('.//DatiGeneraliDocumento//Causale')
-            for element in elements:
-                # Default narration is just for sale documents, and we're importing vendor bills
-                vals['narration'] = (element.text or '') + '<br/>'
+            # Narration (Causale)
+            xml_narrations = body_tree.xpath('.//DatiGeneraliDocumento//Causale')
+            if xml_narrations:
+                vals['narration'] = '<br/>'.join([node.text for node in xml_narrations])
 
             # Information about the contract, the agreement, the reception phase
             # or invoices previously transmitted, <2.1.3> - <2.1.6>
             for document_type in ['DatiContratto', 'DatiConvenzione', 'DatiRicezione', 'DatiFattureCollegate']:
                 elements = body_tree.xpath('.//DatiGenerali/' + document_type)
-                if elements:
-                    for element in elements:
-                        message_to_log.append("%s %s<br/>%s" % (document_type, _("from XML file:"),
-                        invoice._compose_info_message(element, '.')))
+                for element in elements or []:
+                    chatter_messages.append("%s %s<br/>%s" % (document_type, _("from XML file:"),
+                    invoices._compose_info_message(element, '.')))
 
-            #  Dati DDT. <2.1.8>
-            elements = body_tree.xpath('.//DatiGenerali/DatiDDT')
-            if elements:
-                message_to_log.append("%s<br/>%s" % (
+            # DDT (DatiDDT)
+            xml_ddt = gettext('.//DatiGenerali/DatiDDT')
+            if xml_ddt:
+                chatter_messages.append("%s<br/>%s" % (
                     _("Transport informations from XML file:"),
-                    invoice._compose_info_message(body_tree, './/DatiGenerali/DatiDDT')))
+                    invoices._compose_info_message(body_tree, './/DatiGenerali/DatiDDT')))
 
-            # Due date. <2.4.2.5>
-            elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
-            if elements:
-                date_str = elements[0].text.strip()
-                if date_str:
-                    due_date = self._convert_date_from_xml(date_str)
-                    if due_date:
-                        vals['invoice_date_due'] = fields.Date.to_string(due_date)
-                    else:
-                        message_to_log.append("%s<br/>%s" % (
-                            _("Payment due date invalid in XML file:"),
-                            invoice._compose_info_message(elements[0], '.')
-                        ))
+            # Invoice Due Date (DataScadenzaPagamento)
+            payment_due_date = gettext('.//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
+            if payment_due_date:
+                converted = self._convert_date_from_xml(payment_due_date)
+                if converted:
+                    vals['invoice_date_due'] = fields.Date.to_string(converted)
+                else:
+                    chatter_messages.append("%s<br/>%s" % (
+                        _("Payment due date invalid in XML file:"),
+                        invoices._compose_info_message(body_tree, './/DatiPagamento/DettaglioPagamento/DataScadenzaPagamento')
+                    ))
 
-            # Total amount. <2.4.2.6>
+            # Payment total (ImportoPagamento)
+            payment_amount = 0
             elements = body_tree.xpath('.//ImportoPagamento')
-            amount_total_import = 0
             for element in elements:
-                amount_total_import += float(element.text)
-            if amount_total_import:
-                message_to_log.append(_("Total amount from the XML File: %s") % (
-                    amount_total_import))
+                payment_amount += float(element.text)
+            if payment_amount:
+                chatter_messages.append(_("Total amount from the XML File: %s") % payment_amount)
 
-            # Bank account. <2.4.2.13>
+            # Bank account
             if vals['move_type'] not in ('out_invoice', 'in_refund'):
-                elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento/IBAN')
-                if elements:
+                acc_number = gettext('.//DatiPagamento/DettaglioPagamento/IBAN')
+                if acc_number:
+                    domain = [
+                        ('acc_number', '=', acc_number),
+                        ('company_id', 'in', (company.id, False))
+                    ]
                     if vals['partner_id'] and vals['partner_id'].commercial_partner_id:
-                        bank = self.env['res.partner.bank'].search([
-                            ('acc_number', '=', elements[0].text),
-                            ('partner_id', '=', vals['partner_id'].commercial_partner_id.id),
-                            ('company_id', 'in', [company.id, False])
-                        ], order='company_id', limit=1)
-                    else:
-                        bank = self.env['res.partner.bank'].search([
-                            ('acc_number', '=', elements[0].text), ('company_id', 'in', [company.id, False])
-                        ], order='company_id', limit=1)
+                        domain.append(('partner_id', '=', vals['partner_id'].commercial_partner_id.id))
+                    bank = self.env['res.partner.bank'].search(domain, order='company_id', limit=1)
                     if bank:
                         vals['partner_bank_id'] = bank
                     else:
-                        message_to_log.append("%s<br/>%s" % (
+                        chatter_messages.append("%s<br/>%s" % (
                             _("Bank account not found, useful informations from XML file:"),
-                            invoice._compose_multi_info_message(
-                                body_tree, ['.//DatiPagamento//Beneficiario',
-                                    './/DatiPagamento//IstitutoFinanziario',
-                                    './/DatiPagamento//IBAN',
-                                    './/DatiPagamento//ABI',
-                                    './/DatiPagamento//CAB',
-                                    './/DatiPagamento//BIC',
-                                    './/DatiPagamento//ModalitaPagamento'])))
+                            invoices._compose_multi_info_message(body_tree, [
+                                './/DatiPagamento//Beneficiario',
+                                './/DatiPagamento//IstitutoFinanziario',
+                                './/DatiPagamento//IBAN',
+                                './/DatiPagamento//ABI',
+                                './/DatiPagamento//CAB',
+                                './/DatiPagamento//BIC',
+                                './/DatiPagamento//ModalitaPagamento'
+                            ])))
             else:
                 elements = body_tree.xpath('.//DatiPagamento/DettaglioPagamento')
                 if elements:
-                    message_to_log.append("%s<br/>%s" % (
+                    chatter_messages.append("%s<br/>%s" % (
                         _("Bank account not found, useful informations from XML file:"),
-                        invoice._compose_info_message(body_tree, './/DatiPagamento')))
+                        invoices._compose_info_message(body_tree, './/DatiPagamento')))
 
-            # Invoice lines. <2.2.1>
+            # Invoice lines
             if not extra_info['simplified']:
                 elements = body_tree.xpath('.//DettaglioLinee')
             else:
@@ -661,12 +675,13 @@ class AccountEdiFormat(models.Model):
                     'currency_id': currency.id,
                     'tax_ids': [Command.clear()],
                 }
-                message_to_log += self._import_fattura_pa_line(element, invoice_line, extra_info)
+                chatter_messages += self._import_fattura_pa_line(element, invoice_line, extra_info)
                 invoice_lines.append(invoice_line)
 
+            # Total
             untaxed_amount = currency.round(sum([line['price_subtotal'] for line in invoice_lines]))
 
-            # Global discount summarized in 1 amount
+            # Discount
             discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
             if discount_elements:
                 taxable_amount = float(untaxed_amount)
@@ -687,39 +702,48 @@ class AccountEdiFormat(models.Model):
                 general_discount = discounted_amount - taxable_amount
                 sequence = len(elements) + 1
 
+                # Global discount summarized in 1 amount
                 invoice_lines.append({
                     'tax_ids': (6, 0, []),
                     'sequence': sequence,
                     'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
                     'price_unit': general_discount,
                 })
-            vals['line_ids'] = [(0, 0, line_vals) for line_vals in invoice_lines]
+            vals['line_ids'] = [Command.create(line_vals) for line_vals in invoice_lines]
 
-            new_invoice = self.env['account.move'].with_company(company).create(vals)
-
+            # Attachments (Allegati)
+            attachments = []
             elements = body_tree.xpath('.//Allegati')
-            if elements:
-                for element in elements:
-                    name_attachment = element.xpath('.//NomeAttachment')[0].text
-                    attachment_64 = str.encode(element.xpath('.//Attachment')[0].text)
-                    attachment_64 = self.env['ir.attachment'].create({
-                        'name': name_attachment,
-                        'datas': attachment_64,
-                        'type': 'binary',
-                        'res_model': 'account.move',
-                        'res_id': new_invoice.id,
-                    })
+            for element in elements:
+                attachments.append({
+                    'name': element.xpath('.//NomeAttachment')[0].text,
+                    'datas': str.encode(element.xpath('.//Attachment')[0].text),
+                    'type': 'binary',
+                    'res_model': 'account.move',
+                })
 
-                    # no_new_invoice to prevent from looping on the message_post that would create a new invoice without it
-                    new_invoice.with_context(no_new_invoice=True).message_post(
-                        body=(_("Attachment from XML")),
-                        attachment_ids=[attachment_64.id]
-                    )
+            # Save vals for later creation in one go
+            all_values['vals'].append(vals)
+            all_values['attachments'][i] = attachments
+            all_values['chatter_messages'][i] = chatter_messages
 
-            for message in message_to_log:
-                new_invoice.message_post(body=message)
+        # Create invoices
+        invoices = self.env['account.move'].with_company(company).create(all_values['vals'])
+        for invoice in enumerate(invoices):
 
-            invoices += new_invoice
+            # Post XML attachments
+            attachment_vals = all_values['attachments'].get(i, [])
+            if attachment_vals:
+                for attachment in attachment_vals:
+                    attachment['res_id'] = invoice.id
+                attachments = self.env['ir.attachment'].create(attachment_vals)
+                invoice.with_context(no_new_invoice=True).message_post(
+                    body=(_("Attachment from XML")),
+                    attachment_ids=attachments.ids)
+
+            # Post chatter messages
+            for chatter_message in all_values['chatter_messages'].get(i, []):
+                invoice.message_post(body=chatter_message)
 
         return invoices
 
@@ -727,9 +751,8 @@ class AccountEdiFormat(models.Model):
         elements = parent.xpath(selector)
         return elements and elements[0].text or None
 
-
     def _import_fattura_pa_line(self, element, invoice_line, extra_info=None):
-        message_to_log = []
+        chatter_messages = []
         extra_info = extra_info or {}
         currency = self.env['res.currency'].browse([invoice_line['currency_id']])
         company = self.env['res.company'].browse([invoice_line['company_id']])
@@ -790,7 +813,7 @@ class AccountEdiFormat(models.Model):
                 price_subtotal = currency.round(float(price_subtotal_text))
                 price_unit = currency.round(float(price_unit_text))
             else:
-                message_to_log.append("%s %s" % (
+                chatter_messages.append("%s %s" % (
                     _("Invalid price or tax information for line with name:"),
                     invoice_line.get('name')))
         else:
@@ -826,7 +849,7 @@ class AccountEdiFormat(models.Model):
             if tax:
                 invoice_line['tax_ids'].append(Command.link(tax.id))
             else:
-                message_to_log.append("%s<br/>%s" % (
+                chatter_messages.append("%s<br/>%s" % (
                     _("Tax not found for line with description '%s'", invoice_line.get('name')),
                     self.env['account.move']._compose_info_message(element, '.'),
                 ))
@@ -848,7 +871,7 @@ class AccountEdiFormat(models.Model):
                 discount = 100 - (100 * invoice_line['price_total']) / (invoice_line['quantity'] * invoice_line['price_unit'])
                 invoice_line['discount'] = discount
 
-        return message_to_log
+        return chatter_messages
 
     # -------------------------------------------------------------------------
     # Export

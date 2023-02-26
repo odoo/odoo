@@ -52,7 +52,6 @@ class TestItEdi(AccountEdiTestCommon):
             'street': 'Via Privata Alessi 6',
             'zip': '28887',
             'city': 'Milan',
-            'company_id': cls.company.id,
             'is_company': True,
         })
 
