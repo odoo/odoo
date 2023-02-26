@@ -44,6 +44,13 @@
             </div>
             <br /><br />
 
+            <!-- Client name if exists -->
+            	<t t-if="receipt.client">
+                	<t>
+                		<div>---------------------------------------</div>
+                	</t>
+                <div><strong><h2><u>Client:</u> <t t-esc="receipt.client.name" /></h2></strong></div>
+                </t>
             <!-- Orderlines -->
 
             <div class="orderlines">
