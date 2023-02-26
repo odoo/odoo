@@ -20,9 +20,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:41+0000\n"
+"POT-Creation-Date: 2023-01-26 16:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -489,7 +489,7 @@ msgstr "Ein veranstaltungsspezifisches Menü auf der Website anzeigen"
 #: model:ir.model.fields,help:website_event.field_event_event__community_menu
 #: model:ir.model.fields,help:website_event.field_event_type__community_menu
 msgid "Display community tab on website"
-msgstr ""
+msgstr "Registerkarte \" Community\" auf der Website anzeigen"
 
 #. module: website_event
 #. openerp-web
@@ -513,7 +513,7 @@ msgstr "E-Mail"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
-msgstr ""
+msgstr "Ende -"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -524,7 +524,7 @@ msgstr "Veranstaltung"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__community_menu_ids
 msgid "Event Community Menus"
-msgstr ""
+msgstr "Event Community-Menüs"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.template_location
@@ -558,14 +558,14 @@ msgstr "Veranstaltungsanmeldungen"
 #: code:addons/website_event/static/src/xml/customize_options.xml:0
 #, python-format
 msgid "Event Specific"
-msgstr ""
+msgstr "Veranstaltungsspezifisch"
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/xml/customize_options.xml:0
 #, python-format
 msgid "Event Sub-menu"
-msgstr ""
+msgstr "Veranstaltung Unter-Menü"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -661,7 +661,7 @@ msgstr "Überblick"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_done
 msgid "Is Done"
-msgstr ""
+msgstr "Ist abgeschlossen"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_ongoing
@@ -730,7 +730,7 @@ msgstr "Hauptkontakt"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_visitor__parent_id
 msgid "Main identity"
-msgstr ""
+msgstr "Hauptidentität"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
@@ -843,7 +843,7 @@ msgstr "Registrieren"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Register Button"
-msgstr ""
+msgstr "Schaltfläche Registrieren"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -889,7 +889,7 @@ msgstr "Anmeldung noch nicht geöffnet"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__start_remaining
 msgid "Remaining before start"
-msgstr ""
+msgstr "Verbleibend vor Start"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__start_remaining
@@ -987,6 +987,12 @@ msgid "This shortcut will bring you right back to the event form."
 msgstr "Dieser Shortcut führt Sie direkt zurück zum Veranstaltungsformular."
 
 #. module: website_event
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "This ticket is not available for sale for this event"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
 msgstr "Ticket #"
@@ -1076,13 +1082,13 @@ msgstr "Website"
 #: model:ir.model,name:website_event.model_website_event_menu
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "Website Event Menu"
-msgstr ""
+msgstr "Website-Veranstaltungsmenü"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_tree
 msgid "Website Event Menus"
-msgstr ""
+msgstr "Website Event-Menüs"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -1138,7 +1144,7 @@ msgstr "Website Opengraph-Bild"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "Ob Veranstaltung begonnen hat"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_done

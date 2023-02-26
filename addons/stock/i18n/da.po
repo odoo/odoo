@@ -16,7 +16,7 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # Simon Andersen <simon@vkdata.dk>, 2020
-# walther_b <wba@miracle.dk>, 2020
+# Walther Barnett <walther@gundogpro.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
 # Mads Søndergaard, 2021
@@ -3167,6 +3167,13 @@ msgstr "Ugyldig domæne operatør%s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Ugyldig domæne højre operant %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -6775,14 +6782,9 @@ msgstr "Produktet er ikke tilgængeligt i tilstrækkelige mængder"
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"Kvantiteten færdigbehandlet for produktet \"%s\" respekterer ikke "
-"afrundingspræcisionen defineret for måleenheden \"%s\". Ændre venligst den "
-"færdigbehandlede kvantitet, eller afrundingspræcisionen for din måleenhed."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7018,6 +7020,14 @@ msgstr ""
 "Dette produkt har været anvendt i mindst en lagerbevægelse. Det er ikke "
 "tilrådet at ændre Produkttypen, siden det kan fører til uoverensstemmelser. "
 "En bedre løsning kan være at arkivere produktet, og oprette et nyt i stedet."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7963,6 +7973,12 @@ msgstr ""
 "reserveringen på lager bevægelsen."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8157,6 +8173,12 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Du kan ikke aflyse en reservation på en lager bevægelse der er blevet "
 "angivet som 'Færdigbehandlet'."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

@@ -8,7 +8,7 @@
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Paolo Valier, 2020
-# maiolif <maiolif@mgftools.com>, 2020
+# neveroils <maiolif@mgftools.com>, 2020
 # Friederike Fasterling-Nesselbosch, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -284,6 +284,12 @@ msgid ""
 msgstr ""
 "Se il campo Attivo è impostato a falso, consente di nascondere l'orario "
 "lavorativo senza rimuoverlo."
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Impossible to switch calendar type for the default company schedule."
+msgstr ""
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

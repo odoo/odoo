@@ -5,7 +5,7 @@
 # Translators:
 # peso <peer.sommerlund@gmail.com>, 2020
 # Jarnhold Nattestad <nattestads@gmail.com>, 2020
-# walther_b <wba@miracle.dk>, 2020
+# Walther Barnett <walther@gundogpro.dk>, 2020
 # Joe Hansen <joedalton2@yahoo.dk>, 2020
 # jonas jensen <j.jensen@tcomp.dk>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
@@ -2154,6 +2154,14 @@ msgid "It has already been unblocked."
 msgstr "Af allerede blevet afblokeret. "
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid ""
+"It is not possible to unplan one single Work Order. You should unplan the "
+"Manufacturing Order instead in order to unplan all the linked operations."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 msgid "Its Operations are Planned"
 msgstr "Dens operationer er planlagte"
@@ -2824,6 +2832,14 @@ msgstr ""
 "Bemærk at de arkiverede arbejdscentre: '%s' stadig er forbundet til en aktiv"
 " Stykliste, hvilket betyder at operationer stadig kan planlægges for dem. "
 "For at undgå dette, foreslås det i stedet at slette arbejdscentrene."
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3822,6 +3838,12 @@ msgid "Sequence stock after manufacturing"
 msgstr "Sekvens lager efter produktion"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Serial number (%s) has already been produced."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
 msgid "Set duration manually"
 msgstr "Indstil varighed manuelt"
@@ -4192,6 +4214,12 @@ msgid ""
 msgstr "Enheden du vælger har en anden kategori end i vare skærmbilledet."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "The Workorder (%s) cannot be started twice!"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
@@ -4243,6 +4271,15 @@ msgstr ""
 "planlagte startdato, ret venligst dette for at gemme arbejdsordren."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The product has already been used at least once, editing its structure may "
+"lead to undesirable behaviours. You should rather archive the product and "
+"create a new one with a new bill of materials."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
@@ -4274,6 +4311,14 @@ msgid ""
 msgstr ""
 "Serienummeret %(number)s anvendt for komponent %(component)s er allerede "
 "blevet forbrugt."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0

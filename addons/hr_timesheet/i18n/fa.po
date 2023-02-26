@@ -10,7 +10,7 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2020
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
-# Far Har <fhari1234@gmail.com>, 2021
+# Farid Hariri <fhari1234@gmail.com>, 2021
 # Mohsen Seifmohammadi, 2022
 # Hanna Kheradroosta, 2022
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
@@ -1010,6 +1010,12 @@ msgid "Timesheets for sub-task:"
 msgstr ""
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr ""
+
+#. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid ""
@@ -1128,6 +1134,12 @@ msgstr ""
 "شما نمی توانید برگه ساعت کارکرد را در این پروژه ثبت کنید زیرا به یک حساب "
 "تحلیلی غیرفعال لینک داده شده است. لطفا این حساب را تغییر دهید یا حساب فعلی "
 "را مجدد در برگه ساعت کاکرد پروژه فعال کنید."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
