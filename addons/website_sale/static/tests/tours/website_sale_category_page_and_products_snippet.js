@@ -1,7 +1,7 @@
 /** @odoo-modules */
 
-import tour from 'web_tour.tour';
 import wTourUtils from 'website.tour_utils';
+import { registry } from "@web/core/registry";
 
 const PRODUCT_CATEGORY_ID = 2;
 
@@ -29,10 +29,10 @@ wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_editio
     ...wTourUtils.clickOnSave(),
 ]);
 
-tour.register('category_page_and_products_snippet_use', {
+registry.category("web_tour.tours").add('category_page_and_products_snippet_use', {
     test: true,
     url: `/shop/category/${PRODUCT_CATEGORY_ID}`,
-}, [
+    steps: [
     {
         content: "Check that the snippet displays the right products",
         // Wait for at least one shown product
@@ -56,4 +56,4 @@ tour.register('category_page_and_products_snippet_use', {
             }
         },
     },
-]);
+]});

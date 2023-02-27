@@ -2,7 +2,6 @@ odoo.define('website.tour_reset_password', function (require) {
 'use strict';
 
 const { registry } = require("@web/core/registry");
-require('web.dom_ready');
 
 registry.category("web_tour.tours").add('website_reset_password', {
     test: true,

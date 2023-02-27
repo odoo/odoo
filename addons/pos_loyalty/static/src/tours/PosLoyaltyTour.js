@@ -39,6 +39,7 @@ PosLoyalty.check.hasRewardLine("on the cheapest product", "-4.59");
 PosLoyalty.exec.removeRewardLine("90% on the cheapest product");
 PosLoyalty.check.orderTotalIs("45.90");
 PosLoyalty.do.enterCode("invalid_code", false);
+PosLoyalty.check.notificationMessageContains("invalid_code");
 PosLoyalty.do.enterCode("1234");
 PosLoyalty.check.hasRewardLine("Free Product - Desk Organizer", "-15.30");
 PosLoyalty.exec.finalizeOrder("Cash", "50");

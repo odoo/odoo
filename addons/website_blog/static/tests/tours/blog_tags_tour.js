@@ -28,13 +28,13 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     }, {
         content: "Verify tag appears in options",
         trigger: "we-customizeblock-option:contains(Tags) we-list input[data-name=testtag]",
-        run: () => {}, // it's a check
+        isCheck: true,
     },
     ...wTourUtils.clickOnSave(),
     {
         content: "Verify tag appears in blog post",
         trigger: "iframe #o_wblog_post_content .badge:contains(testtag)",
-        run: () => {}, // it's a check
+        isCheck: true,
     },
     wTourUtils.clickOnEdit(),
     wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     }, {
         content: "Verify tag does not appear in options anymore",
         trigger: "we-customizeblock-option:contains(Tags) we-list:not(:has(input[data-name=testtag]))",
-        run: () => {}, // it's a check
+        isCheck: true,
     },
     ...wTourUtils.clickOnSave(),
     {
@@ -61,6 +61,5 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
         content: "Verify we are still on the backend",
         trigger: "iframe span:contains(adventure) i.fa-tag",
         run: () => {}, // it's a check
-
     }]
 );

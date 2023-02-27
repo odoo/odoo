@@ -2,7 +2,7 @@ odoo.define('hr_holidays.tour_time_off_request_calendar_view', function (require
 'use strict';
 
 const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/js/tour_step_utils');
+const { stepUtils } = require('@web_tour/tour_service/tour_utils');
 
 registry.category("web_tour.tours").add('time_off_request_calendar_view', {
     test: true,

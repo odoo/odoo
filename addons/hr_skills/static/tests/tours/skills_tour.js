@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/js/tour_step_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('hr_skills_tour', {
     test: true,
@@ -107,6 +107,11 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
         run: "click",
     },
     {
+        content: "Check if item is added",
+        trigger: ".o_data_row td.o_data_cell:contains('Fortunate Son')",
+        run: () => {},
+    },
+    {
         content: "Add a new Skill",
         trigger: ".o_field_skills_one2many button:contains('ADD')",
     },
@@ -135,6 +140,11 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
         trigger: ".o_form_button_save",
         in_modal: true,
         run: "click",
+    },
+    {
+        content: "Check if item is added",
+        trigger: ".o_data_row td.o_data_cell:contains('Oh Mary')",
+        run: () => {},
     },
     ...stepUtils.saveForm(),
     {

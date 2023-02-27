@@ -158,8 +158,4 @@ class TestUi(TestUICommon):
             ]
         })
 
-        self.browser_js(
-            '/slides',
-            'odoo.__DEBUG__.services["web_tour.tour"].run("certification_member")',
-            'odoo.__DEBUG__.services["web_tour.tour"].tours.certification_member.ready',
-            login=user_demo.login)
+        self.start_tour('/slides', 'certification_member', login=user_demo.login)

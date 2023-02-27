@@ -37,7 +37,7 @@ wTourUtils.registerThemeHomepageTour('homepage', [
     wTourUtils.dragNDrop(snippets[1]),
     wTourUtils.dragNDrop(snippets[2]),
     wTourUtils.dragNDrop(snippets[3]),
-    wTourUtils.dragNDrop(snippets[4]),
+    wTourUtils.dragNDrop(snippets[4], 'top'),
     wTourUtils.dragNDrop(snippets[5]),
     wTourUtils.clickOnSnippet(snippets[5], 'top'),
     wTourUtils.changeBackgroundColor(),

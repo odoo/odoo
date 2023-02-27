@@ -70,7 +70,7 @@ registry.category("web_tour.tours").add('newsletter_popup_use', {
     },
     {
         content: "Check the modal is now closed",
-        trigger: 'body:has(.o_newsletter_popup)',
+        trigger: 'body:not(.modal-open)',
         run: ensurePopupNotVisible,
     }
 ]});

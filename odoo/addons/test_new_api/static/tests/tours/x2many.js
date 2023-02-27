@@ -1,7 +1,7 @@
 odoo.define('web.test.x2many', function (require) {
     'use strict';
 
-    const { stepUtils } = require('@web_tour/js/tour_step_utils');
+    const { stepUtils } = require('@web_tour/tour_service/tour_utils');
     const { registry } = require("@web/core/registry");
     var inc;
 
@@ -52,14 +52,14 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "check if the modal is saved",
         trigger: '.o_field_widget[name=moderator] input:propValueContains(user_test)',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "go to Participants tab to check onchange",
         trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
     }, {
         content: "check the onchange from the o2m to the m2m",
         trigger: '.o_field_widget[name=participants] .o_data_cell:contains(user_test)',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, { // add ourself as participant
         content: "click to add participants",
         trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add a'
@@ -105,7 +105,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "check onchange",
         trigger: '.o_field_widget[name="message_concat"] textarea:propValue([test_trigger] Mitchell Admin:a\n[test_trigger] Mitchell Admin:b)',
-        run: function () {},
+        isCheck: true,
     }, { // change message b
         content: "edit message b",
         trigger: '.o_field_widget[name=messages] .o_data_cell:containsExact(b)',
@@ -152,11 +152,11 @@ odoo.define('web.test.x2many', function (require) {
         content: "check data 1",
         trigger: '.o_content:has(.o_field_widget[name=messages] tbody .o_data_row:eq(2))',
         extra_trigger: 'body:not(:has(.o_field_widget[name=messages] tbody .o_data_row:eq(3)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "check data 2",
         trigger: '.o_content:has(.o_field_widget[name=messages] tr:has(td:containsExact(bbb)):has(td:containsExact([test_trigger] Mitchell Admin)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "go to tab 3",
         trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
@@ -164,7 +164,7 @@ odoo.define('web.test.x2many', function (require) {
         content: "check data 3",
         trigger: '.o_content:has(.o_field_widget[name=participants] tbody .o_data_row:eq(2))',
         extra_trigger: 'body:not(:has(.o_field_widget[name=participants] tbody .o_data_row:eq(3)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "change tab to Messages",
         trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
@@ -216,23 +216,23 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "test one2many's line onchange after many2one",
         trigger: '.o_field_widget[name=name]:contains([test_trigger] Marc Demo)',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "test one2many field not triggered onchange",
         trigger: '.o_field_widget[name="message_concat"] textarea:propValueContains([test_trigger] Mitchell Admin:e)',
         in_modal: false,
-        run: function () {}, // don't change texarea content
+        isCheck: true, // don't change texarea content
     }, {
         content: "save changes",
         trigger: '.modal-footer .o_form_button_save'
     }, {
         content: "test one2many triggered the onchange on save for the line",
         trigger: '.o_field_widget[name=messages] .o_data_cell:contains([test_trigger] Marc Demo)',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "test one2many triggered the onchange on save",
         trigger: '.o_field_widget[name="message_concat"] textarea:propValueContains([test_trigger] Marc Demo:e)',
-        run: function () {}, // don't change texarea content
+        isCheck: true, // don't change texarea content
     }, { // remove
         content: "remove b",
         trigger: '.o_field_widget[name=messages] .o_data_row:has(.o_data_cell:containsExact(bbb)) .o_list_record_remove',
@@ -246,15 +246,15 @@ odoo.define('web.test.x2many', function (require) {
     }, { // check saved data
         content: "check data 4",
         trigger: '.o_content:not(:has(.o_field_widget[name=messages] tbody tr:has(.o_list_record_remove):eq(4)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "check data 5",
         trigger: '.o_content:has(.o_field_widget[name=messages] tbody:has(tr td:containsExact(aaa)):has(tr td:containsExact(c)):has(tr td:containsExact(d)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "check data 6",
         trigger: '.o_content:has(.o_field_widget[name=messages] tbody tr:has(td:containsExact([test_trigger] Mitchell Admin)):has(td:containsExact(aaa)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "go to Participants",
         trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
@@ -262,7 +262,7 @@ odoo.define('web.test.x2many', function (require) {
         content: "check data 7",
         trigger: '.o_content:has(.o_field_widget[name=participants] tbody .o_data_row:eq(2))',
         extra_trigger: '.o_content:not(:has(.o_field_widget[name=participants] tbody .o_data_row:eq(3)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "go to Messages",
         trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
@@ -280,7 +280,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "test one2many's line onchange after many2one",
         trigger: '.o_field_widget[name=name]:contains([test_trigger] Marc Demo)',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "insert body",
         trigger: '.o_field_widget[name="body"] textarea',
@@ -291,12 +291,12 @@ odoo.define('web.test.x2many', function (require) {
     }, { // check onchange data
         content: "check data 8",
         trigger: '.o_field_widget[name="message_concat"] textarea:propValueContains([test_trigger] Mitchell Admin:aaa\n[test_trigger] Mitchell Admin:c\n[test_trigger] Mitchell Admin:d\n[test_trigger] Marc Demo:ddd)',
-        run: function () {}, // don't change texarea content
+        isCheck: true, // don't change texarea content
     }, {
         content: "check data 9",
         trigger: '.o_content:has(.o_field_widget[name=messages] .o_data_row:eq(3))',
         extra_trigger: 'body:not(:has(.o_field_widget[name=messages] .o_data_row:eq(4)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, ...stepUtils.discardForm({ // cancel
         content: "cancel change",
         extra_trigger: '.o_field_widget[name=messages]:has(tr td:containsExact(ddd))',
@@ -339,7 +339,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "test one2many's line onchange",
         trigger: '.o_field_widget[name=messages] .o_selected_row td:nth(3):contains(3)',
-        run: function () {}, // don't blur the many2one
+        isCheck: true, // don't blur the many2one
     }, {
         content: "open the many2one to select an other user",
         trigger: '.o_field_widget[name=messages] .o_field_many2one[name="author"] input',
@@ -350,7 +350,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "test one2many's line onchange after many2one",
         trigger: '.o_field_widget[name=messages] td:contains([test_trigger2] Marc Demo)',
-        run: function () {}, // don't blur the many2one
+        isCheck: true, // don't blur the many2one
     }, {
         content: "change text value",
         trigger: '.o_field_widget[name="body"] textarea',
@@ -362,7 +362,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "test one2many onchange",
         trigger: '.o_field_widget[name="message_concat"] textarea:propValueContains([test_trigger2] Marc Demo:ccccc)',
-        run: function () {}, // don't change texarea content
+        isCheck: true, // don't change texarea content
     }, {
         content: "click outside to trigger one2many onchange",
         trigger: '.o_field_widget[name=categories] input',
@@ -375,19 +375,19 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "test one2many onchange after delete",
         trigger: '.o_content:not(:has(.o_field_widget[name="message_concat"] textarea:propValueContains(Mitchell Admin:d)))',
-        run: function () {},
+        isCheck: true,
     }, ...stepUtils.saveForm({ // save
         content: "save discussion",
         extra_trigger: 'body:not(:has(tr:has(td:containsExact(d))))',
     }), { // check saved data
         content: "check data 10",
         trigger: '.o_field_widget[name=message_concat] textarea:propValueContains([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc)',
-        run: function () {}, // don't change texarea content
+        isCheck: true, // don't change texarea content
     }, {
         content: "check data 11",
         trigger: '.o_field_widget[name=messages] tbody .o_data_row:eq(1)',
         extra_trigger: 'body:not(:has(.o_field_widget[name=messages] tbody .o_data_row:eq(2)))',
-        run: function () {},
+        isCheck: true,
     }, { // add message eee
         content: "create new message eee",
         trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
@@ -402,12 +402,12 @@ odoo.define('web.test.x2many', function (require) {
     }), { // check saved data
         content: "check data 12",
         trigger: '.o_field_widget[name="message_concat"] textarea:propValueContains([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc\n[test_trigger2] Mitchell Admin:eee)',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "check data 13",
         trigger: '.o_field_widget[name=messages] .o_data_row:eq(2)',
         extra_trigger: 'body:not(:has(.o_field_widget[name=messages] .o_data_row:eq(3)))',
-        run: function () {}, // it's a check
+        isCheck: true,
     },
 
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -435,11 +435,11 @@ odoo.define('web.test.x2many', function (require) {
         content: "check new dummy message happened",
         trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:containsExact(13)',
         extra_trigger: '.o_field_widget[name=important_messages] .o_data_row .o_list_number:containsExact(13)',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "check field not in embedded view received correctly",
         trigger: '.o_field_widget[name=messages] .o_data_row input[type="checkbox"]:propChecked',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "empty discussion title",
         trigger: '.o_field_widget[name=name] input',
@@ -447,7 +447,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "onchange happened",
         trigger: '.o_field_widget[name=messages] .o_data_row td:contains([removed_title])',
-        run: function () {}, // it's a check
+        isCheck: true,
     }, {
         content: "set discussion title to generate dummy message",
         trigger: '.o_field_widget[name=name] input',
@@ -456,7 +456,7 @@ odoo.define('web.test.x2many', function (require) {
         content: "check update and new dummy message happened",
         trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:containsExact(22)',
         extra_trigger: '.o_field_widget[name=important_messages] .o_data_row .o_list_number:containsExact(22)',
-        run: function () {}, // it's a check
+        isCheck: true,
     },
     ...stepUtils.discardForm(),
     ]});

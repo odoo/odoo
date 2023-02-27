@@ -171,6 +171,14 @@ class Check {
             },
         ];
     }
+    notificationMessageContains(str) {
+        return [
+            {
+                trigger: `.o_notification span:contains("${str}")`,
+                run: function () {},
+            }
+        ]
+    }
 }
 
 class Execute {

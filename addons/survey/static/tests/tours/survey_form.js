@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/js/tour_step_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers', {
     test: true,
@@ -188,6 +188,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Check that Question 3 no longer has a trigger icon",
         trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button))",
+        allowInvisible: true,
         run: () => {}, // it's a check
     }, {
         content: "Check that Question 2 however still has a trigger icon",
@@ -200,6 +201,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Check that now Question 2 too does no longer have a trigger icon",
         trigger: "tr:contains('Question 2') div.o_widget_survey_question_trigger:not(:has(button))",
+        allowInvisible: true,
         run: () => {}, // it's a check
     }, {
         content: 'Go back to Kanban View',
@@ -226,7 +228,7 @@ function addTwoAnswers() {
             trigger: "div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
             in_modal: true,
         }, {
-            trigger: 'tr.o_selected_row div[name=value] input',
+            trigger: 'tr:nth-child(2).o_selected_row div[name=value] input',
             run: 'text Answer B',
             in_modal: true,
         }
