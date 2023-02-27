@@ -28,7 +28,7 @@
         <field name="model">slide.channel</field>
         <field name="inherit_id" ref="website_slides.slide_channel_view_tree_report"/>
         <field name="arch" type="xml">
-            <field name="members_done_count" position="after">
+            <field name="members_completed_count" position="after">
                 <field name="currency_id" invisible="1"/>
                 <field name="product_sale_revenues" string="Total Revenues" sum="Total Revenues" widget="monetary"/>
             </field>
@@ -40,7 +40,7 @@
         <field name="model">slide.channel</field>
         <field name="inherit_id" ref="website_slides.slide_channel_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='info_total_time']" position="after">
+            <xpath expr="//div[@name='info_avg_rating']" position="after">
                 <div class="d-flex" attrs="{'invisible': [('enroll', '!=', 'payment')]}">
                     <span class="me-auto"><label for="product_sale_revenues" class="mb0">Sales</label></span>
                     <field name="product_sale_revenues" widget="monetary" options="{'currency_field': 'currency_id'}"/>

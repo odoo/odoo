@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
                 <form string="Channels">
                     <header>
-                        <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight" attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
+                        <button name="action_channel_enroll" string="Add Attendees" type="object" class="oe_highlight"/>
+                        <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight btn btn-secondary"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -29,14 +30,14 @@
                                     Published Contents
                                 </span>
                             </button>
-                            <button name="action_redirect_to_done_members"
+                            <button name="action_redirect_to_completed_members"
                                 type="object"
                                 icon="fa-trophy"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
                                 <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="members_done_count" nolabel="1"/></span>
-                                    <span name="members_done_count_label" class="o_stat_text">Finished</span>
+                                    <span class="o_stat_value"><field name="members_completed_count" nolabel="1"/></span>
+                                    <span name="members_completed_count_label" class="o_stat_text">Finished</span>
                                 </div>
                             </button>
                             <button name="action_redirect_to_members"
@@ -44,7 +45,7 @@
                                 icon="fa-graduation-cap"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
-                                <field name="members_count" string="Attendees" widget="statinfo"/>
+                                <field name="members_all_count" string="Attendees" widget="statinfo"/>
                             </button>
                              <button name="action_view_ratings"
                                 type="object"
@@ -103,10 +104,10 @@
                                         <field name="prerequisite_of_channel_ids" widget="many2many_tags" readonly="1"
                                                attrs="{'invisible': [('prerequisite_of_channel_ids', '=', [])]}"/>
                                         <field name="visibility" widget="radio" options="{'horizontal': true}"/>
-                                        <field name="enroll" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('visibility', '=', 'course_attendees')]}"/>
+                                        <field name="enroll" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('visibility', '=', 'members')]}"/>
                                         <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
-                                        <field name="enroll_msg" attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
+                                        <field name="enroll_msg" attrs="{'invisible': ['|', ('enroll', '!=', 'invite'), ('visibility', '=', 'members')]}"/>
                                     </group>
                                 </group>
                                 <group>
@@ -184,7 +185,7 @@
                     <field name="rating_avg_stars" string="Average Review"/>
                     <field name="total_time" string="Total Duration" widget="float_time" sum="Total Duration"/>
                     <field name="members_count" string="# Attendees" sum="Total Attendees"/>
-                    <field name="members_done_count" string="# Completed" sum="Total Completed"/>
+                    <field name="members_completed_count" string="# Completed" sum="Total Completed"/>
                 </tree>
             </field>
         </record>
@@ -257,10 +258,8 @@
                                     <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                 </t>
                                 <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
-                                <a role="menuitem" name="action_channel_invite" class="dropdown-item"
-                                    type="object" attrs="{'invisible': [('enroll', '!=', 'invite')]}">
-                                    Invite
-                                </a>
+                                <a role="menuitem" name="action_channel_enroll" class="dropdown-item" type="object">Add Attendees</a>
+                                <a role="menuitem" name="action_channel_invite" class="dropdown-item" type="object">Invite</a>
                             </div>
                         </t>
                         <t t-name="kanban-box">
@@ -293,37 +292,47 @@
                                             <button class="btn btn-primary" name="open_website_url" type="object">View course</button>
                                         </div>
                                         <div class="col-6 o_kanban_primary_right">
-                                            <div class="d-flex" t-if="record.rating_count.raw_value">
-                                                <a name="action_view_ratings" type="object" class="me-auto"><field name="rating_count"/> Reviews</a>
-                                                <span><field name="rating_avg_stars"/> / 5</span>
-                                            </div>
                                             <div class="d-flex">
                                                 <span class="me-auto"><label for="total_views" class="mb0">Views</label></span>
                                                 <field name="total_views"/>
+                                            </div>
+                                            <div class="d-flex" name="info_total_slides">
+                                                <span class="me-auto"><label for="total_slides" class="mb0">Contents</label></span>
+                                                <field name="total_slides"/>
                                             </div>
                                             <div class="d-flex" name="info_total_time">
                                                 <span class="me-auto"><label for="total_time" class="mb0">Duration</label></span>
                                                 <field name="total_time" widget="float_time"/>
                                             </div>
+                                            <div class="d-flex" name="info_avg_rating" t-if="record.rating_count.raw_value">
+                                                <a name="action_view_ratings" type="object" class="me-auto"><field name="rating_count"/> Reviews</a>
+                                                <span><field name="rating_avg_stars"/> / 5</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row mt3">
-                                        <div class="col-5 border-end">
-                                            <a name="action_view_slides" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="fw-bold"><field name="total_slides"/></span>
-                                                <span class="text-muted">Published Contents</span>
+                                    <div class="row mt3 o_kanban_card_attendees_buttons">
+                                        <div class="col-3 border-end">
+                                            <a name="action_redirect_to_invited_members" type="object" class="d-flex flex-column align-items-center">
+                                                <field name="members_invited_count" class="fw-bold"/>
+                                                <span class="text-muted">Invited</span>
                                             </a>
                                         </div>
                                         <div class="col-3 border-end">
-                                            <a name="action_redirect_to_members" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="fw-bold"><field name="members_count"/></span>
-                                                <span class="text-muted">Attendees</span>
+                                            <a name="action_redirect_to_engaged_members" type="object" class="d-flex flex-column align-items-center">
+                                                <field name="members_engaged_count" class="fw-bold"/>
+                                                <span class="text-muted">Ongoing</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-3 border-end">
+                                            <a name="action_redirect_to_completed_members" type="object" class="d-flex flex-column align-items-center">
+                                                <field name="members_completed_count" class="fw-bold"/>
+                                                <span name="done_members_count_label" class="text-muted">Finished</span>
                                             </a>
                                         </div>
                                         <div class="col-3">
-                                            <a name="action_redirect_to_done_members" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="fw-bold"><field name="members_done_count"/></span>
-                                                <span name="done_members_count_label" class="text-muted">Finished</span>
+                                            <a name="action_redirect_to_members" type="object" class="d-flex flex-column align-items-center">
+                                                <field name="members_all_count" class="fw-bold"/>
+                                                <span class="text-muted">Total</span>
                                             </a>
                                         </div>
                                     </div>

@@ -35,7 +35,7 @@ class TestSlidesManagement(slides_common.SlidesCase):
 
         self.assertTrue(self.channel.active)
         self.assertTrue(self.channel.is_published)
-        self.assertFalse(channel_partner.completed)
+        self.assertFalse(channel_partner.member_status == 'completed')
         for slide in self.channel.slide_ids:
             self.assertTrue(slide.active, "All slide should be archived when a channel is archived")
             self.assertTrue(slide.is_published, "All slide should be unpublished when a channel is archived")
@@ -44,7 +44,7 @@ class TestSlidesManagement(slides_common.SlidesCase):
         self.assertFalse(self.channel.active)
         self.assertFalse(self.channel.is_published)
         # channel_partner should still NOT be marked as completed
-        self.assertFalse(channel_partner.completed)
+        self.assertFalse(channel_partner.member_status == 'completed')
 
         for slide in self.channel.slide_ids:
             self.assertFalse(slide.active, "All slides should be archived when a channel is archived")
@@ -149,7 +149,7 @@ class TestSlidesManagement(slides_common.SlidesCase):
                 any(mail.model == 'slide.channel.partner' and user.partner_id in mail.recipient_ids
                     for mail in created_mails)
             )
-        # user_portal has not finished the course, it should not receive anything
+        # user_portal has not completed the course, they should not receive anything
         self.assertFalse(
             any(mail.model == 'slide.channel.partner' and self.user_portal.partner_id in mail.recipient_ids
                 for mail in created_mails)

@@ -42,6 +42,17 @@ class TestAccess(common.SlidesCase):
         self.slide.with_user(self.user_emp).read(['name'])
 
         # not member anymore -> cannot read
+        membership.action_archive()
+        self.channel.with_user(self.user_emp).read(['name'])
+        with self.assertRaises(AccessError):
+            self.slide.with_user(self.user_emp).read(['name'])
+
+        # re-activate member -> can read again
+        membership.action_unarchive()
+        self.channel.with_user(self.user_emp).read(['name'])
+        self.slide.with_user(self.user_emp).read(['name'])
+
+        # unlink membership -> cannot read
         membership.unlink()
         self.channel.with_user(self.user_emp).read(['name'])
         with self.assertRaises(AccessError):
@@ -205,9 +216,34 @@ class TestAccess(common.SlidesCase):
         with self.assertRaises(AccessError):
             self.channel.with_user(self.user_portal).read(['name'])
 
+        user_emp_membership.action_archive()
+        with self.assertRaises(AccessError):
+            self.channel.with_user(self.user_emp).read(['name'])
+        with self.assertRaises(AccessError):
+            self.slide.with_user(self.user_emp).read(['name'])
+
         user_emp_membership.unlink()
         with self.assertRaises(AccessError):
             self.channel.with_user(self.user_emp).read(['name'])
+
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
+    def test_access_channel_visiblilty_members_as_invited(self):
+        self.channel.visibility = 'members'
+        self.channel.flush_recordset()
+
+        with self.assertRaises(AccessError):
+            self.channel.with_user(self.user_portal).read(['name'])
+
+        user_portal_membership = self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.user_portal.partner_id.id,
+            'member_status': 'invited'
+        })
+        self.channel.with_user(self.user_portal).read(['name'])
+
+        user_portal_membership.action_archive()
+        with self.assertRaises(AccessError):
+            self.channel.with_user(self.user_portal).read(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_members_with_website_published(self):
@@ -219,7 +255,6 @@ class TestAccess(common.SlidesCase):
 
         with self.assertRaises(AccessError):
             self.channel.with_user(self.user_portal).read(['name'])
-
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_visibility_connected(self):
@@ -240,6 +275,45 @@ class TestAccess(common.SlidesCase):
             self.slide.with_user(self.user_portal).read(['name'])
         with self.assertRaises(AccessError):
             self.slide.with_user(self.user_public).read(['name'])
+
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
+    def test_access_channel_visiblilty_connected_as_invited(self):
+        self.channel.visibility = 'connected'
+        self.channel.flush_recordset()
+
+        self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.user_emp.partner_id.id,
+            'member_status': 'invited'
+        })
+        self.channel.with_user(self.user_emp).read(['name'])
+
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
+    def test_access_slide_slide_as_invited(self):
+        """ Check that preview slides are visible to logged invited attendees, but not others, nor non published ones."""
+        self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.user_portal.partner_id.id,
+            'member_status': 'invited'
+        })
+        with self.assertRaises(AccessError):
+            self.slide.with_user(self.user_portal).read(['name'])
+
+        self.slide.is_preview = True
+        self.slide.with_user(self.user_portal).read(['name'])
+
+        self.channel.visibility = 'connected'
+        self.channel.flush_recordset()
+        self.slide.with_user(self.user_portal).read(['name'])
+
+        self.channel.visibility = 'members'
+        self.channel.flush_recordset()
+        self.slide.with_user(self.user_portal).read(['name'])
+
+        self.slide.is_published = False
+        self.slide.flush_recordset(['is_published'])
+        with self.assertRaises(AccessError):
+            self.slide.with_user(self.user_portal).read(['name'])
 
 
 @tagged('functional', 'security')

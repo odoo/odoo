@@ -14,7 +14,7 @@ class SlideChannelPartner(models.Model):
         res = super(SlideChannelPartner, self)._recompute_completion()
         partner_has_completed = {
             channel_partner.partner_id.id: channel_partner.channel_id for channel_partner in self
-            if channel_partner.completed}
+            if channel_partner.member_status == 'completed'}
         employees = self.env['hr.employee'].sudo().search(
             [('user_id.partner_id', 'in', list(partner_has_completed.keys()))])
 
@@ -60,15 +60,18 @@ class SlideChannelPartner(models.Model):
 class Channel(models.Model):
     _inherit = 'slide.channel'
 
-    def _action_add_members(self, target_partners, raise_on_access=False):
-        res = super()._action_add_members(target_partners, raise_on_access=raise_on_access)
-        for channel in self:
-            channel._message_employee_chatter(
-                Markup(_('The employee subscribed to the course <a href="%(link)s">%(course)s</a>')) % {
-                    'link': channel.website_url,
-                    'course': channel.name,
-                },
-                target_partners)
+    def _action_add_members(self, target_partners, member_status='joined', raise_on_access=False):
+        res = super()._action_add_members(target_partners, member_status=member_status, raise_on_access=raise_on_access)
+        if member_status == 'joined':
+            for channel in self:
+                channel._message_employee_chatter(
+                    escape(_('The employee subscribed to the course %s')) % \
+                    Markup('<a href="%(link)s">%(course)s</a>') % {
+                        'link': channel.website_url,
+                        'course': channel.name
+                    },
+                    target_partners
+                )
         return res
 
     def _remove_membership(self, partner_ids):

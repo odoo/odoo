@@ -61,12 +61,14 @@
                 hasNext: false,
                 completed: false,
                 isMember: false,
+                isMemberOrInvited: false,
             });
             this.quiz = quiz_data || false;
             if (this.quiz) {
                 this.quiz.questionsCount = quiz_data.questions.length;
             }
             this.isMember = slide_data.isMember || false;
+            this.isMemberOrInvited = slide_data.isMemberOrInvited || false;
             this.publicUser = session.is_website_user;
             this.userId = session.user_id;
             this.redirectURL = encodeURIComponent(document.URL);
@@ -324,6 +326,7 @@
                     isQuiz: true,
                     channel: this.channel,
                     isMember: this.isMember,
+                    isMemberOrInvited: this.isMemberOrInvited,
                     publicUser: this.publicUser,
                     beforeJoin: this._saveQuizAnswersToSession.bind(this),
                     afterJoin: this._afterJoin.bind(this),

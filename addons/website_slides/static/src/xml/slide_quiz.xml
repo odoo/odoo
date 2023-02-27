@@ -46,7 +46,7 @@
         <div id="validation">
             <div t-if="!widget.isMember">
                 <div class="o_wslides_join_course alert alert-info d-flex align-items-center justify-content-between">
-                    <div t-if="widget.channel.channelEnroll == 'invite'">
+                    <div t-if="widget.channel.channelEnroll == 'invite' and !widget.isMemberOrInvited">
                         <b>This course is private.
                             <span t-if="widget.publicUser">
                                 Please
@@ -73,7 +73,7 @@
                     </div>
                     <div t-else="" class="w-100">
                         <b class="h5 mb-0 o_wslides_quiz_join_course_message">
-                            <span t-if="widget.channel.channelEnroll == 'public'">
+                            <span t-if="widget.channel.channelEnroll == 'public' or (widget.isMemberOrInvited and widget.channel.channelEnroll == 'invite')">
                                 <t t-if="widget.publicUser">
                                     Sign in and join the course to verify your answers!
                                 </t>

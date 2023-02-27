@@ -23,11 +23,11 @@
                     </div>
                 </div>
                 <div class="mb32">
-                    <h5 class="border-bottom pb-1">Followed Courses</h5>
+                    <h5 class="border-bottom pb-1">Ongoing Courses</h5>
                     <t t-if="courses_ongoing" t-call="website_slides.display_course">
                         <t t-set="courses" t-value="courses_ongoing"></t>
                     </t>
-                    <p t-else="" class="text-muted">No followed courses yet!</p>
+                    <p t-else="" class="text-muted">No ongoing courses yet!</p>
                 </div>
             </t>
         </xpath>

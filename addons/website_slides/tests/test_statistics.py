@@ -47,12 +47,12 @@ class TestChannelStatistics(common.SlidesCase):
         # slide statistics computation
         self.assertEqual(float_compare(channel_publisher.total_time, sum(s.completion_time for s in channel_publisher.slide_content_ids), 3), 0)
         # members computation
-        self.assertEqual(channel_publisher.members_count, 1)
-        channel_publisher._action_add_member()
-        self.assertEqual(channel_publisher.members_count, 1)
+        self.assertEqual(channel_publisher.members_all_count, 1)
+        channel_publisher._action_add_members(self.user_officer.partner_id)
+        self.assertEqual(channel_publisher.members_all_count, 1)
         channel_publisher._action_add_members(self.user_emp.partner_id)
         channel_publisher.invalidate_recordset(['partner_ids'])
-        self.assertEqual(channel_publisher.members_count, 2)
+        self.assertEqual(channel_publisher.members_all_count, 2)
         self.assertEqual(channel_publisher.partner_ids, self.user_officer.partner_id | self.user_emp.partner_id)
 
     @mute_logger('odoo.models')

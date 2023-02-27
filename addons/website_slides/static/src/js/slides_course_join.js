@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { sprintf } from '@web/core/utils/strings';
-import { _t } from 'web.core';
+import { _t, qweb } from 'web.core';
 import publicWidget from 'web.public.widget';
 
 var CourseJoinWidget = publicWidget.Widget.extend({
@@ -17,8 +17,16 @@ var CourseJoinWidget = publicWidget.Widget.extend({
      * @param {Object} parent
      * @param {Object} options
      * @param {Object} options.channel slide.channel information
-     * @param {boolean} options.isMember whether current user is member or not
-     * @param {boolean} options.publicUser whether current user is public or not
+     * @param {boolean} options.isMember whether current user is enrolled
+     * @param {boolean} options.isMemberOrInvited whether current user is at least invited
+     * @param {string} options.inviteHash hash of the invited attendee. Needed to grant
+     *   access to a course preview / to identify.
+     * @param {integer} options.invitePartnerId id of partner of invited attendee if any.
+     *   Also needed to access course preview / to identify.
+     * @param {boolean} options.invitePreview whether the course is rendered as a preview.
+     *   This is true when an invited attendee is on the course while unlogged.
+     * @param {boolean} options.isPartnerWithoutUser whether invited partner has users. Used
+     *   to redirect properly to sign up / log in.
      * @param {string} [options.joinMessage] the message to use for the simple join case
      *   when the course is free and the user is logged in, defaults to "Join this Course".
      * @param {Promise} [options.beforeJoin] a promise to execute before we redirect to
@@ -30,6 +38,11 @@ var CourseJoinWidget = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this.channel = options.channel;
         this.isMember = options.isMember;
+        this.isMemberOrInvited = options.isMemberOrInvited;
+        this.inviteHash = options.inviteHash;
+        this.invitePartnerId = options.invitePartnerId;
+        this.invitePreview = options.invitePreview;
+        this.isPartnerWithoutUser = options.isPartnerWithoutUser;
         this.publicUser = options.publicUser;
         this.joinMessage = options.joinMessage || _t('Join this Course');
         this.beforeJoin = options.beforeJoin || function () {return Promise.resolve();};
@@ -47,10 +60,15 @@ var CourseJoinWidget = publicWidget.Widget.extend({
     _onClickJoin: function (ev) {
         ev.preventDefault();
 
+        if (this.invitePreview || (this.channel.channelEnroll === 'invite' && this.isMemberOrInvited)) {
+            this.joinChannel(this.channel.channelId);
+            return;
+        }
+
         if (this.channel.channelEnroll !== 'invite') {
             if (this.publicUser) {
                 this.beforeJoin().then(this._redirectToLogin.bind(this));
-            } else if (!this.isMember && this.channel.channelEnroll === 'public') {
+            } else if (!this.isMember) {
                 this.joinChannel(this.channel.channelId);
             }
         }
@@ -116,10 +134,13 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                 self.afterJoin();
             } else {
                 if (data.error === 'public_user') {
-                    const message = data.error_signup_allowed ?
-                        _t('Please <a href="/web/login?redirect=%s">login</a> or <a href="/web/signup?redirect=%s">create an account</a> to join this course') :
-                        _t('Please <a href="/web/login?redirect=%s">login</a> to join this course');
-                    self._popoverAlert(self.$el, sprintf(message, encodeURIComponent(document.URL), encodeURIComponent(document.URL)));
+                    let $popupContent = qweb.render('slide.course.join.popupContent', {
+                        channelId: channelId,
+                        courseUrl: encodeURIComponent(document.URL),
+                        errorSignupAllowed: data.error_signup_allowed,
+                        widget: self,
+                    });
+                    self._popoverAlert(self.$el, $popupContent);
                 } else if (data.error === 'join_done') {
                     self._popoverAlert(self.$el, _t('You have already joined this channel'));
                 } else {
@@ -141,7 +162,17 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
         var self = this;
         var proms = [this._super.apply(this, arguments)];
         var data = self.$el.data();
-        var options = {channel: {channelEnroll: data.channelEnroll, channelId: data.channelId}};
+        var options = {
+            channel: {
+                channelEnroll: data.channelEnroll,
+                channelId: data.channelId
+            },
+            inviteHash: data.inviteHash,
+            invitePartnerId: data.invitePartnerId,
+            invitePreview: data.invitePreview,
+            isMemberOrInvited: data.isMemberOrInvited,
+            isPartnerWithoutUser: data.isPartnerWithoutUser
+        };
         $('.o_wslides_js_course_join').each(function () {
             proms.push(new CourseJoinWidget(self, options).attachTo($(this)));
         });

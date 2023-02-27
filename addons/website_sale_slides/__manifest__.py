@@ -27,7 +27,10 @@
         'web.assets_frontend': [
             'website_sale_slides/static/src/js/**/*',
             'website_sale_slides/static/src/xml/**/*',
-        ]
+        ],
+        'web.assets_tests': [
+            'website_sale_slides/static/tests/tours/*.js',
+        ],
     },
     'license': 'LGPL-3',
 }
