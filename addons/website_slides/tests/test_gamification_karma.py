@@ -21,7 +21,6 @@ class TestKarmaGain(common.SlidesCase):
             'visibility': 'public',
             'is_published': True,
             'karma_gen_channel_finish': 100,
-            'karma_gen_slide_vote': 5,
             'karma_gen_channel_rank': 10,
         })
 
@@ -39,27 +38,6 @@ class TestKarmaGain(common.SlidesCase):
              'completion_time': 2.0,
             }
         ])
-
-    @mute_logger('odoo.models')
-    @users('user_emp')
-    def test_karma_change_vote(self):
-        """ Test like / dislike only karma changes """
-        channel = self.channel_2.with_user(self.env.user)
-        channel._action_add_member()
-
-        start_karma = self.env.user.karma
-
-        # join slide through like
-        slide_2_0 = self.slide_2_0.with_user(self.env.user)
-        self.assertFalse(slide_2_0.user_membership_id)
-        slide_2_0.action_like()
-        self.assertTrue(slide_2_0.user_membership_id)
-        self.assertEqual(self.env.user.karma, start_karma + channel.karma_gen_slide_vote)
-
-        # dislike: remove gained karma, then remove it again due to dislike
-        slide_2_0.action_dislike()
-        self.assertTrue(slide_2_0.user_membership_id)
-        self.assertEqual(self.env.user.karma, start_karma - channel.karma_gen_slide_vote)
 
     @mute_logger('odoo.models')
     @users('user_emp', 'user_portal', 'user_officer')
@@ -110,32 +88,12 @@ class TestKarmaGain(common.SlidesCase):
         computed_karma += self.channel_2.karma_gen_channel_finish
         self.assertEqual(user.karma, computed_karma)
 
-        # Vote for a slide
+        # Vote for a slide: Karma should not move
         slide_user = self.slide.with_user(user)
-        # up-voting for the first time should add karma
         slide_user.action_like()
-        computed_karma += self.channel.karma_gen_slide_vote
         self.assertEqual(user.karma, computed_karma)
 
-        # toggling the up-vote should reduce karma
-        slide_user.action_like()
-        computed_karma -= self.channel.karma_gen_slide_vote
-        self.assertEqual(user.karma, computed_karma)
-
-        slide_user.action_like()
-        computed_karma += self.channel.karma_gen_slide_vote
-        self.assertEqual(user.karma, computed_karma)
-
-        # down-voting the content that was already up-voted
-        # should reduce the karma two times
         slide_user.action_dislike()
-        computed_karma -= self.channel.karma_gen_slide_vote * 2
-        self.assertEqual(user.karma, computed_karma)
-
-        # up-voting the content that was already down-voted
-        # should add the karma two times
-        slide_user.action_like()
-        computed_karma += self.channel.karma_gen_slide_vote * 2
         self.assertEqual(user.karma, computed_karma)
 
         # Leave the finished course
