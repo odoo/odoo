@@ -103,10 +103,9 @@ function attachmentThumbnailToLinkImg($editable) {
  * support the mixing and matching of column options (e.g., "col-4 col-sm-6" and
  * "col col-4" aren't supported).
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function bootstrapToTable($editable) {
-    const editable = $editable.get(0);
+function bootstrapToTable(editable) {
     // First give all rows in columns a separate container parent.
     for (const rowInColumn of [...editable.querySelectorAll('.row')].filter(row => RE_COL_MATCH.test(row.parentElement.className))) {
         const previous = rowInColumn.previousElementSibling;
@@ -291,10 +290,9 @@ function bootstrapToTable($editable) {
 /**
  * Convert Bootstrap cards to table structures.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function cardToTable($editable) {
-    const editable = $editable.get(0);
+function cardToTable(editable) {
     for (const card of editable.querySelectorAll('.card')) {
         const table = _createTable(card.attributes);
         table.style.removeProperty('overflow');
@@ -598,9 +596,9 @@ async function toInline($editable, cssRules, $iframe) {
     fontToImg($editable);
     await svgToPng($editable);
     classToStyle($editable, cssRules);
-    bootstrapToTable($editable);
-    cardToTable($editable);
-    listGroupToTable($editable);
+    bootstrapToTable(editable);
+    cardToTable(editable);
+    listGroupToTable(editable);
     addTables($editable);
     normalizeColors($editable);
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
@@ -931,10 +929,9 @@ function getCSSRules(doc) {
 /**
  * Convert Bootstrap list groups and their items to table structures.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function listGroupToTable($editable) {
-    const editable = $editable.get(0);
+function listGroupToTable(editable) {
     for (const listGroup of editable.querySelectorAll('.list-group')) {
         let table;
         if (listGroup.querySelectorAll('.list-group-item').length) {
