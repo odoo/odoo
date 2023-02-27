@@ -225,7 +225,7 @@ function bootstrapToTable($editable) {
                     if (columnIndex === bootstrapColumns.length - 1) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
-                        _applyColspan(grid[gridIndex], 12 - gridIndex);
+                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
                         currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                     }
                 } else if (gridIndex + columnSize === 12) {
