@@ -182,8 +182,9 @@ class SelfOrderRoot extends Component {
     /**
      * @param {number} id
      * @param {number} qty
+     * @param {string} customer_note
      */
-    addToCart = (id, qty, note) => {
+    addToCart = (id, qty, customer_note) => {
         // if the product is already in the cart we just increase the quantity
         if (this.state.cart.find((item) => item.product_id === id)) {
             if (qty) {
@@ -195,7 +196,7 @@ class SelfOrderRoot extends Component {
         // if the product is not in the cart we add it to the cart
         else {
             if (qty) {
-                this.state.cart.push({ product_id: id, qty: qty, note: note });
+                this.state.cart.push({ product_id: id, qty: qty, customer_note: customer_note });
             }
         }
         this.viewMenu();

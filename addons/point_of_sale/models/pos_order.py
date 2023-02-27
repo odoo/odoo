@@ -873,6 +873,7 @@ class PosOrder(models.Model):
         """
         order_ids = []
         for order in orders:
+            print("order",order)
             existing_order = False
             if 'server_id' in order['data']:
                 existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)

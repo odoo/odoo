@@ -1,7 +1,7 @@
 export type CartItem = {
     product_id: number;
     qty: number;
-    note?: string;
+    customer_note?: string;
 };
 
 export type Order = {

@@ -10,7 +10,7 @@ export class ProductMainView extends Component {
         this.state = useState(this.env.state);
         this.private_state = useState({
             qty: 1,
-            note: "",
+            customer_note: "",
         });
         if (this.state.cart.some((item) => item.product_id === this.state.currentProduct)) {
             this.private_state.qty = this.state.cart.filter(

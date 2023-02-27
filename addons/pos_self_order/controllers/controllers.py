@@ -248,7 +248,7 @@ class PosSelfOrder(http.Controller):
                      "server_id": False,
                      #  'multiprint_resume': '{}',
                      #  TODO: configure the printing_changes variable
-                     #   'printing_changes': '{"new":[{"product_id":55,"name":"Bacon Burger","note":"","quantity":1}],"cancelled":[]}',
+                     #   'printing_changes': '{"new":[{"product_id":55,"name":"Bacon Burger","customer_note":"","quantity":1}],"cancelled":[]}',
 
                  },
                  'to_invoice': False,
@@ -330,26 +330,29 @@ def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
     If the customer has an existing order, we will add the items from the existing order to the cart.
 
     :param cart: The cart from the frontend.
-    :type cart: list of objects with keys: product_id, qty, and (optionally) note.
+    :type cart: list of objects with keys: product_id, qty, and (optionally) customer_note.
     :param existing_order: The existing order.
     :type existing_order: pos.order object
 
     :return: The cart with the items from the existing order.
-    :rtype: list of objects with keys: product_id, qty, (optionally) uuid, and (optionally) note.
+    :rtype: list of objects with keys: product_id, qty, (optionally) uuid, and (optionally) customer_note.
     """
-    # if there is a line with the same product, we will update the quantity of the product
     for line in existing_order.lines:
+        # if there is a line with the same product, we will update the quantity of the product
         for item in cart:
             if item["product_id"] == line["product_id"].id:
                 item["qty"] += line["qty"]
+                item["uuid"] = line["uuid"]
+                if not item.get("customer_note"):
+                    item["customer_note"] = line["customer_note"]
                 break
-    # if there is no line with the same product, we will create a new line
+        # if there is no line with the same product, we will create a new line
         else:
             cart.append({
                 "product_id": line["product_id"].id,
                 "qty": line["qty"],
                 'uuid': line["uuid"],
-                'note': line["note"],
+                'customer_note': line["customer_note"],
             })
     return cart
 
@@ -361,7 +364,7 @@ def createOrderLinesFromCart(cart, pos_id):
     This is done for security reasons.
 
     :param cart: The cart from the frontend.
-    :type cart: list of objects with keys: product_id, qty and (optionally) uuid, and (optionally) note.
+    :type cart: list of objects with keys: product_id, qty and (optionally) uuid, and (optionally) customer_note.
     :param pos_id: The id of the pos.
     :type pos_id: int.
 
@@ -386,7 +389,7 @@ def createOrderLinesFromCart(cart, pos_id):
             'description': '',
             'full_product_name': product_sudo.name,
             'price_extra': 0,
-            'customer_note': item.get('note'),
+            'customer_note': item.get('customer_note'),
             'price_manually_set': False,
             'note': '',
             'uuid': uuid.uuid4().hex if not item.get("uuid") else item.get("uuid"),
