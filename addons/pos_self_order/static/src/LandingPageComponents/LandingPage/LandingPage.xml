@@ -49,7 +49,7 @@
                 </button>
 <!-- Custom Links -->
                 <t t-foreach="selfOrder.config.custom_links" t-as="link" t-key="link.id">
-                    <a t-attf-href="//{{link.url}}" class="btn btn-lg btn-secondary my-2" target="_blank">
+                    <a t-attf-href="//{{link.url}}" t-attf-class="btn btn-lg my-2 btn-{{link.style}}" target="_blank">
                         <t t-esc="link.name"/>
                     </a>
                 </t>

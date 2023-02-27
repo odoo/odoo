@@ -71,11 +71,10 @@ class PosSelfOrder(http.Controller):
 
         # On the landing page of the app we can have a number of custom links
         # they are defined by the restaurant employee in the backend
-        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([
-        ])
+        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([],order='sequence')
         # TODO: i'm not sure that it's intuitive to have the custom links show in the app when the pos_config_id is empty
         custom_links_list = custom_links_sudo.filtered(lambda link: int(pos_id) in [
-                                                       pos.id for pos in link.pos_config_id] or not link.pos_config_id).read(['name', 'url'])
+                                                       pos.id for pos in link.pos_config_id] or not link.pos_config_id).read(['name', 'url', 'style'])
         context = {
             'pos_id': pos_id,
             'pos_name': pos_sudo.name,
