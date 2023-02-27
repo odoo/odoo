@@ -480,7 +480,7 @@ class ProductTemplate(models.Model):
         for product, data in zip(self, results_data):
             categ_ids = product.public_categ_ids.filtered(lambda c: not c.website_id or c.website_id == current_website)
             if with_price:
-                combination_info = product._get_combination_info(only_template=True)
+                combination_info = product._get_combination_info(only_template=True, pricelist=current_website.get_current_pricelist())
                 data['price'], list_price = self._search_render_results_prices(
                     mapping, combination_info
                 )
