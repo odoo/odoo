@@ -9,8 +9,18 @@
         <div id="toolbar" class="oe-toolbar oe-floating">
             <div id="style" class="btn-group dropdown">
                 <button type="button" class="btn dropdown-toggle"
+<<<<<<< HEAD
                     data-bs-toggle="dropdown" data-bs-original-title="Text style" tabindex="-1" aria-expanded="false">
                     <span title="Text style">Normal</span>
+||||||| parent of 3de01b35059 (temp)
+                    data-bs-toggle="dropdown" title="Text style" tabindex="-1" data-bs-display="static"
+                    data-bs-original-title="Style" aria-expanded="false">
+                    <span>Normal</span>
+=======
+                    data-bs-toggle="dropdown" title="Text style" tabindex="-1"
+                    data-bs-original-title="Style" aria-expanded="false">
+                    <span>Normal</span>
+>>>>>>> 3de01b35059 (temp)
                 </button>
                 <ul class="dropdown-menu">
                     <li id="paragraph-dropdown-item">
@@ -74,6 +84,7 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <t t-if="widget.isMobile()"></t>  
             <t t-else="">
                 <div id="font-size" class="btn-group dropdown">
@@ -98,11 +109,68 @@
                     </ul>
                 </div>
             </t>    
+||||||| parent of 3de01b35059 (temp)
+            <div id="font-size" class="btn-group dropdown">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" title="Font size" tabindex="-1" data-bs-display="static"
+                    data-bs-original-title="Font Size" aria-expanded="false">
+                    <span id="fontSizeCurrentValue"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize">default</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="8px">8</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="9px">9</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="10px">10</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="11px">11</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="12px">12</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="14px">14</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="16px">16</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="18px">18</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="24px">24</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="36px">36</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="48px">48</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="62px">62</a></li>
+                </ul>
+            </div>
+=======
+            <div id="font-size" class="btn-group dropdown">
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" title="Font size" tabindex="-1"
+                    data-bs-original-title="Font Size" aria-expanded="false">
+                    <span id="fontSizeCurrentValue"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize">default</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="8px">8</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="9px">9</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="10px">10</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="11px">11</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="12px">12</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="14px">14</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="16px">16</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="18px">18</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="24px">24</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="36px">36</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="48px">48</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="62px">62</a></li>
+                </ul>
+            </div>
+>>>>>>> 3de01b35059 (temp)
 
             <div id="justify" class="btn-group dropdown">
                 <button type="button" class="btn dropdown-toggle"
+<<<<<<< HEAD
                     data-bs-toggle="dropdown" tabindex="-1" data-bs-original-title="Paragraph" aria-expanded="false">
                     <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw" title="Text align"></i>
+||||||| parent of 3de01b35059 (temp)
+                    data-bs-toggle="dropdown" title="Text align" tabindex="-1" data-bs-display="static"
+                    data-bs-original-title="Paragraph" aria-expanded="false">
+                    <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw"></i>
+=======
+                    data-bs-toggle="dropdown" title="Text align" tabindex="-1"
+                    data-bs-original-title="Paragraph" aria-expanded="false">
+                    <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw"></i>
+>>>>>>> 3de01b35059 (temp)
                 </button>
                 <div class="dropdown-menu">
                     <div class="btn-group">
