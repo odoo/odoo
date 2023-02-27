@@ -2474,10 +2474,10 @@ class Task(models.Model):
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
     def action_assign_to_me(self):
-        self.write({'user_ids': [(4, self.env.user.id)]})
+        self.with_contex(active_test=False).write({'user_ids': [(4, self.env.user.id)]})
 
     def action_unassign_me(self):
-        self.write({'user_ids': [Command.unlink(self.env.uid)]})
+        self.with_contex(active_test=False).write({'user_ids': [Command.unlink(self.env.uid)]})
 
     # If depth == 1, return only direct children
     # If depth == 3, return children to third generation

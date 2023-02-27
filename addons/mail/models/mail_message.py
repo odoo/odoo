@@ -749,7 +749,7 @@ class Message(models.Model):
         partner_id = self.env.user.partner_id.id
 
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
-        starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
+        starred_messages.with_contex(active_test=False).write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
         ids = [m.id for m in starred_messages]
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
@@ -765,9 +765,9 @@ class Message(models.Model):
         self.check_access_rule('read')
         starred = not self.starred
         if starred:
-            self.sudo().write({'starred_partner_ids': [Command.link(self.env.user.partner_id.id)]})
+            self.sudo().with_contex(active_test=False).write({'starred_partner_ids': [Command.link(self.env.user.partner_id.id)]})
         else:
-            self.sudo().write({'starred_partner_ids': [Command.unlink(self.env.user.partner_id.id)]})
+            self.sudo().with_contex(active_test=False).write({'starred_partner_ids': [Command.unlink(self.env.user.partner_id.id)]})
 
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
             'message_ids': [self.id],

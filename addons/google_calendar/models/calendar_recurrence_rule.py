@@ -115,7 +115,8 @@ class RecurrenceRule(models.Model):
             # Remove old attendees. Sometimes, several partners have the same email.
             if email_normalize(odoo_attendee_email) not in emails:
                 attendees = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email))
-                self.calendar_event_ids.write({'need_sync': False, 'partner_ids': [Command.unlink(att.partner_id.id) for att in attendees]})
+                self.calendar_event_ids.with_context(active_test=False).write(
+                    {'need_sync': False, 'partner_ids': [Command.unlink(att.partner_id.id) for att in attendees]})
 
         # Update the recurrence values
         old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]

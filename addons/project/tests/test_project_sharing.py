@@ -214,7 +214,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             1) add many assignees in a task
             2) check the portal user can read no assignee in this task. Should have an AccessError exception
         """
-        self.task_cow.write({'user_ids': [Command.link(self.user_projectmanager.id)]})
+        self.task_cow.with_contex(active_test=False).write({'user_ids': [Command.link(self.user_projectmanager.id)]})
         with self.assertRaises(AccessError, msg="Should not accept the portal user to access to a task he does not follow it and its project."):
             self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
         self.assertEqual(len(self.task_cow.user_ids), 2, '2 users should be assigned in this task.')

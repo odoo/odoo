@@ -790,7 +790,7 @@ class Meeting(models.Model):
         self.ensure_one()
         partner = self.env['res.partner'].browse(partner_id)
         if partner not in self.partner_ids:
-            self.write({'partner_ids': [(4, partner.id)]})
+            self.with_context(active_test=False).write({'partner_ids': [(4, partner.id)]})
 
     def action_mass_deletion(self, recurrence_update_setting):
         self.ensure_one()
