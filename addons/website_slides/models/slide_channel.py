@@ -319,7 +319,6 @@ class Channel(models.Model):
     can_upload = fields.Boolean('Can Upload', compute='_compute_can_upload', compute_sudo=False)
     partner_has_new_content = fields.Boolean(compute='_compute_partner_has_new_content', compute_sudo=False)
     # karma generation
-    karma_gen_slide_vote = fields.Integer(string='Lesson voted', default=1)
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
     karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
     # Karma based actions

@@ -70,7 +70,6 @@ class SlidesCase(MailCommon):
             'visibility': 'public',
             'is_published': True,
             'karma_gen_channel_finish': 100,
-            'karma_gen_slide_vote': 5,
             'karma_gen_channel_rank': 10,
         })
         cls.slide = cls.env['slide.slide'].with_user(cls.user_officer).create({
