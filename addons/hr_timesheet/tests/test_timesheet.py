@@ -474,9 +474,7 @@ class TestTimesheet(TestCommonTimesheet):
 
         self.assertEqual(timesheet.company_id.id, self.env.company.id)
         # ensures a user can create a timesheet in a project even if he does not have access to the company of the analytic account of the project
-        Timesheet = self.env['account.analytic.line'].with_context(allowed_company_ids=[company_4.id])
-
-        timesheet = Timesheet.create({
+        timesheet = self.env['account.analytic.line'].with_context(allowed_company_ids=[company_4.id]).create({
             'project_id': self.project_customer.id,
             'task_id': self.task1.id,
             'name': 'my first timesheet',

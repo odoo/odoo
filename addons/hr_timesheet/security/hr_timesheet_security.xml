@@ -124,10 +124,10 @@
         </record>
 
         <record id="analytic.analytic_line_comp_rule" model="ir.rule">
-            <field name="name">Analytic line multi company rule bis</field>
+            <field name="name">Timesheets multi company rule</field>
             <field name="model_id" ref="model_account_analytic_line"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|','|',('company_id','=',False),('company_id', 'in', company_ids),('project_id', '!=', False)]</field>
+            <field name="domain_force">['|', '|', ('company_id','=',False), ('company_id', 'in', company_ids), ('project_id', '!=', False)]</field>
         </record>
     </data>
 </odoo>
