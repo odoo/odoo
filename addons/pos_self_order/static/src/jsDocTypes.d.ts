@@ -1,6 +1,7 @@
 export type CartItem = {
     product_id: number;
     qty: number;
+    note?: string;
 };
 
 export type Order = {

@@ -24,12 +24,14 @@
                     </t>
                 </div>
                 <t t-if="selfOrder.config.self_order_allow_order">
+    <!-- Customer Note -->
+                    <input class="form-control" type="text" placeholder="Add a note for the chef" t-model="this.private_state.note"/>
     <!-- Increment quantity -->
                     <div class="m-5">
                         <IncrementCounter setValue="setValue" value="this.private_state.qty"/>
                     </div>
     <!-- Add To Cart Button -->
-                    <button t-on-click="() => props.addToCart(props.product.product_id, this.private_state.qty)"
+                    <button t-on-click="() => props.addToCart(props.product.product_id, this.private_state.qty, this.private_state.note)"
                                 class="p-3 fixed-bottom btn btn-primary btn-lg btn-block w-100">
                 <!-- we show a different text based on whether the item is already in the cart or not -->
                                 <t t-if="this.state.cart.some(item => item.product_id === this.state.currentProduct)">

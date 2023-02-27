@@ -180,7 +180,6 @@ class PosSelfOrder(http.Controller):
         :return: dictionary with keys: order_id, access_token, order_total, date, state, order_items
 
         """
-
         # TODO: we need to check if the order is valid --
         # We have to check the cart variable -- this is the variable that contains the order
         # we also have to check if the pos_id and table_id are valid
@@ -336,12 +335,12 @@ def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
     If the customer has an existing order, we will add the items from the existing order to the cart.
 
     :param cart: The cart from the frontend.
-    :type cart: list of objects with keys: product_id, qty
+    :type cart: list of objects with keys: product_id, qty, and (optionally) note.
     :param existing_order: The existing order.
     :type existing_order: pos.order object
 
     :return: The cart with the items from the existing order.
-    :rtype: list of objects with keys: product_id, qty and (optionally) uuid.
+    :rtype: list of objects with keys: product_id, qty, (optionally) uuid, and (optionally) note.
     """
     # if there is a line with the same product, we will update the quantity of the product
     # if there is no line with the same product, we will create a new line
@@ -355,6 +354,7 @@ def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
                 "product_id": line["product_id"].id,
                 "qty": line["qty"],
                 'uuid': line["uuid"],
+                'note': line["note"],
             })
     return cart
 
@@ -366,7 +366,7 @@ def createOrderLinesFromCart(cart, pos_id):
     This is done for security reasons.
 
     :param cart: The cart from the frontend.
-    :type cart: list of objects with keys: product_id, qty and (optionally) uuid.
+    :type cart: list of objects with keys: product_id, qty and (optionally) uuid, and (optionally) note.
     :param pos_id: The id of the pos.
     :type pos_id: int.
 
@@ -391,7 +391,7 @@ def createOrderLinesFromCart(cart, pos_id):
             'description': '',
             'full_product_name': product_sudo.name,
             'price_extra': 0,
-            'customer_note': '',
+            'customer_note': item.get('note'),
             'price_manually_set': False,
             'note': '',
             'uuid': uuid.uuid4().hex if not item.get("uuid") else item.get("uuid"),
