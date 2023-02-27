@@ -42,33 +42,8 @@ class PosSelfOrder(http.Controller):
         # pos_session_sudo = request.env['pos.session'].sudo().search(
         #     domain, limit=1).read(['id', 'name'])
         # print("atts:", pos_session_sudo._get_attributes_by_ptal_id())
-        product_attributes = request.env['product.attribute'].sudo().search([('create_variant', '=', 'no_variant')])
-        product_attributes_by_id = {product_attribute.id: product_attribute for product_attribute in product_attributes}
-        domain = [('attribute_id', 'in', product_attributes.mapped('id'))]
-        product_template_attribute_values = request.env['product.template.attribute.value'].sudo().search(domain)
-        print("product_template_attribute_values:", json.dumps(product_template_attribute_values.read(), indent=4, sort_keys=True, default=str))
-       
-       
-        # vlad = request.env['product.template.attribute.value'].sudo().browse(17)
-        # print("vlad:", vlad.read(['price_extra']))
-        
-        
-        
-        key = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
-        res = {}
-        for key, group in groupby(sorted(product_template_attribute_values, key=key), key=key):
-            attribute_line_id, attribute_id = key
-            values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color'])[0],
-                       'price_extra': ptav.price_extra} for ptav in list(group)]
-            res[attribute_line_id] = {
-                'id': attribute_line_id,
-                'name': product_attributes_by_id[attribute_id].name,
-                'display_type': product_attributes_by_id[attribute_id].display_type,
-                'values': values
-            }
-        print("res: ", json.dumps(res, indent=4, sort_keys=True, default=str))
-# _get_attributes_by_ptal_id
-        return "Hello World"
+        return json.dumps(get_attributes_by_ptal_id(), indent=4, sort_keys=True, default=str)
+        # return "Hello World"
 
     @http.route('/pos-self-order/', auth='public', website=True)
     def pos_self_order_start(self, table_id=None, pos_id=None, message_to_display=None):
@@ -174,6 +149,7 @@ class PosSelfOrder(http.Controller):
             **{
                 'price_info': product.get_product_info_pos(product.list_price, 1, int(pos_id))['all_prices'],
                 'variants': product.get_product_info_pos(product.list_price, 1, int(pos_id))['variants'],
+                'attribute_line_ids': product.attribute_line_ids
             },
             **product.read(['id', 'name', 'description_sale', 'pos_categ_id'])[0],
         } for product in products_sudo]
@@ -548,3 +524,25 @@ def getPosSessionSudo(pos_id):
         # FIXME: this error is not working
         raise werkzeug.exceptions.NotFound()
     return pos_session_sudo[0]
+def get_attributes_by_ptal_id():
+        product_attributes = request.env['product.attribute'].sudo().search([('create_variant', '=', 'no_variant')])
+        product_attributes_by_id = {product_attribute.id: product_attribute for product_attribute in product_attributes}
+        domain = [('attribute_id', 'in', product_attributes.mapped('id'))]
+        product_template_attribute_values = request.env['product.template.attribute.value'].sudo().search(domain)
+        # print("product_template_attribute_values:", json.dumps(product_template_attribute_values.read(), indent=4, sort_keys=True, default=str))
+        # vlad = request.env['product.template.attribute.value'].sudo().browse(17)
+        # print("vlad:", vlad.read(['price_extra']))
+        key = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
+        res = {}
+        for key, group in groupby(sorted(product_template_attribute_values, key=key), key=key):
+            attribute_line_id, attribute_id = key
+            values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color'])[0],
+                       'price_extra': ptav.price_extra} for ptav in list(group)]
+            res[attribute_line_id] = {
+                'id': attribute_line_id,
+                'name': product_attributes_by_id[attribute_id].name,
+                'display_type': product_attributes_by_id[attribute_id].display_type,
+                'values': values
+            }
+        print("res: ", json.dumps(res, indent=4, sort_keys=True, default=str))
+        return res
