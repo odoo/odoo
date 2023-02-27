@@ -773,7 +773,7 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
         correctTripleClick &&
         !endOffset &&
         (start !== end || startOffset !== endOffset) &&
-        (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)))
+        (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleTextNode(beforeEnd) && !isZWS(beforeEnd)))
     ) {
         const previous = previousLeaf(endLeaf, editable, true);
         if (previous && closestElement(previous).isContentEditable) {
@@ -805,8 +805,8 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     return range;
 }
 
-function getNextVisibleNode(node) {
-    while (node && !isVisible(node)) {
+function getNextVisibleNode(node, stopAtZws = false) {
+    while (node && !isVisible(node) && (!stopAtZws || !isZWS(node))) {
         node = node.nextSibling;
     }
     return node;
@@ -817,7 +817,7 @@ export function getDeepestPosition(node, offset) {
     while (node.hasChildNodes()) {
         let newNode = node.childNodes[offset];
         if (newNode) {
-            newNode = getNextVisibleNode(newNode);
+            newNode = getNextVisibleNode(newNode, true);
             if (!newNode || isVisibleEmpty(newNode)) break;
             found = true;
             node = newNode;
@@ -829,7 +829,7 @@ export function getDeepestPosition(node, offset) {
     if (!found) {
         while (node.hasChildNodes()) {
             let newNode = node.childNodes[offset - 1];
-            newNode = getNextVisibleNode(newNode);
+            newNode = getNextVisibleNode(newNode, true);
             if (!newNode || isVisibleEmpty(newNode)) break;
             node = newNode;
             offset = nodeSize(node);
@@ -837,7 +837,7 @@ export function getDeepestPosition(node, offset) {
     }
     let didMove = false;
     let reversed = false;
-    while (!isVisible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
+    while (!isVisible(node) && !isZWS(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
         reversed = reversed || !node.nextSibling;
         node = reversed ? node.previousSibling : node.nextSibling;
         offset = reversed ? nodeSize(node) : 0;
@@ -1523,22 +1523,11 @@ export function isInPre(node) {
             getComputedStyle(element).getPropertyValue('white-space') === 'pre')
     );
 }
-/**
- * Returns whether the given string (or given text node value)
- * has at least one visible character or one non colapsed whitespace characters in it.
- */
-const nonWhitespaces = '\\S\\u00A0\\u0009';
-const nonWhitespacesRegex = new RegExp(`[${nonWhitespaces}]`);
-export function isVisibleStr(value) {
+const whitespace = `[^\\S\\u00A0\\u0009]`; // for formatting (no "real" content) (TODO: 0009 shouldn't be included)
+const whitespaceRegex = new RegExp(`^${whitespace}*$`);
+export function isWhitespace(value) {
     const str = typeof value === 'string' ? value : value.nodeValue;
-    return nonWhitespacesRegex.test(str);
-}
-/**
- * @param {Node} node
- * @returns {boolean}
- */
-export function isContentTextNode(node) {
-    return node.nodeType === Node.TEXT_NODE && (isVisible(node) || isInPre(node));
+    return whitespaceRegex.test(str);
 }
 /**
  * Returns whether removing the given node from the DOM will have a visible
@@ -1560,15 +1549,18 @@ export function isVisible(node, areBlocksAlwaysVisible = true) {
     if ((areBlocksAlwaysVisible && isBlock(node)) || isVisibleEmpty(node)) {
         return true;
     }
-    return [...node.childNodes].some(n => isVisible(n));
+    return [...node.childNodes].some(n => isVisible(n, areBlocksAlwaysVisible));
 }
-
+const visibleCharRegex = /[^\s\u200b]|[\u00A0\u0009]$/; // contains at least a char that is always visible (TODO: 0009 shouldn't be included)
 export function isVisibleTextNode(testedNode) {
-    if (!testedNode.length) {
+    if (!testedNode || !testedNode.length || testedNode.nodeType !== Node.TEXT_NODE) {
         return false;
     }
-    if (isVisibleStr(testedNode)) {
+    if (visibleCharRegex.test(testedNode.textContent) || (isInPre(testedNode) && isWhitespace(testedNode))) {
         return true;
+    }
+    if (testedNode.textContent === '\u200B') {
+        return false;
     }
     // The following assumes node is made entirely of whitespace and is not
     // preceded of followed by a block.
@@ -1578,6 +1570,9 @@ export function isVisibleTextNode(testedNode) {
     // Control variable to know whether the current node has been found
     let foundTestedNode;
     const currentNodeParentBlock = closestBlock(testedNode);
+    if (!currentNodeParentBlock) {
+        return false;
+    }
     const nodeIterator = document.createNodeIterator(currentNodeParentBlock);
     for (let node = nodeIterator.nextNode(); node; node = nodeIterator.nextNode()) {
         if (node.nodeType === Node.TEXT_NODE) {
@@ -1603,9 +1598,13 @@ export function isVisibleTextNode(testedNode) {
             } else {
                 preceding = null;
             }
+        } else if (foundTestedNode && !isWhitespace(node)) {
+            // <block>space<inline>text</inline></block> -> space is visible
+            following = node;
+            break;
         }
     }
-    while (following && /^[\n\t ]*$/.test(following.textContent)) {
+    while (following && !visibleCharRegex.test(following.textContent)) {
         following = following.nextSibling;
     }
     // Missing preceding or following: invisible.
@@ -1618,7 +1617,7 @@ export function isVisibleTextNode(testedNode) {
         return false;
     }
     // Preceding is whitespace or following is whitespace: invisible
-    return !/^[\n\t ]*$/.test(preceding.textContent);
+    return visibleCharRegex.test(preceding.textContent);
 }
 
 export function parentsGet(node, root = undefined) {
@@ -1702,7 +1701,7 @@ export function isEmptyBlock(blockEl) {
     if (!blockEl || blockEl.nodeType !== Node.ELEMENT_NODE) {
         return false;
     }
-    if (isVisibleStr(blockEl.textContent)) {
+    if (visibleCharRegex.test(blockEl.textContent)) {
         return false;
     }
     if (blockEl.querySelectorAll('br').length >= 2) {
@@ -2097,16 +2096,16 @@ export function getState(el, offset, direction, leftCType) {
 
     let domPath;
     let inverseDOMPath;
-    let expr;
+    let whitespaceAtEdgeRegex;
     const reasons = [];
     if (direction === DIRECTIONS.LEFT) {
         domPath = leftDOMPath(el, offset, reasons);
         inverseDOMPath = rightDOMPath(el, offset);
-        expr = new RegExp(`[^${nonWhitespaces}]$`);
+        whitespaceAtEdgeRegex = new RegExp(whitespace + '+$');
     } else {
         domPath = rightDOMPath(el, offset, reasons);
         inverseDOMPath = leftDOMPath(el, offset);
-        expr = new RegExp(`^[^${nonWhitespaces}]`);
+        whitespaceAtEdgeRegex = new RegExp('^' + whitespace + '+');
     }
 
     // TODO I think sometimes, the node we have to consider as the
@@ -2130,8 +2129,8 @@ export function getState(el, offset, direction, leftCType) {
             // visible content afterwards. If going forward, spaces are only
             // visible if we have content backwards.
             if (direction === DIRECTIONS.LEFT) {
-                if (isVisibleStr(value)) {
-                    cType = lastSpace || expr.test(value) ? CTYPES.SPACE : CTYPES.CONTENT;
+                if (!isWhitespace(value)) {
+                    cType = lastSpace || whitespaceAtEdgeRegex.test(value) ? CTYPES.SPACE : CTYPES.CONTENT;
                     break;
                 }
                 if (value.length) {
@@ -2139,8 +2138,8 @@ export function getState(el, offset, direction, leftCType) {
                 }
             } else {
                 leftCType = leftCType || getState(el, offset, DIRECTIONS.LEFT).cType;
-                if (expr.test(value)) {
-                    const rct = isVisibleStr(value)
+                if (whitespaceAtEdgeRegex.test(value)) {
+                    const rct = !isWhitespace(value)
                         ? CTYPES.CONTENT
                         : getState(...rightPos(node), DIRECTIONS.RIGHT).cType;
                     cType =
@@ -2149,7 +2148,7 @@ export function getState(el, offset, direction, leftCType) {
                             : rct;
                     break;
                 }
-                if (isVisibleStr(value)) {
+                if (!isWhitespace(value)) {
                     cType = CTYPES.CONTENT;
                     break;
                 }
@@ -2346,14 +2345,13 @@ export function restoreState(prevStateData) {
  * @param {boolean} [rule.brVisibility]
  */
 export function enforceWhitespace(el, offset, direction, rule) {
-    let domPath;
-    let expr;
+    let domPath, whitespaceAtEdgeRegex;
     if (direction === DIRECTIONS.LEFT) {
         domPath = leftLeafOnlyNotBlockPath(el, offset);
-        expr = new RegExp(`[^${nonWhitespaces}]+$`);
+        whitespaceAtEdgeRegex = new RegExp(whitespace + '+$');
     } else {
         domPath = rightLeafOnlyNotBlockPath(el, offset);
-        expr = new RegExp(`^[^${nonWhitespaces}]+`);
+        whitespaceAtEdgeRegex = new RegExp('^' + whitespace + '+');
     }
 
     const invisibleSpaceTextNodes = [];
@@ -2372,20 +2370,20 @@ export function enforceWhitespace(el, offset, direction, rule) {
             }
             break;
         } else if (node.nodeType === Node.TEXT_NODE && !isInPre(node)) {
-            if (expr.test(node.nodeValue)) {
+            if (whitespaceAtEdgeRegex.test(node.nodeValue)) {
                 // If we hit spaces going in the direction, either they are in a
                 // visible text node and we have to change the visibility of
                 // those spaces, or it is in an invisible text node. In that
                 // last case, we either remove the spaces if there are spaces in
                 // a visible text node going further in the direction or we
                 // change the visiblity or those spaces.
-                if (isVisibleStr(node)) {
+                if (!isWhitespace(node)) {
                     foundVisibleSpaceTextNode = node;
                     break;
                 } else {
                     invisibleSpaceTextNodes.push(node);
                 }
-            } else if (isVisibleStr(node)) {
+            } else if (!isWhitespace(node)) {
                 break;
             }
         }
@@ -2427,7 +2425,7 @@ export function enforceWhitespace(el, offset, direction, rule) {
         ) {
             spaceVisibility = false;
         }
-        spaceNode.nodeValue = spaceNode.nodeValue.replace(expr, spaceVisibility ? '\u00A0' : '');
+        spaceNode.nodeValue = spaceNode.nodeValue.replace(whitespaceAtEdgeRegex, spaceVisibility ? '\u00A0' : '');
     }
 }
 

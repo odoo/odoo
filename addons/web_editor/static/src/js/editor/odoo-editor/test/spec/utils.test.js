@@ -17,7 +17,6 @@ import {
     getSelectedNodes,
     getTraversedNodes,
     isVisible,
-    isVisibleStr,
     lastLeaf,
     leftPos,
     nextLeaf,
@@ -33,6 +32,7 @@ import {
     getCursorDirection,
     DIRECTIONS,
     isBlock,
+    isVisibleTextNode,
 } from '../../src/utils/utils.js';
 import {
     BasicEditor,
@@ -538,7 +538,10 @@ describe('Utils', () => {
             const ij = p2.childNodes[1].firstChild;
             const result = previousLeaf(ij, editable);
             window.chai.expect(result).to.equal(whitespace);
-            window.chai.expect(isVisibleStr(whitespace)).to.equal(false);
+            window.chai.expect(whitespace.nodeType === Node.TEXT_NODE).to.equal(true);
+            window.chai.expect(whitespace.textContent).to.equal(`
+                            `);
+            window.chai.expect(isVisibleTextNode(whitespace)).to.equal(false);
         });
     });
     describe('nextLeaf', () => {
@@ -622,7 +625,10 @@ describe('Utils', () => {
             const whitespace = div.childNodes[1].childNodes[4];
             const result = nextLeaf(kl, editable);
             window.chai.expect(result).to.equal(whitespace);
-            window.chai.expect(isVisibleStr(whitespace)).to.equal(false);
+            window.chai.expect(whitespace.nodeType === Node.TEXT_NODE).to.equal(true);
+            window.chai.expect(whitespace.textContent).to.equal(`
+                    `);
+            window.chai.expect(isVisibleTextNode(whitespace)).to.equal(false);
         });
     });
     describe('getAdjacentPreviousSiblings', () => {
