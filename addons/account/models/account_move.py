@@ -1160,7 +1160,7 @@ class AccountMove(models.Model):
 
                 kwargs = {
                     'base_lines': base_line_values_list,
-                    'currency': move.currency_id or move.journal_id.currency_id or move.journal_id.company_id.currency_id,
+                    'currency': move.currency_id or move.journal_id.currency_id or move.company_id.currency_id,
                 }
 
                 if move.id:
