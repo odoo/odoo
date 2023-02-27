@@ -71,7 +71,8 @@ class PosSelfOrder(http.Controller):
 
         # On the landing page of the app we can have a number of custom links
         # they are defined by the restaurant employee in the backend
-        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([],order='sequence')
+        custom_links_sudo = request.env['pos_self_order.custom_link'].sudo().search([
+        ], order='sequence')
         custom_links_list = custom_links_sudo.filtered(lambda link: int(pos_id) in [
                                                        pos.id for pos in link.pos_config_id] or not link.pos_config_id).read(['name', 'url', 'style'])
         context = {
@@ -139,7 +140,7 @@ class PosSelfOrder(http.Controller):
 
         :param product_id: the id of the product
         :type product_id: int
-        
+
         """
         # We get the product with the specific id from the database
         product_sudo = request.env['product.product'].sudo().browse(product_id)
@@ -232,13 +233,6 @@ class PosSelfOrder(http.Controller):
                      # we only need the digits of the order_id, not the whole id, which starts with word "Order"
                      'uid': order_id[6:],
                      'sequence_number': sequence_number,
-                     #  the date is formatted in the way that the regular POS does it
-                     #  'creation_date': str(fields.Datetime.now()).replace(" ", "T"),
-                     #  FIXME: there is a problem with the time
-                     # when the regular pos creates an order, the time shown is correct
-                     # when self order creates an order, the time shown is also correct
-                     # but when the regular pos adds a new item to an existing order that
-                     # was created with the self order, the time shown is 1 hour ahead
                      'creation_date': str(fields.Datetime.now()),
                      'fiscal_position_id': False,
                      'to_invoice': False,
@@ -275,7 +269,8 @@ class PosSelfOrder(http.Controller):
         # FIXME: make it so we only set it to false if it is a new order
         # if the server already aknowledged the order, we should not set it to false again
         # every time the user adds a new item to the order
-        request.env['pos.order'].sudo().browse(order_resp.get('id')).is_trusted = False
+        request.env['pos.order'].sudo().browse(
+            order_resp.get('id')).is_trusted = False
         order_id = order_resp.get("pos_reference")
         response = {
             "order_id": order['data']['name'],
@@ -295,7 +290,7 @@ class PosSelfOrder(http.Controller):
         This is used by the frontend to find the latest state of an order.
         (e.g. if a customer orders something from the self order app and then the waiter adds an item to the order,
         the customer will be able to see the new item in the order)
-   
+
         :parmam order_id: the id of the order that we want to view
         :type order_id: str
         :param access_token: the access token of the order that we want to view -- this is needed 
@@ -343,12 +338,12 @@ def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
     :rtype: list of objects with keys: product_id, qty, (optionally) uuid, and (optionally) note.
     """
     # if there is a line with the same product, we will update the quantity of the product
-    # if there is no line with the same product, we will create a new line
     for line in existing_order.lines:
         for item in cart:
             if item["product_id"] == line["product_id"].id:
                 item["qty"] += line["qty"]
                 break
+    # if there is no line with the same product, we will create a new line
         else:
             cart.append({
                 "product_id": line["product_id"].id,
