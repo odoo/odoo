@@ -327,7 +327,8 @@ class PosSelfOrder(http.Controller):
 
 def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
     """
-    If the customer has an existing order, we will add the items from the existing order to the cart.
+    If the customer has an existing order, we will add the items from the existing order to the current cart.
+    (This is because the create_from_ui method will overwrite the old items from the order)
 
     :param cart: The cart from the frontend.
     :type cart: list of objects with keys: product_id, qty, and (optionally) customer_note.
@@ -337,6 +338,8 @@ def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
     :return: The cart with the items from the existing order.
     :rtype: list of objects with keys: product_id, qty, (optionally) uuid, and (optionally) customer_note.
     """
+    # there are some fields from the old order that we want to keep: uuid 
+    # and, if we don't have a new customer_note, then we keep the old customer_note
     for line in existing_order.lines:
         # if there is a line with the same product, we will update the quantity of the product
         for item in cart:
@@ -359,6 +362,8 @@ def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
 
 def createOrderLinesFromCart(cart, pos_id):
     """
+    Function that constructs the order lines (as the create_from_ui method expects them) from the cart.
+
     From the frontend we only get the id of the product and the quantity.
     We need to get the other details of the product from the database.
     This is done for security reasons.
