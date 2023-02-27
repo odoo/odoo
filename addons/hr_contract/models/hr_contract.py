@@ -224,6 +224,7 @@ class Contract(models.Model):
         return self[self._get_contract_wage_field()]
 
     def _get_contract_wage_field(self):
+        self.ensure_one()
         return 'wage'
 
     def write(self, vals):
