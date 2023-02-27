@@ -1,19 +1,13 @@
 /** @odoo-module */
 
-import core from "web.core";
-
 /**
  * Implement this interface to support a new payment method in the POS:
  *
- import const PaymentInterface from "@point_of_sale/js/payment";
- * var MyPayment = PaymentInterface.extend({
+ * import { PaymentInterface } from "@point_of_sale/js/payment";
+ * class MyPayment extends PaymentInterface {
  *     ...
- * })
- *
- * To connect the interface to the right payment methods register it:
- *
- * import { register_payment_method } models from "@point_of_sale/js/models";
- * register_payment_method('my_payment', MyPayment);
+ * }
+ * registry.category("payment_methods").add("my_payment", MyPayment);
  *
  * my_payment is the technical name of the added selection in
  * use_payment_terminal.
@@ -22,22 +16,21 @@ import core from "web.core";
  * by overriding the loader_params of the models in the back end
  * in the `pos.session` model
  */
-// FIXME POSREF convert this to a class.
-export const PaymentInterface = core.Class.extend({
-    init: function (pos, payment_method) {
+export class PaymentInterface {
+    constructor(pos, payment_method) {
         this.pos = pos;
         this.payment_method = payment_method;
         this.supports_reversals = false;
-    },
+    }
 
     /**
      * Call this function to enable UI elements that allow a user to
      * reverse a payment. This requires that you implement
      * send_payment_reversal.
      */
-    enable_reversals: function () {
+    enable_reversals() {
         this.supports_reversals = true;
-    },
+    }
 
     /**
      * Called when a user clicks the "Send" button in the
@@ -55,7 +48,7 @@ export const PaymentInterface = core.Class.extend({
      * the payment should be retried. Rejected when the status of the
      * paymentline will be manually updated.
      */
-    send_payment_request: function (cid) {},
+    send_payment_request(cid) {}
 
     /**
      * Called when a user removes a payment line that's still waiting
@@ -69,7 +62,7 @@ export const PaymentInterface = core.Class.extend({
      * @param {string} cid - The id of the paymentline
      * @returns {Promise}
      */
-    send_payment_cancel: function (order, cid) {},
+    send_payment_cancel(order, cid) {}
 
     /**
      * This is an optional method. When implementing this make sure to
@@ -81,12 +74,12 @@ export const PaymentInterface = core.Class.extend({
      * @param {string} cid - The id of the paymentline
      * @returns {Promise} returns true if the reversal was successful.
      */
-    send_payment_reversal: function (cid) {},
+    send_payment_reversal(cid) {}
 
     /**
      * Called when the payment screen in the POS is closed (by
      * e.g. clicking the "Back" button). Could be used to cancel in
      * progress payments.
      */
-    close: function () {},
-});
+    close() {}
+}

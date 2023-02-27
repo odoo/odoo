@@ -9,12 +9,13 @@ import time from "web.time";
 import utils from "web.utils";
 import { batched, uuidv4 } from "@point_of_sale/js/utils";
 import { ErrorPopup } from "./Popups/ErrorPopup";
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 
 var QWeb = core.qweb;
-var _t = core._t;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
-const Markup = utils.Markup
+const Markup = utils.Markup;
 
 const { markRaw, reactive } = owl;
 
@@ -280,10 +281,10 @@ export class PosGlobalState extends PosModel {
         this.payment_methods_by_id = {};
         for (const pm of this.payment_methods) {
             this.payment_methods_by_id[pm.id] = pm;
-            const PaymentInterface = this.electronic_payment_interfaces[pm.use_payment_terminal];
-            if (PaymentInterface) {
-                pm.payment_terminal = new PaymentInterface(this, pm);
-            }
+            const PaymentInterface = registry
+                .category("payment_methods")
+                .get(pm.use_payment_terminal);
+            pm.payment_terminal = new PaymentInterface(this, pm);
         }
     }
     async _loadFonts() {
@@ -1201,7 +1202,8 @@ export class PosGlobalState extends PosModel {
                     } else if (tax.amount_type === "division") {
                         incl_division_amount += tax.amount * tax.sum_repartition_factor;
                     } else if (tax.amount_type === "fixed") {
-                        incl_fixed_amount += Math.abs(quantity) * tax.amount * tax.sum_repartition_factor;
+                        incl_fixed_amount +=
+                            Math.abs(quantity) * tax.amount * tax.sum_repartition_factor;
                     } else {
                         var tax_amount = self._compute_all(tax, base, quantity);
                         incl_fixed_amount += tax_amount;
@@ -1252,7 +1254,10 @@ export class PosGlobalState extends PosModel {
             }
 
             tax_amount = round_pr(tax_amount, currency_rounding);
-            var factorized_tax_amount = round_pr(tax_amount * tax.sum_repartition_factor, currency_rounding)
+            var factorized_tax_amount = round_pr(
+                tax_amount * tax.sum_repartition_factor,
+                currency_rounding
+            );
 
             if (tax.price_include && total_included_checkpoints[i] === undefined) {
                 cumulated_tax_included_amount += factorized_tax_amount;
@@ -1440,24 +1445,6 @@ export class PosGlobalState extends PosModel {
         this.db.update_partners(partnerWithUpdatedTotalDue);
         return partnerWithUpdatedTotalDue;
     }
-}
-PosGlobalState.prototype.electronic_payment_interfaces = {};
-
-/**
- * Call this function to map your PaymentInterface implementation to
- * the use_payment_terminal field. When the POS loads it will take
- * care of instantiating your interface and setting it on the right
- * payment methods.
- *
- * @param {string} use_payment_terminal - value used in the
- * use_payment_terminal selection field
- *
- * @param {Object} ImplementedPaymentInterface - implemented
- * PaymentInterface
- */
-export function register_payment_method(use_payment_terminal, ImplementedPaymentInterface) {
-    PosGlobalState.prototype.electronic_payment_interfaces[use_payment_terminal] =
-        ImplementedPaymentInterface;
 }
 
 export class Product extends PosModel {

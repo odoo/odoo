@@ -1,8 +1,11 @@
 /** @odoo-module */
 
 import { PaymentAdyen } from "@pos_adyen/js/payment_adyen";
+import { patch } from "@web/core/utils/patch";
+// This patch needs to be applied after the patch from pos_restaurant
+import "@pos_restaurant/js/payment";
 
-PaymentAdyen.include({
+patch(PaymentAdyen.prototype, "pos_restaurant_adyen.PaymentAdyen", {
     _adyen_pay_data: function () {
         var data = this._super(...arguments);
 

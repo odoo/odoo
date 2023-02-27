@@ -1,11 +1,10 @@
 /** @odoo-module */
 /* global timapi */
 
-import core from "web.core";
 import { PaymentInterface } from "@point_of_sale/js/payment";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-
-var _t = core._t;
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 
 window.onTimApiReady = function () {};
 window.onTimApiPublishLogRecord = function (record) {
@@ -15,7 +14,7 @@ window.onTimApiPublishLogRecord = function (record) {
     }
 };
 
-export const PaymentSix = PaymentInterface.extend({
+export class PaymentSix extends PaymentInterface {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -23,8 +22,8 @@ export const PaymentSix = PaymentInterface.extend({
     /**
      * @override
      */
-    init: function () {
-        this._super.apply(this, arguments);
+    constructor() {
+        super(...arguments);
         this.enable_reversals();
 
         var terminal_ip = this.payment_method.six_terminal_ip;
@@ -76,44 +75,44 @@ export const PaymentSix = PaymentInterface.extend({
             options.push(option);
         });
         this.terminal.setPrintOptions(options);
-    },
+    }
 
     /**
      * @override
      */
-    send_payment_cancel: function () {
+    send_payment_cancel() {
         this._super.apply(this, arguments);
         this.terminal.cancel();
         return Promise.resolve();
-    },
+    }
 
     /**
      * @override
      */
-    send_payment_request: function () {
+    send_payment_request() {
         this._super.apply(this, arguments);
         this.pos.get_order().selected_paymentline.set_payment_status("waitingCard");
         return this._sendTransaction(timapi.constants.TransactionType.purchase);
-    },
+    }
 
     /**
      * @override
      */
-    send_payment_reversal: function () {
+    send_payment_reversal() {
         this._super.apply(this, arguments);
         this.pos.get_order().selected_paymentline.set_payment_status("reversing");
         return this._sendTransaction(timapi.constants.TransactionType.reversal);
-    },
+    }
 
-    send_balance: function () {
+    send_balance() {
         this.terminal.balanceAsync();
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    _onTransactionComplete: function (event, data) {
+    _onTransactionComplete(event, data) {
         timapi.DefaultTerminalListener.prototype.transactionCompleted(event, data);
 
         if (event.exception) {
@@ -137,9 +136,9 @@ export const PaymentSix = PaymentInterface.extend({
 
             this.transactionResolve(true);
         }
-    },
+    }
 
-    _onBalanceComplete: function (event, data) {
+    _onBalanceComplete(event, data) {
         if (event.exception) {
             this.pos.env.services.popup.add(ErrorPopup, {
                 title: _t("Balance Failed"),
@@ -148,9 +147,9 @@ export const PaymentSix = PaymentInterface.extend({
         } else {
             this._printReceipts(data.printData.receipts);
         }
-    },
+    }
 
-    _printReceipts: function (receipts) {
+    _printReceipts(receipts) {
         _.forEach(receipts, (receipt) => {
             var value = receipt.value.replace(/\n/g, "<br />");
             if (
@@ -166,9 +165,9 @@ export const PaymentSix = PaymentInterface.extend({
                 this.pos.get_order().selected_paymentline.set_receipt_info(value);
             }
         });
-    },
+    }
 
-    _sendTransaction: function (transactionType) {
+    _sendTransaction(transactionType) {
         var amount = new timapi.Amount(
             Math.round(
                 this.pos.get_order().selected_paymentline.amount / this.pos.currency.rounding
@@ -181,5 +180,6 @@ export const PaymentSix = PaymentInterface.extend({
             this.transactionResolve = resolve;
             this.terminal.transactionAsync(transactionType, amount);
         });
-    },
-});
+    }
+}
+registry.category("payment_methods").add("six", PaymentSix);

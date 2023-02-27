@@ -1,29 +1,29 @@
 /** @odoo-module */
 
-import core from "web.core";
+// FIXME POSREF stop using legacy rpc
 import rpc from "web.rpc";
 import { PaymentInterface } from "@point_of_sale/js/payment";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 
-var _t = core._t;
-
-export const PaymentAdyen = PaymentInterface.extend({
-    send_payment_request: function (cid) {
-        this._super.apply(this, arguments);
+export class PaymentAdyen extends PaymentInterface {
+    send_payment_request(cid) {
+        super.send_payment_request(...arguments);
         this._reset_state();
         return this._adyen_pay(cid);
-    },
-    send_payment_cancel: function (order, cid) {
-        this._super.apply(this, arguments);
+    }
+    send_payment_cancel(order, cid) {
+        super.send_payment_cancel(...arguments);
         return this._adyen_cancel();
-    },
-    close: function () {
-        this._super.apply(this, arguments);
-    },
+    }
+    close() {
+        super.close(...arguments);
+    }
 
     set_most_recent_service_id(id) {
         this.most_recent_service_id = id;
-    },
+    }
 
     pending_adyen_line() {
         return this.pos
@@ -33,16 +33,16 @@ export const PaymentAdyen = PaymentInterface.extend({
                     paymentLine.payment_method.use_payment_terminal === "adyen" &&
                     !paymentLine.is_done()
             );
-    },
+    }
 
     // private methods
-    _reset_state: function () {
+    _reset_state() {
         this.was_cancelled = false;
         this.remaining_polls = 4;
         clearTimeout(this.polling);
-    },
+    }
 
-    _handle_odoo_connection_failure: function (data) {
+    _handle_odoo_connection_failure(data) {
         // handle timeout
         var line = this.pending_adyen_line();
         if (line) {
@@ -55,9 +55,9 @@ export const PaymentAdyen = PaymentInterface.extend({
         );
 
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
-    },
+    }
 
-    _call_adyen: function (data, operation) {
+    _call_adyen(data, operation) {
         return rpc
             .query(
                 {
@@ -74,14 +74,14 @@ export const PaymentAdyen = PaymentInterface.extend({
                 }
             )
             .catch(this._handle_odoo_connection_failure.bind(this));
-    },
+    }
 
-    _adyen_get_sale_id: function () {
+    _adyen_get_sale_id() {
         var config = this.pos.config;
         return _.str.sprintf("%s (ID: %s)", config.display_name, config.id);
-    },
+    }
 
-    _adyen_common_message_header: function () {
+    _adyen_common_message_header() {
         var config = this.pos.config;
         this.most_recent_service_id = Math.floor(Math.random() * Math.pow(2, 64)).toString(); // random ID to identify request/response pairs
         this.most_recent_service_id = this.most_recent_service_id.substring(0, 10); // max length is 10
@@ -94,9 +94,9 @@ export const PaymentAdyen = PaymentInterface.extend({
             ServiceID: this.most_recent_service_id,
             POIID: this.payment_method.adyen_terminal_identifier,
         };
-    },
+    }
 
-    _adyen_pay_data: function () {
+    _adyen_pay_data() {
         var order = this.pos.get_order();
         var config = this.pos.config;
         var line = order.selected_paymentline;
@@ -128,9 +128,9 @@ export const PaymentAdyen = PaymentInterface.extend({
         }
 
         return data;
-    },
+    }
 
-    _adyen_pay: function (cid) {
+    _adyen_pay(cid) {
         var self = this;
         var order = this.pos.get_order();
 
@@ -150,9 +150,9 @@ export const PaymentAdyen = PaymentInterface.extend({
         return this._call_adyen(data).then(function (data) {
             return self._adyen_handle_response(data);
         });
-    },
+    }
 
-    _adyen_cancel: function (ignore_error) {
+    _adyen_cancel(ignore_error) {
         var self = this;
         var config = this.pos.config;
         var previous_service_id = this.most_recent_service_id;
@@ -186,9 +186,9 @@ export const PaymentAdyen = PaymentInterface.extend({
                 self.was_cancelled = !!self.polling;
             }
         });
-    },
+    }
 
-    _convert_receipt_info: function (output_text) {
+    _convert_receipt_info(output_text) {
         return output_text.reduce(function (acc, entry) {
             var params = new URLSearchParams(entry.Text);
 
@@ -200,9 +200,9 @@ export const PaymentAdyen = PaymentInterface.extend({
 
             return acc;
         }, "");
-    },
+    }
 
-    _poll_for_response: function (resolve, reject) {
+    _poll_for_response(resolve, reject) {
         var self = this;
         if (this.was_cancelled) {
             resolve(false);
@@ -302,9 +302,9 @@ export const PaymentAdyen = PaymentInterface.extend({
                     line.set_payment_status("waitingCard");
                 }
             });
-    },
+    }
 
-    _adyen_handle_response: function (response) {
+    _adyen_handle_response(response) {
         var line = this.pending_adyen_line();
 
         if (response.error && response.error.status_code == 401) {
@@ -339,7 +339,7 @@ export const PaymentAdyen = PaymentInterface.extend({
             line.set_payment_status("waitingCard");
             return this.start_get_status_polling();
         }
-    },
+    }
 
     start_get_status_polling() {
         var self = this;
@@ -359,9 +359,9 @@ export const PaymentAdyen = PaymentInterface.extend({
         });
 
         return res;
-    },
+    }
 
-    _show_error: function (msg, title) {
+    _show_error(msg, title) {
         if (!title) {
             title = _t("Adyen Error");
         }
@@ -369,5 +369,6 @@ export const PaymentAdyen = PaymentInterface.extend({
             title: title,
             body: msg,
         });
-    },
-});
+    }
+}
+registry.category("payment_methods").add("adyen", PaymentAdyen);

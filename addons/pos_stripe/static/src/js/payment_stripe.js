@@ -1,29 +1,28 @@
 /** @odoo-module */
 /* global StripeTerminal */
 
-import core from "web.core";
 import rpc from "web.rpc";
 import { PaymentInterface } from "@point_of_sale/js/payment";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
 
-const _t = core._t;
-
-export const PaymentStripe = PaymentInterface.extend({
-    init: function (pos, payment_method) {
-        this._super(...arguments);
+export class PaymentStripe extends PaymentInterface {
+    constructor(pos, payment_method) {
+        super(...arguments);
         this.terminal = new StripeTerminal({
             onFetchConnectionToken: this.stripeFetchConnectionToken.bind(this),
             onUnexpectedReaderDisconnect: this.stripeUnexpectedDisconnect.bind(this),
         });
         this.discoverReaders();
-    },
+    }
 
-    stripeUnexpectedDisconnect: function () {
+    stripeUnexpectedDisconnect() {
         // Include a way to attempt to reconnect to a reader ?
         this._showError(_t("Reader disconnected"));
-    },
+    }
 
-    stripeFetchConnectionToken: async function () {
+    async stripeFetchConnectionToken() {
         // Do not cache or hardcode the ConnectionToken.
         try {
             const data = await rpc.query(
@@ -43,9 +42,9 @@ export const PaymentStripe = PaymentInterface.extend({
             this._showError(error.message);
             return false;
         }
-    },
+    }
 
-    discoverReaders: async function () {
+    async discoverReaders() {
         const discoverResult = await this.terminal.discoverReaders({});
         if (discoverResult.error) {
             this._showError(_.str.sprintf(_t("Failed to discover: %s"), discoverResult.error));
@@ -56,9 +55,9 @@ export const PaymentStripe = PaymentInterface.extend({
             // for the Stripe SDK
             this.pos.discoveredReaders = JSON.stringify(discoverResult.discoveredReaders);
         }
-    },
+    }
 
-    checkReader: async function () {
+    async checkReader() {
         const line = this.pos.get_order().selected_paymentline;
         // Because the reader can only connect to one instance of the SDK at a time.
         // We need the disconnect this reader if we want to use another one
@@ -79,9 +78,9 @@ export const PaymentStripe = PaymentInterface.extend({
         } else {
             return true;
         }
-    },
+    }
 
-    connectReader: async function () {
+    async connectReader() {
         const line = this.pos.get_order().selected_paymentline;
         const discoveredReaders = JSON.parse(this.pos.discoveredReaders);
         for (const selectedReader of discoveredReaders) {
@@ -105,9 +104,9 @@ export const PaymentStripe = PaymentInterface.extend({
                 this.payment_method.stripe_serial_number
             )
         );
-    },
+    }
 
-    collectPayment: async function (amount) {
+    async collectPayment(amount) {
         const line = this.pos.get_order().selected_paymentline;
         const clientSecret = await this.fetchPaymentIntentClientSecret(line.payment_method, amount);
         if (!clientSecret) {
@@ -137,18 +136,18 @@ export const PaymentStripe = PaymentInterface.extend({
                 return true;
             }
         }
-    },
+    }
 
-    captureAfterPayment: async function (processPayment, line) {
+    async captureAfterPayment(processPayment, line) {
         const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
         if (capturePayment.charges) {
             line.card_type =
                 capturePayment.charges.data[0].payment_method_details.card_present.brand;
         }
         line.transaction_id = capturePayment.id;
-    },
+    }
 
-    capturePayment: async function (paymentIntentId) {
+    async capturePayment(paymentIntentId) {
         try {
             const data = await rpc.query(
                 {
@@ -168,9 +167,9 @@ export const PaymentStripe = PaymentInterface.extend({
             this._showError(error.message);
             return false;
         }
-    },
+    }
 
-    fetchPaymentIntentClientSecret: async function (payment_method, amount) {
+    async fetchPaymentIntentClientSecret(payment_method, amount) {
         try {
             const data = await rpc.query(
                 {
@@ -190,13 +189,13 @@ export const PaymentStripe = PaymentInterface.extend({
             this._showError(error.message);
             return false;
         }
-    },
+    }
 
-    send_payment_request: async function (cid) {
-        /**
-         * Override
-         */
-        await this._super.apply(this, arguments);
+    /**
+     * @override
+     */
+    async send_payment_request(cid) {
+        await super.send_payment_request(...arguments);
         const line = this.pos.get_order().selected_paymentline;
         line.set_payment_status("waiting");
         if (await this.checkReader()) {
@@ -204,22 +203,21 @@ export const PaymentStripe = PaymentInterface.extend({
         } else {
             return false;
         }
-    },
-
-    send_payment_cancel: async function (order, cid) {
-        /**
-         * Override
-         */
-        this._super.apply(this, arguments);
+    }
+    /**
+     * @override
+     */
+    async send_payment_cancel(order, cid) {
+        super.send_payment_cancel(...arguments);
         const line = this.pos.get_order().selected_paymentline;
         const stripeCancel = await this.stripeCancel();
         if (stripeCancel) {
             line.set_payment_status("retry");
             return true;
         }
-    },
+    }
 
-    stripeCancel: async function () {
+    async stripeCancel() {
         if (this.terminal.getConnectionStatus() != "connected") {
             this._showError(_t("Payment canceled because not reader connected"));
             return true;
@@ -233,11 +231,11 @@ export const PaymentStripe = PaymentInterface.extend({
             }
             return true;
         }
-    },
+    }
 
     // private methods
 
-    _showError: function (msg, title) {
+    _showError(msg, title) {
         if (!title) {
             title = _t("Stripe Error");
         }
@@ -245,5 +243,6 @@ export const PaymentStripe = PaymentInterface.extend({
             title: title,
             body: msg,
         });
-    },
-});
+    }
+}
+registry.category("payment_methods").add("stripe", PaymentStripe);
