@@ -18,6 +18,7 @@
                 </t>
             </div>
             <div class="mx-2">
+    <!-- search input -->
                 <t t-if="private_state.search_is_focused">
                     <div class="d-flex align-items-center">
                         <input type="text" class="" t-ref="searchInput" placeholder="Pizza"
@@ -44,30 +45,37 @@
             <div class="container mb-5">
                 <div class="row">
 <!-- Looping through all the available products -->
-                    <t t-foreach="filteredProducts()" t-as="product" t-key="product.product_id">
-                        <div class="col-12 col-sm-6 col-md-4">
-                            <div t-on-click="() => props.viewProduct(product.product_id)" class="mt-2 bg-white d-flex align-items-center shadow-sm m-1">
-            <!-- Product IMAGE -->
-                                <img class="w-25 img-fluid" t-attf-src="/pos-self-order/get-images/{{ product.product_id }}" alt="Product image"/>
-                                <div class="mt-4 mx-4">
-            <!-- Product NAME -->
-                                    <p class="fw-bold">
-                                        <t t-esc="product.name"/>
-                                    </p>
-            <!-- Product DESCRIPTION -->
-                                    <t t-if="product.description_sale != false">
-                                        <p class="break-line">
-                                            <t t-esc="product.description_sale" />
+                    <t t-foreach="selfOrder.config.pos_categories" t-as="tag" t-key="tag.id">
+                        <t t-esc="tag.name"/>
+                        <!-- <t t-foreach="filteredProducts().filter(product => product.tag_list.has(tag))" t-as="product" t-key="product.product_id"> -->
+                        <!-- <t t-foreach="compose(filteredProducts, filter(true))" t-as="product" t-key="product.product_id"> -->
+                        <t t-foreach="filteredProducts()" t-as="product" t-key="product.product_id">
+
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <div t-on-click="() => props.viewProduct(product.product_id)" class="mt-2 bg-white d-flex align-items-center shadow-sm m-1">
+                <!-- Product IMAGE -->
+                                    <img class="w-25 img-fluid" t-attf-src="/pos-self-order/get-images/{{ product.product_id }}" alt="Product image"/>
+                                    <div class="mt-4 mx-4">
+                <!-- Product NAME -->
+                                        <p class="fw-bold">
+                                            <t t-esc="product.name"/>
                                         </p>
-                                    </t>
-            <!-- Product PRICE -->
-                                    <p class="fst-italic">
-                                        <t t-esc="formatMonetary(product.list_price, {currencyId: selfOrder.config.currency_id})" />
-                                    </p>
+                <!-- Product DESCRIPTION -->
+                                        <t t-if="product.description_sale != false">
+                                            <p class="break-line">
+                                                <t t-esc="product.description_sale" />
+                                            </p>
+                                        </t>
+                <!-- Product PRICE -->
+                                        <p class="fst-italic">
+                                            <t t-esc="formatMonetary(product.list_price, {currencyId: selfOrder.config.currency_id})" />
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </t>
                     </t>
+
                 </div>
             </div>
 <!-- Go to Cart Button -->

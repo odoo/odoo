@@ -28,7 +28,7 @@ export class ProductList extends Component {
     }
     filteredProducts = () => {
         // here we only want to return the products
-        // that have the selected tags
+        // that have the selected tags and that match the search input
         return this.props.productList.filter((product) => {
             return (
                 this.itemHasAllOfTheTags(product, this.private_state.selected_tags) &&

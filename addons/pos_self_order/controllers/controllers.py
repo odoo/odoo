@@ -152,7 +152,7 @@ class PosSelfOrder(http.Controller):
             raise werkzeug.exceptions.NotFound()
         # TODO: only get the products that are available in THIS POS
         products_sudo = request.env['product.product'].sudo().search(
-            [('available_in_pos', '=', True)])
+            [('available_in_pos', '=', True)], order='pos_categ_id')
 
         # FIXME: we are not taking into account product variants
         # for each of the items in products_sudo, we get the price with tax included
