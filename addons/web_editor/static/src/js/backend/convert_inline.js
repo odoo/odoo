@@ -103,10 +103,9 @@ function attachmentThumbnailToLinkImg($editable) {
  * support the mixing and matching of column options (e.g., "col-4 col-sm-6" and
  * "col col-4" aren't supported).
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function bootstrapToTable($editable) {
-    const editable = $editable.get(0);
+function bootstrapToTable(editable) {
     // First give all rows in columns a separate container parent.
     for (const rowInColumn of [...editable.querySelectorAll('.row')].filter(row => RE_COL_MATCH.test(row.parentElement.className))) {
         const previous = rowInColumn.previousElementSibling;
@@ -144,7 +143,7 @@ function bootstrapToTable($editable) {
     for (const container of [...containers].filter(n => [...n.children].some(c => c.classList.contains('row')))) {
         // The width of the table was stored in a temporary attribute. Fetch it
         // for use in `_applyColspan` and remove the attribute at the end.
-        const containerWidth = container.getAttribute('o-temp-width');
+        const containerWidth = parseFloat(container.getAttribute('o-temp-width'));
 
         // TABLE
         const table = _createTable(container.attributes);
@@ -225,7 +224,7 @@ function bootstrapToTable($editable) {
                     if (columnIndex === bootstrapColumns.length - 1) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
-                        _applyColspan(grid[gridIndex], 12 - gridIndex);
+                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
                         currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                     }
                 } else if (gridIndex + columnSize === 12) {
@@ -291,10 +290,9 @@ function bootstrapToTable($editable) {
 /**
  * Convert Bootstrap cards to table structures.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function cardToTable($editable) {
-    const editable = $editable.get(0);
+function cardToTable(editable) {
     for (const card of editable.querySelectorAll('.card')) {
         const table = _createTable(card.attributes);
         table.style.removeProperty('overflow');
@@ -598,9 +596,9 @@ async function toInline($editable, cssRules, $iframe) {
     fontToImg($editable);
     await svgToPng($editable);
     classToStyle($editable, cssRules);
-    bootstrapToTable($editable);
-    cardToTable($editable);
-    listGroupToTable($editable);
+    bootstrapToTable(editable);
+    cardToTable(editable);
+    listGroupToTable(editable);
     addTables($editable);
     normalizeColors($editable);
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
@@ -713,8 +711,8 @@ function fontToImg($editable) {
             font.style.setProperty('line-height', 'normal');
             const intrinsicWidth = _getWidth(font);
             const intrinsicHeight = _getHeight(font);
-            const hPadding = width && (width - intrinsicWidth) / 2;
-            const vPadding = height && (height - intrinsicHeight) / 2;
+            const hPadding = width && intrinsicWidth && (width - intrinsicWidth) / 2;
+            const vPadding = height && intrinsicHeight && (height - intrinsicHeight) / 2;
             let padding = '';
             if (hPadding || vPadding) {
                 padding = vPadding ? vPadding + 'px ' : '0 ';
@@ -931,10 +929,9 @@ function getCSSRules(doc) {
 /**
  * Convert Bootstrap list groups and their items to table structures.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function listGroupToTable($editable) {
-    const editable = $editable.get(0);
+function listGroupToTable(editable) {
     for (const listGroup of editable.querySelectorAll('.list-group')) {
         let table;
         if (listGroup.querySelectorAll('.list-group-item').length) {
@@ -1338,7 +1335,7 @@ function _getStylePropertyValue(element, propertyName) {
  * @returns {Number}
  */
 function _getWidth(element) {
-    return parseFloat(getComputedStyle(element).width.replace('px', ''));
+    return parseFloat(getComputedStyle(element).width.replace('px', '')) || 0;
 }
 /**
  * Equivalent to JQuery's `height` method. Returns the element's visible height.
@@ -1347,7 +1344,7 @@ function _getWidth(element) {
  * @returns {Number}
  */
 function _getHeight(element) {
-    return parseFloat(getComputedStyle(element).height.replace('px', ''));
+    return parseFloat(getComputedStyle(element).height.replace('px', '')) || 0;
 }
 /**
  * Return true if the given element is hidden.
