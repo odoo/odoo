@@ -835,6 +835,7 @@ class ChromeBrowser:
 
         self.window_size = test_class.browser_size
         self.touch_enabled = test_class.touch_enabled
+        self.user_agent = test_class.user_agent
         self.sigxcpu_handler = None
         self._chrome_start()
         self._find_websocket()
@@ -983,6 +984,9 @@ class ChromeBrowser:
             # enable Chrome's Touch mode, useful to detect touch capabilities using
             # "'ontouchstart' in window"
             switches['--touch-events'] = ''
+
+        if self.user_agent:
+            switches['--user-agent'] = self.user_agent
 
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
@@ -1550,6 +1554,7 @@ class HttpCase(TransactionCase):
     browser_size = '1366x768'
     touch_enabled = False
     allow_end_on_form = False
+    user_agent = None
 
     _logger: logging.Logger = None
 
@@ -1749,9 +1754,13 @@ class HttpCase(TransactionCase):
         """Wrapper for `browser_js` to start the given `tour_name` with the
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
-        step_delay = ', %s' % step_delay if step_delay else ''
-        code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
-        ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
+        options = {
+            'stepDelay': step_delay if step_delay else 0,
+            'keepWatchBrowser': kwargs.get('watch', False),
+            'startUrl': url_path,
+        }
+        code = kwargs.pop('code', "odoo.startTour('%s', %s)" % (tour_name, json.dumps(options)))
+        ready = kwargs.pop('ready', "odoo.isTourReady('%s')" % tour_name)
         return self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
 
     def profile(self, **kwargs):

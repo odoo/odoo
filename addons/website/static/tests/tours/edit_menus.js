@@ -92,6 +92,8 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Menu should have a new link item",
         trigger: 'iframe #top_menu .nav-item a:contains("Random!")',
+        // Don't click the new menu when the editor is still blocked.
+        extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
     },
     {
         content: "Click on Edit Link",

@@ -4,7 +4,7 @@ import { createTourMethods } from "@point_of_sale/../tests/tours/helpers/utils";
 
 class Do {
     clickOrderline(name, totalQuantity) {
-        let trigger = `li.orderline .product-name:contains("${name}")`;
+        let trigger = `.splitbill-screen li.orderline .product-name:contains("${name}")`;
         if (totalQuantity) {
             trigger += ` ~ .info-list .info:contains("${totalQuantity}")`;
         }
@@ -38,12 +38,12 @@ class Check {
         return [
             {
                 content: `'${name}' orderline has total quantity of '${totalQuantity}'`,
-                trigger: `li.orderline .product-name:contains("${name}") ~ .info-list .info:contains("${totalQuantity}")`,
+                trigger: `.splitbill-screen li.orderline .product-name:contains("${name}") ~ .info-list .info:contains("${totalQuantity}")`,
                 run: () => {},
             },
             {
                 content: `'${name}' orderline has '${splitQuantity}' quantity to split`,
-                trigger: `li.orderline .product-name:contains("${name}") ~ .info-list .info em:contains("${splitQuantity}")`,
+                trigger: `.splitbill-screen li.orderline .product-name:contains("${name}") ~ .info-list .info em:contains("${splitQuantity}")`,
                 run: () => {},
             },
         ];

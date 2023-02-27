@@ -1,14 +1,13 @@
 odoo.define('website_sale.tour_variants_modal_window', function (require) {
     'use strict';
 
-    var tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
 
     // This tour relies on a data created from the python test.
-    tour.register('tour_variants_modal_window', {
+    registry.category("web_tour.tours").add('tour_variants_modal_window', {
         test: true,
         url: '/shop?search=Short (TEST)',
-    },
-    [
+        steps: [
         {
             content: "Select the Short (TEST) product",
             trigger: '.oe_product_cart a:containsExact("Short (TEST)")',
@@ -63,5 +62,5 @@ odoo.define('website_sale.tour_variants_modal_window', function (require) {
             content: "Check never custom variant",
             trigger: 'td.td-product_name:contains(Never attribute size custom: Yes never custom: TEST)',
         }
-    ]);
+    ]});
 });

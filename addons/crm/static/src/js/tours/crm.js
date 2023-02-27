@@ -4,7 +4,7 @@ import { _t } from 'web.core';
 import { Markup } from 'web.utils';
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/js/tour_step_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('crm_tour', {
     url: "/web",
@@ -47,7 +47,8 @@ registry.category("web_tour.tours").add('crm_tour', {
     position: "right",
     run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:not(.o_updating) .o_ActivityButtonView",
+    // Choose the element that is not going to be moved by the previous step.
+    trigger: ".o_opportunity_kanban .o_kanban_group:nth-child(2) .o_kanban_record:not(.o_updating) .o_ActivityButtonView",
     extra_trigger: ".o_opportunity_kanban",
     content: Markup(_t("Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to keep track of everything you have to do!</i>")),
     position: "bottom",

@@ -18,32 +18,17 @@ Odoo Web tours.
     ],
     'assets': {
         'web.assets_common': [
-            'web_tour/static/src/scss/**/*',
-            'web_tour/static/src/js/running_tour_action_helper.js',
-            'web_tour/static/src/js/tip.js',
-            'web_tour/static/src/js/tour_manager.js',
-            'web_tour/static/src/js/tour_service.js',
-            'web_tour/static/src/js/tour_step_utils.js',
-            'web_tour/static/src/js/tour_utils.js',
-            '/web_tour/static/src/xml/tip.xml',
+            'web_tour/static/src/tour_pointer/**/*',
+            'web_tour/static/src/tour_service/**/*',
         ],
         'web.assets_backend': [
             'web_tour/static/src/debug/debug_manager.js',
             'web_tour/static/src/debug/tour_dialog_component.js',
-            'web_tour/static/src/services/*.js',
             'web_tour/static/src/debug/tour_dialog_component.xml',
         ],
         'web.assets_frontend': [
-            'web_tour/static/src/scss/**/*',
-            'web_tour/static/src/js/running_tour_action_helper.js',
-            'web_tour/static/src/js/tip.js',
-            'web_tour/static/src/js/tour_manager.js',
-            'web_tour/static/src/js/tour_service.js',
-            'web_tour/static/src/js/tour_step_utils.js',
-            'web_tour/static/src/js/tour_utils.js',
-            '/web_tour/static/src/xml/tip.xml',
-
-            'web_tour/static/src/js/public/**/*',
+            'web_tour/static/src/tour_pointer/**/*',
+            'web_tour/static/src/tour_service/**/*',
         ],
         'web.qunit_suite_tests': [
             'web_tour/static/tests/**/*',

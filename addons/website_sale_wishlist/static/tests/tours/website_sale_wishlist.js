@@ -6,6 +6,7 @@ const { registry } = require("@web/core/registry");
 
 registry.category("web_tour.tours").add('shop_wishlist', {
     test: true,
+    checkDelay: 250,
     url: '/shop?search=Customizable Desk',
     steps: [
         {
@@ -47,7 +48,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "check that logged in",
             trigger: "li span:contains('Mitchell Admin')",
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "click on Customizable Desk (TEST)",
@@ -56,7 +57,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "check the first variant is already in wishlist",
             trigger: '#product_detail .o_add_wishlist_dyn:disabled',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "change variant",
@@ -175,7 +176,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check that wishlist contains 1 item",
             trigger: '.my_wish_quantity:contains(1)',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "Click on product",
@@ -210,12 +211,12 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check wishlist contains first variant",
             trigger: '#o_comparelist_table tr:contains("red")',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "Check wishlist contains second variant",
             trigger: '#o_comparelist_table tr:contains("blue")',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "Check wishlist contains third variant, then go to login",
@@ -260,7 +261,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Check there is wishlist button on product from /shop",
             extra_trigger: '.js_sale',
             trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "Click on product",
@@ -273,7 +274,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check there is no wishlist button when selecting impossible variant",
             trigger: '#product_detail:not(:has(.o_add_wishlist))',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "Select Bottle with second variant (blue) from /product",
@@ -326,7 +327,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Check that there is no wishlist button from /shop",
             extra_trigger: '.js_sale',
             trigger: '.oe_product_cart:contains("Bottle"):not(:has(.o_add_wishlist))',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "Click on product",
@@ -335,7 +336,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check that there is no wishlist button from /product",
             trigger: '#product_detail:not(:has(.o_add_wishlist_dyn))',
-            run: function () {},
+            isCheck: true,
         },
         // Test if the wishlist button is active or not in /shop
         {
@@ -356,7 +357,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Added into the wishlist",
             trigger: '.my_wish_quantity.text-bg-primary:contains(1)',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "Go to '/shop",
@@ -373,7 +374,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "The product is in the wishlist",
             trigger: '.oe_product_cart .o_wsale_product_information:has(.o_add_wishlist[disabled])',
-            run: function () {},
+            isCheck: true,
         },
         {
             content: "Go to the wishlist",
@@ -398,7 +399,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "The product is not in the wishlist",
             trigger: '.oe_product_cart .o_wsale_product_information:not(:has(.o_add_wishlist[disabled]))',
-            run: function () {},
+            isCheck: true,
         },
     ]
 });

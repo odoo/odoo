@@ -16,26 +16,29 @@ wTourUtils.registerWebsitePreviewTour('course_publisher', {
     test: true
 }, [{
     content: 'eLearning: click on New (top-menu)',
-    trigger: 'div.o_new_content_container a'
+    trigger: 'div.o_new_content_container a',
 }, {
     content: 'eLearning: click on New Course',
     trigger: '#o_new_content_menu_choices a:contains("Course")'
 }, {
     content: 'eLearning: set name',
-    trigger: 'input[name="name"]',
+    trigger: 'div[name="name"] input',
     run: 'text How to Déboulonnate',
+    in_modal: true,
 }, {
     content: 'eLearning: click on tags',
-    trigger: '.o_field_many2manytags input',
+    trigger: '.o_field_many2many_tags input',
     run: 'text Gard',
+    in_modal: true,
 }, {
     content: 'eLearning: select gardener tag',
     trigger: '.ui-autocomplete a:contains("Gardener")',
-    in_modal: false,
+    in_modal: true,
 }, {
     content: 'eLearning: set description',
     trigger: '.o_field_html[name="description"]',
     run: 'text Déboulonnate is very common at Fleurus',
+    in_modal: true,
 }, {
     content: 'eLearning: we want reviews',
     trigger: '.o_field_boolean[name="allow_comment"] input',

@@ -5,7 +5,7 @@ const {_t} = require('web.core');
 const {Markup} = require('web.utils');
 
 const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/js/tour_step_utils');
+const { stepUtils } = require('@web_tour/tour_service/tour_utils');
 
 registry.category("web_tour.tours").add('hr_expense_tour' , {
     url: "/web",
@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     content: _t("The status of all your current expenses is visible from here."),
     position: 'bottom',
 },
-stepUtils.openBuggerMenu(),
+stepUtils.openBurgerMenu(),
 {
     trigger: "[data-menu-xmlid='hr_expense.menu_hr_expense_report']",
     extra_trigger: '.o_main_navbar',

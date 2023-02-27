@@ -382,6 +382,10 @@ odoo.define('website.tour.form_editor', function (require) {
             extra_trigger: 'iframe body:not(.editor_enable)',
             trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]',
         },
+        {
+            trigger: ".o_edit_website_container a:has(span.fa-pencil)",
+            run() {},
+        },
         wTourUtils.clickOnEdit(),
         {
             content: 'Click on the submit button',

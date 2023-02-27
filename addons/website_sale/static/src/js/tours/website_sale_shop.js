@@ -75,6 +75,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         trigger: "a[data-menu-xmlid='website.menu_website_dashboard'], a[data-menu-xmlid='website.menu_website_analytics']",
         content: _t("Let's now take a look at your eCommerce dashboard to get your eCommerce website ready in no time."),
         position: "bottom",
-        run: "click",
+        // Just check during test mode. Otherwise, clicking it will result to random error on loading the Chart.js script.
+        run: () => {},
     }]);
 });

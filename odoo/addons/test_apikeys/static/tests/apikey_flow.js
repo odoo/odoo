@@ -57,17 +57,9 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
         $('button:contains("Done")').click();
     }
 }, {
-    content: 'Re-open preferences',
-    trigger: '.o_user_menu .oe_topbar_name',
-}, {
-    trigger: '[data-menu=settings]',
-}, {
-    content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
-    run: 'click',
-}, {
     content: "check that our key is present",
     trigger: '[name=api_key_ids] td:contains("my key")',
+    run() {},
 }]});
 
 // deletes the previously created key

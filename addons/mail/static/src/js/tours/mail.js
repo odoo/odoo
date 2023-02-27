@@ -33,9 +33,10 @@ registry.category("web_tour.tours").add(
             trigger: ".o_DiscussSidebarCategory_newChannelAutocompleteSuggestions",
             content: Markup(_t("<p>Create a public or private channel.</p>")),
             position: "right",
-            run() {
-                this.$consumeEventAnchors.find("li:first").click();
-            },
+        },
+        {
+            auto: true,
+            trigger: ".o_DiscussSidebarCategory_newChannelAutocompleteSuggestions .ui-menu-item a",
         },
         {
             trigger: ".o_DiscussView_thread .o_ComposerTextInputView_textarea",
@@ -52,7 +53,7 @@ registry.category("web_tour.tours").add(
             },
         },
         {
-            trigger: ".o_DiscussView_thread .o_ComposerView_buttonSend",
+            trigger: ".o_DiscussView_thread .o_ComposerView_buttonSend:not(:disabled)",
             content: _t("Post your message on the thread"),
             position: "top",
         },

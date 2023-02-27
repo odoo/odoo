@@ -3,24 +3,23 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import ToursDialog from "@web_tour/debug/tour_dialog_component";
-import utils from "web_tour.utils";
+import { tourState } from "../tour_service/tour_state";
 
 export function disableTours({ env }) {
     if (!env.services.user.isSystem) {
         return null;
     }
-    const activeTours = env.services.tour.getActiveTours();
-    if (activeTours.length === 0) {
+    const activeTourNames = tourState.getActiveTourNames();
+    if (activeTourNames.length === 0) {
         return null;
     }
     return {
         type: "item",
         description: env._t("Disable Tours"),
         callback: async () => {
-            const tourNames = activeTours.map(tour => tour.name);
-            await env.services.orm.call("web_tour.tour", "consume", [tourNames]);
-            for (const tourName of tourNames) {
-                browser.localStorage.removeItem(utils.get_debugging_key(tourName));
+            await env.services.orm.call("web_tour.tour", "consume", [activeTourNames]);
+            for (const tourName of activeTourNames) {
+                tourState.clear(tourName);
             }
             browser.location.reload();
         },

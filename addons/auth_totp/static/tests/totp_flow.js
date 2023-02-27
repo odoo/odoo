@@ -3,7 +3,7 @@ odoo.define('auth_totp.tours', function(require) {
 
 const ajax = require('web.ajax');
 const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/js/tour_step_utils');
+const { stepUtils } = require('@web_tour/tour_service/tour_utils');
 
 function openRoot() {
     return [{

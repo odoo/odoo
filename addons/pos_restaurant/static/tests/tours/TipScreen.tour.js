@@ -118,6 +118,7 @@ NumberPopup.check.isShown();
 NumberPopup.do.pressNumpad("1");
 NumberPopup.check.inputShownIs("1");
 NumberPopup.do.clickConfirm();
+PaymentScreen.check.emptyPaymentlines("5.0");
 PaymentScreen.do.clickPaymentMethod("Cash");
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.isShown();

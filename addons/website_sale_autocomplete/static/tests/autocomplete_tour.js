@@ -1,12 +1,12 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
+import { TourError } from "@web_tour/tour_service/tour_utils";
 import tourUtils from 'website_sale.tour_utils';
 
 
 function fail (errorMessage) {
-    const tour = registry.get("tourManager");
-    tour._consume_tour(tour.running_tour, errorMessage);
+    throw new TourError(errorMessage);
 }
 
 registry.category("web_tour.tours").add('autocomplete_tour', {
