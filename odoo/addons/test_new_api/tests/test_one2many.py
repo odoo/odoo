@@ -169,6 +169,25 @@ class One2manyCase(TransactionCase):
         self.assertTrue(model2.exists())
         self.assertEqual(model2.pArTneR_321_id, p1)
 
+    def test_merge_partner_archived(self):
+        partner = self.env['res.partner']
+
+        p1 = partner.create({'name': 'test1'})
+        p2 = partner.create({'name': 'test2'})
+        p3 = partner.create({'name': 'test3', 'active': False})
+        partners_ids = (p1 + p2 + p3)
+
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_context(active_ids=partners_ids.ids, active_model='res.partner').create({})
+
+        self.assertEqual(wizard.partner_ids, partners_ids)
+        self.assertEqual(wizard.dst_partner_id, p2)
+
+        wizard.action_merge()
+
+        self.assertFalse(p1.exists())
+        self.assertTrue(p2.exists())
+        self.assertFalse(p3.exists())
+
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
         record0 = self.env['test_new_api.attachment.host'].create({})
