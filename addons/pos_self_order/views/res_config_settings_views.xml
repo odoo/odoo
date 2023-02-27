@@ -17,10 +17,9 @@
             <setting id="customer_display" position="attributes">
                 <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
-            <setting string="Multi Employees per Session" position="attributes">
-                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
-            </setting>
-            <setting string="Margins &amp; Costs" position="attributes">
+            <!-- refactor by selecting the parent element of the fields instead of trying to select the setting 
+            https://grantm.github.io/perl-libxml-by-example/xpath.html -->
+            <!-- <setting help="Show margins &amp; costs on product information" position="attributes">
                 <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
             </setting>
             <setting help="Improve navigation for imprecise industrial touchscreens" position="attributes">
@@ -49,7 +48,7 @@
             </setting>
             <setting help="Adds a button to set a global discount" position="attributes">
                 <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
-            </setting>
+            </setting> -->
         <!-- TODO: remove the 'down payment' field from the Sales module -->
         </field>
     </record>
