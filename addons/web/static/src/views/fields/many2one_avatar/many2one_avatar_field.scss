@@ -1,0 +1,20 @@
+.o_popover > .o_field_many2one_selection {
+    padding: 0.25rem;
+    .o-autocomplete--dropdown-menu {
+        width: 178px;
+    }
+}
+.o_field_many2one_avatar_kanban {
+    .o_m2o_avatar {
+        .o_delete {
+            margin-left: -12px;
+            margin-top: -4px;
+            width: 12px;
+            height: 12px;
+            visibility: hidden;
+        }
+        &.o_allow_delete_hover:hover .o_delete {
+            visibility: visible;
+        }
+    }
+}

@@ -225,8 +225,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form><field name="user_id" widget="many2one_avatar" placeholder="Placeholder"/></form>',
+            arch: '<form><field name="user_id" widget="many2one_avatar" placeholder="Placeholder"/></form>',
         });
 
         assert.strictEqual(
@@ -337,5 +336,80 @@ QUnit.module("Fields", (hooks) => {
         await clickDiscard(target.querySelector(".modal"));
         assert.strictEqual(target.querySelector(".o_field_widget[name=user_id] input").value, "");
         assert.containsOnce(target, ".o_field_widget[name=user_id] span.o_m2o_avatar_empty");
+    });
+
+    QUnit.test("widget many2one_avatar in kanban view", async function (assert) {
+        assert.expect(4);
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="user_id" widget="many2one_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
+            ).dataset.src,
+            "/web/image/user/17/avatar_128",
+            "should have correct avatar image"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
+            ).dataset.src,
+            "/web/static/img/user_menu_avatar.png",
+            "should have empty avatar image"
+        );
+        // open dialog
+        await click(
+            target.querySelector(
+                ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
+            )
+        );
+        // select input
+        const popover = document.querySelector(".o_popover_container");
+        await click(popover.querySelector(".o_field_many2one_selection input"));
+        // select first input
+        await click(popover.querySelector(".o-autocomplete--dropdown-item"));
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
+            ).dataset.src,
+            "/web/image/user/17/avatar_128",
+            "should have correct avatar image"
+        );
+        // check delete
+        await triggerEvent(
+            target.querySelector(".o_kanban_record:nth-child(4) .o_field_many2one_avatar"),
+            null,
+            "mouseover"
+        );
+        await click(
+            target.querySelector(".o_kanban_record:nth-child(4) .o_field_many2one_avatar"),
+            ".o_delete"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
+            ).dataset.src,
+            "/web/static/img/user_menu_avatar.png",
+            "should have empty avatar image"
+        );
     });
 });

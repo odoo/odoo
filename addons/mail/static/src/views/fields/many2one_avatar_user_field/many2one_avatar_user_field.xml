@@ -6,7 +6,10 @@
         </xpath>
     </t>
     
-    <t t-name="mail.KanbanMany2OneAvatarUserField" t-inherit="mail.Many2OneAvatarUserField" t-inherit-mode="primary" owl="1">
+    <t t-name="mail.KanbanMany2OneAvatarUserField" t-inherit="web.KanbanMany2OneAvatarField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
+            <attribute name="t-on-click.stop.prevent">onClickAvatar</attribute>
+        </xpath>
         <Many2OneField position="attributes">
             <attribute name="t-if">props.readonly and props.displayAvatarName</attribute>
         </Many2OneField>
