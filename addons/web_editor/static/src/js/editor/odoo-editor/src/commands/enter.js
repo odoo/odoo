@@ -49,7 +49,7 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     }
     if (isBlock(this) || splitEl.hasChildNodes()) {
         this.after(splitEl);
-        if (isVisible(splitEl)) {
+        if (isVisible(splitEl) || splitEl.textContent === '\u200B') {
             didSplit = true;
         } else {
             splitEl.remove();
