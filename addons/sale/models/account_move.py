@@ -16,12 +16,7 @@ class AccountMove(models.Model):
         for line in line_ids:
             try:
                 line.sale_line_ids.tax_id = line.tax_ids
-                if all(line.tax_ids.mapped('price_include')):
-                    line.sale_line_ids.price_unit = line.price_unit
-                else:
-                    #To keep positive amount on the sale order and to have the right price for the invoice
-                    #We need the - before our untaxed_amount_to_invoice
-                    line.sale_line_ids.price_unit = -line.sale_line_ids.untaxed_amount_to_invoice
+                line.sale_line_ids.price_unit = line.price_unit
             except UserError:
                 # a UserError here means the SO was locked, which prevents changing the taxes
                 # just ignore the error - this is a nice to have feature and should not be blocking
