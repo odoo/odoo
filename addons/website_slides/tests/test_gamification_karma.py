@@ -63,18 +63,17 @@ class TestKarmaGain(common.SlidesCase):
         self.assertTrue(self.channel.with_user(user).completed)
         self.assertEqual(user.karma, computed_karma)
 
-        # Mark the quiz as not completed
+        # Mark the quiz as not completed.
+        # The course remains completed once completed. No karma change.
         self.slide_3.with_user(user).action_mark_uncompleted()
         computed_karma -= self.slide_3.quiz_first_attempt_reward
-        computed_karma -= self.channel.karma_gen_channel_finish
-        self.assertFalse(self.channel.with_user(user).completed)
+        self.assertTrue(self.channel.with_user(user).completed)
         self.assertEqual(user.karma, computed_karma)
 
         # Re-submit the quiz, we should consider it as the second attempt
         self.slide_3.with_user(user).action_set_viewed(quiz_attempts_inc=True)
         self.slide_3.with_user(user)._action_mark_completed()
         computed_karma += self.slide_3.quiz_second_attempt_reward
-        computed_karma += self.channel.karma_gen_channel_finish
         self.assertTrue(self.channel.with_user(user).completed)
         self.assertEqual(user.karma, computed_karma)
 
@@ -100,6 +99,11 @@ class TestKarmaGain(common.SlidesCase):
         self.channel._remove_membership(user.partner_id.ids)
         self.assertEqual(user.karma, computed_karma)
 
+        # Unarchive the partner. Karma should not move. Course should be completed.
+        self.channel._action_add_members(user.partner_id)
+        self.assertTrue(self.channel_2.with_user(user).completed)
+        self.assertEqual(user.karma, computed_karma)
+
     @mute_logger('odoo.models')
     @users('user_emp', 'user_portal', 'user_officer')
     def test_karma_gain_multiple_course(self):
@@ -123,8 +127,9 @@ class TestKarmaGain(common.SlidesCase):
         channel_partners = self.env['slide.channel.partner'].sudo().search([('partner_id', 'in', users.partner_id.ids)])
         self.assertEqual(len(channel_partners), 4)
 
+        # Set courses as completed and update karma
         with self.assertQueryCount(53):
-            channel_partners._set_as_completed()
+            channel_partners._post_completion_update_hook()
 
         computed_karma = self.channel.karma_gen_channel_finish + self.channel_2.karma_gen_channel_finish
 
