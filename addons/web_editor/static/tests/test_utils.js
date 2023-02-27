@@ -774,6 +774,15 @@ function getGridHtml(matrix) {
         `</div>`
     );
 }
+function getTdHtml(colspan, text, containerWidth) {
+    return (
+        `<td colspan="${colspan}"${
+            containerWidth ? ' ' + `style="max-width: ${Math.round(containerWidth*colspan/12*100)/100}px;"`
+                           : ''}>` +
+            text +
+        `</td>`
+    );
+}
 /**
  * Take a matrix representing a table and return an HTML string of the table.
  * The matrix is an array of rows, with each row being an array of cells. Each
@@ -803,9 +812,7 @@ function getTableHtml(matrix, containerWidth) {
         matrix.map((row, iRow) => (
             `<tr>` +
             row.map((col, iCol) => (
-                `<td colspan="${col[0]}"${containerWidth ? ` style="max-width: ${Math.round(containerWidth*col[0]/12*100)/100}px;"` : ''}>` +
-                (typeof col[2] === 'string' ? col[2] : `(${iRow}, ${iCol})`) +
-                `</td>`
+                getTdHtml(col[0], typeof col[2] === 'string' ? col[2] : `(${iRow}, ${iCol})`, containerWidth)
             )).join('') +
             `</tr>`
         )).join('') +
@@ -885,6 +892,7 @@ return {
     getTableHtml: getTableHtml,
     getRegularGridHtml: getRegularGridHtml,
     getRegularTableHtml: getRegularTableHtml,
+    getTdHtml: getTdHtml,
     removeComments: removeComments,
 };
 
