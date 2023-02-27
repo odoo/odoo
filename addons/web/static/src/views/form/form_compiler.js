@@ -324,8 +324,11 @@ export class FormCompiler extends ViewCompiler {
                     ? child.getAttribute("nolabel") !== "1"
                     : true;
                 slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
-                if (slotContent && addLabel && !isOuterGroup && !isTextNode(slotContent)) {
+                const shouldExpand = slotContent && !isOuterGroup && !isTextNode(slotContent);
+                if (shouldExpand && (addLabel || sequence === 1)) {
                     itemSpan = itemSpan === 1 ? itemSpan + 1 : itemSpan;
+                }
+                if (shouldExpand && addLabel) {
                     const fieldName = child.getAttribute("name");
                     const fieldId = slotContent.getAttribute("id") || fieldName;
                     const props = {
