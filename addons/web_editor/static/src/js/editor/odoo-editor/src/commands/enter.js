@@ -14,6 +14,8 @@ import {
     splitTextNode,
     toggleClass,
     isVisible,
+    descendants,
+    isVisibleTextNode,
 } from '../utils/utils.js';
 
 Text.prototype.oEnter = function (offset) {
@@ -48,7 +50,7 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     }
     if (isBlock(this) || splitEl.hasChildNodes()) {
         this.after(splitEl);
-        if (isVisible(splitEl)) {
+        if (isVisible(splitEl) || splitEl.textContent === '\u200B') {
             didSplit = true;
         } else {
             splitEl.remove();
@@ -91,7 +93,7 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
  */
 HTMLHeadingElement.prototype.oEnter = function () {
     const newEl = HTMLElement.prototype.oEnter.call(this, ...arguments);
-    if ([...newEl.textContent].every(char => char === '\u200B')) { // empty or all invisible
+    if (!descendants(newEl).some(isVisibleTextNode)) {
         const node = setTagName(newEl, 'P');
         node.replaceChildren(document.createElement('br'));
         setCursorStart(node);

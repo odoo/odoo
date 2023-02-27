@@ -19,12 +19,9 @@ import {
     insertText,
     isBlock,
     isColorGradient,
-    isContentTextNode,
     isSelectionFormat,
     isShrunkBlock,
-    isVisible,
     isVisibleEmpty,
-    isVisibleStr,
     leftLeafFirstPath,
     preserveCursor,
     rightPos,
@@ -48,6 +45,8 @@ import {
     getDeepestPosition,
     fillEmpty,
     isEmptyBlock,
+    isWhitespace,
+    isVisibleTextNode,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -58,7 +57,7 @@ function align(editor, mode) {
     const visitedBlocks = new Set();
     const traversedNode = getTraversedNodes(editor.editable);
     for (const node of traversedNode) {
-        if (isContentTextNode(node) && isVisible(node)) {
+        if (isVisibleTextNode(node)) {
             const block = closestBlock(node);
             if (!visitedBlocks.has(block)) {
                 const hasModifier = getComputedStyle(block).textAlign === mode;
@@ -483,7 +482,7 @@ export const editorCommands = {
         const blocks = new Set();
 
         for (const node of getTraversedNodes(editor.editable)) {
-            if (node.nodeType === Node.TEXT_NODE && !isVisibleStr(node)) {
+            if (node.nodeType === Node.TEXT_NODE && isWhitespace(node)) {
                 node.remove();
             } else {
                 const block = closestBlock(node);
@@ -551,11 +550,11 @@ export const editorCommands = {
                 } else {
                     font = [];
                 }
-            } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
+            } else if ((node.nodeType === Node.TEXT_NODE && !isWhitespace(node))
                     || node.nodeName === "BR"
                     || (node.nodeType === Node.ELEMENT_NODE &&
                         ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
-                        isVisibleStr(node.textContent) &&
+                        !isWhitespace(node.textContent) &&
                         !node.classList.contains('btn') &&
                         !node.querySelector('font'))) {
                 // Node is a visible text or inline node without font nor a button:
