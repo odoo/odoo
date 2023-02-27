@@ -123,6 +123,18 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        changeFiscalPosition(name) {
+            return [
+                {
+                    content: 'click fiscal position button',
+                    trigger: '.o_fiscal_position_button',
+                },
+                {
+                    content: 'fiscal position screen is shown',
+                    trigger: `.selection-item:contains("${name}")`,
+                },
+            ];
+        }
     }
 
     class Check {
@@ -199,6 +211,14 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     content: `'${mode}' is active`,
                     trigger: `.numpad button.selected-mode:contains('${mode}')`,
                     run: function () {},
+                },
+            ];
+        }
+        noDiscountApplied(originalPrice) {
+            return [
+                {
+                    content: 'no discount is applied',
+                    trigger: `.info:not(:contains(${originalPrice}))`,
                 },
             ];
         }
