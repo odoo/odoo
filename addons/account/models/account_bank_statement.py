@@ -232,8 +232,11 @@ class AccountBankStatement(models.Model):
         self.env['account.bank.statement'].flush_model(['balance_start', 'balance_end_real', 'first_line_index'])
 
         self.env.cr.execute(f"""
-            SELECT id
-              FROM account_bank_statement st,
+            SELECT st.id
+              FROM account_bank_statement st
+         LEFT JOIN res_company co ON st.company_id = co.id
+         LEFT JOIN account_journal j ON st.journal_id = j.id
+         LEFT JOIN res_currency currency ON COALESCE(j.currency_id, co.currency_id) = currency.id,
                    LATERAL (
                        SELECT balance_end_real
                          FROM account_bank_statement st_lookup
@@ -242,7 +245,7 @@ class AccountBankStatement(models.Model):
                      ORDER BY st_lookup.first_line_index desc
                         LIMIT 1
                    ) prev
-             WHERE prev.balance_end_real != st.balance_start
+             WHERE ROUND(prev.balance_end_real, currency.decimal_places) != ROUND(st.balance_start, currency.decimal_places)
                {"" if all_statements else "AND st.id IN %(ids)s"}
         """, {
             'ids': tuple(self.ids)
