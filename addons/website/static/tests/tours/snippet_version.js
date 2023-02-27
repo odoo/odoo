@@ -33,10 +33,15 @@ wTourUtils.registerWebsitePreviewTour("snippet_version", {
     },
 },
     ...wTourUtils.clickOnSave(),
+{
+    trigger: ".o_edit_website_container a:has(span.fa-pencil)",
+    run() {},
+},
     wTourUtils.clickOnEdit(),
 {
     content: "Modify the version of snippets",
     trigger: '#oe_snippets .o_panel_body > .oe_snippet',
+    extra_trigger: '#oe_snippets.o_loaded',
     run: function () {
         document.querySelector('#oe_snippets .oe_snippet > [data-snippet="s_test_snip"]').dataset.vjs = '999';
         document.querySelector('#oe_snippets .oe_snippet > [data-snippet="s_share"]').dataset.vcss = '999';

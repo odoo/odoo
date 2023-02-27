@@ -49,8 +49,12 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         trigger: '.modal-footer .btn-primary',
         extra_trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
     },
+    {
+        trigger: '#oe_snippets.o_loaded',
+        run() {},
+    },
     // Edit a menu item
-    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}, true),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"}, true),
     toggleMegaMenu({extra_trigger: 'iframe #top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")'}),
     {
         content: "Select the last menu link of the first column",
@@ -79,6 +83,8 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "The menu should still be visible. Edit a menu item.",
         trigger: 'iframe .o_mega_menu h4',
+        // The content is removed in the previous step so it's now invisible.
+        allowInvisible: true,
         run: 'text New Menu Item',
     },
     ...wTourUtils.clickOnSave(),

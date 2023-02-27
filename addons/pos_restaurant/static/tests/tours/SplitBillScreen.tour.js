@@ -53,6 +53,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", { test: true, url
 
 startSteps();
 
+ProductScreen.do.confirmOpeningPopup();
 FloorScreen.do.clickTable("2");
 ProductScreen.exec.addOrderline("Water", "1", "2.0");
 ProductScreen.exec.addOrderline("Minute Maid", "1", "2.0");
@@ -62,17 +63,19 @@ FloorScreen.do.clickTable("2");
 ProductScreen.do.clickSplitBillButton();
 
 SplitBillScreen.do.clickOrderline("Water");
+SplitBillScreen.check.orderlineHas("Water", "1", "1");
 SplitBillScreen.do.clickOrderline("Coca-Cola");
+SplitBillScreen.check.orderlineHas("Coca-Cola", "1", "1");
 SplitBillScreen.do.clickPay();
 PaymentScreen.do.clickBack();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0002");
 ProductScreen.do.clickOrderline("Water", "1.0");
 ProductScreen.do.clickOrderline("Coca-Cola", "1.0");
-ProductScreen.check.totalAmountIs("4.40");
+ProductScreen.check.totalAmountIs("4.00");
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0001");
 ProductScreen.do.clickOrderline("Minute Maid", "1.0");
-ProductScreen.check.totalAmountIs("2.20");
+ProductScreen.check.totalAmountIs("2.00");
 
 registry.category("web_tour.tours").add("SplitBillScreenTour2", { test: true, url: "/pos/ui", steps: getSteps() });

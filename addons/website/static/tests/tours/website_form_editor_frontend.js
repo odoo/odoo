@@ -180,7 +180,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
     },
     {
         content:  "Check mail.mail records have been created",
-        trigger:  "#website_form_editor_success_test_tour_mail_mail"
+        trigger:  "#website_form_editor_success_test_tour_mail_mail",
+        allowInvisible: true,
     }
 ]});
 registry.category("web_tour.tours").add('website_form_contactus_submit', {

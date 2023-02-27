@@ -33,6 +33,7 @@ function clickAndCheck(blockID, expected) {
         trigger: blockID
             ? `iframe .oe_overlay.ui-draggable:eq(${blockData.overlayIndex}).oe_active`
             : `iframe #oe_manipulators:not(:has(.oe_active))`,
+        allowInvisible: !blockID,
         run: function (actions) {
             const result = window.focusBlurSnippetsResult;
             window.focusBlurSnippetsResult = [];

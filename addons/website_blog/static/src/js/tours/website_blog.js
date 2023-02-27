@@ -58,9 +58,9 @@ odoo.define("website_blog.tour", function (require) {
         trigger: ".o_select_media_dialog .o_we_search",
         content: _t("Search for an image. (eg: type \"business\")"),
         position: "top",
+        run() {},
     }, {
         trigger: ".o_select_media_dialog .o_existing_attachment_cell:first img",
-        alt_trigger: ".o_select_media_dialog .o_we_existing_attachments",
         extra_trigger: '.modal:has(.o_existing_attachment_cell:first)',
         content: _t("Choose an image from the library."),
         position: "top",

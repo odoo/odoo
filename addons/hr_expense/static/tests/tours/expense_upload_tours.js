@@ -2,7 +2,7 @@ odoo.define('hr_expense.tests.tours', function (require) {
     "use strict";
 
     const { registry } = require("@web/core/registry");
-    const { stepUtils } = require('@web_tour/js/tour_step_utils');
+    const { stepUtils } = require('@web_tour/tour_service/tour_utils');
 
     registry.category("web_tour.tours").add('hr_expense_test_tour', {
         test: true,

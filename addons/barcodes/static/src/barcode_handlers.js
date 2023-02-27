@@ -26,11 +26,10 @@ function updatePager(position) {
     if (current === next) {
         return;
     }
-    const engine = new MacroEngine();
+    const engine = new MacroEngine({ defaultCheckDelay: 16 });
     engine.activate({
         name: "updating pager",
         timeout: 1000,
-        interval: 0,
         steps: [
             {
                 trigger: "span.o_pager_value",

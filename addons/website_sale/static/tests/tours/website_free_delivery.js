@@ -46,6 +46,7 @@ registry.category("web_tour.tours").add('check_free_delivery', {
         {
             content: "Confirmation page should be shown",
             trigger: '#oe_structure_website_sale_confirmation_1',
+            allowInvisible: true,
             run: function () {}, // it's a check
         }
     ]});

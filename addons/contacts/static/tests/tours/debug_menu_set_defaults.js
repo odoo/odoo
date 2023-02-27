@@ -2,7 +2,7 @@ odoo.define('debug_menu_set_defaults.tour', function (require) {
     "use strict";
 
     const { registry } = require("@web/core/registry");
-    const { stepUtils } = require('@web_tour/js/tour_step_utils');
+    const { stepUtils } = require('@web_tour/tour_service/tour_utils');
 
     registry.category("web_tour.tours").add('debug_menu_set_defaults', {
         test: true,
@@ -52,7 +52,7 @@ odoo.define('debug_menu_set_defaults.tour', function (require) {
                 trigger: 'button.o_form_button_cancel',
             },
             {
-                trigger: '.o-kanban-button-new',
+                trigger: '.o_action_manager .o_kanban_view .o-kanban-button-new',
             },
             {
                 content: "Check that Individual is checked instead of Company",

@@ -161,16 +161,23 @@ steps = steps.concat([
         trigger: ".button.cancel:visible",
     },
     {
+        content: "order 1 kg shelf",
+        trigger: ".product:contains('Wall Shelf')",
+    },
+    {
+        trigger:
+            ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf')",
+        extra_trigger:
+            ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf') ~ .info-list .info em:contains('1.0')",
+        run: function () {},
+    },
+    {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
     },
     {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('min_quantity ordering')",
-    },
-    {
-        content: "order 1 kg shelf",
-        trigger: ".product:contains('Wall Shelf')",
     },
     {
         content: "change qty to 2 kg",

@@ -4,7 +4,7 @@ odoo.define('sale.tour', function(require) {
 const {_t} = require('web.core');
 const {Markup} = require('web.utils');
 const { registry } = require("@web/core/registry");
-const { stepUtils } = require('@web_tour/js/tour_step_utils');
+const { stepUtils } = require('@web_tour/tour_service/tour_utils');
 
 const { markup } = owl;
 
@@ -38,6 +38,17 @@ registry.category("web_tour.tours").add("sale_tour", {
     content: _t("Looks good. Let's continue."),
     position: "left",
     skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
+}, stepUtils.showAppsMenuItem(),
+{
+    trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
+    skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
+    edition: "community",
+    auto: true,
+}, {
+    trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
+    skip_trigger: 'a[data-method=action_open_base_onboarding_company].o_onboarding_step_action__done',
+    edition: "enterprise",
+    auto: true,
 }, {
     trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_base_document_layout]',
     extra_trigger: ".o_sale_order",
@@ -113,11 +124,18 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         trigger: "a:contains('DESK0001')",
         auto: true,
     }, {
-        trigger: ".o_field_widget[name='price_unit'] ",
+        trigger: ".o_field_text[name='name'] textarea:propValueContains(DESK0001)",
+        run: () => {},
+        auto: true,
+    }, {
+        trigger: ".o_field_widget[name='price_unit'] input",
         extra_trigger: ".fa-arrow-right",  // Wait for product creation
         content: Markup(_t("<b>Set a price</b>.")),
         position: "right",
         run: "text 10.0"
+    }, {
+        trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
+        auto: true,
     },
     ...stepUtils.statusbarButtonsSteps("Send by Email", Markup(_t("<b>Send the quote</b> to yourself and check what the customer will receive.")), ".o_statusbar_buttons button[name='action_quotation_send']"),
     {
@@ -125,6 +143,11 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         extra_trigger: ".modal-footer button[name='action_send_mail']",
         content: _t("Let's send the quote."),
         position: "bottom",
-    }]});
+    },
+    {
+        trigger: "body:not(.modal-open)",
+        auto: true,
+    }
+]});
 
 });

@@ -153,5 +153,6 @@ registry.category("web_tour.tours").add('website_livechat_chatbot_flow_tour', {
 }, {
     // wait for chatbot script to finish.
     trigger: '.o_livechat_chatbot_restart',
+    run() {},
 }
 ]});

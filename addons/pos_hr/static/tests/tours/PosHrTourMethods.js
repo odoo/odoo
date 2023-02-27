@@ -56,6 +56,7 @@ class Execute {
         res.push(...SelectionPopup._do.clickItem(name));
         if (pin) {
             res.push(...NumberPopup._do.pressNumpad(pin.split("").join(" ")));
+            res.push(...NumberPopup._check.inputShownIs("••••"));
             res.push(...NumberPopup._do.clickConfirm());
         }
         return res;

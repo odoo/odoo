@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@web_tour/js/tour_step_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('create_crm_team_tour', {
     url: "/web",
@@ -27,6 +27,9 @@ registry.category("web_tour.tours").add('create_crm_team_tour', {
     run: 'click',
 }, {
     trigger: 'div.modal-dialog tr:contains("Test Sales Manager") input.form-check-input:checked',
+    run: () => {},
+}, {
+    trigger: '.o_list_selection_box:contains(2)',
     run: () => {},
 }, {
     trigger: 'button.o_select_button',

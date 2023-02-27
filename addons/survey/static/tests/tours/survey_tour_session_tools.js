@@ -1,7 +1,7 @@
 odoo.define('survey.session_tour_tools', function (require) {
 'use strict';
 
-const { stepUtils } = require('@web_tour/js/tour_step_utils');
+const { stepUtils } = require('@web_tour/tour_service/tour_utils');
 
 /**
  * Tool that gathers common steps to every 'survey session' tours.

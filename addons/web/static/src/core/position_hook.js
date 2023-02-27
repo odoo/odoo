@@ -194,6 +194,15 @@ function getBestPosition(reference, popper, { container, margin, position }) {
 }
 
 /**
+ * @param {Options | (() => Options)} options
+ * @returns {Options}
+ */
+function getOptions(options) {
+    const optionsValue = typeof options === "function" ? options() : options;
+    return { ...DEFAULTS, container: document.documentElement, ...optionsValue };
+}
+
+/**
  * This method will try to position the popper as requested (according to options).
  * If the requested position does not fit the container, other positions will be
  * tried in different direction and variant flip orders (depending on the requested position).
@@ -204,14 +213,22 @@ function getBestPosition(reference, popper, { container, margin, position }) {
  *
  * @param {HTMLElement} reference
  * @param {HTMLElement} popper
- * @param {Options} options
+ * @param {Options | (() => Options)} getOptions
  */
 export function reposition(reference, popper, options) {
-    const [directionKey, variantKey = "middle"] = options.position.split("-");
-    options = {
-        container: document.documentElement,
-        ...options,
-    };
+    options = getOptions(options);
+
+    let [directionKey, variantKey = "middle"] = options.position.split("-");
+    if (localization.direction === "rtl") {
+        if (["bottom", "top"].includes(directionKey)) {
+            if (variantKey !== "middle") {
+                variantKey = variantKey === "start" ? "end" : "start";
+            }
+        } else {
+            directionKey = directionKey === "left" ? "right" : "left";
+        }
+    }
+    options.position = [directionKey, variantKey].join("-");
 
     // Reset popper style
     popper.style.position = "fixed";
@@ -220,11 +237,22 @@ export function reposition(reference, popper, options) {
 
     // Get best positioning solution and apply it
     const position = getBestPosition(reference, popper, options);
-    const { top, left } = position;
-    popper.style.top = `${top}px`;
-    popper.style.left = `${left}px`;
+    const popperRect = popper.getBoundingClientRect();
+    const { top, left, direction, variant } = position;
+    if (direction === "top") {
+        popper.style.bottom = `${window.innerHeight - top - popperRect.height}px`;
+        popper.style.removeProperty("top");
+    } else {
+        popper.style.top = `${top}px`;
+    }
+    if (direction === "left") {
+        popper.style.right = `${window.innerWidth - left - popperRect.width}px`;
+        popper.style.removeProperty("left");
+    } else {
+        popper.style.left = `${left}px`;
+    }
 
-    if (variantKey === "fit") {
+    if (variant === "fit") {
         const styleProperty = ["top", "bottom"].includes(directionKey) ? "width" : "height";
         popper.style[styleProperty] = reference.getBoundingClientRect()[styleProperty] + "px";
     }
@@ -245,26 +273,11 @@ export function reposition(reference, popper, options) {
  * Note: The popper element should be indicated in your template with a t-ref reference.
  *       This could be customized with the `popper` option.
  *
- * @param {HTMLElement | (()=>HTMLElement)} reference
- * @param {Options} options
+ * @param {HTMLElement | (() => HTMLElement)} reference
+ * @param {Options | (() => Options)} options
  */
 export function usePosition(reference, options) {
-    options = { ...DEFAULTS, ...options };
-    const { popper, position } = options;
-
-    let [directionKey, variantKey = "middle"] = position.split("-");
-
-    if (localization.direction === "rtl") {
-        if (["bottom", "top"].includes(directionKey)) {
-            if (variantKey !== "middle") {
-                variantKey = variantKey === "start" ? "end" : "start";
-            }
-        } else {
-            directionKey = directionKey === "left" ? "right" : "left";
-        }
-        options.position = [directionKey, variantKey].join("-");
-    }
-
+    const { popper } = getOptions(options);
     const popperRef = useRef(popper);
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
     const update = () => {

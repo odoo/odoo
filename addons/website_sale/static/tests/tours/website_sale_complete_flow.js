@@ -7,6 +7,7 @@ odoo.define('website_sale_tour.tour', function (require) {
 
     registry.category("web_tour.tours").add('website_sale_tour_1', {
         test: true,
+        checkDelay: 250,
         url: '/shop?search=Storage Box Test',
         steps: [
     // Testing b2c with Tax-Excluded Prices
@@ -157,6 +158,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
     {
         content: "Open Dropdown for logout",
+        extra_trigger: ".o_header_standard:not(.o_transitioning)",
         trigger: '#top_menu li.dropdown:visible a:contains("abcd")',
     },
     {
@@ -301,6 +303,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     // enable extra step on website checkout and check extra step on checkout process
     {
         content: "Open Dropdown for logout",
+        extra_trigger: ".o_header_standard:not(.o_transitioning)",
         trigger: '#top_menu li.dropdown:visible a:contains("abc")',
     },
     {

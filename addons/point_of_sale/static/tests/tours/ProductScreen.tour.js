@@ -43,11 +43,13 @@ ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.0", "627.3");
 ProductScreen.do.pressNumpad(". 5");
 ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.5", "629.85");
 ProductScreen.do.pressNumpad("Price");
+ProductScreen.check.modeIsActive("Price");
 ProductScreen.do.pressNumpad("1");
 ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.5", "123.5");
 ProductScreen.do.pressNumpad("1 .");
 ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.5", "1,358.5");
 ProductScreen.do.pressNumpad("Disc");
+ProductScreen.check.modeIsActive("Disc");
 ProductScreen.do.pressNumpad("5 .");
 ProductScreen.check.selectedOrderlineHas("Desk Organizer", "123.5", "1,290.58");
 ProductScreen.do.pressNumpad("Qty");
@@ -123,6 +125,7 @@ ProductScreen.check.orderIsEmpty();
 
 // Test OrderlineCustomerNoteButton
 ProductScreen.do.clickDisplayedProduct("Desk Organizer");
+ProductScreen.check.selectedOrderlineHas("Desk Organizer", "1.0");
 ProductScreen.do.clickOrderlineCustomerNoteButton();
 TextAreaPopup.check.isShown();
 TextAreaPopup.do.inputText("Test customer note");

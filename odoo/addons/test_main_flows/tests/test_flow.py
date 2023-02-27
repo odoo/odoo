@@ -80,5 +80,9 @@ class TestUiMobile(BaseTestUi):
     browser_size = '375x667'
     touch_enabled = True
 
+    # Taken from user agents provided in Chrome (Version 110.0.5481.100) dev tools.
+    # This is specified so that the feature_detection.js heuristics for `isMobileOS` can work.
+    user_agent = 'Mozilla/5.0 (Linux; Android 10; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Mobile Safari/537.36'
+
     def test_01_main_flow_tour_mobile(self):
         self.main_flow_tour()

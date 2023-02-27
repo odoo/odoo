@@ -1,12 +1,12 @@
 /** @odoo-modules */
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
-tour.register('website_event_pages_seo', {
+registry.category("web_tour.tours").add('website_event_pages_seo', {
     test: true,
     // The tour must start on an event's custom page (not register page)
     // url: `/event/openwood-collection-online-reveal-8/page/introduction-openwood-collection-online-reveal`,
-}, [
+    steps: [
     {
         content: "Open the site menu",
         trigger: '[data-menu-xmlid="website.menu_site"]',
@@ -30,4 +30,4 @@ tour.register('website_event_pages_seo', {
         trigger: 'html:has(title:containsExactText(Hello, world!))',
         extra_trigger: 'iframe html:has(title:containsExactText(Hello, world!))',
     },
-]);
+]});

@@ -4,7 +4,6 @@ odoo.define('website_sale.tour_shop_cart_recovery', function (require) {
 var localStorage = require('web.local_storage');
 const { registry } = require("@web/core/registry");
 const tourUtils = require('website_sale.tour_utils');
-require('web.dom_ready');
 
 var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
 var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';

@@ -2,6 +2,16 @@
 
 import { browser } from "@web/core/browser/browser";
 import { isVisible } from "@web/core/utils/ui";
+import { Mutex } from "@web/core/utils/concurrency";
+
+/**
+ * @typedef MacroStep
+ * @property {string} [trigger]
+ * - An action returning a "truthy" value means that the step isn't successful.
+ * - Current step index won't be incremented.
+ * @property {string | (el: Element, step: MacroStep) => undefined | string} [action]
+ * @property {*} [*] - any payload to the step.
+ */
 
 export const ACTION_HELPERS = {
     click(el, _step) {
@@ -22,6 +32,8 @@ export const ACTION_HELPERS = {
     },
 };
 
+const mutex = new Mutex();
+
 class TimeoutError extends Error {}
 
 class Macro {
@@ -30,7 +42,7 @@ class Macro {
         this.timeoutDuration = descr.timeout || 0;
         this.timeout = null;
         this.currentIndex = 0;
-        this.interval = "interval" in descr ? Math.max(16, descr.interval) : 500;
+        this.checkDelay = descr.checkDelay || 0;
         this.isComplete = false;
         this.steps = descr.steps;
         this.onStep = descr.onStep || (() => {});
@@ -39,48 +51,72 @@ class Macro {
         this.setTimer();
     }
 
-    advance() {
+    async advance() {
         if (this.isComplete) {
             return;
         }
         const step = this.steps[this.currentIndex];
-        const trigger = step.trigger;
-        if (trigger) {
-            let el = null;
-            if (typeof trigger === "function") {
-                const result = this.safeCall(trigger);
-                if (result instanceof HTMLElement) {
-                    el = result;
+        const [proceedToAction, el] = this.checkTrigger(step);
+        if (proceedToAction) {
+            this.safeCall(this.onStep, el, step);
+            const actionResult = await this.performAction(el, step);
+            if (!actionResult) {
+                // If falsy action result, it means the action worked properly.
+                // So we can proceed to the next step.
+                this.currentIndex++;
+                if (this.currentIndex === this.steps.length) {
+                    this.isComplete = true;
+                    browser.clearTimeout(this.timeout);
+                } else {
+                    this.setTimer();
+                    await this.advance();
                 }
             }
-            if (typeof trigger === "string") {
-                el = document.querySelector(trigger);
-            }
-            if (el && isVisible(el)) {
-                this.advanceStep(el, step);
-            }
-        } else {
-            // a step without a trigger is just an action
-            this.advanceStep(null, step);
         }
     }
 
-    advanceStep(el, step) {
-        this.safeCall(this.onStep, el, step);
-        const action = step.action;
-        if (action in ACTION_HELPERS) {
-            ACTION_HELPERS[action](el, step);
-        } else if (typeof action === "function") {
-            this.safeCall(action, el);
+    /**
+     * Find the trigger and assess whether it can continue on performing the actions.
+     * @param {{ trigger: string | () => Element | null }} param0
+     * @returns {[proceedToAction: boolean; el: Element | undefined]}
+     */
+    checkTrigger({ trigger }) {
+        let el;
+
+        if (!trigger) {
+            return [true, el];
         }
-        this.currentIndex++;
-        if (this.currentIndex === this.steps.length) {
-            this.isComplete = true;
-            browser.clearTimeout(this.timeout);
+
+        if (typeof trigger === "function") {
+            el = this.safeCall(trigger);
+        } else if (typeof trigger === "string") {
+            const triggerEl = document.querySelector(trigger);
+            el = isVisible(triggerEl) && triggerEl;
         } else {
-            this.setTimer();
-            this.advance();
+            throw new Error(`Trigger can only be string or function.`);
         }
+
+        if (el) {
+            return [true, el];
+        } else {
+            return [false, el];
+        }
+    }
+
+    /**
+     * Calls the `step.action` expecting no return to be successful.
+     * @param {Element} el
+     * @param {Step} step
+     */
+    async performAction(el, step) {
+        const action = step.action;
+        let actionResult;
+        if (action in ACTION_HELPERS) {
+            actionResult = ACTION_HELPERS[action](el, step);
+        } else if (typeof action === "function") {
+            actionResult = await this.safeCall(action, el, step);
+        }
+        return actionResult;
     }
 
     safeCall(fn, ...args) {
@@ -126,13 +162,39 @@ class Macro {
 }
 
 export class MacroEngine {
-    constructor(target = document.body) {
+    constructor(params = {}) {
         this.isRunning = false;
         this.timeout = null;
-        this.target = target;
-        this.interval = Infinity; // nbr of ms before we check the dom to advance macros
+        this.target = params.target || document.body;
+        this.defaultCheckDelay = params.defaultCheckDelay ?? 750;
         this.macros = new Set();
+        this.observerOptions = {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            characterData: true,
+        };
         this.observer = new MutationObserver(this.delayedCheck.bind(this));
+        this.iframeObserver = new MutationObserver(() => {
+            const iframeEl = document.querySelector("iframe.o_iframe");
+            if (iframeEl) {
+                iframeEl.addEventListener("load", () => {
+                    if (iframeEl.contentDocument) {
+                        this.observer.observe(iframeEl.contentDocument, this.observerOptions);
+                    }
+                });
+                // If the iframe was added without a src, its load event was immediately fired and
+                // will not fire again unless another src is set. Unfortunately, the case of this
+                // happening and the iframe content being altered programmaticaly may happen.
+                // (E.g. at the moment this was written, the mass mailing editor iframe is added
+                // without src and its content rewritten immediately afterwards).
+                if (!iframeEl.src) {
+                    if (iframeEl.contentDocument) {
+                        this.observer.observe(iframeEl.contentDocument, this.observerOptions);
+                    }
+                }
+            }
+        });
     }
 
     async activate(descr) {
@@ -140,7 +202,6 @@ export class MacroEngine {
         // so we are guaranteed that we are not iterating on the current macros
         await Promise.resolve();
         const macro = new Macro(descr);
-        this.interval = Math.min(this.interval, macro.interval);
         this.macros.add(macro);
         this.start();
     }
@@ -148,12 +209,8 @@ export class MacroEngine {
     start() {
         if (!this.isRunning) {
             this.isRunning = true;
-            this.observer.observe(this.target, {
-                attributes: true,
-                childList: true,
-                subtree: true,
-                characterData: true,
-            });
+            this.observer.observe(this.target, this.observerOptions);
+            this.iframeObserver.observe(this.target, { childList: true, subtree: true });
         }
         this.delayedCheck();
     }
@@ -171,25 +228,27 @@ export class MacroEngine {
         if (this.timeout) {
             browser.clearTimeout(this.timeout);
         }
-        this.timeout = browser.setTimeout(this.advanceMacros.bind(this), this.interval);
+        this.timeout = browser.setTimeout(
+            () => mutex.exec(this.advanceMacros.bind(this)),
+            this.getCheckDelay() || this.defaultCheckDelay
+        );
     }
 
-    advanceMacros() {
-        const toDelete = [];
+    getCheckDelay() {
+        // If a macro has a checkDelay different from 0, use it. Select the minimum.
+        // For example knowledge has a macro with a delay of 10ms. We don't want to wait
+        // longer because of other running tours.
+        return [...this.macros]
+            .map((m) => m.checkDelay)
+            .filter((delay) => delay > 0)
+            .reduce((m, v) => Math.min(m, v), this.defaultCheckDelay);
+    }
+
+    async advanceMacros() {
+        await Promise.all([...this.macros].map((macro) => macro.advance()));
         for (const macro of this.macros) {
-            macro.advance();
             if (macro.isComplete) {
-                toDelete.push(macro);
-            }
-        }
-        if (toDelete.length) {
-            for (const macro of toDelete) {
                 this.macros.delete(macro);
-            }
-            // recompute current interval, because it may need to be increased
-            this.interval = Infinity;
-            for (const macro of this.macros) {
-                this.interval = Math.min(this.interval, macro.interval);
             }
         }
         if (this.macros.size === 0) {

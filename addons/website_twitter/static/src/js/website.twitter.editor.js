@@ -39,6 +39,9 @@ sOptions.registry.twitter = sOptions.Class.extend({
                         - $configuration.outerWidth() / 2,
             });
         }).on('mouseleave.website_twitter', function (e) {
+            if (isNaN(e.clientX) || isNaN(e.clientY)) {
+                return;
+            }
             var current = document.elementFromPoint(e.clientX, e.clientY);
             if (current === $configuration[0]) {
                 return;

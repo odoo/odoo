@@ -5,8 +5,6 @@ var rpc = require('web.rpc');
 const { registry } = require("@web/core/registry");
 const tourUtils = require('website_sale.tour_utils');
 
-require('web.dom_ready');
-
 registry.category("web_tour.tours").add('shop_mail', {
     test: true,
     url: '/',

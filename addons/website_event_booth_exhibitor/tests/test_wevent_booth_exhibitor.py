@@ -19,9 +19,4 @@ class TestWEventBoothExhibitorCommon(HttpCaseWithUserDemo, HttpCaseWithUserPorta
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
 
-        self.browser_js(
-            '/event',
-            'odoo.__DEBUG__.services["web_tour.tour"].run("webooth_exhibitor_register")',
-            'odoo.__DEBUG__.services["web_tour.tour"].tours.webooth_exhibitor_register.ready',
-            login='admin'
-        )
+        self.start_tour('/event', 'webooth_exhibitor_register', login='admin')

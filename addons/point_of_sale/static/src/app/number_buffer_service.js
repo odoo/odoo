@@ -97,7 +97,7 @@ class NumberBuffer extends EventBus {
     capture() {
         if (this.handler) {
             clearTimeout(this._timeout);
-            this.handler();
+            this.handler(true);
             delete this.handler;
         }
     }
@@ -187,8 +187,10 @@ class NumberBuffer extends EventBus {
         };
     }
     _onInput(keyAccessor) {
-        return () => {
-            if (this.eventsBuffer.length <= 2) {
+        return (manualCapture = false) => {
+            // Manual call to NumberBuffer.capture() should allow handling more than 2 items in the buffer.
+            // This is useful in tour test that make very fast screen numpad presses (clicks).
+            if (manualCapture || (!manualCapture && this.eventsBuffer.length <= 2)) {
                 // Check first the buffer if its contents are all valid
                 // number input.
                 for (const event of this.eventsBuffer) {

@@ -280,6 +280,7 @@ class Execute {
      */
     addOrderline(productName, quantity, unitPrice = undefined, expectedTotal = undefined) {
         const res = this._do.clickDisplayedProduct(productName);
+        res.push(...this._check.selectedOrderlineHas(productName, "1.00"));
         if (unitPrice) {
             res.push(...this._do.pressNumpad("Price"));
             res.push(...this._check.modeIsActive("Price"));

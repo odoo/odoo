@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('course_member_youtube', {
     trigger: '.o_wslides_progress_percentage:contains("50")',
     run: function () {} // check progression
 }, {
-    trigger: 'a:contains("Wood Bending With Steam Box")',
+    trigger: '.o_wslides_fs_slide_name:contains("Wood Bending With Steam Box")',
 }, {
     trigger: '.player',
     run: function () {} // check player loading
@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add('course_member_youtube', {
     trigger: '.o_wslides_fs_sidebar_section_slides li:contains("Wood Bending With Steam Box") .o_wslides_slide_completed',
     run: function () {} // check that video slide is marked as 'done'
 }, {
-    trigger: '.o_wslides_progress_percentage:contains("100")',
+    trigger: '.o_wslides_channel_completion_completed:contains(Completed)',
     run: function () {} // check progression
 }, {
     trigger: 'a:contains("Back to course")'
