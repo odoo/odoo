@@ -353,6 +353,9 @@
             <xpath expr="//group[@name='col_left']" position="attributes">
                 <attribute name="colspan">5</attribute>
             </xpath>
+            <xpath expr="//div[hasclass('o_hr_leave_column')]" position="attributes">
+                <attribute name="class" remove="col_left col-md-6" separator=" "/>
+            </xpath>
         </field>
     </record>
 

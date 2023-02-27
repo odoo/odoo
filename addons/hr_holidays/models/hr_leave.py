@@ -1207,10 +1207,12 @@ class HolidaysRequest(models.Model):
         self.activity_update()
         return True
 
-    def action_approve(self):
+    def action_approve(self, check_state=True):
         # if validation_type == 'both': this method is the first approval approval
         # if validation_type != 'both': this method calls action_validate() below
-        if any(holiday.state != 'confirm' for holiday in self):
+
+        # Do not check the state in case we are redirected from the dashboard
+        if check_state and any(holiday.state != 'confirm' for holiday in self):
             raise UserError(_('Time off request must be confirmed ("To Approve") in order to approve it.'))
 
         current_employee = self.env.user.employee_id
