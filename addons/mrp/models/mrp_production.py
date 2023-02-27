@@ -1823,24 +1823,19 @@ class MrpProduction(models.Model):
         return action
 
     def _pre_button_mark_done(self):
-        immediate_productions = self.browse()
         for production in self:
-            if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding) or any(
-                    not float_is_zero(ml.qty_done, precision_digits=ml.product_uom_id.rounding) for
-                        ml in production.move_raw_ids.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
-                immediate_productions |= production
-                continue
-            production._set_quantities()
+            if float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
+                production._set_quantities()
 
-        for production in immediate_productions:
+        for production in self:
             if float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
                 raise UserError(_('The quantity to produce must be positive!'))
             if production.move_raw_ids and not any(production.move_raw_ids.mapped('quantity_done')):
                 raise UserError(_("You must indicate a non-zero amount consumed for at least one of your components"))
 
-        consumption_issues = immediate_productions._get_consumption_issues()
+        consumption_issues = self._get_consumption_issues()
         if consumption_issues:
-            return immediate_productions._action_generate_consumption_wizard(consumption_issues)
+            return self._action_generate_consumption_wizard(consumption_issues)
 
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
@@ -2212,16 +2207,22 @@ class MrpProduction(models.Model):
         else:
             self.qty_producing = self.product_qty - self.qty_produced
         self._set_qty_producing()
+
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ['done', 'cancel']):
             rounding = move.product_uom.rounding
-            for move_line in move.move_line_ids:
-                if move_line.reserved_uom_qty:
-                    move_line.qty_done = min(move_line.reserved_uom_qty, move_line.move_id.should_consume_qty)
-                if float_compare(move.quantity_done, move.should_consume_qty, precision_rounding=rounding) >= 0:
-                    break
-            if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) == 1:
-                if move.has_tracking in ('serial', 'lot'):
+            if move.manual_consumption:
+                if move.has_tracking in ('serial', 'lot') and float_is_zero(move.quantity_done, precision_rounding=rounding):
                     missing_lot_id_products += "\n  - %s" % move.product_id.display_name
+            else:
+                for move_line in move.move_line_ids:
+                    if move_line.reserved_uom_qty:
+                        move_line.qty_done = min(move_line.reserved_uom_qty, move_line.move_id.should_consume_qty)
+                    if float_compare(move.quantity_done, move.should_consume_qty, precision_rounding=rounding) >= 0:
+                        break
+                if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) == 1:
+                    if move.has_tracking in ('serial', 'lot'):
+                        missing_lot_id_products += "\n  - %s" % move.product_id.display_name
+
         if missing_lot_id_products:
             error_msg = _('You need to supply Lot/Serial Number for products:') + missing_lot_id_products
             raise UserError(error_msg)
