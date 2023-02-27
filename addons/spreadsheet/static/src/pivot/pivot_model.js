@@ -5,6 +5,7 @@ import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { computeReportMeasures } from "@web/views/utils";
+import { session } from "@web/session";
 
 import { FORMATS } from "../helpers/constants";
 
@@ -479,7 +480,8 @@ export class SpreadsheetPivotModel extends PivotModel {
         if (this.metaData.fields[field.name].type === "date") {
             return sqlValue;
         }
-        return luxon.DateTime.fromSQL(sqlValue, { zone: "utc" }).toLocal().toISODate();
+        const userTz = session.user_context.tz || luxon.Settings.defaultZoneName;
+        return luxon.DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz).toISODate();
     }
 
     /**
