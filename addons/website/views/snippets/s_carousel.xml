@@ -6,7 +6,7 @@
         <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
         <div t-attf-id="myCarousel{{uniq}}" class="s_carousel s_carousel_default carousel slide" data-interval="10000">
             <!-- Indicators -->
-            <ol class="carousel-indicators">
+            <ol class="carousel-indicators o_not_editable oe_unremovable">
                 <li t-attf-data-target="#myCarousel{{uniq}}" data-slide-to="0" class="active"/>
                 <li t-attf-data-target="#myCarousel{{uniq}}" data-slide-to="1"/>
                 <li t-attf-data-target="#myCarousel{{uniq}}" data-slide-to="2"/>
@@ -60,14 +60,16 @@
                 </div>
             </div>
             <!-- Controls -->
-            <a class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-href="#myCarousel{{uniq}}" data-slide="prev" role="img" aria-label="Previous" title="Previous">
-                <span class="carousel-control-prev-icon"/>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next o_not_editable" contenteditable="false" t-attf-href="#myCarousel{{uniq}}" data-slide="next" role="img" aria-label="Next" title="Next">
-                <span class="carousel-control-next-icon"/>
-                <span class="sr-only">Next</span>
-            </a>
+            <div class="o_not_editable oe_unremovable">
+                <a class="carousel-control-prev" t-attf-href="#myCarousel{{uniq}}" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+                    <span class="carousel-control-prev-icon"/>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" t-attf-href="#myCarousel{{uniq}}" data-slide="next" role="img" aria-label="Next" title="Next">
+                    <span class="carousel-control-next-icon"/>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
         </div>
     </section>
 </template>
