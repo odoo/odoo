@@ -13,11 +13,9 @@
                 </t>
                 <t t-if="selfOrder.config.self_order_location == 'table'">
 <!-- OrdersList -->
-                    <OrdersList 
-                        orders_list = "this.orders_list"
-                        productList = "props.productList"
-                        payOrder="props.payOrder"
-                            />
+                <button type="button" class="btn btn-primary" t-on-click="props.viewOrders">
+                    View Orders
+                </button>
                     <t t-if="!user_has_provided_name">
                         <h3 class="">Your name:</h3>
                         <h6 class="text-muted">Preferably the one from your reservation</h6>

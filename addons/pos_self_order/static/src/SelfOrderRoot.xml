@@ -11,6 +11,7 @@
                     viewOrder="viewOrder"
                     getUpdatedOrdersListFromServer = "getUpdatedOrdersListFromServer"
                     productList="productList" 
+                    viewOrders="viewOrders"
                 />
             </t>
     <!-- Menu -->
@@ -54,10 +55,12 @@
                     order_id="this.state.order_id_user_is_paying_for"
                     />
             </t>
+<!-- View Orders -->
             <t t-elif="state.currentScreen == 5">
                     <OrdersList 
                         payOrder="payOrder"
                         productList = "productList"
+                        goBack.bind="viewLandingPage"
                         />
             </t>
         <!-- TODO: add a help icon in the corner of the screen 

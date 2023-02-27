@@ -3,17 +3,17 @@ import { Component, whenReady, App, useState, onWillStart, useSubEnv } from "@od
 import { makeEnv, startServices } from "@web/env";
 import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-import { LandingPage } from "./LandingPageComponents/LandingPage/LandingPage";
-import { NavBar } from "./NavBar/NavBar";
-import { ProductMainView } from "./ProductMainView/ProductMainView";
-import { ProductList } from "./ProductList/ProductList";
+import { LandingPage } from "@pos_self_order/LandingPageComponents/LandingPage/LandingPage";
+import { NavBar } from "@pos_self_order/NavBar/NavBar";
+import { ProductMainView } from "@pos_self_order/ProductMainView/ProductMainView";
+import { ProductList } from "@pos_self_order/ProductList/ProductList";
 import { CartView } from "@pos_self_order/CartView/CartView";
-import { OrderView } from "./OrderView/OrderView";
-import { OrdersList } from "./OrdersList/OrdersList";
-import { PaymentMethodsSelect } from "./PaymentMethodsSelect/PaymentMethodsSelect";
-import { HelpIcon } from "./HelpIcon/HelpIcon";
+import { OrderView } from "@pos_self_order/OrderView/OrderView";
+import { OrdersList } from "@pos_self_order/OrdersList/OrdersList";
+import { PaymentMethodsSelect } from "@pos_self_order/PaymentMethodsSelect/PaymentMethodsSelect";
+import { HelpIcon } from "@pos_self_order/HelpIcon/HelpIcon";
 import { useService } from "@web/core/utils/hooks";
-import { useSelfOrder } from "./SelfOrderService";
+import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 import { effect } from "@point_of_sale/utils";
 /**
  * @typedef {import("@pos_self_order/jsDocTypes").Product} Product
@@ -172,6 +172,9 @@ class SelfOrderRoot extends Component {
     viewCart = () => {
         this.state.currentScreen = 3;
     };
+    viewOrders = () => {
+        this.state.currentScreen = 5;
+    };
     payOrder = (order) => {
         this.state.order_to_pay = order;
         this.state.currentScreen = 4;
@@ -279,6 +282,7 @@ class SelfOrderRoot extends Component {
             this.state.message_to_display = "error";
         }
         if (this.selfOrder.config.self_order_location === "table") {
+            this.state.message_to_display = "order_needs_payment";
             this.viewLandingPage();
         } else if (this.selfOrder.config.self_order_location === "kiosk") {
             this.payOrder(this.posted_order);
@@ -288,36 +292,6 @@ class SelfOrderRoot extends Component {
     // some of this functions i pass as props to the components that need them
     // why don't i export them from this file and import them in the components?
 
-    /**
-     * @param {Order[]} old_orders_list
-     * @returns {Order[]}
-     */
-    getUpdatedOrdersListFromServer = async (old_orders_list) => {
-        return await Promise.all(
-            old_orders_list.map(async (order) =>
-                order.state === "paid" ? order : await this.getUpdatedOrderFromServer(order)
-            )
-        );
-    };
-    /**
-     * @param {Order} order
-     * @returns
-     */
-    getUpdatedOrderFromServer = async (order) => {
-        try {
-            console.log("getting update for order ", order.order_id, order.access_token);
-            return await this.rpc(`/pos-self-order/view-order/`, {
-                order_id: order.order_id,
-                access_token: order.access_token,
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    // TODO: replace the euro sign string from the rest of the app with
-    // the this.selfOrder.config.currency variable
-    currencyType = "€";
     static components = {
         LandingPage,
         ProductMainView,
