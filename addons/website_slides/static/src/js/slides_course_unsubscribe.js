@@ -33,6 +33,7 @@ var SlideUnsubscribeDialog = Dialog.extend({
         this.channelID = parseInt(options.channelId, 10);
         this.isFollower = options.isFollower === 'True';
         this.enroll = options.enroll;
+        this.visibility = options.visibility;
     },
     /**
      * @override
@@ -92,13 +93,16 @@ var SlideUnsubscribeDialog = Dialog.extend({
         this.set('state', '_subscription');
     },
 
-    _onClickLeaveCourseSubmit: function () {
-        this._rpc({
+    _onClickLeaveCourseSubmit: async function () {
+        await this._rpc({
             route: '/slides/channel/leave',
             params: {channel_id: this.channelID},
-        }).then(function () {
-            window.location.reload();
         });
+        if (this.visibility === 'public' || this.visibility === 'connected') {
+            window.location.reload();
+        } else {
+            window.location.href = '/slides';
+        }
     },
 
     _onClickSubscriptionSubmit: function () {

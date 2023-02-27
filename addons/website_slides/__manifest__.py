@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'eLearning',
-    'version': '2.6',
+    'version': '2.7',
     'sequence': 125,
     'summary': 'Manage and publish an eLearning platform',
     'website': 'https://www.odoo.com/app/elearning',
@@ -77,6 +77,8 @@ Featuring
             'website_slides/static/src/scss/slide_views.scss',
             'website_slides/static/src/js/tours/slides_tour.js',
             'website_slides/static/src/js/components/**/*.js',
+            'website_slides/static/src/views/**/*.js',
+            'website_slides/static/src/views/**/*.xml',
         ],
         'web.assets_frontend': [
             'website_slides/static/src/scss/website_slides.scss',

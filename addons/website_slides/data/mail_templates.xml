@@ -29,9 +29,9 @@
         <td style="min-width: 590px;">
             <t t-out="message.body"/>
             <div style="margin: 32px 0px 32px 0px; text-align: center;">
-                <a t-att-href="record.channel_id.website_url"
+                <a t-att-href="record.invitation_link"
                     style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
-                    Click here to start the course
+                    <t t-if="enroll_mode"> Click here to start the course </t> <t t-else=""> Click here to get started </t>
                 </a>
             </div>
             <div style="margin: 0px; padding: 0px; font-size:13px;">

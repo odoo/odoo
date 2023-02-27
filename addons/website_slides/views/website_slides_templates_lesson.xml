@@ -189,7 +189,8 @@
                             </div>
                         </t>
                         <div t-else="" class="o_wslides_js_course_join o_wslides_no_access">
-                            <li t-if="aside_slide.channel_id.enroll == 'public'" class="text-decoration-none small">
+                            <li t-if="aside_slide.channel_id.enroll == 'public' or (aside_slide.channel_id.enroll == 'invite' and aside_slide.channel_id.is_member_invited)"
+                                class="text-decoration-none small">
                                 <i class="fa fa-download me-1"/>
                                 <t t-call="website_slides.join_course_link">
                                     <t t-set="for_resources" t-value="1"/>
@@ -448,10 +449,10 @@
                     Additional Resources
                 </span>
                 <div class="o_wslides_js_course_join o_wslides_no_access">
-                    <div t-if="slide.channel_id.enroll == 'invite'">
-                        <span>Content only accessible to course members.</span>
+                    <div t-if="slide.channel_id.enroll == 'invite' and not slide.channel_id.is_member_invited">
+                        <span>Content only accessible to course attendees.</span>
                     </div>
-                    <div t-if="slide.channel_id.enroll == 'public'" class="text-muted me-auto border-start ps-3">
+                    <div t-else="" class="text-muted me-auto border-start ps-3">
                         <t t-call="website_slides.join_course_link">
                             <t t-set="for_resources" t-value="1"/>
                         </t>
@@ -475,6 +476,7 @@
         t-att-data-name="slide.name"
         t-att-data-slide-category="slide.slide_category"
         t-att-data-is-member="slide.channel_id.is_member"
+        t-att-data-is-member-or-invited="slide.channel_id.is_member or slide.channel_id.is_member_invited"
         t-att-data-can-self-mark-completed="slide.can_self_mark_completed"
         t-att-data-can-self-mark-uncompleted="slide.can_self_mark_uncompleted"
         t-att-data-completed="slide_completed"

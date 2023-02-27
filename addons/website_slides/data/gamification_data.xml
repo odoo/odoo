@@ -101,7 +101,7 @@
         <field name="model_id" ref="website_slides.model_slide_channel_partner"/>
         <field name="condition">higher</field>
         <field name="domain">[
-            ('completed', '=', True)
+            ('member_status', '=', 'completed')
         ]</field>
         <field name="batch_mode">True</field>
         <field name="batch_distinctive_field" ref="website_slides.field_slide_channel_partner__partner_id"/>

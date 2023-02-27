@@ -14,16 +14,19 @@
                         </li>
                         <t t-set="breadcrumb_class" t-value="'breadcrumb-item %s' % ('fw-bold' if not slide else '')" />
                         <li t-att-class="'breadcrumb-item %s' % ('fw-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
-                            <a t-att-href="'/slides/%s' % slug(channel)"><span t-esc="channel.name"/></a>
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?#{keep_query('invite_hash', 'invite_partner_id')}"><span t-esc="channel.name"/></a>
+                            <a t-else="" t-attf-href="/slides/#{slug(channel)}"><span t-esc="channel.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_category" t-if="search_category">
-                            <a t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))"><span t-esc="search_category.name"/></a>
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}/category/#{search_category.id}?#{keep_query('invite_hash', 'invite_partner_id')}"><span t-esc="search_category.name"/></a>
+                            <a t-else="" t-attf-href="/slides/#{slug(channel)}/category/#{slug(search_category)}"><span t-esc="search_category.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_tag" t-if="search_tag">
                             <a t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))"><span t-esc="search_tag.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized">
-                            <a t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">Uncategorized</a>
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id')}">Uncategorized</a>
+                            <a t-else="" t-attf-href="/slides/#{slug(channel)}?uncategorized=1">Uncategorized</a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-att-aria-current="'page' and search_slide_category" t-if="search_slide_category">
                             <a t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)"><span t-esc="slide_categories[search_slide_category]"/></a>
@@ -58,16 +61,19 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/slides">Home</a>
                                 <t t-set="dropdown_class" t-value="'dropdown-item %s' % ('active' if not slide else '')"/>
-                                <a t-att-class="'dropdown-item %s' % ('active' if not search_category and not search_tag and not search_slide_category else '')" t-att-href="'/slides/%s' % slug(channel)">
+                                <a t-attf-class="dropdown-item #{'active' if not search_category and not search_tag and not search_slide_category else ''}"
+                                    t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}?#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
                                     &#9492;<span class="ms-1" t-esc="channel.name"/>
                                 </a>
-                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_category" t-if="search_category" t-att-href="'/slides/%s/category/%s' % (slug(channel), slug(search_category))">
+                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_category" t-if="search_category"
+                                    t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}/category/#{search_category.id if invite_preview else slug(search_category)}?#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
                                     &#9492;<span class="ms-1" t-esc="search_category.name"/>
                                 </a>
                                 <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_tag" t-if="search_tag" t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))">
                                     &#9492;<span class="ms-1" t-esc="search_tag.name"/>
                                 </a>
-                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized" t-att-href="'/slides/%s?search_uncategorized=1' % (slug(channel))">
+                                <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_uncategorized" t-if="search_uncategorized"
+                                    t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
                                     &#9492;<span class="ms-1">Uncategorized</span>
                                 </a>
                                 <a t-att-class="dropdown_class" t-att-aria-current="'page' and search_slide_category" t-if="search_slide_category" t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)">
@@ -190,6 +196,14 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         You need to join this course to access &quot;<t t-out="access_error_content_name"/>&quot;.
                                     </div>
+                                    <!-- ==== Invitation Banner ==== -->
+                                    <div t-if="invite_preview" class="o_wslides_identification_banner alert alert-success mb-4 p-2 px-3" role="alert">
+                                        You have been invited to this course.
+                                        <a class="o_underline" t-attf-href="/slides/#{channel.id}/identify?#{keep_query('invite_partner_id', 'invite_hash')}">
+                                            <t t-if="is_partner_without_user">Sign up</t>
+                                            <t t-else="">Log in</t>
+                                        </a> to browse preview content and enroll.
+                                    </div>
                                     <div t-if="channel.channel_type == 'training' and (channel_frontend_tags or channel.can_upload)"
                                          class="mb-1 pt-1">
                                         <t t-if="channel_frontend_tags">
@@ -275,11 +289,118 @@
 
 <template id="course_join">
     <div class="o_wslides_js_course_join flex-grow-1 d-grid">
-        <t t-if="channel.is_member">
+        <t t-if="(invite_preview and channel.enroll in ['public', 'invite']) or (not channel.is_member and (channel.enroll == 'public' or (channel.is_member_invited and channel.enroll == 'invite')))">
+           <div t-if="not invite_preview and channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed" class="text-center">
+                <div class="alert my-0 bg-100">
+                    <h6>
+                        <i class="fa fa-lock"/>
+                        <span>Course Locked</span>
+                    </h6>
+                    <div>
+                        <small>
+                            Finish
+                            <a t-if="len(channel.prerequisite_channel_ids) == 1"
+                                t-attf-href="/slides/{{channel.prerequisite_channel_ids[0].id}}"
+                                t-out="channel.prerequisite_channel_ids[0].name"/>
+                            <a t-else="" href="#" class="o_wslides_js_prerequisite_course"
+                                t-att-data-channels="json.dumps(
+                                    [{'course_id': course.id, 'course_name': course.name}
+                                    for course in channel.prerequisite_channel_ids]
+                                )">
+                                courses
+                            </a>
+                            to unlock
+                        </small>
+                        <small>
+                            or 
+                            <a role="button" class="o_wslides_js_course_join_link"
+                                title="Start Course" aria-label="Start Course" href="#"
+                                t-att-data-channel-id="channel.id"
+                                t-att-data-channel-enroll="channel.enroll"
+                                t-att-data-invite-hash="invite_hash"
+                                t-att-data-invite-partner-id="invite_partner_id"
+                                t-att-data-invite-preview="invite_preview"
+                                t-att-data-is-member-or-invited="channel.is_member or channel.is_member_invited"
+                                t-att-data-is-partner-without-user="is_partner_without_user">
+                                <t t-if="channel.channel_type == 'documentation'">start</t>
+                                <t t-else="">join</t>
+                            </a> anyway
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <a t-else="" role="button" class="btn btn-primary btn-block o_wslides_js_course_join_link"
+               title="Start Course" aria-label="Start Course" href="#"
+               t-att-data-channel-id="channel.id"
+               t-att-data-channel-enroll="channel.enroll"
+               t-att-data-invite-hash="invite_hash"
+               t-att-data-invite-partner-id="invite_partner_id"
+               t-att-data-invite-preview="invite_preview"
+               t-att-data-is-member-or-invited="channel.is_member or channel.is_member_invited"
+               t-att-data-is-partner-without-user="is_partner_without_user">
+                <span class="cta-title text_small_caps">
+                    <t t-if="channel.channel_type == 'documentation'">Start this Course</t>
+                    <t t-else="">Join this Course</t>
+                </span>
+            </a>
+        </t>
+        <div t-elif="not invite_preview and channel.enroll == 'invite' and not channel.is_member and not channel.is_member_invited" class="text-center">
+            <div t-if="channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed" class="text-center">
+                <div class="alert my-0 bg-100">
+                    <h6>
+                        <i class="fa fa-lock"/>
+                        <span>Course Locked</span>
+                    </h6>
+                    <div>
+                        <small>
+                            Finish
+                            <a t-if="len(channel.prerequisite_channel_ids) == 1"
+                                t-attf-href="/slides/{{channel.prerequisite_channel_ids[0].id}}"
+                                t-out="channel.prerequisite_channel_ids[0].name"/>
+                            <a t-else="" href="#" class="o_wslides_js_prerequisite_course"
+                                t-att-data-channels="json.dumps(
+                                    [{'course_id': course.id, 'course_name': course.name}
+                                    for course in channel.prerequisite_channel_ids]
+                                )">
+                                courses
+                            </a>
+                            to unlock
+                        </small>
+                        <small t-if="is_public_user">
+                            or <a t-att-href="'/web/login?redirect=/slides/%s' % (slug(channel))">sign in</a> to request access
+                        </small>
+                        <small t-else="">
+                            or <a href="#" class="o_wslides_js_channel_enroll" t-att-data-channel-id="channel.id">request</a> direct access
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div t-else="" t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
+                t-att-data-channel-id="channel.id">
+                Private Course
+                <div t-if="is_public_user">
+                    <small>
+                        Please <a t-att-href="'/web/login?redirect=/slides/%s' % (slug(channel))">sign in</a> to contact responsible
+                    </small>
+                </div>
+                <div t-elif="channel.has_requested_access">
+                    <small class="text-success">
+                        Request already sent
+                    </small>
+                </div>
+                <div t-else="" class="o_wslides_enroll_msg">
+                    <small>
+                        <div t-field="channel.enroll_msg"/>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <t t-elif="channel.is_member">
             <button class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
                     t-att-data-channel-id="channel.id"
                     t-att-data-is-follower="channel.message_is_follower"
-                    t-att-data-enroll="channel.enroll">
+                    t-att-data-enroll="channel.enroll"
+                    t-att-data-visibility="channel.visibility">
                 <t t-call="website_slides.slides_misc_user_image">
                     <t t-set="img_class" t-value="'rounded-circle me-1'"/>
                     <t t-set="img_style" t-value="'width: 1.4em; height: 1.4em; object-fit: cover;'"/>
@@ -301,76 +422,6 @@
                     </div>
                 </div>
             </div>
-        </t>
-        <t t-elif="channel.enroll in ['public', 'invite']">
-            <div t-if="channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed"
-                 class="text-center">
-                <div class="alert my-0 bg-100">
-                    <h6>
-                        <i class="fa fa-lock"/>
-                        <span>Course Locked</span>
-                    </h6>
-                    <div>
-                        <small>
-                            Finish
-                            <a t-if="len(channel.prerequisite_channel_ids) == 1"
-                               t-attf-href="/slides/{{slug(channel.prerequisite_channel_ids[0])}}"
-                               t-out="channel.prerequisite_channel_ids[0].name"/>
-                            <a t-else="" href="#" class="o_wslides_js_prerequisite_course"
-                               t-att-data-channels="json.dumps(
-                                  [{'course_id': course.id, 'course_name': course.name}
-                                  for course in channel.prerequisite_channel_ids]
-                               )">
-                                courses
-                            </a>
-                            to unlock
-                        </small>
-                    </div>
-                    <div>
-                        <small t-if="channel.enroll == 'public'">
-                            or
-                            <a href="#" class="o_wslides_js_course_join_link"
-                               t-att-data-channel-id="channel.id"
-                               t-att-data-channel-enroll="channel.enroll">
-                                join
-                            </a> anyway.
-                        </small>
-                        <small t-else="">
-                            or <a href="#" class="o_wslides_js_channel_enroll" t-att-data-channel-id="channel.id">request</a> direct access.
-                        </small>
-                    </div>
-                </div>
-            </div>
-            <t t-else="">
-                <a t-if="channel.enroll == 'public'" role="button"
-                    class="btn btn-primary o_wslides_js_course_join_link"
-                    title="Start Course" aria-label="Start Course Channel" href="#"
-                    t-att-data-channel-id="channel.id"
-                    t-att-data-channel-enroll="channel.enroll">
-                    <span class="cta-title text_small_caps">
-                        Join this Course
-                    </span>
-                </a>
-                <div t-if="channel.enroll == 'invite'" class="text-center">
-                    <div t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
-                         t-att-data-channel-id="channel.id">
-                        Private Course
-                        <div t-if="is_public_user">
-                            <small>
-                                Please <a t-attf-href="/web/login?redirect=/slides/{{slug(channel)}}">sign in</a> to contact responsible.
-                            </small>
-                        </div>
-                        <div t-elif="channel.has_requested_access">
-                            <small class="text-success">
-                                Request already sent
-                            </small>
-                        </div>
-                        <div t-else="" class="o_wslides_enroll_msg">
-                            <small t-field="channel.enroll_msg"/>
-                        </div>
-                    </div>
-                </div>
-            </t>
         </t>
     </div>
 </template>
@@ -451,11 +502,19 @@
                 href="#" role="button"
                 groups="website_slides.group_website_slides_officer"><i class="fa fa-folder-o me-1"/><span>Add Section</span></a>
         </div>
-        <t t-if="not channel.slide_ids and channel.can_publish">
-            <t t-call="website_slides.course_slides_list_sample"/>
-        </t>
+        <t t-if="not channel.slide_ids and channel.can_publish" t-call="website_slides.course_slides_list_sample"/>
+        <t t-elif="slide_count == 0 and not channel.can_publish" t-call="website_slides.course_slides_list_placeholder"/>
     </div>
     <div t-field="channel.description_html"/>
+</template>
+
+<template id="course_slides_list_placeholder" name="Course Placeholder Content">
+    <div class="my-5 d-flex">
+        <div class="mx-auto">
+            <img class="mx-auto mb-3" src="/web/static/img/smiling_face.svg"/>
+            <div class="text-muted fw-bold">No lessons are available yet.</div>
+        </div>
+    </div>
 </template>
 
 <template id="course_slides_list_sample" name="Course Sample Content">
@@ -539,7 +598,7 @@
             <t t-set="icon_class" t-value="'py-2 mx-2'"/>
         </t>
         <div class="text-truncate me-auto">
-            <a t-if="slide.is_preview or channel.is_member or channel.can_publish" class="o_wslides_js_slides_list_slide_link" t-attf-href="/slides/slide/#{slug(slide)}">
+            <a t-if="not invite_preview and (slide.is_preview or channel.is_member or channel.can_publish)" class="o_wslides_js_slides_list_slide_link" t-attf-href="/slides/slide/#{slug(slide)}">
                 <span t-field="slide.name"/>
             </a>
             <span t-else="">
@@ -586,7 +645,7 @@
     <div class="o_wslides_promoted_slide">
         <div t-if="not search and not search_slide_category and slide_promoted" class="container py-1 mb-2">
             <div class="card flex-column flex-lg-row">
-                <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher" t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
+                <a t-if="not invite_preview and (slide_promoted.is_preview or channel.is_member or is_slides_publisher)" t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}" class="w-100 w-lg-50 flex-shrink-0 rounded">
                     <div t-field="slide_promoted.image_1920" t-options="{'widget': 'image', 'style': 'height:100%', 'preview_image': 'image_512'}" class="h-100"/>
                 </a>
                 <div t-else="" class="w-100 w-lg-50 flex-shrink-0 rounded">
@@ -594,14 +653,15 @@
                 </div>
 
                 <div class="card-body">
-                    <a t-if="slide_promoted.is_preview or channel.is_member or is_slides_publisher"
+                    <a t-if="not invite_preview and (slide_promoted.is_preview or channel.is_member or is_slides_publisher)"
                     t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}"
                     class="h4 d-block pb-2 border-bottom" t-att-title="slide_promoted.name" t-field="slide_promoted.name"/>
                     <h4 t-else="" class="text-muted pb-2 border-bottom" t-field="slide_promoted.name"/>
                     <div class="o_wslides_desc_truncate_10 mt-3" t-field="slide_promoted.description"/>
                     <div t-if="slide_promoted.tag_ids" class="mt-2 pt-1">
                         <t t-foreach="slide_promoted.tag_ids" t-as="tag">
-                            <a t-att-href="'/slides/%s/tag/%s' % (slug(slide_promoted.channel_id), slug(tag))" class="badge text-bg-light" t-esc="tag.name"/>
+                            <h4 t-if="invite_preview" class="badge text-bg-light" t-esc="tag.name"/>
+                            <a t-else="" t-attf-href="/slides/#{slug(slide_promoted.channel_id)}/tag/#{slug(tag)}" class="badge text-bg-light" t-esc="tag.name"/>
                         </t>
                     </div>
                 </div>
@@ -611,7 +671,7 @@
 </template>
 
 <template id="course_slides_cards" name="Documentation Course content: cards / categories">
-    <div class="o_wslides_lesson_nav mb-4">
+    <div t-if="not invite_preview" class="o_wslides_lesson_nav mb-4">
         <div class="container">
             <div class="row">
                 <nav class="navbar navbar-expand-lg navbar-light bg-transparent col">
@@ -758,11 +818,11 @@
                 <t t-set="is_empty_editable" t-value="not category['slides'] and channel.can_publish"/>
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="category['id'] and query_string != '?search_uncategorized=1'">
                     <h5 t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-esc="category['name']"/></h5>
-                    <a t-if="category['id'] and not is_empty_editable" t-att-href="'/slides/%s/category/%s' % (slug(channel), category['slug_name'])">View all</a>
+                    <a t-if="category['id'] and not is_empty_editable" t-attf-href="/slides/#{channel.id}/category/#{category['id']}?#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">View all</a>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="not category['id'] and len(category['slides']) > 0">
                     <h5 t-if="len(category_data) > 1" t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-esc="category['name']"/></h5>
-                    <a t-att-href="'/slides/%s?uncategorized=1' % (slug(channel))">View all</a>
+                    <a t-attf-href="/slides/#{channel.id}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">View all</a>
                 </div>
                 <div class="row mx-n2">
                     <t t-foreach="category['slides']" t-as="slide">
@@ -786,7 +846,7 @@
 <template id='lesson_card' name="Lesson Card">
     <div class="card w-100 o_wslides_lesson_card mb-4">
         <t t-if="slide.is_new_slide and not channel_progress[slide.id].get('completed')" t-call="website_slides.course_card_information"/>
-        <t t-set="can_access" t-value="slide.is_preview or channel.is_member or channel.can_publish"/>
+        <t t-set="can_access" t-value="not invite_preview and (slide.is_preview or channel.is_member or channel.can_publish)"/>
         <a t-if="can_access" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-title="slide.name" style="height:150px">
             <div t-field="slide.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100"/>
         </a>
@@ -807,7 +867,8 @@
             </div>
             <div class="text-muted o_wslides_desc_truncate_2 my-2">
                 <t t-foreach="slide.tag_ids" t-as="tag">
-                    <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-light" t-esc="tag.name"/>
+                    <h4 t-if="invite_preview" class="badge text-bg-light" t-esc="tag.name"/>
+                    <a t-else="" t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(tag)}" class="badge text-bg-light" t-esc="tag.name"/>
                 </t>
             </div>
             <span t-if="channel.is_member and channel_progress[slide.id].get('completed')" class="badge rounded-pill text-bg-success align-self-start"><i class="fa fa-check me-1"/>Completed</span>

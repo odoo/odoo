@@ -19,7 +19,7 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         img_path = get_module_resource('website_slides', 'static', 'src', 'img', 'slide_demo_gardening_1.jpg')
         img_content = base64.b64encode(open(img_path, "rb").read())
 
-        self.env['slide.channel'].create({
+        self.channel = self.env['slide.channel'].create({
             'name': 'Basics of Gardening - Test',
             'user_id': self.env.ref('base.user_admin').id,
             'enroll': 'public',
@@ -146,6 +146,44 @@ class TestUiPublisher(HttpCaseWithUserDemo):
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_publisher_standard', login=user_demo.login)
+
+
+@tests.common.tagged('post_install', '-at_install')
+class TestUiMemberInvited(TestUICommon):
+
+    def setUp(self):
+        super(TestUiMemberInvited, self).setUp()
+        self.channel_partner_portal = self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.user_portal.partner_id.id,
+            'member_status': 'invited',
+            'last_invitation_date': Datetime.now(),
+        })
+        self.portal_invite_url = self.channel_partner_portal.invitation_link
+
+    def test_invite_check_channel_preview_as_logged_connected_on_invite(self):
+        self.channel.enroll = 'invite'
+        self.channel.visibility = 'connected'
+        self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_logged', login='portal')
+
+    def test_invite_check_channel_preview_as_public_connected_on_invite(self):
+        self.channel.enroll = 'invite'
+        self.channel.visibility = 'connected'
+        self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_public', login=None)
+
+    def test_invite_check_channel_preview_as_logged_members(self):
+        self.channel.visibility = 'members'
+        self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_logged', login='portal')
+
+    def test_invite_check_channel_preview_as_public_members(self):
+        self.channel.visibility = 'members'
+        self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_public', login=None)
+
+    def test_invite_check_channel_preview_as_logged_public(self):
+        self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_logged', login='portal')
+
+    def test_invite_check_channel_preview_as_public_public(self):
+        self.start_tour(self.portal_invite_url, 'invite_check_channel_preview_as_public', login=None)
 
 
 @tests.common.tagged('external', 'post_install', '-standard', '-at_install')

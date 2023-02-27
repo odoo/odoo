@@ -74,6 +74,7 @@ class SlidePartnerRelation(models.Model):
         self.env['slide.channel.partner'].search([
             ('channel_id', 'in', self.channel_id.ids),
             ('partner_id', 'in', self.partner_id.ids),
+            ('member_status', 'not in', ('completed', 'invited'))
         ])._recompute_completion()
 
 
