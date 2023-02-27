@@ -9,6 +9,7 @@ import { reactive, markRaw } from "@odoo/owl";
 import { Reactive } from "@point_of_sale/utils";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _t } from "@web/core/l10n/translation";
+import { CashOpeningPopup } from "@point_of_sale/js/Popups/CashOpeningPopup";
 
 export class PosStore extends Reactive {
     /** @type {'LOADING' | 'READY' | 'CLOSING'} */
@@ -192,6 +193,17 @@ export class PosStore extends Reactive {
 
     closeTempScreen() {
         this.tempScreen = null;
+    }
+    openCashControl() {
+        if (this.shouldShowCashControl()) {
+            this.popup.add(CashOpeningPopup, { keepBehind: true });
+        }
+    }
+    shouldShowCashControl() {
+        return (
+            this.globalState.config.cash_control &&
+            this.globalState.pos_session.state == "opening_control"
+        );
     }
 }
 

@@ -54,7 +54,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         });
     }
     onMounted() {
-        this.env.posbus.trigger("start-cash-control");
+        this.pos.openCashControl();
     }
     /**
      * To be overridden by modules that checks availability of

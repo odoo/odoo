@@ -17,7 +17,8 @@ export class ProductInfoPopup extends AbstractAwaitablePopup {
         Object.assign(this, this.props.info);
     }
     searchProduct(productName) {
-        this.env.posbus.trigger("search-product-from-info-popup", productName);
+        this.env.pos.setSelectedCategoryId(0);
+        this.env.pos.searchProductWord = productName;
         this.cancel();
     }
     _hasMarginsCostsAccessRights() {
