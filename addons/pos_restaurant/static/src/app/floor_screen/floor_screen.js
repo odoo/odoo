@@ -45,7 +45,7 @@ export class FloorScreen extends Component {
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
     }
     onMounted() {
-        this.env.posbus.trigger("start-cash-control");
+        this.pos.openCashControl();
         this.floorMapRef.el.style.background = this.state.floorBackground;
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
         // call _tableLongpolling once then set interval of 5sec.

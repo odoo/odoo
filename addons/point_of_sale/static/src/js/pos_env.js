@@ -15,5 +15,4 @@ export const pos_env = Object.create(env);
 pos_env.proxy_queue = new JobQueue(); // used to prevent parallels communications to the proxy
 pos_env.proxy = new ProxyDevice({ env: pos_env }); // used to communicate to the hardware devices via a local proxy
 pos_env.barcode_reader = new BarcodeReader({ env: pos_env, proxy: pos_env.proxy });
-pos_env.posbus = new owl.EventBus();
 pos_env.posMutex = new concurrency.Mutex();

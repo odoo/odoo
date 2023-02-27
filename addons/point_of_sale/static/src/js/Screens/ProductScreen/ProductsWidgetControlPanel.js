@@ -5,7 +5,7 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 import { CategoryButton } from "./CategoryButton";
 
-import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class ProductsWidgetControlPanel extends Component {
@@ -18,21 +18,13 @@ export class ProductsWidgetControlPanel extends Component {
         this.notification = useService("pos_notification");
         this.rpc = useService("rpc");
         this.updateSearch = debounce(this.updateSearch, 100);
-        this.state = useState({ searchInput: "", mobileSearchBarIsShown: false });
-
-        onMounted(() => {
-            this.env.posbus.on("search-product-from-info-popup", this, this.searchProductFromInfo);
-        });
-
-        onWillUnmount(() => {
-            this.env.posbus.off("search-product-from-info-popup", this);
-        });
+        this.state = useState({ mobileSearchBarIsShown: false });
     }
     toggleMobileSearchBar() {
         this.state.mobileSearchBarIsShown = !this.state.mobileSearchBarIsShown;
     }
     _clearSearch() {
-        this.state.searchInput = "";
+        this.env.pos.searchProductWord = "";
         this.props.clearSearch();
     }
     get displayCategImages() {
@@ -42,13 +34,13 @@ export class ProductsWidgetControlPanel extends Component {
         );
     }
     updateSearch(event) {
-        this.props.updateSearch(this.state.searchInput);
+        this.props.updateSearch(this.env.pos.searchProductWord);
         if (event.key === "Enter") {
             this._onPressEnterKey();
         }
     }
     async _onPressEnterKey() {
-        if (!this.state.searchInput) {
+        if (!this.env.pos.searchProductWord) {
             return;
         }
         const result = await this.loadProductFromDB();
@@ -56,18 +48,18 @@ export class ProductsWidgetControlPanel extends Component {
             _.str.sprintf(
                 this.env._t('%s product(s) found for "%s".'),
                 result.length,
-                this.state.searchInput
+                this.env.pos.searchProductWord
             ),
             3000
         );
     }
     searchProductFromInfo(productName) {
-        this.state.searchInput = productName;
+        this.env.pos.searchProductWord = productName;
         this.props.switchCategory(0);
         this.props.updateSearch(productName);
     }
     async loadProductFromDB() {
-        if (!this.state.searchInput) {
+        if (!this.env.pos.searchProductWord) {
             return;
         }
 
@@ -80,9 +72,9 @@ export class ProductsWidgetControlPanel extends Component {
                     ["available_in_pos", "=", true],
                     "|",
                     "|",
-                    ["name", "ilike", this.state.searchInput],
-                    ["default_code", "ilike", this.state.searchInput],
-                    ["barcode", "ilike", this.state.searchInput],
+                    ["name", "ilike", this.env.pos.searchProductWord],
+                    ["default_code", "ilike", this.env.pos.searchProductWord],
+                    ["barcode", "ilike", this.env.pos.searchProductWord],
                 ],
             ],
             context: this.env.session.user_context,

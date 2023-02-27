@@ -19,7 +19,7 @@ export class LoginScreen extends Component {
         this.props.resolve({ confirmed: false, payload: false });
         this.pos.closeTempScreen();
         this.env.pos.hasLoggedIn = true;
-        this.env.posbus.trigger("start-cash-control");
+        this.pos.openCashControl();
     }
 
     get shopName() {

@@ -16,10 +16,4 @@ patch(Chrome.prototype, "pos_hr.Chrome", {
             (!this.env.pos.cashier || this.env.pos.cashier.role == "manager")
         );
     },
-    shouldShowCashControl() {
-        if (this.env.pos.config.module_pos_hr) {
-            return this._super(...arguments) && this.env.pos.hasLoggedIn;
-        }
-        return this._super(...arguments);
-    },
 });
