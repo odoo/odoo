@@ -133,6 +133,17 @@ registry.category("web_tour.tours").add("ProductScreenTour", { test: true, url: 
 
 startSteps();
 
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.clickDisplayedProduct('Test Product');
+ProductScreen.check.totalAmountIs('100.00');
+ProductScreen.do.changeFiscalPosition('No Tax');
+ProductScreen.check.noDiscountApplied("100.00");
+ProductScreen.check.totalAmountIs('86.96');
+
+registry.category("web_tour.tours").add("FiscalPositionNoTax", { test: true, url: "/pos/ui", steps: getSteps() });
+
+startSteps();
+
 ProductScreen.do.enterOpeningAmount('90');
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.check.checkSecondCashClosingDetailsLineAmount('10.00', '-');
