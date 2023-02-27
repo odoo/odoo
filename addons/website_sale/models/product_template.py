@@ -417,7 +417,7 @@ class ProductTemplate(models.Model):
         product_or_template = product or self
         combination = combination or product.product_template_attribute_value_ids
 
-        display_name = product_or_template.display_name
+        display_name = product_or_template.with_context(display_default_code=False).display_name
         if not product:
             combination_name = combination._get_combination_name()
             if combination_name:
