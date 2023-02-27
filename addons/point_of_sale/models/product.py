@@ -92,7 +92,7 @@ class ProductProduct(models.Model):
 
         # Variants
         variant_list = [{'name': attribute_line.attribute_id.name,
-                         'values': list(map(lambda attr_name: {'name': attr_name, 'search': '%s %s' % (self.name, attr_name)}, attribute_line.value_ids.mapped('name')))}
+                         'values': list(map(lambda attr_name: {'name': attr_name,'id': self.id, 'search': '%s %s' % (self.name, attr_name)}, attribute_line.value_ids.mapped('name')))}
                         for attribute_line in self.attribute_line_ids]
 
         return {

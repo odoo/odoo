@@ -137,7 +137,7 @@ class SelfOrderRoot extends Component {
              * @type {Product[]}
              */
             this.productList = this.result_from_get_menu.map(
-                ({ id, name, description_sale, price_info, pos_categ_id }) => ({
+                ({ id, name, description_sale, price_info, pos_categ_id, variants }) => ({
                     product_id: id,
                     name: name,
                     // TODO: we have to TEST if prices are correctly displayed / calculated with tax included or tax excluded
@@ -153,8 +153,10 @@ class SelfOrderRoot extends Component {
                     // "pairs well with wine", "pairs well with beer", "pairs well with soda", "pairs well with water",
                     // "HAPPY HOUR", "kids menu",  "local", "seasonal"
                     tag_list: pos_categ_id ? new Set(pos_categ_id[1].split(" / ")) : new Set(),
+                    variants: variants,
                 })
             );
+            console.log("this.productList :>> ", this.productList);
         });
     }
 

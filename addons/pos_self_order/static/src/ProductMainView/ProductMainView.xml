@@ -23,7 +23,19 @@
                         <t t-esc="props.product.description_sale"/>    
                     </t>
                 </div>
+<!-- if ordering is allowed: -->
                 <t t-if="selfOrder.config.self_order_allow_order">
+    <!-- Variants -->
+                <t t-foreach="props.product.variants" t-as="variant" t-key="variant.name">
+                <t t-esc="variant.name"/>
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    <t t-foreach="variant.values" t-as="value" t-key="value.name">
+                        <option value="value.name">
+                            <t t-esc="value.name"/>
+                        </option>
+                    </t>
+                </select>
+                </t>
     <!-- Customer customer_note -->
                     <input class="form-control" type="text" placeholder="Add a note for the chef" t-model="this.private_state.customer_note"/>
     <!-- Increment quantity -->

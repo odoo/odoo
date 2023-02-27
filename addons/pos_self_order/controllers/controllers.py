@@ -7,6 +7,9 @@ from odoo.http import request
 from odoo.osv.expression import AND
 from odoo.tools import format_amount
 
+import json
+
+from itertools import groupby
 
 class PosSelfOrder(http.Controller):
     """
@@ -15,13 +18,56 @@ class PosSelfOrder(http.Controller):
     # test route
     @http.route('/pos-self-order/test', auth='public', website=True)
     def pos_self_order_test(self, pos_id=None):
-        # we get the custom links that we want to show for this POS
-        pos_sudo = request.env['pos.config'].sudo().browse(int(pos_id))
-        print("pos_sudo", pos_sudo.self_order_kiosk_mode)
-        print("pos_sudo", pos_sudo.self_order_phone_mode)
-        print("pos_sudo", pos_sudo.compute_self_order_location())
-        print("pos_sudo open tabs ", pos_sudo.self_order_pay_after)
 
+        # products_sudo = request.env['product.product'].sudo().search(
+        #     [('available_in_pos', '=', True),
+        #      ('name', '=', 'Desk Organizer'),
+        #     ],
+        #     )
+        # print(products_sudo.read())
+        #         , 'sale_ok': True, 'purchase_ok': True, 'uom_id': (1, 'Units'), 'uom_name': 'Units', 'uom_po_id': (1, 'Units'), 'company_id': False, 'seller_ids':
+        #  [], 'variant_seller_ids': [], 'color': 0, 'attribute_line_ids': [4, 5], 'valid_product_template_attribute_line_ids': [4, 5], 'product_variant_ids': [42], 'product_variant_id': (42, '[FURN_0001] Desk Organizer'), 'product_vari
+        # ant_count': 1, 'has_configurable_attributes': True, 'product_tooltip': 'Storable products are physical items for which you manage the inventory level.', 'priority': '0', 'product_tag_ids': [], 'taxes_id': [], 'supplier_taxes_i
+        # d': [2], 'property_account_income_id': (20, '400000 Product Sales'), 'property_account_expense_id': (26, '600000 Expenses'), 'account_tag_ids': [], 'fiscal_country_codes': 'US', 'responsible_id': (1, 'OdooBot'), 'property_stoc
+        # k_production': (15, 'Virtual Locations/Production'), 'property_stock_inventory': (14, 'Virtual Locations/Inventory adjustment'), 'sale_delay': 0.0, 'tracking': 'none', 'description_picking': False, 'description_pickingout': Fa
+        # lse, 'description_pickingin': False, 'location_id': False, 'warehouse_id': False, 'has_available_route_ids': False, 'route_ids': [], 'route_from_categ_ids': [], 'available_in_pos': True, 'to_weight': True, 'pos_categ_id': (1,
+        # 'Miscellaneous')}]
+        # pos_session_sudo = getPosSessionSudo(pos_id)
+
+        # domain = [
+        #     ('state', 'in', ['opening_control', 'opened']),
+        #     ('rescue', '=', False),
+        #     ('config_id', '=', int(pos_id)),
+        # ]
+        # pos_session_sudo = request.env['pos.session'].sudo().search(
+        #     domain, limit=1).read(['id', 'name'])
+        # print("atts:", pos_session_sudo._get_attributes_by_ptal_id())
+        product_attributes = request.env['product.attribute'].sudo().search([('create_variant', '=', 'no_variant')])
+        product_attributes_by_id = {product_attribute.id: product_attribute for product_attribute in product_attributes}
+        domain = [('attribute_id', 'in', product_attributes.mapped('id'))]
+        product_template_attribute_values = request.env['product.template.attribute.value'].sudo().search(domain)
+        print("product_template_attribute_values:", json.dumps(product_template_attribute_values.read(), indent=4, sort_keys=True, default=str))
+       
+       
+        # vlad = request.env['product.template.attribute.value'].sudo().browse(17)
+        # print("vlad:", vlad.read(['price_extra']))
+        
+        
+        
+        key = lambda ptav: (ptav.attribute_line_id.id, ptav.attribute_id.id)
+        res = {}
+        for key, group in groupby(sorted(product_template_attribute_values, key=key), key=key):
+            attribute_line_id, attribute_id = key
+            values = [{**ptav.product_attribute_value_id.read(['name', 'is_custom', 'html_color'])[0],
+                       'price_extra': ptav.price_extra} for ptav in list(group)]
+            res[attribute_line_id] = {
+                'id': attribute_line_id,
+                'name': product_attributes_by_id[attribute_id].name,
+                'display_type': product_attributes_by_id[attribute_id].display_type,
+                'values': values
+            }
+        print("res: ", json.dumps(res, indent=4, sort_keys=True, default=str))
+# _get_attributes_by_ptal_id
         return "Hello World"
 
     @http.route('/pos-self-order/', auth='public', website=True)
@@ -121,10 +167,13 @@ class PosSelfOrder(http.Controller):
         # TODO: only get the products that are available in THIS POS
         products_sudo = request.env['product.product'].sudo().search(
             [('available_in_pos', '=', True)])
+
+        # FIXME: we are not taking into account product variants
         # for each of the items in products_sudo, we get the price with tax included
         menu = [{
             **{
                 'price_info': product.get_product_info_pos(product.list_price, 1, int(pos_id))['all_prices'],
+                'variants': product.get_product_info_pos(product.list_price, 1, int(pos_id))['variants'],
             },
             **product.read(['id', 'name', 'description_sale', 'pos_categ_id'])[0],
         } for product in products_sudo]
@@ -338,7 +387,7 @@ def returnCartUpdatedWithItemsFromExistingOrder(cart, existing_order):
     :return: The cart with the items from the existing order.
     :rtype: list of objects with keys: product_id, qty, (optionally) uuid, and (optionally) customer_note.
     """
-    # there are some fields from the old order that we want to keep: uuid 
+    # there are some fields from the old order that we want to keep: uuid
     # and, if we don't have a new customer_note, then we keep the old customer_note
     for line in existing_order.lines:
         # if there is a line with the same product, we will update the quantity of the product
