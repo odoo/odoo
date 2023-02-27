@@ -576,3 +576,44 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[1].balance, 0)
         self.assertEqual(lines[2].account_id, tax_received_account)
         self.assertAlmostEqual(lines[2].balance, 1)
+
+    def test_fiscal_position_no_tax(self):
+        #create a tax of 15% with price included
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount': 15,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        #create a product with the tax
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'taxes_id': [(6, 0, [tax.id])],
+            'list_price': 100,
+            'available_in_pos': True,
+        })
+
+        #create a fiscal position that map the tax to no tax
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'No Tax',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax.id,
+                'tax_dest_id': False,
+            })],
+        })
+
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+            'discount_policy': 'without_discount',
+        })
+
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+            'available_pricelist_ids': [(6, 0, [pricelist.id])],
+            'pricelist_id': pricelist.id,
+        })
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTax', login="admin")
