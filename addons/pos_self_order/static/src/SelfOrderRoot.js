@@ -136,24 +136,42 @@ class SelfOrderRoot extends Component {
             /**
              * @type {Product[]}
              */
+            // this.productList = this.result_from_get_menu.map(
+            //     ({
+            //         id,
+            //         name,
+            //         description_sale,
+            //         price_info,
+            //         pos_categ_id,
+            //         variants,
+            //         attribute_line_ids,
+            //     }) => ({
+            //         product_id: id,
+            //         name: name,
+            //         // TODO: we have to TEST if prices are correctly displayed / calculated with tax included or tax excluded
+            //         list_price: this.selfOrder.config.show_prices_with_tax_included
+            //             ? price_info["price_with_tax"]
+            //             : price_info["price_without_tax"],
+            //         description_sale: description_sale,
+            //         price_info: price_info,
+            //         // We are using a system of tags to categorize products
+            //         // the categories of a product will also be considered as tags
+            //         // ex of tags: "Pizza", "Drinks", "Italian", "Vegetarian", "Vegan", "Gluten Free","healthy", "organic",
+            //         // "Spicy", "Hot", "Cold", "Alcoholic", "Non Alcoholic", "Dessert", "Breakfast", "Lunch", "Dinner"
+            //         // "pairs well with wine", "pairs well with beer", "pairs well with soda", "pairs well with water",
+            //         // "HAPPY HOUR", "kids menu",  "local", "seasonal"
+            //         tag_list: pos_categ_id ? new Set(pos_categ_id[1].split(" / ")) : new Set(),
+            //         variants: variants,
+            //         attribute_line_ids: attribute_line_ids,
+            //     })
+            // );
             this.productList = this.result_from_get_menu.map(
-                ({
-                    id,
-                    name,
-                    description_sale,
-                    price_info,
-                    pos_categ_id,
-                    variants,
-                    attribute_line_ids,
-                }) => ({
+                ({ id, price_info, pos_categ_id, ...rest }) => ({
                     product_id: id,
-                    name: name,
                     // TODO: we have to TEST if prices are correctly displayed / calculated with tax included or tax excluded
                     list_price: this.selfOrder.config.show_prices_with_tax_included
                         ? price_info["price_with_tax"]
                         : price_info["price_without_tax"],
-                    description_sale: description_sale,
-                    price_info: price_info,
                     // We are using a system of tags to categorize products
                     // the categories of a product will also be considered as tags
                     // ex of tags: "Pizza", "Drinks", "Italian", "Vegetarian", "Vegan", "Gluten Free","healthy", "organic",
@@ -161,10 +179,20 @@ class SelfOrderRoot extends Component {
                     // "pairs well with wine", "pairs well with beer", "pairs well with soda", "pairs well with water",
                     // "HAPPY HOUR", "kids menu",  "local", "seasonal"
                     tag_list: pos_categ_id ? new Set(pos_categ_id[1].split(" / ")) : new Set(),
-                    variants: variants,
-                    attribute_line_ids: attribute_line_ids,
+                    ...rest,
                 })
             );
+            this.productList.forEach((product) => {
+                if (
+                    product.attribute_line_ids.some(
+                        (id) => id in this.selfOrder.config.attributes_by_ptal_id
+                    )
+                ) {
+                    product.attributes = product.attribute_line_ids
+                        .map((id) => this.selfOrder.config.attributes_by_ptal_id[id])
+                        .filter((attr) => attr !== undefined);
+                }
+            });
             console.log("this.productList :>> ", this.productList);
         });
     }

@@ -19,11 +19,21 @@ class PosSelfOrder(http.Controller):
     @http.route('/pos-self-order/test', auth='public', website=True)
     def pos_self_order_test(self, pos_id=None):
 
-        # products_sudo = request.env['product.product'].sudo().search(
-        #     [('available_in_pos', '=', True),
-        #      ('name', '=', 'Desk Organizer'),
-        #     ],
-        #     )
+        products_sudo = request.env['product.template'].sudo().search(
+            [('available_in_pos', '=', True),
+             ('name', '=', 'Desk Organizer'),
+            ],
+            )
+        print(products_sudo.read(['attribute_line_ids', 'name']))
+        print(products_sudo.read(['attribute_line_ids'])[0].get('attribute_line_ids'))
+        products_sudo2 = request.env['product.product'].sudo().search(
+            [('available_in_pos', '=', True),
+             ('name', '=', 'Desk Organizer'),
+            ],
+            )
+        print(products_sudo2.read(['attribute_line_ids', 'name']))
+        print(products_sudo2.read(['attribute_line_ids'])[0].get('attribute_line_ids'))
+
         # print(products_sudo.read())
         #         , 'sale_ok': True, 'purchase_ok': True, 'uom_id': (1, 'Units'), 'uom_name': 'Units', 'uom_po_id': (1, 'Units'), 'company_id': False, 'seller_ids':
         #  [], 'variant_seller_ids': [], 'color': 0, 'attribute_line_ids': [4, 5], 'valid_product_template_attribute_line_ids': [4, 5], 'product_variant_ids': [42], 'product_variant_id': (42, '[FURN_0001] Desk Organizer'), 'product_vari
@@ -42,8 +52,8 @@ class PosSelfOrder(http.Controller):
         # pos_session_sudo = request.env['pos.session'].sudo().search(
         #     domain, limit=1).read(['id', 'name'])
         # print("atts:", pos_session_sudo._get_attributes_by_ptal_id())
-        return json.dumps(get_attributes_by_ptal_id(), indent=4, sort_keys=True, default=str)
-        # return "Hello World"
+        # return json.dumps(get_attributes_by_ptal_id(), indent=4, sort_keys=True, default=str)
+        return "Hello World"
 
     @http.route('/pos-self-order/', auth='public', website=True)
     def pos_self_order_start(self, table_id=None, pos_id=None, message_to_display=None):
@@ -108,6 +118,7 @@ class PosSelfOrder(http.Controller):
             'allows_ongoing_orders': pos_sudo.self_order_allows_ongoing_orders(),
             'payment_methods': pos_sudo.payment_method_ids.read(['name']),
             'custom_links': custom_links_list,
+            'attributes_by_ptal_id': get_attributes_by_ptal_id(),
         }
         if pos_sudo.module_pos_restaurant:
             context.update({
@@ -148,8 +159,7 @@ class PosSelfOrder(http.Controller):
         menu = [{
             **{
                 'price_info': product.get_product_info_pos(product.list_price, 1, int(pos_id))['all_prices'],
-                'variants': product.get_product_info_pos(product.list_price, 1, int(pos_id))['variants'],
-                'attribute_line_ids': product.attribute_line_ids
+                'attribute_line_ids': product.read(['attribute_line_ids'])[0].get('attribute_line_ids'),
             },
             **product.read(['id', 'name', 'description_sale', 'pos_categ_id'])[0],
         } for product in products_sudo]
@@ -544,5 +554,5 @@ def get_attributes_by_ptal_id():
                 'display_type': product_attributes_by_id[attribute_id].display_type,
                 'values': values
             }
-        print("res: ", json.dumps(res, indent=4, sort_keys=True, default=str))
+        # print("res: ", json.dumps(res, indent=4, sort_keys=True, default=str))
         return res
