@@ -33,18 +33,23 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @override
      */
     start: function () {
+        const self = this;
         this.$main = this.$el.next('main');
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
         this.$navbarCollapses = this.$el.find('.navbar-collapse');
+        this.scrollTarget = document.querySelector('#wrapwrap');
+        const navbarEl = this.scrollTarget.querySelector('.navbar');
+        const [breakpoint] = Object.keys(config.device.SIZES).filter((size) => navbarEl.classList.contains(`navbar-expand-${size.toLowerCase()}`));
+        this.navBreakpoint = breakpoint || 'LG';
 
         // While scrolling through navbar menus on medium devices, body should not be scrolled with it
         this.$navbarCollapses.on('show.bs.collapse.BaseAnimatedHeader', function () {
-            if (config.device.size_class <= config.device.SIZES.SM) {
-                $(document.body).addClass('overflow-hidden');
+            if (config.device.size_class < config.device.SIZES[self.navBreakpoint]) {
+                self.scrollTarget.classList.add('overflow-hidden');
             }
         }).on('hide.bs.collapse.BaseAnimatedHeader', function () {
-            $(document.body).removeClass('overflow-hidden');
+            self.scrollTarget.classList.remove('overflow-hidden');
         });
 
         // We can rely on transitionend which is well supported but not on
@@ -227,9 +232,9 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     _updateHeaderOnResize: function () {
         this._adaptFixedHeaderPosition();
-        if (document.body.classList.contains('overflow-hidden')
-                && config.device.size_class > config.device.SIZES.SM) {
-            document.body.classList.remove('overflow-hidden');
+        if (this.scrollTarget.classList.contains('overflow-hidden')
+                && config.device.size_class >= config.device.SIZES[this.navBreakpoint]) {
+            this.scrollTarget.classList.remove('overflow-hidden');
             this.$el.find('.navbar-collapse').removeClass('show');
         }
     },
