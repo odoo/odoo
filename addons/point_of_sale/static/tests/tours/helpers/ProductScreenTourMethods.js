@@ -151,6 +151,18 @@ class Do {
             },
         ];
     }
+    changeFiscalPosition(name) {
+        return [
+            {
+                content: 'click fiscal position button',
+                trigger: '.o_fiscal_position_button',
+            },
+            {
+                content: 'fiscal position screen is shown',
+                trigger: `.selection-item:contains("${name}")`,
+            },
+        ];
+    }
 }
 
 class Check {
@@ -259,6 +271,14 @@ class Check {
                 content: 'Check closing details',
                 trigger: `.cash-overview tr:nth-child(2) .cash-sign:contains("${sign}")`,
                 run: () => {}, // it's a check
+            },
+        ];
+    }
+    noDiscountApplied(originalPrice) {
+        return [
+            {
+                content: 'no discount is applied',
+                trigger: `.info:not(:contains(${originalPrice}))`,
             },
         ];
     }
