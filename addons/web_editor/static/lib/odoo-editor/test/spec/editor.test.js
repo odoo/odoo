@@ -1,5 +1,5 @@
 import { OdooEditor } from '../../src/OdooEditor.js';
-import { getTraversedNodes } from '../../src/utils/utils.js';
+import { getTraversedNodes, getDeepRange } from '../../src/utils/utils.js';
 import {
     BasicEditor,
     deleteBackward,
@@ -2549,6 +2549,39 @@ X[]
                     ),
                     stepFunction: deleteBackward,
                     contentAfter: '<p>a[]l</p>',
+                });
+            });
+            it('should remove a table if completely selected', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody>
+                        <tr><td>[a</td><td>b</td><td>c</td></tr>
+                        <tr><td>d</td><td>e</td><td>f</td></tr>
+                        <tr><td>g</td><td>h</td><td>i</td></tr>
+                        </tbody></table>
+                        <p>]<br></p>`,
+                    ),
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                        getDeepRange(editor.editable, { select: true });
+                    },
+                    contentAfter: `<p>[]<br></p>`,
+                });
+            });
+            it('should remove an empty table placed at end if completely selected', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<p>[<br></p>
+                        <table><tbody>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br>]</td></tr>
+                        </tbody></table>`,
+                    ),
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                    },
+                    contentAfter: `<p>[]<br></p>`,
                 });
             });
             it('should only remove the text content and full rows a partly selected table', async () => {

@@ -1544,9 +1544,13 @@ export class OdooEditor extends EventTarget {
             end = parent;
         }
         // Same with the start container
+        const table = closestElement(start, 'table');
+        // For selection starting at the beginning of the table and ending outside the
+        // table, the block should not be considered visible in order to remove the table.
+        const noBlocks = (table && firstLeaf(table) === start && !table.contains(end)) ? false : true;
         while (
             start &&
-            isRemovableInvisible(start) &&
+            isRemovableInvisible(start, noBlocks) &&
             !(endIsStart && start.contains(range.startContainer))
         ) {
             const parent = start.parentNode;
