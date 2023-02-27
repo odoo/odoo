@@ -956,41 +956,17 @@ class Website(models.Model):
 
     def _get_alternate_languages(self, canonical_params):
         self.ensure_one()
-
-        if not self._is_canonical_url(canonical_params=canonical_params):
-            # no hreflang on non-canonical pages
-            return []
-
-        languages = self.language_ids
-        if len(languages) <= 1:
-            # no hreflang if no alternate language
-            return []
-
-        langs = []
-        shorts = []
-
         self_prefetch_langs = self.with_context(prefetch_langs=True)
-        for lg in languages:
-            lg_codes = lg.code.split('_')
-            short = lg_codes[0]
-            shorts.append(short)
+        langs = []
+        for lg in self.env['res.lang'].get_available():
             langs.append({
-                'hreflang': ('-'.join(lg_codes)).lower(),
-                'short': short,
+                'id': lg[5],
+                'code': lg[0],
+                'url_code': lg[1],
+                'name': lg[2].split('/').pop(),
+                'flag_image_url': lg[4],
                 'href': self_prefetch_langs._get_canonical_url_localized(lang=lg, canonical_params=canonical_params),
             })
-
-        # if there is only one region for a language, use only the language code
-        for lang in langs:
-            if shorts.count(lang['short']) == 1:
-                lang['hreflang'] = lang['short']
-
-        # add the default
-        langs.append({
-            'hreflang': 'x-default',
-            'href': self._get_canonical_url_localized(lang=self.default_lang_id, canonical_params=canonical_params),
-        })
-
         return langs
 
     # ----------------------------------------------------------
@@ -1394,8 +1370,8 @@ class Website(models.Model):
                 if isinstance(val, models.BaseModel):
                     if isinstance(val._uid, RequestUID):
                         args[key] = val = val.with_user(request.uid)
-                    if val.env.context.get('lang') != lang.code:
-                        args[key] = val = val.with_context(lang=lang.code)
+                    if val.env.context.get('lang') != lang[0]:
+                        args[key] = val = val.with_context(lang=lang[0])
                     if self.env.context.get('prefetch_langs'):
                         args[key] = val = val.with_context(prefetch_langs=True)
 
@@ -1404,36 +1380,10 @@ class Website(models.Model):
         except (NotFound, AccessError, MissingError):
             # The build method returns a quoted URL so convert in this case for consistency.
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
-        if lang != self.default_lang_id:
-            path = f'/{lang.url_code}{path if path != "/" else ""}'
+        if lang[5] != self.default_lang_id.id:
+            path = f'/{lang[1]}{path if path != "/" else ""}'
         canonical_query_string = f'?{urls.url_encode(canonical_params)}' if canonical_params else ''
         return self.get_base_url() + path + canonical_query_string
-
-    def _get_canonical_url(self, canonical_params):
-        """Returns the canonical URL for the current request."""
-        self.ensure_one()
-        lang = getattr(request, 'lang', self.env['ir.http']._get_default_lang())
-        return self._get_canonical_url_localized(lang=lang, canonical_params=canonical_params)
-
-    def _is_canonical_url(self, canonical_params):
-        """Returns whether the current request URL is canonical."""
-        self.ensure_one()
-        # Compare OrderedMultiDict because the order is important, there must be
-        # only one canonical and not params permutations.
-        params = request.httprequest.args
-        canonical_params = canonical_params or OrderedMultiDict()
-        if params != canonical_params:
-            return False
-        # Compare URL at the first routing iteration because it's the one with
-        # the language in the path. It is important to also test the domain of
-        # the current URL.
-        current_url = request.httprequest.url_root[:-1] + request.httprequest.environ['REQUEST_URI']
-        canonical_url = self._get_canonical_url_localized(lang=request.lang, canonical_params=None)
-        # A request path with quotable characters (such as ",") is never
-        # canonical because request.httprequest.base_url is always unquoted,
-        # and canonical url is always quoted, so it is never possible to tell
-        # if the current URL is indeed canonical or not.
-        return current_url == canonical_url
 
     @tools.ormcache('self.id')
     def _get_cached_values(self):
@@ -1442,6 +1392,7 @@ class Website(models.Model):
             'user_id': self.user_id.id,
             'company_id': self.company_id.id,
             'default_lang_id': self.default_lang_id.id,
+            'lang_ids': set(self.language_ids.mapped('id') + [self.default_lang_id.id]),
             'homepage_url': self.homepage_url,
         }
 

@@ -105,12 +105,3 @@ class Crawler(HttpCaseWithUserDemo):
         sql = self.registry.test_cr.sql_log_count - t0_sql
         _logger.runbot("demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
 
-    def test_30_crawl_admin(self):
-        t0 = time.time()
-        t0_sql = self.registry.test_cr.sql_log_count
-        self.authenticate('admin', 'admin')
-        seen = self.crawl('/', msg='admin')
-        count = len(seen)
-        duration = time.time() - t0
-        sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.runbot("admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)

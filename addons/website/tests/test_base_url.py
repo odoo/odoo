@@ -84,8 +84,8 @@ class TestBaseUrl(TestUrlCommon):
         self._assertCanonical('/', self.website.get_base_url() + '/')
         self._assertCanonical('/?debug=1', self.website.get_base_url() + '/')
         self._assertCanonical('/a-page', self.website.get_base_url() + '/a-page')
-        self._assertCanonical('/en_US', self.website.get_base_url() + '/')
-        self._assertCanonical('/fr_FR', self.website.get_base_url() + '/fr')
+        self._assertCanonical('/en', self.website.get_base_url() + '/')
+        self._assertCanonical('/fr', self.website.get_base_url() + '/fr')
 
 
 @odoo.tests.tagged('-at_install', 'post_install')

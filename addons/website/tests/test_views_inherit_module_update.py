@@ -25,7 +25,7 @@ def test_01_cow_views_inherit_on_module_update(env):
     # 1. Setup hierarchy as comment above
     View = env['ir.ui.view']
     View.with_context(_force_unlink=True, active_test=False).search([('website_id', '=', 1)]).unlink()
-    child_view = env.ref('portal.footer_language_selector')
+    child_view = env.ref('website.footer_language_selector')
     parent_view = env.ref('portal.portal_back_in_edit_mode')
     # Remove any possibly existing COW view (another theme etc)
     parent_view.with_context(_force_unlink=True, active_test=False)._get_specific_views().unlink()

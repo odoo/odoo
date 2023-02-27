@@ -28,7 +28,8 @@ class Lang(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
-    url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
+    url_code = fields.Char('URL Code', help='The Lang Code displayed in the URL',
+        compute='_default_url_code', store=True, readonly=False, precompute=True, required=True)
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
@@ -63,6 +64,7 @@ class Lang(models.Model):
         ('name_uniq', 'unique(name)', 'The name of the language must be unique!'),
         ('code_uniq', 'unique(code)', 'The code of the language must be unique!'),
         ('url_code_uniq', 'unique(url_code)', 'The URL code of the language must be unique!'),
+        ('url_code_notmy', "check(url_code <> 'my')", 'the URL code can not be my to avoid conflict with portal')
     ]
 
     @api.constrains('active')
@@ -216,9 +218,11 @@ class Lang(models.Model):
     def _lang_get_direction(self, code):
         return self.with_context(active_test=True).search([('code', '=', code)]).direction
 
-    @tools.ormcache('url_code')
     def _lang_get_code(self, url_code):
-        return self.with_context(active_test=True).search([('url_code', '=', url_code)]).code or url_code
+        for lg in self.get_available():
+            if lg[3] and (lg[1] == url_code):
+                return lg[0]
+        return None
 
     def _lang_get(self, code):
         """ Return the language using this code if it is active """
@@ -241,7 +245,7 @@ class Lang(models.Model):
         return langs.get_sorted()
 
     def get_sorted(self):
-        return sorted([(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url) for lang in self], key=itemgetter(2))
+        return sorted([(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url, lang.id) for lang in self], key=itemgetter(2))
 
     @tools.ormcache('self.id')
     def _get_cached_values(self):
@@ -265,11 +269,9 @@ class Lang(models.Model):
         return self._lang_get(code).url_code
 
     @api.model
-    @tools.ormcache()
     def get_installed(self):
         """ Return the installed languages as a list of (code, name) sorted by name. """
-        langs = self.with_context(active_test=True).search([])
-        return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+        return [(lg[0], lg[2]) for lg in self.get_available() if lg[3]]
 
     def toggle_active(self):
         super().toggle_active()
@@ -279,13 +281,20 @@ class Lang(models.Model):
             mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
             mods._update_translations(active_lang)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.env.registry.clear_cache()
-        for vals in vals_list:
-            if not vals.get('url_code'):
-                vals['url_code'] = vals.get('iso_code') or vals['code']
-        return super(Lang, self).create(vals_list)
+        # If we activate a lang, set it's url_code to the shortest version if possible
+        if self.active and len(self.url_code) > 3:   # mya is the shortest
+            short = self.code.split('_')[0]
+            others = self.with_context(active_test=False).search([('active', '=', False), ('url_code', '=', short)])
+            if others and others != self:
+                others.url_code = others.code
+            if not self.search([('url_code', '=', short)]):
+                self.url_code = short
+
+    @api.depends('iso_code', 'code')
+    def _default_url_code(self):
+        for lang in self:
+            newlang = lang.iso_code or lang.code
+            lang.url_code = (newlang != 'my') and newlang or 'mya'
 
     def write(self, vals):
         lang_codes = self.mapped('code')

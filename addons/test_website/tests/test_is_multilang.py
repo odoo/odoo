@@ -34,7 +34,7 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         country1 = self.env['res.country'].create({'name': "My Super Country", 'code': 'ZV'})
 
         it.active = True
-        be.active = True
+        be.toggle_active()
         website.domain = self.base_url()  # for _is_canonical_url
         website.default_lang_id = en
         website.language_ids = en + it + be

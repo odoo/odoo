@@ -438,6 +438,9 @@ class WithContext(HttpCase):
 
     def test_07_alternatives(self):
         website = self.env.ref('website.default_website')
+        current_fr = self.env['res.lang'].search([('url_code', '=', 'fr')])
+        if current_fr:
+            current_fr.url_code = current_fr.code
         lang_fr = self.env['res.lang']._activate_lang('fr_FR')
         lang_fr.write({'url_code': 'fr'})
         website.language_ids = self.env.ref('base.lang_en') + lang_fr

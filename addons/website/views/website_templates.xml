@@ -125,13 +125,16 @@
             </t>
         </t>
         <!-- `alternate`/`canonical` mainly useful to crawlers/bots/SEO tools, which test the website as public user -->
-        <t t-if="request and request.is_frontend_multilang and website and website.is_public_user()">
+        <t t-if="request and request.is_frontend_multilang">
             <t t-set="alternate_languages" t-value="website._get_alternate_languages(canonical_params=canonical_params)"/>
-            <t t-foreach="alternate_languages" t-as="lg">
-        <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
-            </t>
+            <t t-foreach="alternate_languages" t-as="lg" t-if="len(alternate_languages) > 1">
+        <link rel="alternate" t-att-hreflang="lg['url_code']" t-att-href="lg['href']"/>
+        <link rel="alternate" hreflang="x-default" t-att-href="lg['href']" t-if="lg['id'] == website._get_cached('default_lang_id')"/>
+        <link rel="canonical" t-att-href="lg['href']" t-if="lg['code']==lang"/>
+                </t><t t-else="">
+        <link rel="canonical" t-att-href="alternate_languages[0]['href']"/>
+                </t>
         </t>
-        <link t-if="request and website and website.is_public_user()" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
         <!-- TODO: Once we have style in DB, add this preconnect only if a
         google font is actually used. Note that if no font is used, the
         preconnect is actually not connecting to the google servers. -->
@@ -1972,40 +1975,44 @@
     </a>
 </template>
 
-<template id="language_selector" inherit_id="portal.language_selector">
-    <xpath expr="//t[@t-nocache]" position="attributes">
-        <attribute name="t-nocache-flags">flags</attribute>
-    </xpath>
+<template id="language_selector" inherit_id="" name="Language Selector">
+        <t t-nocache="The query strings can change for the same page and the same rendering."
+           t-nocache-no_text="no_text"
+           t-nocache-flags="flags"
+           t-nocache-_div_classes="_div_classes"
+           t-nocache-_btn_class="_btn_class"
+           t-nocache-_dropdown_menu_class="_dropdown_menu_class">
 
-    <xpath expr="//t[@t-set='active_lang']" position="before">
-        <t t-if="lang not in (lg[0] for lg in languages)">
-            <t t-set="lang" t-value="website.default_lang_id.code"/>
-        </t>
-    </xpath>
+            <t t-set="languages" t-value="website._get_alternate_languages(canonical_params=canonical_params)"/>
+            <t t-set="active_lang" t-value="list(filter(lambda lg : lang == lg['code'], languages))[0]"/>
+            <t t-set="language_selector_visible" t-value="(len(languages) &gt; 1) or (website and (editable or translatable))"/>
 
-    <!-- Always show the language selector on editable websites -->
-    <xpath expr="//t[@t-set='language_selector_visible']" position="after">
-        <t t-set="language_selector_visible" t-value="language_selector_visible or (website and (editable or translatable))"/>
-    </xpath>
-
-    <!-- Add the button to add a language -->
-    <xpath expr="//t[@t-foreach='languages']" position="after">
-        <t t-call="website.language_selector_add_language">
-            <t t-set="dropdown" t-value="True"/>
+            <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
+                <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle #{_btn_class}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <t t-if="flags" t-call="website.lang_flag">
+                        <t t-set="flag_image_src" t-value="active_lang['flag_image_url']"/>
+                    </t>
+                    <span t-if="not no_text"
+                            class="align-middle"
+                            t-esc="active_lang['name']"/>
+                </button>
+                <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
+                    <t t-foreach="languages" t-as="lg">
+                        <a t-att-href="lg['href']"
+                        t-attf-class="dropdown-item js_change_lang #{active_lang['id'] == lg['id'] and 'active'}"
+                        t-att-data-url_code="lg['url_code']">
+                        <t t-if="flags" t-call="website.lang_flag">
+                            <t t-set="flag_image_src" t-value="lg['flag_image_url']"/>
+                        </t>
+                            <span t-if="not no_text" t-esc="lg['name']"/>
+                        </a>
+                    </t>
+                    <t t-call="website.language_selector_add_language">
+                        <t t-set="dropdown" t-value="True"/>
+                    </t>
+                </div>
+            </div>
         </t>
-    </xpath>
-
-    <!-- Add the 'flags' possibility -->
-    <xpath expr="//button[contains(@t-attf-class, 'dropdown-toggle')]/span" position="before">
-        <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="flag_image_src" t-value="active_lang[4]"/>
-        </t>
-    </xpath>
-    <xpath expr="//*[contains(@t-attf-class, 'js_change_lang')]/span" position="before">
-        <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="flag_image_src" t-value="lg[4]"/>
-        </t>
-    </xpath>
 </template>
 
 <!-- Alternative extension of the language_selector to make it look like an -->
@@ -2039,7 +2046,7 @@
 
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="False">
     <xpath expr="." position="inside">
-        <t id="header_language_selector_call" t-call="portal.language_selector">
+        <t id="header_language_selector_call" t-call="website.language_selector">
             <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
         </t>
     </xpath>
@@ -2063,19 +2070,28 @@
     </xpath>
 </template>
 
-<template id="footer_language_selector_inline" name="Footer Language Selector Inline" inherit_id="portal.footer_language_selector" active="False">
+<!-- Language selector in the footer -->
+<template id="footer_language_selector" inherit_id="portal.frontend_layout" name="Footer Language Selector">
+    <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="after">
+        <t id="language_selector_call" t-call="website.language_selector">
+            <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropup'"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="footer_language_selector_inline" name="Footer Language Selector Inline" inherit_id="website.footer_language_selector" active="False">
     <xpath expr="//t[@id='language_selector_call']" position="replace">
         <t id="language_selector_call" t-call="website.language_selector_inline"/>
     </xpath>
 </template>
 
-<template id="footer_language_selector_flag" name="Footer Language Selector Flag" inherit_id="portal.footer_language_selector" active="True">
+<template id="footer_language_selector_flag" name="Footer Language Selector Flag" inherit_id="website.footer_language_selector" active="True">
     <xpath expr="//t[@id='language_selector_call']" position="before">
         <t t-set="flags" t-value="True"/>
     </xpath>
 </template>
 
-<template id="footer_language_selector_no_text" name="Footer Language Selector No Text" inherit_id="portal.footer_language_selector" active="False">
+<template id="footer_language_selector_no_text" name="Footer Language Selector No Text" inherit_id="website.footer_language_selector" active="False">
     <xpath expr="//t[@id='language_selector_call']" position="before">
         <t t-set="no_text" t-value="True"/>
     </xpath>

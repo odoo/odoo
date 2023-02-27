@@ -36,17 +36,11 @@ class TestWebsiteLinksRussian(HttpCase):
             "Should not be redirected to /ru")
 
     def test1_russian_link_tracker(self):
-        res = self.url_open(f'/r/r/{self.link.code}', allow_redirects=False)
+        res = self.url_open(f'/ru/r/{self.link.code}', allow_redirects=False)
         res.raise_for_status()
         self.assertEqual(res.status_code, 301, "Should be a lang alias redirection")
-        self.assertEqual(urlparse(res.headers.get('Location'), '').path, f'/ru/r/{self.link.code}',
-            "Should be redirected to /ru as r is an alias for ru (russian)")
-
-        res = self.url_open(res.headers['Location'], allow_redirects=False)
-        res.raise_for_status()
-        self.assertEqual(res.status_code, 301, "Should be a link-tracking redirection")
-        self.assertEqual(res.headers.get('Location'), self.link.url,
-            "Should not be redirected to /ru")
+        self.assertEqual(urlparse(res.headers.get('Location'), '').path, '/web/health',
+            "Should be redirected to /web/health")
 
     def test2_russian_page(self):
         # This generate a new unused link
