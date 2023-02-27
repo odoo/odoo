@@ -366,8 +366,8 @@ QUnit.module('hr', {}, function () {
             res_model: 'm2x.avatar.employee',
             views: [[false, 'kanban']],
         });
-        assert.containsN(document.body, '.o_kanban_record:first .o_field_many2many_avatar_employee img.o_m2m_avatar', 2,
-            "should have 2 avatar images");
+        assert.containsN(document.body, '.o_kanban_record:first .o_field_many2many_avatar_employee img.o_m2m_avatar', 3,
+            "should have 2 avatar images and the default empty avatar");
         assert.strictEqual(document.querySelector('.o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar').getAttribute('data-src'),
             `/web/image/hr.employee.public/${hrEmployeePublicId1}/avatar_128`,
             "should have correct avatar image");

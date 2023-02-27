@@ -78,11 +78,11 @@ QUnit.module("mail", {}, function () {
     });
 
     QUnit.test("many2many_avatar_user in kanban view", async function (assert) {
-        assert.expect(5);
+        assert.expect(8);
 
         patchWithCleanup(browser, {
             setTimeout: async (fn) => {
-                await new Promise((r) => setTimeout(r))
+                await new Promise((r) => setTimeout(r));
                 fn();
             },
         });
@@ -136,26 +136,34 @@ QUnit.module("mail", {}, function () {
             "+2",
             "should have +2 in o_m2m_avatar_empty"
         );
-
-        document
-            .querySelector(".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty")
-            .dispatchEvent(new Event("mouseenter"));
-        await nextTick();
+        await click(
+            document.querySelector(
+                ".o_kanban_record .o_field_many2many_avatar_user .o_m2m_avatar_empty"
+            )
+        );
         assert.containsOnce(
             document.body,
             ".popover",
             "should open a popover hover on o_m2m_avatar_empty"
         );
+        const tags = document.querySelectorAll(".o_popover > .o_field_tags > .o_tag");
+        assert.strictEqual(tags.length, 4, "should have 4 tags");
         assert.strictEqual(
-            document.querySelector(".popover .o-tooltip > div").innerText.trim(),
+            tags[0].innerText.trim(),
+            "Mario",
+            "should have a right text in popover"
+        );
+        assert.strictEqual(
+            tags[1].innerText.trim(),
+            "Yoshi",
+            "should have a right text in popover"
+        );
+        assert.strictEqual(
+            tags[2].innerText.trim(),
             "Luigi",
             "should have a right text in popover"
         );
-        assert.strictEqual(
-            document.querySelectorAll(".popover .o-tooltip > div")[1].innerText.trim(),
-            "Tapu",
-            "should have a right text in popover"
-        );
+        assert.strictEqual(tags[3].innerText.trim(), "Tapu", "should have a right text in popover");
     });
 
     QUnit.test(
