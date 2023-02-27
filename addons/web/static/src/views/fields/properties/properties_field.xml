@@ -21,6 +21,10 @@
                             t-if="state.canChangeDefinition &amp;&amp; !props.readonly &amp;&amp; foldable"
                             class="o_field_property_open_popover fa fa-pencil ms-2"
                             t-on-click.prevent.stop="(event) => this.onPropertyEdit(event, propertiesListGroup.name)"/>
+                        <i t-if="state.canChangeDefinition &amp;&amp; !props.readonly"
+                            class="o_field_property_add_in_group fa fa-plus ms-2"
+                            title="New Property In Group"
+                            t-on-click.prevent.stop="(event) => this.onPropertyCreateInGroup(propertiesListGroup.name)"/>
                     </div>
 
                     <div

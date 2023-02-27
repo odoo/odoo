@@ -58,10 +58,9 @@ export class PropertiesField extends Component {
         useEffect(() => {
             this._movePopoverIfNeeded();
 
-            if (this.openLastPropertyDefinition) {
-                this.openLastPropertyDefinition = null;
-                const propertiesList = this.propertiesList;
-                const lastPropertyName = propertiesList[propertiesList.length - 1].name;
+            if (this.openPropertyDefinition) {
+                const lastPropertyName = this.openPropertyDefinition;
+                this.openPropertyDefinition = null;
                 const labels = this.propertiesRef.el.querySelectorAll(
                     `.o_property_field[property-name="${lastPropertyName}"] .o_field_property_open_popover`
                 );
@@ -328,31 +327,18 @@ export class PropertiesField extends Component {
     }
 
     onPropertyCreate() {
+        this._createPropertyAt(-1);
+    }
+
+    onPropertyCreateInGroup(separatorName) {
         const propertiesDefinitions = this.propertiesList || [];
-
-        if (
-            propertiesDefinitions.length &&
-            propertiesDefinitions.some((prop) => !prop.string || !prop.string.length)
-        ) {
-            // do not allow to add new field until we set a label on the previous one
-            this.propertiesRef.el.closest(".o_field_properties").classList.add("o_field_invalid");
-
-            this.notification.add(_lt("Please complete your properties before adding a new one"), {
-                type: "warning",
-            });
-            return;
-        }
-
-        this.propertiesRef.el.closest(".o_field_properties").classList.remove("o_field_invalid");
-
-        propertiesDefinitions.push({
-            name: uuid(),
-            string: sprintf(_lt("Property %s"), propertiesDefinitions.length + 1),
-            type: "char",
-            definition_changed: true,
-        });
-        this.openLastPropertyDefinition = true;
-        this.props.update(propertiesDefinitions);
+        const seperatorIndex = propertiesDefinitions.findIndex(
+            (property) => property.name === separatorName
+        );
+        const endGroupIndex = propertiesDefinitions.findIndex(
+            (property, index) => index > seperatorIndex && property.type === "separator"
+        );
+        this._createPropertyAt(endGroupIndex);
     }
 
     /**
@@ -458,6 +444,38 @@ export class PropertiesField extends Component {
         );
     }
 
+    _createPropertyAt(index) {
+        const propertiesDefinitions = this.propertiesList || [];
+        if (index < 0) {
+            index = propertiesDefinitions.length;
+        }
+
+        if (
+            propertiesDefinitions.length &&
+            propertiesDefinitions.some((prop) => !prop.string || !prop.string.length)
+        ) {
+            // do not allow to add new field until we set a label on the previous one
+            this.propertiesRef.el.closest(".o_field_properties").classList.add("o_field_invalid");
+
+            this.notification.add(_lt("Please complete your properties before adding a new one"), {
+                type: "warning",
+            });
+            return;
+        }
+
+        this.propertiesRef.el.closest(".o_field_properties").classList.remove("o_field_invalid");
+
+        const newProperty = {
+            name: uuid(),
+            string: sprintf(_lt("Property %s"), propertiesDefinitions.length + 1),
+            type: "char",
+            definition_changed: true,
+        };
+        propertiesDefinitions.splice(index, 0, newProperty);
+        this.openPropertyDefinition = newProperty.name;
+        this.props.update(propertiesDefinitions);
+    }
+
     /**
      * When we add or remove a separator, we should automatically create separators
      * where the columns split was, in order to not change the groups.
@@ -475,11 +493,12 @@ export class PropertiesField extends Component {
         const checkState = (definitions) => {
             const groups = this._groupProperties(definitions);
             console.log("checkState", groups)
-            return groups.every(group => !!group.title);
+            // return groups.slice(1).every(group => !!group.title);
+            return groups.every((group) => !!group.title);
         };
 
         const separatorsCount = (definitions) => {
-            return definitions.filter(property => property.type === "separator").length;
+            return definitions.filter((property) => property.type === "separator").length;
         };
 
         const previousState = checkState(this.propertiesList);
@@ -490,10 +509,8 @@ export class PropertiesField extends Component {
 
         console.log(previousState, newState)
 
-        if (previousState) {
+        if (previousState || previousSeparatorsCount === newSeparatorsCount) {
             // nothing to do
-            return;
-        } else if (!previousState && !newState) {
             return;
         } else if (previousSeparatorsCount !== 0 && newSeparatorsCount === 0) {
             // go back to the initial situation, with no group
@@ -502,14 +519,22 @@ export class PropertiesField extends Component {
             // situation where we have only one group that take all columns
             return;
         }
+        //  else if (!newState && !newState) {
+        //     return;
+        // }
 
         // insert separators where the columns separation was, to keep the same groups
         const step = Math.ceil(propertiesValues.length / this.props.columns);
         const start = step * (this.props.columns - 1);
-        for (let index = start; index >= 0;  index -= step) {
+        for (let index = start; index >= 0; index -= step) {
             if (propertiesValues[index].type !== "separator") {
                 const name = uuid();
-                propertiesValues.splice(index, 0, {name: name, type: "separator", string: "Group " + name});
+                const newSeparator = {
+                    name: name,
+                    type: "separator",
+                    string: "Group " + name,
+                };
+                propertiesValues.splice(index, 0, newSeparator);
             }
         }
 

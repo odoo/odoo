@@ -7,8 +7,10 @@ import {
     editInput,
     getFixture,
     nextTick,
+    patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -21,11 +23,82 @@ async function closePopover(target) {
 }
 
 async function changeType(target, propertyType) {
-    const TYPES_INDEX = {"datetime": 6, "selection": 7, "tags": 8, "many2one": 9, "many2many": 10};
+    const TYPES_INDEX = {
+        char: 1,
+        datetime: 6,
+        selection: 7,
+        tags: 8,
+        many2one: 9,
+        many2many: 10,
+        separator: 11,
+    };
     const propertyTypeIndex = TYPES_INDEX[propertyType];
     await click(target, ".o_field_property_definition_type input");
     await nextTick();
     await click(target, `.o_field_property_definition_type .dropdown-item:nth-child(${propertyTypeIndex})`);
+}
+
+// -----------------------------------------
+// Separators tests utils
+// -----------------------------------------
+
+async function makePropertiesGroupView(properties) {
+    // mock random function to have predictable auto generated properties names
+    let counter = 1;
+    patchWithCleanup(window, {
+        crypto: {
+            getRandomValues: (array) => {
+                array[0] = counter;
+                counter++;
+            },
+        },
+    });
+
+    async function mockRPC(route, { method }) {
+        if (method === "check_access_rights") {
+            return true;
+        }
+    }
+
+    const data = JSON.parse(JSON.stringify(serverData));
+    data.models.partner.records[1].properties = properties.map((isSeparator, index) => {
+        return {
+            name: `property_${index}`,
+            string: isSeparator ? `Separator ${index}` : `Property ${index}`,
+            type: isSeparator ? "separator" : "char",
+        };
+    });
+
+    return await makeView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        serverData: data,
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties" columns="2"/>
+                    </group>
+                </sheet>
+            </form>`,
+        mockRPC,
+    });
+}
+
+async function toggleSeparator(index, isSeparator) {
+    await click(target, `[property-name=property_${index}] .o_field_property_open_popover`);
+    await changeType(target, isSeparator ? "separator" : "char");
+    await closePopover(target);
+}
+
+function getGroups() {
+    const propertiesField = target.querySelector(".o_field_properties .row");
+    const groups = propertiesField.querySelectorAll(".o_inner_group");
+    return [...groups]
+        .map(group => [...group.querySelectorAll("[property-name]")]
+        .map(property =>[property.innerText, property.getAttribute("property-name")]));
 }
 
 QUnit.module("Fields", (hooks) => {
@@ -1094,5 +1167,148 @@ QUnit.module("Fields", (hooks) => {
         // check first card
         const items = target.querySelectorAll(".o_kanban_record:nth-child(1) .o_kanban_property_field");
         assert.equal(items.length, 2);
+    });
+
+
+    // ---------------------------------------------------
+    // Test the properties groups
+    // ---------------------------------------------------
+
+    /**
+     * Start with no group, set the first property as a separator
+     */
+    QUnit.test("properties: separators 1", async function (assert) {
+        await makePropertiesGroupView([false, false, false, false]);
+        await toggleSeparator(0, true);
+        const groups = getGroups();
+        assert.strictEqual(groups.length, 2, "Should have 2 columns");
+        assert.strictEqual(groups[0][0][1], groups[1][0][1], "The 2 columns belong to the same group");
+        assert.strictEqual(groups[0][0][0], "PROPERTY 0", "First column label should be visible");
+        assert.strictEqual(groups[1][0][0], "", "Second column label should be invisible");
+    });
+
+    /**
+     * Start with no group, set the first property in the second column as a separator
+     */
+    QUnit.test("properties: separators 2", async function (assert) {
+        await makePropertiesGroupView([false, false, false, false]);
+        await toggleSeparator(2, true);
+        const groups = getGroups();
+
+        assert.deepEqual(
+            groups,
+            [
+                [
+                ["GROUP 0700000000000000", "0700000000000000"],
+                ["Property 0", "property_0"],
+                ["Property 1", "property_1"],
+            ],
+            [
+                ["PROPERTY 2", "0600000000000000"],
+                ["Property 3", "property_3"],
+            ],
+        ]);
+    });
+
+    /**
+     * Start with no group, set the first property in the second column as a separator
+     */
+    QUnit.test("properties: separators 3", async function (assert) {
+        await makePropertiesGroupView([false, false, false, false, false, false]);
+        await toggleSeparator(4, true);
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 0A00000000000000", "0a00000000000000"],
+                ["Property 0", "property_0"],
+                ["Property 1", "property_1"],
+                ["Property 2", "property_2"],
+            ],
+            [
+                // this separator should have been automatic ally created to keep
+                // initial column separation
+                ["GROUP 0900000000000000", "0900000000000000"],
+                ["Property 3", "property_3"],
+            ],
+            [
+                ["PROPERTY 4", "0800000000000000"],
+                ["Property 5", "property_5"],
+            ],
+        ]);
+
+        // create a property in the first group
+        await click(target, "[property-name='0a00000000000000'] .o_field_property_add_in_group");
+        await nextTick();
+        await closePopover();
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 0A00000000000000", "0a00000000000000"],
+                ["Property 0", "property_0"],
+                ["Property 1", "property_1"],
+                ["Property 2", "property_2"],
+                ["Property 9", "1000000000000000"],
+            ],
+            [
+                // this separator should have been automatic ally created to keep
+                // initial column separation
+                ["GROUP 0900000000000000", "0900000000000000"],
+                ["Property 3", "property_3"],
+            ],
+            [
+                ["PROPERTY 4", "0800000000000000"],
+                ["Property 5", "property_5"],
+            ],
+        ]);
+
+        // create a property in the second group
+        await click(target, "[property-name='0900000000000000'] .o_field_property_add_in_group");
+        await nextTick();
+        await closePopover();
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 0A00000000000000", "0a00000000000000"],
+                ["Property 0", "property_0"],
+                ["Property 1", "property_1"],
+                ["Property 2", "property_2"],
+                ["Property 9", "1000000000000000"],
+            ],
+            [
+                // this separator should have been automatic ally created to keep
+                // initial column separation
+                ["GROUP 0900000000000000", "0900000000000000"],
+                ["Property 3", "property_3"],
+                ["Property 10", "1800000000000000"],
+            ],
+            [
+                ["PROPERTY 4", "0800000000000000"],
+                ["Property 5", "property_5"],
+            ],
+        ]);
+
+        // create a property in the third group
+        await click(target, "[property-name='0800000000000000'] .o_field_property_add_in_group");
+        await nextTick();
+        await closePopover();
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 0A00000000000000", "0a00000000000000"],
+                ["Property 0", "property_0"],
+                ["Property 1", "property_1"],
+                ["Property 2", "property_2"],
+                ["Property 9", "1000000000000000"],
+            ],
+            [
+                // this separator should have been automatic ally created to keep
+                // initial column separation
+                ["GROUP 0900000000000000", "0900000000000000"],
+                ["Property 3", "property_3"],
+                ["Property 10", "1800000000000000"],
+            ],
+            [
+                ["PROPERTY 4", "0800000000000000"],
+                ["Property 5", "property_5"],
+                ["Property 11", "2100000000000000"],
+            ],
+        ]);
     });
 });

@@ -61,15 +61,19 @@
 
 .o_field_property_label {
     &:hover .o_field_property_open_popover,
-    .o_field_property_open_popover:focus {
+    .o_field_property_open_popover:focus,
+    &:hover .o_field_property_add_in_group,
+    .o_field_property_add_in_group:focus {
         opacity: 1;
     }
-    .o_field_property_open_popover {
+    .o_field_property_open_popover,
+    .o_field_property_add_in_group {
         opacity: 0;
         cursor: pointer;
         transition: 0.1s;
     }
-    .o_field_property_open_popover:hover {
+    .o_field_property_open_popover:hover,
+    .o_field_property_add_in_group:hover {
         color: $primary;
     }
 }
