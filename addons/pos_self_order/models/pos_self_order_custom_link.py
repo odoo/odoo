@@ -8,7 +8,7 @@ class PosSelfOrderCustomLink(models.Model):
     _name = 'pos_self_order.custom_link'
     _description = 'Custom links that the restaurant can configure to be displayed on the self order screen'
     url =  fields.Char(string='URL', required=True)
-    name = fields.Char(string='Label', required=True)
+    name = fields.Char(string='Label', required=True, translate=True)
     pos_config_id = fields.Many2many('pos.config', string='Point of Sale')
     style = fields.Selection([('primary', 'Primary'), 
                               ('secondary', 'Secondary'),

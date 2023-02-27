@@ -12,9 +12,9 @@
     <field name="arch" type="xml">
         <tree string="Custom Links" editable="bottom">
             <field name="sequence" widget="handle" />
-            <field name="name"/>
-            <field name="url"/>
-            <field name="pos_config_id" widget="many2many_tags"/>
+            <field name="name" placeholder="odoo"/>
+            <field name="url" placeholder="odoo.com"/>
+            <field name="pos_config_id" widget="many2many_tags" placeholder="Leave empty in order to have this link for all the points of sale"/>
             <field name="style"/>
         </tree>
     </field> 
