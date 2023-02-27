@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { loadCSS } from "@web/core/assets";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import BarcodeParser from "barcodes.BarcodeParser";
 import { batched } from "@point_of_sale/js/utils";
 import { debounce } from "@web/core/utils/timing";
@@ -16,7 +16,6 @@ import { registry } from "@web/core/registry";
 import { pos_env as env } from "@point_of_sale/js/pos_env";
 
 import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
-import { CashOpeningPopup } from "./Popups/CashOpeningPopup";
 
 import {
     onMounted,
@@ -89,7 +88,6 @@ export class Chrome extends Component {
 
         super.setup();
         useExternalListener(window, "beforeunload", this._onBeforeUnload);
-        useBus(this.env.posbus, "start-cash-control", this.openCashControl);
         useService("number_buffer").activate();
 
         useSubEnv({
@@ -248,23 +246,6 @@ export class Chrome extends Component {
         return barcode_parser.is_loaded();
     }
 
-    openCashControl() {
-        if (this.shouldShowCashControl()) {
-            this.popup.add(CashOpeningPopup, { keepBehind: true });
-        }
-    }
-
-    shouldShowCashControl() {
-        return (
-            this.env.pos.config.cash_control && this.env.pos.pos_session.state == "opening_control"
-        );
-    }
-
-    // EVENT HANDLERS //
-
-    async _closePos() {
-        this.pos.closePos();
-    }
     /**
      * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
      * browser, reloading or going to other page.

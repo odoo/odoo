@@ -16,7 +16,7 @@ import { OrderDetails } from "../TicketScreen/OrderDetails";
 import { ReprintReceiptButton } from "./ControlButtons/ReprintReceiptButton";
 import { SearchBar } from "../../Misc/SearchBar";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { onWillUnmount, onMounted, useState } from "@odoo/owl";
+import { onMounted, useState } from "@odoo/owl";
 
 export class TicketScreen extends IndependentToOrderScreen {
     static template = "TicketScreen";
@@ -62,18 +62,13 @@ export class TicketScreen extends IndependentToOrderScreen {
         Object.assign(this._state.ui, defaultUIState, this.props.ui || {});
 
         onMounted(this.onMounted);
-        onWillUnmount(this.onWillUnmount);
     }
     //#region LIFECYCLE METHODS
     onMounted() {
-        this.env.posbus.on("ticket-button-clicked", this, this.close);
         setTimeout(() => {
             // Show updated list of synced orders when going back to the screen.
             this.onFilterSelected(this._state.ui.filter);
         });
-    }
-    onWillUnmount() {
-        this.env.posbus.off("ticket-button-clicked", this);
     }
     //#endregion
     //#region EVENT HANDLERS
