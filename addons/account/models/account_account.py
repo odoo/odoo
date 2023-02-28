@@ -566,7 +566,10 @@ class AccountAccount(models.Model):
                             self.env.company.id, self._context.get('partner_id'), self._context.get('move_type'))
         domain = domain or []
         if name:
-            name_domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
+            if operator in ('=', '!='):
+                name_domain = ['|', ('code', '=', name.split(' ')[0]), ('name', operator, name)]
+            else:
+                name_domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 name_domain = ['&', '!'] + name_domain[1:]
             domain = expression.AND([name_domain, domain])
