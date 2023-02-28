@@ -982,12 +982,12 @@ export class Record extends DataPoint {
         this.invalidateCache();
     }
 
-    async update(changes) {
+    async update(changes, options) {
         if (this._urgentSave) {
-            return this._update(changes);
+            return this._update(changes, options);
         }
         return this.model.mutex.exec(async () => {
-            await this._update(changes);
+            await this._update(changes, options);
         });
     }
 
@@ -1382,7 +1382,7 @@ export class Record extends DataPoint {
         return true;
     }
 
-    async _update(changes) {
+    async _update(changes, { silent } = {}) {
         await this._applyChanges(changes);
         if (this.selected && this.model.multiEdit) {
             await this.model.root._multiSave(this);
@@ -1418,7 +1418,9 @@ export class Record extends DataPoint {
             proms.push(this.loadPreloadedData());
             await Promise.all(proms);
             this.canBeAbandoned = false;
-            this.model.notify();
+            if (!silent) {
+                this.model.notify();
+            }
         }
     }
 }
@@ -1781,7 +1783,7 @@ class DynamicList extends DataPoint {
             const record = records.find((r) => r.resId === recordData.id);
             const value = { [handleField]: recordData[handleField] };
             if (record instanceof Record) {
-                await record.update(value);
+                await record.update(value, { silent: true });
             } else {
                 Object.assign(record.data, value);
             }
