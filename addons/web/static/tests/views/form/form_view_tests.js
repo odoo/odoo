@@ -12935,4 +12935,33 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
     });
+
+    QUnit.test(
+        "action button in x2many should display a notification if the record is virtual",
+        async (assert) => {
+            const notificationService = makeFakeNotificationService((msg, options) => {
+                assert.step(`${options.type}:${msg}`);
+            });
+            registry.category("services").add("notification", notificationService, { force: true });
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="foo"/>
+                            <button class="oe_stat_button" name="test_action" type="object" icon="fa-check">MyButton</button>
+                        </tree>
+                    </field>
+                </form>`,
+            });
+
+            await click(target.querySelector(".o_field_one2many .o_field_x2many_list_row_add a"));
+            await click(target.querySelector("button.oe_stat_button[name='test_action']"));
+            assert.verifySteps(['danger:Please click on the "save" button first']);
+        }
+    );
 });
