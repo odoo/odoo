@@ -12,7 +12,8 @@ class PosConfig(models.Model):
         ('meal', 'Meal')
         ],
         string='Pay After:', default='each', 
-        help="Choose when the customer will pay")
+        help="Choose when the customer will pay",
+        )
 
     def self_order_allow_view_menu(self):
         """

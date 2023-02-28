@@ -37,21 +37,15 @@ export class ProductList extends Component {
             );
         });
     };
+
+
     /**
      * @param {Product} item
      * @param {Set<string>} selected_tags
      * @returns
      */
     itemHasAllOfTheTags = (item, selected_tags) => {
-        if (!selected_tags.size) {
-            return true;
-        }
-        for (const tag of selected_tags) {
-            if (!item.tag_list.has(tag)) {
-                return false;
-            }
-        }
-        return true;
+        return this.setIsSubset(selected_tags, item.tag_list);
     };
     /**
      * @param {Product} item
@@ -75,10 +69,11 @@ export class ProductList extends Component {
      */
     selectTag = (tag_name) => {
         // we make it so only one tag can be selected at a time
-        // if (this.private_state.selected_tags.has(tag_name)) {
-        //     this.private_state.selected_tags.delete(tag_name);
-        //     return;
-        // }
+        if (this.private_state.selected_tags.has(tag_name)) {
+            this.private_state.selected_tags.delete(tag_name);
+            return;
+        }
+        // delete this line if you want to be able to select multiple tags ( you will have to change the template too )
         this.private_state.selected_tags.clear();
         this.private_state.selected_tags.add(tag_name);
     };
@@ -98,23 +93,39 @@ export class ProductList extends Component {
         this.private_state.search_input = "";
     };
     /**
-     * @param { Set<string> } set1
-     * @param { Set<string> } set2
-     * @returns { boolean }
-     * @description returns true if the two sets are equal;
-     * the order of the elements in the sets does not matter
+     * @param {Set} set1
+     * @param {Set} set2
+     * @returns
+     * @description returns true if set1 is a subset of set2
+     *
+     * example:
+     * set1 = {1, 2, 3}
+     * set2 = {1, 2, 3, 4}
+     * set1IsSubsetOfSet2(set1, set2) returns true
+     *
+     * set1 = {1, 2, 3}
+     * set2 = {1, 2, 4}
+     * set1IsSubsetOfSet2(set1, set2) returns false
+     *
      */
-    areSetsEqual = (set1, set2) => {
-        if (set1.size !== set2.size) {
-            return false;
-        }
+    setIsSubset(set1, set2) {
         for (const item of set1) {
             if (!set2.has(item)) {
                 return false;
             }
         }
         return true;
-    };
+    }
+    /**
+     * @param { Set } set1
+     * @param { Set } set2
+     * @returns { boolean }
+     * @description returns true if the two sets are equal;
+     * the order of the elements in the sets does not matter
+     */
+    areSetsEqual(set1, set2) {
+        return set1.size !== set2.size && this.setIsSubset(set1, set2);
+    }
     static components = { NavBar };
 }
 ProductList.template = "ProductList";
