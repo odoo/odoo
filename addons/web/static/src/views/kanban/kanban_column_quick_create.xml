@@ -10,29 +10,27 @@
             </div>
             <div t-else="" class="o_quick_create_unfolded pt-3 px-2 pb-2">
                 <div class="o_kanban_header top-0 pb-3">
-                    <div class="input-group">
+                    <div class="input-group mb-1">
                         <input type="text"
-                            class="form-control o_input bg-transparent fs-4"
+                            class="form-control bg-view"
                             t-attf-placeholder="{{ relatedFieldName }}..."
                             t-ref="autofocus"
                             t-model.trim="state.columnTitle"
                             t-on-focus="() => state.hasInputFocused = true"
                             t-on-blur="() => state.hasInputFocused = false"
                         />
-                        <span class="input-group-append">
-                            <button class="btn btn-primary o_kanban_add" type="button" t-on-click="validate">
-                                Add
-                            </button>
-                        </span>
+                        <button class="btn btn-primary o_kanban_add" type="button" t-on-click="validate">
+                            Add
+                        </button>
                     </div>
                     <small t-if="!env.isSmall and state.hasInputFocused" class="o_discard_msg text-muted float-end">
-                        Esc to discard
+                        <kbd>Esc</kbd> to discard
                     </small>
                     <t t-if="canShowExamples and !env.isSmall">
                         <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
                     </t>
                 </div>
-                <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record mt-3 py-5 bg-300" />
+                <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record mb-2 py-5 bg-300 opacity-50" />
             </div>
         </div>
     </t>

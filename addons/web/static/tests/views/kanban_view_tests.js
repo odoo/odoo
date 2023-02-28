@@ -6867,7 +6867,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // leaving column creation mode
-        await triggerEvent(target, ".o_column_quick_create .o_input", "keydown", {
+        await triggerEvent(target, ".o_column_quick_create .form-control", "keydown", {
             key: "Escape",
         });
 
@@ -12162,7 +12162,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target
                 .querySelector(
-                    ".o_column_quick_create .o_quick_create_unfolded .input-group .o_input"
+                    ".o_column_quick_create .o_quick_create_unfolded .input-group .form-control"
                 )
                 .getAttribute("placeholder"),
             productFieldName + "..."
