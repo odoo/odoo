@@ -14,7 +14,8 @@ from odoo import Command, _, models, api
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.account import SYSCOHADA_LIST
 from odoo.exceptions import AccessError
-from odoo.tools import file_open
+from odoo.tools import file_open, groupby
+from odoo.tools.translate import TranslationImporter
 
 _logger = logging.getLogger(__name__)
 
@@ -179,6 +180,7 @@ class AccountChartTemplate(models.AbstractModel):
             install_demo = False
         data = self._pre_load_data(template_code, company, template_data, data)
         self._load_data(data)
+        self._load_translations(companies=company)
         self._post_load_data(template_code, company, template_data)
 
         # Manual sync because disable above (delay_account_group_sync)
@@ -405,20 +407,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         created_vals = {}
         for model, data in defer(list(data.items())):
-            translate_vals = []
             create_vals = []
-
             for xml_id, record in data.items():
                 # Extract the translations from the values
-                if any('@' in key for key in record):
-                    translate_vals.append({
-                        translate.split('@')[1]: value
-                        for translate, value in record.items()
-                        if '@' in translate and value
-                    })
-                    translate_vals[-1]['en_US'] = record['name']
-                else:
-                    translate_vals.append(None)
                 for key in list(record):
                     if '@' in key:
                         del record[key]
@@ -435,19 +426,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'values': deref(record, self.env[model]),
                     'noupdate': True,
                 })
-            created_vals[model] = created = self.env[model]._load_records(create_vals)
-
-            # Update the translations in batch for all languages
-            translate_vals = [(r.id, Json(t)) for t, r in zip(translate_vals, created) if t]
-            if translate_vals:
-                self.env.cr.execute(f"""
-                    UPDATE "{self.env[model]._table}" AS m
-                    SET "name" =  t.value
-                    FROM (
-                        VALUES {', '.join(['(%s, %s::jsonb)'] * (len(translate_vals)))}
-                    ) AS t(id, value)
-                    WHERE m.id = t.id
-                """, [v for vals in translate_vals for v in vals])
+            created_vals[model] = self.env[model]._load_records(create_vals)
         return created_vals
 
     def _post_load_data(self, template_code, company, template_data):
@@ -776,3 +755,33 @@ class AccountChartTemplate(models.AbstractModel):
             except FileNotFoundError:
                 _logger.debug("No file %s found for template '%s'", model, module)
         return res
+
+    def _load_translations(self, langs=None, companies=None):
+        """Load the translations of the chart template.
+
+        :param langs: the lang code to load the translations for. If one of the codes is not present,
+                      we are looking for it more generic locale (i.e. `en` instead of `en_US`)
+        :type langs: list[str]
+        :param companies: the companies to load the translations for
+        :type companies: Model<res.company>
+        """
+        langs = langs or [code for code, _name in self.env['res.lang'].get_installed()]
+        companies = companies or self.env['res.company'].search([('chart_template', '!=', False)])
+
+        translation_importer = TranslationImporter(self.env.cr, verbose=False)
+        for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
+            template_data = self.env['account.chart.template']._get_chart_template_data(chart_template)
+            template_data.pop('template_data', None)
+            for mname, data in template_data.items():
+                for _xml_id, record in data.items():
+                    fnames = {fname.split('@')[0] for fname in record}
+                    for lang in langs:
+                        for fname in fnames:
+                            value = record.get(f"{fname}@{lang}")
+                            if not value:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
+                                value = record.get(f"{fname}@{lang.split('_')[0]}")
+                            if value:
+                                for company in chart_companies:
+                                    xml_id = f"account.{company.id}_{_xml_id}"
+                                    translation_importer.model_translations[mname][fname][xml_id][lang] = value
+        translation_importer.save(overwrite=False)
