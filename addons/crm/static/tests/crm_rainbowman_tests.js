@@ -4,7 +4,6 @@ import "@crm/../tests/mock_server";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
-    clickSave,
     dragAndDrop,
     getFixture,
 } from '@web/../tests/helpers/utils';
@@ -131,8 +130,8 @@ QUnit.module('Crm Rainbowman Triggers', {
         assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
     });
 
-    QUnit.test("first lead won, click on statusbar in edit mode then save", async function (assert) {
-        assert.expect(3);
+    QUnit.test("first lead won, click on statusbar in edit mode", async function (assert) {
+        assert.expect(2);
 
         await makeView({
             ...this.testFormView,
@@ -141,9 +140,6 @@ QUnit.module('Crm Rainbowman Triggers', {
         });
 
         await click(target.querySelector(".o_statusbar_status button[data-value='3']"));
-        assert.verifySteps([]); // no message displayed yet
-
-        await clickSave(target);
         assert.verifySteps(['Go, go, go! Congrats for your first deal.']);
     });
 
