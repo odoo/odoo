@@ -201,27 +201,16 @@ export class StatusBarField extends Component {
         }
     }
 
-    selectItem(item) {
-        const rootRecord =
-            this.props.record.model.root instanceof this.props.record.constructor &&
-            this.props.record.model.root;
-        const isInEdition = rootRecord ? rootRecord.isInEdition : this.props.record.isInEdition;
+    async selectItem(item) {
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
-                this.props.record.update({ [this.props.name]: [item.id, item.name] });
-                // We save only if we're on view mode readonly and no readonly field modifier
-                if (!isInEdition) {
-                    return this.props.record.save();
-                }
+                await this.props.record.update({ [this.props.name]: [item.id, item.name] });
                 break;
             case "selection":
-                this.props.record.update({ [this.props.name]: item.id });
-                // We save only if we're on view mode readonly and no readonly field modifier
-                if (!isInEdition) {
-                    return this.props.record.save();
-                }
+                await this.props.record.update({ [this.props.name]: item.id });
                 break;
         }
+        return this.props.record.save();
     }
 
     onDropdownItemSelected(ev) {
