@@ -542,7 +542,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         cls.diff_income_account = cls.company.income_currency_exchange_account_id
         cls.diff_expense_account = cls.company.expense_currency_exchange_account_id
 
-        cls.inbound_payment_method = cls.env['account.payment.method'].create({
+        cls.inbound_payment_method = cls.env['account.payment.method'].sudo().create({
             'name': 'inbound',
             'code': 'IN',
             'payment_type': 'inbound',
