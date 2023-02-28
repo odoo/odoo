@@ -45,8 +45,15 @@
             <div class="container mb-5">
                 <div class="row">
 <!-- Looping through all the available products -->
-                        <t t-set="tag" t-value="filteredProducts()[0].tag_list"/>
-                        <t t-esc="Array.from(tag).join(' ')"/>
+                        <t t-if="filteredProducts().length > 0">
+                            <t t-set="tag" t-value="filteredProducts()[0].tag_list"/>
+                            <t t-esc="Array.from(tag).join(' ')"/>
+                        </t>
+                        <t t-else="">
+                            <p class="text-center">
+                                No products found
+                            </p>
+                        </t>
                         <t t-foreach="filteredProducts()" t-as="product" t-key="product.product_id">
                             <t t-if="!areSetsEqual(product.tag_list, tag)">
                                 <t t-set="tag" t-value="product.tag_list"/>

@@ -38,11 +38,11 @@ export class ProductList extends Component {
         });
     };
 
-
     /**
      * @param {Product} item
      * @param {Set<string>} selected_tags
-     * @returns
+     * @returns {boolean}
+     * @description returns true if the set of selected tags is a subset of the item's tags
      */
     itemHasAllOfTheTags = (item, selected_tags) => {
         return this.setIsSubset(selected_tags, item.tag_list);
@@ -50,7 +50,7 @@ export class ProductList extends Component {
     /**
      * @param {Product} item
      * @param {string} search_input
-     * @returns
+     * @returns {boolean}
      * @description returns true if the item matches the search input
      */
     itemMatchesSearch = (item, search_input) => {
@@ -58,10 +58,11 @@ export class ProductList extends Component {
         if (!search_input) {
             return true;
         }
-        return item.name.toLowerCase().includes(search_input.toLowerCase());
-        // TODO: maybe we should also search in the description
-        // be careful, the description is not always filled
-        // item.description_sale.toLowerCase().includes(search_input.toLowerCase());
+        return (
+            item.name.toLowerCase().includes(search_input.toLowerCase()) ||
+            (item.description_sale &&
+                item.description_sale.toLowerCase().includes(search_input.toLowerCase()))
+        );
     };
 
     /**
@@ -124,7 +125,7 @@ export class ProductList extends Component {
      * the order of the elements in the sets does not matter
      */
     areSetsEqual(set1, set2) {
-        return set1.size !== set2.size && this.setIsSubset(set1, set2);
+        return set1.size === set2.size && this.setIsSubset(set1, set2);
     }
     static components = { NavBar };
 }
