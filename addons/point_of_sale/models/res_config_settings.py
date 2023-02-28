@@ -64,15 +64,25 @@ class ResConfigSettings(models.TransientModel):
     # Customer will be able to order from their phone
     pos_self_order_phone_mode = fields.Boolean(related='pos_config_id.self_order_phone_mode', readonly=False)
     @api.onchange('pos_self_order_kiosk_mode','pos_self_order_view_mode', 'pos_self_order_phone_mode')
-    def _compute_module_pos_self_order(self):
+    def _compute_self_order_kiosk(self):
         for record in self:
             record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode or record.pos_self_order_phone_mode
             if record.pos_self_order_kiosk_mode :
                 record.pos_self_order_phone_mode = False
                 record.pos_self_order_view_mode = False
-            elif record.pos_self_order_view_mode:
+    @api.onchange('pos_self_order_view_mode')
+    def _compute_self_order_view(self):
+        for record in self:
+            record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode or record.pos_self_order_phone_mode
+            if record.pos_self_order_view_mode:
                 record.pos_self_order_kiosk_mode = False
-            elif record.pos_self_order_phone_mode:
+            else:
+                record.pos_self_order_phone_mode = False
+    @api.onchange('pos_self_order_phone_mode')
+    def _compute_self_order_phone(self):
+        for record in self:
+            record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode or record.pos_self_order_phone_mode
+            if record.pos_self_order_phone_mode:
                 record.pos_self_order_view_mode = True
                 record.pos_self_order_kiosk_mode = False
     
