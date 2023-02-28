@@ -47,8 +47,9 @@ export class AceField extends Component {
             () => [this.editorRef.el]
         );
 
-        useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges());
-        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({ detail }) =>
+        const { model } = this.props.record;
+        useBus(model, "WILL_SAVE_URGENTLY", () => this.commitChanges());
+        useBus(model, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())
         );
     }
