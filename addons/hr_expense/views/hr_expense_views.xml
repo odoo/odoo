@@ -71,8 +71,8 @@
                     <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="amount_tax_company" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="attachment_number" nolabel="1" class='fa fa-paperclip pe-0' attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
-                    <field name="total_amount_company" optional="show" sum="Total Company Currency" widget='monetary' options="{'currency_field': 'company_currency_id'}" decoration-bf="True"/>
-                    <field name="total_amount" optional="hide" decoration-bf="True" groups="base.group_multi_currency"/>
+                    <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}" decoration-bf="1"/>
+                    <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" optional="hide" decoration-bf="1" groups="base.group_multi_currency"/>
                     <field name="currency_id" optional="hide" groups="base.group_multi_currency"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
                 </tree>
@@ -102,7 +102,7 @@
                 <xpath expr="//tree" position="attributes">
                     <!-- Display the tree dashboard view with the header -->
                     <attribute name="js_class">hr_expense_dashboard_tree</attribute>
-                    <attribute name="class">hr_expense h-auto o_forbidden_tooltip_parent</attribute>
+                    <attribute name="class">hr_expense o_forbidden_tooltip_parent</attribute>
                 </xpath>
             </field>
         </record>
@@ -145,6 +145,8 @@
                             <field name="duplicate_expense_ids" invisible="1"/>
                             <field name="sheet_is_editable" invisible="1"/>
                             <field name="currency_rate" invisible="1"/>
+                            <field name="product_uom_category_id" invisible="1"/>
+
                             <label for="product_id"/>
                             <div>
                                 <field name="product_id" required="1" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" context="{'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}" class="w-100"/>
@@ -152,8 +154,9 @@
                                     <field name="product_description"/>
                                 </div>
                             </div>
+
+                            <!-- CASE: product has a cost defined -> user input qty (always in company currency) -->
                             <field name="unit_amount" required="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('product_has_cost', '=', False)], 'readonly': ['|', ('sheet_is_editable', '=', False), ('product_has_cost', '=', True)]}"/>
-                            <field name="product_uom_category_id" invisible="1"/>
                             <label for="quantity" attrs="{'invisible': [('product_has_cost', '=', False)]}"/>
                             <div attrs="{'invisible': [('product_has_cost', '=', False)]}">
                                 <div class="o_row">
@@ -162,33 +165,30 @@
                                 </div>
                             </div>
 
+                            <!-- CASE: product has no cost defined -> user input amount (in other currency if multi-currency) -->
                             <label for="total_amount" string="Total" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_has_cost', '=', True)]}">
                                 <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}" class="oe_inline"/>
-                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="currency_id" style="max-width: 25%;" groups="base.group_multi_currency" options="{'no_create': True}"/>
                             </div>
-                            <label for="total_amount_company" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
+
+                            <!-- CASE: converter when currency is different than the company one -->
+                            <label for="total_amount_company" string="" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
                             <div class="o_row" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
                                 <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}" class="oe_inline"/>
                                 <field name="label_convert_rate" class="ps-0"/>
                             </div>
+
                             <label for="tax_ids" attrs="{'invisible': [('product_has_tax', '=', False)]}"/>
-                            <div class="d-flex o_row" attrs="{'invisible': [('product_has_tax', '=', False)]}">
-                                <div class="p-2">
-                                    <field name="tax_ids" force_save="1"
-                                        widget="many2many_tags"
-                                        attrs="{'readonly': ['|', ('is_editable', '=', False), ('product_has_cost', '=', True)],
-                                                'invisible': [('product_has_tax', '=', False)]}"
-                                        context="{'default_company_id': company_id, 'default_type_tax_use': 'purchase', 'default_price_include': 1}"
-                                        options="{'no_create': True}"/>
-                                </div>
-                                <div class="d-flex pt-2">
-                                    <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ms-1 me-1"> ( </span>
-                                    <field name="amount_tax"
-                                        class="ps-0"
-                                        attrs="{'invisible': [('product_has_tax', '=', False)]}"/>
-                                    <span attrs="{'invisible': [('product_has_tax', '=', False)]}" class="oe_inline o_form_label ms-1 me-3"> ) </span>
-                                </div>
+                            <div class="o_row" attrs="{'invisible': [('product_has_tax', '=', False)]}">
+                                <field name="tax_ids"
+                                       force_save="1"
+                                       widget="many2many_tags"
+                                       attrs="{'readonly': ['|', ('is_editable', '=', False), ('product_has_cost', '=', True)],
+                                               'invisible': [('product_has_tax', '=', False)]}"
+                                       options="{'no_create': True}"/>
+                                <field name="amount_tax"
+                                    attrs="{'invisible': [('product_has_tax', '=', False)]}"/>
                             </div>
                             <field name="employee_id" groups="hr_expense.group_hr_expense_team_approver" context="{'default_company_id': company_id}" widget="many2one_avatar_user"/>
                             <label id="lo" for="payment_mode" attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
@@ -329,9 +329,8 @@
                     <field name="quantity" invisible="1"/>
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="total_amount" type="measure" groups="base.group_multi_currency"/>
-                    <field name="untaxed_amount" groups="base.group_multi_currency"/>
-                    <field name="amount_tax" groups="base.group_multi_currency"/>
+                    <field name="total_amount_company" type="measure" />
+                    <field name="amount_tax_company"/>
                 </graph>
             </field>
         </record>
@@ -500,7 +499,7 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name='product_variant_count' invisible='1'/>
-                        <field name="id" invisible="True"/>
+                        <field name="id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'image_preview': 'image_128'}"/>
                         <field name="detailed_type" invisible="1"/>
                         <div class="oe_title">
@@ -619,19 +618,19 @@
                 <tree string="Expense Reports" multi_edit="1" js_class="hr_expense_tree" sample="1" decoration-info="state == 'draft'">
                     <field name="company_id" invisible="1"/>
                     <field name="product_ids" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
                     <field name="employee_id" widget="many2one_avatar_user"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_manager"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Expense Report"/>
+                    <field name="payment_mode" optional="hide"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company"/>
                     <field name="activity_ids" widget="list_activity" optional="show" readonly="1"/>
-                    <field name="total_amount" optional="show" sum="Total Amount" decoration-bf="True"/>
-                    <field name="currency_id" optional="hide"/>
                     <field name="journal_id" optional="hide"/>
+                    <field name="total_amount" sum="Total Amount" decoration-bf="1" widget="monetary"/>
                     <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['submit', 'approve', 'post', 'done']" decoration-danger="state == 'cancel'" widget="badge"/>
                     <field name="payment_state" optional="show" decoration-info="payment_state in ('partial','in_payment')" decoration-success="payment_state == 'paid'" decoration-danger="payment_state in ('reversed','not_paid')" widget="badge"/>
-                    <field name="payment_mode" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -659,7 +658,11 @@
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
                 <field name="company_id" invisible="1"/>
-                 <header>
+                <field name="account_move_id" invisible="1"/>
+                <field name="payment_state" invisible="1"/>
+                <field name="is_editable" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <header>
                     <button name="action_submit_sheet"
                             string="Submit to Manager"
                             attrs="{'invisible': [('state', '!=', 'draft')]}"
@@ -717,7 +720,6 @@
                             groups="account.group_account_invoice">
                             Journal Entry
                         </button>
-                        <field name="account_move_id" invisible="1"/>
                         <button name="action_open_expense_view"
                             class="oe_stat_button"
                             icon="fa-file-text-o"
@@ -726,7 +728,6 @@
                             <field name="expense_number" widget="statinfo" string="Expenses"/>
                         </button>
                     </div>
-                    <field name="payment_state" invisible="True"/>
                     <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('payment_state', '!=', 'paid')]}"/>
                     <widget name="web_ribbon" title="Partial" bg_color="bg-info" attrs="{'invisible': [('payment_state', '!=', 'partial')]}"/>
                     <widget name="web_ribbon" title="In Payment" attrs="{'invisible': [('payment_state', '!=', 'in_payment')]}"/>
@@ -757,7 +758,6 @@
                     </group>
                      <notebook>
                         <page name="expenses" string="Expense">
-                            <field name="is_editable" invisible="1"/>
                             <field name="expense_line_ids"
                                     nolabel="1"
                                     widget="many2many"
@@ -778,34 +778,33 @@
                                     attrs="{'readonly': [('is_editable', '=', False)]}"
                                     force_save="1">
                                 <tree editable="bottom">
+                                    <field name="employee_id" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="attachment_number" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="company_currency_id" invisible="1"/>
+                                    <field name="product_has_cost" invisible="1"/>
                                     <field name="date" optional="show"/>
                                     <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="description" optional="hide"/>
-                                    <field name="employee_id" invisible="1"/>
-                                    <field name="state" invisible="1"/>
-                                    <field name="attachment_number" invisible="1"/>
-                                    <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-end pe-0" readonly="True" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
-                                    <field name="reference" optional="hide" readonly="True"/>
+                                    <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-end pe-0" readonly="1" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
+                                    <field name="reference" optional="hide" readonly="1"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
                                            optional="show"
                                            options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"/>
                                     <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
-                                    <field name="product_has_cost" invisible="True"/>
                                     <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="currency_id" optional="hide" readonly="True"/>
+                                    <field name="currency_id" optional="hide" readonly="1" groups="base.group_multi_currency"/>
                                     <field name="quantity" optional="hide" attrs="{'readonly': [('product_has_cost', '=', False)]}"/>
-                                    <field name="company_id" invisible="1"/>
                                     <field name="tax_ids" string="Taxes" optional="show" widget="many2many_tags" context="{'default_company_id': company_id}"/>
-                                    <field name="amount_tax" optional="hide" context="{'default_company_id': company_id}" readonly="True" groups="base.group_multi_currency"/>
-                                    <field name="total_amount" optional="show" attrs="{'readonly': [('product_has_cost', '=', True)]}"/>
-                                    <field name="amount_tax_company" optional="hide" readonly="True"/>
-                                    <field name="company_currency_id" invisible="1"/>
-                                    <field name="total_amount_company" optional="show" groups="base.group_multi_currency" readonly="True"/>
+                                    <field name="amount_tax" optional="hide"  options="{'currency_field': 'currency_id'}" context="{'default_company_id': company_id}" readonly="1" groups="base.group_multi_currency"/>
+                                    <field name="amount_tax_company" optional="hide" readonly="1"/>
+                                    <field name="total_amount" options="{'currency_field': 'currency_id'}" string="Subtotal In Currency " optional="show" attrs="{'readonly': [('product_has_cost', '=', True)]}" groups="base.group_multi_currency"/>
+                                    <field name="total_amount_company" string="Subtotal" readonly="1"/>
                                 </tree>
                             </field>
-                            <field name="currency_id" invisible="1"/>
                             <group class="oe_subtotal_footer oe_right" colspan="2" name="expense_total">
                                 <field name="untaxed_amount"/>
                                 <div class="oe_inline o_td_label">
