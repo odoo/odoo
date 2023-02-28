@@ -12828,6 +12828,69 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_kanban_record").innerHTML, "<div></div>");
     });
 
+    QUnit.test("rerenders only once after resequencing records", async (assert) => {
+        // actually it's not once, but twice, because we must render directly after
+        // the drag&drop s.t. the dropped record remains where it has been dropped,
+        // and once again after the reload
+        class MyField extends Component {
+            setup() {
+                this.renderCount = 0;
+                owl.onWillRender(() => this.renderCount++);
+            }
+        }
+        MyField.template = xml`<span t-esc="renderCount"/>`;
+        registry.category("fields").add("my_field", { component: MyField });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                                <field name="int_field" widget="my_field"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_kanban_record")), [
+            "yop1",
+            "gnap1",
+            "blip1",
+            "blip1",
+        ]);
+
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_kanban_record")), [
+            "gnap3",
+            "blip3",
+            "blip3",
+            "yop1", // new instance
+        ]);
+
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_kanban_record")), [
+            "blip5",
+            "blip5",
+            "yop3",
+            "gnap1", // new instance
+        ]);
+    });
+
     QUnit.test("sample server: _mockWebReadGroup API", async (assert) => {
         serverData.models.partner.records = [];
 
