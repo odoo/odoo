@@ -432,7 +432,15 @@ class HolidaysType(models.Model):
     def _get_days_request(self):
         self.ensure_one()
         result = self._get_employees_days_per_allocation(self.closest_allocation_to_expire.employee_id.ids)
-        closest_allocation_remaining = result[self.closest_allocation_to_expire.employee_id.id][self][self.closest_allocation_to_expire]['virtual_remaining_leaves']
+        closest_allocation_remaining = 0
+        if self.closest_allocation_to_expire:
+            # Shows the sum of allocation expiring on the same day as the closest to expire
+            employee_allocations = result[self.closest_allocation_to_expire.employee_id.id][self].items()
+            closest_allocation_remaining = sum(
+                res['virtual_remaining_leaves']
+                for alloc, res in employee_allocations
+                if alloc and alloc.date_to == self.closest_allocation_to_expire.date_to
+            )
         return (self.name, {
                 'remaining_leaves': ('%.2f' % self.remaining_leaves).rstrip('0').rstrip('.'),
                 'virtual_remaining_leaves': ('%.2f' % self.virtual_remaining_leaves).rstrip('0').rstrip('.'),
