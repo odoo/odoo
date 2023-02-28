@@ -73,28 +73,23 @@ export class ProductList extends Component {
      * @param {string} tag_name
      */
     selectTag = (tag_name) => {
-        if (this.private_state.selected_tags.has(tag_name)) {
-            this.private_state.selected_tags.delete(tag_name);
-            return;
-        }
+        // if (this.private_state.selected_tags.has(tag_name)) {
+        //     this.private_state.selected_tags.delete(tag_name);
+        //     return;
+        // }
+        this.private_state.selected_tags.clear();
         this.private_state.selected_tags.add(tag_name);
     };
     focusSearch = () => {
         this.private_state.search_is_focused = true;
         // we make it so tags are automatically deselected
         // when the search input is focused
-        // TODO: decide if we want this behavior
         // ( i made it this way because when the search bar opens
         // the tags are not visible anymore ( on the small size of the screen ))
         // also, the tags provide a more vague way to filter the products
         // ( maybe you don't know exactly what you want ), while the search bar
         // is more precise; ex: you want a Coca Cola, not a soda in general
         this.private_state.selected_tags.clear();
-        // FIXME: this is a hack: we want to focus the input after the search bar
-        // is rendered, but we don't know when it is rendered
-        // setTimeout(() => {
-        //     this.inputRef.el.focus();
-        // }, 50);
     };
     closeSearch = () => {
         this.private_state.search_is_focused = false;
