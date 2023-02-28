@@ -28,15 +28,15 @@ from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_M
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 
-diverging_history_regex = 'data-last-history-steps="([0-9,]*?)"'
+diverging_history_regex = 'data-last-history-steps="([0-9,]+)"'
 
 def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
-    server_history_matches = re.search(diverging_history_regex, record[html_field_name])
+    server_history_matches = re.search(diverging_history_regex, record[html_field_name] or '')
     # Do not check old documents without data-last-history-steps.
     if server_history_matches:
         server_last_history_id = server_history_matches[1].split(',')[-1]
         if server_last_history_id not in incoming_history_ids:
-            logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
+            logger.warning('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
             raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
 
 def handle_history_divergence(record, html_field_name, vals):

@@ -22,13 +22,17 @@ import json
 from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader, utils
+from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+try:
+    from PyPDF2.errors import PdfReadError
+except ImportError:
+    from PyPDF2.utils import PdfReadError
 
 _logger = logging.getLogger(__name__)
 
@@ -615,7 +619,7 @@ class IrActionsReport(models.Model):
             try:
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
-            except utils.PdfReadError:
+            except PdfReadError:
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
         streams.append(result_stream)
@@ -803,6 +807,14 @@ class IrActionsReport(models.Model):
                 if stream_data['attachment']:
                     continue
 
+                # if res_id is false
+                # we are unable to fetch the record, it won't be saved as we can't split the documents unambiguously
+                if not res_id:
+                    _logger.warning(
+                        "These documents were not saved as an attachment because the template of %s doesn't "
+                        "have any headers seperating different instances of it. If you want it saved,"
+                        "please print the documents separately", report_sudo.report_name)
+                    continue
                 record = self.env[report_sudo.model].browse(res_id)
                 attachment_name = safe_eval(report_sudo.attachment, {'object': record, 'time': time})
 

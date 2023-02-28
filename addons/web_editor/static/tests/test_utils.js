@@ -774,13 +774,23 @@ function getGridHtml(matrix) {
         `</div>`
     );
 }
+function getTdHtml(colspan, text, containerWidth) {
+    return (
+        `<td colspan="${colspan}"${
+            containerWidth ? ' ' + `style="max-width: ${Math.round(containerWidth*colspan/12*100)/100}px;"`
+                           : ''}>` +
+            text +
+        `</td>`
+    );
+}
 /**
  * Take a matrix representing a table and return an HTML string of the table.
  * The matrix is an array of rows, with each row being an array of cells. Each
  * cell is represented by a tuple of numbers [colspan, width (in percent)]. A
  * cell can have a string as third value to represent its text content. The
  * default text content of each cell is its coordinates `(row index, column
- * index)`.
+ * index)`. If the cell has a number as third value, it will be used as the
+ * max-width of the cell (in pixels).
  * Eg: [                        // <table> (note: extra attrs and styles apply)
  *      [                       //   <tr>
  *          [1, 8],             //     <td colspan="1" width="8%">(0, 0)</td>
@@ -792,18 +802,17 @@ function getGridHtml(matrix) {
  *      ],                      //   </tr>
  * ]                            // </table>
  *
- * @param {Array<Array<Array<[Number, Number, string?]>>>} matrix
+ * @param {Array<Array<Array<[Number, Number, string?, number?]>>>} matrix
+ * @param {Number} [containerWidth]
  * @returns {string}
  */
-function getTableHtml(matrix) {
+function getTableHtml(matrix, containerWidth) {
     return (
         `<table ${tableAttributesString} style="width: 100% !important; ${tableStylesString}">` +
         matrix.map((row, iRow) => (
             `<tr>` +
             row.map((col, iCol) => (
-                `<td colspan="${col[0]}">` +
-                (col.length === 3 ? col[2] : `(${iRow}, ${iCol})`) +
-                `</td>`
+                getTdHtml(col[0], typeof col[2] === 'string' ? col[2] : `(${iRow}, ${iCol})`, containerWidth)
             )).join('') +
             `</tr>`
         )).join('') +
@@ -841,16 +850,17 @@ function getRegularGridHtml(nRows, nCols) {
  * @param {Number|Number[]} nCols
  * @param {Number|Number[]} colspan
  * @param {Number|Number[]} width
+ * @param {Number} containerWidth
  * @returns {string}
  */
-function getRegularTableHtml(nRows, nCols, colspan, width) {
+function getRegularTableHtml(nRows, nCols, colspan, width, containerWidth) {
     const matrix = new Array(nRows).fill().map((_, iRow) => (
         new Array(Array.isArray(nCols) ? nCols[iRow] : nCols).fill().map(() => ([
             Array.isArray(colspan) ? colspan[iRow] : colspan,
             Array.isArray(width) ? width[iRow] : width,
         ])))
     );
-    return getTableHtml(matrix);
+    return getTableHtml(matrix, containerWidth);
 }
 /**
  * Take an HTML string and returns that string stripped from any HTML comments.
@@ -882,6 +892,7 @@ return {
     getTableHtml: getTableHtml,
     getRegularGridHtml: getRegularGridHtml,
     getRegularTableHtml: getRegularTableHtml,
+    getTdHtml: getTdHtml,
     removeComments: removeComments,
 };
 

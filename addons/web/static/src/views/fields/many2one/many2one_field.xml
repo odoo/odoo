@@ -46,7 +46,7 @@
                     <button
                         type="button"
                         class="btn btn-secondary fa o_external_button"
-                        t-att-class="props.openTarget === 'current' ? 'fa-arrow-right' : 'fa-external-link'"
+                        t-att-class="(props.openTarget === 'current' and !env.inDialog )? 'fa-arrow-right' : 'fa-external-link'"
                         tabindex="-1"
                         draggable="false"
                         aria-label="Internal link"

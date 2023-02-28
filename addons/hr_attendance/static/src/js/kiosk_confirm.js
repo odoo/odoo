@@ -39,25 +39,27 @@ var KioskConfirm = AbstractAction.extend({
         'click .o_hr_attendance_pin_pad_button_8': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 8); },
         'click .o_hr_attendance_pin_pad_button_9': function() { this.$('.o_hr_attendance_PINbox').val(this.$('.o_hr_attendance_PINbox').val() + 9); },
         'click .o_hr_attendance_pin_pad_button_C': function() { this.$('.o_hr_attendance_PINbox').val(''); },
-        'click .o_hr_attendance_pin_pad_button_ok': _.debounce(function() {
-            var self = this;
-            this.$('.o_hr_attendance_pin_pad_button_ok').attr("disabled", "disabled");
-            this._rpc({
-                    model: 'hr.employee',
-                    method: 'attendance_manual',
-                    args: [[this.employee_id], this.next_action, this.$('.o_hr_attendance_PINbox').val()],
-                    context: session.user_context,
-                })
-                .then(function(result) {
-                    if (result.action) {
-                        self.do_action(result.action);
-                    } else if (result.warning) {
-                        self.displayNotification({ title: result.warning, type: 'danger' });
-                        self.$('.o_hr_attendance_PINbox').val('');
-                        setTimeout( function() { self.$('.o_hr_attendance_pin_pad_button_ok').removeAttr("disabled"); }, 500);
-                    }
-                });
-        }, 200, true),
+        'click .o_hr_attendance_pin_pad_button_ok': function() { this._send_pin_debounced() },
+    },
+
+    _sendPin: function() {
+        var self = this;
+        this.$('.o_hr_attendance_pin_pad_button_ok').attr("disabled", "disabled");
+        this._rpc({
+            model: 'hr.employee',
+            method: 'attendance_manual',
+            args: [[this.employee_id], this.next_action, this.$('.o_hr_attendance_PINbox').val()],
+            context: session.user_context,
+        })
+        .then(function(result) {
+            if (result.action) {
+                self.do_action(result.action);
+            } else if (result.warning) {
+                self.displayNotification({ title: result.warning, type: 'danger' });
+                self.$('.o_hr_attendance_PINbox').val('');
+                setTimeout( function() { self.$('.o_hr_attendance_pin_pad_button_ok').removeAttr("disabled"); }, 500);
+            }
+        });
     },
 
     init: function (parent, action) {
@@ -67,6 +69,35 @@ var KioskConfirm = AbstractAction.extend({
         this.employee_name = action.employee_name;
         this.employee_state = action.employee_state;
         this.employee_hours_today = field_utils.format.float_time(action.employee_hours_today);
+
+        this._send_pin_debounced = _.debounce(this._sendPin, 200, true);
+
+        window.addEventListener("keydown", (ev) => {
+            const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'Enter', 'Delete'];
+            const key = ev.key;
+
+            if (!allowedKeys.includes(key)) {
+                return;
+            }
+
+            ev.preventDefault();
+            ev.stopPropagation();
+
+            const pinBox = this.$('.o_hr_attendance_PINbox');
+
+            if (key.length == 1) {
+                pinBox.val(pinBox.val() + key);
+            }
+            else if (key == 'Enter') {
+                this._send_pin_debounced();
+            }
+            else if (key == 'Backspace') {
+                pinBox.val(pinBox.val().substring(0, pinBox.val().length - 1));
+            }
+            else {  // Delete
+                pinBox.val('');
+            }
+        });
     },
 
     start: function () {

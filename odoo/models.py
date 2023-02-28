@@ -4202,8 +4202,14 @@ class BaseModel(metaclass=MetaModel):
             SET parent_path=concat((SELECT parent.parent_path FROM {0} parent
                                     WHERE parent.id=node.{1}), node.id, '/')
             WHERE node.id IN %s
+            RETURNING node.id, node.parent_path
         """.format(self._table, self._parent_name)
         self._cr.execute(query, [tuple(self.ids)])
+
+        # update the cache of updated nodes, and determine what to recompute
+        updated = dict(self._cr.fetchall())
+        records = self.browse(updated)
+        self.env.cache.update(records, self._fields['parent_path'], updated.values())
 
     def _parent_store_update_prepare(self, vals):
         """ Return the records in ``self`` that must update their parent_path

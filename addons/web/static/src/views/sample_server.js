@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { parseDate, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    parseDate,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { groupBy as arrayGroupBy, sortBy as arraySortBy } from "@web/core/utils/arrays";
@@ -487,8 +493,21 @@ export class SampleServer {
             group[countKey] = records.length;
             const firstElem = records[0];
             for (const gb of normalizedGroupBys) {
-                const { alias, fieldName } = gb;
+                const { alias, fieldName, type } = gb;
                 group[alias] = this._formatValue(firstElem[fieldName], gb);
+                if (["date", "datetime"].includes(type)) {
+                    group.__range = {};
+                    const val = firstElem[fieldName];
+                    if (val) {
+                        const deserialize = type === "date" ? deserializeDate : deserializeDateTime;
+                        const serialize = type === "date" ? serializeDate : serializeDateTime;
+                        const from = deserialize(val).startOf(gb.interval);
+                        const to = SampleServer.INTERVALS[gb.interval](from);
+                        group.__range[alias] = { from: serialize(from), to: serialize(to) };
+                    } else {
+                        group.__range[alias] = false;
+                    }
+                }
             }
             Object.assign(group, this._aggregateFields(measures, records));
             result.push(group);
@@ -724,6 +743,13 @@ SampleServer.FORMATS = {
     month: "MMMM yyyy",
     quarter: "'Q'q yyyy",
     year: "y",
+};
+SampleServer.INTERVALS = {
+    day: (dt) => dt.plus({ days: 1 }),
+    week: (dt) => dt.plus({ weeks: 1 }),
+    month: (dt) => dt.plus({ months: 1 }),
+    quarter: (dt) => dt.plus({ months: 3 }),
+    year: (dt) => dt.plus({ years: 1 }),
 };
 SampleServer.DISPLAY_FORMATS = Object.assign({}, SampleServer.FORMATS, { day: "dd MMM yyyy" });
 

@@ -99,7 +99,7 @@ class PickingType(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if 'sequence_id' not in vals or not vals['sequence_id']:
+            if not vals.get('sequence_id') and vals.get('sequence_code'):
                 if vals.get('warehouse_id'):
                     wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
                     vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
@@ -863,6 +863,7 @@ class Picking(models.Model):
     def action_cancel(self):
         self.move_ids._action_cancel()
         self.write({'is_locked': True})
+        self.filtered(lambda x: not x.move_ids).state = 'cancel'
         return True
 
     def _action_done(self):

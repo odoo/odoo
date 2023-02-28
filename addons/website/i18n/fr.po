@@ -806,7 +806,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"Site web\"/>"
+msgstr "<i class=\"fa fa-globe me-1\" title=\"Site Web\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -1392,9 +1392,9 @@ msgid ""
 msgstr ""
 "Une action de code serveur peut être exécutée depuis le site web en "
 "utilisant un contrôleur dédié. L'adresse est "
-"<base>/website/action/<website_path>. Configurez ce champ comme True pour "
+"<base>/website/action/<website_path>. Configurez ce champ comme vrai pour "
 "permettre aux utilisateurs d'exécuter cette action. Si la configuration est "
-"False, l'action ne pourra pas être exécutée sur le site web."
+"faux, l'action ne pourra pas être exécutée sur le site web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -4428,7 +4428,7 @@ msgid ""
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
 "Fichier d'où provient la vue.\n"
-"                                                          Utile pour effectuer un (hard) reset des vues cassées ou pour lire l'archive d'un fichier en mode dev-xml."
+"                                                          Utile pour effectuer une réinitialisation (aux paramètres d'usine) des vues cassées ou pour lire l'archive d'un fichier en mode dev-xml."
 
 #. module: website
 #: model:ir.model,name:website.model_ir_binary
@@ -5346,7 +5346,7 @@ msgstr "Icône"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
 msgid "If True, new accounts will be associated to the current website"
-msgstr "Si True, de nouveaux comptes seront associés au site web actuel"
+msgstr "Si vrai, de nouveaux comptes seront associés au site web actuel"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_configurator_feature__menu_sequence
@@ -5399,8 +5399,8 @@ msgid ""
 "         "
 msgstr ""
 "Indique cette vue est héritée,\n"
-"* Si 'True', la vue étend toujours son parent\n"
-"* Si 'False', la vue n'étend pas son parent, mais elle peut être activée"
+"* Si 'vrai', la vue étend toujours son parent\n"
+"* Si 'Faux', la vue n'étend pas son parent, mais elle peut être activée"
 
 #. module: website
 #. odoo-javascript
@@ -8144,7 +8144,7 @@ msgstr "Réinitialiser les modèles"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Reset to initial version (hard reset)."
-msgstr "Réinitialisation à la version initiale (réinitialisation matérielle)."
+msgstr "Réinitialisation à la version initiale (hard reset)."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -8161,7 +8161,7 @@ msgstr "Le respect de votre vie privée est notre priorité."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Restore previous version (soft reset)."
-msgstr "Restaurer la version précédente (réinitialisation logicielle)."
+msgstr "Restaurer la version précédente (soft reset)."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_id
@@ -9630,7 +9630,7 @@ msgid ""
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
 "Ce champ enregistrera le `arch_db` actuel avant d’écrire dessus.\n"
-"Utile pour réinitialiser une vue brisée."
+"Utile pour effectuer une réinitialisation (soft) d'une vue brisée."
 
 #. module: website
 #. odoo-javascript
@@ -9918,7 +9918,7 @@ msgstr "Déclencheur"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__configurator_done
 msgid "True if configurator has been completed or ignored"
-msgstr "True si le configurateur a été terminé ou ignoré"
+msgstr "Vrai si le configurateur a été terminé ou ignoré"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -11097,6 +11097,16 @@ msgstr "Vous ne pouvez pas supprimer le bouton d'envoi du formulaire"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+"Vous ne pouvez pas supprimer le site web %s par défaut. Veuillez plutôt "
+"changer ses paramètres."
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/mixins.py:0
 #, python-format
 msgid "You do not have the rights to publish/unpublish"
@@ -11351,7 +11361,7 @@ msgstr "btn-secondary"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "business"
-msgstr "business"
+msgstr " "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

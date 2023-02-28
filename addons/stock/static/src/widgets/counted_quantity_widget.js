@@ -2,6 +2,7 @@
 
 import { FloatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 const { useEffect, useRef } = owl;
 
@@ -16,8 +17,10 @@ export class CountedQuantityWidgetField extends FloatField {
             (inputEl) => {
                 if (inputEl) {
                     inputEl.addEventListener("input", this.onInput.bind(this));
+                    inputEl.addEventListener("keydown", this.onKeydown.bind(this));
                     return () => {
                         inputEl.removeEventListener("input", this.onInput.bind(this));
+                        inputEl.removeEventListener("keydown", this.onKeydown.bind(this));
                     };
                 }
             },
@@ -28,6 +31,12 @@ export class CountedQuantityWidgetField extends FloatField {
     onInput(ev) {
         this.props.setDirty(true);
         return this.props.record.update({ inventory_quantity_set: true });
+    }
+
+    onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (["enter", "tab", "shift+tab"].includes(hotkey))
+            this.onInput(ev)
     }
 
     get formattedValue() {

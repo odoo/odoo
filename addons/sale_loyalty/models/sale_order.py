@@ -494,6 +494,7 @@ class SaleOrder(models.Model):
             points += self.coupon_point_ids.filtered(lambda p: p.coupon_id == coupon).points
         # Points already used by rewards
         points -= sum(self.order_line.filtered(lambda l: l.coupon_id == coupon).mapped('points_cost'))
+        points = coupon.currency_id.round(points)
         return points
 
     def _add_points_for_coupon(self, coupon_points):

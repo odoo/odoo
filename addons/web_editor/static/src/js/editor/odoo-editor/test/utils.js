@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
 import { closestElement } from '../src/utils/utils.js';

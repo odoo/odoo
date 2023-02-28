@@ -7,7 +7,6 @@
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
 # liAnGjiA <liangjia@qq.com>, 2022
 # keecome <7017511@qq.com>, 2022
-# Martin Trigaux, 2022
 # 宇洛 李, 2022
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2022
 # lonely落叶 <liu--qiong@hotmail.com>, 2022
@@ -16,6 +15,9 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
+# Martin Trigaux, 2023
+# Pierre Masereel, 2023
+# Emily Jia <eji@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
+"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -386,22 +388,22 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 " <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 " 亲爱的\n"
-" <t t -if=\"object.partner_id.parent_id\">\n"
+" <t t-if=\"object.partner_id.parent_id\">\n"
 " <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object .partner_id.parent_id.name 或 ''\">Azure 内部</t>)，\n"
 " </t>\n"
 " <t t-else=\"\">\n"
-" <t t-out=\"object .partner_id.name 或 ''\">Brandon Freeman</t>，\n"
+" <t t-out=\"object .partner_id.name or ''\">Brandon Freeman</t>，\n"
 " </t>\n"
 " <br/><br/>\n"
 " 这是您的\n"
-" <t t-if=\"对象。 name\">\n"
+" <t t-if=\"object.name\">\n"
 " 贷方通知单<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 " </t>\n"
 " <t t-else=\"\">\n"
 " 贷方票据\n"
 " </t>\n"
 " <t t-if=\"object.invoice_origin\">\n"
-"（参考：< t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"（参考：<t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 " </t>\n"
 " <span style=\"font-weight:bold;\" t-out= \"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 " from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
@@ -463,25 +465,25 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 " <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 " 亲爱的\n"
-" <t t -if=\"object.partner_id.parent_id\">\n"
-" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object .partner_id.parent_id.name 或 ''\">Azure 内部</t>)，\n"
+" <t t-if=\"object.partner_id.parent_id\">\n"
+" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or '' \">Azure 内部</t>)，\n"
 " </t>\n"
 " <t t-else=\"\">\n"
-" <t t-out=\"object .partner_id.name 或 ''\">Brandon Freeman</t>，\n"
+" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>，\n"
 " </t>\n"
 " <br/><br/>\n"
 " 这是您的\n"
-" <t t-if=\"对象。 name\">\n"
+" <t t-if=\"object.name\">\n"
 " 结算 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-" < /t>\n"
+" </t>\n"
 " <t t-else=\"\">\n"
 " invoice\n"
 " </t>\n"
 " <t t-if=\"object.invoice_origin\">\n"
-"（参考：<t t -out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"（参考：<t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 " </t>\n"
-" <span style=\"font-weight:bold;\" t-out=\" format_amount(object.amount_total, object.currency_id) 或 ''\">$ 143,750.00</span>\n"
-" 来自 <t t-out=\"object.company_id.name 或 ''\">YourCompany</t>。 \n"
+" <span style=\"font-weight:bold;\" t-out=\" format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+" 来自 <t t-out=\"object.company_id.name or ''\">YourCompany</t>。 \n"
 " <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 " 此结算已付款。\n"
 " < /t>\n"
@@ -494,7 +496,7 @@ msgstr ""
 " </t>\n"
 " <br/><br/>\n"
 "如果您有任何问题，请随时与我们联系。\n"
-" <t t-if=\"不是 is_html_empty(object.invoice_user_id.signature)\">\n"
+" <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 " <br/><br/>\n"
 " <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>米切尔管理员</t>\n"
 " </t>\n"
@@ -1256,7 +1258,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 msgid "<strong>Total Rounded</strong>"
-msgstr ""
+msgstr "<strong>总计舍入</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13411,7 +13413,7 @@ msgstr "支付期限必须有一个余额行。"
 msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
-msgstr ""
+msgstr "您为产品'%s'选择的度量单位（UoM）'%s'与其类别不兼容：%s。"
 
 #. module: account
 #. odoo-python
@@ -14348,6 +14350,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"尝试将横幅添加至原始PDF时出错。\n"
+"请确保源文件有效。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14618,6 +14622,8 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
+"此产品已用于已过帐的日记账分录。\n"
+"要更改其度量单位，请将产品存档，并创建一个新产品。"
 
 #. module: account
 #. odoo-python
@@ -14796,7 +14802,7 @@ msgstr "货币总残差"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #, python-format
 msgid "Total Rounded"
-msgstr ""
+msgstr "总计舍入"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -15027,7 +15033,7 @@ msgstr "未发布"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "未发布的分录"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -15613,6 +15619,16 @@ msgstr "每年"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -15885,6 +15901,12 @@ msgstr "已经存在日记账科目，不能修改公司的币种"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""

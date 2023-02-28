@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2022-12-15 12:44+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -33,26 +33,28 @@ msgid "Address"
 msgstr "地址"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr "使用 Snailmail 發送信件時發生錯誤。"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
 msgstr ""
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr "發生未知錯誤，請聯繫支援。"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "An unknown error occurred. Please contact our"
@@ -69,7 +71,7 @@ msgid "Attachment Filename"
 msgstr "附件文件名稱"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
 #, python-format
 msgid "Awaiting Dispatch"
@@ -86,7 +88,7 @@ msgid "Both sides"
 msgstr "雙面"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
@@ -110,7 +112,7 @@ msgid "Cancel Letter"
 msgstr "取消信件"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 #, python-format
@@ -123,7 +125,7 @@ msgid "Cancel notification in failure"
 msgstr "取消失敗通知"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
 #, python-format
@@ -138,7 +140,7 @@ msgid "City"
 msgstr "城市"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -227,7 +229,7 @@ msgid "Email Thread"
 msgstr "電郵線程"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__error_code
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__error
@@ -241,7 +243,7 @@ msgid "FORMAT_ERROR"
 msgstr "格式錯誤"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 #, python-format
@@ -309,6 +311,7 @@ msgid "Letter"
 msgstr "信"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Letter sent by post with Snailmail"
@@ -359,6 +362,7 @@ msgid "NO_PRICE_AVAILABLE"
 msgstr "NO_PRICE_AVAILABLE"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Not enough credits for Snail Mail"
@@ -375,6 +379,7 @@ msgid "Notifications"
 msgstr "通知"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "One or more required fields are empty."
@@ -401,6 +406,13 @@ msgid "Partner"
 msgstr "業務夥伴"
 
 #. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "Please use an A4 Paper format."
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
 msgstr "雙面列印"
@@ -411,7 +423,7 @@ msgid "Print In Color"
 msgstr "彩色列印"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "Re-send letter"
@@ -438,7 +450,7 @@ msgid "Send Now"
 msgstr "立即發送"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
 #, python-format
@@ -451,12 +463,14 @@ msgid "Sent by"
 msgstr "發送者"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Snail Mails are successfully sent"
 msgstr ""
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/wizard/snailmail_confirm.py:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
@@ -480,7 +494,7 @@ msgid "Snailmail Credit Error"
 msgstr "Snailmail 點數錯誤"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/models/notification_group.js:0
 #, python-format
 msgid "Snailmail Failures"
@@ -537,7 +551,6 @@ msgstr "Snailmail 錯誤訊息"
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
-#: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
 msgstr "snailmail:處理信件隊列"
 
@@ -581,12 +594,14 @@ msgid "TRIAL_ERROR"
 msgstr "TRIAL_ERROR"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The address of the recipient is not complete"
 msgstr "收件人地址不完整"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid ""
@@ -595,13 +610,14 @@ msgid ""
 msgstr "無法發送信件的附件。如果問題仍然存在，請檢查其內容並聯繫支持人員。"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr "Snailmail不包含合作夥伴所在的國家或地區。"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid ""
@@ -617,13 +633,14 @@ msgid ""
 msgstr "客戶地址不完整。在這裡更新地址並重新發送信件。"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
 msgstr "文件已正確郵寄。<br>跟踪 ID 為 %s"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid ""
@@ -674,6 +691,7 @@ msgid "You are about to send this"
 msgstr "你即將發送這個"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid ""
@@ -682,6 +700,7 @@ msgid ""
 msgstr "您沒有為此服務註冊的IAP帳戶。<br>請訪問<a href=%s target=\"new\">iap.odoo.com</a>以獲得免費點數。"
 
 #. module: snailmail
+#. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid ""
@@ -690,7 +709,7 @@ msgid ""
 msgstr "您沒有足夠的積分來執行此操作.<br>請轉到您的<a href=%s target=\"new\">iap帳戶</a>。"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "You need credits on your IAP account to send a letter."
@@ -713,14 +732,14 @@ msgid "by post. Are you sure you want to continue?"
 msgstr "郵寄。你確定你要繼續嗎？"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "for further assistance."
 msgstr "為進一步協助"
 
 #. module: snailmail
-#. openerp-web
+#. odoo-javascript
 #: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
 #, python-format
 msgid "support"

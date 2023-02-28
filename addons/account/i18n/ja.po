@@ -8,9 +8,9 @@
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Noma Yuki, 2022
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
+"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,11 @@ msgid ""
 "The total of debits equals %s and the total of credits equals %s.\n"
 "You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"この移動 (%s)はバランスしてません。\n"
+"借方の総額は%s、貸方の総額は%sです。\n"
+"仕訳帳「%s」にデフォルト勘定科目を特定して、自動的に全ての移動をバランスします。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -571,6 +576,9 @@ msgid ""
 "clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\"><i class=\"fa fa-fw fa-"
+"clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> 支払待ち</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -769,6 +777,9 @@ msgid ""
 "                                        Taxes\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                        税金\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -3989,7 +4000,7 @@ msgstr "設定の確認"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 msgid "Configure"
-msgstr "設定しましょう"
+msgstr "設定"
 
 #. module: account
 #. odoo-python
@@ -4643,7 +4654,7 @@ msgstr "流動資産"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
 msgid "Current Balance"
-msgstr ""
+msgstr "現在残高"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_current
@@ -7075,14 +7086,14 @@ msgstr ".qif ファイルをインポート"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Import Template for Chart of Accounts"
-msgstr ""
+msgstr "勘定科目表にテンプレートをインポート"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Import Template for Journal Items"
-msgstr ""
+msgstr "仕訳項目にテンプレートをインポート"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -8605,7 +8616,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
 msgid "Lock Posted Entries with Hash"
-msgstr "投稿されたエントリをハッシュでロックする"
+msgstr "記帳済仕訳をハッシュでロックする"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_log
@@ -9292,7 +9303,7 @@ msgstr "アカウントコードのために使用される数字の桁数"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
 msgid "Non Trade"
-msgstr ""
+msgstr "営業外"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9408,7 +9419,7 @@ msgstr "フォロワーに通知"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr "フォロワーに文書を通知する(一括投稿のみ)"
+msgstr "ドキュメントのフォロワーに通知(一括記帳のみ)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -9742,7 +9753,7 @@ msgstr "仕訳を開きます"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
 msgid "Opening Move Posted"
-msgstr "投稿された挙動を開きます"
+msgstr "記帳済開始仕訳"
 
 #. module: account
 #. odoo-python
@@ -9949,7 +9960,7 @@ msgstr "未消込支払勘定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr ""
+msgstr "未消込支払勘定"
 
 #. module: account
 #. odoo-python
@@ -9966,7 +9977,7 @@ msgstr "未消込入金勘定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr ""
+msgstr "未消込入金勘定"
 
 #. module: account
 #. odoo-python
@@ -10683,8 +10694,8 @@ msgid ""
 "Posted journal entry must have an unique sequence number per company.\n"
 "Problematic numbers: %s\n"
 msgstr ""
-"投稿ジャーナルエントリは、会社ごとに固有のシーケンス番号である必要があります。\n"
-"問題番号:%s\n"
+"記帳済仕訳の番号は会社ごとに一意でなければなりません。\n"
+"問題のある番号:%s\n"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
@@ -10821,7 +10832,7 @@ msgstr "仕入先への支払に小切手を印刷"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Product"
-msgstr "商品"
+msgstr "プロダクト"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_product_categories
@@ -11213,7 +11224,7 @@ msgstr "関連ドキュメントモデル"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__related_taxes_amount
 msgid "Related Taxes Amount"
-msgstr ""
+msgstr "関連税金数"
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -13499,7 +13510,7 @@ msgstr "請求書を生成したことを文書(複数可)。"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr "%s(id%s)はすでに投稿済です。"
+msgstr "仕訳%s(id%s)はすでに記帳済です。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -14115,7 +14126,7 @@ msgstr "アカウントには請求書や支払はありません。"
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr "投稿できるような下書き状態のジャーナルアイテムはありません。"
+msgstr "記帳対象のドラフト状態の仕訳項目はありません。"
 
 #. module: account
 #. odoo-python
@@ -15442,6 +15453,16 @@ msgstr "年次"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -15525,14 +15546,14 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr "投稿されたエントリのみ消込することができます。"
+msgstr "記帳済の仕訳のみ消込することができます。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr "投稿済みの仕訳の支払いのみを登録することができます。"
+msgstr "記帳済の仕訳に対してのみ支払登録することができます。"
 
 #. module: account
 #. odoo-python
@@ -15716,6 +15737,12 @@ msgstr "いくつかのジャーナル項目がすでに存在しているので
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -15789,7 +15816,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr "投稿されたエントリにリンクされている項目を削除することはできません。"
+msgstr "記帳済仕訳に紐づいた項目を削除することはできません。"
 
 #. module: account
 #. odoo-python
@@ -15863,7 +15890,7 @@ msgstr "タイプとして、\"当期純利\"で複数のアカウントを持�
 msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
-msgstr "この台帳はストリクトモードであるため、投稿されたエントリを変更することはできません。"
+msgstr "この仕訳帳は厳格モードであるため、記帳済の仕訳を変更することはできません。"
 
 #. module: account
 #. odoo-python
@@ -16042,7 +16069,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr "請求書を投稿するためのアクセス権を持っていません。"
+msgstr "請求書を記帳するためのアクセス権がありません。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16059,7 +16086,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr "投稿前に行を追加する必要があります。"
+msgstr "記帳前に行を追加する必要があります。"
 
 #. module: account
 #. odoo-python
@@ -16369,7 +16396,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "tax"
-msgstr ""
+msgstr "税"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form

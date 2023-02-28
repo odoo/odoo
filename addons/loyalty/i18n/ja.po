@@ -5,9 +5,9 @@
 # Translators:
 # Noma Yuki, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Martin Trigaux, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 # 
 msgid ""
@@ -32,6 +32,10 @@ msgid ""
 "        Use a code: Customers will be eligible for a reward if they enter a code.\n"
 "        "
 msgstr ""
+"\n"
+"        自動：顧客がカートに入れると自動的に報奨の対象となります。\n"
+"　　コードを使用：顧客がコードを入力すると、報奨の対象となります。\n"
+"        "
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__available_on
@@ -48,6 +52,8 @@ msgid ""
 "        Show in web portal, PoS customer ticket, eCommerce checkout, the number of points available and used by reward.\n"
 "        "
 msgstr ""
+"\n"
+"        Webポータル、POSレジ、eコマースチェックアウトに、報奨で利用可能なポイント数、使用可能なポイント数を表示します。"
 
 #. module: loyalty
 #. odoo-python
@@ -246,6 +252,8 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">In exchange of</span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">交換ポイント</span>\n"
+"                                    <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -257,6 +265,12 @@ msgid ""
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">eWallets</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('coupons', 'next_order_coupons'))]}\">クーポン</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'loyalty')]}\">ロイヤルティカード</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', 'not in', ('promotion', 'buy_x_get_y'))]}\">プロモーション</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'promo_code')]}\">値引</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'gift_card')]}\">ギフトカード</span>\n"
+"                                <span class=\"o_stat_text\" attrs=\"{'invisible': [('program_type', '!=', 'ewallet')]}\">eウォレット</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -272,6 +286,8 @@ msgid ""
 "'coupons')]}\">Grant the amount of coupon points defined as the coupon "
 "value</span>"
 msgstr ""
+"<span colspan=\"2\" attrs=\"{'invisible': [('program_type', '!=', "
+"'coupons')]}\">クーポンの値として定義されたクーポンポイント数を付与する。</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -306,7 +322,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "<strong>Gift Card Code</strong>"
-msgstr ""
+msgstr "<strong>ギフトカードコード</strong>"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_loyalty_card
@@ -427,7 +443,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Among"
-msgstr ""
+msgstr "対象"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
@@ -464,7 +480,7 @@ msgstr "添付数"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__trigger__auto
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__auto
 msgid "Automatic"
-msgstr "オートマ"
+msgstr "自動"
 
 #. module: loyalty
 #. odoo-python
@@ -477,7 +493,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
-msgstr ""
+msgstr "利用可能"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
@@ -539,7 +555,7 @@ msgstr "カテゴリ"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__cheapest
 msgid "Cheapest Product"
-msgstr ""
+msgstr "最も安価なプロダクト"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__clear_wallet
@@ -549,7 +565,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Clear all promo point(s)"
-msgstr ""
+msgstr "全てのプロモポイントをクリア"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__code
@@ -589,7 +605,7 @@ msgstr "Eメール作成"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__rule_ids
 msgid "Conditional rules"
-msgstr ""
+msgstr "条件ルール"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
@@ -629,7 +645,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Coupon point(s)"
-msgstr ""
+msgstr "クーポンポイント"
 
 #. module: loyalty
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
@@ -716,12 +732,12 @@ msgstr "通貨記号：印刷時に使用される"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__both
 msgid "Current & Future orders"
-msgstr ""
+msgstr "今回のオーダおよび次回以降のオーダ"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__current
 msgid "Current order"
-msgstr ""
+msgstr "今回のオーダ"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__customer_tag_ids
@@ -738,7 +754,7 @@ msgstr "顧客"
 msgid ""
 "Define Discount codes on conditional rules then share it with your customers"
 " for rewards."
-msgstr ""
+msgstr "条件ルールで値引コードを定義し、報奨のためにそれを顧客と共有します。"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
@@ -748,7 +764,7 @@ msgstr "説明"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Description on order"
-msgstr ""
+msgstr "オーダ上の表記"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount
@@ -761,7 +777,7 @@ msgstr "値引"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr ""
+msgstr "値引 & ロイヤルティ"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -771,7 +787,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
 msgid "Discount Code"
-msgstr ""
+msgstr "値引コード"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
@@ -786,7 +802,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
-msgstr ""
+msgstr "値引プロダクトドメイン"
 
 #. module: loyalty
 #. odoo-python
@@ -795,7 +811,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 #, python-format
 msgid "Discount code"
-msgstr ""
+msgstr "値引コード"
 
 #. module: loyalty
 #. odoo-python
@@ -803,22 +819,22 @@ msgstr ""
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_with_code
 #, python-format
 msgid "Discount point(s)"
-msgstr ""
+msgstr "値引ポイント"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
 msgid "Discounted Prod. Categories"
-msgstr ""
+msgstr "値引対象プロダクトカテゴリ"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_tag_id
 msgid "Discounted Prod. Tag"
-msgstr ""
+msgstr "値引対象プロダクトタグ"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_ids
 msgid "Discounted Products"
-msgstr ""
+msgstr "値引対象プロダクト"
 
 #. module: loyalty
 #. odoo-python
@@ -847,14 +863,14 @@ msgstr "次のように表示されます"
 msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
-msgstr ""
+msgstr "ショップで商品を購入したお客様に、次回購入時に使えるユニークな1回限りのクーポンコードを送ることで、リピート購入を促進します。"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
-msgstr ""
+msgstr "各ルールは、顧客が報奨と交換できるポイントを付与することができます。"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -941,7 +957,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__future
 msgid "Future orders"
-msgstr ""
+msgstr "次回以降のオーダ"
 
 #. module: loyalty
 #. odoo-javascript
@@ -959,6 +975,7 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
+"クーポンコードを手動で生成＆共有します。Eコマース、POS、通常のオーダで使用することができ、報奨を請求することができます。条件ルールの設定により、クーポンの使用に関する制約を定義することができます。"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
@@ -969,7 +986,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate Gift Cards"
-msgstr ""
+msgstr "ギフトカードを生成"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1005,7 +1022,7 @@ msgstr "ギフトカード"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Gift Card Products"
-msgstr ""
+msgstr "ギフトカードプロダクト"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -1015,7 +1032,7 @@ msgstr ""
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
 msgid "Gift Card: Gift Card Information"
-msgstr ""
+msgstr "ギフトカード: ギフトカード情報"
 
 #. module: loyalty
 #. odoo-python
@@ -1032,11 +1049,14 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, Gift Cards can be used to pay orders."
 msgstr ""
+"ギフトカードは、顧客がギフトカードプロダクトを注文すると、手動で作成されるか、または電子メールで自動的に送信されます。\n"
+"                                    <br/>\n"
+"                                    その後、ギフトカードは注文の支払いに使用することができます。"
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
 msgid "Gift cards & eWallet"
-msgstr ""
+msgstr "ギフトカード & eウォレット"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
@@ -1049,7 +1069,7 @@ msgstr "付与"
 msgid ""
 "Grant 1 credit for each item bought then reward the customer with Y items in"
 " exchange of X credits."
-msgstr ""
+msgstr "購入した商品1個につき1クレジットを付与し、Xクレジットと引き換えにY個の商品を提供します。"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
@@ -1095,7 +1115,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "In exchange of"
-msgstr ""
+msgstr "交換ポイント"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
@@ -1105,7 +1125,7 @@ msgstr "無効"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
 msgid "Included"
-msgstr ""
+msgstr "込み"
 
 #. module: loyalty
 #. odoo-python
@@ -1178,7 +1198,7 @@ msgstr "制限"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__limit_usage
 msgid "Limit Usage"
-msgstr ""
+msgstr "使用制限"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1193,7 +1213,7 @@ msgstr "ロゴ"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__loyalty
 #, python-format
 msgid "Loyalty Cards"
-msgstr ""
+msgstr "ロイヤルティカード"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
@@ -1225,7 +1245,7 @@ msgstr "ロイヤリティ規則"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty point(s)"
-msgstr ""
+msgstr "ロイヤルティポイント"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_main_attachment_id
@@ -1235,7 +1255,7 @@ msgstr "主な添付"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
 msgid "Max Discount"
-msgstr ""
+msgstr "最大値引"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__max_usage
@@ -1245,7 +1265,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_program_check_max_usage
 msgid "Max usage must be strictly positive if a limit is used."
-msgstr ""
+msgstr "制限を使用する場合、最大使用数は正の値でなければなりません"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_error
@@ -1265,7 +1285,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
 msgid "Minimum Purchase"
-msgstr ""
+msgstr "最少購買"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_qty
@@ -1284,7 +1304,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__next_order_coupons
 #, python-format
 msgid "Next Order Coupons"
-msgstr ""
+msgstr "次回注文クーポン"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -1334,7 +1354,7 @@ msgstr "取引先"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Point(s)"
-msgstr ""
+msgstr "ポイント"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points
@@ -1351,7 +1371,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Points Unit"
-msgstr ""
+msgstr "ポイント単位"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__required_points
@@ -1375,18 +1395,18 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_id
 msgid "Product"
-msgstr "商品"
+msgstr "プロダクト"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_domain
 msgid "Product Domain"
-msgstr ""
+msgstr "プロダクトドメイン"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_tag_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_tag_id
 msgid "Product Tag"
-msgstr "商品タグ"
+msgstr "プロダクトタグ"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
@@ -1404,7 +1424,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_ids
 msgid "Products"
-msgstr "商品"
+msgstr "プロダクト"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__program_id
@@ -1428,26 +1448,26 @@ msgstr "プログラム名"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__program_type
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__program_type
 msgid "Program Type"
-msgstr ""
+msgstr "プログラムタイプ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Program trigger"
-msgstr ""
+msgstr "プログラムトリガー"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promo Code"
-msgstr ""
+msgstr "プロモコード"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Promo point(s)"
-msgstr ""
+msgstr "プロモポイント"
 
 #. module: loyalty
 #. odoo-python
@@ -1529,7 +1549,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rules & Rewards"
-msgstr ""
+msgstr "ルール & リワード"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_sms_error
@@ -1587,17 +1607,17 @@ msgstr "付番"
 msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
-msgstr ""
+msgstr "オーダに条件ルールを設定することで、顧客に報奨を提供することができます。"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Show points Unit"
-msgstr ""
+msgstr "ポイント単位を表示"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__specific
 msgid "Specific Products"
-msgstr ""
+msgstr "特定のプロダクト"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_split
@@ -1657,7 +1677,7 @@ msgstr ""
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_max_amount
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
-msgstr ""
+msgstr "リワードが値引する最大金額です。制限なしの場合は0にしてください。"
 
 #. module: loyalty
 #. odoo-python
@@ -1696,7 +1716,7 @@ msgstr "コードを使用"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Use points on"
-msgstr ""
+msgstr "ポイントの使用"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1744,14 +1764,14 @@ msgstr ""
 msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
-msgstr ""
+msgstr "お客様が注文をすると、ポイントがたまり、そのポイントを使って今回のオーダや次回以降のオーダで報奨と交換することができます。"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
-msgstr ""
+msgstr "クーポンを生成する際に、報奨と交換できる特定のポイント値を定義することができます。"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -1833,7 +1853,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "eWallet Products"
-msgstr ""
+msgstr "eウォレットプロダクト"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -1854,6 +1874,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
+"eウォレットは、顧客がeウォレットプロダクトを注文したときに、手動または自動で作成されます。\n"
+"                                    <br/>\n"
+"                                    そして、チェックアウトの際に、オーダを支払うためにeウォレットが提案されます。"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -1905,7 +1928,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "specific products"
-msgstr ""
+msgstr "特定のプロダクト"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban

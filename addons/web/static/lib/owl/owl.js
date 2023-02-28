@@ -1888,10 +1888,15 @@
         const targets = callbacksToTargets.get(callback) || [];
         return [...targets].map((target) => {
             const keysToCallbacks = targetToKeysToCallbacks.get(target);
-            return {
-                target,
-                keys: keysToCallbacks ? [...keysToCallbacks.keys()] : [],
-            };
+            let keys = [];
+            if (keysToCallbacks) {
+                for (const [key, cbs] of keysToCallbacks) {
+                    if (cbs.has(callback)) {
+                        keys.push(key);
+                    }
+                }
+            }
+            return { target, keys };
         });
     }
     // Maps reactive objects to the underlying target
@@ -2789,6 +2794,7 @@
         if (Array.isArray(schema)) {
             schema = toSchema(schema);
         }
+        obj = toRaw(obj);
         let errors = [];
         // check if each value in obj has correct shape
         for (let key in obj) {
@@ -3044,6 +3050,15 @@
             }
         };
     }
+    function singleRefSetter(refs, name) {
+        let _el = null;
+        return (el) => {
+            if (el || refs[name] === _el) {
+                refs[name] = el;
+                _el = el;
+            }
+        };
+    }
     /**
      * Validate the component props (or next props) against the (static) props
      * description.  This is potentially an expensive operation: it may needs to
@@ -3092,6 +3107,7 @@
         prepareList,
         setContextValue,
         multiRefSetter,
+        singleRefSetter,
         shallowEqual,
         toNumber,
         validateProps,
@@ -4068,8 +4084,9 @@
                 this.target.hasRef = true;
                 const isDynamic = INTERP_REGEXP.test(ast.ref);
                 if (isDynamic) {
+                    this.helpers.add("singleRefSetter");
                     const str = replaceDynamicParts(ast.ref, (expr) => this.captureExpression(expr, true));
-                    const idx = block.insertData(`(el) => refs[${str}] = el`, "ref");
+                    const idx = block.insertData(`singleRefSetter(refs, ${str})`, "ref");
                     attrs["block-ref"] = String(idx);
                 }
                 else {
@@ -4084,7 +4101,8 @@
                     }
                     else {
                         let id = generateId("ref");
-                        this.target.refInfo[name] = [id, `(el) => refs[\`${name}\`] = el`];
+                        this.helpers.add("singleRefSetter");
+                        this.target.refInfo[name] = [id, `singleRefSetter(refs, \`${name}\`)`];
                         const index = block.data.push(id) - 1;
                         attrs["block-ref"] = String(index);
                     }
@@ -4592,6 +4610,13 @@
                 id,
                 expr: `app.createComponent(${ast.isDynamic ? null : expr}, ${!ast.isDynamic}, ${!!ast.slots}, ${!!ast.dynamicProps}, ${!ast.props && !ast.dynamicProps})`,
             });
+            if (ast.isDynamic) {
+                // If the component class changes, this can cause delayed renders to go
+                // through if the key doesn't change. Use the component name for now.
+                // This means that two component classes with the same name isn't supported
+                // in t-component. We can generate a unique id per class later if needed.
+                keyArg = `(${expr}).name + ${keyArg}`;
+            }
             let blockExpr = `${id}(${propString}, ${keyArg}, node, this, ${ast.isDynamic ? expr : null})`;
             if (ast.isDynamic) {
                 blockExpr = `toggler(${expr}, ${blockExpr})`;
@@ -5577,6 +5602,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     };
     window.__OWL_DEVTOOLS__ || (window.__OWL_DEVTOOLS__ = {
         apps: new Set(),
+        Fiber: Fiber,
+        RootFiber: RootFiber,
     });
     class App extends TemplateSet {
         constructor(Root, config = {}) {
@@ -5882,9 +5909,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.5';
-    __info__.date = '2023-01-27T14:29:31.753Z';
-    __info__.hash = 'ea5d2be';
+    __info__.version = '2.0.7';
+    __info__.date = '2023-02-20T08:44:56.632Z';
+    __info__.hash = '276c8a0';
     __info__.url = 'https://github.com/odoo/owl';
 
 

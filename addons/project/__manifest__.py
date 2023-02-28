@@ -139,7 +139,6 @@
             'web/static/src/legacy/scss/kanban_examples_dialog.scss',
             'web/static/src/legacy/scss/kanban_column_progressbar.scss',
             'web/static/src/legacy/scss/kanban_view.scss',
-            'web/static/src/legacy/scss/progress_bar.scss',
 
             'base/static/src/scss/res_partner.scss',
 

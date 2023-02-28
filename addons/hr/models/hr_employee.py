@@ -120,6 +120,7 @@ class HrEmployeePrivate(models.Model):
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
@@ -208,7 +209,7 @@ class HrEmployeePrivate(models.Model):
             responsible_user_id = employee.parent_id.user_id.id
             if responsible_user_id:
                 employees_scheduled |= employee
-                lang = self.env['res.partner'].browse(responsible_user_id).lang
+                lang = self.env['res.users'].browse(responsible_user_id).lang
                 formated_date = format_date(employee.env, employee.work_permit_expiration_date, date_format="dd MMMM y", lang_code=lang)
                 employee.activity_schedule(
                     'mail.mail_activity_data_todo',

@@ -130,7 +130,7 @@ const Wysiwyg = Widget.extend({
         this.$editable.data('oe-model', options.recordInfo.res_model);
         this.$editable.data('oe-id', options.recordInfo.res_id);
         document.addEventListener('mousedown', this._onDocumentMousedown, true);
-        this.$editable.on('blur', this._onBlur);
+        this._bindOnBlur();
 
         this.toolbar = new Toolbar(this, this.options.toolbarTemplate);
         await this.toolbar.appendTo(document.createElement('void'));
@@ -220,6 +220,7 @@ const Wysiwyg = Widget.extend({
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
+            foldSnippets: !!options.foldSnippets,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -383,7 +384,7 @@ const Wysiwyg = Widget.extend({
                     })();
                 }
                 $target.focus();
-                if ($target.closest('#wrapwrap').length) {
+                if ($target.closest('#wrapwrap').length && this.snippetsMenu) {
                     this.toggleLinkTools({
                         forceOpen: true,
                         link: $target[0],
@@ -1211,6 +1212,8 @@ const Wysiwyg = Widget.extend({
                 this.destroyLinkTools();
             }
         } else {
+            const historyStepIndex = this.odooEditor.historySize() - 1;
+            this.odooEditor.historyPauseSteps();
             let { link } = Link.getOrCreateLink({
                 containerNode: this.odooEditor.editable,
                 startNode: options.link,
@@ -1224,7 +1227,6 @@ const Wysiwyg = Widget.extend({
             }, this.$editable[0], {
                 needLabel: true
             }, undefined, link);
-            const restoreSelection = preserveCursor(this.odooEditor.document);
             linkDialog.open();
             linkDialog.on('save', this, data => {
                 if (!data) {
@@ -1236,6 +1238,7 @@ const Wysiwyg = Widget.extend({
                     data.rel = 'ugc';
                 }
                 linkWidget.applyLinkToDom(data);
+                this.odooEditor.historyUnpauseSteps();
                 this.odooEditor.historyStep();
                 link = linkWidget.$link[0];
                 this.odooEditor.setContenteditableLink(linkWidget.$link[0]);
@@ -1250,6 +1253,7 @@ const Wysiwyg = Widget.extend({
                 Promise.resolve().then(() => link.focus());
             });
             linkDialog.on('closed', this, function () {
+                this.odooEditor.historyUnpauseSteps();
                 // If the linkDialog content has been saved
                 // the previous selection in not relevant anymore.
                 if (linkDialog.destroyAction !== 'save') {
@@ -1260,7 +1264,7 @@ const Wysiwyg = Widget.extend({
                     // microtask to set the focus is hackish and might break if
                     // another microtask which changes the selection in the dom
                     // occurs at the same time (but this case seems unlikely).
-                    Promise.resolve().then(() => restoreSelection());
+                    Promise.resolve().then(() => this.odooEditor.historyRevertUntil(historyStepIndex));
                 }
             });
         }
@@ -2507,7 +2511,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _getInitialHistoryId: function (value) {
-        const matchId = value.match(/data-last-history-steps="([0-9,]*?)"/);
+        const matchId = value.match(/data-last-history-steps="([0-9,]+)"/);
         return matchId && matchId[1];
     },
     /**
@@ -2619,6 +2623,9 @@ const Wysiwyg = Widget.extend({
                 firstChild.setAttribute('data-last-history-steps', historyIds);
             }
         }
+    },
+    _bindOnBlur() {
+        this.$editable.on('blur', this._onBlur);
     },
 
 });

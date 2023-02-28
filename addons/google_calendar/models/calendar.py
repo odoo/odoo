@@ -256,7 +256,7 @@ class Meeting(models.Model):
                 'useDefault': False,
             }
         }
-        if not self.google_id:
+        if not self.google_id and not self.videocall_location:
             values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
         if self.privacy:
             values['visibility'] = self.privacy
