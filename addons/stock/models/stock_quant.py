@@ -423,7 +423,7 @@ class StockQuant(models.Model):
         for quant in quants:
             try:
                 with self._cr.savepoint(flush=False):  # Avoid flush compute store of package
-                    self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
+                    self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR NO KEY UPDATE NOWAIT", [quant.id], log_exceptions=False)
                     quant.write({
                         'quantity': quant.quantity + quantity,
                         'in_date': in_date,
