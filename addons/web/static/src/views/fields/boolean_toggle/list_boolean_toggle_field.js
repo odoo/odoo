@@ -6,11 +6,12 @@ import { booleanToggleField, BooleanToggleField } from "./boolean_toggle_field";
 export class ListBooleanToggleField extends BooleanToggleField {
     static template = "web.ListBooleanToggleField";
 
-    onClick() {
+    async onClick() {
         if (!this.props.readonly) {
-            this.props.record.update({
+            await this.props.record.update({
                 [this.props.name]: !this.props.record.data[this.props.name],
             });
+            return this.props.record.save();
         }
     }
 }
