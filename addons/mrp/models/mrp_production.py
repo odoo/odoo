@@ -1078,9 +1078,10 @@ class MrpProduction(models.Model):
                 if move.procure_method == 'make_to_order':
                     procurement_qty = new_qty - old_qty
                     values = move._prepare_procurement_values()
+                    origin = move._prepare_procurement_origin()
                     procurements.append(self.env['procurement.group'].Procurement(
                         move.product_id, procurement_qty, move.product_uom,
-                        move.location_id, move.name, move.origin, move.company_id, values))
+                        move.location_id, move.name, origin, move.company_id, values))
                 update_info.append((move, old_qty, new_qty))
         moves_to_assign._action_assign()
         if procurements:
@@ -2181,7 +2182,7 @@ class MrpProduction(models.Model):
         pd = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for production in self:
             if all(float_is_zero(ml.qty_done, precision_digits=pd) for
-                    ml in production.move_raw_ids.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                    ml in production.move_raw_ids.filtered(lambda m: not m.manual_consumption and m.state not in('done', 'cancel')).move_line_ids
                     ) and float_is_zero(production.qty_producing, precision_digits=pd):
                 immediate_productions |= production
         return immediate_productions

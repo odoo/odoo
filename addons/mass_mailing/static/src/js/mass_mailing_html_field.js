@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "mass_mailing.design_constants";
-import { toInline } from "web_editor.convertInline";
+import { toInline, getCSSRules } from "web_editor.convertInline";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { qweb } from 'web.core';
 import { useService } from "@web/core/utils/hooks";
@@ -17,7 +17,6 @@ import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/ut
 
 const {
     onWillStart,
-    useEffect,
     useSubEnv,
     onWillUpdateProps,
 } = owl;
@@ -41,15 +40,6 @@ export class MassMailingHtmlField extends HtmlField {
                 this._hideIrrelevantTemplates();
             }
         });
-
-        useEffect(() => {
-            const listener = () => {
-                this._lastClickInIframe = false;
-            };
-            document.addEventListener('mousedown', listener, true);
-
-            return () => document.removeEventListener('mousedown', listener, true);
-        }, () => []);
     }
 
     get wysiwygOptions() {
@@ -91,30 +81,62 @@ export class MassMailingHtmlField extends HtmlField {
         if (this.props.readonly || !this.isRendered) {
             return super.commitChanges();
         }
-
-        if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
-            this.wysiwyg.$iframeBody.find('*').css('font-family', '');
+        if (!this._isDirty()) {
+            // In case there is still a pending change while committing the
+            // changes from the save button, we need to wait for the previous
+            // operation to finish, otherwise the "inline field" of the mass
+            // mailing might not be saved.
+            return this._pendingCommitChanges;
         }
 
-        const $editable = this.wysiwyg.getEditable();
-        const initialHtml = $editable.html();
-        await this.wysiwyg.cleanForSave();
-        await this.wysiwyg.saveModifiedImages(this.$content);
+        this._pendingCommitChanges = (async () => {
+            if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
+                this.wysiwyg.$iframeBody.find('*').css('font-family', '');
+            }
 
-        await super.commitChanges();
+            const $editable = this.wysiwyg.getEditable();
+            this.wysiwyg.odooEditor.historyPauseSteps();
+            await this.wysiwyg.cleanForSave();
+            await this.wysiwyg.saveModifiedImages(this.$content);
 
-        const $editorEnable = $editable.closest('.editor_enable');
-        $editorEnable.removeClass('editor_enable');
-        // Prevent history reverts.
-        this.wysiwyg.odooEditor.observerUnactive('toInline');
-        await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
-        this.wysiwyg.odooEditor.observerActive('toInline');
-        const inlineHtml = $editable.html();
-        $editorEnable.addClass('editor_enable');
-        this.wysiwyg.odooEditor.resetContent(initialHtml);
+            await super.commitChanges();
 
-        const fieldName = this.props.inlineField;
-        return this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});
+            const $editorEnable = $editable.closest('.editor_enable');
+            $editorEnable.removeClass('editor_enable');
+            // Prevent history reverts.
+            this.wysiwyg.odooEditor.observerUnactive('toInline');
+            const iframe = document.createElement('iframe');
+            iframe.style.height = '0px';
+            iframe.style.visibility = 'hidden';
+            iframe.setAttribute('sandbox', 'allow-same-origin'); // Make sure no scripts get executed.
+            const clonedHtmlNode = $editable[0].closest('html').cloneNode(true);
+            // Replace the body to only contain the target as we do not care for
+            // other elements (e.g. sidebar, toolbar, ...)
+            const clonedBody = clonedHtmlNode.querySelector('body');
+            const clonedIframeTarget = clonedHtmlNode.querySelector('#iframe_target');
+            clonedBody.replaceChildren(clonedIframeTarget);
+            clonedHtmlNode.querySelectorAll('script').forEach(script => script.remove()); // Remove scripts.
+            iframe.srcdoc = clonedHtmlNode.outerHTML;
+            const iframePromise = new Promise((resolve) => {
+                iframe.addEventListener("load", resolve);
+            });
+            document.body.append(iframe);
+            // Wait for the css and images to be loaded.
+            await iframePromise;
+            const editableClone = iframe.contentDocument.querySelector('.note-editable');
+            this.cssRules = this.cssRules || getCSSRules($editable[0].ownerDocument);
+            await toInline($(editableClone), this.cssRules, $(iframe));
+            iframe.remove();
+            this.wysiwyg.odooEditor.observerActive('toInline');
+            const inlineHtml = editableClone.innerHTML;
+            $editorEnable.addClass('editor_enable');
+            this.wysiwyg.odooEditor.historyUnpauseSteps();
+            this.wysiwyg.odooEditor.historyRevertCurrentStep();
+
+            const fieldName = this.props.inlineField;
+            await this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});
+        })();
+        return this._pendingCommitChanges;
     }
     async startWysiwyg(...args) {
         await super.startWysiwyg(...args);
@@ -152,10 +174,6 @@ export class MassMailingHtmlField extends HtmlField {
         this.wysiwyg.odooEditor.observerFlush();
         this.wysiwyg.odooEditor.historyReset();
         this.wysiwyg.$iframeBody.addClass('o_mass_mailing_iframe');
-
-        this.wysiwyg.odooEditor.document.addEventListener('mousedown', () => {
-            this._lastClickInIframe = true;
-        }, true);
 
         this.onIframeUpdated();
     }
@@ -568,11 +586,6 @@ export class MassMailingHtmlField extends HtmlField {
     }
     async _getWysiwygClass() {
         return getWysiwygClass({moduleName: 'mass_mailing.wysiwyg'});
-    }
-    _onWysiwygBlur() {
-        if (!this._lastClickInIframe) {
-            super._onWysiwygBlur();
-        }
     }
 }
 

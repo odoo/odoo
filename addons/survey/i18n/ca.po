@@ -596,7 +596,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_scored_question', '!=', "
 "True)]}\">Points</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('isscoredquestion', '!=', "
+"<span attrs=\"{'invisible': [('is_scored_question', '!=', "
 "True)]}\">Punts</span>"
 
 #. module: survey
@@ -623,7 +623,7 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Maximum "
 "</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary onlyleftradius px-2 pt-1\">Màxim "
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Màxim "
 "</span>"
 
 #. module: survey
@@ -632,7 +632,7 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
 "</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary onlyleftradius px-2 pt-1\">Mínim "
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Mínim "
 "</span>"
 
 #. module: survey
@@ -695,8 +695,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or"
 " press Enter</span>"
 msgstr ""
-"<span class=\"osurveyenter fw-bold text-muted ms-2 d-none d-md-inline\">o "
-"premeu Introdueix</span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">o "
+"premeu Retorn</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -705,7 +705,7 @@ msgid ""
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Key</span></span>"
 msgstr ""
-"<span class=\"osurveykey text-center position-absolute bg-white rounded-"
+"<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Clau</span></span>"
 
@@ -3518,7 +3518,7 @@ msgstr "Participants"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to {{ object.survey_id.display_name }} survey"
-msgstr "Participa a l'enquesta {{ object.surveyid.displayname }}"
+msgstr "Participa a l'enquesta {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input

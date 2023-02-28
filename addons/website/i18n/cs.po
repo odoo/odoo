@@ -10,8 +10,9 @@
 # Martin Trigaux, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
-# trendspotter <jirka.p@volny.cz>, 2022
+# Jiří Podhorecký, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -627,6 +628,8 @@ msgid ""
 "<br/><br/>\n"
 "                    Example of rule:<br/>"
 msgstr ""
+"<br/><br/>\n"
+"                    Příklad pravidla:<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1745,22 +1748,22 @@ msgstr "Již nainstalováno"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Alternate Image Text"
-msgstr ""
+msgstr "Alternativní text obrázku"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Alternate Text"
-msgstr ""
+msgstr "Alternativní text"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Alternate Text Image"
-msgstr ""
+msgstr "Alternativní textový obrázek"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Alternate Text Image Text"
-msgstr ""
+msgstr "Alternativní text textového obrázku"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -2197,7 +2200,7 @@ msgstr "Blur"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
 msgid "Books"
-msgstr ""
+msgstr "Knihy"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -3367,7 +3370,7 @@ msgstr "Výchozí hlavní nabídka"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Default Reversed"
-msgstr ""
+msgstr "Výchozí opačné"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_default_image
@@ -5826,7 +5829,7 @@ msgstr "Označení"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_label
 msgid "Label for form action"
-msgstr ""
+msgstr "Štítek pro akci formuláře"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -6383,7 +6386,7 @@ msgstr "Mega obsah nabídky"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Men"
-msgstr ""
+msgstr "Muži"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__name
@@ -6600,7 +6603,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Mosaic"
-msgstr ""
+msgstr "Mozaika"
 
 #. module: website
 #. odoo-javascript
@@ -6614,7 +6617,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Mouse"
-msgstr ""
+msgstr "Myš"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6883,7 +6886,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 #, python-format
 msgid "No results found for '"
-msgstr ""
+msgstr "Nenašly se výsledky pro '"
 
 #. module: website
 #. odoo-javascript
@@ -7393,6 +7396,8 @@ msgid ""
 "Paragraph with <strong>bold</strong>, <span class=\"text-"
 "muted\">muted</span> and <em>italic</em> texts"
 msgstr ""
+"Odstavec s <strong>tučným</strong>, <span class=\"text-"
+"muted\">ztlumeným</span> a <em>kurzívou</em> "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -10766,7 +10771,7 @@ msgstr "S heslem"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Women"
-msgstr ""
+msgstr "Ženy"
 
 #. module: website
 #. odoo-javascript
@@ -10892,6 +10897,16 @@ msgstr "Nelze odebrat pole, které je vyžadováno samotným modelem."
 #, python-format
 msgid "You can't remove the submit button of the form"
 msgstr "Tlačítko pro odeslání formuláře nelze odstranit."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+"Nemůžete smazat výchozí webovou stránku %s. Zkuste místo toho změnit její "
+"nastavení"
 
 #. module: website
 #. odoo-python
@@ -11324,7 +11339,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11463,7 +11478,7 @@ msgstr "propagace, charakteristika, kvalita"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "results"
-msgstr ""
+msgstr "výsledky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options

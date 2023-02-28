@@ -414,7 +414,7 @@ msgid ""
 "Accounting journal used to post POS session journal entries and POS invoice "
 "payments."
 msgstr ""
-"Diario contable que se utiliza para publicar asientos de diario de sesiones "
+"Diario contable que se utiliza para publicar asientos contables de sesiones "
 "de PdV y pagos de factura de PdV."
 
 #. module: point_of_sale
@@ -582,7 +582,7 @@ msgid ""
 msgstr ""
 "Todas las listas de precios tienen que estar en la misma divisa de la "
 "empresa o del diario de ventas indicado en este punto de venta si utiliza la"
-" aplicación de Contabilidad."
+" aplicación Contabilidad."
 
 #. module: point_of_sale
 #. odoo-python
@@ -2111,7 +2111,7 @@ msgid ""
 "Do you want to accept payments difference and post a profit/loss journal "
 "entry?"
 msgstr ""
-"¿Desea aceptar diferencias de pago y publicar un asiento de diario de "
+"¿Desea aceptar diferencias de pago y publicar un asiento contable de "
 "ganancias y pérdidas?"
 
 #. module: point_of_sale
@@ -2449,7 +2449,7 @@ msgid ""
 "journal entries for each customer. It could slow down the closing process."
 msgstr ""
 "Obliga a establecer un cliente al utilizar este método de pago y divide los "
-"asientos de diario para cada cliente. Podría ralentizar el proceso de "
+"asientos contables para cada cliente. Podría ralentizar el proceso de "
 "cierre."
 
 #. module: point_of_sale
@@ -2761,7 +2761,7 @@ msgid ""
 "                methods automatically."
 msgstr ""
 "La instalación del plan de cuentas desde los ajustes generales de\n"
-"                la aplicación de Facturación o Contabilidad creará métodos de pago bancarios y en\n"
+"                las aplicaciones Facturación o Contabilidad creará métodos de pago bancarios y en\n"
 "                efectivo automáticamente."
 
 #. module: point_of_sale
@@ -2967,12 +2967,12 @@ msgstr "Diario"
 #: model:ir.model,name:point_of_sale.model_account_move
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_id
 msgid "Journal Entry"
-msgstr "Asiento de diario"
+msgstr "Asiento contable"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move_line
 msgid "Journal Item"
-msgstr "Apunte de diario"
+msgstr "Apunte contable"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2980,7 +2980,7 @@ msgstr "Apunte de diario"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Journal Items"
-msgstr "Apuntes de diario "
+msgstr "Apuntes contables"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -3100,7 +3100,7 @@ msgid ""
 "Overrides the company's receivable account (for Point of Sale) used in the journal entries."
 msgstr ""
 "Dejar vacío para utilizar la cuenta predeterminada de los ajustes de la empresa.\n"
-"Anula la cuenta por cobrar de la empresa (para el punto de venta) que se utiliza en los asientos de diario."
+"Anula la cuenta por cobrar de la empresa (para el punto de venta) que se utiliza en los asientos contables."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -3410,8 +3410,8 @@ msgstr "Necesita un cliente para facturar"
 msgid ""
 "Need loss account for the following journals to post the lost amount: %s\n"
 msgstr ""
-"Necesita una cuenta de pérdidas para para publicar el importe perdido en los"
-" siguientes diarios: %s\n"
+"Necesita una cuenta de pérdidas para registrar el importe perdido en los "
+"siguientes diarios: %s\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3420,7 +3420,7 @@ msgstr ""
 msgid ""
 "Need profit account for the following journals to post the gained amount: %s"
 msgstr ""
-"Necesita una cuenta de ganancias para publicar el importe ganado en los "
+"Necesita una cuenta de ganancias para registrar el importe ganado en los "
 "siguientes diarios: %s"
 
 #. module: point_of_sale
@@ -3639,7 +3639,7 @@ msgstr "Número de mensajes con error de envío"
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "De acuerdo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3694,7 +3694,7 @@ msgstr "OfflineErrorPopup"
 #: code:addons/point_of_sale/static/src/xml/Popups/OfflineErrorPopup.xml:0
 #, python-format
 msgid "Ok"
-msgstr "Aceptar"
+msgstr "De acuerdo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3743,8 +3743,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
-"Solo los usuarios con derechos de acceso de gerente de la aplicación de PdV "
-"pueden modificar los precios de los productos en las órdenes."
+"Solo los usuarios con derechos de acceso de gerente de la aplicación Punto "
+"de Venta pueden modificar los precios de los productos en las órdenes."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4573,7 +4573,7 @@ msgstr "Reporte de facturas de Punto de venta"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__journal_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_journal_id
 msgid "Point of Sale Journal"
-msgstr "Diario de Punto de venta"
+msgstr "Diario de punto de venta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
@@ -5135,7 +5135,7 @@ msgstr "Impresora de recibos"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr "Registre los pagos en este diario con un terminal."
+msgstr "Registre los pagos en este diario con una terminal."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rescue
@@ -5660,7 +5660,7 @@ msgstr "ID de sesión"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr "Asiento de diario de sesión"
+msgstr "Asiento contable de sesión"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6314,7 +6314,7 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
-"El registro de facturas tiene que estar en la misma divisa del diario de "
+"El diario de facturas tiene que estar en la misma divisa del diario de "
 "ventas o de la empresa, si esta no se ha establecido."
 
 #. module: point_of_sale
@@ -7023,6 +7023,17 @@ msgstr "Tipo de actividad de excepción registrada."
 
 #. module: point_of_sale
 #. odoo-python
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Esta orden aún no se sincroniza con el servidor. Asegúrese de que esté "
+"sincronizada y vuelva a intentarlo."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7189,9 +7200,10 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#, python-format
-msgid "VAT:"
-msgstr "RFC:"
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format, python-format
+msgid "Unsynced order"
+msgstr "Orden sin sincronizar"
 
 #. module: point_of_sale
 #. odoo-javascript

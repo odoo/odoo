@@ -978,7 +978,7 @@ class ProductTemplate(models.Model):
 
     def action_product_tmpl_forecast_report(self):
         self.ensure_one()
-        if self.env.ref('stock.stock_replenishment_product_template_action', raise_if_not_found=True):
+        if self.env.ref('stock.stock_replenishment_product_template_action', raise_if_not_found=False):
             action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_template_action')
         else:
             action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_replenishment_product_product_action')

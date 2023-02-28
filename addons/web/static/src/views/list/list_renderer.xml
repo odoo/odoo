@@ -3,8 +3,7 @@
 
     <t t-name="web.ListRenderer" owl="1">
         <div
-            class="o_list_renderer o_renderer"
-            t-att-class="{'table-responsive': showTable}"
+            class="o_list_renderer o_renderer table-responsive"
             t-attf-class="{{ props.archInfo.className or '' }}"
             tabindex="-1"
             t-ref="root"
@@ -12,7 +11,7 @@
             <t t-if="showNoContentHelper" t-call="web.ActionHelper">
                 <t t-set="noContentHelp" t-value="props.noContentHelp"/>
             </t>
-            <table t-if="showTable" t-attf-class="o_list_table table table-sm table-hover position-relative mb-0  {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
+            <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
                 <thead>
                     <tr>
                         <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
@@ -224,15 +223,16 @@
             </td>
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
+                    <t t-set="isInvisible" t-value="evalModifier(column.modifiers.invisible, record)"/>
                     <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="getCellClass(column, record)"
                         t-att-name="column.name"
                         t-att-colspan="column.colspan"
-                        t-att-data-tooltip="getCellTitle(column, record)"
+                        t-att-data-tooltip="!isInvisible ? getCellTitle(column, record) : false"
                         data-tooltip-delay="1000"
                         t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
-                        <t t-if="!evalModifier(column.modifiers.invisible, record)">
+                        <t t-if="!isInvisible">
                             <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
                             <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/>
                         </t>
@@ -245,7 +245,7 @@
                                 className="button.className"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"
-                                disabled="record.isVirtual || button.disabled"
+                                disabled="button.disabled"
                                 icon="button.icon"
                                 record="record"
                                 string="button.string"

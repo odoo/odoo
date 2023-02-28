@@ -6,17 +6,12 @@ import os
 import re
 import tempfile
 
-import werkzeug
-import werkzeug.exceptions
-import werkzeug.utils
-import werkzeug.wrappers
-import werkzeug.wsgi
 from lxml import html
 
 import odoo
 import odoo.modules.registry
 from odoo import http
-from odoo.http import content_disposition, dispatch_rpc, request
+from odoo.http import content_disposition, dispatch_rpc, request, Response
 from odoo.service import db
 from odoo.tools.misc import file_open, str2bool
 from odoo.tools.translate import _
@@ -138,7 +133,7 @@ class Database(http.Controller):
                 ('Content-Disposition', content_disposition(filename)),
             ]
             dump_stream = odoo.service.db.dump_db(name, None, backup_format)
-            response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
+            response = Response(dump_stream, headers=headers, direct_passthrough=True)
             return response
         except Exception as e:
             _logger.exception('Database.backup')

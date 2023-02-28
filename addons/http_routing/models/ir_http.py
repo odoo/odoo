@@ -23,7 +23,7 @@ from odoo import api, models, exceptions, tools, http
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import QWebException
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
 
@@ -657,7 +657,7 @@ class IrHttp(models.AbstractModel):
         except Exception:
             code, html = 418, request.env['ir.ui.view']._render_template('http_routing.http_error', values)
 
-        response = werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+        response = Response(html, status=code, content_type='text/html;charset=utf-8')
         cls._post_dispatch(response)
         return response
 

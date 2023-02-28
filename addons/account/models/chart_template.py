@@ -136,10 +136,16 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             if not fp:
                 continue
             for position_tax in position_template.tax_ids:
-                if position_tax.tax_src_id in new_taxes_template or position_tax.tax_dest_id in new_taxes_template:
+                src_id = tax_template_ref[position_tax.tax_src_id.id]
+                dest_id = position_tax.tax_dest_id and tax_template_ref[position_tax.tax_dest_id.id] or False
+                position_tax_template_exist = fp.tax_ids.filtered_domain([
+                    ('tax_src_id', '=', src_id),
+                    ('tax_dest_id', '=', dest_id)
+                ])
+                if not position_tax_template_exist and (position_tax.tax_src_id in new_taxes_template or position_tax.tax_dest_id in new_taxes_template):
                     tax_template_vals.append((position_tax, {
-                        'tax_src_id': tax_template_ref[position_tax.tax_src_id.id],
-                        'tax_dest_id': position_tax.tax_dest_id and tax_template_ref[position_tax.tax_dest_id.id] or False,
+                        'tax_src_id': src_id,
+                        'tax_dest_id': dest_id,
                         'position_id': fp.id,
                     }))
         chart_template._create_records_with_xmlid('account.fiscal.position.tax', tax_template_vals, company)
@@ -563,9 +569,9 @@ class AccountChartTemplate(models.Model):
         """
         model_to_check = ['account.payment', 'account.bank.statement.line']
         for model in model_to_check:
-            if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
+            if self.env[model].sudo().search([('company_id', '=', company_id.id)], order="id DESC", limit=1):
                 return True
-        if self.env['account.move'].sudo().search([('company_id', '=', company_id.id), ('state', '!=', 'draft')], limit=1):
+        if self.env['account.move'].sudo().search([('company_id', '=', company_id.id), ('state', '!=', 'draft')], order="id DESC", limit=1):
             return True
         return False
 

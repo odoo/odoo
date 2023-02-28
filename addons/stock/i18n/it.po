@@ -7,6 +7,7 @@
 # Martin Trigaux, 2022
 # francesco.foresti <francesco.foresti@ooops404.com>, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2519,7 +2520,7 @@ msgstr "Descrizione su ricezioni"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description picking"
-msgstr ""
+msgstr "Descrizione prelievo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -2636,7 +2637,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__display_complete
 msgid "Display Complete"
-msgstr ""
+msgstr "Visualizzazione completa"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
@@ -3137,12 +3138,12 @@ msgstr ""
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock"
-msgstr ""
+msgstr "Giacenza libera"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr ""
+msgstr "Quantità ad uso libero"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -3322,7 +3323,7 @@ msgstr "Altezza deve essere positivo"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Hidden until next scheduler."
-msgstr ""
+msgstr "Nascosto fino al prossimo pianificatore"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__hide_picking_type
@@ -3719,7 +3720,7 @@ msgstr "Ubicazione di ingresso"
 #: code:addons/stock/models/res_company.py:0
 #, python-format
 msgid "Inter-warehouse transit"
-msgstr ""
+msgstr "Transito inter-magazzino"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3808,6 +3809,7 @@ msgstr "Operando destro %s non valido per il dominio"
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"Configurazione non valida, la seguente regola provoca un ciclo infinito: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -4296,7 +4298,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
 msgid "Lead Days Date"
-msgstr ""
+msgstr "Data giorni di risposta"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__lead_time
@@ -5804,7 +5806,7 @@ msgstr "Tipologia prelievo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
 msgid "Picking Type Code Domain"
-msgstr ""
+msgstr "Dominio codice tipo di prelievo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -6397,6 +6399,7 @@ msgstr "Quantitativo"
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
+"Impossibile eseguire l'operazione, la creazione del quantitativo è limitata."
 
 #. module: stock
 #. odoo-python
@@ -6404,6 +6407,7 @@ msgstr ""
 #, python-format
 msgid "Quant's editing is restricted, you can't do this operation."
 msgstr ""
+"Impossibile eseguire l'operazione, la modifica del quantitativo è limitata."
 
 #. module: stock
 #. odoo-python
@@ -6852,7 +6856,7 @@ msgstr "Ricerca resoconto rifornimenti"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
 msgid "Reporting"
-msgstr "Rendicontazione"
+msgstr "Rendiconto"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
@@ -8605,6 +8609,8 @@ msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr ""
+"Non è possibile cambiare l'azienda del prodotto finché sono presenti "
+"quantità dello stesso che appartengono a un'altra."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9752,7 +9758,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "You can not change the type of a product that was already used."
-msgstr ""
+msgstr "Impossibile cambiare la tipologia di un prodotto già utilizzato."
 
 #. module: stock
 #. odoo-python
@@ -9828,6 +9834,8 @@ msgstr ""
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
+"Impossibile cambiare un movimento di magazzino annullato, creare invece una "
+"nuova riga."
 
 #. module: stock
 #. odoo-python

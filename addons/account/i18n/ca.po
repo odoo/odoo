@@ -662,7 +662,7 @@ msgid ""
 "'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
 msgstr ""
 "<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quickeditmode', '=', True)]}\">Esborrany</span>"
+"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Esborrany</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -1300,7 +1300,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 msgid "<strong>Total Rounded</strong>"
-msgstr ""
+msgstr "<strong>Total arrodonit</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1762,7 +1762,7 @@ msgstr "Desconciliar compte"
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr "2 primers dígits dels codis de compte"
+msgstr "Els 2 primers dígits dels comptes comptables"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -1899,8 +1899,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr ""
-"Compte: Publica les entrades de l'esborrany amb l'entrada automàtica "
-"activada i data comptable fins avui"
+"Compte: Publica les entrades en esborrany amb l'auto_post activat i data "
+"comptable fins el dia d'avui"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -2193,7 +2193,7 @@ msgstr "Afegir"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add Credit Note"
-msgstr "Afegir nota d'abonament"
+msgstr "Afegir factura rectificativa"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_new_bank_setting
@@ -2320,7 +2320,7 @@ msgid ""
 msgstr ""
 "S'han creat entrades d'ajust per a aquesta factura:<ul><li>%(link1)s "
 "cancel·lant {percent:.2f}%% de {amount}</li><li>%(link0)s posposant-lo a "
-"{newdate}</li></ul>"
+"{new_date}</li></ul>"
 
 #. module: account
 #. odoo-python
@@ -2331,7 +2331,7 @@ msgid ""
 "{new_date}"
 msgstr ""
 "S'està ajustant l'entrada per a {link}: {percent:.2f}% de {amount} reconegut"
-" el {newdate}"
+" el {new_date}"
 
 #. module: account
 #. odoo-python
@@ -4834,7 +4834,7 @@ msgstr "Moviment de Crèdit"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
-msgstr "Factura rectificativa (abonament)"
+msgstr "Factura rectificativa"
 
 #. module: account
 #. odoo-python
@@ -4859,7 +4859,7 @@ msgstr "Nota de crèdit: S'està enviant"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "Abonaments"
+msgstr "Factures rectificatives"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -4870,7 +4870,7 @@ msgstr "Abona registres del diari que coincideixin amb aquest."
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
 #: model:ir.model.fields,help:account.field_res_users__credit_limit
 msgid "Credit limit specific to this partner."
-msgstr "Límit de crèdit específic per aquest partner"
+msgstr "Límit de crèdit específic per a aquest soci."
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_credit_note
@@ -4878,8 +4878,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
-"Nota_crèdit_{{ (object.name o '').replace('/','_') }}{{ object.state == "
-"'esborrany' i '_draft' o '' }}"
+"Factura_rectificativa_{{ (object.name or '').replace('/','_') }}{{ "
+"object.state == 'esborrany' i '_draft' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -4928,7 +4928,7 @@ msgstr "Ajudant a la Conversió de Divises"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_exchange_journal_id
 msgid "Currency Exchange Journal"
-msgstr "Revista de Canvi de Divises"
+msgstr "Diari d'intercanvi de divises"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_rate
@@ -4969,7 +4969,7 @@ msgstr "Taxa monetària de la moneda de l'empresa a la divisa del document."
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_current
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__asset_current
 msgid "Current Assets"
-msgstr "Actius actuals"
+msgstr "Actius circulants"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
@@ -5270,7 +5270,7 @@ msgstr "Dates"
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__datetime
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__datetime
 msgid "Datetime"
-msgstr "Data-hora"
+msgstr "Data i hora"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days
@@ -5326,7 +5326,7 @@ msgstr "Separador de decimals"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Seqüència de Notes de crèdit Dedicada"
+msgstr "Seqüència per factures rectificatives dedicada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
@@ -5948,7 +5948,7 @@ msgstr "Factura esborrany"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "Factura abonament esborrany"
+msgstr "Factura rectificativa esborrany"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
@@ -6866,11 +6866,11 @@ msgid ""
 "allowed as value in case the carryover destination requires more complex "
 "logic."
 msgstr ""
-"Fórmula en el formulari linecode.expressionlabel. Permet establir l'objectiu"
-" de la portada per a aquesta expressió (en una expressió etiquetada "
-"carryover*), en cas que sigui diferent de la línia pare. També es permet "
-"\"personal\" com a valor en cas que la destinació de la transferència "
-"requereixi una lògica més complexa."
+"Fórmula en el formulari line_code.expression_label. Permet establir "
+"l'objectiu de la portada per a aquesta expressió (en una expressió "
+"etiquetada _carryover_*), en cas que sigui diferent de la línia pare. "
+"'Personalitzat' és també un valor permès si l'objectiu d'ajornament demana "
+"una lògica més complexa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
@@ -7826,15 +7826,15 @@ msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
 msgstr ""
-"Camp intern per a escurçar la creació dels «expressionids» per al motor de "
-"codis de compte"
+"Camp intern per a escurçar la creació dels expression_ids per al motor "
+"account_codes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the aggregation engine"
 msgstr ""
-"Camp intern per a escurçar la creació dels expressionids per al motor "
+"Camp intern per a escurçar la creació dels expression_ids per al motor "
 "d'agregació"
 
 #. module: account
@@ -7842,7 +7842,7 @@ msgstr ""
 msgid ""
 "Internal field to shorten expression_ids creation for the domain engine"
 msgstr ""
-"Camp intern per a escurçar la creació dels expressionids per al motor de "
+"Camp intern per a escurçar la creació d'expressions_ids per al motor de "
 "domini"
 
 #. module: account
@@ -8047,8 +8047,8 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
-"La distribució de factures i notes de crèdit ha de tenir el mateix nombre de"
-" línies."
+"La distribució de factures i abonaments ha de tenir el mateix nombre de "
+"línies."
 
 #. module: account
 #. odoo-python
@@ -9331,7 +9331,7 @@ msgstr "Conciliació"
 #: model:ir.model.fields,field_description:account.field_account_move_line__matching_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Matching #"
-msgstr "Coincidència #"
+msgstr "Conciliació #"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
@@ -9778,8 +9778,8 @@ msgid ""
 "No tax template found for this country. Please install the corresponding "
 "localization module."
 msgstr ""
-"No s' ha trobat cap plantilla d' impostos per aquest país. Si us plau, "
-"instal· leu el mòdul localització corresponent."
+"No s'ha trobat cap model d'impost per a aquest país. Instal·leu el mòdul de "
+"localització corresponent."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -9802,7 +9802,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__code_digits
 msgid "No. of Digits to use for account code"
-msgstr "Núm. de dígits a utilitzar per a codi de compte"
+msgstr "Nombre de dígits a utilitzar pel compte comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -9901,8 +9901,8 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"Noteu que la manera més facil de crear una factura d'abonament és fer-la directament\n"
-"                des de la factura del client."
+"Tingueu en compte que la manera més fàcil de crear una factura rectificativa\n"
+"                és fer-la directament des de la factura del client."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
@@ -9910,8 +9910,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
 msgstr ""
-"Tingueu en compte que la manera més fàcil de crear una nota de crèdit del "
-"proveïdor és fer-ho directament des de la factura del proveïdor."
+"Tingueu en compte que la manera més fàcil de crear una factura rectificativa"
+" del proveïdor és fer-ho directament des de la factura del proveïdor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -10163,8 +10163,8 @@ msgid ""
 "Only 'tax_tags' expressions can be linked to a tax repartition line "
 "template."
 msgstr ""
-"Només les expressions «taxtags» es poden enllaçar a una plantilla de línia "
-"de distribució d'impostos."
+"Només les expressions 'tax_tags' es poden enllaçar amb un model de línia de "
+"distribució d'impostos."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -10409,7 +10409,7 @@ msgstr "Recaptador d' origen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
 msgid "Originator Tax Distribution Line"
-msgstr "Línia d' impostos de distribució del remitent"
+msgstr "Línia de distribució de l'impost d'origen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
@@ -11712,7 +11712,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Refund"
-msgstr "Factura rectificativa (abonament)"
+msgstr "Abonament"
 
 #. module: account
 #. odoo-python
@@ -11844,8 +11844,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
-"Adreça de resposta dels correus. Establint aquest camp, se saltara la "
-"creació automàtica de fils."
+"Adreça de correu de resposta. Estableix el camp de reply_to evita la creació"
+" automàtica de fils."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__report_id
@@ -11999,7 +11999,7 @@ msgstr "Compte de revenue/Excens"
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__reversal_date
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reversal Date"
-msgstr "Data reversal"
+msgstr "Data de reversió"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_id
@@ -12025,7 +12025,7 @@ msgstr "La data reversal ha de ser posterior a la data."
 #: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversed_entry_id
 msgid "Reversal of"
-msgstr "Reversal de"
+msgstr "Revertida de"
 
 #. module: account
 #. odoo-python
@@ -12072,7 +12072,7 @@ msgstr "Moviments de reversió"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "Invers"
+msgstr "Revertida"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -12108,7 +12108,7 @@ msgstr "Arrodoniment"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_form_view
 msgid "Rounding Form"
-msgstr "Forma d' arrodoniment"
+msgstr "Forma d'arrodoniment"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding__rounding_method
@@ -12220,7 +12220,7 @@ msgstr "Rebut de vendes"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Sales Receipt Created"
-msgstr "S' ha creat Saes Receipt"
+msgstr "Rebut de venda creat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
@@ -13593,9 +13593,9 @@ msgid ""
 "at the same time. invoice_tax_id and refund_tax_id should not be set "
 "together."
 msgstr ""
-"Les línies d' impostos de la distribució s'han d'aplicar a \"invoices\" o "
-"restitucions, no alhora. invoice_ tax_ id i reembeix_ id no s' ha d' "
-"establir junts."
+"Les línies de distribució d'impostos han d'aplicar-se a les factures o als "
+"reemborsaments, i no a totes dues al mateix temps. invoce_tax_id i "
+"refund_tax_id no s'han de definir junts."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_tax_name_company_uniq
@@ -14099,7 +14099,9 @@ msgstr "El país que fan servir els informes d'impostos d'aquesta empresa."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "The credit note is auto-validated and reconciled with the invoice."
-msgstr "La nota d'abonament s'auto-valida i concilia amb la factura."
+msgstr ""
+"La factura rectificativa s'ha validat i conciliat amb la factura "
+"automàticament."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -14107,16 +14109,16 @@ msgid ""
 "The credit note is auto-validated and reconciled with the invoice.\n"
 "                               The original invoice is duplicated as a new draft."
 msgstr ""
-"La nota d'abonament s'auto-valida i concilia amb la factura.\n"
-"                               Es duplica la factura orifinal com a nou esborrany."
+"La factura rectificativa s'ha validat i conciliat amb la factura automàticament.\n"
+"                               La factura original s'ha duplicat com esborrany."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
 msgstr ""
-"La nota d'abonament es crea com a esborrany i pot ésser editada abans de "
-"confirmar-se."
+"La factura rectificativa es crea en esborrany i es pot editar abans de ser "
+"emesa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -15071,10 +15073,10 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
-"Aquest camp fictici ens permet utilitzar un altre mètode de cerca al camp "
-"«nom».Això permet més llibertat sobre com cercar el «nom» en comparació amb "
-"el «domini del filtre».Vegeu 'searchname' i 'parsenamesearch' per què això "
-"no és possible amb 'filterdomain'."
+"Aquest camp fictici ens permet utilitzar un altre mètode de cerca en el camp"
+" 'name', el qual ens dóna més llibertat en la manera de cercar el 'name' en "
+"relació amb 'filter_domain'. Vegeu '_search_name' i '_parse_name_search' per"
+" a veure per què no és possible amb 'filter_domain'."
 
 #. module: account
 #. odoo-python
@@ -15689,7 +15691,7 @@ msgstr "Sense comptabilitzar"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "Entrades no comptabilitzades"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -16063,7 +16065,7 @@ msgstr "Factures de proveïdors "
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "Nota d'abonament de proveïdor"
+msgstr "Factura rectificativa de proveïdor"
 
 #. module: account
 #. odoo-python
@@ -16307,6 +16309,19 @@ msgstr "Valor erroni del deure o haver en l'assentament comptable !"
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
 msgid "Yearly"
 msgstr "Anualment"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
+msgstr ""
+"No es pot importar 'opening_balance' si el seient d'obertura (%s) ja està "
+"comptabilitzat. Si esteu segur que voleu canviar el saldo d'obertura dels "
+"comptes, reinicieu el seient a esborrany."
 
 #. module: account
 #. odoo-python
@@ -16630,6 +16645,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Contacteu amb el vostre comptable per a imprimir els resultats del resum "
+"d'integritat."
+
+#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -17000,9 +17023,9 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"No es pot validar una factura amb una quantitat total negativa. Hauríeu de "
-"crear una nota de crèdit en comptes d'això. Useu el menú d' acció per "
-"transformar- lo en una nota de crèdit o reemborsament."
+"No es pot validar una factura amb una quantitat total negativa. En comptes "
+"d'això, hauríeu de crear una factura rectificativa. Feu servir el menú "
+"d'acció per convertir-la en una factura rectificativa o abonament."
 
 #. module: account
 #. odoo-python
@@ -17317,10 +17340,7 @@ msgstr "nom"
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
-msgstr ""
-"d' impostosPlease take the official translations! You find them here: http: "
-"// europa. eu. int/ eur- lex/ lex/ LexUriServ/ LexUriServ. do? uri=CELEX: "
-"32001L0059: EN: HTML"
+msgstr "de l'impost"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
@@ -17441,7 +17461,7 @@ msgstr "{label}: S'està ajustant l'entrada de {date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{label}: Adjusting Entry of {new_date}"
-msgstr "{label}: S'està ajustant l'entrada de {newdate}"
+msgstr "{label}: S'està ajustant l'entrada de {new_date}"
 
 #. module: account
 #. odoo-python

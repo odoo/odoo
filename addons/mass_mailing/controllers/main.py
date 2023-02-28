@@ -5,7 +5,7 @@ import base64
 import werkzeug
 
 from odoo import _, exceptions, http, tools
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.tools import consteq
 from werkzeug.exceptions import BadRequest, NotFound
 
@@ -120,7 +120,7 @@ class MassMailController(http.Controller):
             raise BadRequest()
 
         request.env['mailing.trace'].sudo().set_opened(domain=[('mail_mail_id_int', 'in', [mail_id])])
-        response = werkzeug.wrappers.Response()
+        response = Response()
         response.mimetype = 'image/gif'
         response.data = base64.b64decode(b'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')
 

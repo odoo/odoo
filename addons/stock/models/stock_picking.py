@@ -863,6 +863,7 @@ class Picking(models.Model):
     def action_cancel(self):
         self.move_ids._action_cancel()
         self.write({'is_locked': True})
+        self.filtered(lambda x: not x.move_ids).state = 'cancel'
         return True
 
     def _action_done(self):

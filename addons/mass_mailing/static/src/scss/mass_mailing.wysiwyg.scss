@@ -1,0 +1,15 @@
+.o_mass_mailing_iframe body {
+    padding-right: $o-we-sidebar-width !important;
+
+    #web_editor-top-edit .note-popover .popover {
+        right: $o-we-sidebar-width !important;
+    }
+
+    .modal:not(.o_technical_modal) {
+        top: 0 !important;
+        // set z-index so customize options visible on dialog.
+        z-index: $o-we-overlay-zindex - 1;
+        // just for fake backdrop effect
+        background-color: rgba(66, 66, 66, 0.4);
+    }
+}

@@ -415,6 +415,45 @@ class TestMrpOrder(TestMrpCommon):
         update_quantity_wizard.change_prod_qty()
         self.assertEqual(production.workorder_ids.duration_expected, 90)
 
+    def test_qty_producing(self):
+        """Qty producing should be the qty remain to produce, instead of 0"""
+        # Required for `workerorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.00}),
+            ],
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom
+        production_form.product_qty = 5
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        production_form = Form(production)
+        with production_form.workorder_ids.new() as wo:
+            wo.name = 'OP1'
+            wo.workcenter_id = self.workcenter_1
+            wo.duration_expected = 40
+        production = production_form.save()
+        production.action_confirm()
+        production.button_plan()
+
+        wo = production.workorder_ids[0]
+        wo.button_start()
+        self.assertEqual(wo.qty_producing, 5, "Wrong quantity is suggested to produce.")
+
+        # Simulate changing the qty_producing in the frontend
+        wo.qty_producing = 4
+        wo.button_pending()
+        wo.button_start()
+        self.assertEqual(wo.qty_producing, 4, "Changing the qty_producing in the frontend is not persisted")
+
     def test_update_quantity_5(self):
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
@@ -443,153 +482,6 @@ class TestMrpOrder(TestMrpCommon):
             move.product_uom_qty = 2
         production = production_form.save()
         production.button_mark_done()
-
-    def test_update_quantity_6(self):
-        """Test manual consumption mechanism. Test when manual consumption is
-        True, quantity_done won't be updated automatically. Bom line with tracked
-        products or operations should be set to manual consumption automatically.
-        Also test that when manually change quantity_done, manual consumption
-        will be set to True. Also test when create backorder, the namual consumption
-        should be set according to the bom.
-        """
-        Product = self.env['product.product']
-        product_nt = Product.create({
-            'name': 'No tracking',
-            'type': 'product',
-            'tracking': 'none',})
-        product_sn = Product.create({
-            'name': 'Serial',
-            'type': 'product',
-            'tracking': 'serial',})
-        product_lot = Product.create({
-            'name': 'Lot',
-            'type': 'product',
-            'tracking': 'lot',})
-        bom = self.env['mrp.bom'].create({
-            'product_id': self.product_6.id,
-            'product_tmpl_id': self.product_6.product_tmpl_id.id,
-            'product_qty': 1,
-            'product_uom_id': self.product_6.uom_id.id,
-            'type': 'normal',
-            'bom_line_ids': [
-                (0, 0, {'product_id': product_nt.id, 'product_qty': 1}),
-                (0, 0, {'product_id': product_sn.id, 'product_qty': 1}),
-                (0, 0, {'product_id': product_lot.id, 'product_qty': 1}),
-            ],
-        })
-
-        # Bom linse with tracking products or operations should have manual_consumption set
-        self.assertEqual(bom.bom_line_ids.mapped('manual_consumption'), [False, True, True])
-
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = bom
-        production_form.product_qty = 10
-        production_form.product_uom_id = self.product_6.uom_id
-        production = production_form.save()
-        production.action_confirm()
-        production.action_assign()
-        production.is_locked = False
-
-        # test no updating
-        production_form = Form(production)
-        production_form.qty_producing = 5
-        production = production_form.save()
-        move_nt, move_sn, move_lot = production.move_raw_ids
-        self.assertEqual(move_nt.manual_consumption, False)
-        self.assertEqual(move_nt.quantity_done, 5)
-        self.assertEqual(move_sn.manual_consumption, True)
-        self.assertEqual(move_sn.quantity_done, 0)
-        self.assertEqual(move_lot.manual_consumption, True)
-        self.assertEqual(move_lot.quantity_done, 0)
-
-        # test manual change
-        with production_form.move_raw_ids.edit(0) as move_product_2_line:
-            move_product_2_line.quantity_done = 6
-        production = production_form.save()
-        self.assertEqual(move_nt.manual_consumption, True)
-        production_form.qty_producing = 8
-        production = production_form.save()
-        self.assertEqual(move_nt.quantity_done, 6)
-
-        # test manual consumption on backorder
-        action = production.button_mark_done()
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
-        action = warning.action_confirm()
-        backorder_wizard = Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save()
-        backorder_wizard.action_backorder()
-        backorder = production.procurement_group_id.mrp_production_ids[-1]
-        self.assertEqual(backorder.move_raw_ids.mapped('manual_consumption'), [False, True, True])
-
-    def test_update_quantity_7(self):
-        """Test manual consumption mechanism without bom. Test when manual consumption
-        is True, quantity_done won't be updated automatically. Component line with
-        tracked products should be set to manual consumption automatically.
-        Also test that when manually change quantity_done, manual consumption
-        will be set to True. Also test when create backorder, the namual consumption
-        should be set according to the product's tracking.
-        """
-        Product = self.env['product.product']
-        product_nt = Product.create({
-            'name': 'No tracking',
-            'type': 'product',
-            'tracking': 'none',})
-        product_sn = Product.create({
-            'name': 'Serial',
-            'type': 'product',
-            'tracking': 'serial',})
-        product_lot = Product.create({
-            'name': 'Lot',
-            'type': 'product',
-            'tracking': 'lot',})
-
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = self.env['mrp.bom']
-        production_form.product_qty = 10
-        production_form.product_uom_id = self.product_6.uom_id
-        for product in [product_nt, product_sn, product_lot]:
-            with production_form.move_raw_ids.new() as line:
-                line.product_id = product
-                line.product_uom_qty = 10
-        production = production_form.save()
-
-        self.assertEqual(production.move_raw_ids.mapped('manual_consumption'), [False, True, True])
-
-        # <field name="qty_producing" attrs="{'invisible': [('state', '=', 'draft')]}"/>
-        production.action_confirm()
-        production.action_assign()
-        production.is_locked = False
-
-        # test no updating
-        production_form = Form(production)
-        production_form.qty_producing = 5
-        production = production_form.save()
-        move_nt, move_sn, move_lot = production.move_raw_ids
-        self.assertEqual(move_nt.manual_consumption, False)
-        self.assertEqual(move_nt.quantity_done, 5)
-        self.assertEqual(move_sn.manual_consumption, True)
-        self.assertEqual(move_sn.quantity_done, 0)
-        self.assertEqual(move_lot.manual_consumption, True)
-        self.assertEqual(move_lot.quantity_done, 0)
-
-        # test manual change
-        with production_form.move_raw_ids.edit(0) as move_product_2_line:
-            move_product_2_line.quantity_done = 6
-        production = production_form.save()
-        self.assertEqual(move_nt.manual_consumption, True)
-        production_form.qty_producing = 8
-        production = production_form.save()
-        self.assertEqual(move_nt.quantity_done, 6)
-
-        # test manual consumption on backorder
-        action = production.button_mark_done()
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
-        action = warning.action_confirm()
-        backorder_wizard = Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save()
-        backorder_wizard.action_backorder()
-        backorder = production.procurement_group_id.mrp_production_ids[-1]
-        self.assertEqual(backorder.move_raw_ids.mapped('manual_consumption'), [False, True, True])
 
     def test_update_plan_date(self):
         """Editing the scheduled date after planning the MO should unplan the MO, and adjust the date on the stock moves"""
@@ -1881,6 +1773,9 @@ class TestMrpOrder(TestMrpCommon):
         we do not create a new move line due to extra reserved quantity
         caused by decimal rounding conversions.
         """
+
+        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
+        picking_type.use_auto_consume_components_lots = True
 
         # the overall decimal accuracy is set to 3 digits
         precision = self.env.ref('product.decimal_product_uom')

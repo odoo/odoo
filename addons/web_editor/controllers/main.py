@@ -8,12 +8,11 @@ import time
 import requests
 import werkzeug.exceptions
 import werkzeug.urls
-import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
 from base64 import b64decode, b64encode
 
-from odoo.http import request
+from odoo.http import request, Response
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.web_editor.tools import get_video_url_data
@@ -29,15 +28,15 @@ from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_M
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 
-diverging_history_regex = 'data-last-history-steps="([0-9,]*?)"'
+diverging_history_regex = 'data-last-history-steps="([0-9,]+)"'
 
 def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
-    server_history_matches = re.search(diverging_history_regex, record[html_field_name])
+    server_history_matches = re.search(diverging_history_regex, record[html_field_name] or '')
     # Do not check old documents without data-last-history-steps.
     if server_history_matches:
         server_last_history_id = server_history_matches[1].split(',')[-1]
         if server_last_history_id not in incoming_history_ids:
-            logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
+            logger.warning('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
             raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
 
 def handle_history_divergence(record, html_field_name, vals):
@@ -138,7 +137,7 @@ class Web_Editor(http.Controller):
         # output image
         output = io.BytesIO()
         outimage.save(output, format="PNG")
-        response = werkzeug.wrappers.Response()
+        response = Response()
         response.mimetype = 'image/png'
         response.data = output.getvalue()
         response.headers['Cache-Control'] = 'public, max-age=604800'

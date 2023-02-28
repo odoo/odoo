@@ -76,7 +76,10 @@
   </t>
 
   <t t-name="o-spreadsheet-ColorPicker" owl="1">
-    <div class="o-color-picker" t-att-class="props.dropdownDirection || 'right'">
+    <div
+      class="o-color-picker"
+      t-att-class="props.dropdownDirection || 'right'"
+      t-att-style="colorPickerStyle">
       <div class="o-color-picker-section-name">Standard</div>
       <div class="colors-grid">
         <div
@@ -329,7 +332,7 @@
   </t>
 
   <t t-name="o-spreadsheet-ChartJsComponent" owl="1">
-    <canvas class="o-figure-canvas" t-att-style="canvasStyle" t-ref="graphContainer"/>
+    <canvas class="o-figure-canvas w-100 h-100" t-att-style="canvasStyle" t-ref="graphContainer"/>
   </t>
 
   <t t-name="o-spreadsheet-ScorecardChart" owl="1">
@@ -370,7 +373,7 @@
         class="o-figure w-100 h-100"
         t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
         t-ref="figure"
-        t-att-style="figureStyle"
+        t-att-style="props.style"
         tabindex="0"
         t-on-keydown.stop="(ev) => this.onKeyDown(ev)"
         t-on-keyup.stop="">
@@ -381,8 +384,8 @@
           figure="props.figure"
         />
       </div>
+      <div class="o-figure-border w-100 h-100 position-absolute pe-none" t-att-style="borderStyle"/>
       <t t-if="isSelected">
-        <div class="w-100 h-100 o-active-figure-border position-absolute pe-none"/>
         <div
           class="o-fig-anchor o-top"
           t-att-style="this.getResizerPosition('top')"
@@ -2928,6 +2931,7 @@
           onClick="() => this.focusGrid()"
           onComposerContentFocused="(selection) => this.onTopBarComposerFocused(selection)"
           focusComposer="focusTopBarComposer"
+          dropdownMaxHeight="gridHeight"
         />
         <Grid
           sidePanelIsOpen="sidePanel.isOpen"
@@ -3040,6 +3044,7 @@
             </div>
             <div
               class="o-dropdown-content o-text-options  o-format-tool "
+              t-att-style="dropdownStyle"
               t-if="state.activeTool === 'formatTool'"
               t-on-click="setFormat">
               <t t-foreach="commonFormats" t-as="commonFormat" t-key="commonFormat.name">
@@ -3068,6 +3073,7 @@
             </div>
             <div
               class="o-dropdown-content o-text-options "
+              t-att-style="dropdownStyle"
               t-if="state.activeTool === 'fontSizeTool'"
               t-on-click="setSize">
               <t t-foreach="fontSizes" t-as="font" t-key="font_index">
@@ -3109,6 +3115,7 @@
               onColorPicked="(color) => this.setColor('textColor', color)"
               currentColor="textColor"
               t-key="textColor"
+              maxHeight="this.props.dropdownMaxHeight"
             />
           </div>
           <div class="o-divider"/>
@@ -3124,6 +3131,7 @@
               onColorPicked="(color) => this.setColor('fillColor', color)"
               currentColor="fillColor"
               t-key="fillColor"
+              maxHeight="this.props.dropdownMaxHeight"
             />
           </div>
           <div
@@ -3135,6 +3143,7 @@
             </span>
             <div
               class="o-dropdown-content o-border-dropdown"
+              t-att-style="dropdownStyle"
               t-if="state.activeTool === 'borderTool'">
               <div class="o-dropdown-line">
                 <span class="o-line-item" t-on-click="(ev) => this.setBorder('all', ev)">
@@ -3196,7 +3205,10 @@
               </t>
               <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
             </span>
-            <div t-if="state.activeTool === 'alignTool'" class="o-dropdown-content">
+            <div
+              t-if="state.activeTool === 'alignTool'"
+              class="o-dropdown-content"
+              t-att-style="dropdownStyle">
               <div class="o-dropdown-item" t-on-click="(ev) => this.toggleAlign('left', ev)">
                 <t t-call="o-spreadsheet-Icon.ALIGN_LEFT"/>
               </div>
