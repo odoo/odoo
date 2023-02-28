@@ -750,6 +750,12 @@ class Picking(models.Model):
             "location_id": self.location_id,
             "location_dest_id": self.location_dest_id
         })
+        if any(line.reserved_qty or line.qty_done for line in self.move_ids.move_line_ids):
+            return {'warning': {
+                    'title': 'Locations to update',
+                    'message': _("You might want to update the locations of this transfer's operations")
+                }
+            }
 
     @api.model_create_multi
     def create(self, vals_list):
