@@ -2542,12 +2542,7 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             mockRPC(route, args) {
                 if (args.method === "write") {
-                    assert.deepEqual(args.args[1], {
-                        o2m: [
-                            [1, 1, { grosminet: false }],
-                            [4, 2, false],
-                        ],
-                    });
+                    assert.deepEqual(args.args[1], { grosminet: false });
                 }
             },
         });
@@ -2558,7 +2553,6 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_data_row"), "o_selected_row");
         assert.containsOnce(target.querySelectorAll(".o_data_cell")[0], ".o_readonly_modifier");
         await click(target.querySelectorAll(".o_data_cell")[1], ".o_boolean_toggle input");
-        await clickSave(target);
     });
 
     QUnit.test(
@@ -2637,12 +2631,6 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_row .o_data_cell .o_field_boolean_toggle div"));
         assert.containsOnce(target, ".o_selected_row");
         await click(target.querySelector(".o_selected_row .o_field_boolean_toggle div"));
-        assert.containsOnce(target, ".o_selected_row");
-        assert.verifySteps([]);
-
-        // save
-        await clickSave(target);
-        assert.containsNone(target, ".o_selected_row");
         assert.verifySteps(["write: true"]);
     });
 
