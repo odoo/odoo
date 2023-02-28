@@ -996,13 +996,14 @@ class AccountMoveLine(models.Model):
             if line.display_type != 'product' or not line.tax_ids.ids or line.company_id.early_pay_discount_computation != 'mixed':
                 continue
 
+            amount_total = abs(sum(x['amount_currency'] for x in needed_terms.values()))
             percentages_to_apply = []
             names = []
             for term in needed_terms.values():
                 if term.get('discount_percentage'):
                     percentages_to_apply.append({
                         'discount_percentage': term['discount_percentage'],
-                        'term_percentage': abs(term['amount_currency'] / line.move_id.amount_total) if line.move_id.amount_total else 0
+                        'term_percentage': abs(term['amount_currency'] / amount_total) if amount_total else 0
                     })
                     names.append(f"{term['discount_percentage']}%")
 
