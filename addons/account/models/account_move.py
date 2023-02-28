@@ -3443,6 +3443,7 @@ class AccountMove(models.Model):
             'name': _('Register Payment'),
             'res_model': 'account.payment.register',
             'view_mode': 'form',
+            'views': [[False, 'form']],
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.ids,
