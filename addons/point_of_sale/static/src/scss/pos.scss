@@ -2551,6 +2551,13 @@ td {
     padding: 20px;
     border-radius: 3px 3px 0px 0px;
     border-bottom: solid 1px rgba(60,60,60,0.1);
+    display: flex;
+    flex-direction: column;
+}
+.pos .popup .subtitle {
+    padding: 5px;
+    font-size: 14px;
+    font-weight: normal;
 }
 .pos .popup .body {
     font-weight: normal;
@@ -2597,6 +2604,22 @@ td {
     color: $primary;
 }
 
+.pos .button .flex-column {
+    display: flex;
+    justify-content: center;
+    height: 40px;
+    gap: 2px;
+    flex-direction: column;
+}
+
+.pos .button .flex-column span {
+    line-height: normal;
+}
+
+.pos .button .flex-column .input-buffer-reminder {
+    font-weight: normal;
+}
+
 .pos .popup .button.dont-show-again {
     width: 130px;
 }
@@ -2633,6 +2656,23 @@ td {
     height: 180px;
     line-height:180px;
 }
+
+.pos .input-symbol {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+}
+
+.pos .input-symbol .popup-input {
+    display: flex;
+    gap: 4px;
+}
+
+.pos .input-symbol .popup-input .input-value {
+    flex-grow: 1;
+}
+
 .pos .popup input,
 .pos .popup-input {
     text-align: left;
@@ -2682,7 +2722,7 @@ td {
 }
 
 .pos .popup-number .popup-input {
-    text-align: center;
+    text-align: right;
 }
 .pos .popup input:focus,
 .pos .popup-input.active {
@@ -2730,11 +2770,14 @@ td {
     background: $primary;
 }
 .pos .popup.popup-number {
-    width: 300px;
-    height: 450px;
+    max-width: none;
+    width: auto;
+    padding: 0 10px;
 }
 .pos .footer.centered {
     text-align: center;
+    display: flex;
+    justify-content: center;
 }
 .pos .footer.centered .button {
     float: none;
@@ -2772,11 +2815,6 @@ td {
     background: #444;
     color: white;
     border-color: #444;
-}
-
-.pos .popup.popup-password {
-    width: 254px;
-    height: 510px;
 }
 .pos .popup-password .mode-button.add,
 .pos .popup-password .input-button.dot {

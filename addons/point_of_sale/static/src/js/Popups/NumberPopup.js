@@ -11,10 +11,13 @@ export class NumberPopup extends AbstractAwaitablePopup {
         confirmText: _t("Confirm"),
         cancelText: _t("Discard"),
         title: _t("Confirm?"),
+        subtitle: "",
         body: "",
         cheap: false,
         startingValue: null,
         isPassword: false,
+        inputSuffix: "",
+        getInputBufferReminder: () => false,
     };
 
     /**
