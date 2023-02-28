@@ -3,7 +3,7 @@
 import {_t} from "web.core";
 import publicWidget from "web.public.widget";
 import Dialog from "web.Dialog";
-import {handleCheckIdentity} from "portal.portal";
+import {handleCheckIdentity} from "portal.security";
 
 /**
  * Replaces specific <field> elements by normal HTML, strip out the rest entirely

@@ -52,27 +52,6 @@
             <field name="binding_model_id" ref="base.model_res_users"/>
         </record>
 
-        <record id="identity_check_wizard" model="ir.ui.view">
-            <field name="model">res.users.identitycheck</field>
-            <field name="arch" type="xml">
-                <form string="Password Confirmation">
-                    <sheet class="bg-primary">
-                        <h3><strong>Please enter your password to confirm you own this account</strong></h3>
-                        <br/>
-                        <div>
-                            <field class="o_field_highlight col-10 col-md-6 px-0" name="password" autocomplete="current-password"
-                                required="True" password="True" placeholder="************"/>
-                        </div>
-                        <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
-                    </sheet>
-                    <footer>
-                        <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary" data-hotkey="q"/>
-                        <button string="Cancel" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
         <!-- res.groups -->
         <record id="view_groups_search" model="ir.ui.view">
             <field name="name">res.groups.search</field>
@@ -491,6 +470,11 @@
                             <group name="auth" string="Password Management">
                                 <div colspan="2">
                                     <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
+                                </div>
+                            </group>
+                            <group name="access" string="Other Devices">
+                                <div colspan="2">
+                                    <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary"/>
                                 </div>
                             </group>
                             <group string="API Keys">
