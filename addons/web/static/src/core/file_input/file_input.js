@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onMounted, useRef } from "@odoo/owl";
+import { Component, onMounted, useRef, useState } from "@odoo/owl";
 
 /**
  * Custom file input
@@ -26,6 +26,10 @@ export class FileInput extends Component {
     setup() {
         this.http = useService("http");
         this.fileInputRef = useRef("file-input");
+        this.state = useState({
+            // Disables upload button if currently uploading.
+            isDisable: false,
+        });
 
         onMounted(() => {
             if (this.props.autoOpen) {
@@ -70,12 +74,14 @@ export class FileInput extends Component {
      * - resId: the id of the resModel target instance
      */
     async onFileInputChange() {
+        this.state.isDisable = true;
         const parsedFileData = await this.uploadFiles(this.httpParams);
         // When calling onUpload, also pass the files to allow to get data like their names
         this.props.onUpload(parsedFileData, this.fileInputRef.el ? this.fileInputRef.el.files : []);
         // Because the input would not trigger this method if the same file name is uploaded,
         // we must clear the value after handling the upload
         this.fileInputRef.el.value = null;
+        this.state.isDisable = false;
     }
 
     /**

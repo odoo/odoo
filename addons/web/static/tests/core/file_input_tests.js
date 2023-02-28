@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { editInput, getFixture, mount, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
+import { editInput, getFixture, mount, patchWithCleanup, triggerEvent, makeDeferred, nextTick } from "@web/../tests/helpers/utils";
 import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
 
@@ -137,5 +137,30 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await editInput(target, ".o_file_input input", file);
         assert.verifySteps(["fake_file.txt"], "file has been uploaded a second time");
+    });
+
+    QUnit.test("Upload button is disabled if attachment upload is not finished", async (assert) => {
+        assert.expect(2);
+
+        const uploadedPromise = makeDeferred();
+        await createFileInput({
+            mockPost: async (route, params) => {
+                if (route === "/web/binary/upload_attachment") {
+                    await uploadedPromise;
+                }
+                return "[]";
+            },
+            props: {},
+        });
+        //enable button
+        const input = target.querySelector(".o_file_input input");
+        await triggerEvent(input, null, "change", {}, { skipVisibilityCheck: true });
+
+        //disable button
+        assert.ok(input.disabled, "the upload button should be disabled on upload");
+
+        uploadedPromise.resolve();
+        await nextTick();
+        assert.notOk(input.disabled, "the upload button should be enabled for upload");
     });
 });
