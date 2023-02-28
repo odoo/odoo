@@ -29,6 +29,8 @@
                 <t t-set="display_description" t-valuef="true"/>
                 <t t-set="display_detail" t-valuef="false"/>
                 <input type="hidden" name="tag" t-att-value="tag"/>
+                <input type="hidden" name="date_begin" t-att-value="date_begin"/>
+                <input type="hidden" name="date_end" t-att-value="date_end"/>
             </t>
         </div>
     </nav>
@@ -64,7 +66,7 @@
         <optgroup t-foreach="nav_list" t-as="year" t-attf-label="#{year}">
             <option t-foreach="nav_list[year]" t-as="months"
                     t-att="[('selected' if date_begin and (months['date_begin'] == date_begin) else 'unselected' ) , 'true' ]"
-                    t-attf-value="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}">
+                    t-attf-value="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'], tag=tag)}">
                 <t t-esc="months['month']"/>
                 <t t-esc="year"/>
             </option>
