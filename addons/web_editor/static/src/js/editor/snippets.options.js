@@ -3661,6 +3661,12 @@ const SnippetOptionWidget = Widget.extend({
                 }
 
                 const dependencies = widget.getDependencies();
+
+                if (dependencies.length === 1 && dependencies[0] === 'fake') {
+                    widget.toggleVisibility(false);
+                    return;
+                }
+
                 const dependenciesData = [];
                 dependencies.forEach(depName => {
                     const toBeActive = (depName[0] !== '!');
