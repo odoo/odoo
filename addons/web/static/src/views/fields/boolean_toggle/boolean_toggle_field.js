@@ -10,6 +10,7 @@ export class BooleanToggleField extends BooleanField {
     get isReadonly() {
         return this.props.record.isReadonly(this.props.name);
     }
+<<<<<<< HEAD
 
     async onChange(newValue) {
         await this.props.record.update({ [this.props.name]: newValue });
@@ -22,6 +23,12 @@ export class BooleanToggleField extends BooleanField {
             return this.props.record.save();
         }
     }
+||||||| parent of 5304c30f911 (temp)
+=======
+    onChange(newValue) {
+        this.props.update(newValue, { save: true });
+    }
+>>>>>>> 5304c30f911 (temp)
 }
 
 export const booleanToggleField = {

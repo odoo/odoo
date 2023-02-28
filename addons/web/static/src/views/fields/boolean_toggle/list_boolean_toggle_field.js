@@ -8,9 +8,15 @@ export class ListBooleanToggleField extends BooleanToggleField {
 
     onClick() {
         if (!this.props.readonly) {
+<<<<<<< HEAD
             this.props.record.update({
                 [this.props.name]: !this.props.record.data[this.props.name],
             });
+||||||| parent of 5304c30f911 (temp)
+            this.props.update(!this.props.value);
+=======
+            this.props.update(!this.props.value, { save: true });
+>>>>>>> 5304c30f911 (temp)
         }
     }
 }

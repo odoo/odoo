@@ -77,8 +77,15 @@ export class PriorityField extends Component {
     onStarClicked(value) {
         if (this.props.record.data[this.props.name] === value) {
             this.state.index = -1;
+<<<<<<< HEAD
             this.updateRecord(this.options[0][0]);
+||||||| parent of 5304c30f911 (temp)
+            this.props.update(this.options[0][0]);
+=======
+            this.props.update(this.options[0][0], { save: true });
+>>>>>>> 5304c30f911 (temp)
         } else {
+<<<<<<< HEAD
             this.updateRecord(value);
         }
     }
@@ -92,6 +99,11 @@ export class PriorityField extends Component {
         // We save only if we're on view mode readonly and no readonly field modifier
         if (!isInEdition) {
             return this.props.record.save();
+||||||| parent of 5304c30f911 (temp)
+            this.props.update(value);
+=======
+            this.props.update(value, { save: true });
+>>>>>>> 5304c30f911 (temp)
         }
     }
 }

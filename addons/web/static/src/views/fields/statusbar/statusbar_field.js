@@ -208,18 +208,30 @@ export class StatusBarField extends Component {
         const isInEdition = rootRecord ? rootRecord.isInEdition : this.props.record.isInEdition;
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
+<<<<<<< HEAD
                 this.props.record.update({ [this.props.name]: [item.id, item.name] });
                 // We save only if we're on view mode readonly and no readonly field modifier
                 if (!isInEdition) {
                     return this.props.record.save();
                 }
+||||||| parent of 5304c30f911 (temp)
+                this.props.update([item.id, item.name]);
+=======
+                this.props.update([item.id, item.name], { save: true });
+>>>>>>> 5304c30f911 (temp)
                 break;
             case "selection":
+<<<<<<< HEAD
                 this.props.record.update({ [this.props.name]: item.id });
                 // We save only if we're on view mode readonly and no readonly field modifier
                 if (!isInEdition) {
                     return this.props.record.save();
                 }
+||||||| parent of 5304c30f911 (temp)
+                this.props.update(item.id);
+=======
+                this.props.update(item.id, { save: true });
+>>>>>>> 5304c30f911 (temp)
                 break;
         }
     }
