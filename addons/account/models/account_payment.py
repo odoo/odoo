@@ -671,7 +671,7 @@ class AccountPayment(models.Model):
 
     def new(self, values=None, origin=None, ref=None):
         payment = super(AccountPayment, self.with_context(is_payment=True)).new(values, origin, ref)
-        if not payment.journal_id:  # might not be computed because declared by inheritance
+        if not payment.journal_id and not payment.default_get(['journal_id']):  # might not be computed because declared by inheritance
             payment.move_id._compute_journal_id()
         return payment
 
