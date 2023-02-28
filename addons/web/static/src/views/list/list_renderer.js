@@ -62,6 +62,7 @@ export class ListRenderer extends Component {
     setup() {
         this.uiService = useService("ui");
         this.allColumns = this.processAllColumn(this.props.archInfo.columns, this.props.list);
+        this.notificationService = useService("notification");
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
         this.cellClassByColumn = {};
@@ -205,6 +206,12 @@ export class ListRenderer extends Component {
         });
         useExternalListener(window, "blur", (ev) => {
             this.shiftKeyMode = false;
+        });
+    }
+
+    displaySaveNotification() {
+        this.notificationService.add(this.env._t('Please click on the "save" button first'), {
+            type: "danger",
         });
     }
 
