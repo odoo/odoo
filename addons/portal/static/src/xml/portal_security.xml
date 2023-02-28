@@ -38,4 +38,25 @@
             </p>
         </div>
     </t>
+    <!-- Popup's view !-->
+    <t t-name="portal.revoke_all_devices_popup_template">
+        <section>
+            <div>
+                You are about to log out from all devices that currently have access to this user's account.
+            </div><br/>
+            <t t-set="path">password</t>
+            <form action="/my/security" method="post" class="oe_reset_password_form" >
+                <input type="hidden" name="op" value="revoke"/>
+                <div class="mb-3">
+                    <label for="current">Type in your password to confirm :</label>
+                    <input type="password" t-attf-class="form-control form-control-sm"
+                            id="current" name="password"
+                            autocomplete="current-password" required="required"/>
+                    <div class="invalid-feedback">
+                        <t t-esc="error"/>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </t>
 </templates>

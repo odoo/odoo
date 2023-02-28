@@ -964,6 +964,18 @@ class Users(models.Model):
             'view_mode': 'form',
         }
 
+    def action_revoke_all_devices(self):
+        ctx = dict(self.env.context, dialog_size='medium')
+        return {
+            'name': _('Log out from all devices?'),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': 'res.users.identitycheck',
+            'view_mode': 'form',
+            'view_id': self.env.ref('base.res_users_identitycheck_view_form_revokedevices').id,
+            'context': ctx,
+        }
+
     @api.model
     def has_group(self, group_ext_id):
         # use singleton's id if called on a non-empty recordset, otherwise
@@ -1872,7 +1884,8 @@ class UsersView(models.Model):
         return res
 
 class CheckIdentity(models.TransientModel):
-    """ Wizard used to re-check the user's credentials (password)
+    """ Wizard used to re-check the user's credentials (password) and eventually
+    revoke access to his account to every device he has an active session on.
 
     Might be useful before the more security-sensitive operations, users might be
     leaving their computer unlocked & unattended. Re-checking credentials mitigates
@@ -1885,13 +1898,15 @@ class CheckIdentity(models.TransientModel):
     request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
     password = fields.Char()
 
-    def run_check(self):
-        assert request, "This method can only be accessed over HTTP"
+    def _check_identity(self):
         try:
             self.create_uid._check_credentials(self.password, {'interactive': True})
         except AccessDenied:
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
 
+    def run_check(self):
+        assert request, "This method can only be accessed over HTTP"
+        self._check_identity()
         self.password = False
 
         request.session['identity-check-last'] = time.time()
@@ -1899,6 +1914,12 @@ class CheckIdentity(models.TransientModel):
         method = getattr(self.env(context=ctx)[model].browse(ids), method)
         assert getattr(method, '__has_check_identity', False)
         return method()
+
+    def revoke_all_devices(self):
+        self._check_identity()
+        self.env.user._change_password(self.password)
+        self.sudo().unlink()
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
 
 #----------------------------------------------------------
 # change password wizard
@@ -1908,6 +1929,7 @@ class ChangePasswordWizard(models.TransientModel):
     """ A wizard to manage the change of users' passwords. """
     _name = "change.password.wizard"
     _description = "Change Password Wizard"
+    _transient_max_hours = 0.2
 
     def _default_user_ids(self):
         user_ids = self._context.get('active_model') == 'res.users' and self._context.get('active_ids') or []
