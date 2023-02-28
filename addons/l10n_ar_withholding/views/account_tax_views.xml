@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="type_tax_use" position="after">
+                <field name="l10n_ar_withholding" attrs="{'invisible': ['|', ('type_tax_use', '!=', 'none'), ('country_code', '!=', 'AR')]}"/>
+                <field name="l10n_ar_withholding_amount_type" attrs="{'invisible':[('l10n_ar_withholding', 'not in', ['customer', 'supplier'])], 'required':[('l10n_ar_withholding', 'in', ['customer', 'supplier'])]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
