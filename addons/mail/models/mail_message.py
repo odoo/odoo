@@ -871,7 +871,8 @@ class Message(models.Model):
             if message_sudo.model and message_sudo.res_id:
                 record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
                 record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
-                default_subject = record_sudo._message_compute_subject()
+                # if not a thread, display_name is the default subject
+                default_subject = record_sudo._message_compute_subject() if hasattr(record_sudo, '_message_compute_subject') else record_name
             else:
                 record_name = False
                 default_subject = False
