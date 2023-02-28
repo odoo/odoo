@@ -78,7 +78,7 @@ class MrpUnbuild(models.Model):
 
     def _compute_allowed_mo_ids(self):
         # the function remains as a stable fix patch that was removed in master
-        pass
+        self.allowed_mo_ids = False
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
