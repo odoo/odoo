@@ -14,15 +14,12 @@ class PosConfig(models.Model):
         string='Pay After:', default='each', 
         help="Choose when the customer will pay")
 
-    # @api.constrains('self_order_location', 'self_order_allows_ongoing_orders')
-    # def _check_required_fields(self):
-    #     if self.module_pos_self_order and not self.self_order_location:
-    #         raise ValidationError(_('Please select the order location for self order'))
-    #     if self.self_order_location == 'table' and not self.self_order_allows_ongoing_orders:
-    #         raise ValidationError(_('Please select a value for "Pay After"'))
-
     def self_order_allow_view_menu(self):
-        """"""
+        """
+        Returns True if the menu can be viewed by customers on their phones, by scanning the QR code on the table and going to the provided URL.
+        :return: True if the menu can be viewed, False otherwise
+        :rtype: bool
+        """
         self.ensure_one()
         return self.self_order_view_mode or self.self_order_kiosk_mode
 
@@ -48,6 +45,11 @@ class PosConfig(models.Model):
         return self.self_order_pay_after == 'meal'
 
     def compute_self_order_location(self):
+        """
+        Returns the self order location.
+        :return: 'none' if self ordering is disabled, 'table' if self_order_phone_mode is enabled, 'kiosk' if self_order_kiosk_mode is enabled
+        :rtype: str
+        """
         self.ensure_one()
         if self.self_order_kiosk_mode:
             return 'kiosk'
