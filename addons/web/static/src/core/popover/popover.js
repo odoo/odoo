@@ -34,8 +34,7 @@ export class Popover extends Component {
         }
 
         // reset all arrow classes
-        const arrowEl = el.firstElementChild;
-        arrowEl.className = "popover-arrow";
+        const arrowEl = el.getElementsByClassName('popover-arrow')[0];
         switch (position) {
             case "tm": // top-middle
             case "bm": // bottom-middle
