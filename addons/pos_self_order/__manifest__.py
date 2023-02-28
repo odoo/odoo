@@ -54,6 +54,7 @@
             'web/static/lib/luxon/luxon.js',
 
             'web/static/src/views/fields/formatters.js',
+            'web/static/lib/underscore/underscore.js',
 
             'pos_self_order/static/src/**/*',
             'point_of_sale/static/src/utils.js',

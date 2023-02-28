@@ -25,6 +25,7 @@ export class ProductList extends Component {
         this.selfOrder = useSelfOrder();
         this.formatMonetary = formatMonetary;
         useAutofocus({ refName: "searchInput", mobile: true });
+        this._ = _;
     }
     filteredProducts = () => {
         // here we only want to return the products
@@ -73,6 +74,7 @@ export class ProductList extends Component {
      * @param {string} tag_name
      */
     selectTag = (tag_name) => {
+        // we make it so only one tag can be selected at a time
         // if (this.private_state.selected_tags.has(tag_name)) {
         //     this.private_state.selected_tags.delete(tag_name);
         //     return;
@@ -95,7 +97,24 @@ export class ProductList extends Component {
         this.private_state.search_is_focused = false;
         this.private_state.search_input = "";
     };
-
+    /**
+     * @param { Set<string> } set1
+     * @param { Set<string> } set2
+     * @returns { boolean }
+     * @description returns true if the two sets are equal;
+     * the order of the elements in the sets does not matter
+     */
+    areSetsEqual = (set1, set2) => {
+        if (set1.size !== set2.size) {
+            return false;
+        }
+        for (const item of set1) {
+            if (!set2.has(item)) {
+                return false;
+            }
+        }
+        return true;
+    };
     static components = { NavBar };
 }
 ProductList.template = "ProductList";

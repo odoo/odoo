@@ -45,12 +45,13 @@
             <div class="container mb-5">
                 <div class="row">
 <!-- Looping through all the available products -->
-                    <t t-foreach="selfOrder.config.pos_categories" t-as="tag" t-key="tag.id">
-                        <t t-esc="tag.name"/>
-                        <!-- <t t-foreach="filteredProducts().filter(product => product.tag_list.has(tag))" t-as="product" t-key="product.product_id"> -->
-                        <!-- <t t-foreach="compose(filteredProducts, filter(true))" t-as="product" t-key="product.product_id"> -->
+                        <t t-set="tag" t-value="filteredProducts()[0].tag_list"/>
+                        <t t-esc="Array.from(tag).join(' ')"/>
                         <t t-foreach="filteredProducts()" t-as="product" t-key="product.product_id">
-
+                            <t t-if="!areSetsEqual(product.tag_list, tag)">
+                                <t t-set="tag" t-value="product.tag_list"/>
+                                <t t-esc="Array.from(tag).join(' ')"/>
+                            </t>
                             <div class="col-12 col-sm-6 col-md-4">
                                 <div t-on-click="() => props.viewProduct(product.product_id)" class="mt-2 bg-white d-flex align-items-center shadow-sm m-1">
                 <!-- Product IMAGE -->
@@ -74,8 +75,6 @@
                                 </div>
                             </div>
                         </t>
-                    </t>
-
                 </div>
             </div>
 <!-- Go to Cart Button -->
