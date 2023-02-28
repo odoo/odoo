@@ -206,7 +206,8 @@ class WebsiteBlog(http.Controller):
         blogs = Blog.search(request.website.website_domain(), order="create_date asc, id asc")
 
         if not blog and len(blogs) == 1:
-            return request.redirect('/blog/%s' % slug(blogs[0]), code=302)
+            url = QueryURL('/blog/%s' % slug(blogs[0]), search=search, **opt)()
+            return request.redirect(url, code=302)
 
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
 
