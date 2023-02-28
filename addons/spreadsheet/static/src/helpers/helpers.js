@@ -37,11 +37,6 @@ export function getMaxObjectId(o) {
     return max;
 }
 
-/** converts and orderBy Object to a string equivalent that can be processed by orm.call */
-export function orderByToString(orderBy) {
-    return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
-}
-
 /**
  * Convert a spreadsheet date representation to an odoo
  * server formatted date

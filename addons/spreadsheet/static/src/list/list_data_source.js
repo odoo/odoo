@@ -1,10 +1,10 @@
 /** @odoo-module */
 
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
-import { orderByToString } from "@spreadsheet/helpers/helpers";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
+import { orderByToString } from "@web/views/utils";
 
 import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
 
