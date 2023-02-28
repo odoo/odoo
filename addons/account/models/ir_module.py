@@ -35,19 +35,23 @@ class IrModule(models.Model):
         for module in self:
             templates = {}
             if module.category_id == chart_category or module.name == 'account':
-                python_module = import_module(f"odoo.addons.{module.name}.models")
-                templates = {
-                    fct._l10n_template[0]: {
-                        'name': fct(ChartTemplate).get('name'),
-                        'parent': fct(ChartTemplate).get('parent'),
-                        'country': fct(ChartTemplate).get('country', ''),
-                        'visible': fct(ChartTemplate).get('visible', True),
-                        'module': module.name,
+                try:
+                    python_module = import_module(f"odoo.addons.{module.name}.models")
+                except ModuleNotFoundError:
+                    templates = {}
+                else:
+                    templates = {
+                        fct._l10n_template[0]: {
+                            'name': fct(ChartTemplate).get('name'),
+                            'parent': fct(ChartTemplate).get('parent'),
+                            'country': fct(ChartTemplate).get('country', ''),
+                            'visible': fct(ChartTemplate).get('visible', True),
+                            'module': module.name,
+                        }
+                        for _name, mdl in getmembers(python_module, template_module)
+                        for _name, cls in getmembers(mdl, template_class)
+                        for _name, fct in getmembers(cls, template_function)
                     }
-                    for _name, mdl in getmembers(python_module, template_module)
-                    for _name, cls in getmembers(mdl, template_class)
-                    for _name, fct in getmembers(cls, template_function)
-                }
 
             module.account_templates = {
                 code: templ(self.env, code, **vals)
