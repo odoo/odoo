@@ -101,11 +101,11 @@ export class ProductList extends Component {
      * example:
      * set1 = {1, 2, 3}
      * set2 = {1, 2, 3, 4}
-     * set1IsSubsetOfSet2(set1, set2) returns true
+     * setIsSubset(set1, set2) returns true
      *
      * set1 = {1, 2, 3}
      * set2 = {1, 2, 4}
-     * set1IsSubsetOfSet2(set1, set2) returns false
+     * setIsSubset(set1, set2) returns false
      *
      */
     setIsSubset(set1, set2) {
