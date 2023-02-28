@@ -21,14 +21,14 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         cls.payment_debit_account_id = cls.company_data['default_journal_bank'].payment_debit_account_id.copy()
         cls.payment_credit_account_id = cls.company_data['default_journal_bank'].payment_credit_account_id.copy()
 
-        cls.custom_payment_method_in = cls.env['account.payment.method'].create({
+        cls.custom_payment_method_in = cls.env['account.payment.method'].sudo().create({
             'name': 'custom_payment_method_in',
             'code': 'CUSTOMIN',
             'payment_type': 'inbound',
         })
         cls.manual_payment_method_in = cls.env.ref('account.account_payment_method_manual_in')
 
-        cls.custom_payment_method_out = cls.env['account.payment.method'].create({
+        cls.custom_payment_method_out = cls.env['account.payment.method'].sudo().create({
             'name': 'custom_payment_method_out',
             'code': 'CUSTOMOUT',
             'payment_type': 'outbound',
