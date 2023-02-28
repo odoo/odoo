@@ -1,0 +1,23 @@
+<odoo noupdate="1">
+
+    <record id="sequence_customer_payment_group" model="ir.sequence">
+        <field name="name">Customer Payment Group Sequence</field>
+        <field name="code">l10n_ar.payment.group.customer</field>
+        <field name="prefix">00001-</field>
+        <field eval="1" name="number_next"/>
+        <field eval="1" name="number_increment"/>
+        <field eval="8" name="padding"/>
+        <field eval="False" name="company_id"/>
+    </record>
+
+    <record id="sequence_supplier_payment_group" model="ir.sequence">
+        <field name="name">Supplier Payment Group Sequence</field>
+        <field name="code">l10n_ar.payment.group.supplier</field>
+        <field name="prefix">00001-</field>
+        <field eval="1" name="number_next"/>
+        <field eval="1" name="number_increment"/>
+        <field eval="8" name="padding"/>
+        <field eval="False" name="company_id"/>
+    </record>
+
+</odoo>

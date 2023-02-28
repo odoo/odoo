@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <group name="group2">
+                <label for="withholding_ids" colspan="2"/>
+                <field name="withholding_ids" nolabel="1" colspan="2">
+                    <tree editable="bottom">
+                        <field name="tax_id" domain="[('l10n_ar_withholding', '=', parent.partner_type), ('company_id', '=', parent.company_id)]" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="name"/>
+                        <field name="base_amount"/>
+                        <field name="amount"/>
+                        <field name="currency_id" invisible="True"/>
+                    </tree>
+                </field>
+                <field name="net_amount"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>
