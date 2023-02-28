@@ -66,14 +66,14 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('pos_self_order_kiosk_mode','pos_self_order_view_mode', 'pos_self_order_phone_mode')
     def _compute_self_order_kiosk(self):
         for record in self:
-            record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode or record.pos_self_order_phone_mode
+            record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode
             if record.pos_self_order_kiosk_mode :
                 record.pos_self_order_phone_mode = False
                 record.pos_self_order_view_mode = False
     @api.onchange('pos_self_order_view_mode')
     def _compute_self_order_view(self):
         for record in self:
-            record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode or record.pos_self_order_phone_mode
+            record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode
             if record.pos_self_order_view_mode:
                 record.pos_self_order_kiosk_mode = False
             else:
@@ -81,7 +81,7 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('pos_self_order_phone_mode')
     def _compute_self_order_phone(self):
         for record in self:
-            record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode or record.pos_self_order_phone_mode
+            record.env["pos.config"].search([]).module_pos_self_order = record.pos_self_order_kiosk_mode or record.pos_self_order_view_mode
             if record.pos_self_order_phone_mode:
                 record.pos_self_order_view_mode = True
                 record.pos_self_order_kiosk_mode = False
