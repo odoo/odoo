@@ -4,13 +4,17 @@ import { makeDeferred } from "@mail/utils/deferred";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
+    dragenterFiles,
+    dropFiles,
     isScrolledToBottom,
     nextAnimationFrame,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { dom, makeTestPromise } from "web.test_utils";
+import { dom, file, makeTestPromise } from "web.test_utils";
+
+const { createFile } = file;
 
 const { triggerEvent } = dom;
 
@@ -316,6 +320,42 @@ QUnit.module("mail", {}, function () {
                 "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
             );
             assert.containsOnce(document.body, ".o_Chatter_thread", "there should be a thread");
+        });
+
+        QUnit.test("upload attachment on draft record", async function (assert) {
+            const views = {
+                "res.partner,false,form": `
+                    <form string="Partners">
+                        <sheet>
+                            <field name="name"/>
+                        </sheet>
+                        <div class="oe_chatter">
+                            <field name="message_ids"/>
+                        </div>
+                    </form>`,
+            };
+            const { openView } = await start({ serverData: { views } });
+            await openView({
+                res_model: "res.partner",
+                views: [[false, "form"]],
+            });
+            const file = await createFile({
+                content: "hello, world",
+                contentType: "text/plain",
+                name: "text.txt",
+            });
+            assert.containsNone(
+                document.body,
+                ".o_ChatterTopbar_buttonToggleAttachments:contains(1)"
+            );
+            await afterNextRender(() => dragenterFiles(document.querySelector(".o_Chatter")));
+            await afterNextRender(() =>
+                dropFiles(document.querySelector(".o_Chatter_dropZone"), [file])
+            );
+            assert.containsOnce(
+                document.body,
+                ".o_ChatterTopbar_buttonToggleAttachments:contains(1)"
+            );
         });
 
         QUnit.test("basic chatter rendering without activities", async function (assert) {
