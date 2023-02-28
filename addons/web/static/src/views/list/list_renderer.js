@@ -166,8 +166,8 @@ export class ListRenderer extends Component {
         });
 
         useBus(
-            this.env.bus,
-            "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+            this.props.list.model,
+            "FIELD_IS_DIRTY",
             (ev) => (this.lastIsDirty = ev.detail)
         );
 

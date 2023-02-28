@@ -91,8 +91,13 @@ export class HtmlField extends Component {
             iframeVisible: false,
         });
 
-        useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
-        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({detail}) => detail.proms.push(this.commitChanges()));
+        const { model } = this.props.record;
+        useBus(model, "WILL_SAVE_URGENTLY", () =>
+            this.commitChanges({ urgent: true })
+        );
+        useBus(model, "NEED_LOCAL_CHANGES", ({ detail }) =>
+            detail.proms.push(this.commitChanges())
+        );
 
         useSpellCheck();
 
@@ -293,7 +298,7 @@ export class HtmlField extends Component {
             !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
             stripHistoryIds(value) !== stripHistoryIds(lastValue)
         ) {
-            this.props.record.model.env.bus.trigger("RELATIONAL_MODEL:FIELD_IS_DIRTY", false);
+            this.props.record.model.trigger("FIELD_IS_DIRTY", false);
             this.currentEditingValue = value;
             await this.props.record.update({ [this.props.name]: value });
         }
@@ -314,10 +319,7 @@ export class HtmlField extends Component {
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
         this.wysiwyg.odooEditor.editable.addEventListener("input", () =>
-            this.props.record.model.env.bus.trigger(
-                "RELATIONAL_MODEL:FIELD_IS_DIRTY",
-                this._isDirty()
-            )
+            this.props.record.model.trigger("FIELD_IS_DIRTY", this._isDirty())
         );
 
         this.isRendered = true;

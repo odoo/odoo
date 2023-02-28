@@ -202,7 +202,7 @@ export class Record extends DataPoint {
 
     async askChanges() {
         const proms = [];
-        this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
+        this.model.trigger("NEED_LOCAL_CHANGES", { proms });
         return Promise.all([...proms, this._updatePromise]);
     }
 
@@ -691,7 +691,7 @@ export class Record extends DataPoint {
     async urgentSave() {
         this.model.__bm__.bypassMutex = true;
         this._urgentSave = true;
-        this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
+        this.model.trigger("WILL_SAVE_URGENTLY");
         await Promise.resolve();
         this.__syncData();
         let isValid = true;

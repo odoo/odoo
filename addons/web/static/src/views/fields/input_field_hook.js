@@ -3,7 +3,7 @@
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
-import { useComponent, useEffect, useRef, useEnv } from "@odoo/owl";
+import { useComponent, useEffect, useRef } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -16,7 +16,6 @@ import { useComponent, useEffect, useRef, useEnv } from "@odoo/owl";
  * @param {string} [refName="input"] the ref of the input/textarea
  */
 export function useInputField(params) {
-    const env = useEnv();
     const inputRef = params.ref || useRef(params.refName || "input");
     const component = useComponent();
 
@@ -46,7 +45,7 @@ export function useInputField(params) {
      */
     function onInput(ev) {
         isDirty = ev.target.value !== lastSetValue;
-        component.props.record.model.env.bus.trigger("RELATIONAL_MODEL:FIELD_IS_DIRTY", isDirty);
+        component.props.record.model.trigger("FIELD_IS_DIRTY", isDirty);
     }
 
     /**
@@ -77,10 +76,7 @@ export function useInputField(params) {
                 lastSetValue = ev.target.value;
             }
 
-            component.props.record.model.env.bus.trigger(
-                "RELATIONAL_MODEL:FIELD_IS_DIRTY",
-                isDirty
-            );
+            component.props.record.model.trigger("FIELD_IS_DIRTY", isDirty);
         }
     }
     function onKeydown(ev) {
@@ -119,8 +115,9 @@ export function useInputField(params) {
         }
     });
 
-    useBus(env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => commitChanges(true));
-    useBus(env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", (ev) =>
+    const { model } = component.props.record;
+    useBus(model, "WILL_SAVE_URGENTLY", () => commitChanges(true));
+    useBus(model, "NEED_LOCAL_CHANGES", (ev) =>
         ev.detail.proms.push(commitChanges())
     );
 
@@ -157,10 +154,7 @@ export function useInputField(params) {
             if ((val || false) !== (component.props.record.data[component.props.name] || false)) {
                 await component.props.record.update({ [component.props.name]: val });
                 lastSetValue = inputRef.el.value;
-                component.props.record.model.env.bus.trigger(
-                    "RELATIONAL_MODEL:FIELD_IS_DIRTY",
-                    isDirty
-                );
+                component.props.record.model.trigger("FIELD_IS_DIRTY", isDirty);
             }
         }
     }

@@ -9,8 +9,8 @@ export class FormStatusIndicator extends Component {
             fieldIsDirty: false,
         });
         useBus(
-            this.env.bus,
-            "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+            this.props.model,
+            "FIELD_IS_DIRTY",
             (ev) => (this.state.fieldIsDirty = ev.detail)
         );
     }
