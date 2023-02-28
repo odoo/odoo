@@ -597,4 +597,29 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
         assert.containsNone(target, ".modal", "command palette should not open");
     });
+
+    QUnit.test("auto save record when field toggled", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <field name="trululu" widget="statusbar" options="{'clickable': 1}" />
+                    </header>
+                </form>`,
+            mockRPC(_route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                }
+            },
+        });
+        const clickableButtons = target.querySelectorAll(
+            ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current)"
+        );
+        await click(clickableButtons[clickableButtons.length - 1]);
+        assert.verifySteps(["write"]);
+    });
 });
