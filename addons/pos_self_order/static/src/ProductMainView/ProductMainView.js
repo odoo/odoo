@@ -20,6 +20,14 @@ export class ProductMainView extends Component {
         this.selfOrder = useSelfOrder();
         this.formatMonetary = formatMonetary;
     }
+
+    onMounted() {
+        // With radio buttons `t-model` selects the default input by searching for inputs with
+        // a matching `value` attribute. In our case, we use `t-att-value` so `value` is
+        // not found yet and no radio is selected by default.
+        // We then manually select the first input of each radio attribute.
+        $(this.el).find('input[type="radio"]:first').prop("checked", true);
+    }
     setValue = (qty) => {
         if (qty >= 0) {
             this.private_state.qty = qty;
@@ -28,4 +36,5 @@ export class ProductMainView extends Component {
     static components = { NavBar, IncrementCounter };
 }
 ProductMainView.template = "ProductMainView";
+
 export default { ProductMainView };
