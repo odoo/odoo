@@ -439,7 +439,10 @@ class AccountAccount(models.Model):
         args = args or []
         domain = []
         if name:
-            domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
+            if operator in ('=', '!='):
+                domain = ['|', ('code', '=', name.split(' ')[0]), ('name', operator, name)]
+            else:
+                domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
