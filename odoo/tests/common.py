@@ -324,21 +324,6 @@ class OdooSuite(BackportSuite):
         return self.countTestCases() and any(isinstance(test_case, HttpCase) for test_case in self)
 
 
-class MetaCase(type):
-    """ Metaclass of test case classes to assign default 'test_tags':
-        'standard', 'at_install' and the name of the module.
-    """
-    def __init__(cls, name, bases, attrs):
-        super(MetaCase, cls).__init__(name, bases, attrs)
-        # assign default test tags
-        if cls.__module__.startswith('odoo.addons.'):
-            if getattr(cls, 'test_tags', None) is None:
-                cls.test_tags = {'standard', 'at_install'}
-            cls.test_module = cls.__module__.split('.')[2]
-            cls.test_class = cls.__name__
-            cls.test_sequence = 0
-
-
 def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     """Takes some xml and normalize it to make it comparable to other xml
     in particular, blank text is removed, and the output is pretty-printed
@@ -359,10 +344,20 @@ def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     return etree.tostring(arch_string, pretty_print=True, encoding='unicode')
 
 
-class BaseCase(unittest.TestCase, metaclass=MetaCase):
+class BaseCase(unittest.TestCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
     """
+    def __init_subclass__(cls):
+        """Assigns default test tags ``standard`` and ``at_install`` to test
+        cases not having them. Also sets a completely unnecessary
+        ``test_module`` attribute.
+        """
+        super().__init_subclass__()
+        if cls.__module__.startswith('odoo.addons.'):
+            if getattr(cls, 'test_tags', None) is None:
+                cls.test_tags = {'standard', 'at_install'}
+            cls.test_module = cls.__module__.split('.')[2]
 
     _python_version = sys.version_info
     if _python_version < (3, 8):

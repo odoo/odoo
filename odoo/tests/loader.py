@@ -51,7 +51,7 @@ def make_suite(module_names, position='at_install'):
         for t in unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
         if position_tag.check(t) and config_tags.check(t)
     )
-    return OdooSuite(sorted(tests, key=lambda t: t.test_sequence))
+    return OdooSuite(tests)
 
 def run_suite(suite, module_name=None):
     # avoid dependency hell

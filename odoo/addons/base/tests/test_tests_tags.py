@@ -16,7 +16,6 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertTrue(hasattr(fc, 'test_tags'))
         self.assertEqual(fc.test_tags, {'at_install', 'standard'})
         self.assertEqual(fc.test_module, 'base')
 
@@ -28,7 +27,6 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertTrue(hasattr(fc, 'test_tags'))
         self.assertEqual(fc.test_tags, {'at_install', 'standard'})
         self.assertEqual(fc.test_module, 'base')
 

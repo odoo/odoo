@@ -14,10 +14,9 @@ from odoo.tests.runner import OdooTestResult
 
 _logger = logging.getLogger(__name__)
 
-from odoo.tests import MetaCase
 
-
-class TestTestSuite(TestCase, metaclass=MetaCase):
+class TestTestSuite(TestCase):
+    test_tags = {'standard', 'at_install'}
 
     def test_test_suite(self):
         """ Check that OdooSuite handles unittest.TestCase correctly. """
