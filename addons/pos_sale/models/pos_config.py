@@ -13,3 +13,5 @@ class PosConfig(models.Model):
     down_payment_product_id = fields.Many2one('product.product',
         string="Down Payment Product",
         help="This product will be used as down payment on a sale order.")
+    down_payment_method = fields.Selection(string="Down Payment Type", selection=[(
+        "percentage", "Apply a percentage"), ("fixed_amount", "Apply a fixed amount")], default="percentage", required=True)

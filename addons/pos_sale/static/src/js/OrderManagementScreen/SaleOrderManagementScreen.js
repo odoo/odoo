@@ -248,15 +248,25 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         down_payment = sale_order.amount_total;
                     }
 
+                    let popupTitle = "";
+                    if (this.env.pos.config.down_payment_method == "fixed_amount") {
+                        popupTitle = this.env._t("Amount of %s");
+                    } else {
+                        popupTitle = this.env._t("Percentage of %s");
+                    }
                     const { confirmed, payload } = await this.popup.add(NumberPopup, {
                         title: sprintf(
-                            this.env._t("Percentage of %s"),
+                            popupTitle,
                             this.env.pos.format_currency(sale_order.amount_total)
                         ),
                         startingValue: 0,
                     });
                     if (confirmed) {
-                        down_payment = (down_payment * parse.float(payload)) / 100;
+                        if (this.env.pos.config.down_payment_method == "fixed_amount") {
+                            down_payment = parse.float(payload);
+                        } else {
+                            down_payment = (down_payment * parse.float(payload)) / 100;
+                        }
                     }
 
                     if (down_payment > sale_order.amount_unpaid) {
