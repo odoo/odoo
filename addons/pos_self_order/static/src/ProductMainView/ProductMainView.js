@@ -53,7 +53,6 @@ export class RadioProductAttribute extends BaseProductAttribute {
         // this.root.el.querySelector("input[type=radio]").checked = true;
     }
 }
-
 export class SelectProductAttribute extends BaseProductAttribute {
     static template = "SelectProductAttribute";
 }
