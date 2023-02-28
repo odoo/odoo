@@ -4,10 +4,14 @@
     <t t-name="NumberPopup" owl="1">
         <div class="popup popup-number" t-att-class="{ 'popup-password': props.isPassword }">
             <header class="title drag-handle">
-                <t t-esc="props.title" />
+                <span><t t-esc="props.title"/></span>
+                <span t-if="props.subtitle" class="subtitle"><t t-esc="props.subtitle"/></span>
             </header>
-            <div class="popup-input value active">
-                <span t-att-class="{ 'highlight': state.toStartOver }"><t t-esc="inputBuffer"/></span>
+            <div class="input-symbol">
+                <div class="popup-input value active">
+                    <span class="input-value" t-att-class="{ 'highlight': state.toStartOver }"><t t-esc="inputBuffer"/></span>
+                    <span t-if="props.inputSuffix"><t t-esc="props.inputSuffix" /></span>
+                </div>
             </div>
             <div class="popup-numpad">
                 <!-- FIXME POSREF do we really need to hardcode all of these? -->
@@ -49,7 +53,12 @@
             </div>
             <footer class="footer centered">
                 <div class="button confirm highlight" t-on-mousedown.prevent="confirm">
-                    <t t-esc="props.confirmText" />
+                    <div class="flex-column">
+                        <span><t t-esc="props.confirmText" /></span>
+                        <span t-if="props.getInputBufferReminder(state.buffer)" class="input-buffer-reminder">
+                            (<t t-esc="props.getInputBufferReminder(state.buffer)" />)
+                        </span>
+                    </div>
                 </div>
                 <div class="button cancel" t-on-mousedown.prevent="cancel">
                     <t t-esc="props.cancelText" />
