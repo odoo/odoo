@@ -29,10 +29,10 @@
                 <t t-if="props.product.attributes">
                     <t t-foreach="props.product.attributes" t-as="attribute" t-key="attribute.id">
                         <div class="attribute_name" t-esc="attribute.name"/>
-                        <t t-set="values" t-value="attribute.values"/>
-                        <t t-call="RadioProductAttribute" t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
-                        <t t-call="SelectProductAttribute" t-if="attribute.display_type === 'select'" attribute="attribute"/>
-                        <!-- <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/> -->
+                        <!-- <t t-set="values" t-value="attribute.values"/> -->
+                        <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
+                        <!-- <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
+                        <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/> -->
                     </t>
                 </t>
     <!-- Customer customer_note -->
@@ -56,9 +56,11 @@
             </div>
     </t>
     <t t-name="RadioProductAttribute" owl="1">
-        <div class="configurator_radio">
+        <div class="configurator_radio" t-ref="root">
             <div class="table">
-                <t t-foreach="values" t-as="value" t-key="value.id">
+                <t t-log="attribute"/>
+                <t t-log="values"/>
+                <!-- <t t-foreach="values" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell">
                         <input type="radio" t-model="state.selected_value" t-att-name="attribute.id"
                                    t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
@@ -70,7 +72,7 @@
                             + <t t-esc="formatMonetary(value.price_extra, {currencyId: selfOrder.config.currency_id})" />
                         </span>
                     </div>
-                </t>
+                </t> -->
             </div>
         </div>
     </t>

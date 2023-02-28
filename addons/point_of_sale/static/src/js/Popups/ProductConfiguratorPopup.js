@@ -6,7 +6,6 @@ export class BaseProductAttribute extends Component {
     setup() {
         super.setup();
         this.env.attribute_components.push(this);
-
         this.attribute = this.props.attribute;
         this.values = this.attribute.values;
         this.state = useState({

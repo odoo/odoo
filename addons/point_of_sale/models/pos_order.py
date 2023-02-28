@@ -19,7 +19,7 @@ import base64
 
 _logger = logging.getLogger(__name__)
 
-
+import json
 class PosOrder(models.Model):
     _name = "pos.order"
     _inherit = ["portal.mixin"]
@@ -873,7 +873,7 @@ class PosOrder(models.Model):
         """
         order_ids = []
         for order in orders:
-            print("order",order)
+            print(json.dumps(order, indent=4, sort_keys=True, default=str))
             existing_order = False
             if 'server_id' in order['data']:
                 existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)

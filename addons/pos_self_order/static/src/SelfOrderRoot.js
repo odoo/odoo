@@ -165,6 +165,7 @@ class SelfOrderRoot extends Component {
             //         attribute_line_ids: attribute_line_ids,
             //     })
             // );
+            console.log("this.result_from_get_menu :>> ", this.result_from_get_menu);
             this.productList = this.result_from_get_menu.map(
                 ({ id, price_info, pos_categ_id, ...rest }) => ({
                     product_id: id,
@@ -188,9 +189,10 @@ class SelfOrderRoot extends Component {
                         (id) => id in this.selfOrder.config.attributes_by_ptal_id
                     )
                 ) {
-                    product.attributes = product.attribute_line_ids
-                        .map((id) => this.selfOrder.config.attributes_by_ptal_id[id])
-                        .filter((attr) => attr !== undefined);
+                    product.attributes = _.map(
+                        product.attribute_line_ids,
+                        (id) => this.selfOrder.config.attributes_by_ptal_id[id]
+                    ).filter((attr) => attr !== undefined);
                 }
             });
             console.log("this.productList :>> ", this.productList);

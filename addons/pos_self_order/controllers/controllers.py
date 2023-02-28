@@ -419,6 +419,7 @@ def createOrderLinesFromCart(cart, pos_id):
         lines.append([0, 0, {
             'product_id': item.get('product_id'),
             'qty': item.get('qty'),
+            'price_extra': item.get('price_extra'),
             'price_unit': product_sudo.list_price,
             'price_subtotal': product_sudo.list_price * item.get('qty'),
             'price_subtotal_incl': product_sudo.get_product_info_pos(product_sudo.list_price, item.get('qty'), int(pos_id))['all_prices']['price_with_tax'] * item.get('qty'),
@@ -426,7 +427,7 @@ def createOrderLinesFromCart(cart, pos_id):
             'tax_ids': product_sudo.taxes_id,
             'id': 1,
             'pack_lot_ids': [],
-            'description': '',
+            'description': item.get('description'),
             'full_product_name': product_sudo.name,
             'price_extra': 0,
             'customer_note': item.get('customer_note'),
