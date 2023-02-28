@@ -2569,11 +2569,14 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onDragAndDropStop: async function (ev) {
-        const $modal = ev.data.$snippet.closest('.modal');
+        const modalEl = ev.data.$snippet[0].closest('.modal');
+        const carouselItemEl = ev.data.$snippet[0].closest('.carousel-item');
         // If the snippet is in a modal, destroy editors only in that modal.
         // This to prevent the modal from closing because of the cleanForSave
-        // on each editors.
-        await this._destroyEditors($modal.length ? $modal : null);
+        // on each editors. Same thing for 'carousel-item', otherwise all the
+        // editors of the 'carousel' are destroyed and the 'carousel' jumps to
+        // first slide.
+        await this._destroyEditors(carouselItemEl ? $(carouselItemEl) : modalEl ? $(modalEl) : null);
         await this._activateSnippet(ev.data.$snippet);
     },
     /**
