@@ -230,7 +230,7 @@ export class KanbanRecord extends Component {
         const { archInfo, canResequence, forceGlobalClick, group, record } = this.props;
         const classes = ["o_kanban_record d-flex"];
         if (canResequence) {
-            classes.push("o_record_draggable");
+            classes.push("o_draggable");
         }
         if (forceGlobalClick || archInfo.openAction) {
             classes.push("oe_kanban_global_click");
