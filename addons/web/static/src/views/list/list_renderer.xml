@@ -251,6 +251,7 @@
                                 string="button.string"
                                 title="button.title"
                                 tabindex="props.list.editedRecord ? '-1' : '0'"
+                                onClick="isX2Many and record.isVirtual ? displaySaveNotification.bind(this) : ''"
                             />
                         </t>
                     </td>
