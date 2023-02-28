@@ -403,6 +403,29 @@ class TestNoThread(TestMailCommon, TestRecipients):
     """ Specific tests for cross models thread features"""
 
     @users('employee')
+    def test_message_format(self):
+        """ Test formatting of messages when linked to non-thread models.
+        Format could be asked notably if an inbox notification due to a
+        'message_notify' happens. """
+        test_record = self.env['mail.test.nothread'].create({
+            'customer_id': self.partner_1.id,
+            'name': 'Not A Thread',
+        })
+        message = self.env['mail.message'].create({
+            'model': test_record._name,
+            'record_name': 'Not used in message_format',
+            'res_id': test_record.id,
+        })
+        formatted = message.message_format()[0]
+        self.assertEqual(formatted['default_subject'], test_record.name)
+        self.assertEqual(formatted['record_name'], test_record.name)
+
+        test_record.write({'name': 'Just Test'})
+        formatted = message.message_format()[0]
+        self.assertEqual(formatted['default_subject'], 'Just Test')
+        self.assertEqual(formatted['record_name'], 'Just Test')
+
+    @users('employee')
     def test_message_notify(self):
         """ Test notifying on non-thread models, using MailThread as an abstract
         class with model and res_id giving the record used for notification.
