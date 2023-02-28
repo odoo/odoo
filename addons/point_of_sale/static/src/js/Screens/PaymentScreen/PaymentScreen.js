@@ -147,6 +147,7 @@ export class PaymentScreen extends Component {
             title: tip ? this.env._t("Change Tip") : this.env._t("Add Tip"),
             startingValue: value,
             isInputSelected: true,
+            inputSuffix: this.env.pos.currency.symbol,
         });
 
         if (confirmed) {

@@ -94,8 +94,17 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         const { confirmed, payload: selectedOption } = await this.popup.add(SelectionPopup, {
             title: this.env._t("What do you want to do?"),
             list: [
-                { id: "0", label: this.env._t("Apply a down payment"), item: false },
-                { id: "1", label: this.env._t("Settle the order"), item: true },
+                { id: "0", label: this.env._t("Settle the order"), item: "settle" },
+                {
+                    id: "1",
+                    label: this.env._t("Apply a down payment (percentage)"),
+                    item: "dpPercentage",
+                },
+                {
+                    id: "2",
+                    label: this.env._t("Apply a down payment (fixed amount)"),
+                    item: "dpAmount",
+                },
             ],
         });
 
@@ -159,7 +168,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                 currentPOSOrder.set_pricelist(orderPricelist);
             }
 
-            if (selectedOption) {
+            if (selectedOption == "settle") {
                 // settle the order
                 const lines = sale_order.order_line;
                 const product_to_add_in_pos = lines
@@ -249,9 +258,13 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
             } else {
                 // apply a downpayment
                 if (this.env.pos.config.down_payment_product_id) {
-                    const lines = sale_order.order_line;
+                    let lines = sale_order.order_line;
                     const tab = [];
-
+                    lines = lines.filter((line) => {
+                        return (
+                            line.product_id[0] !== this.env.pos.config.down_payment_product_id[0]
+                        );
+                    });
                     for (let i = 0; i < lines.length; i++) {
                         tab[i] = {
                             product_name: lines[i].product_id[1],
@@ -282,14 +295,48 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         down_payment = sale_order.amount_total;
                     }
 
+                    let popupTitle = "";
+                    let popupInputSuffix = "";
+                    const popupTotalDue = sale_order.amount_total;
+                    let getInputBufferReminder = () => false;
+                    const popupSubtitle = this.env._t("Due balance: %s");
+                    if (selectedOption == "dpAmount") {
+                        popupTitle = this.env._t("Down Payment");
+                        popupInputSuffix = this.env.pos.currency.symbol;
+                    } else {
+                        popupTitle = this.env._t("Down Payment");
+                        popupInputSuffix = "%";
+                        getInputBufferReminder = (buffer) => {
+                            if (buffer && buffer.length > 0) {
+                                const percentage = parseFloat(buffer);
+                                if (isNaN(percentage)) {
+                                    return false;
+                                }
+                                return this.env.utils.formatCurrency(
+                                    (popupTotalDue * percentage) / 100
+                                );
+                            } else {
+                                return false;
+                            }
+                        };
+                    }
                     const { confirmed, payload } = await this.popup.add(NumberPopup, {
-                        title: sprintf(
-                            this.env._t("Percentage of %s"),
+                        title: popupTitle,
+                        subtitle: sprintf(
+                            popupSubtitle,
                             this.env.utils.formatCurrency(sale_order.amount_total)
                         ),
+                        inputSuffix: popupInputSuffix,
                         startingValue: 0,
+                        getInputBufferReminder,
                     });
-                    if (confirmed) {
+
+                    if (!confirmed) {
+                        return;
+                    }
+                    if (selectedOption == "dpAmount") {
+                        down_payment = parseFloat(payload);
+                    } else {
                         down_payment = (down_payment * parseFloat(payload)) / 100;
                     }
 
