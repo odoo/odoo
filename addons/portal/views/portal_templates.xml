@@ -531,6 +531,13 @@
                     <button type="submit" class="btn btn-secondary">Change Password</button>
                 </form>
             </section>
+            <section name="portal_revoke_all_devices_popup">
+            <h3>Revoke All Sessions</h3>
+                <t t-set="path"/>
+                    <button type="button" class="btn btn-secondary" id="portal_revoke_all_sessions_popup">
+                        Log out from all devices
+                    </button>
+            </section>
             <section t-if="debug and allow_api_keys">
                 <h3>
                 Developer API Keys
