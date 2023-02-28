@@ -519,15 +519,21 @@ export class Record extends DataPoint {
     }
 
     get evalContext() {
-        return {
-            // ...
-            ...this.dataContext,
-            ...this.context,
-            active_id: this.resId || false,
-            active_ids: this.resId ? [this.resId] : [],
-            active_model: this.resModel,
-            current_company_id: this.model.company.currentCompany.id,
-        };
+        if (!this.__evalContext) {
+            // store evalContext and reset it after a tick, as all calls during
+            // the same tick will produce the exact same evalContext
+            this.__evalContext = {
+                // ...
+                ...this.dataContext,
+                ...this.context,
+                active_id: this.resId || false,
+                active_ids: this.resId ? [this.resId] : [],
+                active_model: this.resModel,
+                current_company_id: this.model.company.currentCompany.id,
+            };
+            Promise.resolve().then(() => (this.__evalContext = null));
+        }
+        return this.__evalContext;
     }
 
     /**
@@ -782,9 +788,10 @@ export class Record extends DataPoint {
                     : false;
             } else if (fieldType === "reference") {
                 const value = changes[fieldName];
-                changes[fieldName] = value && value.resModel && value.resId
-                    ? `${value.resModel},${value.resId}`
-                    : (value || false);
+                changes[fieldName] =
+                    value && value.resModel && value.resId
+                        ? `${value.resModel},${value.resId}`
+                        : value || false;
             }
         }
 
