@@ -543,7 +543,7 @@ class PosOrder(models.Model):
                     })
             else:
                 if rounding_line:
-                    rounding_line.with_context(check_move_validity=False).unlink()
+                    rounding_line.with_context(skip_invoice_sync=True, check_move_validity=False).unlink()
             if rounding_line_difference:
                 existing_terms_line = new_move.line_ids.filtered(
                     lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
@@ -555,12 +555,10 @@ class PosOrder(models.Model):
                     existing_terms_line_new_val = float_round(
                         -existing_terms_line.credit + rounding_line_difference,
                         precision_rounding=new_move.currency_id.rounding)
-                existing_terms_line.write({
+                existing_terms_line.with_context(skip_invoice_sync=True).write({
                     'debit': existing_terms_line_new_val > 0.0 and existing_terms_line_new_val or 0.0,
                     'credit': existing_terms_line_new_val < 0.0 and -existing_terms_line_new_val or 0.0,
                 })
-
-                new_move._recompute_payment_terms_lines()
         return new_move
 
     def action_pos_order_paid(self):
