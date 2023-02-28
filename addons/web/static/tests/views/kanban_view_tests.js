@@ -1724,7 +1724,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("quick create record with quick_create_view", async (assert) => {
-        assert.expect(19);
+        assert.expect(20);
 
         serverData.views["partner,some_view_ref,form"] =
             "<form>" +
@@ -1795,6 +1795,7 @@ QUnit.module("Views", (hooks) => {
             "get_views", // form view in quick create
             "onchange", // quick create
             "create", // should perform a create to create the record
+            "read",
             "onchange", // new quick create
             "read", // read the created record
         ]);
@@ -2024,7 +2025,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("quick create record in grouped on m2o (with quick_create_view)", async (assert) => {
-        assert.expect(15);
+        assert.expect(16);
 
         serverData.views["partner,some_view_ref,form"] =
             "<form>" +
@@ -2086,6 +2087,7 @@ QUnit.module("Views", (hooks) => {
             "get_views", // form view in quick create
             "onchange", // quick create
             "create", // should perform a create to create the record
+            "read",
             "onchange", // reopen the quick create automatically
             "read", // read the created record
         ]);

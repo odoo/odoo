@@ -141,10 +141,10 @@ export class StatusBarField extends Component {
     selectItem(item) {
         switch (this.props.type) {
             case "many2one":
-                this.props.update([item.id, item.name]);
+                this.props.update([item.id, item.name], { save: true });
                 break;
             case "selection":
-                this.props.update(item.id);
+                this.props.update(item.id, { save: true });
                 break;
         }
     }
