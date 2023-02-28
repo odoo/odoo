@@ -27,7 +27,7 @@
                     </group>
                 </group>
                 <div>
-                    <span class="text-muted">Warning: Work Entry Regeneration will erase all manual configuration (work entry type, deferred time off, ...).</span>
+                    <span class="text-muted">Warning: The work entry regeneration will delete all manual changes on the selected period.</span>
                 </div>
                 <field name="search_criteria_completed" invisible="1"/>
                 <field name="valid" invisible="1"/>
@@ -55,8 +55,10 @@
                             attrs="{'invisible': ['|', ('search_criteria_completed', '=', False), ('valid', '=', False)]}"/>
                     <button name="regenerate_work_entries_disabled"
                             string="Regenerate Work Entries"
-                            class="btn btn-primary disabled"
+                            class="btn btn-primary"
+                            disabled="1"
                             attrs="{'invisible': [('search_criteria_completed', '=', True), ('valid', '=', True)]}"/>
+                    <button name="cancel_button" string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>
