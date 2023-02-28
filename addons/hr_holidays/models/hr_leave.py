@@ -1078,9 +1078,11 @@ class HolidaysRequest(models.Model):
             calendar = holiday.employee_id.resource_calendar_id or company_calendar
             user = holiday.user_id
             if holiday.leave_type_request_unit == 'hour':
-                meeting_name = _("%s on Time Off: %.2f hour(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_hours_display)
+                meeting_name = _("%s on Time Off : %.2f hour(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_hours_display)
+                allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
             else:
-                meeting_name = _("%s on Time Off: %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
+                meeting_name = _("%s on Time Off : %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
+                allday_value = not holiday.request_unit_half
             meeting_values = {
                 'name': meeting_name,
                 'duration': holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
@@ -1088,7 +1090,7 @@ class HolidaysRequest(models.Model):
                 'user_id': user.id,
                 'start': holiday.date_from,
                 'stop': holiday.date_to,
-                'allday': False,
+                'allday': allday_value,
                 'privacy': 'confidential',
                 'event_tz': user.tz,
                 'activity_ids': [(5, 0, 0)],
