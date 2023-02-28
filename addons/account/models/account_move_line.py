@@ -1143,6 +1143,7 @@ class AccountMoveLine(models.Model):
 
     @api.onchange('account_id')
     def _inverse_account_id(self):
+        self._inverse_analytic_distribution()
         self._conditional_add_to_compute('tax_ids', lambda line: (
             line.account_id.tax_ids
             and not line.product_id.taxes_id.filtered(lambda tax: tax.company_id == line.company_id)
