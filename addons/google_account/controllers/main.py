@@ -16,9 +16,10 @@ class GoogleAuth(http.Controller):
         dbname = state.get('d')
         service = state.get('s')
         url_return = state.get('f')
+        base_url = request.httprequest.url_root.strip('/')
 
         if kw.get('code'):
-            access_token, refresh_token, ttl = request.env['google.service']._get_google_tokens(kw['code'], service)
+            access_token, refresh_token, ttl = request.env['google.service'].with_context(base_url=base_url)._get_google_tokens(kw['code'], service)
             # LUL TODO only defined in google_calendar
             request.env.user.google_cal_account_id._set_auth_tokens(access_token, refresh_token, ttl)
             return request.redirect(url_return)
