@@ -1,26 +1,6 @@
 (function (exports, owl) {
     'use strict';
 
-    function _interopNamespace(e) {
-        if (e && e.__esModule) return e;
-        var n = Object.create(null);
-        if (e) {
-            Object.keys(e).forEach(function (k) {
-                if (k !== 'default') {
-                    var d = Object.getOwnPropertyDescriptor(e, k);
-                    Object.defineProperty(n, k, d.get ? d : {
-                        enumerable: true,
-                        get: function () { return e[k]; }
-                    });
-                }
-            });
-        }
-        n["default"] = e;
-        return Object.freeze(n);
-    }
-
-    var owl__namespace = /*#__PURE__*/_interopNamespace(owl);
-
     /*
      * usage: every string should be translated either with _lt if they are registered with a registry at
      *  the load of the app or with Spreadsheet._t in the templates. Spreadsheet._t is exposed in the
@@ -263,6 +243,7 @@
     const DEFAULT_FIGURE_WIDTH = 536;
     // Chart
     const MAX_CHAR_LABEL = 20;
+    const FIGURE_ID_SPLITTER = "??";
     const DEFAULT_GAUGE_LOWER_COLOR = "#cc0000";
     const DEFAULT_GAUGE_MIDDLE_COLOR = "#f1c232";
     const DEFAULT_GAUGE_UPPER_COLOR = "#6aa84f";
@@ -2819,7 +2800,7 @@
             return `background-color: ${this.background}`;
         }
         get chartRuntime() {
-            const runtime = this.env.model.getters.getChartRuntime(this.props.figure.id);
+            const runtime = this.env.model.getters.getChartRuntime(this.env.model.getters.getActiveSheetId(), this.props.figure.id);
             if (!("chartJsConfig" in runtime)) {
                 throw new Error("Unsupported chart runtime");
             }
@@ -3187,6 +3168,7 @@
         CommandResult[CommandResult["NonContinuousTargets"] = 80] = "NonContinuousTargets";
         CommandResult[CommandResult["DuplicatedFigureId"] = 81] = "DuplicatedFigureId";
         CommandResult[CommandResult["InvalidSelectionStep"] = 82] = "InvalidSelectionStep";
+        CommandResult[CommandResult["DuplicatedChartId"] = 83] = "DuplicatedChartId";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -5550,7 +5532,7 @@
         separator: true,
     })
         .add("unhide_columns", {
-        name: "Unhide columns",
+        name: _lt("Unhide columns"),
         sequence: 86,
         action: UNHIDE_COLUMNS_ACTION,
         isVisible: (env) => {
@@ -5638,7 +5620,7 @@
         separator: true,
     })
         .add("unhide_rows", {
-        name: "Unhide rows",
+        name: _lt("Unhide rows"),
         sequence: 86,
         action: UNHIDE_ROWS_ACTION,
         isVisible: (env) => {
@@ -6200,17 +6182,17 @@
         separator: true,
     })
         .addChild("format_wrapping_overflow", ["format", "format_wrapping"], {
-        name: "Overflow",
+        name: _lt("Overflow"),
         sequence: 10,
         action: (env) => setStyle(env, { wrapping: "overflow" }),
     })
         .addChild("format_wrapping_wrap", ["format", "format_wrapping"], {
-        name: "Wrap",
+        name: _lt("Wrap"),
         sequence: 20,
         action: (env) => setStyle(env, { wrapping: "wrap" }),
     })
         .addChild("format_wrapping_clip", ["format", "format_wrapping"], {
-        name: "Clip",
+        name: _lt("Clip"),
         sequence: 30,
         action: (env) => setStyle(env, { wrapping: "clip" }),
     })
@@ -7051,7 +7033,7 @@
         validateChartDefinition: (validator, definition) => BarChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => BarChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => BarChart.getDefinitionFromContextCreation(context),
-        name: "Bar",
+        name: _lt("Bar"),
     });
     class BarChart extends AbstractChart {
         constructor(definition, sheetId, getters) {
@@ -7280,7 +7262,7 @@
         validateChartDefinition: (validator, definition) => GaugeChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => GaugeChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => GaugeChart.getDefinitionFromContextCreation(context),
-        name: "Gauge",
+        name: _lt("Gauge"),
     });
     function isDataRangeValid(definition) {
         return definition.dataRange && !rangeReference.test(definition.dataRange)
@@ -7675,7 +7657,7 @@
         validateChartDefinition: (validator, definition) => LineChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => LineChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => LineChart.getDefinitionFromContextCreation(context),
-        name: "Line",
+        name: _lt("Line"),
     });
     class LineChart extends AbstractChart {
         constructor(definition, sheetId, getters) {
@@ -7932,7 +7914,7 @@
         validateChartDefinition: (validator, definition) => PieChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => PieChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => PieChart.getDefinitionFromContextCreation(context),
-        name: "Pie",
+        name: _lt("Pie"),
     });
     class PieChart extends AbstractChart {
         constructor(definition, sheetId, getters) {
@@ -8078,7 +8060,7 @@
         validateChartDefinition: (validator, definition) => ScorecardChart$1.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => ScorecardChart$1.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => ScorecardChart$1.getDefinitionFromContextCreation(context),
-        name: "Scorecard",
+        name: _lt("Scorecard"),
     });
     function checkKeyValue(definition) {
         return definition.keyValue && !rangeReference.test(definition.keyValue)
@@ -8655,7 +8637,7 @@
 
     class LineConfigPanel extends LineBarPieConfigPanel {
         get canTreatLabelsAsText() {
-            const chart = this.env.model.getters.getChart(this.props.figureId);
+            const chart = this.env.model.getters.getChart(this.props.sheetId, this.props.figureId);
             if (chart && chart instanceof LineChart) {
                 return canChartParseLabels(chart, this.env.model.getters);
             }
@@ -8825,6 +8807,9 @@
         get figureId() {
             return this.state.figureId;
         }
+        get sheetId() {
+            return this.state.sheetId;
+        }
         setup() {
             const selectedFigureId = this.env.model.getters.getSelectedFigureId();
             if (!selectedFigureId) {
@@ -8833,17 +8818,19 @@
             this.state = owl.useState({
                 panel: "configuration",
                 figureId: selectedFigureId,
+                sheetId: this.env.model.getters.getActiveSheetId(),
             });
             owl.onWillUpdateProps(() => {
                 const selectedFigureId = this.env.model.getters.getSelectedFigureId();
                 if (selectedFigureId && selectedFigureId !== this.state.figureId) {
                     this.state.figureId = selectedFigureId;
+                    this.state.sheetId = this.env.model.getters.getActiveSheetId();
                     this.shouldUpdateChart = false;
                 }
                 else {
                     this.shouldUpdateChart = true;
                 }
-                if (!this.env.model.getters.isChartDefined(this.figureId)) {
+                if (!this.env.model.getters.isChartDefined(this.sheetId, this.figureId)) {
                     this.props.onCloseSidePanel();
                     return;
                 }
@@ -8860,11 +8847,11 @@
             return this.env.model.dispatch("UPDATE_CHART", {
                 definition,
                 id: this.figureId,
-                sheetId: this.env.model.getters.getActiveSheetId(),
+                sheetId: this.sheetId,
             });
         }
         onTypeChange(type) {
-            const context = this.env.model.getters.getContextCreationChart(this.figureId);
+            const context = this.env.model.getters.getContextCreationChart(this.sheetId, this.figureId);
             if (!context) {
                 throw new Error("Chart not defined.");
             }
@@ -8872,11 +8859,11 @@
             this.env.model.dispatch("UPDATE_CHART", {
                 definition,
                 id: this.figureId,
-                sheetId: this.env.model.getters.getActiveSheetId(),
+                sheetId: this.sheetId,
             });
         }
         get chartPanel() {
-            const type = this.env.model.getters.getChartType(this.figureId);
+            const type = this.env.model.getters.getChartType(this.sheetId, this.figureId);
             if (!type) {
                 throw new Error("Chart not defined.");
             }
@@ -8886,8 +8873,8 @@
             }
             return chartPanel;
         }
-        getChartDefinition(figureId = this.figureId) {
-            return this.env.model.getters.getChartDefinition(figureId);
+        getChartDefinition() {
+            return this.env.model.getters.getChartDefinition(this.sheetId, this.figureId);
         }
         get chartTypes() {
             return getChartTypes();
@@ -10023,7 +10010,7 @@
             this.ctx = document.createElement("canvas").getContext("2d");
         }
         get runtime() {
-            return this.env.model.getters.getChartRuntime(this.props.figure.id);
+            return this.env.model.getters.getChartRuntime(this.env.model.getters.getActiveSheetId(), this.props.figure.id);
         }
         get title() {
             return this.runtime.title;
@@ -10253,7 +10240,7 @@
             return registry;
         }
         get chartType() {
-            return this.env.model.getters.getChartType(this.props.figure.id);
+            return this.env.model.getters.getChartType(this.env.model.getters.getActiveSheetId(), this.props.figure.id);
         }
         onContextMenu(ev) {
             const position = {
@@ -20478,7 +20465,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     GridComposer.template = "o-spreadsheet-GridComposer";
     GridComposer.components = { Composer };
 
-    const { Component: Component$1 } = owl__namespace;
     const CSS$1 = css /* scss */ `
   .o-filter-icon {
     color: ${FILTERS_COLOR};
@@ -20504,7 +20490,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
   }
 `;
-    class FilterIcon extends Component$1 {
+    class FilterIcon extends owl.Component {
         get style() {
             const { x, y } = this.props.position;
             return `top:${y}px;left:${x}px`;
@@ -20513,9 +20499,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     FilterIcon.style = CSS$1;
     FilterIcon.template = "o-spreadsheet-FilterIcon";
 
-    const { Component } = owl__namespace;
     const CSS = css /* scss */ ``;
-    class FilterIconsOverlay extends Component {
+    class FilterIconsOverlay extends owl.Component {
         getVisibleFilterHeaders() {
             const sheetId = this.env.model.getters.getActiveSheetId();
             const headerPositions = this.env.model.getters.getFilterHeaders(sheetId);
@@ -27582,13 +27567,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor() {
             super(...arguments);
             this.charts = {};
-            this.nextId = 1;
             this.createChart = chartFactory(this.getters);
-            this.validateChartDefinition = (definition) => validateChartDefinition(this, definition);
+            this.validateChartDefinition = (cmd) => validateChartDefinition(this, cmd.definition);
         }
         adaptRanges(applyChange) {
-            for (const [chartId, chart] of Object.entries(this.charts)) {
-                this.history.update("charts", chartId, chart === null || chart === void 0 ? void 0 : chart.updateRanges(applyChange));
+            for (const sheetId of Object.keys(this.charts)) {
+                for (const [chartId, chart] of Object.entries(this.charts[sheetId] || {})) {
+                    this.history.update("charts", sheetId, chartId, chart === null || chart === void 0 ? void 0 : chart.updateRanges(applyChange));
+                }
             }
         }
         // ---------------------------------------------------------------------------
@@ -27597,14 +27583,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CREATE_CHART":
+                    return this.checkValidations(cmd, this.chainValidations(this.validateChartDefinition, this.checkChartDuplicate));
                 case "UPDATE_CHART":
-                    return this.validateChartDefinition(cmd.definition);
+                    return this.validateChartDefinition(cmd);
                 default:
                     return 0 /* CommandResult.Success */;
             }
         }
         handle(cmd) {
-            var _a;
+            var _a, _b;
             switch (cmd.type) {
                 case "CREATE_CHART":
                     this.addFigure(cmd.id, cmd.sheetId, cmd.position, cmd.size);
@@ -27618,12 +27605,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const sheetFiguresFrom = this.getters.getFigures(cmd.sheetId);
                     for (const fig of sheetFiguresFrom) {
                         if (fig.tag === "chart") {
-                            const id = this.nextId.toString();
-                            this.history.update("nextId", this.nextId + 1);
-                            const chart = (_a = this.charts[fig.id]) === null || _a === void 0 ? void 0 : _a.copyForSheetId(cmd.sheetIdTo);
+                            const figureIdBase = fig.id.split(FIGURE_ID_SPLITTER).pop();
+                            const duplicatedFigureId = `${cmd.sheetIdTo}${FIGURE_ID_SPLITTER}${figureIdBase}`;
+                            const chart = (_b = (_a = this.charts[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[fig.id]) === null || _b === void 0 ? void 0 : _b.copyForSheetId(cmd.sheetIdTo);
                             if (chart) {
                                 this.dispatch("CREATE_CHART", {
-                                    id,
+                                    id: duplicatedFigureId,
                                     position: { x: fig.x, y: fig.y },
                                     size: { width: fig.width, height: fig.height },
                                     definition: chart.getDefinition(),
@@ -27635,44 +27622,41 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 }
                 case "DELETE_FIGURE":
-                    this.history.update("charts", cmd.id, undefined);
+                    this.history.update("charts", cmd.sheetId, cmd.id, undefined);
                     break;
                 case "DELETE_SHEET":
-                    for (let id of this.getChartIds(cmd.sheetId)) {
-                        this.history.update("charts", id, undefined);
-                    }
+                    this.history.update("charts", cmd.sheetId, undefined);
                     break;
             }
         }
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
-        getContextCreationChart(figureId) {
-            var _a;
-            return (_a = this.charts[figureId]) === null || _a === void 0 ? void 0 : _a.getContextCreation();
+        getContextCreationChart(sheetId, figureId) {
+            var _a, _b;
+            return (_b = (_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === null || _b === void 0 ? void 0 : _b.getContextCreation();
         }
-        getChart(figureId) {
-            return this.charts[figureId];
-        }
-        getChartType(figureId) {
+        getChart(sheetId, figureId) {
             var _a;
-            const type = (_a = this.charts[figureId]) === null || _a === void 0 ? void 0 : _a.type;
+            return (_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId];
+        }
+        getChartType(sheetId, figureId) {
+            var _a, _b;
+            const type = (_b = (_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === null || _b === void 0 ? void 0 : _b.type;
             if (!type) {
                 throw new Error("Chart not defined.");
             }
             return type;
         }
-        isChartDefined(figureId) {
-            return figureId in this.charts && this.charts !== undefined;
+        isChartDefined(sheetId, figureId) {
+            return figureId in (this.charts[sheetId] || {});
         }
         getChartIds(sheetId) {
-            return Object.entries(this.charts)
-                .filter(([, chart]) => (chart === null || chart === void 0 ? void 0 : chart.sheetId) === sheetId)
-                .map(([id]) => id);
+            return Object.keys(this.charts[sheetId] || {});
         }
-        getChartDefinition(figureId) {
-            var _a;
-            const definition = (_a = this.charts[figureId]) === null || _a === void 0 ? void 0 : _a.getDefinition();
+        getChartDefinition(sheetId, figureId) {
+            var _a, _b;
+            const definition = (_b = (_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === null || _b === void 0 ? void 0 : _b.getDefinition();
             if (!definition) {
                 throw new Error(`There is no chart with the given figureId: ${figureId}`);
             }
@@ -27684,15 +27668,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         import(data) {
             for (let sheet of data.sheets) {
                 if (sheet.figures) {
+                    const charts = {};
                     for (let figure of sheet.figures) {
                         // TODO:
                         // figure data should be external IMO => chart should be in sheet.chart
                         // instead of in figure.data
                         if (figure.tag === "chart") {
-                            this.history.update("nextId", this.nextId + 1);
-                            this.charts[figure.id] = this.createChart(figure.id, figure.data, sheet.id);
+                            charts[figure.id] = this.createChart(figure.id, figure.data, sheet.id);
                         }
                     }
+                    this.charts[sheet.id] = charts;
                 }
             }
         }
@@ -27704,7 +27689,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const figures = sheetFigures;
                     for (let figure of figures) {
                         if (figure && figure.tag === "chart") {
-                            figure.data = this.getChartDefinition(figure.id);
+                            figure.data = this.getChartDefinition(sheet.id, figure.id);
                         }
                     }
                     sheet.figures = figures;
@@ -27712,13 +27697,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         exportForExcel(data) {
-            var _a;
+            var _a, _b;
             for (let sheet of data.sheets) {
                 const sheetFigures = this.getters.getFigures(sheet.id);
                 const figures = [];
                 for (let figure of sheetFigures) {
                     if (figure && figure.tag === "chart") {
-                        const figureData = (_a = this.charts[figure.id]) === null || _a === void 0 ? void 0 : _a.getDefinitionForExcel();
+                        const figureData = (_b = (_a = this.charts[sheet.id]) === null || _a === void 0 ? void 0 : _a[figure.id]) === null || _b === void 0 ? void 0 : _b.getDefinitionForExcel();
                         if (figureData) {
                             figures.push({
                                 ...figure,
@@ -27758,7 +27743,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * replaced
          */
         addChart(id, sheetId, definition) {
-            this.history.update("charts", id, this.createChart(id, definition, sheetId));
+            this.history.update("charts", sheetId, id, this.createChart(id, definition, sheetId));
+        }
+        checkChartDuplicate(cmd) {
+            var _a;
+            if ((_a = this.charts[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[cmd.id]) {
+                return 83 /* CommandResult.DuplicatedChartId */;
+            }
+            return 0 /* CommandResult.Success */;
         }
     }
     ChartPlugin.getters = [
@@ -28139,7 +28131,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CREATE_FIGURE":
-                    return this.checkFigureDuplicate(cmd.figure.id);
+                    return this.checkFigureDuplicate(cmd.sheetId, cmd.figure.id);
                 case "UPDATE_FIGURE":
                 case "DELETE_FIGURE":
                     return this.checkFigureExists(cmd.sheetId, cmd.id);
@@ -28205,8 +28197,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return 0 /* CommandResult.Success */;
         }
-        checkFigureDuplicate(figureId) {
-            if (Object.values(this.figures).find((sheet) => sheet === null || sheet === void 0 ? void 0 : sheet[figureId])) {
+        checkFigureDuplicate(sheetId, figureId) {
+            var _a;
+            if ((_a = this.figures[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) {
                 return 81 /* CommandResult.DuplicatedFigureId */;
             }
             return 0 /* CommandResult.Success */;
@@ -31537,7 +31530,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 throw new Error(`No figure for the given id: ${copiedFigureId}`);
             }
             this.copiedFigure = { ...figure };
-            const chart = getters.getChart(copiedFigureId);
+            const chart = getters.getChart(this.sheetId, copiedFigureId);
             if (!chart) {
                 throw new Error(`No chart for the given id: ${copiedFigureId}`);
             }
@@ -31989,7 +31982,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return formatColors.filter(isDefined$1);
         }
         getChartColors(sheetId) {
-            const charts = this.getters.getChartIds(sheetId).map((cid) => this.getters.getChart(cid));
+            const charts = this.getters
+                .getChartIds(sheetId)
+                .map((cid) => this.getters.getChart(sheetId, cid));
             let chartsColors = new Set();
             for (let chart of charts) {
                 if (chart === undefined) {
@@ -32256,34 +32251,37 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 invalidateCFEvaluationCommands.has(cmd.type) ||
                 cmd.type === "EVALUATE_CELLS" ||
                 cmd.type === "UPDATE_CELL") {
-                for (const chartId in this.charts) {
-                    this.charts[chartId] = undefined;
+                for (const sheetId in this.charts) {
+                    for (const chartId in this.charts[sheetId]) {
+                        this.charts[sheetId][chartId] = undefined;
+                    }
                 }
             }
             switch (cmd.type) {
                 case "UPDATE_CHART":
                 case "CREATE_CHART":
                 case "DELETE_FIGURE":
-                    this.charts[cmd.id] = undefined;
+                    if (this.charts[cmd.sheetId]) {
+                        this.charts[cmd.sheetId][cmd.id] = undefined;
+                    }
                     break;
                 case "DELETE_SHEET":
-                    for (let chartId in this.charts) {
-                        if (!this.getters.isChartDefined(chartId)) {
-                            this.charts[chartId] = undefined;
-                        }
-                    }
+                    delete this.charts[cmd.sheetId];
                     break;
             }
         }
-        getChartRuntime(figureId) {
-            if (!this.charts[figureId]) {
-                const chart = this.getters.getChart(figureId);
+        getChartRuntime(sheetId, figureId) {
+            var _a;
+            if (!((_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId])) {
+                const chart = this.getters.getChart(sheetId, figureId);
                 if (!chart) {
                     throw new Error(`No chart for the given id: ${figureId}`);
                 }
-                this.charts[figureId] = this.createRuntimeChart(chart);
+                if (!this.charts[sheetId])
+                    this.charts[sheetId] = {};
+                this.charts[sheetId][figureId] = this.createRuntimeChart(chart);
             }
-            return this.charts[figureId];
+            return this.charts[sheetId][figureId];
         }
         /**
          * Get the background color of a chart based on the color of the first cell of the main range
@@ -42406,9 +42404,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-    exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-02-17T09:46:03.434Z';
-    exports.__info__.hash = 'c96ce8d';
+
+    __info__.version = '16.0.1';
+    __info__.date = '2023-03-01T14:49:14.503Z';
+    __info__.hash = '2ac9223';
+
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
