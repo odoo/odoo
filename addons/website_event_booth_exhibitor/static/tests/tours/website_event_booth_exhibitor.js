@@ -40,6 +40,6 @@
     }, {
         content: "Validate booth details",
         extra_trigger: "input[name='sponsor_name'], input[name='sponsor_email'], input[name='sponsor_phone']",
-        trigger: 'button:contains("Book my Booths")',
+        trigger: 'button.o_wbooth_registration_confirm',
         run: 'click',
     }, ...new FinalSteps()._getSteps()].filter(Boolean)});

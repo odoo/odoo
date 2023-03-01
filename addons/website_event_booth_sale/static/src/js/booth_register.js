@@ -11,6 +11,12 @@ BoothRegistration.include({
     // Overrides
     //--------------------------------------------------------------------------
 
+    start() {
+        return this._super.apply(this, arguments).then(() => {
+            this.categoryPrice = this.selectedBoothCategory ? this.selectedBoothCategory.dataset.price : undefined;
+        });
+    },
+
     _onChangeBoothType(ev) {
         this.categoryPrice = parseFloat($(ev.currentTarget).data('price'));
         return this._super.apply(this, arguments);
