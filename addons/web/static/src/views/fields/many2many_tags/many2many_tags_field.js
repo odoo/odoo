@@ -250,12 +250,12 @@ export const many2ManyTagsField = {
     displayName: _lt("Tags"),
     supportedTypes: ["many2many"],
     isSet: (value) => value.count > 0,
-    fieldsToFetch: ({ options }) => {
-        const fieldsToFetch = [{ name: "display_name", type: "char" }];
+    relatedFields: ({ options }) => {
+        const relatedFields = [{ name: "display_name", type: "char" }];
         if (options.color_field) {
-            fieldsToFetch.push({ name: options.color_field, type: "integer" });
+            relatedFields.push({ name: options.color_field, type: "integer" });
         }
-        return fieldsToFetch;
+        return relatedFields;
     },
     extractProps: ({ attrs, options }) => {
         const noCreate = Boolean(options.no_create);
