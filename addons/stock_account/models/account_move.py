@@ -71,15 +71,15 @@ class AccountMove(models.Model):
         # Create additional COGS lines for customer invoices.
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
 
-        # Post entries.
-        posted = super()._post(soft)
-
         # The invoice reference is set during the super call
         for layer in stock_valuation_layers:
             description = f"{layer.account_move_line_id.move_id.display_name} - {layer.product_id.display_name}"
             layer.description = description
             layer.account_move_id.ref = description
             layer.account_move_id.line_ids.write({'name': description})
+
+        # Post entries.
+        posted = super()._post(soft)
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
         posted._stock_account_anglo_saxon_reconcile_valuation()
