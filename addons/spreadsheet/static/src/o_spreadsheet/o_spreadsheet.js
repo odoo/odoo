@@ -1,26 +1,6 @@
 (function (exports, owl) {
     'use strict';
 
-    function _interopNamespace(e) {
-        if (e && e.__esModule) return e;
-        var n = Object.create(null);
-        if (e) {
-            Object.keys(e).forEach(function (k) {
-                if (k !== 'default') {
-                    var d = Object.getOwnPropertyDescriptor(e, k);
-                    Object.defineProperty(n, k, d.get ? d : {
-                        enumerable: true,
-                        get: function () { return e[k]; }
-                    });
-                }
-            });
-        }
-        n["default"] = e;
-        return Object.freeze(n);
-    }
-
-    var owl__namespace = /*#__PURE__*/_interopNamespace(owl);
-
     /*
      * usage: every string should be translated either with _lt if they are registered with a registry at
      *  the load of the app or with Spreadsheet._t in the templates. Spreadsheet._t is exposed in the
@@ -266,6 +246,7 @@
     const DEFAULT_FIGURE_WIDTH = 536;
     // Chart
     const MAX_CHAR_LABEL = 20;
+    const FIGURE_ID_SPLITTER = "??";
     const DEFAULT_GAUGE_LOWER_COLOR = "#cc0000";
     const DEFAULT_GAUGE_MIDDLE_COLOR = "#f1c232";
     const DEFAULT_GAUGE_UPPER_COLOR = "#6aa84f";
@@ -2863,7 +2844,7 @@
             return `background-color: ${this.background}`;
         }
         get chartRuntime() {
-            const runtime = this.env.model.getters.getChartRuntime(this.props.figure.id);
+            const runtime = this.env.model.getters.getChartRuntime(this.env.model.getters.getActiveSheetId(), this.props.figure.id);
             if (!("chartJsConfig" in runtime)) {
                 throw new Error("Unsupported chart runtime");
             }
@@ -3128,7 +3109,7 @@
             this.ctx = document.createElement("canvas").getContext("2d");
         }
         get runtime() {
-            return this.env.model.getters.getChartRuntime(this.props.figure.id);
+            return this.env.model.getters.getChartRuntime(this.env.model.getters.getActiveSheetId(), this.props.figure.id);
         }
         get title() {
             return this.runtime.title;
@@ -3517,7 +3498,7 @@
         CommandResult[CommandResult["InvalidRange"] = 25] = "InvalidRange";
         CommandResult[CommandResult["InvalidZones"] = 26] = "InvalidZones";
         CommandResult[CommandResult["InvalidSheetId"] = 27] = "InvalidSheetId";
-        CommandResult[CommandResult["InvalidFigureId"] = 28] = "InvalidFigureId";
+        CommandResult[CommandResult["DuplicatedImageId"] = 28] = "DuplicatedImageId";
         CommandResult[CommandResult["InputAlreadyFocused"] = 29] = "InputAlreadyFocused";
         CommandResult[CommandResult["MaximumRangesReached"] = 30] = "MaximumRangesReached";
         CommandResult[CommandResult["InvalidChartDefinition"] = 31] = "InvalidChartDefinition";
@@ -3573,6 +3554,7 @@
         CommandResult[CommandResult["NonContinuousTargets"] = 81] = "NonContinuousTargets";
         CommandResult[CommandResult["DuplicatedFigureId"] = 82] = "DuplicatedFigureId";
         CommandResult[CommandResult["InvalidSelectionStep"] = 83] = "InvalidSelectionStep";
+        CommandResult[CommandResult["DuplicatedChartId"] = 84] = "DuplicatedChartId";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -5430,7 +5412,7 @@
         validateChartDefinition: (validator, definition) => BarChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => BarChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => BarChart.getDefinitionFromContextCreation(context),
-        name: "Bar",
+        name: _lt("Bar"),
         sequence: 10,
     });
     chartRegistry.add("line", {
@@ -5440,7 +5422,7 @@
         validateChartDefinition: (validator, definition) => LineChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => LineChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => LineChart.getDefinitionFromContextCreation(context),
-        name: "Line",
+        name: _lt("Line"),
         sequence: 20,
     });
     chartRegistry.add("pie", {
@@ -5450,7 +5432,7 @@
         validateChartDefinition: (validator, definition) => PieChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => PieChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => PieChart.getDefinitionFromContextCreation(context),
-        name: "Pie",
+        name: _lt("Pie"),
         sequence: 30,
     });
     chartRegistry.add("scorecard", {
@@ -5460,7 +5442,7 @@
         validateChartDefinition: (validator, definition) => ScorecardChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => ScorecardChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => ScorecardChart.getDefinitionFromContextCreation(context),
-        name: "Scorecard",
+        name: _lt("Scorecard"),
         sequence: 40,
     });
     chartRegistry.add("gauge", {
@@ -5470,7 +5452,7 @@
         validateChartDefinition: (validator, definition) => GaugeChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => GaugeChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => GaugeChart.getDefinitionFromContextCreation(context),
-        name: "Gauge",
+        name: _lt("Gauge"),
         sequence: 50,
     });
     const chartComponentRegistry = new Registry();
@@ -5584,28 +5566,28 @@
         return position;
     }
     /**
-     * Return the component (or ref's component) top left position (in pixels) relative
+     * Return the component (or ref's component) BoundingRect, relative
      * to the upper left corner of the screen (<body> element).
      *
      * Note: when used with a <Portal/> component, it will
      * return the portal position, not the teleported position.
      */
-    function useAbsolutePosition(ref) {
-        const position = owl.useState({ x: 0, y: 0 });
-        function updateElPosition() {
+    function useAbsoluteBoundingRect(ref) {
+        const rect = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
+        function updateElRect() {
             const el = ref.el;
             if (el === null) {
                 return;
             }
-            const { top, left } = el.getBoundingClientRect();
-            if (left !== position.x || top !== position.y) {
-                position.x = left;
-                position.y = top;
-            }
+            const { top, left, width, height } = el.getBoundingClientRect();
+            rect.x = left;
+            rect.y = top;
+            rect.width = width;
+            rect.height = height;
         }
-        owl.onMounted(updateElPosition);
-        owl.onPatched(updateElPosition);
-        return position;
+        owl.onMounted(updateElRect);
+        owl.onPatched(updateElRect);
+        return rect;
     }
     /**
      * Get the rectangle inside which a popover should stay when being displayed.
@@ -5970,7 +5952,7 @@
                 menuItems: [],
             });
             this.menuRef = owl.useRef("menu");
-            this.position = useAbsolutePosition(this.menuRef);
+            this.position = useAbsoluteBoundingRect(this.menuRef);
         }
         setup() {
             owl.useExternalListener(window, "click", this.onExternalClick, { capture: true });
@@ -6138,8 +6120,8 @@
             this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
             this.chartContainerRef = owl.useRef("chartContainer");
             this.menuButtonRef = owl.useRef("menuButton");
-            this.menuButtonPosition = useAbsolutePosition(this.menuButtonRef);
-            this.position = useAbsolutePosition(this.chartContainerRef);
+            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
+            this.position = useAbsoluteBoundingRect(this.chartContainerRef);
         }
         getMenuItemRegistry() {
             const registry = new MenuItemRegistry();
@@ -6183,7 +6165,7 @@
             return registry;
         }
         get chartType() {
-            return this.env.model.getters.getChartType(this.props.figure.id);
+            return this.env.model.getters.getChartType(this.env.model.getters.getActiveSheetId(), this.props.figure.id);
         }
         onContextMenu(ev) {
             const position = {
@@ -6193,11 +6175,12 @@
             this.openContextMenu(position);
         }
         showMenu() {
-            const position = {
-                x: this.menuButtonPosition.x - MENU_WIDTH,
-                y: this.menuButtonPosition.y,
+            const { x, y, width } = this.menuButtonRect;
+            const menuPosition = {
+                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
+                y: y,
             };
-            this.openContextMenu(position);
+            this.openContextMenu(menuPosition);
         }
         openContextMenu(position) {
             const registry = this.getMenuItemRegistry();
@@ -7352,7 +7335,7 @@
         separator: true,
     })
         .add("unhide_columns", {
-        name: "Unhide columns",
+        name: _lt("Unhide columns"),
         sequence: 86,
         action: UNHIDE_COLUMNS_ACTION,
         isVisible: (env) => {
@@ -7440,7 +7423,7 @@
         separator: true,
     })
         .add("unhide_rows", {
-        name: "Unhide rows",
+        name: _lt("Unhide rows"),
         sequence: 86,
         action: UNHIDE_ROWS_ACTION,
         isVisible: (env) => {
@@ -7614,31 +7597,31 @@
     // -----------------------------------------------------------------------------
     css /* scss */ `
   .o-autofill {
-    height: 6px;
-    width: 6px;
-    border: 1px solid white;
     position: absolute;
+    height: ${AUTOFILL_EDGE_LENGTH}px;
+    width: ${AUTOFILL_EDGE_LENGTH}px;
+    border: 1px solid white;
+    box-sizing: border-box !important;
     background-color: #1a73e8;
+  }
 
-    .o-autofill-handler {
-      position: absolute;
-      height: ${AUTOFILL_EDGE_LENGTH}px;
-      width: ${AUTOFILL_EDGE_LENGTH}px;
-
-      &:hover {
-        cursor: crosshair;
-      }
+  .o-autofill-handler {
+    position: absolute;
+    height: ${AUTOFILL_EDGE_LENGTH}px;
+    width: ${AUTOFILL_EDGE_LENGTH}px;
+    &:hover {
+      cursor: crosshair;
     }
+  }
 
-    .o-autofill-nextvalue {
-      position: absolute;
-      background-color: #ffffff;
-      border: 1px solid black;
-      padding: 5px;
-      font-size: 12px;
-      pointer-events: none;
-      white-space: nowrap;
-    }
+  .o-autofill-nextvalue {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid black;
+    padding: 5px;
+    font-size: 12px;
+    pointer-events: none;
+    white-space: nowrap;
   }
 `;
     class Autofill extends owl.Component {
@@ -7651,15 +7634,25 @@
         }
         get style() {
             const { left, top } = this.props.position;
-            return `top:${top}px;left:${left}px`;
+            return cssPropertiesToCss({
+                top: `${top}px`,
+                left: `${left}px`,
+                visibility: this.props.isVisible ? "visible" : "hidden",
+            });
         }
-        get styleHandler() {
-            let position = this.state.handler ? this.state.position : { left: 0, top: 0 };
-            return `top:${position.top}px;left:${position.left}px;`;
+        get handlerStyle() {
+            const { left, top } = this.state.handler ? this.state.position : this.props.position;
+            return cssPropertiesToCss({
+                top: `${top}px`,
+                left: `${left}px`,
+            });
         }
-        get styleNextvalue() {
-            let position = this.state.handler ? this.state.position : { left: 0, top: 0 };
-            return `top:${position.top + 5}px;left:${position.left + 15}px;`;
+        get styleNextValue() {
+            const { left, top } = this.state.position;
+            return cssPropertiesToCss({
+                top: `${top + 5}px`,
+                left: `${left + 15}px`,
+            });
         }
         getTooltip() {
             const tooltip = this.env.model.getters.getAutofillTooltip();
@@ -7670,27 +7663,22 @@
         }
         onMouseDown(ev) {
             this.state.handler = true;
-            this.state.position = { left: 0, top: 0 };
-            const { scrollY, scrollX } = this.env.model.getters.getActiveSheetScrollInfo();
-            const start = {
-                left: ev.clientX + scrollX,
-                top: ev.clientY + scrollY,
-            };
             let lastCol;
             let lastRow;
+            const start = {
+                left: ev.clientX - this.props.position.left,
+                top: ev.clientY - this.props.position.top,
+            };
             const onMouseUp = () => {
                 this.state.handler = false;
+                this.state.position = { ...this.props.position };
                 this.env.model.dispatch("AUTOFILL");
             };
-            const onMouseMove = (ev) => {
-                const position = gridOverlayPosition();
-                const { scrollY, scrollX } = this.env.model.getters.getActiveSheetScrollInfo();
+            const onMouseMove = (col, row, ev) => {
                 this.state.position = {
-                    left: ev.clientX - start.left + scrollX,
-                    top: ev.clientY - start.top + scrollY,
+                    left: ev.clientX - start.left,
+                    top: ev.clientY - start.top,
                 };
-                const col = this.env.model.getters.getColIndex(ev.clientX - position.left);
-                const row = this.env.model.getters.getRowIndex(ev.clientY - position.top);
                 if (lastCol !== col || lastRow !== row) {
                     const activeSheetId = this.env.model.getters.getActiveSheetId();
                     const numberOfCols = this.env.model.getters.getNumberCols(activeSheetId);
@@ -7702,7 +7690,7 @@
                     }
                 }
             };
-            startDnd(onMouseMove, onMouseUp);
+            dragAndDropBeyondTheViewport(this.env, onMouseMove, onMouseUp);
         }
         onDblClick() {
             this.env.model.dispatch("AUTOFILL_AUTO");
@@ -7711,6 +7699,7 @@
     Autofill.template = "o-spreadsheet-Autofill";
     Autofill.props = {
         position: Object,
+        isVisible: Boolean,
     };
     class TooltipComponent extends owl.Component {
     }
@@ -7777,22 +7766,8 @@
         "RANGE<STRING>",
         "META",
     ];
-    /**
-     * This function is meant to be used as a tag for a template strings.
-     *
-     * Its job is to convert a textual description of the list of arguments into an
-     * actual array of Arg, suitable for consumption.
-     */
-    function args(strings) {
-        let lines = strings.split("\n");
-        const result = [];
-        for (let l of lines) {
-            l = l.trim();
-            if (l) {
-                result.push(makeArg(l));
-            }
-        }
-        return result;
+    function arg(definition, description = "") {
+        return makeArg(`${definition} ${description}`);
     }
     function makeArg(str) {
         let parts = str.match(ARG_REGEXP);
@@ -8475,10 +8450,10 @@
     // -----------------------------------------------------------------------------
     const FORMAT_LARGE_NUMBER = {
         description: _lt(`Apply a large number format`),
-        args: args(`
-      value (number) ${_lt("The number.")}
-      unit (string, optional) ${_lt("The formatting unit. Use 'k', 'm', or 'b' to force the unit")}
-    `),
+        args: [
+            arg("value (number)", _lt("The number.")),
+            arg("unit (string, optional)", _lt("The formatting unit. Use 'k', 'm', or 'b' to force the unit")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (arg, unit) => {
             const value = Math.abs(toNumber(arg.value));
@@ -8526,9 +8501,7 @@
     // -----------------------------------------------------------------------------
     const ABS = {
         description: _lt("Absolute value of a number."),
-        args: args(`
-    value (number) ${_lt("The number of which to return the absolute value.")}
-  `),
+        args: [arg("value (number)", _lt("The number of which to return the absolute value."))],
         returns: ["NUMBER"],
         compute: function (value) {
             return Math.abs(toNumber(value));
@@ -8540,9 +8513,9 @@
     // -----------------------------------------------------------------------------
     const ACOS = {
         description: _lt("Inverse cosine of a value, in radians."),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the inverse cosine. Must be between -1 and 1, inclusive.")}
-  `),
+        args: [
+            arg("value (number)", _lt("The value for which to calculate the inverse cosine. Must be between -1 and 1, inclusive.")),
+        ],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -8556,9 +8529,9 @@
     // -----------------------------------------------------------------------------
     const ACOSH = {
         description: _lt("Inverse hyperbolic cosine of a number."),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.")}
-  `),
+        args: [
+            arg("value (number)", _lt("The value for which to calculate the inverse hyperbolic cosine. Must be greater than or equal to 1.")),
+        ],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -8572,9 +8545,7 @@
     // -----------------------------------------------------------------------------
     const ACOT = {
         description: _lt("Inverse cotangent of a value."),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the inverse cotangent.")}
-  `),
+        args: [arg("value (number)", _lt("The value for which to calculate the inverse cotangent."))],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -8591,9 +8562,9 @@
     // -----------------------------------------------------------------------------
     const ACOTH = {
         description: _lt("Inverse hyperbolic cotangent of a value."),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the inverse hyperbolic cotangent. Must not be between -1 and 1, inclusive.")}
-  `),
+        args: [
+            arg("value (number)", _lt("The value for which to calculate the inverse hyperbolic cotangent. Must not be between -1 and 1, inclusive.")),
+        ],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -8607,9 +8578,9 @@
     // -----------------------------------------------------------------------------
     const ASIN = {
         description: _lt("Inverse sine of a value, in radians."),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the inverse sine. Must be between -1 and 1, inclusive.")}
-  `),
+        args: [
+            arg("value (number)", _lt("The value for which to calculate the inverse sine. Must be between -1 and 1, inclusive.")),
+        ],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -8623,9 +8594,9 @@
     // -----------------------------------------------------------------------------
     const ASINH = {
         description: _lt("Inverse hyperbolic sine of a number."),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the inverse hyperbolic sine.")}
-  `),
+        args: [
+            arg("value (number)", _lt("The value for which to calculate the inverse hyperbolic sine.")),
+        ],
         returns: ["NUMBER"],
         compute: function (value) {
             return Math.asinh(toNumber(value));
@@ -8637,9 +8608,7 @@
     // -----------------------------------------------------------------------------
     const ATAN = {
         description: _lt("Inverse tangent of a value, in radians."),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the inverse tangent.")}
-  `),
+        args: [arg("value (number)", _lt("The value for which to calculate the inverse tangent."))],
         returns: ["NUMBER"],
         compute: function (value) {
             return Math.atan(toNumber(value));
@@ -8651,10 +8620,10 @@
     // -----------------------------------------------------------------------------
     const ATAN2 = {
         description: _lt("Angle from the X axis to a point (x,y), in radians."),
-        args: args(`
-    x (number) ${_lt("The x coordinate of the endpoint of the line segment for which to calculate the angle from the x-axis.")}
-    y (number) ${_lt("The y coordinate of the endpoint of the line segment for which to calculate the angle from the x-axis.")}
-  `),
+        args: [
+            arg("x (number)", _lt("The x coordinate of the endpoint of the line segment for which to calculate the angle from the x-axis.")),
+            arg("y (number)", _lt("The y coordinate of the endpoint of the line segment for which to calculate the angle from the x-axis.")),
+        ],
         returns: ["NUMBER"],
         compute: function (x, y) {
             const _x = toNumber(x);
@@ -8669,9 +8638,9 @@
     // -----------------------------------------------------------------------------
     const ATANH = {
         description: _lt("Inverse hyperbolic tangent of a number."),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the inverse hyperbolic tangent. Must be between -1 and 1, exclusive.")}
-  `),
+        args: [
+            arg("value (number)", _lt("The value for which to calculate the inverse hyperbolic tangent. Must be between -1 and 1, exclusive.")),
+        ],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -8685,10 +8654,10 @@
     // -----------------------------------------------------------------------------
     const CEILING = {
         description: _lt(`Rounds number up to nearest multiple of factor.`),
-        args: args(`
-    value (number) ${_lt("The value to round up to the nearest integer multiple of factor.")}
-    factor (number, default=${DEFAULT_FACTOR}) ${_lt("The number to whose multiples value will be rounded.")}
-  `),
+        args: [
+            arg("value (number)", _lt("The value to round up to the nearest integer multiple of factor.")),
+            arg(`factor (number, default=${DEFAULT_FACTOR})`, _lt("The number to whose multiples value will be rounded.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         compute: function (value, factor = DEFAULT_FACTOR) {
@@ -8704,11 +8673,11 @@
     // -----------------------------------------------------------------------------
     const CEILING_MATH = {
         description: _lt(`Rounds number up to nearest multiple of factor.`),
-        args: args(`
-    number (number) ${_lt("The value to round up to the nearest integer multiple of significance.")}
-    significance (number, default=${DEFAULT_SIGNIFICANCE}) ${_lt("The number to whose multiples number will be rounded. The sign of significance will be ignored.")}
-    mode (number, default=${DEFAULT_MODE}) ${_lt("If number is negative, specifies the rounding direction. If 0 or blank, it is rounded towards zero. Otherwise, it is rounded away from zero.")}
-  `),
+        args: [
+            arg("number (number)", _lt("The value to round up to the nearest integer multiple of significance.")),
+            arg(`significance (number, default=${DEFAULT_SIGNIFICANCE})`, _lt("The number to whose multiples number will be rounded. The sign of significance will be ignored.")),
+            arg(`mode (number, default=${DEFAULT_MODE})`, _lt("If number is negative, specifies the rounding direction. If 0 or blank, it is rounded towards zero. Otherwise, it is rounded away from zero.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (number) => number === null || number === void 0 ? void 0 : number.format,
         compute: function (number, significance = DEFAULT_SIGNIFICANCE, mode = DEFAULT_MODE) {
@@ -8734,10 +8703,10 @@
     // -----------------------------------------------------------------------------
     const CEILING_PRECISE = {
         description: _lt(`Rounds number up to nearest multiple of factor.`),
-        args: args(`
-    number (number) ${_lt("The value to round up to the nearest integer multiple of significance.")}
-    significance (number, default=${DEFAULT_SIGNIFICANCE}) ${_lt("The number to whose multiples number will be rounded.")}
-  `),
+        args: [
+            arg("number (number)", _lt("The value to round up to the nearest integer multiple of significance.")),
+            arg(`significance (number, default=${DEFAULT_SIGNIFICANCE})`, _lt("The number to whose multiples number will be rounded.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (number) => number === null || number === void 0 ? void 0 : number.format,
         compute: function (number, significance) {
@@ -8750,9 +8719,7 @@
     // -----------------------------------------------------------------------------
     const COS = {
         description: _lt("Cosine of an angle provided in radians."),
-        args: args(`
-    angle (number) ${_lt("The angle to find the cosine of, in radians.")}
-  `),
+        args: [arg("angle (number)", _lt("The angle to find the cosine of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
             return Math.cos(toNumber(angle));
@@ -8764,9 +8731,7 @@
     // -----------------------------------------------------------------------------
     const COSH = {
         description: _lt("Hyperbolic cosine of any real number."),
-        args: args(`
-    value (number) ${_lt("Any real value to calculate the hyperbolic cosine of.")}
-  `),
+        args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic cosine of."))],
         returns: ["NUMBER"],
         compute: function (value) {
             return Math.cosh(toNumber(value));
@@ -8778,9 +8743,7 @@
     // -----------------------------------------------------------------------------
     const COT = {
         description: _lt("Cotangent of an angle provided in radians."),
-        args: args(`
-    angle (number) ${_lt("The angle to find the cotangent of, in radians.")}
-  `),
+        args: [arg("angle (number)", _lt("The angle to find the cotangent of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
             const _angle = toNumber(angle);
@@ -8794,9 +8757,7 @@
     // -----------------------------------------------------------------------------
     const COTH = {
         description: _lt("Hyperbolic cotangent of any real number."),
-        args: args(`
-    value (number) ${_lt("Any real value to calculate the hyperbolic cotangent of.")}
-  `),
+        args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic cotangent of."))],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -8810,10 +8771,10 @@
     // -----------------------------------------------------------------------------
     const COUNTBLANK = {
         description: _lt("Number of empty values."),
-        args: args(`
-    value1 (any, range) ${_lt("The first value or range in which to count the number of blanks.")}
-    value2 (any, range, repeating) ${_lt("Additional values or ranges in which to count the number of blanks.")}
-  `),
+        args: [
+            arg("value1 (any, range)", _lt("The first value or range in which to count the number of blanks.")),
+            arg("value2 (any, range, repeating)", _lt("Additional values or ranges in which to count the number of blanks.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...argsValues) {
             return reduceAny(argsValues, (acc, a) => (a === null || a === undefined || a === "" ? acc + 1 : acc), 0);
@@ -8825,10 +8786,10 @@
     // -----------------------------------------------------------------------------
     const COUNTIF = {
         description: _lt("A conditional count across a range."),
-        args: args(`
-    range (range) ${_lt("The range that is tested against criterion.")}
-    criterion (string) ${_lt("The pattern or test to apply to range.")}
-  `),
+        args: [
+            arg("range (range)", _lt("The range that is tested against criterion.")),
+            arg("criterion (string)", _lt("The pattern or test to apply to range.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...argsValues) {
             let count = 0;
@@ -8844,12 +8805,12 @@
     // -----------------------------------------------------------------------------
     const COUNTIFS = {
         description: _lt("Count values depending on multiple criteria."),
-        args: args(`
-    criteria_range1 (range) ${_lt("The range to check against criterion1.")}
-    criterion1 (string) ${_lt("The pattern or test to apply to criteria_range1.")}
-    criteria_range2 (any, range, repeating) ${_lt("Additional ranges over which to evaluate the additional criteria. The filtered set will be the intersection of the sets produced by each criterion-range pair.")}
-    criterion2 (string, repeating) ${_lt("Additional criteria to check.")}
-  `),
+        args: [
+            arg("criteria_range1 (range)", _lt("The range to check against criterion1.")),
+            arg("criterion1 (string)", _lt("The pattern or test to apply to criteria_range1.")),
+            arg("criteria_range2 (any, range, repeating)", _lt("Additional ranges over which to evaluate the additional criteria. The filtered set will be the intersection of the sets produced by each criterion-range pair.")),
+            arg("criterion2 (string, repeating)", _lt("Additional criteria to check.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...argsValues) {
             let count = 0;
@@ -8877,10 +8838,10 @@
     }
     const COUNTUNIQUE = {
         description: _lt("Counts number of unique values in a range."),
-        args: args(`
-    value1 (any, range) ${_lt("The first value or range to consider for uniqueness.")}
-    value2 (any, range, repeating) ${_lt("Additional values or ranges to consider for uniqueness.")}
-  `),
+        args: [
+            arg("value1 (any, range)", _lt("The first value or range to consider for uniqueness.")),
+            arg("value2 (any, range, repeating)", _lt("Additional values or ranges to consider for uniqueness.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...argsValues) {
             return reduceAny(argsValues, (acc, a) => (isDefined(a) ? acc.add(a) : acc), new Set()).size;
@@ -8891,13 +8852,13 @@
     // -----------------------------------------------------------------------------
     const COUNTUNIQUEIFS = {
         description: _lt("Counts number of unique values in a range, filtered by a set of criteria."),
-        args: args(`
-    range (range) ${_lt("The range of cells from which the number of unique values will be counted.")}
-    criteria_range1 (range) ${_lt("The range of cells over which to evaluate criterion1.")}
-    criterion1 (string) ${_lt("The pattern or test to apply to criteria_range1, such that each cell that evaluates to TRUE will be included in the filtered set.")}
-    criteria_range2 (any, range, repeating) ${_lt("Additional ranges over which to evaluate the additional criteria. The filtered set will be the intersection of the sets produced by each criterion-range pair.")}
-    criterion2 (string, repeating) ${_lt("The pattern or test to apply to criteria_range2.")}
-  `),
+        args: [
+            arg("range (range)", _lt("The range of cells from which the number of unique values will be counted.")),
+            arg("criteria_range1 (range)", _lt("The range of cells over which to evaluate criterion1.")),
+            arg("criterion1 (string)", _lt("The pattern or test to apply to criteria_range1, such that each cell that evaluates to TRUE will be included in the filtered set.")),
+            arg("criteria_range2 (any, range, repeating)", _lt("Additional ranges over which to evaluate the additional criteria. The filtered set will be the intersection of the sets produced by each criterion-range pair.")),
+            arg("criterion2 (string, repeating)", _lt("The pattern or test to apply to criteria_range2.")),
+        ],
         returns: ["NUMBER"],
         compute: function (range, ...argsValues) {
             let uniqueValues = new Set();
@@ -8915,9 +8876,7 @@
     // -----------------------------------------------------------------------------
     const CSC = {
         description: _lt("Cosecant of an angle provided in radians."),
-        args: args(`
-    angle (number) ${_lt("The angle to find the cosecant of, in radians.")}
-  `),
+        args: [arg("angle (number)", _lt("The angle to find the cosecant of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
             const _angle = toNumber(angle);
@@ -8931,9 +8890,7 @@
     // -----------------------------------------------------------------------------
     const CSCH = {
         description: _lt("Hyperbolic cosecant of any real number."),
-        args: args(`
-    value (number) ${_lt("Any real value to calculate the hyperbolic cosecant of.")}
-  `),
+        args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic cosecant of."))],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -8947,10 +8904,10 @@
     // -----------------------------------------------------------------------------
     const DECIMAL = {
         description: _lt("Converts from another base to decimal."),
-        args: args(`
-    value (string) ${_lt("The number to convert.")},
-    base (number) ${_lt("The base to convert the value from.")},
-  `),
+        args: [
+            arg("value (string)", _lt("The number to convert.")),
+            arg(",base (number)", _lt("The base to convert the value from.")),
+        ],
         returns: ["NUMBER"],
         compute: function (value, base) {
             let _base = toNumber(base);
@@ -8977,9 +8934,7 @@
     // -----------------------------------------------------------------------------
     const DEGREES = {
         description: _lt(`Converts an angle value in radians to degrees.`),
-        args: args(`
-    angle (number)  ${_lt("The angle to convert from radians to degrees.")}
-  `),
+        args: [arg("angle (number)", _lt("The angle to convert from radians to degrees."))],
         returns: ["NUMBER"],
         compute: function (angle) {
             return (toNumber(angle) * 180) / Math.PI;
@@ -8991,9 +8946,7 @@
     // -----------------------------------------------------------------------------
     const EXP = {
         description: _lt(`Euler's number, e (~2.718) raised to a power.`),
-        args: args(`
-    value (number) ${_lt("The exponent to raise e.")}
-  `),
+        args: [arg("value (number)", _lt("The exponent to raise e."))],
         returns: ["NUMBER"],
         compute: function (value) {
             return Math.exp(toNumber(value));
@@ -9005,10 +8958,10 @@
     // -----------------------------------------------------------------------------
     const FLOOR = {
         description: _lt(`Rounds number down to nearest multiple of factor.`),
-        args: args(`
-    value (number) ${_lt("The value to round down to the nearest integer multiple of factor.")}
-    factor (number, default=${DEFAULT_FACTOR}) ${_lt("The number to whose multiples value will be rounded.")}
-  `),
+        args: [
+            arg("value (number)", _lt("The value to round down to the nearest integer multiple of factor.")),
+            arg(`factor (number, default=${DEFAULT_FACTOR})`, _lt("The number to whose multiples value will be rounded.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         compute: function (value, factor = DEFAULT_FACTOR) {
@@ -9024,11 +8977,11 @@
     // -----------------------------------------------------------------------------
     const FLOOR_MATH = {
         description: _lt(`Rounds number down to nearest multiple of factor.`),
-        args: args(`
-    number (number) ${_lt("The value to round down to the nearest integer multiple of significance.")}
-    significance (number, default=${DEFAULT_SIGNIFICANCE}) ${_lt("The number to whose multiples number will be rounded. The sign of significance will be ignored.")}
-    mode (number, default=${DEFAULT_MODE}) ${_lt("If number is negative, specifies the rounding direction. If 0 or blank, it is rounded away from zero. Otherwise, it is rounded towards zero.")}
-  `),
+        args: [
+            arg("number (number)", _lt("The value to round down to the nearest integer multiple of significance.")),
+            arg(`significance (number, default=${DEFAULT_SIGNIFICANCE})`, _lt("The number to whose multiples number will be rounded. The sign of significance will be ignored.")),
+            arg(`mode (number, default=${DEFAULT_MODE})`, _lt("If number is negative, specifies the rounding direction. If 0 or blank, it is rounded away from zero. Otherwise, it is rounded towards zero.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (number) => number === null || number === void 0 ? void 0 : number.format,
         compute: function (number, significance = DEFAULT_SIGNIFICANCE, mode = DEFAULT_MODE) {
@@ -9054,10 +9007,10 @@
     // -----------------------------------------------------------------------------
     const FLOOR_PRECISE = {
         description: _lt(`Rounds number down to nearest multiple of factor.`),
-        args: args(`
-    number (number) ${_lt("The value to round down to the nearest integer multiple of significance.")}
-    significance (number, default=${DEFAULT_SIGNIFICANCE}) ${_lt("The number to whose multiples number will be rounded.")}
-  `),
+        args: [
+            arg("number (number)", _lt("The value to round down to the nearest integer multiple of significance.")),
+            arg(`significance (number, default=${DEFAULT_SIGNIFICANCE})`, _lt("The number to whose multiples number will be rounded.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (number) => number === null || number === void 0 ? void 0 : number.format,
         compute: function (number, significance = DEFAULT_SIGNIFICANCE) {
@@ -9070,9 +9023,7 @@
     // -----------------------------------------------------------------------------
     const ISEVEN = {
         description: _lt(`Whether the provided value is even.`),
-        args: args(`
-    value (number) ${_lt("The value to be verified as even.")}
-  `),
+        args: [arg("value (number)", _lt("The value to be verified as even."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             const _value = strictToNumber(value);
@@ -9085,10 +9036,10 @@
     // -----------------------------------------------------------------------------
     const ISO_CEILING = {
         description: _lt(`Rounds number up to nearest multiple of factor.`),
-        args: args(`
-      number (number) ${_lt("The value to round up to the nearest integer multiple of significance.")}
-      significance (number, default=${DEFAULT_SIGNIFICANCE}) ${_lt("The number to whose multiples number will be rounded.")}
-    `),
+        args: [
+            arg("number (number)", _lt("The value to round up to the nearest integer multiple of significance.")),
+            arg(`significance (number, default=${DEFAULT_SIGNIFICANCE})`, _lt("The number to whose multiples number will be rounded.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (number) => number === null || number === void 0 ? void 0 : number.format,
         compute: function (number, significance = DEFAULT_SIGNIFICANCE) {
@@ -9101,9 +9052,7 @@
     // -----------------------------------------------------------------------------
     const ISODD = {
         description: _lt(`Whether the provided value is even.`),
-        args: args(`
-    value (number) ${_lt("The value to be verified as even.")}
-  `),
+        args: [arg("value (number)", _lt("The value to be verified as even."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             const _value = strictToNumber(value);
@@ -9116,9 +9065,7 @@
     // -----------------------------------------------------------------------------
     const LN = {
         description: _lt(`The logarithm of a number, base e (euler's number).`),
-        args: args(`
-    value (number) ${_lt("The value for which to calculate the logarithm, base e.")}
-  `),
+        args: [arg("value (number)", _lt("The value for which to calculate the logarithm, base e."))],
         returns: ["NUMBER"],
         compute: function (value) {
             const _value = toNumber(value);
@@ -9132,10 +9079,10 @@
     // -----------------------------------------------------------------------------
     const MOD = {
         description: _lt(`Modulo (remainder) operator.`),
-        args: args(`
-      dividend (number) ${_lt("The number to be divided to find the remainder.")}
-      divisor (number) ${_lt("The number to divide by.")}
-    `),
+        args: [
+            arg("dividend (number)", _lt("The number to be divided to find the remainder.")),
+            arg("divisor (number)", _lt("The number to divide by.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (dividend) => dividend === null || dividend === void 0 ? void 0 : dividend.format,
         compute: function (dividend, divisor) {
@@ -9156,9 +9103,7 @@
     // -----------------------------------------------------------------------------
     const ODD = {
         description: _lt(`Rounds a number up to the nearest odd integer.`),
-        args: args(`
-      value (number) ${_lt("The value to round to the next greatest odd number.")}
-    `),
+        args: [arg("value (number)", _lt("The value to round to the next greatest odd number."))],
         returns: ["NUMBER"],
         computeFormat: (number) => number === null || number === void 0 ? void 0 : number.format,
         compute: function (value) {
@@ -9186,10 +9131,10 @@
     // -----------------------------------------------------------------------------
     const POWER = {
         description: _lt(`A number raised to a power.`),
-        args: args(`
-      base (number) ${_lt("The number to raise to the exponent power.")}
-      exponent (number) ${_lt("The exponent to raise base to.")}
-    `),
+        args: [
+            arg("base (number)", _lt("The number to raise to the exponent power.")),
+            arg("exponent (number)", _lt("The exponent to raise base to.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (base) => base === null || base === void 0 ? void 0 : base.format,
         compute: function (base, exponent) {
@@ -9205,10 +9150,10 @@
     // -----------------------------------------------------------------------------
     const PRODUCT = {
         description: _lt("Result of multiplying a series of numbers together."),
-        args: args(`
-      factor1 (number, range<number>) ${_lt("The first number or range to calculate for the product.")}
-      factor2 (number, range<number>, repeating) ${_lt("More numbers or ranges to calculate for the product.")}
-    `),
+        args: [
+            arg("factor1 (number, range<number>)", _lt("The first number or range to calculate for the product.")),
+            arg("factor2 (number, range<number>, repeating)", _lt("More numbers or ranges to calculate for the product.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (factor1) => {
             var _a;
@@ -9257,10 +9202,10 @@
     // -----------------------------------------------------------------------------
     const RANDBETWEEN = {
         description: _lt("Random integer between two values, inclusive."),
-        args: args(`
-      low (number) ${_lt("The low end of the random range.")}
-      high (number) ${_lt("The high end of the random range.")}
-    `),
+        args: [
+            arg("low (number)", _lt("The low end of the random range.")),
+            arg("high (number)", _lt("The high end of the random range.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (low) => low === null || low === void 0 ? void 0 : low.format,
         compute: function (low, high) {
@@ -9282,10 +9227,10 @@
     // -----------------------------------------------------------------------------
     const ROUND = {
         description: _lt("Rounds a number according to standard rules."),
-        args: args(`
-      value (number) ${_lt("The value to round to places number of places.")}
-      places (number, default=${DEFAULT_PLACES}) ${_lt("The number of decimal places to which to round.")}
-    `),
+        args: [
+            arg("value (number)", _lt("The value to round to places number of places.")),
+            arg(`places (number, default=${DEFAULT_PLACES})`, _lt("The number of decimal places to which to round.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         compute: function (value, places = DEFAULT_PLACES) {
@@ -9311,10 +9256,10 @@
     // -----------------------------------------------------------------------------
     const ROUNDDOWN = {
         description: _lt(`Rounds down a number.`),
-        args: args(`
-      value (number) ${_lt("The value to round to places number of places, always rounding down.")}
-      places (number, default=${DEFAULT_PLACES}) ${_lt("The number of decimal places to which to round.")}
-    `),
+        args: [
+            arg("value (number)", _lt("The value to round to places number of places, always rounding down.")),
+            arg(`places (number, default=${DEFAULT_PLACES})`, _lt("The number of decimal places to which to round.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         compute: function (value, places = DEFAULT_PLACES) {
@@ -9340,10 +9285,10 @@
     // -----------------------------------------------------------------------------
     const ROUNDUP = {
         description: _lt(`Rounds up a number.`),
-        args: args(`
-      value (number) ${_lt("The value to round to places number of places, always rounding up.")}
-      places (number, default=${DEFAULT_PLACES}) ${_lt("The number of decimal places to which to round.")}
-    `),
+        args: [
+            arg("value (number)", _lt("The value to round to places number of places, always rounding up.")),
+            arg(`places (number, default=${DEFAULT_PLACES})`, _lt("The number of decimal places to which to round.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         compute: function (value, places = DEFAULT_PLACES) {
@@ -9369,9 +9314,7 @@
     // -----------------------------------------------------------------------------
     const SEC = {
         description: _lt("Secant of an angle provided in radians."),
-        args: args(`
-    angle (number) ${_lt("The angle to find the secant of, in radians.")}
-  `),
+        args: [arg("angle (number)", _lt("The angle to find the secant of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
             return 1 / Math.cos(toNumber(angle));
@@ -9383,9 +9326,7 @@
     // -----------------------------------------------------------------------------
     const SECH = {
         description: _lt("Hyperbolic secant of any real number."),
-        args: args(`
-    value (number) ${_lt("Any real value to calculate the hyperbolic secant of.")}
-  `),
+        args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic secant of."))],
         returns: ["NUMBER"],
         compute: function (value) {
             return 1 / Math.cosh(toNumber(value));
@@ -9397,9 +9338,7 @@
     // -----------------------------------------------------------------------------
     const SIN = {
         description: _lt("Sine of an angle provided in radians."),
-        args: args(`
-      angle (number) ${_lt("The angle to find the sine of, in radians.")}
-    `),
+        args: [arg("angle (number)", _lt("The angle to find the sine of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
             return Math.sin(toNumber(angle));
@@ -9411,9 +9350,7 @@
     // -----------------------------------------------------------------------------
     const SINH = {
         description: _lt("Hyperbolic sine of any real number."),
-        args: args(`
-    value (number) ${_lt("Any real value to calculate the hyperbolic sine of.")}
-  `),
+        args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic sine of."))],
         returns: ["NUMBER"],
         compute: function (value) {
             return Math.sinh(toNumber(value));
@@ -9425,9 +9362,7 @@
     // -----------------------------------------------------------------------------
     const SQRT = {
         description: _lt("Positive square root of a positive number."),
-        args: args(`
-      value (number) ${_lt("The number for which to calculate the positive square root.")}
-    `),
+        args: [arg("value (number)", _lt("The number for which to calculate the positive square root."))],
         returns: ["NUMBER"],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         compute: function (value) {
@@ -9442,10 +9377,10 @@
     // -----------------------------------------------------------------------------
     const SUM = {
         description: _lt("Sum of a series of numbers and/or cells."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first number or range to add together.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional numbers or ranges to add to value1.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first number or range to add together.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional numbers or ranges to add to value1.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
             var _a;
@@ -9461,11 +9396,11 @@
     // -----------------------------------------------------------------------------
     const SUMIF = {
         description: _lt("A conditional sum across a range."),
-        args: args(`
-      criteria_range (range) ${_lt("The range which is tested against criterion.")}
-      criterion (string) ${_lt("The pattern or test to apply to range.")}
-      sum_range (range, default=criteria_range) ${_lt("The range to be summed, if different from range.")}
-    `),
+        args: [
+            arg("criteria_range (range)", _lt("The range which is tested against criterion.")),
+            arg("criterion (string)", _lt("The pattern or test to apply to range.")),
+            arg("sum_range (range, default=criteria_range)", _lt("The range to be summed, if different from range.")),
+        ],
         returns: ["NUMBER"],
         compute: function (criteriaRange, criterion, sumRange = undefined) {
             if (sumRange === undefined) {
@@ -9487,13 +9422,13 @@
     // -----------------------------------------------------------------------------
     const SUMIFS = {
         description: _lt("Sums a range depending on multiple criteria."),
-        args: args(`
-      sum_range (range) ${_lt("The range to sum.")}
-      criteria_range1 (range) ${_lt("The range to check against criterion1.")}
-      criterion1 (string) ${_lt("The pattern or test to apply to criteria_range1.")}
-      criteria_range2 (any, range, repeating) ${_lt("Additional ranges to check.")}
-      criterion2 (string, repeating) ${_lt("Additional criteria to check.")}
-    `),
+        args: [
+            arg("sum_range (range)", _lt("The range to sum.")),
+            arg("criteria_range1 (range)", _lt("The range to check against criterion1.")),
+            arg("criterion1 (string)", _lt("The pattern or test to apply to criteria_range1.")),
+            arg("criteria_range2 (any, range, repeating)", _lt("Additional ranges to check.")),
+            arg("criterion2 (string, repeating)", _lt("Additional criteria to check.")),
+        ],
         returns: ["NUMBER"],
         compute: function (sumRange, ...criters) {
             let sum = 0;
@@ -9512,9 +9447,7 @@
     // -----------------------------------------------------------------------------
     const TAN = {
         description: _lt("Tangent of an angle provided in radians."),
-        args: args(`
-    angle (number) ${_lt("The angle to find the tangent of, in radians.")}
-  `),
+        args: [arg("angle (number)", _lt("The angle to find the tangent of, in radians."))],
         returns: ["NUMBER"],
         compute: function (angle) {
             return Math.tan(toNumber(angle));
@@ -9526,9 +9459,7 @@
     // -----------------------------------------------------------------------------
     const TANH = {
         description: _lt("Hyperbolic tangent of any real number."),
-        args: args(`
-    value (number) ${_lt("Any real value to calculate the hyperbolic tangent of.")}
-  `),
+        args: [arg("value (number)", _lt("Any real value to calculate the hyperbolic tangent of."))],
         returns: ["NUMBER"],
         compute: function (value) {
             return Math.tanh(toNumber(value));
@@ -9540,10 +9471,10 @@
     // -----------------------------------------------------------------------------
     const TRUNC = {
         description: _lt("Truncates a number."),
-        args: args(`
-      value (number) ${_lt("The value to be truncated.")}
-      places (number, default=${DEFAULT_PLACES}) ${_lt("The number of significant digits to the right of the decimal point to retain.")}
-    `),
+        args: [
+            arg("value (number)", _lt("The value to be truncated.")),
+            arg(`places (number, default=${DEFAULT_PLACES})`, _lt("The number of significant digits to the right of the decimal point to retain.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         compute: function (value, places = DEFAULT_PLACES) {
@@ -9697,10 +9628,10 @@
     // -----------------------------------------------------------------------------
     const AVEDEV = {
         description: _lt("Average magnitude of deviations from mean."),
-        args: args(`
-    value1 (number, range<number>) ${_lt("The first value or range of the sample.")}
-    value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the sample.")}
-  `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the sample.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the sample.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             let count = 0;
@@ -9719,10 +9650,10 @@
     // -----------------------------------------------------------------------------
     const AVERAGE = {
         description: _lt(`Numerical average value in a dataset, ignoring text.`),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range to consider when calculating the average value.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to consider when calculating the average value.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range to consider when calculating the average value.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to consider when calculating the average value.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
             var _a;
@@ -9746,12 +9677,12 @@
     const negativeWeightError = _lt(`[[FUNCTION_NAME]] expects the weight to be positive or equal to 0.`);
     const AVERAGE_WEIGHTED = {
         description: _lt(`Weighted average.`),
-        args: args(`
-      values (number, range<number>) ${_lt("Values to average.")}
-      weights (number, range<number>) ${_lt("Weights for each corresponding value.")}
-      additional_values (number, range<number>, repeating) ${_lt("Additional values to average.")}
-      additional_weights (number, range<number>, repeating) ${_lt("Additional weights.")}
-    `),
+        args: [
+            arg("values (number, range<number>)", _lt("Values to average.")),
+            arg("weights (number, range<number>)", _lt("Weights for each corresponding value.")),
+            arg("additional_values (number, range<number>, repeating)", _lt("Additional values to average.")),
+            arg("additional_weights (number, range<number>, repeating)", _lt("Additional weights.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (values) => {
             var _a;
@@ -9807,10 +9738,10 @@
     // -----------------------------------------------------------------------------
     const AVERAGEA = {
         description: _lt(`Numerical average value in a dataset.`),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range to consider when calculating the average value.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to consider when calculating the average value.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range to consider when calculating the average value.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to consider when calculating the average value.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
             var _a;
@@ -9832,11 +9763,11 @@
     // -----------------------------------------------------------------------------
     const AVERAGEIF = {
         description: _lt(`Average of values depending on criteria.`),
-        args: args(`
-      criteria_range (range) ${_lt("The range to check against criterion.")}
-      criterion (string) ${_lt("The pattern or test to apply to criteria_range.")}
-      average_range (range, default=criteria_range) ${_lt("The range to average. If not included, criteria_range is used for the average instead.")}
-    `),
+        args: [
+            arg("criteria_range (range)", _lt("The range to check against criterion.")),
+            arg("criterion (string)", _lt("The pattern or test to apply to criteria_range.")),
+            arg("average_range (range, default=criteria_range)", _lt("The range to average. If not included, criteria_range is used for the average instead.")),
+        ],
         returns: ["NUMBER"],
         compute: function (criteriaRange, criterion, averageRange) {
             if (averageRange === undefined || averageRange === null) {
@@ -9861,13 +9792,13 @@
     // -----------------------------------------------------------------------------
     const AVERAGEIFS = {
         description: _lt(`Average of values depending on multiple criteria.`),
-        args: args(`
-      average_range (range) ${_lt("The range to average.")}
-      criteria_range1 (range) ${_lt("The range to check against criterion1.")}
-      criterion1 (string) ${_lt("The pattern or test to apply to criteria_range1.")}
-      criteria_range2 (any, range, repeating) ${_lt("Additional criteria_range and criterion to check.")}
-      criterion2 (string, repeating) ${_lt("The pattern or test to apply to criteria_range2.")}
-    `),
+        args: [
+            arg("average_range (range)", _lt("The range to average.")),
+            arg("criteria_range1 (range)", _lt("The range to check against criterion1.")),
+            arg("criterion1 (string)", _lt("The pattern or test to apply to criteria_range1.")),
+            arg("criteria_range2 (any, range, repeating)", _lt("Additional criteria_range and criterion to check.")),
+            arg("criterion2 (string, repeating)", _lt("The pattern or test to apply to criteria_range2.")),
+        ],
         returns: ["NUMBER"],
         compute: function (averageRange, ...values) {
             let count = 0;
@@ -9889,10 +9820,10 @@
     // -----------------------------------------------------------------------------
     const COUNT = {
         description: _lt(`The number of numeric values in dataset.`),
-        args: args(`
-    value1 (number, range<number>) ${_lt("The first value or range to consider when counting.")}
-    value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to consider when counting.")}
-  `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range to consider when counting.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to consider when counting.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             let count = 0;
@@ -9919,10 +9850,10 @@
     // -----------------------------------------------------------------------------
     const COUNTA = {
         description: _lt(`The number of values in a dataset.`),
-        args: args(`
-    value1 (any, range) ${_lt("The first value or range to consider when counting.")}
-    value2 (any, range, repeating) ${_lt("Additional values or ranges to consider when counting.")}
-  `),
+        args: [
+            arg("value1 (any, range)", _lt("The first value or range to consider when counting.")),
+            arg("value2 (any, range, repeating)", _lt("Additional values or ranges to consider when counting.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return reduceAny(values, (acc, a) => (a !== undefined && a !== null ? acc + 1 : acc), 0);
@@ -9936,10 +9867,10 @@
     // the COVAR function corresponds to the covariance over an entire population (COVAR.P)
     const COVAR = {
         description: _lt(`The covariance of a dataset.`),
-        args: args(`
-    data_y (any, range) ${_lt("The range representing the array or matrix of dependent data.")}
-    data_x (any, range) ${_lt("The range representing the array or matrix of independent data.")}
-  `),
+        args: [
+            arg("data_y (any, range)", _lt("The range representing the array or matrix of dependent data.")),
+            arg("data_x (any, range)", _lt("The range representing the array or matrix of independent data.")),
+        ],
         returns: ["NUMBER"],
         compute: function (dataY, dataX) {
             return covariance(dataY, dataX, false);
@@ -9951,10 +9882,10 @@
     // -----------------------------------------------------------------------------
     const COVARIANCE_P = {
         description: _lt(`The covariance of a dataset.`),
-        args: args(`
-    data_y (any, range) ${_lt("The range representing the array or matrix of dependent data.")}
-    data_x (any, range) ${_lt("The range representing the array or matrix of independent data.")}
-  `),
+        args: [
+            arg("data_y (any, range)", _lt("The range representing the array or matrix of dependent data.")),
+            arg("data_x (any, range)", _lt("The range representing the array or matrix of independent data.")),
+        ],
         returns: ["NUMBER"],
         compute: function (dataY, dataX) {
             return covariance(dataY, dataX, false);
@@ -9966,10 +9897,10 @@
     // -----------------------------------------------------------------------------
     const COVARIANCE_S = {
         description: _lt(`The sample covariance of a dataset.`),
-        args: args(`
-    data_y (any, range) ${_lt("The range representing the array or matrix of dependent data.")}
-    data_x (any, range) ${_lt("The range representing the array or matrix of independent data.")}
-  `),
+        args: [
+            arg("data_y (any, range)", _lt("The range representing the array or matrix of dependent data.")),
+            arg("data_x (any, range)", _lt("The range representing the array or matrix of independent data.")),
+        ],
         returns: ["NUMBER"],
         compute: function (dataY, dataX) {
             return covariance(dataY, dataX, true);
@@ -9981,10 +9912,10 @@
     // -----------------------------------------------------------------------------
     const LARGE = {
         description: _lt("Nth largest element from a data set."),
-        args: args(`
-      data (any, range) ${_lt("Array or range containing the dataset to consider.")}
-      n (number) ${_lt("The rank from largest to smallest of the element to return.")}
-    `),
+        args: [
+            arg("data (any, range)", _lt("Array or range containing the dataset to consider.")),
+            arg("n (number)", _lt("The rank from largest to smallest of the element to return.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
             var _a;
@@ -10018,10 +9949,10 @@
     // -----------------------------------------------------------------------------
     const MAX = {
         description: _lt("Maximum value in a numeric dataset."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range to consider when calculating the maximum value.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to consider when calculating the maximum value.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range to consider when calculating the maximum value.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to consider when calculating the maximum value.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
             var _a;
@@ -10038,10 +9969,10 @@
     // -----------------------------------------------------------------------------
     const MAXA = {
         description: _lt("Maximum numeric value in a dataset."),
-        args: args(`
-      value1 (any, range) ${_lt("The first value or range to consider when calculating the maximum value.")}
-      value2 (any, range, repeating) ${_lt("Additional values or ranges to consider when calculating the maximum value.")}
-    `),
+        args: [
+            arg("value1 (any, range)", _lt("The first value or range to consider when calculating the maximum value.")),
+            arg("value2 (any, range, repeating)", _lt("Additional values or ranges to consider when calculating the maximum value.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
             var _a;
@@ -10060,13 +9991,13 @@
     // -----------------------------------------------------------------------------
     const MAXIFS = {
         description: _lt("Returns the maximum value in a range of cells, filtered by a set of criteria."),
-        args: args(`
-      range (range) ${_lt("The range of cells from which the maximum will be determined.")}
-      criteria_range1 (range) ${_lt("The range of cells over which to evaluate criterion1.")}
-      criterion1 (string) ${_lt("The pattern or test to apply to criteria_range1, such that each cell that evaluates to TRUE will be included in the filtered set.")}
-      criteria_range2 (any, range, repeating) ${_lt("Additional ranges over which to evaluate the additional criteria. The filtered set will be the intersection of the sets produced by each criterion-range pair.")}
-      criterion2 (string, repeating) ${_lt("The pattern or test to apply to criteria_range2.")}
-    `),
+        args: [
+            arg("range (range)", _lt("The range of cells from which the maximum will be determined.")),
+            arg("criteria_range1 (range)", _lt("The range of cells over which to evaluate criterion1.")),
+            arg("criterion1 (string)", _lt("The pattern or test to apply to criteria_range1, such that each cell that evaluates to TRUE will be included in the filtered set.")),
+            arg("criteria_range2 (any, range, repeating)", _lt("Additional ranges over which to evaluate the additional criteria. The filtered set will be the intersection of the sets produced by each criterion-range pair.")),
+            arg("criterion2 (string, repeating)", _lt("The pattern or test to apply to criteria_range2.")),
+        ],
         returns: ["NUMBER"],
         compute: function (range, ...args) {
             let result = -Infinity;
@@ -10085,10 +10016,10 @@
     // -----------------------------------------------------------------------------
     const MEDIAN = {
         description: _lt("Median value in a numeric dataset."),
-        args: args(`
-      value1 (any, range) ${_lt("The first value or range to consider when calculating the median value.")}
-      value2 (any, range, repeating) ${_lt("Additional values or ranges to consider when calculating the median value.")}
-    `),
+        args: [
+            arg("value1 (any, range)", _lt("The first value or range to consider when calculating the median value.")),
+            arg("value2 (any, range, repeating)", _lt("Additional values or ranges to consider when calculating the median value.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
             var _a;
@@ -10108,10 +10039,10 @@
     // -----------------------------------------------------------------------------
     const MIN = {
         description: _lt("Minimum value in a numeric dataset."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range to consider when calculating the minimum value.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to consider when calculating the minimum value.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range to consider when calculating the minimum value.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to consider when calculating the minimum value.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
             var _a;
@@ -10128,10 +10059,10 @@
     // -----------------------------------------------------------------------------
     const MINA = {
         description: _lt("Minimum numeric value in a dataset."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range to consider when calculating the minimum value.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to consider when calculating the minimum value.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range to consider when calculating the minimum value.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to consider when calculating the minimum value.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
             var _a;
@@ -10150,13 +10081,13 @@
     // -----------------------------------------------------------------------------
     const MINIFS = {
         description: _lt("Returns the minimum value in a range of cells, filtered by a set of criteria."),
-        args: args(`
-      range (range) ${_lt("The range of cells from which the minimum will be determined.")}
-      criteria_range1 (range) ${_lt("The range of cells over which to evaluate criterion1.")}
-      criterion1 (string) ${_lt("The pattern or test to apply to criteria_range1, such that each cell that evaluates to TRUE will be included in the filtered set.")}
-      criteria_range2 (any, range, repeating) ${_lt("Additional ranges over which to evaluate the additional criteria. The filtered set will be the intersection of the sets produced by each criterion-range pair.")}
-      criterion2 (string, repeating) ${_lt("The pattern or test to apply to criteria_range2.")}
-    `),
+        args: [
+            arg("range (range)", _lt("The range of cells from which the minimum will be determined.")),
+            arg("criteria_range1 (range)", _lt("The range of cells over which to evaluate criterion1.")),
+            arg("criterion1 (string)", _lt("The pattern or test to apply to criteria_range1, such that each cell that evaluates to TRUE will be included in the filtered set.")),
+            arg("criteria_range2 (any, range, repeating)", _lt("Additional ranges over which to evaluate the additional criteria. The filtered set will be the intersection of the sets produced by each criterion-range pair.")),
+            arg("criterion2 (string, repeating)", _lt("The pattern or test to apply to criteria_range2.")),
+        ],
         returns: ["NUMBER"],
         compute: function (range, ...args) {
             let result = Infinity;
@@ -10175,10 +10106,10 @@
     // -----------------------------------------------------------------------------
     const PERCENTILE = {
         description: _lt("Value at a given percentile of a dataset."),
-        args: args(`
-      data (any, range) ${_lt("The array or range containing the dataset to consider.")}
-      percentile (number) ${_lt("The percentile whose value within data will be calculated and returned.")}
-    `),
+        args: [
+            arg("data (any, range)", _lt("The array or range containing the dataset to consider.")),
+            arg("percentile (number)", _lt("The percentile whose value within data will be calculated and returned.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
             var _a;
@@ -10194,10 +10125,10 @@
     // -----------------------------------------------------------------------------
     const PERCENTILE_EXC = {
         description: _lt("Value at a given percentile of a dataset exclusive of 0 and 1."),
-        args: args(`
-      data (any, range) ${_lt("The array or range containing the dataset to consider.")}
-      percentile (number) ${_lt("The percentile, exclusive of 0 and 1, whose value within 'data' will be calculated and returned.")}
-    `),
+        args: [
+            arg("data (any, range)", _lt("The array or range containing the dataset to consider.")),
+            arg("percentile (number)", _lt("The percentile, exclusive of 0 and 1, whose value within 'data' will be calculated and returned.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
             var _a;
@@ -10213,10 +10144,10 @@
     // -----------------------------------------------------------------------------
     const PERCENTILE_INC = {
         description: _lt("Value at a given percentile of a dataset."),
-        args: args(`
-      data (any, range) ${_lt("The array or range containing the dataset to consider.")}
-      percentile (number) ${_lt("The percentile whose value within data will be calculated and returned.")}
-    `),
+        args: [
+            arg("data (any, range)", _lt("The array or range containing the dataset to consider.")),
+            arg("percentile (number)", _lt("The percentile whose value within data will be calculated and returned.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
             var _a;
@@ -10232,10 +10163,10 @@
     // -----------------------------------------------------------------------------
     const QUARTILE = {
         description: _lt("Value nearest to a specific quartile of a dataset."),
-        args: args(`
-      data (any, range) ${_lt("The array or range containing the dataset to consider.")}
-      quartile_number (number) ${_lt("Which quartile value to return.")}
-    `),
+        args: [
+            arg("data (any, range)", _lt("The array or range containing the dataset to consider.")),
+            arg("quartile_number (number)", _lt("Which quartile value to return.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
             var _a;
@@ -10251,10 +10182,10 @@
     // -----------------------------------------------------------------------------
     const QUARTILE_EXC = {
         description: _lt("Value nearest to a specific quartile of a dataset exclusive of 0 and 4."),
-        args: args(`
-      data (any, range) ${_lt("The array or range containing the dataset to consider.")}
-      quartile_number (number) ${_lt("Which quartile value, exclusive of 0 and 4, to return.")}
-    `),
+        args: [
+            arg("data (any, range)", _lt("The array or range containing the dataset to consider.")),
+            arg("quartile_number (number)", _lt("Which quartile value, exclusive of 0 and 4, to return.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
             var _a;
@@ -10271,10 +10202,10 @@
     // -----------------------------------------------------------------------------
     const QUARTILE_INC = {
         description: _lt("Value nearest to a specific quartile of a dataset."),
-        args: args(`
-      data (any, range) ${_lt("The array or range containing the dataset to consider.")}
-      quartile_number (number) ${_lt("Which quartile value to return.")}
-    `),
+        args: [
+            arg("data (any, range)", _lt("The array or range containing the dataset to consider.")),
+            arg("quartile_number (number)", _lt("Which quartile value to return.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
             var _a;
@@ -10291,10 +10222,10 @@
     // -----------------------------------------------------------------------------
     const SMALL = {
         description: _lt("Nth smallest element in a data set."),
-        args: args(`
-      data (any, range) ${_lt("The array or range containing the dataset to consider.")}
-      n (number) ${_lt("The rank from smallest to largest of the element to return.")}
-    `),
+        args: [
+            arg("data (any, range)", _lt("The array or range containing the dataset to consider.")),
+            arg("n (number)", _lt("The rank from smallest to largest of the element to return.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
             var _a;
@@ -10328,10 +10259,10 @@
     // -----------------------------------------------------------------------------
     const STDEV = {
         description: _lt("Standard deviation."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range of the sample.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the sample.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the sample.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the sample.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return Math.sqrt(VAR.compute(...values));
@@ -10343,10 +10274,10 @@
     // -----------------------------------------------------------------------------
     const STDEV_P = {
         description: _lt("Standard deviation of entire population."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range of the population.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the population.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the population.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the population.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return Math.sqrt(VAR_P.compute(...values));
@@ -10358,10 +10289,10 @@
     // -----------------------------------------------------------------------------
     const STDEV_S = {
         description: _lt("Standard deviation."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range of the sample.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the sample.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the sample.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the sample.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return Math.sqrt(VAR_S.compute(...values));
@@ -10373,10 +10304,10 @@
     // -----------------------------------------------------------------------------
     const STDEVA = {
         description: _lt("Standard deviation of sample (text as 0)."),
-        args: args(`
-    value1 (number, range<number>) ${_lt("The first value or range of the sample.")}
-    value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the sample.")}
-  `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the sample.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the sample.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return Math.sqrt(VARA.compute(...values));
@@ -10388,10 +10319,10 @@
     // -----------------------------------------------------------------------------
     const STDEVP = {
         description: _lt("Standard deviation of entire population."),
-        args: args(`
-    value1 (number, range<number>) ${_lt("The first value or range of the population.")}
-    value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the population.")}
-  `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the population.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the population.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return Math.sqrt(VARP.compute(...values));
@@ -10403,10 +10334,10 @@
     // -----------------------------------------------------------------------------
     const STDEVPA = {
         description: _lt("Standard deviation of entire population (text as 0)."),
-        args: args(`
-    value1 (number, range<number>) ${_lt("The first value or range of the population.")}
-    value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the population.")}
-  `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the population.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the population.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return Math.sqrt(VARPA.compute(...values));
@@ -10418,10 +10349,10 @@
     // -----------------------------------------------------------------------------
     const VAR = {
         description: _lt("Variance."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range of the sample.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the sample.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the sample.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the sample.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return variance(values, true, false);
@@ -10433,10 +10364,10 @@
     // -----------------------------------------------------------------------------
     const VAR_P = {
         description: _lt("Variance of entire population."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range of the population.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the population.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the population.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the population.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return variance(values, false, false);
@@ -10448,10 +10379,10 @@
     // -----------------------------------------------------------------------------
     const VAR_S = {
         description: _lt("Variance."),
-        args: args(`
-      value1 (number, range<number>) ${_lt("The first value or range of the sample.")}
-      value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the sample.")}
-    `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the sample.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the sample.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return variance(values, true, false);
@@ -10463,10 +10394,10 @@
     // -----------------------------------------------------------------------------
     const VARA = {
         description: _lt("Variance of sample (text as 0)."),
-        args: args(`
-    value1 (number, range<number>) ${_lt("The first value or range of the sample.")}
-    value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the sample.")}
-  `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the sample.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the sample.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return variance(values, true, true);
@@ -10478,10 +10409,10 @@
     // -----------------------------------------------------------------------------
     const VARP = {
         description: _lt("Variance of entire population."),
-        args: args(`
-    value1 (number, range<number>) ${_lt("The first value or range of the population.")}
-    value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the population.")}
-  `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the population.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the population.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return variance(values, false, false);
@@ -10493,10 +10424,10 @@
     // -----------------------------------------------------------------------------
     const VARPA = {
         description: _lt("Variance of entire population (text as 0)."),
-        args: args(`
-    value1 (number, range<number>) ${_lt("The first value or range of the population.")}
-    value2 (number, range<number>, repeating) ${_lt("Additional values or ranges to include in the population.")}
-  `),
+        args: [
+            arg("value1 (number, range<number>)", _lt("The first value or range of the population.")),
+            arg("value2 (number, range<number>, repeating)", _lt("Additional values or ranges to include in the population.")),
+        ],
         returns: ["NUMBER"],
         compute: function (...values) {
             return variance(values, false, true);
@@ -10633,11 +10564,11 @@
         // Example continuation:: matchingCells = ["j", 7]
         return matchingCells;
     }
-    const databaseArgs = args(`
-  database (range) ${_lt("The array or range containing the data to consider, structured in such a way that the first row contains the labels for each column's values.")}
-  field (any) ${_lt("Indicates which column in database contains the values to be extracted and operated on.")}
-  criteria (range) ${_lt("An array or range containing zero or more criteria to filter the database values by before operating.")}
-`);
+    const databaseArgs = [
+        arg("database (range)", _lt("The array or range containing the data to consider, structured in such a way that the first row contains the labels for each column's values.")),
+        arg("field (any)", _lt("Indicates which column in database contains the values to be extracted and operated on.")),
+        arg("criteria (range)", _lt("An array or range containing zero or more criteria to filter the database values by before operating.")),
+    ];
     // -----------------------------------------------------------------------------
     // DAVERAGE
     // -----------------------------------------------------------------------------
@@ -10819,11 +10750,11 @@
     // -----------------------------------------------------------------------------
     const DATE = {
         description: _lt("Converts year/month/day into a date."),
-        args: args(`
-    year (number) ${_lt("The year component of the date.")}
-    month (number) ${_lt("The month component of the date.")}
-    day (number) ${_lt("The day component of the date.")}
-    `),
+        args: [
+            arg("year (number)", _lt("The year component of the date.")),
+            arg("month (number)", _lt("The month component of the date.")),
+            arg("day (number)", _lt("The day component of the date.")),
+        ],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (year, month, day) {
@@ -10848,9 +10779,7 @@
     // -----------------------------------------------------------------------------
     const DATEVALUE = {
         description: _lt("Converts a date string to a date value."),
-        args: args(`
-      date_string (string) ${_lt("The string representing the date.")}
-    `),
+        args: [arg("date_string (string)", _lt("The string representing the date."))],
         returns: ["NUMBER"],
         compute: function (dateString) {
             const _dateString = toString(dateString);
@@ -10865,9 +10794,7 @@
     // -----------------------------------------------------------------------------
     const DAY = {
         description: _lt("Day of the month that a specific date falls on."),
-        args: args(`
-      date (string) ${_lt("The date from which to extract the day.")}
-    `),
+        args: [arg("date (string)", _lt("The date from which to extract the day."))],
         returns: ["NUMBER"],
         compute: function (date) {
             return toJsDate(date).getDate();
@@ -10879,10 +10806,10 @@
     // -----------------------------------------------------------------------------
     const DAYS = {
         description: _lt("Number of days between two dates."),
-        args: args(`
-      end_date (date) ${_lt("The end of the date range.")}
-      start_date (date) ${_lt("The start of the date range.")}
-    `),
+        args: [
+            arg("end_date (date)", _lt("The end of the date range.")),
+            arg("start_date (date)", _lt("The start of the date range.")),
+        ],
         returns: ["NUMBER"],
         compute: function (endDate, startDate) {
             const _endDate = toJsDate(endDate);
@@ -10898,11 +10825,11 @@
     const DEFAULT_DAY_COUNT_METHOD = 0;
     const DAYS360 = {
         description: _lt("Number of days between two dates on a 360-day year (months of 30 days)."),
-        args: args(`
-      start_date (date) ${_lt("The start date to consider in the calculation.")}
-      end_date (date) ${_lt("The end date to consider in the calculation.")}
-      method (number, default=${DEFAULT_DAY_COUNT_METHOD}) ${_lt("An indicator of what day count method to use. (0) US NASD method (1) European method")}
-    `),
+        args: [
+            arg("start_date (date)", _lt("The start date to consider in the calculation.")),
+            arg("end_date (date)", _lt("The end date to consider in the calculation.")),
+            arg(`method (number, default=${DEFAULT_DAY_COUNT_METHOD})`, _lt("An indicator of what day count method to use. (0) US NASD method (1) European method")),
+        ],
         returns: ["NUMBER"],
         compute: function (startDate, endDate, method = DEFAULT_DAY_COUNT_METHOD) {
             const _startDate = toNumber(startDate);
@@ -10918,10 +10845,10 @@
     // -----------------------------------------------------------------------------
     const EDATE = {
         description: _lt("Date a number of months before/after another date."),
-        args: args(`
-    start_date (date) ${_lt("The date from which to calculate the result.")}
-    months (number) ${_lt("The number of months before (negative) or after (positive) 'start_date' to calculate.")}
-    `),
+        args: [
+            arg("start_date (date)", _lt("The date from which to calculate the result.")),
+            arg("months (number)", _lt("The number of months before (negative) or after (positive) 'start_date' to calculate.")),
+        ],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (startDate, months) {
@@ -10937,10 +10864,10 @@
     // -----------------------------------------------------------------------------
     const EOMONTH = {
         description: _lt("Last day of a month before or after a date."),
-        args: args(`
-    start_date (date) ${_lt("The date from which to calculate the result.")}
-    months (number) ${_lt("The number of months before (negative) or after (positive) 'start_date' to consider.")}
-    `),
+        args: [
+            arg("start_date (date)", _lt("The date from which to calculate the result.")),
+            arg("months (number)", _lt("The number of months before (negative) or after (positive) 'start_date' to consider.")),
+        ],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (startDate, months) {
@@ -10958,9 +10885,7 @@
     // -----------------------------------------------------------------------------
     const HOUR = {
         description: _lt("Hour component of a specific time."),
-        args: args(`
-    time (date) ${_lt("The time from which to calculate the hour component.")}
-    `),
+        args: [arg("time (date)", _lt("The time from which to calculate the hour component."))],
         returns: ["NUMBER"],
         compute: function (date) {
             return toJsDate(date).getHours();
@@ -10972,9 +10897,9 @@
     // -----------------------------------------------------------------------------
     const ISOWEEKNUM = {
         description: _lt("ISO week number of the year."),
-        args: args(`
-    date (date) ${_lt("The date for which to determine the ISO week number. Must be a reference to a cell containing a date, a function returning a date type, or a number.")}
-    `),
+        args: [
+            arg("date (date)", _lt("The date for which to determine the ISO week number. Must be a reference to a cell containing a date, a function returning a date type, or a number.")),
+        ],
         returns: ["NUMBER"],
         compute: function (date) {
             const _date = toJsDate(date);
@@ -11046,9 +10971,7 @@
     // -----------------------------------------------------------------------------
     const MINUTE = {
         description: _lt("Minute component of a specific time."),
-        args: args(`
-      time (date) ${_lt("The time from which to calculate the minute component.")}
-    `),
+        args: [arg("time (date)", _lt("The time from which to calculate the minute component."))],
         returns: ["NUMBER"],
         compute: function (date) {
             return toJsDate(date).getMinutes();
@@ -11060,9 +10983,7 @@
     // -----------------------------------------------------------------------------
     const MONTH = {
         description: _lt("Month of the year a specific date falls in"),
-        args: args(`
-      date (date) ${_lt("The date from which to extract the month.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to extract the month."))],
         returns: ["NUMBER"],
         compute: function (date) {
             return toJsDate(date).getMonth() + 1;
@@ -11074,11 +10995,11 @@
     // -----------------------------------------------------------------------------
     const NETWORKDAYS = {
         description: _lt("Net working days between two provided days."),
-        args: args(`
-      start_date (date) ${_lt("The start date of the period from which to calculate the number of net working days.")}
-      end_date (date) ${_lt("The end date of the period from which to calculate the number of net working days.")}
-      holidays (date, range<date>, optional) ${_lt("A range or array constant containing the date serial numbers to consider holidays.")}
-    `),
+        args: [
+            arg("start_date (date)", _lt("The start date of the period from which to calculate the number of net working days.")),
+            arg("end_date (date)", _lt("The end date of the period from which to calculate the number of net working days.")),
+            arg("holidays (date, range<date>, optional)", _lt("A range or array constant containing the date serial numbers to consider holidays.")),
+        ],
         returns: ["NUMBER"],
         compute: function (startDate, endDate, holidays) {
             return NETWORKDAYS_INTL.compute(startDate, endDate, 1, holidays);
@@ -11153,12 +11074,12 @@
     }
     const NETWORKDAYS_INTL = {
         description: _lt("Net working days between two dates (specifying weekends)."),
-        args: args(`
-      start_date (date) ${_lt("The start date of the period from which to calculate the number of net working days.")}
-      end_date (date) ${_lt("The end date of the period from which to calculate the number of net working days.")}
-      weekend (any, default=${DEFAULT_WEEKEND}) ${_lt("A number or string representing which days of the week are considered weekends.")}
-      holidays (date, range<date>, optional) ${_lt("A range or array constant containing the dates to consider as holidays.")}
-    `),
+        args: [
+            arg("start_date (date)", _lt("The start date of the period from which to calculate the number of net working days.")),
+            arg("end_date (date)", _lt("The end date of the period from which to calculate the number of net working days.")),
+            arg(`weekend (any, default=${DEFAULT_WEEKEND})`, _lt("A number or string representing which days of the week are considered weekends.")),
+            arg("holidays (date, range<date>, optional)", _lt("A range or array constant containing the dates to consider as holidays.")),
+        ],
         returns: ["NUMBER"],
         compute: function (startDate, endDate, weekend = DEFAULT_WEEKEND, holidays) {
             const _startDate = toJsDate(startDate);
@@ -11210,9 +11131,7 @@
     // -----------------------------------------------------------------------------
     const SECOND = {
         description: _lt("Minute component of a specific time."),
-        args: args(`
-      time (date) ${_lt("The time from which to calculate the second component.")}
-    `),
+        args: [arg("time (date)", _lt("The time from which to calculate the second component."))],
         returns: ["NUMBER"],
         compute: function (date) {
             return toJsDate(date).getSeconds();
@@ -11224,11 +11143,11 @@
     // -----------------------------------------------------------------------------
     const TIME = {
         description: _lt("Converts hour/minute/second into a time."),
-        args: args(`
-    hour (number) ${_lt("The hour component of the time.")}
-    minute (number) ${_lt("The minute component of the time.")}
-    second (number) ${_lt("The second component of the time.")}
-    `),
+        args: [
+            arg("hour (number)", _lt("The hour component of the time.")),
+            arg("minute (number)", _lt("The minute component of the time.")),
+            arg("second (number)", _lt("The second component of the time.")),
+        ],
         returns: ["DATE"],
         computeFormat: () => "hh:mm:ss a",
         compute: function (hour, minute, second) {
@@ -11250,9 +11169,7 @@
     // -----------------------------------------------------------------------------
     const TIMEVALUE = {
         description: _lt("Converts a time string into its serial number representation."),
-        args: args(`
-      time_string (string) ${_lt("The string that holds the time representation.")}
-    `),
+        args: [arg("time_string (string)", _lt("The string that holds the time representation."))],
         returns: ["NUMBER"],
         compute: function (timeString) {
             const _timeString = toString(timeString);
@@ -11283,10 +11200,10 @@
     // -----------------------------------------------------------------------------
     const WEEKDAY = {
         description: _lt("Day of the week of the date provided (as number)."),
-        args: args(`
-    date (date) ${_lt("The date for which to determine the day of the week. Must be a reference to a cell containing a date, a function returning a date type, or a number.")}
-    type (number, default=${DEFAULT_TYPE}) ${_lt("A number indicating which numbering system to use to represent weekdays. By default, counts starting with Sunday = 1.")}
-  `),
+        args: [
+            arg("date (date)", _lt("The date for which to determine the day of the week. Must be a reference to a cell containing a date, a function returning a date type, or a number.")),
+            arg(`type (number, default=${DEFAULT_TYPE})`, _lt("A number indicating which numbering system to use to represent weekdays. By default, counts starting with Sunday = 1.")),
+        ],
         returns: ["NUMBER"],
         compute: function (date, type = DEFAULT_TYPE) {
             const _date = toJsDate(date);
@@ -11306,10 +11223,10 @@
     // -----------------------------------------------------------------------------
     const WEEKNUM = {
         description: _lt("Week number of the year."),
-        args: args(`
-    date (date) ${_lt("The date for which to determine the week number. Must be a reference to a cell containing a date, a function returning a date type, or a number.")}
-    type (number, default=${DEFAULT_TYPE}) ${_lt("A number representing the day that a week starts on. Sunday = 1.")}
-    `),
+        args: [
+            arg("date (date)", _lt("The date for which to determine the week number. Must be a reference to a cell containing a date, a function returning a date type, or a number.")),
+            arg(`type (number, default=${DEFAULT_TYPE})`, _lt("A number representing the day that a week starts on. Sunday = 1.")),
+        ],
         returns: ["NUMBER"],
         compute: function (date, type = DEFAULT_TYPE) {
             const _date = toJsDate(date);
@@ -11346,11 +11263,11 @@
     // -----------------------------------------------------------------------------
     const WORKDAY = {
         description: _lt("Date after a number of workdays."),
-        args: args(`
-      start_date (date) ${_lt("The date from which to begin counting.")}
-      num_days (number) ${_lt("The number of working days to advance from start_date. If negative, counts backwards.")}
-      holidays (date, range<date>, optional) ${_lt("A range or array constant containing the dates to consider holidays.")}
-      `),
+        args: [
+            arg("start_date (date)", _lt("The date from which to begin counting.")),
+            arg("num_days (number)", _lt("The number of working days to advance from start_date. If negative, counts backwards.")),
+            arg("holidays (date, range<date>, optional)", _lt("A range or array constant containing the dates to consider holidays.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "m/d/yyyy",
         compute: function (startDate, numDays, holidays = undefined) {
@@ -11363,12 +11280,12 @@
     // -----------------------------------------------------------------------------
     const WORKDAY_INTL = {
         description: _lt("Date after a number of workdays (specifying weekends)."),
-        args: args(`
-      start_date (date) ${_lt("The date from which to begin counting.")}
-      num_days (number) ${_lt("The number of working days to advance from start_date. If negative, counts backwards.")}
-      weekend (any, default=${DEFAULT_WEEKEND}) ${_lt("A number or string representing which days of the week are considered weekends.")}
-      holidays (date, range<date>, optional) ${_lt("A range or array constant containing the dates to consider holidays.")}
-    `),
+        args: [
+            arg("start_date (date)", _lt("The date from which to begin counting.")),
+            arg("num_days (number)", _lt("The number of working days to advance from start_date. If negative, counts backwards.")),
+            arg(`weekend (any, default=${DEFAULT_WEEKEND})`, _lt("A number or string representing which days of the week are considered weekends.")),
+            arg("holidays (date, range<date>, optional)", _lt("A range or array constant containing the dates to consider holidays.")),
+        ],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (startDate, numDays, weekend = DEFAULT_WEEKEND, holidays) {
@@ -11406,9 +11323,7 @@
     // -----------------------------------------------------------------------------
     const YEAR = {
         description: _lt("Year specified by a given date."),
-        args: args(`
-    date (date) ${_lt("The date from which to extract the year.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to extract the year."))],
         returns: ["NUMBER"],
         compute: function (date) {
             return toJsDate(date).getFullYear();
@@ -11421,11 +11336,11 @@
     const DEFAULT_DAY_COUNT_CONVENTION$1 = 0;
     const YEARFRAC = {
         description: _lt("Exact number of years between two dates."),
-        args: args(`
-    start_date (date) ${_lt("The start date to consider in the calculation. Must be a reference to a cell containing a date, a function returning a date type, or a number.")}
-    end_date (date) ${_lt("The end date to consider in the calculation. Must be a reference to a cell containing a date, a function returning a date type, or a number.")}
-    day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION$1}) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("start_date (date)", _lt("The start date to consider in the calculation. Must be a reference to a cell containing a date, a function returning a date type, or a number.")),
+            arg("end_date (date)", _lt("The end date to consider in the calculation. Must be a reference to a cell containing a date, a function returning a date type, or a number.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION$1})`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (startDate, endDate, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION$1) {
             let _startDate = Math.trunc(toNumber(startDate));
@@ -11442,9 +11357,7 @@
     // -----------------------------------------------------------------------------
     const MONTH_START = {
         description: _lt("First day of the month preceding a date."),
-        args: args(`
-    date (date) ${_lt("The date from which to calculate the result.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to calculate the result."))],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (date) {
@@ -11460,9 +11373,7 @@
     // -----------------------------------------------------------------------------
     const MONTH_END = {
         description: _lt("Last day of the month following a date."),
-        args: args(`
-    date (date) ${_lt("The date from which to calculate the result.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to calculate the result."))],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (date) {
@@ -11474,9 +11385,7 @@
     // -----------------------------------------------------------------------------
     const QUARTER = {
         description: _lt("Quarter of the year a specific date falls in"),
-        args: args(`
-    date (date) ${_lt("The date from which to extract the quarter.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to extract the quarter."))],
         returns: ["NUMBER"],
         compute: function (date) {
             return Math.ceil((toJsDate(date).getMonth() + 1) / 3);
@@ -11487,9 +11396,7 @@
     // -----------------------------------------------------------------------------
     const QUARTER_START = {
         description: _lt("First day of the quarter of the year a specific date falls in."),
-        args: args(`
-    date (date) ${_lt("The date from which to calculate the start of quarter.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to calculate the start of quarter."))],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (date) {
@@ -11504,9 +11411,7 @@
     // -----------------------------------------------------------------------------
     const QUARTER_END = {
         description: _lt("Last day of the quarter of the year a specific date falls in."),
-        args: args(`
-    date (date) ${_lt("The date from which to calculate the end of quarter.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to calculate the end of quarter."))],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (date) {
@@ -11521,9 +11426,7 @@
     // -----------------------------------------------------------------------------
     const YEAR_START = {
         description: _lt("First day of the year a specific date falls in."),
-        args: args(`
-    date (date) ${_lt("The date from which to calculate the start of the year.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to calculate the start of the year."))],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (date) {
@@ -11537,9 +11440,7 @@
     // -----------------------------------------------------------------------------
     const YEAR_END = {
         description: _lt("Last day of the year a specific date falls in."),
-        args: args(`
-    date (date) ${_lt("The date from which to calculate the end of the year.")}
-    `),
+        args: [arg("date (date)", _lt("The date from which to calculate the end of the year."))],
         returns: ["DATE"],
         computeFormat: () => "m/d/yyyy",
         compute: function (date) {
@@ -11590,10 +11491,10 @@
     // -----------------------------------------------------------------------------
     const DELTA = {
         description: _lt("Compare two numeric values, returning 1 if they're equal."),
-        args: args(`
-  number1  (number) ${_lt("The first number to compare.")}
-  number2  (number, default=${DEFAULT_DELTA_ARG}) ${_lt("The second number to compare.")}
-  `),
+        args: [
+            arg(" (number)", _lt("The first number to compare.")),
+            arg(` (number, default=${DEFAULT_DELTA_ARG})`, _lt("The second number to compare.")),
+        ],
         returns: ["NUMBER"],
         compute: function (number1, number2 = DEFAULT_DELTA_ARG) {
             const _number1 = toNumber(number1);
@@ -11728,12 +11629,12 @@
     const DEFAULT_DAY_COUNT_CONVENTION = 0;
     const DEFAULT_END_OR_BEGINNING = 0;
     const DEFAULT_FUTURE_VALUE = 0;
-    const COUPON_FUNCTION_ARGS = args(`
-settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-frequency (number) ${_lt("The number of interest or coupon payments per year (1, 2, or 4).")}
-day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-`);
+    const COUPON_FUNCTION_ARGS = [
+        arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+        arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+        arg("frequency (number)", _lt("The number of interest or coupon payments per year (1, 2, or 4).")),
+        arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+    ];
     /**
      * Use the Newton–Raphson method to find a root of the given function in an iterative manner.
      *
@@ -11777,13 +11678,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ACCRINTM = {
         description: _lt("Accrued interest of security paying at maturity."),
-        args: args(`
-        issue (date) ${_lt("The date the security was initially issued.")}
-        maturity (date) ${_lt("The maturity date of the security.")}
-        rate (number) ${_lt("The annualized rate of interest.")}
-        redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
-        day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("issue (date)", _lt("The date the security was initially issued.")),
+            arg("maturity (date)", _lt("The maturity date of the security.")),
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("redemption (number)", _lt("The redemption amount per 100 face value, or par.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (issue, maturity, rate, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -11806,15 +11707,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const AMORLINC = {
         description: _lt("Depreciation for an accounting period."),
-        args: args(`
-        cost (number) ${_lt("The initial cost of the asset.")}
-        purchase_date (date) ${_lt("The date the asset was purchased.")}
-        first_period_end (date) ${_lt("The date the first period ended.")}
-        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
-        period (number) ${_lt("The single period within life for which to calculate depreciation.")}
-        rate (number) ${_lt("The deprecation rate.")}
-        day_count_convention  (number, optional) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("cost (number)", _lt("The initial cost of the asset.")),
+            arg("purchase_date (date)", _lt("The date the asset was purchased.")),
+            arg("first_period_end (date)", _lt("The date the first period ended.")),
+            arg("salvage (number)", _lt("The value of the asset at the end of depreciation.")),
+            arg("period (number)", _lt("The single period within life for which to calculate depreciation.")),
+            arg("rate (number)", _lt("The deprecation rate.")),
+            arg(" (number, optional)", _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (cost, purchaseDate, firstPeriodEnd, salvage, period, rate, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -12051,14 +11952,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const CUMIPMT = {
         description: _lt("Cumulative interest paid over a set of periods."),
-        args: args(`
-  rate (number) ${_lt("The interest rate.")}
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  present_value (number) ${_lt("The current value of the annuity.")}
-  first_period (number) ${_lt("The number of the payment period to begin the cumulative calculation.")}
-  last_period (number) ${_lt("The number of the payment period to end the cumulative calculation.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The interest rate.")),
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("present_value (number)", _lt("The current value of the annuity.")),
+            arg("first_period (number)", _lt("The number of the payment period to begin the cumulative calculation.")),
+            arg("last_period (number)", _lt("The number of the payment period to end the cumulative calculation.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+        ],
         returns: ["NUMBER"],
         compute: function (rate, numberOfPeriods, presentValue, firstPeriod, lastPeriod, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
             const first = toNumber(firstPeriod);
@@ -12083,14 +11984,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const CUMPRINC = {
         description: _lt("Cumulative principal paid over a set of periods."),
-        args: args(`
-  rate (number) ${_lt("The interest rate.")}
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  present_value (number) ${_lt("The current value of the annuity.")}
-  first_period (number) ${_lt("The number of the payment period to begin the cumulative calculation.")}
-  last_period (number) ${_lt("The number of the payment period to end the cumulative calculation.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The interest rate.")),
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("present_value (number)", _lt("The current value of the annuity.")),
+            arg("first_period (number)", _lt("The number of the payment period to begin the cumulative calculation.")),
+            arg("last_period (number)", _lt("The number of the payment period to end the cumulative calculation.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+        ],
         returns: ["NUMBER"],
         compute: function (rate, numberOfPeriods, presentValue, firstPeriod, lastPeriod, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
             const first = toNumber(firstPeriod);
@@ -12115,13 +12016,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const DB = {
         description: _lt("Depreciation via declining balance method."),
-        args: args(`
-        cost (number) ${_lt("The initial cost of the asset.")}
-        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
-        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
-        period (number) ${_lt("The single period within life for which to calculate depreciation.")}
-        month (number, optional) ${_lt("The number of months in the first year of depreciation.")}
-    `),
+        args: [
+            arg("cost (number)", _lt("The initial cost of the asset.")),
+            arg("salvage (number)", _lt("The value of the asset at the end of depreciation.")),
+            arg("life (number)", _lt("The number of periods over which the asset is depreciated.")),
+            arg("period (number)", _lt("The single period within life for which to calculate depreciation.")),
+            arg("month (number, optional)", _lt("The number of months in the first year of depreciation.")),
+        ],
         returns: ["NUMBER"],
         // to do: replace by dollar format
         computeFormat: () => "#,##0.00",
@@ -12161,13 +12062,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const DEFAULT_DDB_DEPRECIATION_FACTOR = 2;
     const DDB = {
         description: _lt("Depreciation via double-declining balance method."),
-        args: args(`
-        cost (number) ${_lt("The initial cost of the asset.")}
-        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
-        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
-        period (number) ${_lt("The single period within life for which to calculate depreciation.")}
-        factor (number, default=${DEFAULT_DDB_DEPRECIATION_FACTOR}) ${_lt("The factor by which depreciation decreases.")}
-    `),
+        args: [
+            arg("cost (number)", _lt("The initial cost of the asset.")),
+            arg("salvage (number)", _lt("The value of the asset at the end of depreciation.")),
+            arg("life (number)", _lt("The number of periods over which the asset is depreciated.")),
+            arg("period (number)", _lt("The single period within life for which to calculate depreciation.")),
+            arg(`factor (number, default=${DEFAULT_DDB_DEPRECIATION_FACTOR})`, _lt("The factor by which depreciation decreases.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (cost, salvage, life, period, factor = DEFAULT_DDB_DEPRECIATION_FACTOR) {
@@ -12204,13 +12105,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const DISC = {
         description: _lt("Discount rate of a security based on price."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      price (number) ${_lt("The price at which the security is bought per 100 face value.")}
-      redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
-      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("price (number)", _lt("The price at which the security is bought per 100 face value.")),
+            arg("redemption (number)", _lt("The redemption amount per 100 face value, or par.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, price, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -12243,10 +12144,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const DOLLARDE = {
         description: _lt("Convert a decimal fraction to decimal value."),
-        args: args(`
-      fractional_price (number) ${_lt("The price quotation given using fractional decimal conventions.")}
-      unit (number) ${_lt("The units of the fraction, e.g. 8 for 1/8ths or 32 for 1/32nds.")}
-    `),
+        args: [
+            arg("fractional_price (number)", _lt("The price quotation given using fractional decimal conventions.")),
+            arg("unit (number)", _lt("The units of the fraction, e.g. 8 for 1/8ths or 32 for 1/32nds.")),
+        ],
         returns: ["NUMBER"],
         compute: function (fractionalPrice, unit) {
             const price = toNumber(fractionalPrice);
@@ -12264,10 +12165,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const DOLLARFR = {
         description: _lt("Convert a decimal value to decimal fraction."),
-        args: args(`
-  decimal_price (number) ${_lt("The price quotation given as a decimal value.")}
-      unit (number) ${_lt("The units of the desired fraction, e.g. 8 for 1/8ths or 32 for 1/32nds.")}
-    `),
+        args: [
+            arg("decimal_price (number)", _lt("The price quotation given as a decimal value.")),
+            arg("unit (number)", _lt("The units of the desired fraction, e.g. 8 for 1/8ths or 32 for 1/32nds.")),
+        ],
         returns: ["NUMBER"],
         compute: function (decimalPrice, unit) {
             const price = toNumber(decimalPrice);
@@ -12285,14 +12186,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const DURATION = {
         description: _lt("Number of periods for an investment to reach a value."),
-        args: args(`
-        settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-        maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-        rate (number) ${_lt("The annualized rate of interest.")}
-        yield (number) ${_lt("The expected annual yield of the security.")}
-        frequency (number) ${_lt("The number of interest or coupon payments per year (1, 2, or 4).")}
-        day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("yield (number)", _lt("The expected annual yield of the security.")),
+            arg("frequency (number)", _lt("The number of interest or coupon payments per year (1, 2, or 4).")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, rate, securityYield, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -12331,10 +12232,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const EFFECT = {
         description: _lt("Annual effective interest rate."),
-        args: args(`
-  nominal_rate (number) ${_lt("The nominal interest rate per year.")}
-  periods_per_year (number) ${_lt("The number of compounding periods per year.")}
-  `),
+        args: [
+            arg("nominal_rate (number)", _lt("The nominal interest rate per year.")),
+            arg("periods_per_year (number)", _lt("The number of compounding periods per year.")),
+        ],
         returns: ["NUMBER"],
         compute: function (nominal_rate, periods_per_year) {
             const nominal = toNumber(nominal_rate);
@@ -12352,13 +12253,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const DEFAULT_PRESENT_VALUE = 0;
     const FV = {
         description: _lt("Future value of an annuity investment."),
-        args: args(`
-  rate (number) ${_lt("The interest rate.")}
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  payment_amount (number) ${_lt("The amount per period to be paid.")}
-  present_value (number, default=${DEFAULT_PRESENT_VALUE}) ${_lt("The current value of the annuity.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The interest rate.")),
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("payment_amount (number)", _lt("The amount per period to be paid.")),
+            arg(`present_value (number, default=${DEFAULT_PRESENT_VALUE})`, _lt("The current value of the annuity.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+        ],
         returns: ["NUMBER"],
         // to do: replace by dollar format
         computeFormat: () => "#,##0.00",
@@ -12379,10 +12280,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const FVSCHEDULE = {
         description: _lt("Future value of principal from series of rates."),
-        args: args(`
-  principal (number) ${_lt("The amount of initial capital or value to compound against.")}
-  rate_schedule (number, range<number>) ${_lt("A series of interest rates to compound against the principal.")}
-  `),
+        args: [
+            arg("principal (number)", _lt("The amount of initial capital or value to compound against.")),
+            arg("rate_schedule (number, range<number>)", _lt("A series of interest rates to compound against the principal.")),
+        ],
         returns: ["NUMBER"],
         compute: function (principalAmount, rateSchedule) {
             const principal = toNumber(principalAmount);
@@ -12395,13 +12296,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const INTRATE = {
         description: _lt("Calculates effective interest rate."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      investment (number) ${_lt("The amount invested in the security.")}
-      redemption (number) ${_lt("The amount to be received at maturity.")}
-      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("investment (number)", _lt("The amount invested in the security.")),
+            arg("redemption (number)", _lt("The amount to be received at maturity.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, investment, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             const _settlement = Math.trunc(toNumber(settlement));
@@ -12428,14 +12329,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const IPMT = {
         description: _lt("Payment on the principal of an investment."),
-        args: args(`
-  rate (number) ${_lt("The annualized rate of interest.")}
-  period (number) ${_lt("The amortization period, in terms of number of periods.")}
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  present_value (number) ${_lt("The current value of the annuity.")}
-  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("period (number)", _lt("The amortization period, in terms of number of periods.")),
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("present_value (number)", _lt("The current value of the annuity.")),
+            arg(`future_value (number, default=${DEFAULT_FUTURE_VALUE})`, _lt("The future value remaining after the final payment has been made.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (rate, currentPeriod, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
@@ -12451,10 +12352,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const DEFAULT_RATE_GUESS = 0.1;
     const IRR = {
         description: _lt("Internal rate of return given periodic cashflows."),
-        args: args(`
-  cashflow_amounts (number, range<number>) ${_lt("An array or range containing the income or payments associated with the investment.")}
-  rate_guess (number, default=${DEFAULT_RATE_GUESS}) ${_lt("An estimate for what the internal rate of return will be.")}
-  `),
+        args: [
+            arg("cashflow_amounts (number, range<number>)", _lt("An array or range containing the income or payments associated with the investment.")),
+            arg(`rate_guess (number, default=${DEFAULT_RATE_GUESS})`, _lt("An estimate for what the internal rate of return will be.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "0%",
         compute: function (cashFlowAmounts, rateGuess = DEFAULT_RATE_GUESS) {
@@ -12509,12 +12410,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISPMT = {
         description: _lt("Returns the interest paid at a particular period of an investment."),
-        args: args(`
-  rate (number) ${_lt("The interest rate.")}
-  period (number) ${_lt("The period for which you want to view the interest payment.")}
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  present_value (number) ${_lt("The current value of the annuity.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The interest rate.")),
+            arg("period (number)", _lt("The period for which you want to view the interest payment.")),
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("present_value (number)", _lt("The current value of the annuity.")),
+        ],
         returns: ["NUMBER"],
         compute: function (rate, currentPeriod, numberOfPeriods, presentValue) {
             const interestRate = toNumber(rate);
@@ -12532,14 +12433,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const MDURATION = {
         description: _lt("Modified Macaulay duration."),
-        args: args(`
-        settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-        maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-        rate (number) ${_lt("The annualized rate of interest.")}
-        yield (number) ${_lt("The expected annual yield of the security.")}
-        frequency (number) ${_lt("The number of interest or coupon payments per year (1, 2, or 4).")}
-        day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("yield (number)", _lt("The expected annual yield of the security.")),
+            arg("frequency (number)", _lt("The number of interest or coupon payments per year (1, 2, or 4).")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, rate, securityYield, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             const duration = DURATION.compute(settlement, maturity, rate, securityYield, frequency, dayCountConvention);
@@ -12554,11 +12455,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const MIRR = {
         description: _lt("Modified internal rate of return."),
-        args: args(`
-  cashflow_amounts (range<number>) ${_lt("A range containing the income or payments associated with the investment. The array should contain bot payments and incomes.")}
-  financing_rate (number) ${_lt("The interest rate paid on funds invested.")}
-  reinvestment_return_rate (number) ${_lt("The return (as a percentage) earned on reinvestment of income received from the investment.")}
-  `),
+        args: [
+            arg("cashflow_amounts (range<number>)", _lt("A range containing the income or payments associated with the investment. The array should contain bot payments and incomes.")),
+            arg("financing_rate (number)", _lt("The interest rate paid on funds invested.")),
+            arg("reinvestment_return_rate (number)", _lt("The return (as a percentage) earned on reinvestment of income received from the investment.")),
+        ],
         returns: ["NUMBER"],
         compute: function (cashflowAmount, financingRate, reinvestmentRate) {
             const fRate = toNumber(financingRate);
@@ -12604,10 +12505,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const NOMINAL = {
         description: _lt("Annual nominal interest rate."),
-        args: args(`
-  effective_rate (number) ${_lt("The effective interest rate per year.")}
-  periods_per_year (number) ${_lt("The number of compounding periods per year.")}
-  `),
+        args: [
+            arg("effective_rate (number)", _lt("The effective interest rate per year.")),
+            arg("periods_per_year (number)", _lt("The number of compounding periods per year.")),
+        ],
         returns: ["NUMBER"],
         compute: function (effective_rate, periods_per_year) {
             const effective = toNumber(effective_rate);
@@ -12624,13 +12525,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const NPER = {
         description: _lt("Number of payment periods for an investment."),
-        args: args(`
-  rate (number) ${_lt("The interest rate.")}
-  payment_amount (number) ${_lt("The amount of each payment made.")}
-  present_value (number) ${_lt("The current value of the annuity.")}
-  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The interest rate.")),
+            arg("payment_amount (number)", _lt("The amount of each payment made.")),
+            arg("present_value (number)", _lt("The current value of the annuity.")),
+            arg(`future_value (number, default=${DEFAULT_FUTURE_VALUE})`, _lt("The future value remaining after the final payment has been made.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+        ],
         returns: ["NUMBER"],
         compute: function (rate, paymentAmount, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
             futureValue = futureValue || 0;
@@ -12674,11 +12575,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     const NPV = {
         description: _lt("The net present value of an investment based on a series of periodic cash flows and a discount rate."),
-        args: args(`
-  discount (number) ${_lt("The discount rate of the investment over one period.")}
-  cashflow1 (number, range<number>) ${_lt("The first future cash flow.")}
-  cashflow2 (number, range<number>, repeating) ${_lt("Additional future cash flows.")}
-  `),
+        args: [
+            arg("discount (number)", _lt("The discount rate of the investment over one period.")),
+            arg("cashflow1 (number, range<number>)", _lt("The first future cash flow.")),
+            arg("cashflow2 (number, range<number>, repeating)", _lt("Additional future cash flows.")),
+        ],
         returns: ["NUMBER"],
         // to do: replace by dollar format
         computeFormat: () => "#,##0.00",
@@ -12694,11 +12595,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const PDURATION = {
         description: _lt("Computes the number of periods needed for an investment to reach a value."),
-        args: args(`
-  rate (number) ${_lt("The rate at which the investment grows each period.")}
-  present_value (number) ${_lt("The investment's current value.")}
-  future_value (number) ${_lt("The investment's desired future value.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The rate at which the investment grows each period.")),
+            arg("present_value (number)", _lt("The investment's current value.")),
+            arg("future_value (number)", _lt("The investment's desired future value.")),
+        ],
         returns: ["NUMBER"],
         compute: function (rate, presentValue, futureValue) {
             const _rate = toNumber(rate);
@@ -12716,13 +12617,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const PMT = {
         description: _lt("Periodic payment for an annuity investment."),
-        args: args(`
-  rate (number) ${_lt("The annualized rate of interest.")}
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  present_value (number) ${_lt("The current value of the annuity.")}
-  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("present_value (number)", _lt("The current value of the annuity.")),
+            arg(`future_value (number, default=${DEFAULT_FUTURE_VALUE})`, _lt("The future value remaining after the final payment has been made.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (rate, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
@@ -12755,14 +12656,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const PPMT = {
         description: _lt("Payment on the principal of an investment."),
-        args: args(`
-  rate (number) ${_lt("The annualized rate of interest.")}
-  period (number) ${_lt("The amortization period, in terms of number of periods.")}
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  present_value (number) ${_lt("The current value of the annuity.")}
-  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("period (number)", _lt("The amortization period, in terms of number of periods.")),
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("present_value (number)", _lt("The current value of the annuity.")),
+            arg(`future_value (number, default=${DEFAULT_FUTURE_VALUE})`, _lt("The future value remaining after the final payment has been made.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (rate, currentPeriod, numberOfPeriods, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING) {
@@ -12792,13 +12693,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const PV = {
         description: _lt("Present value of an annuity investment."),
-        args: args(`
-  rate (number) ${_lt("The interest rate.")}
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  payment_amount (number) ${_lt("The amount per period to be paid.")}
-  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  `),
+        args: [
+            arg("rate (number)", _lt("The interest rate.")),
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("payment_amount (number)", _lt("The amount per period to be paid.")),
+            arg(`future_value (number, default=${DEFAULT_FUTURE_VALUE})`, _lt("The future value remaining after the final payment has been made.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+        ],
         returns: ["NUMBER"],
         // to do: replace by dollar format
         computeFormat: () => "#,##0.00",
@@ -12820,15 +12721,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const PRICE = {
         description: _lt("Price of a security paying periodic interest."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      rate (number) ${_lt("The annualized rate of interest.")}
-      yield (number) ${_lt("The expected annual yield of the security.")}
-      redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
-      frequency (number) ${_lt("The number of interest or coupon payments per year (1, 2, or 4).")}
-      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("yield (number)", _lt("The expected annual yield of the security.")),
+            arg("redemption (number)", _lt("The redemption amount per 100 face value, or par.")),
+            arg("frequency (number)", _lt("The number of interest or coupon payments per year (1, 2, or 4).")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, rate, securityYield, redemption, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -12870,13 +12771,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const PRICEDISC = {
         description: _lt("Price of a discount security."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      discount (number) ${_lt("The discount rate of the security at time of purchase.")}
-      redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
-      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("discount (number)", _lt("The discount rate of the security at time of purchase.")),
+            arg("redemption (number)", _lt("The redemption amount per 100 face value, or par.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, discount, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -12907,14 +12808,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const PRICEMAT = {
         description: _lt("Calculates the price of a security paying interest at maturity, based on expected yield."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      issue (date) ${_lt("The date the security was initially issued.")}
-      rate (number) ${_lt("The annualized rate of interest.")}
-      yield (number) ${_lt("The expected annual yield of the security.")}
-      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("issue (date)", _lt("The date the security was initially issued.")),
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("yield (number)", _lt("The expected annual yield of the security.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, issue, rate, securityYield, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -12971,14 +12872,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const RATE_GUESS_DEFAULT = 0.1;
     const RATE = {
         description: _lt("Interest rate of an annuity investment."),
-        args: args(`
-  number_of_periods (number) ${_lt("The number of payments to be made.")}
-  payment_per_period (number) ${_lt("The amount per period to be paid.")}
-  present_value (number) ${_lt("The current value of the annuity.")}
-  future_value (number, default=${DEFAULT_FUTURE_VALUE}) ${_lt("The future value remaining after the final payment has been made.")}
-  end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING}) ${_lt("Whether payments are due at the end (0) or beginning (1) of each period.")}
-  rate_guess (number, default=${RATE_GUESS_DEFAULT}) ${_lt("An estimate for what the interest rate will be.")}
-  `),
+        args: [
+            arg("number_of_periods (number)", _lt("The number of payments to be made.")),
+            arg("payment_per_period (number)", _lt("The amount per period to be paid.")),
+            arg("present_value (number)", _lt("The current value of the annuity.")),
+            arg(`future_value (number, default=${DEFAULT_FUTURE_VALUE})`, _lt("The future value remaining after the final payment has been made.")),
+            arg(`end_or_beginning (number, default=${DEFAULT_END_OR_BEGINNING})`, _lt("Whether payments are due at the end (0) or beginning (1) of each period.")),
+            arg(`rate_guess (number, default=${RATE_GUESS_DEFAULT})`, _lt("An estimate for what the interest rate will be.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "0%",
         compute: function (numberOfPeriods, paymentPerPeriod, presentValue, futureValue = DEFAULT_FUTURE_VALUE, endOrBeginning = DEFAULT_END_OR_BEGINNING, rateGuess = RATE_GUESS_DEFAULT) {
@@ -13019,13 +12920,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const RECEIVED = {
         description: _lt("Amount received at maturity for a security."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      investment (number) ${_lt("The amount invested (irrespective of face value of each security).")}
-      discount (number) ${_lt("The discount rate of the security invested in.")}
-      day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("investment (number)", _lt("The amount invested (irrespective of face value of each security).")),
+            arg("discount (number)", _lt("The discount rate of the security invested in.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, investment, discount, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -13059,11 +12960,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const RRI = {
         description: _lt("Computes the rate needed for an investment to reach a specific value within a specific number of periods."),
-        args: args(`
-      number_of_periods (number) ${_lt("The number of periods.")}
-      present_value (number) ${_lt("The present value of the investment.")}
-      future_value (number) ${_lt("The future value of the investment.")}
-    `),
+        args: [
+            arg("number_of_periods (number)", _lt("The number of periods.")),
+            arg("present_value (number)", _lt("The present value of the investment.")),
+            arg("future_value (number)", _lt("The future value of the investment.")),
+        ],
         returns: ["NUMBER"],
         compute: function (numberOfPeriods, presentValue, futureValue) {
             const n = toNumber(numberOfPeriods);
@@ -13084,11 +12985,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const SLN = {
         description: _lt("Depreciation of an asset using the straight-line method."),
-        args: args(`
-        cost (number) ${_lt("The initial cost of the asset.")}
-        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
-        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
-    `),
+        args: [
+            arg("cost (number)", _lt("The initial cost of the asset.")),
+            arg("salvage (number)", _lt("The value of the asset at the end of depreciation.")),
+            arg("life (number)", _lt("The number of periods over which the asset is depreciated.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (cost, salvage, life) {
@@ -13106,12 +13007,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const SYD = {
         description: _lt("Depreciation via sum of years digit method."),
-        args: args(`
-        cost (number) ${_lt("The initial cost of the asset.")}
-        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
-        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
-        period (number) ${_lt("The single period within life for which to calculate depreciation.")}
-    `),
+        args: [
+            arg("cost (number)", _lt("The initial cost of the asset.")),
+            arg("salvage (number)", _lt("The value of the asset at the end of depreciation.")),
+            arg("life (number)", _lt("The number of periods over which the asset is depreciated.")),
+            arg("period (number)", _lt("The single period within life for which to calculate depreciation.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: () => "#,##0.00",
         compute: function (cost, salvage, life, period) {
@@ -13141,11 +13042,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const TBILLPRICE = {
         description: _lt("Price of a US Treasury bill."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      discount (number) ${_lt("The discount rate of the bill at time of purchase.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("discount (number)", _lt("The discount rate of the bill at time of purchase.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, discount) {
             const start = Math.trunc(toNumber(settlement));
@@ -13174,11 +13075,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const TBILLEQ = {
         description: _lt("Equivalent rate of return for a US Treasury bill."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      discount (number) ${_lt("The discount rate of the bill at time of purchase.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("discount (number)", _lt("The discount rate of the bill at time of purchase.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, discount) {
             const start = Math.trunc(toNumber(settlement));
@@ -13232,11 +13133,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const TBILLYIELD = {
         description: _lt("The yield of a US Treasury bill based on price."),
-        args: args(`
-      settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-      maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-      price (number) ${_lt("The price at which the security is bought per 100 face value.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("price (number)", _lt("The price at which the security is bought per 100 face value.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, price) {
             const start = Math.trunc(toNumber(settlement));
@@ -13268,15 +13169,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const DEFAULT_VDB_NO_SWITCH = false;
     const VDB = {
         description: _lt("Variable declining balance. WARNING : does not handle decimal periods."),
-        args: args(`
-        cost (number) ${_lt("The initial cost of the asset.")}
-        salvage (number) ${_lt("The value of the asset at the end of depreciation.")}
-        life (number) ${_lt("The number of periods over which the asset is depreciated.")}
-        start (number) ${_lt("Starting period to calculate depreciation.")}
-        end (number) ${_lt("Ending period to calculate depreciation.")}
-        factor (number, default=${DEFAULT_DDB_DEPRECIATION_FACTOR}) ${_lt("The number of months in the first year of depreciation.")}
-  no_switch (number, default=${DEFAULT_VDB_NO_SWITCH}) ${_lt("Whether to switch to straight-line depreciation when the depreciation is greater than the declining balance calculation.")}
-    `),
+        args: [
+            arg("cost (number)", _lt("The initial cost of the asset.")),
+            arg("salvage (number)", _lt("The value of the asset at the end of depreciation.")),
+            arg("life (number)", _lt("The number of periods over which the asset is depreciated.")),
+            arg("start (number)", _lt("Starting period to calculate depreciation.")),
+            arg("end (number)", _lt("Ending period to calculate depreciation.")),
+            arg(`factor (number, default=${DEFAULT_DDB_DEPRECIATION_FACTOR})`, _lt("The number of months in the first year of depreciation.")),
+            arg(`no_switch (number, default=${DEFAULT_VDB_NO_SWITCH})`, _lt("Whether to switch to straight-line depreciation when the depreciation is greater than the declining balance calculation.")),
+        ],
         returns: ["NUMBER"],
         compute: function (cost, salvage, life, startPeriod, endPeriod, factor = DEFAULT_DDB_DEPRECIATION_FACTOR, noSwitch = DEFAULT_VDB_NO_SWITCH) {
             factor = factor || 0;
@@ -13337,11 +13238,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const XIRR = {
         description: _lt("Internal rate of return given non-periodic cash flows."),
-        args: args(`
-  cashflow_amounts (range<number>) ${_lt("An range containing the income or payments associated with the investment.")}
-  cashflow_dates (range<number>) ${_lt("An range with dates corresponding to the cash flows in cashflow_amounts.")}
-  rate_guess (number, default=${RATE_GUESS_DEFAULT}) ${_lt("An estimate for what the internal rate of return will be.")}
-  `),
+        args: [
+            arg("cashflow_amounts (range<number>)", _lt("An range containing the income or payments associated with the investment.")),
+            arg("cashflow_dates (range<number>)", _lt("An range with dates corresponding to the cash flows in cashflow_amounts.")),
+            arg(`rate_guess (number, default=${RATE_GUESS_DEFAULT})`, _lt("An estimate for what the internal rate of return will be.")),
+        ],
         returns: ["NUMBER"],
         compute: function (cashflowAmounts, cashflowDates, rateGuess = RATE_GUESS_DEFAULT) {
             rateGuess = rateGuess || 0;
@@ -13409,11 +13310,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const XNPV = {
         description: _lt("Net present value given to non-periodic cash flows.."),
-        args: args(`
-  discount (number) ${_lt("The discount rate of the investment over one period.")}
-  cashflow_amounts (number, range<number>) ${_lt("An range containing the income or payments associated with the investment.")}
-  cashflow_dates (number, range<number>) ${_lt("An range with dates corresponding to the cash flows in cashflow_amounts.")}
-  `),
+        args: [
+            arg("discount (number)", _lt("The discount rate of the investment over one period.")),
+            arg("cashflow_amounts (number, range<number>)", _lt("An range containing the income or payments associated with the investment.")),
+            arg("cashflow_dates (number, range<number>)", _lt("An range with dates corresponding to the cash flows in cashflow_amounts.")),
+        ],
         returns: ["NUMBER"],
         compute: function (discount, cashflowAmounts, cashflowDates) {
             const rate = toNumber(discount);
@@ -13472,15 +13373,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const YIELD = {
         description: _lt("Annual yield of a security paying periodic interest."),
-        args: args(`
-        settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-        maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-        rate (number) ${_lt("The annualized rate of interest.")}
-        price (number) ${_lt("The price at which the security is bought per 100 face value.")}
-        redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
-        frequency (number) ${_lt("The number of interest or coupon payments per year (1, 2, or 4).")}
-        day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("price (number)", _lt("The price at which the security is bought per 100 face value.")),
+            arg("redemption (number)", _lt("The redemption amount per 100 face value, or par.")),
+            arg("frequency (number)", _lt("The number of interest or coupon payments per year (1, 2, or 4).")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, rate, price, redemption, frequency, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -13549,13 +13450,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const YIELDDISC = {
         description: _lt("Annual yield of a discount security."),
-        args: args(`
-        settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-        maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-        price (number) ${_lt("The price at which the security is bought per 100 face value.")}
-        redemption (number) ${_lt("The redemption amount per 100 face value, or par.")}
-        day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("price (number)", _lt("The price at which the security is bought per 100 face value.")),
+            arg("redemption (number)", _lt("The redemption amount per 100 face value, or par.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, price, redemption, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -13585,14 +13486,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const YIELDMAT = {
         description: _lt("Annual yield of a security paying interest at maturity."),
-        args: args(`
-        settlement (date) ${_lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")}
-        maturity (date) ${_lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")}
-        issue (date) ${_lt("The date the security was initially issued.")}
-        rate (number) ${_lt("The annualized rate of interest.")}
-        price (number) ${_lt("The price at which the security is bought.")}
-        day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("An indicator of what day count method to use.")}
-    `),
+        args: [
+            arg("settlement (date)", _lt("The settlement date of the security, the date after issuance when the security is delivered to the buyer.")),
+            arg("maturity (date)", _lt("The maturity or end date of the security, when it can be redeemed at face, or par value.")),
+            arg("issue (date)", _lt("The date the security was initially issued.")),
+            arg("rate (number)", _lt("The annualized rate of interest.")),
+            arg("price (number)", _lt("The price at which the security is bought.")),
+            arg(`day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} )`, _lt("An indicator of what day count method to use.")),
+        ],
         returns: ["NUMBER"],
         compute: function (settlement, maturity, issue, rate, price, dayCountConvention = DEFAULT_DAY_COUNT_CONVENTION) {
             dayCountConvention = dayCountConvention || 0;
@@ -13674,7 +13575,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISERR = {
         description: _lt("Whether a value is an error other than #N/A."),
-        args: args(`value (any, lazy) ${_lt("The value to be verified as an error type.")}`),
+        args: [arg("value (any, lazy)", _lt("The value to be verified as an error type."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             try {
@@ -13692,7 +13593,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISERROR = {
         description: _lt("Whether a value is an error."),
-        args: args(`value (any, lazy) ${_lt("The value to be verified as an error type.")}`),
+        args: [arg("value (any, lazy)", _lt("The value to be verified as an error type."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             try {
@@ -13710,7 +13611,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISLOGICAL = {
         description: _lt("Whether a value is `true` or `false`."),
-        args: args(`value (any, lazy) ${_lt("The value to be verified as a logical TRUE or FALSE.")}`),
+        args: [arg("value (any, lazy)", _lt("The value to be verified as a logical TRUE or FALSE."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             try {
@@ -13727,7 +13628,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISNA = {
         description: _lt("Whether a value is the error #N/A."),
-        args: args(`value (any, lazy) ${_lt("The value to be verified as an error type.")}`),
+        args: [arg("value (any, lazy)", _lt("The value to be verified as an error type."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             try {
@@ -13745,7 +13646,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISNONTEXT = {
         description: _lt("Whether a value is non-textual."),
-        args: args(`value (any, lazy) ${_lt("The value to be checked.")}`),
+        args: [arg("value (any, lazy)", _lt("The value to be checked."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             try {
@@ -13762,7 +13663,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISNUMBER = {
         description: _lt("Whether a value is a number."),
-        args: args(`value (any, lazy) ${_lt("The value to be verified as a number.")}`),
+        args: [arg("value (any, lazy)", _lt("The value to be verified as a number."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             try {
@@ -13779,7 +13680,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISTEXT = {
         description: _lt("Whether a value is text."),
-        args: args(`value (any, lazy) ${_lt("The value to be verified as text.")}`),
+        args: [arg("value (any, lazy)", _lt("The value to be verified as text."))],
         returns: ["BOOLEAN"],
         compute: function (value) {
             try {
@@ -13796,7 +13697,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ISBLANK = {
         description: _lt("Whether the referenced cell is empty"),
-        args: args(`value (any, lazy) ${_lt("Reference to the cell that will be checked for emptiness.")}`),
+        args: [
+            arg("value (any, lazy)", _lt("Reference to the cell that will be checked for emptiness.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (value) {
             try {
@@ -13814,7 +13717,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const NA = {
         description: _lt("Returns the error value #N/A."),
-        args: args(``),
+        args: [],
         returns: ["BOOLEAN"],
         compute: function (value) {
             throw new NotAvailableError();
@@ -13840,10 +13743,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const AND = {
         description: _lt("Logical `and` operator."),
-        args: args(`
-      logical_expression1 (boolean, range<boolean>) ${_lt("An expression or reference to a cell containing an expression that represents some logical value, i.e. TRUE or FALSE, or an expression that can be coerced to a logical value.")}
-      logical_expression2 (boolean, range<boolean>, repeating) ${_lt("More expressions that represent logical values.")}
-    `),
+        args: [
+            arg("logical_expression1 (boolean, range<boolean>)", _lt("An expression or reference to a cell containing an expression that represents some logical value, i.e. TRUE or FALSE, or an expression that can be coerced to a logical value.")),
+            arg("logical_expression2 (boolean, range<boolean>, repeating)", _lt("More expressions that represent logical values.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (...logicalExpressions) {
             let foundBoolean = false;
@@ -13863,11 +13766,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const IF = {
         description: _lt("Returns value depending on logical expression."),
-        args: args(`
-      logical_expression (boolean) ${_lt("An expression or reference to a cell containing an expression that represents some logical value, i.e. TRUE or FALSE.")}
-      value_if_true (any, lazy) ${_lt("The value the function returns if logical_expression is TRUE.")}
-      value_if_false (any, lazy, default=FALSE) ${_lt("The value the function returns if logical_expression is FALSE.")}
-    `),
+        args: [
+            arg("logical_expression (boolean)", _lt("An expression or reference to a cell containing an expression that represents some logical value, i.e. TRUE or FALSE.")),
+            arg("value_if_true (any, lazy)", _lt("The value the function returns if logical_expression is TRUE.")),
+            arg("value_if_false (any, lazy, default=FALSE)", _lt("The value the function returns if logical_expression is FALSE.")),
+        ],
         returns: ["ANY"],
         compute: function (logicalExpression, valueIfTrue, valueIfFalse = () => false) {
             const result = toBoolean(logicalExpression) ? valueIfTrue() : valueIfFalse();
@@ -13880,10 +13783,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const IFERROR = {
         description: _lt("Value if it is not an error, otherwise 2nd argument."),
-        args: args(`
-    value (any, lazy) ${_lt("The value to return if value itself is not an error.")}
-    value_if_error (any, lazy, default=${_lt("An empty value")}) ${_lt("The value the function returns if value is an error.")}
-  `),
+        args: [
+            arg("value (any, lazy)", _lt("The value to return if value itself is not an error.")),
+            arg(`value_if_error (any, lazy, default="empty")`, _lt("The value the function returns if value is an error.")),
+        ],
         returns: ["ANY"],
         computeFormat: (value, valueIfError = () => ({ value: "" })) => {
             var _a;
@@ -13911,10 +13814,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const IFNA = {
         description: _lt("Value if it is not an #N/A error, otherwise 2nd argument."),
-        args: args(`
-    value (any, lazy) ${_lt("The value to return if value itself is not #N/A an error.")}
-    value_if_error (any, lazy, default=${_lt("An empty value")}) ${_lt("The value the function returns if value is an #N/A error.")}
-  `),
+        args: [
+            arg("value (any, lazy)", _lt("The value to return if value itself is not #N/A an error.")),
+            arg(`value_if_error (any, lazy, default="empty")`, _lt("The value the function returns if value is an #N/A error.")),
+        ],
         returns: ["ANY"],
         compute: function (value, valueIfError = () => "") {
             let result;
@@ -13938,12 +13841,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const IFS = {
         description: _lt("Returns a value depending on multiple logical expressions."),
-        args: args(`
-      condition1 (boolean, lazy) ${_lt("The first condition to be evaluated. This can be a boolean, a number, an array, or a reference to any of those.")}
-      value1 (any, lazy) ${_lt("The returned value if condition1 is TRUE.")}
-      condition2 (boolean, lazy, repeating) ${_lt("Additional conditions to be evaluated if the previous ones are FALSE.")}
-      value2 (any, lazy, repeating) ${_lt("Additional values to be returned if their corresponding conditions are TRUE.")}
-  `),
+        args: [
+            arg("condition1 (boolean, lazy)", _lt("The first condition to be evaluated. This can be a boolean, a number, an array, or a reference to any of those.")),
+            arg("value1 (any, lazy)", _lt("The returned value if condition1 is TRUE.")),
+            arg("condition2 (boolean, lazy, repeating)", _lt("Additional conditions to be evaluated if the previous ones are FALSE.")),
+            arg("value2 (any, lazy, repeating)", _lt("Additional values to be returned if their corresponding conditions are TRUE.")),
+        ],
         returns: ["ANY"],
         compute: function (...values) {
             assert(() => values.length % 2 === 0, _lt(`Wrong number of arguments. Expected an even number of arguments.`));
@@ -13962,8 +13865,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const NOT = {
         description: _lt("Returns opposite of provided logical value."),
-        args: args(`logical_expression (boolean) ${_lt("An expression or reference to a cell holding an expression that represents some logical value.")}
-    `),
+        args: [
+            arg("logical_expression (boolean)", _lt("An expression or reference to a cell holding an expression that represents some logical value.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (logicalExpression) {
             return !toBoolean(logicalExpression);
@@ -13975,10 +13879,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const OR = {
         description: _lt("Logical `or` operator."),
-        args: args(`
-      logical_expression1 (boolean, range<boolean>) ${_lt("An expression or reference to a cell containing an expression that represents some logical value, i.e. TRUE or FALSE, or an expression that can be coerced to a logical value.")}
-      logical_expression2 (boolean, range<boolean>, repeating) ${_lt("More expressions that evaluate to logical values.")}
-    `),
+        args: [
+            arg("logical_expression1 (boolean, range<boolean>)", _lt("An expression or reference to a cell containing an expression that represents some logical value, i.e. TRUE or FALSE, or an expression that can be coerced to a logical value.")),
+            arg("logical_expression2 (boolean, range<boolean>, repeating)", _lt("More expressions that evaluate to logical values.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (...logicalExpressions) {
             let foundBoolean = false;
@@ -13998,10 +13902,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const XOR = {
         description: _lt("Logical `xor` operator."),
-        args: args(`
-      logical_expression1 (boolean, range<boolean>) ${_lt("An expression or reference to a cell containing an expression that represents some logical value, i.e. TRUE or FALSE, or an expression that can be coerced to a logical value.")}
-      logical_expression2 (boolean, range<boolean>, repeating) ${_lt("More expressions that evaluate to logical values.")}
-    `),
+        args: [
+            arg("logical_expression1 (boolean, range<boolean>)", _lt("An expression or reference to a cell containing an expression that represents some logical value, i.e. TRUE or FALSE, or an expression that can be coerced to a logical value.")),
+            arg("logical_expression2 (boolean, range<boolean>, repeating)", _lt("More expressions that evaluate to logical values.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (...logicalExpressions) {
             let foundBoolean = false;
@@ -14042,8 +13946,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const COLUMN = {
         description: _lt("Column number of a specified cell."),
-        args: args(`cell_reference (meta, default=${_lt("The cell in which the formula is entered")}) ${_lt("The cell whose column number will be returned. Column A corresponds to 1.")}
-    `),
+        args: [
+            arg("cell_reference (meta, default='this cell')", _lt("The cell whose column number will be returned. Column A corresponds to 1. By default, the function use the cell in which the formula is entered.")),
+        ],
         returns: ["NUMBER"],
         compute: function (cellReference) {
             var _a;
@@ -14059,7 +13964,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const COLUMNS = {
         description: _lt("Number of columns in a specified array or range."),
-        args: args(`range (meta) ${_lt("The range whose column count will be returned.")}`),
+        args: [arg("range (meta)", _lt("The range whose column count will be returned."))],
         returns: ["NUMBER"],
         compute: function (range) {
             const zone = toZone(range);
@@ -14072,12 +13977,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const HLOOKUP = {
         description: _lt(`Horizontal lookup`),
-        args: args(`
-      search_key (any) ${_lt("The value to search for. For example, 42, 'Cats', or I24.")}
-      range (range) ${_lt("The range to consider for the search. The first row in the range is searched for the key specified in search_key.")}
-      index (number) ${_lt("The row index of the value to be returned, where the first row in range is numbered 1.")}
-      is_sorted (boolean, default=${DEFAULT_IS_SORTED}) ${_lt("Indicates whether the row to be searched (the first row of the specified range) is sorted, in which case the closest match for search_key will be returned.")}
-  `),
+        args: [
+            arg("search_key (any)", _lt("The value to search for. For example, 42, 'Cats', or I24.")),
+            arg("range (range)", _lt("The range to consider for the search. The first row in the range is searched for the key specified in search_key.")),
+            arg("index (number)", _lt("The row index of the value to be returned, where the first row in range is numbered 1.")),
+            arg(`is_sorted (boolean, default=${DEFAULT_IS_SORTED})`, _lt("Indicates whether the row to be searched (the first row of the specified range) is sorted, in which case the closest match for search_key will be returned.")),
+        ],
         returns: ["ANY"],
         compute: function (searchKey, range, index, isSorted = DEFAULT_IS_SORTED) {
             const _index = Math.trunc(toNumber(index));
@@ -14102,11 +14007,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const LOOKUP = {
         description: _lt(`Look up a value.`),
-        args: args(`
-      search_key (any) ${_lt("The value to search for. For example, 42, 'Cats', or I24.")}
-      search_array (range) ${_lt("One method of using this function is to provide a single sorted row or column search_array to look through for the search_key with a second argument result_range. The other way is to combine these two arguments into one search_array where the first row or column is searched and a value is returned from the last row or column in the array. If search_key is not found, a non-exact match may be returned.")}
-      result_range (range, optional) ${_lt("The range from which to return a result. The value returned corresponds to the location where search_key is found in search_range. This range must be only a single row or column and should not be used if using the search_result_array method.")}
-  `),
+        args: [
+            arg("search_key (any)", _lt("The value to search for. For example, 42, 'Cats', or I24.")),
+            arg("search_array (range)", _lt("One method of using this function is to provide a single sorted row or column search_array to look through for the search_key with a second argument result_range. The other way is to combine these two arguments into one search_array where the first row or column is searched and a value is returned from the last row or column in the array. If search_key is not found, a non-exact match may be returned.")),
+            arg("result_range (range, optional)", _lt("The range from which to return a result. The value returned corresponds to the location where search_key is found in search_range. This range must be only a single row or column and should not be used if using the search_result_array method.")),
+        ],
         returns: ["ANY"],
         compute: function (searchKey, searchArray, resultRange) {
             let nbCol = searchArray.length;
@@ -14140,11 +14045,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const DEFAULT_SEARCH_TYPE = 1;
     const MATCH = {
         description: _lt(`Position of item in range that matches value.`),
-        args: args(`
-      search_key (any) ${_lt("The value to search for. For example, 42, 'Cats', or I24.")}
-      range (any, range) ${_lt("The one-dimensional array to be searched.")}
-      search_type (number, default=${DEFAULT_SEARCH_TYPE}) ${_lt("The search method. 1 (default) finds the largest value less than or equal to search_key when range is sorted in ascending order. 0 finds the exact value when range is unsorted. -1 finds the smallest value greater than or equal to search_key when range is sorted in descending order.")}
-  `),
+        args: [
+            arg("search_key (any)", _lt("The value to search for. For example, 42, 'Cats', or I24.")),
+            arg("range (any, range)", _lt("The one-dimensional array to be searched.")),
+            arg(`search_type (number, default=${DEFAULT_SEARCH_TYPE})`, _lt("The search method. 1 (default) finds the largest value less than or equal to search_key when range is sorted in ascending order. 0 finds the exact value when range is unsorted. -1 finds the smallest value greater than or equal to search_key when range is sorted in descending order.")),
+        ],
         returns: ["NUMBER"],
         compute: function (searchKey, range, searchType = DEFAULT_SEARCH_TYPE) {
             let _searchType = toNumber(searchType);
@@ -14177,7 +14082,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ROW = {
         description: _lt("Row number of a specified cell."),
-        args: args(`cell_reference (meta, default=${_lt("The cell in which the formula is entered by default")}) ${_lt("The cell whose row number will be returned.")}`),
+        args: [
+            arg("cell_reference (meta, default='this cell')", _lt("The cell whose row number will be returned. By default, this function uses the cell in which the formula is entered.")),
+        ],
         returns: ["NUMBER"],
         compute: function (cellReference) {
             var _a;
@@ -14193,7 +14100,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ROWS = {
         description: _lt("Number of rows in a specified array or range."),
-        args: args(`range (meta) ${_lt("The range whose row count will be returned.")}`),
+        args: [arg("range (meta)", _lt("The range whose row count will be returned."))],
         returns: ["NUMBER"],
         compute: function (range) {
             const zone = toZone(range);
@@ -14206,12 +14113,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const VLOOKUP = {
         description: _lt(`Vertical lookup.`),
-        args: args(`
-      search_key (any) ${_lt("The value to search for. For example, 42, 'Cats', or I24.")}
-      range (any, range) ${_lt("The range to consider for the search. The first column in the range is searched for the key specified in search_key.")}
-      index (number) ${_lt("The column index of the value to be returned, where the first column in range is numbered 1.")}
-      is_sorted (boolean, default=${DEFAULT_IS_SORTED}) ${_lt("Indicates whether the column to be searched (the first column of the specified range) is sorted, in which case the closest match for search_key will be returned.")}
-  `),
+        args: [
+            arg("search_key (any)", _lt("The value to search for. For example, 42, 'Cats', or I24.")),
+            arg("range (any, range)", _lt("The range to consider for the search. The first column in the range is searched for the key specified in search_key.")),
+            arg("index (number)", _lt("The column index of the value to be returned, where the first column in range is numbered 1.")),
+            arg(`is_sorted (boolean, default=${DEFAULT_IS_SORTED})`, _lt("Indicates whether the column to be searched (the first column of the specified range) is sorted, in which case the closest match for search_key will be returned.")),
+        ],
         returns: ["ANY"],
         compute: function (searchKey, range, index, isSorted = DEFAULT_IS_SORTED) {
             const _index = Math.trunc(toNumber(index));
@@ -14236,19 +14143,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const XLOOKUP = {
         description: _lt(`Search a range for a match and return the corresponding item from a second range.`),
-        args: args(`
-      search_key (any) ${_lt("The value to search for.")}
-      lookup_range (any, range) ${_lt("The range to consider for the search. Should be a single column or a single row.")}
-      return_range (any, range) ${_lt("The range containing the return value. Should have the same dimensions as lookup_range.")}
-      if_not_found (any, lazy, optional) ${_lt("If a valid match is not found, return this value.")}
-      match_mode (any, default=${DEFAULT_MATCH_MODE}) ${_lt("(0) Exact match. (-1) Return next smaller item if no match. (1) Return next greater item if no match.")}
-      search_mode (any, default=${DEFAULT_SEARCH_MODE}) ${_lt("(1) Search starting at first item. \
-    (-1) Search starting at last item. \
-    (2) Perform a binary search that relies on lookup_array being sorted in ascending order. If not sorted, invalid results will be returned. \
-    (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\
-    ")}
-
-  `),
+        args: [
+            arg("search_key (any)", _lt("The value to search for.")),
+            arg("lookup_range (any, range)", _lt("The range to consider for the search. Should be a single column or a single row.")),
+            arg("return_range (any, range)", _lt("The range containing the return value. Should have the same dimensions as lookup_range.")),
+            arg("if_not_found (any, lazy, optional)", _lt("If a valid match is not found, return this value.")),
+            arg(`match_mode (any, default=${DEFAULT_MATCH_MODE})`, _lt("(0) Exact match. (-1) Return next smaller item if no match. (1) Return next greater item if no match.")),
+            arg(`search_mode (any, default=${DEFAULT_SEARCH_MODE})`, _lt("(1) Search starting at first item. \
+      (-1) Search starting at last item. \
+      (2) Perform a binary search that relies on lookup_array being sorted in ascending order. If not sorted, invalid results will be returned. \
+      (-2) Perform a binary search that relies on lookup_array being sorted in descending order. If not sorted, invalid results will be returned.\
+      ")),
+        ],
         returns: ["ANY"],
         compute: function (searchKey, lookupRange, returnRange, defaultValue, matchMode = DEFAULT_MATCH_MODE, searchMode = DEFAULT_SEARCH_MODE) {
             const _matchMode = Math.trunc(toNumber(matchMode));
@@ -14300,10 +14206,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const ADD = {
         description: _lt(`Sum of two numbers.`),
-        args: args(`
-      value1 (number) ${_lt("The first addend.")}
-      value2 (number) ${_lt("The second addend.")}
-    `),
+        args: [
+            arg("value1 (number)", _lt("The first addend.")),
+            arg("value2 (number)", _lt("The second addend.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1, value2) => (value1 === null || value1 === void 0 ? void 0 : value1.format) || (value2 === null || value2 === void 0 ? void 0 : value2.format),
         compute: function (value1, value2) {
@@ -14315,10 +14221,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const CONCAT = {
         description: _lt(`Concatenation of two values.`),
-        args: args(`
-      value1 (string) ${_lt("The value to which value2 will be appended.")}
-      value2 (string) ${_lt("The value to append to value1.")}
-    `),
+        args: [
+            arg("value1 (string)", _lt("The value to which value2 will be appended.")),
+            arg("value2 (string)", _lt("The value to append to value1.")),
+        ],
         returns: ["STRING"],
         compute: function (value1, value2) {
             return toString(value1) + toString(value2);
@@ -14330,10 +14236,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const DIVIDE = {
         description: _lt(`One number divided by another.`),
-        args: args(`
-      dividend (number) ${_lt("The number to be divided.")}
-      divisor (number) ${_lt("The number to divide by.")}
-    `),
+        args: [
+            arg("dividend (number)", _lt("The number to be divided.")),
+            arg("divisor (number)", _lt("The number to divide by.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (dividend, divisor) => (dividend === null || dividend === void 0 ? void 0 : dividend.format) || (divisor === null || divisor === void 0 ? void 0 : divisor.format),
         compute: function (dividend, divisor) {
@@ -14351,10 +14257,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const getNeutral = { number: 0, string: "", boolean: false };
     const EQ = {
         description: _lt(`Equal.`),
-        args: args(`
-      value1 (any) ${_lt("The first value.")}
-      value2 (any) ${_lt("The value to test against value1 for equality.")}
-    `),
+        args: [
+            arg("value1 (any)", _lt("The first value.")),
+            arg("value2 (any)", _lt("The value to test against value1 for equality.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
             value1 = isEmpty(value1) ? getNeutral[typeof value2] : value1;
@@ -14392,10 +14298,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     const GT = {
         description: _lt(`Strictly greater than.`),
-        args: args(`
-      value1 (any) ${_lt("The value to test as being greater than value2.")}
-      value2 (any) ${_lt("The second value.")}
-    `),
+        args: [
+            arg("value1 (any)", _lt("The value to test as being greater than value2.")),
+            arg("value2 (any)", _lt("The second value.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
             return applyRelationalOperator(value1, value2, (v1, v2) => {
@@ -14408,10 +14314,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const GTE = {
         description: _lt(`Greater than or equal to.`),
-        args: args(`
-      value1 (any) ${_lt("The value to test as being greater than or equal to value2.")}
-      value2 (any) ${_lt("The second value.")}
-    `),
+        args: [
+            arg("value1 (any)", _lt("The value to test as being greater than or equal to value2.")),
+            arg("value2 (any)", _lt("The second value.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
             return applyRelationalOperator(value1, value2, (v1, v2) => {
@@ -14424,10 +14330,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const LT = {
         description: _lt(`Less than.`),
-        args: args(`
-      value1 (any) ${_lt("The value to test as being less than value2.")}
-      value2 (any) ${_lt("The second value.")}
-    `),
+        args: [
+            arg("value1 (any)", _lt("The value to test as being less than value2.")),
+            arg("value2 (any)", _lt("The second value.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
             return !GTE.compute(value1, value2);
@@ -14438,10 +14344,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const LTE = {
         description: _lt(`Less than or equal to.`),
-        args: args(`
-      value1 (any) ${_lt("The value to test as being less than or equal to value2.")}
-      value2 (any) ${_lt("The second value.")}
-    `),
+        args: [
+            arg("value1 (any)", _lt("The value to test as being less than or equal to value2.")),
+            arg("value2 (any)", _lt("The second value.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
             return !GT.compute(value1, value2);
@@ -14452,10 +14358,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const MINUS = {
         description: _lt(`Difference of two numbers.`),
-        args: args(`
-      value1 (number) ${_lt("The minuend, or number to be subtracted from.")}
-      value2 (number) ${_lt("The subtrahend, or number to subtract from value1.")}
-    `),
+        args: [
+            arg("value1 (number)", _lt("The minuend, or number to be subtracted from.")),
+            arg("value2 (number)", _lt("The subtrahend, or number to subtract from value1.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (value1, value2) => (value1 === null || value1 === void 0 ? void 0 : value1.format) || (value2 === null || value2 === void 0 ? void 0 : value2.format),
         compute: function (value1, value2) {
@@ -14467,10 +14373,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const MULTIPLY = {
         description: _lt(`Product of two numbers`),
-        args: args(`
-      factor1 (number) ${_lt("The first multiplicand.")}
-      factor2 (number) ${_lt("The second multiplicand.")}
-    `),
+        args: [
+            arg("factor1 (number)", _lt("The first multiplicand.")),
+            arg("factor2 (number)", _lt("The second multiplicand.")),
+        ],
         returns: ["NUMBER"],
         computeFormat: (factor1, factor2) => (factor1 === null || factor1 === void 0 ? void 0 : factor1.format) || (factor2 === null || factor2 === void 0 ? void 0 : factor2.format),
         compute: function (factor1, factor2) {
@@ -14482,10 +14388,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const NE = {
         description: _lt(`Not equal.`),
-        args: args(`
-      value1 (any) ${_lt("The first value.")}
-      value2 (any) ${_lt("The value to test against value1 for inequality.")}
-    `),
+        args: [
+            arg("value1 (any)", _lt("The first value.")),
+            arg("value2 (any)", _lt("The value to test against value1 for inequality.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (value1, value2) {
             return !EQ.compute(value1, value2);
@@ -14496,10 +14402,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const POW = {
         description: _lt(`A number raised to a power.`),
-        args: args(`
-      base (number) ${_lt("The number to raise to the exponent power.")}
-      exponent (number) ${_lt("The exponent to raise base to.")}
-    `),
+        args: [
+            arg("base (number)", _lt("The number to raise to the exponent power.")),
+            arg("exponent (number)", _lt("The exponent to raise base to.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (base, exponent) {
             return POWER.compute(base, exponent);
@@ -14510,9 +14416,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const UMINUS = {
         description: _lt(`A number with the sign reversed.`),
-        args: args(`
-      value (number) ${_lt("The number to have its sign reversed. Equivalently, the number to multiply by -1.")}
-    `),
+        args: [
+            arg("value (number)", _lt("The number to have its sign reversed. Equivalently, the number to multiply by -1.")),
+        ],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         returns: ["NUMBER"],
         compute: function (value) {
@@ -14524,9 +14430,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const UNARY_PERCENT = {
         description: _lt(`Value interpreted as a percentage.`),
-        args: args(`
-      percentage (number) ${_lt("The value to interpret as a percentage.")}
-    `),
+        args: [arg("percentage (number)", _lt("The value to interpret as a percentage."))],
         returns: ["NUMBER"],
         compute: function (percentage) {
             return toNumber(percentage) / 100;
@@ -14537,9 +14441,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const UPLUS = {
         description: _lt(`A specified number, unchanged.`),
-        args: args(`
-      value (any) ${_lt("The number to return.")}
-    `),
+        args: [arg("value (any)", _lt("The number to return."))],
         returns: ["ANY"],
         computeFormat: (value) => value === null || value === void 0 ? void 0 : value.format,
         compute: function (value) {
@@ -14574,9 +14476,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const CHAR = {
         description: _lt("Gets character associated with number."),
-        args: args(`
-      table_number (number) ${_lt("The number of the character to look up from the current Unicode table in decimal format.")}
-  `),
+        args: [
+            arg("table_number (number)", _lt("The number of the character to look up from the current Unicode table in decimal format.")),
+        ],
         returns: ["STRING"],
         compute: function (tableNumber) {
             const _tableNumber = Math.trunc(toNumber(tableNumber));
@@ -14590,9 +14492,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const CLEAN = {
         description: _lt("Remove non-printable characters from a piece of text."),
-        args: args(`
-      text (string) ${_lt("The text whose non-printable characters are to be removed.")}
-  `),
+        args: [arg("text (string)", _lt("The text whose non-printable characters are to be removed."))],
         returns: ["STRING"],
         compute: function (text) {
             const _text = toString(text);
@@ -14611,10 +14511,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const CONCATENATE = {
         description: _lt("Appends strings to one another."),
-        args: args(`
-      string1 (string, range<string>) ${_lt("The initial string.")}
-      string2 (string, range<string>, repeating) ${_lt("More strings to append in sequence.")}
-  `),
+        args: [
+            arg("string1 (string, range<string>)", _lt("The initial string.")),
+            arg("string2 (string, range<string>, repeating)", _lt("More strings to append in sequence.")),
+        ],
         returns: ["STRING"],
         compute: function (...values) {
             return reduceAny(values, (acc, a) => acc + toString(a), "");
@@ -14626,10 +14526,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const EXACT = {
         description: _lt("Tests whether two strings are identical."),
-        args: args(`
-      string1 (string) ${_lt("The first string to compare.")}
-      string2 (string) ${_lt("The second string to compare.")}
-  `),
+        args: [
+            arg("string1 (string)", _lt("The first string to compare.")),
+            arg("string2 (string)", _lt("The second string to compare.")),
+        ],
         returns: ["BOOLEAN"],
         compute: function (string1, string2) {
             return toString(string1) === toString(string2);
@@ -14641,11 +14541,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const FIND = {
         description: _lt("First position of string found in text, case-sensitive."),
-        args: args(`
-      search_for (string) ${_lt("The string to look for within text_to_search.")}
-      text_to_search (string) ${_lt("The text to search for the first occurrence of search_for.")}
-      starting_at (number, default=${DEFAULT_STARTING_AT}) ${_lt("The character within text_to_search at which to start the search.")}
-  `),
+        args: [
+            arg("search_for (string)", _lt("The string to look for within text_to_search.")),
+            arg("text_to_search (string)", _lt("The text to search for the first occurrence of search_for.")),
+            arg(`starting_at (number, default=${DEFAULT_STARTING_AT})`, _lt("The character within text_to_search at which to start the search.")),
+        ],
         returns: ["NUMBER"],
         compute: function (searchFor, textToSearch, startingAt = DEFAULT_STARTING_AT) {
             const _searchFor = toString(searchFor);
@@ -14664,11 +14564,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const JOIN = {
         description: _lt("Concatenates elements of arrays with delimiter."),
-        args: args(`
-      delimiter (string) ${_lt("The character or string to place between each concatenated value.")}
-      value_or_array1 (string, range<string>) ${_lt("The value or values to be appended using delimiter.")}
-      value_or_array2 (string, range<string>, repeating) ${_lt("More values to be appended using delimiter.")}
-  `),
+        args: [
+            arg("delimiter (string)", _lt("The character or string to place between each concatenated value.")),
+            arg("value_or_array1 (string, range<string>)", _lt("The value or values to be appended using delimiter.")),
+            arg("value_or_array2 (string, range<string>, repeating)", _lt("More values to be appended using delimiter.")),
+        ],
         returns: ["STRING"],
         compute: function (delimiter, ...valuesOrArrays) {
             const _delimiter = toString(delimiter);
@@ -14680,10 +14580,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const LEFT = {
         description: _lt("Substring from beginning of specified string."),
-        args: args(`
-      text (string) ${_lt("The string from which the left portion will be returned.")}
-      number_of_characters (number, optional) ${_lt("The number of characters to return from the left side of string.")}
-  `),
+        args: [
+            arg("text (string)", _lt("The string from which the left portion will be returned.")),
+            arg("number_of_characters (number, optional)", _lt("The number of characters to return from the left side of string.")),
+        ],
         returns: ["STRING"],
         compute: function (text, ...args) {
             const _numberOfCharacters = args.length ? toNumber(args[0]) : 1;
@@ -14697,9 +14597,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const LEN = {
         description: _lt("Length of a string."),
-        args: args(`
-      text (string) ${_lt("The string whose length will be returned.")}
-  `),
+        args: [arg("text (string)", _lt("The string whose length will be returned."))],
         returns: ["NUMBER"],
         compute: function (text) {
             return toString(text).length;
@@ -14711,9 +14609,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const LOWER = {
         description: _lt("Converts a specified string to lowercase."),
-        args: args(`
-      text (string) ${_lt("The string to convert to lowercase.")}
-  `),
+        args: [arg("text (string)", _lt("The string to convert to lowercase."))],
         returns: ["STRING"],
         compute: function (text) {
             return toString(text).toLowerCase();
@@ -14725,11 +14621,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const MID = {
         description: _lt("A segment of a string."),
-        args: args(`
-      text (string) ${_lt("The string to extract a segment from.")}
-      starting_at  (number) ${_lt("The index from the left of string from which to begin extracting. The first character in string has the index 1.")}
-      extract_length  (number) ${_lt("The length of the segment to extract.")}
-  `),
+        args: [
+            arg("text (string)", _lt("The string to extract a segment from.")),
+            arg(" (number)", _lt("The index from the left of string from which to begin extracting. The first character in string has the index 1.")),
+            arg(" (number)", _lt("The length of the segment to extract.")),
+        ],
         returns: ["STRING"],
         compute: function (text, starting_at, extract_length) {
             const _text = toString(text);
@@ -14746,9 +14642,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const PROPER = {
         description: _lt("Capitalizes each word in a specified string."),
-        args: args(`
-  text_to_capitalize (string) ${_lt("The text which will be returned with the first letter of each word in uppercase and all other letters in lowercase.")}
-  `),
+        args: [
+            arg("text_to_capitalize (string)", _lt("The text which will be returned with the first letter of each word in uppercase and all other letters in lowercase.")),
+        ],
         returns: ["STRING"],
         compute: function (text) {
             const _text = toString(text);
@@ -14763,12 +14659,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const REPLACE = {
         description: _lt("Replaces part of a text string with different text."),
-        args: args(`
-      text (string) ${_lt("The text, a part of which will be replaced.")}
-      position (number) ${_lt("The position where the replacement will begin (starting from 1).")}
-      length (number) ${_lt("The number of characters in the text to be replaced.")}
-      new_text (string) ${_lt("The text which will be inserted into the original text.")}
-  `),
+        args: [
+            arg("text (string)", _lt("The text, a part of which will be replaced.")),
+            arg("position (number)", _lt("The position where the replacement will begin (starting from 1).")),
+            arg("length (number)", _lt("The number of characters in the text to be replaced.")),
+            arg("new_text (string)", _lt("The text which will be inserted into the original text.")),
+        ],
         returns: ["STRING"],
         compute: function (text, position, length, newText) {
             const _position = toNumber(position);
@@ -14785,10 +14681,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const RIGHT = {
         description: _lt("A substring from the end of a specified string."),
-        args: args(`
-      text (string) ${_lt("The string from which the right portion will be returned.")}
-      number_of_characters (number, optional) ${_lt("The number of characters to return from the right side of string.")}
-  `),
+        args: [
+            arg("text (string)", _lt("The string from which the right portion will be returned.")),
+            arg("number_of_characters (number, optional)", _lt("The number of characters to return from the right side of string.")),
+        ],
         returns: ["STRING"],
         compute: function (text, ...args) {
             const _numberOfCharacters = args.length ? toNumber(args[0]) : 1;
@@ -14804,11 +14700,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const SEARCH = {
         description: _lt("First position of string found in text, ignoring case."),
-        args: args(`
-      search_for (string) ${_lt("The string to look for within text_to_search.")}
-      text_to_search (string) ${_lt("The text to search for the first occurrence of search_for.")}
-      starting_at (number, default=${DEFAULT_STARTING_AT}) ${_lt("The character within text_to_search at which to start the search.")}
-  `),
+        args: [
+            arg("search_for (string)", _lt("The string to look for within text_to_search.")),
+            arg("text_to_search (string)", _lt("The text to search for the first occurrence of search_for.")),
+            arg(`starting_at (number, default=${DEFAULT_STARTING_AT})`, _lt("The character within text_to_search at which to start the search.")),
+        ],
         returns: ["NUMBER"],
         compute: function (searchFor, textToSearch, startingAt = DEFAULT_STARTING_AT) {
             const _searchFor = toString(searchFor).toLowerCase();
@@ -14827,12 +14723,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const SUBSTITUTE = {
         description: _lt("Replaces existing text with new text in a string."),
-        args: args(`
-      text_to_search (string) ${_lt("The text within which to search and replace.")}
-      search_for (string) ${_lt("The string to search for within text_to_search.")}
-      replace_with (string) ${_lt("The string that will replace search_for.")}
-      occurrence_number (number, optional) ${_lt("The instance of search_for within text_to_search to replace with replace_with. By default, all occurrences of search_for are replaced; however, if occurrence_number is specified, only the indicated instance of search_for is replaced.")}
-  `),
+        args: [
+            arg("text_to_search (string)", _lt("The text within which to search and replace.")),
+            arg("search_for (string)", _lt("The string to search for within text_to_search.")),
+            arg("replace_with (string)", _lt("The string that will replace search_for.")),
+            arg("occurrence_number (number, optional)", _lt("The instance of search_for within text_to_search to replace with replace_with. By default, all occurrences of search_for are replaced; however, if occurrence_number is specified, only the indicated instance of search_for is replaced.")),
+        ],
         returns: ["NUMBER"],
         compute: function (textToSearch, searchFor, replaceWith, occurrenceNumber) {
             const _occurrenceNumber = toNumber(occurrenceNumber);
@@ -14857,12 +14753,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const TEXTJOIN = {
         description: _lt("Combines text from multiple strings and/or arrays."),
-        args: args(`
-      delimiter (string) ${_lt(" A string, possible empty, or a reference to a valid string. If empty, the text will be simply concatenated.")}
-      ignore_empty (boolean) ${_lt("A boolean; if TRUE, empty cells selected in the text arguments won't be included in the result.")}
-      text1 (string, range<string>) ${_lt("Any text item. This could be a string, or an array of strings in a range.")}
-      text2 (string, range<string>, repeating) ${_lt("Additional text item(s).")}
-  `),
+        args: [
+            arg("delimiter (string)", _lt(" A string, possible empty, or a reference to a valid string. If empty, the text will be simply concatenated.")),
+            arg("ignore_empty (boolean)", _lt("A boolean; if TRUE, empty cells selected in the text arguments won't be included in the result.")),
+            arg("text1 (string, range<string>)", _lt("Any text item. This could be a string, or an array of strings in a range.")),
+            arg("text2 (string, range<string>, repeating)", _lt("Additional text item(s).")),
+        ],
         returns: ["STRING"],
         compute: function (delimiter, ignoreEmpty, ...textsOrArrays) {
             const _delimiter = toString(delimiter);
@@ -14877,9 +14773,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const TRIM = {
         description: _lt("Removes space characters."),
-        args: args(`
-      text (string) ${_lt("The text or reference to a cell containing text to be trimmed.")}
-  `),
+        args: [
+            arg("text (string)", _lt("The text or reference to a cell containing text to be trimmed.")),
+        ],
         returns: ["STRING"],
         compute: function (text) {
             return toString(text).trim();
@@ -14891,9 +14787,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const UPPER = {
         description: _lt("Converts a specified string to uppercase."),
-        args: args(`
-      text (string) ${_lt("The string to convert to uppercase.")}
-  `),
+        args: [arg("text (string)", _lt("The string to convert to uppercase."))],
         returns: ["STRING"],
         compute: function (text) {
             return toString(text).toUpperCase();
@@ -14905,10 +14799,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const TEXT = {
         description: _lt("Converts a number to text according to a specified format."),
-        args: args(`
-      number (number) ${_lt("The number, date or time to format.")}
-      format (string) ${_lt("The pattern by which to format the number, enclosed in quotation marks.")}
-  `),
+        args: [
+            arg("number (number)", _lt("The number, date or time to format.")),
+            arg("format (string)", _lt("The pattern by which to format the number, enclosed in quotation marks.")),
+        ],
         returns: ["STRING"],
         compute: function (number, format) {
             const _number = toNumber(number);
@@ -14945,10 +14839,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     const HYPERLINK = {
         description: _lt("Creates a hyperlink in a cell."),
-        args: args(`
-    url (string) ${_lt("The full URL of the link enclosed in quotation marks.")}
-    link_label (string, optional) ${_lt("The text to display in the cell, enclosed in quotation marks.")}
-  `),
+        args: [
+            arg("url (string)", _lt("The full URL of the link enclosed in quotation marks.")),
+            arg("link_label (string, optional)", _lt("The text to display in the cell, enclosed in quotation marks.")),
+        ],
         returns: ["STRING"],
         compute: function (url, linkLabel) {
             const processedUrl = toString(url).trim();
@@ -15065,15 +14959,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
 
     & > div {
-      display: flex;
-      flex-direction: column;
       padding: 1px 0 5px 5px;
       .o-autocomplete-description {
-        padding: 0 0 0 5px;
+        padding-left: 5px;
         font-size: 11px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
     }
   }
@@ -15296,21 +15185,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // -----------------------------------------------------------------------------
     css /* scss */ `
   .o-formula-assistant {
-    white-space: normal;
-    background-color: #fff;
     .o-formula-assistant-head {
       background-color: #f2f2f2;
       padding: 10px;
     }
     .o-formula-assistant-core {
-      padding: 0px 0px 10px 0px;
-      margin: 10px;
       border-bottom: 1px solid gray;
-    }
-    .o-formula-assistant-arg {
-      padding: 0px 10px 10px 10px;
-      display: flex;
-      flex-direction: column;
     }
     .o-formula-assistant-arg-description {
       font-size: 85%;
@@ -15328,18 +15208,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     .o-formula-assistant-gray {
       color: gray;
     }
-  }
-  .o-formula-assistant-container {
-    user-select: none;
-  }
-  .o-formula-assistant-event-none {
-    pointer-events: none;
-  }
-  .o-formula-assistant-event-auto {
-    pointer-events: auto;
-  }
-  .o-formula-assistant-transparency {
-    opacity: 0.3;
   }
 `;
     class FunctionDescriptionProvider extends owl.Component {
@@ -15432,11 +15300,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       margin: 1px 4px;
       pointer-events: none;
     }
-
-    .o-autocomplete-dropdown,
-    .o-formula-assistant-container {
-      box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
-    }
   }
 `;
     class Composer extends owl.Component {
@@ -15483,7 +15346,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 let assistantStyle = {};
                 if (cellY > remainingHeight) {
                     // render top
-                    assistantStyle.top = `$-3px`;
+                    // We compensate 2 px of margin on the assistant style + 1px for design reasons
+                    assistantStyle.top = `-3px`;
                     assistantStyle.transform = `translate(0, -100%)`;
                 }
                 if (cellX + ASSISTANT_WIDTH > this.props.delimitation.width) {
@@ -16079,7 +15943,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         gridDims: Object,
     };
 
-    const { Component: Component$1 } = owl__namespace;
     const CSS$2 = css /* scss */ `
   .o-filter-icon {
     color: ${FILTERS_COLOR};
@@ -16105,7 +15968,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
   }
 `;
-    class FilterIcon extends Component$1 {
+    class FilterIcon extends owl.Component {
         get style() {
             const { x, y } = this.props.position;
             return `top:${y}px;left:${x}px`;
@@ -16119,9 +15982,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onClick: Function,
     };
 
-    const { Component } = owl__namespace;
     const CSS$1 = css /* scss */ ``;
-    class FilterIconsOverlay extends Component {
+    class FilterIconsOverlay extends owl.Component {
         getVisibleFilterHeaders() {
             const sheetId = this.env.model.getters.getActiveSheetId();
             const headerPositions = this.env.model.getters.getFilterHeaders(sheetId);
@@ -16645,6 +16507,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         },
     };
 
+    css /*SCSS*/ `
+  .o-filter-menu-value {
+    padding: 4px;
+    line-height: 20px;
+    height: 28px;
+    .o-filter-menu-value-checked {
+      width: 20px;
+    }
+  }
+`;
     class FilterMenuValueItem extends owl.Component {
         constructor() {
             super(...arguments);
@@ -16734,15 +16606,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       flex: auto;
       overflow-y: auto;
       border: 1px solid #949494;
-
-      .o-filter-menu-value {
-        padding: 4px;
-        line-height: 20px;
-        height: 28px;
-        .o-filter-menu-value-checked {
-          width: 20px;
-        }
-      }
 
       .o-filter-menu-no-values {
         color: #949494;
@@ -17175,7 +17038,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 isOpen: false,
             });
             this.linkEditorRef = owl.useRef("linkEditor");
-            this.position = useAbsolutePosition(this.linkEditorRef);
+            this.position = useAbsoluteBoundingRect(this.linkEditorRef);
             this.urlInput = owl.useRef("urlInput");
         }
         setup() {
@@ -17294,8 +17157,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
             this.imageContainerRef = owl.useRef("o-image");
             this.menuButtonRef = owl.useRef("menuButton");
-            this.menuButtonPosition = useAbsolutePosition(this.menuButtonRef);
-            this.position = useAbsolutePosition(this.imageContainerRef);
+            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
+            this.position = useAbsoluteBoundingRect(this.imageContainerRef);
             this.menuItems = createMenu([
                 {
                     id: "copy",
@@ -17321,7 +17184,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     id: "reset_size",
                     name: _lt("Reset size"),
                     action: () => {
-                        const size = this.env.model.getters.getImageSize(this.figureId);
+                        const size = this.env.model.getters.getImage(this.env.model.getters.getActiveSheetId(), this.figureId).size;
                         const { height, width } = getMaxFigureSize(this.env.model.getters, size);
                         this.env.model.dispatch("UPDATE_FIGURE", {
                             sheetId: this.env.model.getters.getActiveSheetId(),
@@ -17352,11 +17215,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.openContextMenu(position);
         }
         showMenu() {
-            const position = {
-                x: this.menuButtonPosition.x - MENU_WIDTH,
-                y: this.menuButtonPosition.y,
+            const { x, y, width } = this.menuButtonRect;
+            const menuPosition = {
+                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
+                y: y,
             };
-            this.openContextMenu(position);
+            this.openContextMenu(menuPosition);
         }
         openContextMenu(position) {
             this.menuState.isOpen = true;
@@ -17369,7 +17233,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.props.figure.id;
         }
         get getImagePath() {
-            return this.env.model.getters.getImagePath(this.figureId);
+            return this.env.model.getters.getImage(this.env.model.getters.getActiveSheetId(), this.figureId)
+                .path;
         }
     }
     ImageFigure.template = "o-spreadsheet-ImageFigure";
@@ -17526,7 +17391,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             },
             action: (env) => env.model.dispatch("MOVE_SHEET", {
                 sheetId: env.model.getters.getActiveSheetId(),
-                direction: "right",
+                delta: 1,
             }),
         })
             .add("move_left", {
@@ -17538,7 +17403,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             },
             action: (env) => env.model.dispatch("MOVE_SHEET", {
                 sheetId: env.model.getters.getActiveSheetId(),
-                direction: "left",
+                delta: -1,
             }),
         })
             .add("hide_sheet", {
@@ -18021,17 +17886,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         separator: true,
     })
         .addChild("format_wrapping_overflow", ["format", "format_wrapping"], {
-        name: "Overflow",
+        name: _lt("Overflow"),
         sequence: 10,
         action: (env) => setStyle(env, { wrapping: "overflow" }),
     })
         .addChild("format_wrapping_wrap", ["format", "format_wrapping"], {
-        name: "Wrap",
+        name: _lt("Wrap"),
         sequence: 20,
         action: (env) => setStyle(env, { wrapping: "wrap" }),
     })
         .addChild("format_wrapping_clip", ["format", "format_wrapping"], {
-        name: "Clip",
+        name: _lt("Clip"),
         sequence: 30,
         action: (env) => setStyle(env, { wrapping: "clip" }),
     })
@@ -18167,6 +18032,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 isMissing: false,
                 mode: "select-range",
             });
+            this.focusedInput = owl.useRef("focusedInput");
         }
         get ranges() {
             const existingSelectionRange = this.env.model.getters.getSelectionInput(this.id);
@@ -18194,6 +18060,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.props.isInvalid || this.state.isMissing;
         }
         setup() {
+            owl.useEffect(() => { var _a; return (_a = this.focusedInput.el) === null || _a === void 0 ? void 0 : _a.focus(); }, () => [this.focusedInput.el]);
             owl.onMounted(() => this.enableNewSelectionInput());
             owl.onWillUnmount(async () => this.disableNewSelectionInput());
             owl.onPatched(() => this.checkChange());
@@ -18237,6 +18104,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     updateSelectionWithArrowKeys(ev, this.env.model.selection);
                 }
             }
+            else if (ev.key === "Enter") {
+                const target = ev.target;
+                target.blur();
+            }
         }
         focus(rangeId) {
             this.state.isMissing = false;
@@ -18262,7 +18133,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 rangeId,
                 value: target.value,
             });
-            target.blur();
             this.triggerChange();
         }
         disable() {
@@ -18360,6 +18230,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     LineBarPieConfigPanel.template = "o-spreadsheet-LineBarPieConfigPanel";
     LineBarPieConfigPanel.components = { SelectionInput };
     LineBarPieConfigPanel.props = {
+        sheetId: String,
         figureId: String,
         definition: Object,
         updateChart: Function,
@@ -18621,6 +18492,60 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         maxHeight: { type: Number, optional: true },
     };
 
+    css /* scss */ `
+  .o-color-picker-widget {
+    display: inline-block;
+    position: relative;
+
+    .o-color-picker-button-style {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 2px;
+      padding: 3px;
+      border-radius: 2px;
+      cursor: pointer;
+      &:not([disabled]):hover {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    .o-color-picker-button {
+      > span {
+        border-bottom: 4px solid;
+        height: 16px;
+        margin-top: 2px;
+      }
+
+      &[disabled] {
+        pointer-events: none;
+        opacity: 0.3;
+      }
+    }
+  }
+`;
+    class ColorPickerWidget extends owl.Component {
+        get iconStyle() {
+            return this.props.currentColor
+                ? `border-color: ${this.props.currentColor}`
+                : "border-bottom-style: hidden";
+        }
+    }
+    ColorPickerWidget.template = "o-spreadsheet-ColorPickerWidget";
+    ColorPickerWidget.components = { ColorPicker };
+    ColorPickerWidget.props = {
+        currentColor: { type: String, optional: true },
+        toggleColorPicker: Function,
+        showColorPicker: Boolean,
+        onColorPicked: Function,
+        icon: String,
+        dropdownDirection: { type: String, optional: true },
+        title: { type: String, optional: true },
+        disabled: { type: Boolean, optional: true },
+        dropdownMaxHeight: { type: Number, optional: true },
+        class: { type: String, optional: true },
+    };
+
     class LineBarPieDesignPanel extends owl.Component {
         constructor() {
             super(...arguments);
@@ -18654,7 +18579,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     LineBarPieDesignPanel.template = "o-spreadsheet-LineBarPieDesignPanel";
-    LineBarPieDesignPanel.components = { ColorPicker };
+    LineBarPieDesignPanel.components = { ColorPickerWidget };
     LineBarPieDesignPanel.props = {
         figureId: String,
         definition: Object,
@@ -18694,6 +18619,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     GaugeChartConfigPanel.template = "o-spreadsheet-GaugeChartConfigPanel";
     GaugeChartConfigPanel.components = { SelectionInput };
     GaugeChartConfigPanel.props = {
+        sheetId: String,
         figureId: String,
         definition: Object,
         updateChart: Function,
@@ -18701,16 +18627,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     css /* scss */ `
   .o-gauge-color-set {
-    .o-gauge-color-set-color-button {
-      display: inline-block;
-      border: 1px solid #dadce0;
-      border-radius: 4px;
-      cursor: pointer;
-      padding: 1px 2px;
-    }
-    .o-gauge-color-set-color-button:hover {
-      background-color: rgba(0, 0, 0, 0.08);
-    }
     table {
       table-layout: fixed;
       margin-top: 2%;
@@ -18747,6 +18663,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 openedMenu: undefined,
                 sectionRuleDispatchResult: undefined,
             });
+        }
+        setup() {
+            owl.useExternalListener(window, "click", this.closeMenus);
         }
         get designErrorMessages() {
             var _a;
@@ -18838,7 +18757,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     GaugeChartDesignPanel.template = "o-spreadsheet-GaugeChartDesignPanel";
-    GaugeChartDesignPanel.components = { ColorPicker };
+    GaugeChartDesignPanel.components = { ColorPickerWidget };
     GaugeChartDesignPanel.props = {
         figureId: String,
         definition: Object,
@@ -18847,7 +18766,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     class LineConfigPanel extends LineBarPieConfigPanel {
         get canTreatLabelsAsText() {
-            const chart = this.env.model.getters.getChart(this.props.figureId);
+            const chart = this.env.model.getters.getChart(this.props.sheetId, this.props.figureId);
             if (chart && chart instanceof LineChart) {
                 return canChartParseLabels(chart.labelRange, this.env.model.getters);
             }
@@ -18924,6 +18843,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     ScorecardChartConfigPanel.template = "o-spreadsheet-ScorecardChartConfigPanel";
     ScorecardChartConfigPanel.components = { SelectionInput };
     ScorecardChartConfigPanel.props = {
+        sheetId: String,
         figureId: String,
         definition: Object,
         updateChart: Function,
@@ -18936,6 +18856,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 openedColorPicker: undefined,
             });
         }
+        setup() {
+            owl.useExternalListener(window, "click", this.closeMenus);
+        }
         updateTitle(ev) {
             this.props.updateChart({
                 title: ev.target.value,
@@ -18944,8 +18867,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         updateBaselineDescr(ev) {
             this.props.updateChart({ baselineDescr: ev.target.value });
         }
-        openColorPicker(colorPickerId) {
-            this.state.openedColorPicker = colorPickerId;
+        toggleColorPicker(colorPickerId) {
+            if (this.state.openedColorPicker === colorPickerId) {
+                this.state.openedColorPicker = undefined;
+            }
+            else {
+                this.state.openedColorPicker = colorPickerId;
+            }
         }
         setColor(color, colorPickerId) {
             switch (colorPickerId) {
@@ -18959,11 +18887,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.props.updateChart({ baselineColorUp: color });
                     break;
             }
+            this.closeMenus();
+        }
+        closeMenus() {
             this.state.openedColorPicker = undefined;
         }
     }
     ScorecardChartDesignPanel.template = "o-spreadsheet-ScorecardChartDesignPanel";
-    ScorecardChartDesignPanel.components = { ColorPicker };
+    ScorecardChartDesignPanel.components = { ColorPickerWidget };
     ScorecardChartDesignPanel.props = {
         figureId: String,
         definition: Object,
@@ -19015,13 +18946,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         border-right: none;
       }
     }
-
-    .o-with-color-picker {
-      position: relative;
-    }
-    .o-with-color-picker > span {
-      border-bottom: 4px solid;
-    }
   }
 `;
     class ChartPanel extends owl.Component {
@@ -19032,6 +18956,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         get figureId() {
             return this.state.figureId;
         }
+        get sheetId() {
+            return this.state.sheetId;
+        }
         setup() {
             const selectedFigureId = this.env.model.getters.getSelectedFigureId();
             if (!selectedFigureId) {
@@ -19040,17 +18967,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.state = owl.useState({
                 panel: "configuration",
                 figureId: selectedFigureId,
+                sheetId: this.env.model.getters.getActiveSheetId(),
             });
             owl.onWillUpdateProps(() => {
                 const selectedFigureId = this.env.model.getters.getSelectedFigureId();
                 if (selectedFigureId && selectedFigureId !== this.state.figureId) {
                     this.state.figureId = selectedFigureId;
+                    this.state.sheetId = this.env.model.getters.getActiveSheetId();
                     this.shouldUpdateChart = false;
                 }
                 else {
                     this.shouldUpdateChart = true;
                 }
-                if (!this.env.model.getters.isChartDefined(this.figureId)) {
+                if (!this.env.model.getters.isChartDefined(this.sheetId, this.figureId)) {
                     this.props.onCloseSidePanel();
                     return;
                 }
@@ -19067,11 +18996,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.env.model.dispatch("UPDATE_CHART", {
                 definition,
                 id: this.figureId,
-                sheetId: this.env.model.getters.getActiveSheetId(),
+                sheetId: this.sheetId,
             });
         }
         onTypeChange(type) {
-            const context = this.env.model.getters.getContextCreationChart(this.figureId);
+            const context = this.env.model.getters.getContextCreationChart(this.sheetId, this.figureId);
             if (!context) {
                 throw new Error("Chart not defined.");
             }
@@ -19079,11 +19008,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.env.model.dispatch("UPDATE_CHART", {
                 definition,
                 id: this.figureId,
-                sheetId: this.env.model.getters.getActiveSheetId(),
+                sheetId: this.sheetId,
             });
         }
         get chartPanel() {
-            const type = this.env.model.getters.getChartType(this.figureId);
+            const type = this.env.model.getters.getChartType(this.sheetId, this.figureId);
             if (!type) {
                 throw new Error("Chart not defined.");
             }
@@ -19093,8 +19022,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return chartPanel;
         }
-        getChartDefinition(figureId = this.figureId) {
-            return this.env.model.getters.getChartDefinition(figureId);
+        getChartDefinition() {
+            return this.env.model.getters.getChartDefinition(this.sheetId, this.figureId);
         }
         get chartTypes() {
             return getChartTypes();
@@ -19384,14 +19313,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       margin-bottom: 5px;
       width: 96%;
     }
-    .o-color-picker {
+    .o-color-picker-widget .o-color-picker-button {
       pointer-events: all;
+      cursor: default;
     }
   }
   .o-cf-color-scale-editor {
     .o-threshold {
       display: flex;
-      flex-direction: horizontal;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
       select {
         width: 100%;
       }
@@ -19862,7 +19794,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     ConditionalFormattingPanel.template = "o-spreadsheet-ConditionalFormattingPanel";
-    ConditionalFormattingPanel.components = { SelectionInput, IconPicker, ColorPicker };
+    ConditionalFormattingPanel.components = { SelectionInput, IconPicker, ColorPickerWidget };
     ConditionalFormattingPanel.props = {
         selection: { type: Object, optional: true },
         onCloseSidePanel: Function,
@@ -21618,7 +21550,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return cssPropertiesToCss({
                 left: `${leftValue - AUTOFILL_EDGE_LENGTH / 2}px`,
                 top: `${topValue - AUTOFILL_EDGE_LENGTH / 2}px`,
-                backgroundColor: this.props.color,
+                "background-color": this.props.color,
             });
         }
         onMouseDown(ev) {
@@ -22067,7 +21999,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
             this.gridRef = owl.useRef("grid");
             this.hiddenInput = owl.useRef("hiddenInput");
-            this.canvasPosition = useAbsolutePosition(this.gridRef);
+            this.canvasPosition = useAbsoluteBoundingRect(this.gridRef);
             this.hoveredCell = owl.useState({ col: undefined, row: undefined });
             owl.useChildSubEnv({ getPopoverContainerRect: () => this.getGridRect() });
             owl.useExternalListener(document.body, "cut", this.copy.bind(this, true));
@@ -22121,7 +22053,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 top: rect.y + rect.height - AUTOFILL_EDGE_LENGTH / 2,
             };
         }
-        isAutoFillActive() {
+        get isAutofillVisible() {
             const zone = this.env.model.getters.getSelectedZone();
             const rect = this.env.model.getters.getVisibleRect({
                 left: zone.right,
@@ -28120,13 +28052,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor() {
             super(...arguments);
             this.charts = {};
-            this.nextId = 1;
             this.createChart = chartFactory(this.getters);
-            this.validateChartDefinition = (definition) => validateChartDefinition(this, definition);
+            this.validateChartDefinition = (cmd) => validateChartDefinition(this, cmd.definition);
         }
         adaptRanges(applyChange) {
-            for (const [chartId, chart] of Object.entries(this.charts)) {
-                this.history.update("charts", chartId, chart === null || chart === void 0 ? void 0 : chart.updateRanges(applyChange));
+            for (const sheetId of Object.keys(this.charts)) {
+                for (const [chartId, chart] of Object.entries(this.charts[sheetId] || {})) {
+                    this.history.update("charts", sheetId, chartId, chart === null || chart === void 0 ? void 0 : chart.updateRanges(applyChange));
+                }
             }
         }
         // ---------------------------------------------------------------------------
@@ -28135,14 +28068,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CREATE_CHART":
+                    return this.checkValidations(cmd, this.chainValidations(this.validateChartDefinition, this.checkChartDuplicate));
                 case "UPDATE_CHART":
-                    return this.validateChartDefinition(cmd.definition);
+                    return this.validateChartDefinition(cmd);
                 default:
                     return 0 /* CommandResult.Success */;
             }
         }
         handle(cmd) {
-            var _a;
+            var _a, _b;
             switch (cmd.type) {
                 case "CREATE_CHART":
                     this.addFigure(cmd.id, cmd.sheetId, cmd.position, cmd.size);
@@ -28156,12 +28090,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const sheetFiguresFrom = this.getters.getFigures(cmd.sheetId);
                     for (const fig of sheetFiguresFrom) {
                         if (fig.tag === "chart") {
-                            const id = this.nextId.toString();
-                            this.history.update("nextId", this.nextId + 1);
-                            const chart = (_a = this.charts[fig.id]) === null || _a === void 0 ? void 0 : _a.copyForSheetId(cmd.sheetIdTo);
+                            const figureIdBase = fig.id.split(FIGURE_ID_SPLITTER).pop();
+                            const duplicatedFigureId = `${cmd.sheetIdTo}${FIGURE_ID_SPLITTER}${figureIdBase}`;
+                            const chart = (_b = (_a = this.charts[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[fig.id]) === null || _b === void 0 ? void 0 : _b.copyForSheetId(cmd.sheetIdTo);
                             if (chart) {
                                 this.dispatch("CREATE_CHART", {
-                                    id,
+                                    id: duplicatedFigureId,
                                     position: { x: fig.x, y: fig.y },
                                     size: { width: fig.width, height: fig.height },
                                     definition: chart.getDefinition(),
@@ -28173,44 +28107,41 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 }
                 case "DELETE_FIGURE":
-                    this.history.update("charts", cmd.id, undefined);
+                    this.history.update("charts", cmd.sheetId, cmd.id, undefined);
                     break;
                 case "DELETE_SHEET":
-                    for (let id of this.getChartIds(cmd.sheetId)) {
-                        this.history.update("charts", id, undefined);
-                    }
+                    this.history.update("charts", cmd.sheetId, undefined);
                     break;
             }
         }
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
-        getContextCreationChart(figureId) {
-            var _a;
-            return (_a = this.charts[figureId]) === null || _a === void 0 ? void 0 : _a.getContextCreation();
+        getContextCreationChart(sheetId, figureId) {
+            var _a, _b;
+            return (_b = (_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === null || _b === void 0 ? void 0 : _b.getContextCreation();
         }
-        getChart(figureId) {
-            return this.charts[figureId];
-        }
-        getChartType(figureId) {
+        getChart(sheetId, figureId) {
             var _a;
-            const type = (_a = this.charts[figureId]) === null || _a === void 0 ? void 0 : _a.type;
+            return (_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId];
+        }
+        getChartType(sheetId, figureId) {
+            var _a, _b;
+            const type = (_b = (_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === null || _b === void 0 ? void 0 : _b.type;
             if (!type) {
                 throw new Error("Chart not defined.");
             }
             return type;
         }
-        isChartDefined(figureId) {
-            return figureId in this.charts && this.charts !== undefined;
+        isChartDefined(sheetId, figureId) {
+            return figureId in (this.charts[sheetId] || {});
         }
         getChartIds(sheetId) {
-            return Object.entries(this.charts)
-                .filter(([, chart]) => (chart === null || chart === void 0 ? void 0 : chart.sheetId) === sheetId)
-                .map(([id]) => id);
+            return Object.keys(this.charts[sheetId] || {});
         }
-        getChartDefinition(figureId) {
-            var _a;
-            const definition = (_a = this.charts[figureId]) === null || _a === void 0 ? void 0 : _a.getDefinition();
+        getChartDefinition(sheetId, figureId) {
+            var _a, _b;
+            const definition = (_b = (_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === null || _b === void 0 ? void 0 : _b.getDefinition();
             if (!definition) {
                 throw new Error(`There is no chart with the given figureId: ${figureId}`);
             }
@@ -28222,15 +28153,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         import(data) {
             for (let sheet of data.sheets) {
                 if (sheet.figures) {
+                    const charts = {};
                     for (let figure of sheet.figures) {
                         // TODO:
                         // figure data should be external IMO => chart should be in sheet.chart
                         // instead of in figure.data
                         if (figure.tag === "chart") {
-                            this.history.update("nextId", this.nextId + 1);
-                            this.charts[figure.id] = this.createChart(figure.id, figure.data, sheet.id);
+                            charts[figure.id] = this.createChart(figure.id, figure.data, sheet.id);
                         }
                     }
+                    this.charts[sheet.id] = charts;
                 }
             }
         }
@@ -28242,7 +28174,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const figures = sheetFigures;
                     for (let figure of figures) {
                         if (figure && figure.tag === "chart") {
-                            figure.data = this.getChartDefinition(figure.id);
+                            figure.data = this.getChartDefinition(sheet.id, figure.id);
                         }
                     }
                     sheet.figures = figures;
@@ -28250,13 +28182,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         exportForExcel(data) {
-            var _a;
+            var _a, _b;
             for (let sheet of data.sheets) {
                 const sheetFigures = this.getters.getFigures(sheet.id);
                 const figures = [];
                 for (let figure of sheetFigures) {
                     if (figure && figure.tag === "chart") {
-                        const figureData = (_a = this.charts[figure.id]) === null || _a === void 0 ? void 0 : _a.getDefinitionForExcel();
+                        const figureData = (_b = (_a = this.charts[sheet.id]) === null || _a === void 0 ? void 0 : _a[figure.id]) === null || _b === void 0 ? void 0 : _b.getDefinitionForExcel();
                         if (figureData) {
                             figures.push({
                                 ...figure,
@@ -28296,7 +28228,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * replaced
          */
         addChart(id, sheetId, definition) {
-            this.history.update("charts", id, this.createChart(id, definition, sheetId));
+            this.history.update("charts", sheetId, id, this.createChart(id, definition, sheetId));
+        }
+        checkChartDuplicate(cmd) {
+            var _a;
+            if ((_a = this.charts[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[cmd.id]) {
+                return 84 /* CommandResult.DuplicatedChartId */;
+            }
+            return 0 /* CommandResult.Success */;
         }
     }
     ChartPlugin.getters = [
@@ -28677,7 +28616,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CREATE_FIGURE":
-                    return this.checkFigureDuplicate(cmd.figure.id);
+                    return this.checkFigureDuplicate(cmd.sheetId, cmd.figure.id);
                 case "UPDATE_FIGURE":
                 case "DELETE_FIGURE":
                     return this.checkFigureExists(cmd.sheetId, cmd.id);
@@ -28743,8 +28682,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return 0 /* CommandResult.Success */;
         }
-        checkFigureDuplicate(figureId) {
-            if (Object.values(this.figures).find((sheet) => sheet === null || sheet === void 0 ? void 0 : sheet[figureId])) {
+        checkFigureDuplicate(sheetId, figureId) {
+            var _a;
+            if ((_a = this.figures[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) {
                 return 82 /* CommandResult.DuplicatedFigureId */;
             }
             return 0 /* CommandResult.Success */;
@@ -29501,7 +29441,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              * paths of images synced with the file store server.
              */
             this.syncedImages = new Set();
-            this.nextId = 1;
             this.fileStore = config.external.fileStore;
         }
         // ---------------------------------------------------------------------------
@@ -29511,7 +29450,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "CREATE_IMAGE":
                     if (this.getters.getFigure(cmd.sheetId, cmd.figureId)) {
-                        return 28 /* CommandResult.InvalidFigureId */;
+                        return 28 /* CommandResult.DuplicatedImageId */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -29529,14 +29468,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const sheetFiguresFrom = this.getters.getFigures(cmd.sheetId);
                     for (const fig of sheetFiguresFrom) {
                         if (fig.tag === "image") {
-                            const id = `image-${this.nextId}`;
-                            this.history.update("nextId", this.nextId + 1);
-                            const image = this.getImage(fig.id);
+                            const figureIdBase = fig.id.split(FIGURE_ID_SPLITTER).pop();
+                            const duplicatedFigureId = `${cmd.sheetIdTo}${FIGURE_ID_SPLITTER}${figureIdBase}`;
+                            const image = this.getImage(cmd.sheetId, fig.id);
                             if (image) {
                                 const size = { width: fig.width, height: fig.height };
                                 this.dispatch("CREATE_IMAGE", {
                                     sheetId: cmd.sheetIdTo,
-                                    figureId: id,
+                                    figureId: duplicatedFigureId,
                                     position: { x: fig.x, y: fig.y },
                                     size,
                                     definition: deepCopy(image),
@@ -29569,19 +29508,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
-        getImage(figureId) {
-            for (const sheet of Object.values(this.images)) {
-                if (sheet && sheet[figureId]) {
-                    return sheet[figureId];
-                }
+        getImage(sheetId, figureId) {
+            var _a;
+            const image = (_a = this.images[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId];
+            if (!image) {
+                throw new Error(`There is no image with the given figureId: ${figureId}`);
             }
-            throw new Error(`There is no image with the given figureId: ${figureId}`);
-        }
-        getImagePath(figureId) {
-            return this.getImage(figureId).path;
-        }
-        getImageSize(figureId) {
-            return this.getImage(figureId).size;
+            return image;
         }
         // ---------------------------------------------------------------------------
         // Private
@@ -29601,7 +29534,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const sheet of data.sheets) {
                 const images = (sheet.figures || []).filter((figure) => figure.tag === "image");
                 for (const image of images) {
-                    this.history.update("nextId", this.nextId + 1);
                     this.history.update("images", sheet.id, image.id, image.data);
                     this.syncedImages.add(image.data.path);
                 }
@@ -29624,7 +29556,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return images;
         }
     }
-    ImagePlugin.getters = ["getImage", "getImagePath", "getImageSize"];
+    ImagePlugin.getters = ["getImage"];
 
     class MergePlugin extends CorePlugin {
         constructor() {
@@ -30463,22 +30395,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return this.checkValidations(cmd, this.checkSheetName, this.checkSheetPosition);
                 }
                 case "MOVE_SHEET":
-                    const currentIndex = this.orderedSheetIds.indexOf(cmd.sheetId);
-                    if (cmd.direction === "left") {
-                        const leftSheets = this.orderedSheetIds
-                            .slice(0, currentIndex)
-                            .map((id) => !this.isSheetVisible(id));
-                        return leftSheets.every((isHidden) => isHidden)
-                            ? 14 /* CommandResult.WrongSheetMove */
-                            : 0 /* CommandResult.Success */;
+                    try {
+                        const currentIndex = this.orderedSheetIds.findIndex((id) => id === cmd.sheetId);
+                        this.findIndexOfTargetSheet(currentIndex, cmd.delta);
+                        return 0 /* CommandResult.Success */;
                     }
-                    else {
-                        const rightSheets = this.orderedSheetIds
-                            .slice(currentIndex + 1)
-                            .map((id) => !this.isSheetVisible(id));
-                        return rightSheets.every((isHidden) => isHidden)
-                            ? 14 /* CommandResult.WrongSheetMove */
-                            : 0 /* CommandResult.Success */;
+                    catch (e) {
+                        return 14 /* CommandResult.WrongSheetMove */;
                     }
                 case "RENAME_SHEET":
                     return this.isRenameAllowed(cmd);
@@ -30517,7 +30440,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.history.update("sheetIdsMapName", sheet.name, sheet.id);
                     break;
                 case "MOVE_SHEET":
-                    this.moveSheet(cmd.sheetId, cmd.direction);
+                    this.moveSheet(cmd.sheetId, cmd.delta);
                     break;
                 case "RENAME_SHEET":
                     this.renameSheet(this.sheets[cmd.sheetId], cmd.name);
@@ -30862,37 +30785,33 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.history.update("sheets", Object.assign({}, sheets, { [sheet.id]: sheet }));
             return sheet;
         }
-        moveSheet(sheetId, direction) {
+        moveSheet(sheetId, delta) {
             const orderedSheetIds = this.orderedSheetIds.slice();
             const currentIndex = orderedSheetIds.findIndex((id) => id === sheetId);
             const sheet = orderedSheetIds.splice(currentIndex, 1);
-            let index = direction === "left"
-                ? this.findIndexOfPreviousVisibleSheet(currentIndex - 1, orderedSheetIds)
-                : this.findIndexOfNextVisibleSheet(currentIndex + 1, orderedSheetIds);
-            if (index === undefined) {
-                index = orderedSheetIds.length;
-            }
+            let index = this.findIndexOfTargetSheet(currentIndex, delta);
             orderedSheetIds.splice(index, 0, sheet[0]);
             this.history.update("orderedSheetIds", orderedSheetIds);
         }
-        findIndexOfPreviousVisibleSheet(current, orderedSheetIds) {
-            while (current >= 0 && !this.isSheetVisible(orderedSheetIds[current])) {
-                current--;
+        findIndexOfTargetSheet(currentIndex, deltaIndex) {
+            while (deltaIndex != 0 && 0 <= currentIndex && currentIndex <= this.orderedSheetIds.length) {
+                if (deltaIndex > 0) {
+                    currentIndex++;
+                    if (this.isSheetVisible(this.orderedSheetIds[currentIndex])) {
+                        deltaIndex--;
+                    }
+                }
+                else if (deltaIndex < 0) {
+                    currentIndex--;
+                    if (this.isSheetVisible(this.orderedSheetIds[currentIndex])) {
+                        deltaIndex++;
+                    }
+                }
             }
-            if (current === -1) {
-                throw new Error("There is no previous visible sheet");
+            if (deltaIndex === 0) {
+                return currentIndex;
             }
-            return current;
-        }
-        findIndexOfNextVisibleSheet(current, orderedSheetIds) {
-            while (current < orderedSheetIds.length && !this.isSheetVisible(orderedSheetIds[current])) {
-                current++;
-            }
-            if (current === orderedSheetIds.length - 1 &&
-                !this.isSheetVisible(orderedSheetIds[current - 1])) {
-                return undefined;
-            }
-            return current;
+            throw new Error(_lt("There is not enough visible sheets"));
         }
         checkSheetName(cmd) {
             const { orderedSheetIds, sheets } = this;
@@ -31443,7 +31362,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return formatColors.filter(isDefined$1);
         }
         getChartColors(sheetId) {
-            const charts = this.getters.getChartIds(sheetId).map((cid) => this.getters.getChart(cid));
+            const charts = this.getters
+                .getChartIds(sheetId)
+                .map((cid) => this.getters.getChart(sheetId, cid));
             let chartsColors = new Set();
             for (let chart of charts) {
                 if (chart === undefined) {
@@ -31809,34 +31730,37 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 invalidateCFEvaluationCommands.has(cmd.type) ||
                 cmd.type === "EVALUATE_CELLS" ||
                 cmd.type === "UPDATE_CELL") {
-                for (const chartId in this.charts) {
-                    this.charts[chartId] = undefined;
+                for (const sheetId in this.charts) {
+                    for (const chartId in this.charts[sheetId]) {
+                        this.charts[sheetId][chartId] = undefined;
+                    }
                 }
             }
             switch (cmd.type) {
                 case "UPDATE_CHART":
                 case "CREATE_CHART":
                 case "DELETE_FIGURE":
-                    this.charts[cmd.id] = undefined;
+                    if (this.charts[cmd.sheetId]) {
+                        this.charts[cmd.sheetId][cmd.id] = undefined;
+                    }
                     break;
                 case "DELETE_SHEET":
-                    for (let chartId in this.charts) {
-                        if (!this.getters.isChartDefined(chartId)) {
-                            this.charts[chartId] = undefined;
-                        }
-                    }
+                    delete this.charts[cmd.sheetId];
                     break;
             }
         }
-        getChartRuntime(figureId) {
-            if (!this.charts[figureId]) {
-                const chart = this.getters.getChart(figureId);
+        getChartRuntime(sheetId, figureId) {
+            var _a;
+            if (!((_a = this.charts[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId])) {
+                const chart = this.getters.getChart(sheetId, figureId);
                 if (!chart) {
                     throw new Error(`No chart for the given id: ${figureId}`);
                 }
-                this.charts[figureId] = this.createRuntimeChart(chart);
+                if (!this.charts[sheetId])
+                    this.charts[sheetId] = {};
+                this.charts[sheetId][figureId] = this.createRuntimeChart(chart);
             }
-            return this.charts[figureId];
+            return this.charts[sheetId][figureId];
         }
         /**
          * Get the background color of a chart based on the color of the first cell of the main range
@@ -35230,7 +35154,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         this.focus(index);
                     }
                     if (index !== null) {
-                        const values = cmd.value.split(",").map((reference) => reference.trim());
+                        const valueWithoutLeadingComma = cmd.value.replace(/^,+/, "");
+                        const values = valueWithoutLeadingComma.split(",").map((reference) => reference.trim());
                         this.setRange(index, values);
                     }
                     break;
@@ -35317,10 +35242,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Insert new inputs after the given index.
          */
         insertNewRange(index, values) {
+            const currentMaxId = Math.max(0, ...this.ranges.map((range) => Number(range.id)));
             this.ranges.splice(index, 0, ...values.map((xc, i) => ({
                 xc,
-                id: (this.ranges.length + i + 1).toString(),
-                color: colors$1[(this.ranges.length + i) % colors$1.length],
+                id: (currentMaxId + i + 1).toString(),
+                color: colors$1[(currentMaxId + 1 + i) % colors$1.length],
             })));
         }
         /**
@@ -37486,7 +37412,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor(dispatch, getters, sheetId, copiedFigureId) {
             this.dispatch = dispatch;
             this.sheetId = sheetId;
-            const chart = getters.getChart(copiedFigureId);
+            const chart = getters.getChart(sheetId, copiedFigureId);
             if (!chart) {
                 throw new Error(`No chart for the given id: ${copiedFigureId}`);
             }
@@ -37507,7 +37433,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor(dispatch, getters, sheetId, copiedFigureId) {
             this.dispatch = dispatch;
             this.sheetId = sheetId;
-            const image = getters.getImage(copiedFigureId);
+            const image = getters.getImage(sheetId, copiedFigureId);
             this.copiedImage = deepCopy(image);
         }
         paste(sheetId, figureId, position, size) {
@@ -39440,6 +39366,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     padding-right: 10px;
     height: ${BOTTOMBAR_HEIGHT}px;
     border-left: 1px solid #c1c1c1;
+    border-right: 1px solid #c1c1c1;
+    margin-left: -1px;
     cursor: pointer;
     &:hover {
       background-color: rgba(0, 0, 0, 0.08);
@@ -39513,8 +39441,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 this.stopEdition();
             }
         }
-        clickSheet() {
+        onMouseDown(ev) {
             this.activateSheet();
+            this.props.onMouseDown(ev);
         }
         activateSheet() {
             this.env.model.dispatch("ACTIVATE_SHEET", {
@@ -39599,9 +39528,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     BottomBarSheet.template = "o-spreadsheet-BottomBarSheet";
     BottomBarSheet.components = { Ripple };
+    BottomBarSheet.defaultProps = {
+        onMouseDown: () => { },
+        style: "",
+    };
     BottomBarSheet.props = {
         sheetId: String,
         openContextMenu: Function,
+        style: { type: String, optional: true },
+        onMouseDown: { type: Function, optional: true },
     };
 
     // -----------------------------------------------------------------------------
@@ -39673,6 +39608,141 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         closeContextMenu: Function,
     };
 
+    class DOMDndHelper {
+        constructor(args) {
+            this.edgeScrollOffset = 0;
+            this.items = args.items.map((item) => ({ ...item, positionAtStart: item.position }));
+            this.draggedItemId = args.draggedItemId;
+            this.containerEl = args.containerEl;
+            this.onChange = args.onChange;
+            this.onCancel = args.onCancel;
+            this.onDragEnd = args.onDragEnd;
+            this.initialMousePosition = args.mouseX;
+            this.currentMousePosition = args.mouseX;
+            this.minPosition = this.items[0].position;
+            this.maxPosition =
+                this.items[this.items.length - 1].position + this.items[this.items.length - 1].size;
+            startDnd(this.onMouseMove.bind(this), this.onMouseUp.bind(this));
+        }
+        onMouseMove(ev) {
+            if (ev.button !== 0) {
+                this.onCancel();
+                return;
+            }
+            const mousePosition = ev.clientX;
+            if (mousePosition < this.containerRect.left || mousePosition > this.containerRect.right) {
+                this.startEdgeScroll(mousePosition < this.containerRect.left ? -1 : 1);
+                return;
+            }
+            else {
+                this.stopEdgeScroll();
+            }
+            this.moveDraggedItemToPosition(mousePosition + this.edgeScrollOffset);
+        }
+        moveDraggedItemToPosition(position) {
+            this.currentMousePosition = position;
+            const hoveredItemIndex = this.getHoveredItemIndex(position, this.items);
+            const draggedItemIndex = this.items.findIndex((item) => item.id === this.draggedItemId);
+            const draggedItem = this.items[draggedItemIndex];
+            if (this.deadZone && this.isInZone(position, this.deadZone)) {
+                this.onChange(this.getItemsPositions());
+                return;
+            }
+            else if (this.isInZone(position, {
+                start: draggedItem.position,
+                end: draggedItem.position + draggedItem.size,
+            })) {
+                this.deadZone = undefined;
+            }
+            if (draggedItemIndex === hoveredItemIndex) {
+                this.onChange(this.getItemsPositions());
+                return;
+            }
+            const leftIndex = Math.min(draggedItemIndex, hoveredItemIndex);
+            const rightIndex = Math.max(draggedItemIndex, hoveredItemIndex);
+            const direction = Math.sign(hoveredItemIndex - draggedItemIndex);
+            let draggedItemMoveSize = 0;
+            for (let i = leftIndex; i <= rightIndex; i++) {
+                if (i === draggedItemIndex) {
+                    continue;
+                }
+                this.items[i].position -= direction * draggedItem.size;
+                draggedItemMoveSize += this.items[i].size;
+            }
+            draggedItem.position += direction * draggedItemMoveSize;
+            this.items.sort((item1, item2) => item1.position - item2.position);
+            this.deadZone =
+                direction > 0
+                    ? { start: position, end: draggedItem.position }
+                    : { start: draggedItem.position + draggedItem.size, end: position };
+            this.onChange(this.getItemsPositions());
+        }
+        onMouseUp(ev) {
+            if (ev.button !== 0) {
+                this.onCancel();
+            }
+            const targetItemIndex = this.items.findIndex((item) => item.id === this.draggedItemId);
+            this.onDragEnd(this.draggedItemId, targetItemIndex);
+            this.stopEdgeScroll();
+        }
+        startEdgeScroll(direction) {
+            if (this.edgeScrollIntervalId)
+                return;
+            this.edgeScrollIntervalId = window.setInterval(() => {
+                const offset = direction * 3;
+                let newPosition = this.currentMousePosition + offset;
+                if (newPosition < this.minPosition) {
+                    newPosition = this.minPosition;
+                }
+                else if (newPosition > this.maxPosition) {
+                    newPosition = this.maxPosition;
+                }
+                this.edgeScrollOffset += newPosition - this.currentMousePosition;
+                this.moveDraggedItemToPosition(newPosition);
+                this.containerEl.scrollLeft += offset;
+            }, 5);
+        }
+        stopEdgeScroll() {
+            window.clearInterval(this.edgeScrollIntervalId);
+            this.edgeScrollIntervalId = undefined;
+        }
+        /**
+         * Get the index of the item the given mouse position is inside.
+         * If the mouse is outside the container, return the first or last item index.
+         */
+        getHoveredItemIndex(mousePosition, items) {
+            if (mousePosition <= this.minPosition)
+                return 0;
+            if (mousePosition >= this.maxPosition)
+                return items.length - 1;
+            return items.findIndex((item) => item.position + item.size >= mousePosition);
+        }
+        getItemsPositions() {
+            const positions = {};
+            for (let item of this.items) {
+                if (item.id !== this.draggedItemId) {
+                    positions[item.id] = item.position - item.positionAtStart;
+                    continue;
+                }
+                let mouseOffset = this.currentMousePosition - this.initialMousePosition;
+                let left = mouseOffset;
+                left = Math.max(this.minPosition - item.positionAtStart, left);
+                left = Math.min(this.maxPosition - item.positionAtStart - item.size, left);
+                positions[item.id] = left;
+            }
+            return positions;
+        }
+        get containerRect() {
+            return this.containerEl.getBoundingClientRect();
+        }
+        isInZone(position, zone) {
+            return position >= zone.start && position <= zone.end;
+        }
+        destroy() {
+            this.stopEdgeScroll();
+        }
+    }
+
     // -----------------------------------------------------------------------------
     // SpreadSheet
     // -----------------------------------------------------------------------------
@@ -39697,19 +39767,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     .o-all-sheets {
       max-width: 70%;
-
       .o-bottom-bar-fade-out {
         background-image: linear-gradient(-90deg, #cfcfcf, transparent 1%);
       }
 
       .o-bottom-bar-fade-in {
         background-image: linear-gradient(90deg, #cfcfcf, transparent 1%);
-      }
-
-      &:after {
-        content: "";
-        border-right: 1px solid #c1c1c1;
-        height: 100%;
       }
     }
 
@@ -39751,11 +39814,30 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 position: null,
                 menuItems: [],
             });
+            this.sheetState = owl.useState({
+                sheetList: this.getVisibleSheets(),
+                isDnd: false,
+                sheetDndPositions: undefined,
+            });
         }
         setup() {
             owl.onWillUpdateProps(() => {
                 this.updateScrollState();
+                const visibleSheets = this.getVisibleSheets();
+                // Cancel sheet dragging when there is a change in the sheets
+                if (this.sheetState.isDnd && !deepEquals(this.sheetState.sheetList, visibleSheets)) {
+                    this.stopDragging();
+                }
+                this.sheetState.sheetList = visibleSheets;
             });
+            owl.onWillUnmount(() => {
+                var _a;
+                (_a = this.dndHelper) === null || _a === void 0 ? void 0 : _a.destroy();
+            });
+        }
+        isDragged(sheetId) {
+            var _a;
+            return this.sheetState.isDnd && ((_a = this.dndHelper) === null || _a === void 0 ? void 0 : _a.draggedItemId) === sheetId;
         }
         clickAddSheet(ev) {
             const activeSheetId = this.env.model.getters.getActiveSheetId();
@@ -39766,9 +39848,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: activeSheetId, sheetIdTo: sheetId });
         }
         getVisibleSheets() {
-            return this.env.model.getters
-                .getVisibleSheetIds()
-                .map((sheetId) => this.env.model.getters.getSheet(sheetId));
+            return this.env.model.getters.getVisibleSheetIds().map((sheetId) => {
+                const sheet = this.env.model.getters.getSheet(sheetId);
+                return { id: sheet.id, name: sheet.name };
+            });
+        }
+        getSheets() {
+            return this.sheetState.sheetList;
         }
         clickListSheets(ev) {
             const registry = new MenuItemRegistry();
@@ -39855,6 +39941,83 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.targetScroll = scroll;
             this.sheetListRef.el.scrollTo({ top: 0, left: scroll, behavior: "smooth" });
         }
+        onSheetMouseDown(sheetId, event) {
+            if (event.button !== 0)
+                return;
+            this.closeMenu();
+            const mouseX = event.clientX;
+            document.body.style.cursor = "move";
+            const visibleSheets = this.getVisibleSheets();
+            const sheetRects = this.getSheetItemRects();
+            const sheets = visibleSheets.map((sheet, index) => ({
+                id: sheet.id,
+                size: sheetRects[index].width,
+                position: sheetRects[index].x,
+            }));
+            this.dndHelper = new DOMDndHelper({
+                draggedItemId: sheetId,
+                mouseX,
+                items: sheets,
+                containerEl: this.sheetListRef.el,
+                onChange: (newPositions) => {
+                    this.sheetState.isDnd = true;
+                    this.sheetState.sheetDndPositions = newPositions;
+                },
+                onCancel: () => this.stopDragging(),
+                onDragEnd: (sheetId, finalIndex) => this.onDragEnd(sheetId, finalIndex),
+            });
+        }
+        onDragEnd(sheetId, finalIndex) {
+            const originalIndex = this.sheetState.sheetList.findIndex((sheet) => sheet.id === sheetId);
+            const delta = finalIndex - originalIndex;
+            if (sheetId && delta !== 0) {
+                this.env.model.dispatch("MOVE_SHEET", {
+                    sheetId: sheetId,
+                    delta: delta,
+                });
+            }
+            this.stopDragging();
+        }
+        getSheetStyle(sheetId) {
+            var _a;
+            const style = {};
+            if (this.sheetState.isDnd) {
+                style.position = "relative";
+                style.left = (((_a = this.sheetState.sheetDndPositions) === null || _a === void 0 ? void 0 : _a[sheetId]) || 0) + "px";
+                style.transition = "left 0.5s";
+                style.cursor = "move";
+            }
+            if (this.isDragged(sheetId)) {
+                style.transition = "left 0s";
+                style["z-index"] = "1000";
+            }
+            return cssPropertiesToCss(style);
+        }
+        stopDragging() {
+            document.body.style.cursor = "";
+            this.sheetState.sheetList = this.getVisibleSheets();
+            this.sheetState.isDnd = false;
+            this.sheetState.sheetDndPositions = undefined;
+            this.dndHelper = undefined;
+        }
+        getSheetItemRects() {
+            return Array.from(this.bottomBarRef.el.querySelectorAll(`.o-sheet`))
+                .map((sheetEl) => sheetEl.getBoundingClientRect())
+                .map((rect) => ({
+                x: rect.x,
+                width: rect.width - 1,
+                y: rect.y,
+                height: rect.height,
+            }));
+        }
+        getSheetClasses(sheetId) {
+            let classes = "";
+            if (this.isDragged(sheetId))
+                classes += "dragged ";
+            if (this.sheetState.isDnd)
+                classes += "dragging ";
+            return classes;
+        }
         get sheetListCurrentScroll() {
             if (!this.sheetListRef.el)
                 return 0;
@@ -39887,7 +40050,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     class SpreadsheetDashboard extends owl.Component {
         setup() {
             const gridRef = owl.useRef("grid");
-            this.canvasPosition = useAbsolutePosition(gridRef);
+            this.canvasPosition = useAbsoluteBoundingRect(gridRef);
             this.hoveredCell = owl.useState({ col: undefined, row: undefined });
             owl.useChildSubEnv({ getPopoverContainerRect: () => this.getGridRect() });
             useGridDrawing("canvas", this.env.model, () => this.env.model.getters.getSheetViewDimension());
@@ -40132,16 +40295,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
 
     .o-inflection {
-      .o-inflection-icon-button {
-        display: inline-block;
-        border: 1px solid #dadce0;
-        border-radius: 4px;
-        cursor: pointer;
-        padding: 1px 2px;
-      }
-      .o-inflection-icon-button:hover {
-        background-color: rgba(0, 0, 0, 0.08);
-      }
       table {
         table-layout: fixed;
         margin-top: 2%;
@@ -40151,21 +40304,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         line-height: 18px;
         width: 100%;
       }
-      th.o-inflection-iconset-icons {
-        width: 8%;
-      }
-      th.o-inflection-iconset-text {
-        width: 28%;
-      }
-      th.o-inflection-iconset-operator {
-        width: 14%;
-      }
-      th.o-inflection-iconset-type {
-        width: 28%;
-      }
-      th.o-inflection-iconset-value {
-        width: 26%;
-      }
       input,
       select {
         width: 100%;
@@ -40174,38 +40312,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       }
     }
 
-    .o-dropdown {
-      position: relative;
-      .o-dropdown-content {
-        position: absolute;
-        top: calc(100% + 5px);
-        left: 0;
-        z-index: ${ComponentsImportance.Dropdown};
-        box-shadow: 1px 2px 5px 2px rgba(51, 51, 51, 0.15);
-        background-color: #f6f6f6;
-
-        .o-dropdown-item {
-          padding: 7px 10px;
-        }
-        .o-dropdown-item:hover {
-          background-color: rgba(0, 0, 0, 0.08);
-        }
-        .o-dropdown-line {
-          display: flex;
-          padding: 3px 6px;
-          .o-line-item {
-            width: 16px;
-            height: 16px;
-            margin: 1px 3px;
-            &:hover {
-              background-color: rgba(0, 0, 0, 0.08);
-            }
-          }
-        }
-      }
-    }
-
-    .o-tools {
+    .o-sidePanel-tools {
       color: #333;
       font-size: 13px;
       cursor: default;
@@ -40217,27 +40324,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         margin: 2px;
         padding: 0 3px;
         border-radius: 2px;
-      }
 
-      .o-tool.active,
-      .o-tool:not(.o-disabled):hover {
-        background-color: rgba(0, 0, 0, 0.08);
-      }
-
-      .o-with-color > span {
-        border-bottom: 4px solid;
-        height: 16px;
-        margin-top: 2px;
-      }
-      .o-with-color {
-        .o-line-item:hover {
-          outline: 1px solid gray;
-        }
-      }
-      .o-border {
-        .o-line-item {
-          padding: 4px;
-          margin: 1px;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.08);
         }
       }
     }
@@ -40396,6 +40485,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     FontSizeEditor.template = "o-spreadsheet-FontSizeEditor";
     FontSizeEditor.components = {};
+    FontSizeEditor.props = {
+        onToggle: Function,
+        dropdownStyle: String,
+    };
 
     const FORMATS = [
         { name: "automatic", text: NumberFormatTerms.Automatic },
@@ -40545,18 +40638,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
           }
         }
 
-        .o-with-color > span {
-          border-bottom: 4px solid;
-          height: 16px;
-          margin-top: 2px;
-        }
-
-        .o-with-color {
-          .o-line-item:hover {
-            outline: 1px solid gray;
-          }
-        }
-
         .o-border-dropdown {
           padding: 4px;
         }
@@ -40650,17 +40731,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
           }
         }
-      }
-
-      /* Cell Content */
-      .o-toolbar-cell-content {
-        font-size: 12px;
-        font-weight: 500;
-        padding: 0 12px;
-        margin: 0;
-        line-height: 34px;
-        white-space: nowrap;
-        user-select: text;
       }
     }
   }
@@ -40898,7 +40968,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     TopBar.template = "o-spreadsheet-TopBar";
-    TopBar.components = { ColorPicker, Menu, TopBarComposer, FontSizeEditor };
+    TopBar.components = { ColorPickerWidget, Menu, TopBarComposer, FontSizeEditor };
     TopBar.props = {
         onClick: Function,
         focusComposer: String,
@@ -44688,7 +44758,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         cellPopoverRegistry,
     };
     const helpers = {
-        args,
+        arg,
         toBoolean,
         toJsDate,
         toNumber,
@@ -44713,6 +44783,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         colorToRGBA,
         positionToZone,
         isDefined: isDefined$1,
+        lazy,
     };
     const links = {
         isMarkdownLink,
@@ -44773,9 +44844,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-    exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-02-17T09:47:51.238Z';
-    exports.__info__.hash = '1b66725';
+
+    __info__.version = '16.2.0-alpha.2';
+    __info__.date = '2023-03-01T14:51:00.189Z';
+    __info__.hash = 'eb626ad';
+
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
