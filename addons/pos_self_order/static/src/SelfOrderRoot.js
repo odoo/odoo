@@ -136,35 +136,6 @@ class SelfOrderRoot extends Component {
             /**
              * @type {Product[]}
              */
-            // this.productList = this.result_from_get_menu.map(
-            //     ({
-            //         id,
-            //         name,
-            //         description_sale,
-            //         price_info,
-            //         pos_categ_id,
-            //         variants,
-            //         attribute_line_ids,
-            //     }) => ({
-            //         product_id: id,
-            //         name: name,
-            //         // TODO: we have to TEST if prices are correctly displayed / calculated with tax included or tax excluded
-            //         list_price: this.selfOrder.config.show_prices_with_tax_included
-            //             ? price_info["price_with_tax"]
-            //             : price_info["price_without_tax"],
-            //         description_sale: description_sale,
-            //         price_info: price_info,
-            //         // We are using a system of tags to categorize products
-            //         // the categories of a product will also be considered as tags
-            //         // ex of tags: "Pizza", "Drinks", "Italian", "Vegetarian", "Vegan", "Gluten Free","healthy", "organic",
-            //         // "Spicy", "Hot", "Cold", "Alcoholic", "Non Alcoholic", "Dessert", "Breakfast", "Lunch", "Dinner"
-            //         // "pairs well with wine", "pairs well with beer", "pairs well with soda", "pairs well with water",
-            //         // "HAPPY HOUR", "kids menu",  "local", "seasonal"
-            //         tag_list: pos_categ_id ? new Set(pos_categ_id[1].split(" / ")) : new Set(),
-            //         variants: variants,
-            //         attribute_line_ids: attribute_line_ids,
-            //     })
-            // );
             console.log("this.result_from_get_menu :>> ", this.result_from_get_menu);
             this.productList = this.result_from_get_menu.map(
                 ({ id, price_info, pos_categ_id, ...rest }) => ({
@@ -220,43 +191,60 @@ class SelfOrderRoot extends Component {
         this.state.order_to_pay = order;
         this.state.currentScreen = 4;
     };
+    isProductInCart = (id, description) => {
+        return (
+            this.state.cart.find((item) => item.product_id === id) &&
+            this.state.cart.find((item) => item.product_id === id).description === description
+        );
+    };
     /**
      * @param {number} id
      * @param {number} qty
      * @param {string} customer_note
+     * @param {string} description
      */
-    addToCart = (id, qty, customer_note) => {
+    addToCart = (id, qty, customer_note, description, price_extra) => {
         // if the product is already in the cart we just increase the quantity
-        if (this.state.cart.find((item) => item.product_id === id)) {
+        if (this.isProductInCart(id, description)) {
             if (qty) {
                 this.state.cart.find((item) => item.product_id === id).qty = qty;
             } else {
-                this.removeProductFromCart(id);
+                this.removeProductFromCart(id, description);
             }
         }
         // if the product is not in the cart we add it to the cart
         else {
             if (qty) {
-                this.state.cart.push({ product_id: id, qty: qty, customer_note: customer_note });
+                this.state.cart.push({
+                    product_id: id,
+                    qty: qty,
+                    customer_note: customer_note,
+                    description: description,
+                    price_extra: price_extra,
+                });
             }
         }
         this.viewMenu();
     };
 
-    removeProductFromCart = (id) => {
-        this.state.cart = this.state.cart.filter((item) => item.product_id !== id);
+    removeProductFromCart = (id, description) => {
+        this.state.cart = this.state.cart.filter(
+            (item) => item.product_id !== id || item.description !== description
+        );
     };
     getTotalCartQty = () => {
         return this.state.cart.reduce((sum, cartItem) => {
             return sum + cartItem.qty;
         }, 0);
     };
+    // FIXME: i don't know if the price_extra is written with tax included or not
     getTotalCartCost = () => {
         return this.state.cart.reduce((sum, cartItem) => {
             return (
                 sum +
-                this.productList.find((x) => x.product_id === cartItem.product_id).price_info
-                    .price_with_tax *
+                (this.productList.find((x) => x.product_id === cartItem.product_id).price_info
+                    .price_with_tax +
+                    cartItem.price_extra) *
                     cartItem.qty
             );
         }, 0);

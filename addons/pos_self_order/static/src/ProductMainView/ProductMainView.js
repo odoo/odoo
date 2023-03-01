@@ -34,24 +34,31 @@ export class ProductMainView extends Component {
     findPriceExtraBasedOnSelectedValueOfCertainAttribute(attribute_name, value_name) {
         const attributesLegend = this.selfOrder.config.attributes_by_ptal_id;
         return attributesLegend[
-            Object.keys(attributesLegend).filter((key) => attributesLegend[key].name === "Fabric")
-        ].values.filter((value) => value.name === "Plastic")[0].price_extra;
+            Object.keys(attributesLegend).filter(
+                (key) => attributesLegend[key].name === attribute_name
+            )
+        ].values.filter((value) => value.name === value_name)[0].price_extra;
     }
     findDescriptionOfProductBasedOnSelectedValuesOfAttributes(selectedVariants) {
-        const attributesLegend = this.selfOrder.config.attributes_by_ptal_id;
-        return Object.keys(attributesLegend)
-            .map((key) => attributesLegend[key])
+        return Object.keys(selectedVariants)
+            .map((key) => selectedVariants[key])
             .join(", ");
     }
-    setValue = (qty) => {
+    setValue(qty) {
         if (qty >= 0) {
             this.private_state.qty = qty;
-            console.log(
-                "this.private_state.selectedVariants :>> ",
-                this.props.product.attributes.map((x) => x.name)
-            );
         }
-    };
+    }
+    addToCart() {
+        this.props.addToCart(
+            this.props.product.product_id,
+            this.private_state.qty,
+            this.private_state.customer_note,
+            this.findDescriptionOfProductBasedOnSelectedValuesOfAttributes(
+                this.private_state.selectedVariants
+            )
+        );
+    }
     static components = {
         NavBar,
         IncrementCounter,
