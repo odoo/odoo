@@ -30,7 +30,7 @@ class Applicant(models.Model):
     name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
-    email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
+    email_from = fields.Char("Email", size=128, compute='_compute_partner_phone_email',
         inverse='_inverse_partner_email', store=True, index='trigram')
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
@@ -50,7 +50,7 @@ class Applicant(models.Model):
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True)
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
-    priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
+    priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True, index=True)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True, groups="hr_recruitment.group_hr_recruitment_user")
@@ -343,11 +343,11 @@ class Applicant(models.Model):
             alias_id = False
 
         nocontent_body = Markup("""
-<p class="o_view_nocontent_empty_folder">%(help_title)s</p>
+<p class="o_view_nocontent_smiling_face">%(help_title)s</p>
 <p>%(para_1)s<br/>%(para_2)s</p>""") % {
-            'help_title': _('No application yet'),
-            'para_1': _('Let people apply by email to save time.'),
-            'para_2': _('Attachments, like resumes, get indexed automatically.'),
+            'help_title': _("No application found. Let's create one !"),
+            'para_1': _('People can also apply by email to save time.'),
+            'para_2': _("You can search into attachment's content, like resumes, with the searchbar."),
         }
 
         if alias_id and alias_id.alias_domain and alias_id.alias_name:
@@ -379,6 +379,19 @@ class Applicant(models.Model):
             @return: Dictionary value for created Meeting view
         """
         self.ensure_one()
+
+        if not self.partner_id:
+            if not self.partner_name:
+                raise UserError(_('You must define a Contact Name for this applicant.'))
+            self.partner_id = self.env['res.partner'].create({
+                'is_company': False,
+                'type': 'private',
+                'name': self.partner_name,
+                'email': self.email_from,
+                'phone': self.partner_phone,
+                'mobile': self.partner_mobile
+            })
+
         partners = self.partner_id | self.user_id.partner_id | self.department_id.manager_id.user_id.partner_id
 
         category = self.env.ref('hr_recruitment.categ_meet_interview')
@@ -424,7 +437,8 @@ class Applicant(models.Model):
             'view_mode': 'tree,kanban,form,pivot,graph,calendar,activity',
             'domain': [('id', 'in', other_applicants.ids)],
             'context': {
-                'active_test': False
+                'active_test': False,
+                'search_default_stage': 1,
             },
         }
 
