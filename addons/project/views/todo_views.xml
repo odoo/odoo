@@ -35,6 +35,16 @@
             </form>
         </field>
     </record>
+    <record id="view_project_task_todo_tree_inherit" model="ir.ui.view">
+        <field name="name">project.task.todo.tree.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="note.view_project_task_todo_tree"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="js_class">todo_list</attribute>
+            </tree>
+        </field>
+    </record>
 
     <!-- Override of to-do form to add the "convert to task" action (through a js override of formView) -->
     <record id="view_project_task_todo_form_with_conversion" model="ir.ui.view">
