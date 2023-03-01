@@ -34,6 +34,7 @@ export class FloorScreen extends Component {
             floorMapScrollTop: 0,
         });
         this.floorMapRef = useRef("floor-map-ref");
+        this.map = useRef("map");
         onPatched(this.onPatched);
         onMounted(this.onMounted);
         onWillUnmount(this.onWillUnmount);
@@ -169,18 +170,15 @@ export class FloorScreen extends Component {
         this.scalehypot = hypot;
         this.initalScale = this.getScale();
     }
-    getMapNode() {
-        return this.el.querySelector(".floor-map > .tables, .floor-map > .empty-floor");
-    }
     getScale() {
-        const scale = this.getMapNode().style.getPropertyValue("--scale");
+        const scale = this.map.el.style.getPropertyValue("--scale");
         const parsedScaleValue = parseFloat(scale);
         return isNaN(parsedScaleValue) ? 1 : parsedScaleValue;
     }
     setScale(value) {
         // a scale can't be a negative number
         if (value > 0) {
-            this.getMapNode().style.setProperty("--scale", value);
+            this.map.el.style.setProperty("--scale", value);
         }
     }
     selectFloor(floor) {
