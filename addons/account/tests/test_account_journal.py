@@ -98,7 +98,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
             return res
 
         with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            self.env['account.payment.method'].create({
+            self.env['account.payment.method'].sudo().create({
                 'name': 'Multi method',
                 'code': 'multi',
                 'payment_type': 'inbound'
