@@ -2,6 +2,8 @@
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
 import base64
+import re
+import string
 from io import BytesIO
 from lxml import etree
 
@@ -104,6 +106,10 @@ def cleanup_xml_node(xml_node_or_string, remove_blank_text=True, remove_blank_no
     if isinstance(xml_node, str):
         xml_node = xml_node.encode()  # misnomer: fromstring actually reads bytes
     if isinstance(xml_node, bytes):
+        # remove non printable characters before converting to etree._Element
+        # e.g. etree.fromstring(b'<t>\x02</t>') raises an XMLSyntaxError: PCDATA invalid Char
+        printable = re.compile(b'[^%s]' % string.printable.encode())
+        xml_node = printable.sub(b'', xml_node)
         xml_node = etree.fromstring(xml_node)
 
     # Process leaf nodes iteratively
