@@ -10,7 +10,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.float_utils import float_compare, float_round, float_split
 
 
 _logger = logging.getLogger(__name__)
@@ -40,9 +40,23 @@ class PaymentAcquirerPayulatam(models.Model):
             data_string = ('~').join((self.payulatam_api_key, self.payulatam_merchant_id, values['referenceCode'],
                                       str(values['amount']), values['currency']))
         else:
-            rounded_amount = decimal.Decimal(values.get('TX_VALUE')).quantize(decimal.Decimal('0.1'), decimal.ROUND_HALF_EVEN)
+            # "Confirmation" and "Response" pages have a different way to calculate what they call the `new_value`
+            if self.env.context.get('payulatam_is_confirmation_page'):
+                # https://developers.payulatam.com/latam/en/docs/integrations/webcheckout-integration/confirmation-page.html#signature-validation
+                # For confirmation page, PayU Latam round to the first digit if the second one is a zero
+                # to generate their signature.
+                # e.g:
+                #  150.00 -> 150.0
+                #  150.26 -> 150.26
+                # This happens to be Python 3's default behavior when casting to `float`.
+                new_value = "%d.%d" % float_split(float(values.get('TX_VALUE')), 2)
+            else:
+                # https://developers.payulatam.com/latam/en/docs/integrations/webcheckout-integration/response-page.html#signature-validation
+                # PayU Latam use the "Round half to even" rounding method to generate their signature.
+                new_value = decimal.Decimal(values.get('TX_VALUE')).quantize(
+                    decimal.Decimal('0.1'), decimal.ROUND_HALF_EVEN)
             data_string = ('~').join((self.payulatam_api_key, self.payulatam_merchant_id, values['referenceCode'],
-                                      str(rounded_amount), values['currency'], values.get('transactionState')))
+                                      str(new_value), values['currency'], values.get('transactionState')))
         return md5(data_string.encode('utf-8')).hexdigest()
 
     def payulatam_form_generate_values(self, values):
