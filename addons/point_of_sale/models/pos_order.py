@@ -362,7 +362,7 @@ class PosOrder(models.Model):
             if order.is_total_cost_computed:
                 order.margin = sum(order.lines.mapped('margin'))
                 amount_untaxed = order.currency_id.round(sum(line.price_subtotal for line in order.lines))
-                order.margin_percent = not float_is_zero(amount_untaxed, order.currency_id.rounding) and order.margin / amount_untaxed or 0
+                order.margin_percent = not float_is_zero(amount_untaxed, precision_rounding=order.currency_id.rounding) and order.margin / amount_untaxed or 0
             else:
                 order.margin = 0
                 order.margin_percent = 0
@@ -547,7 +547,7 @@ class PosOrder(models.Model):
                     })
             else:
                 if rounding_line:
-                    rounding_line.with_context(check_move_validity=False).unlink()
+                    rounding_line.with_context(skip_invoice_sync=True, check_move_validity=False).unlink()
             if rounding_line_difference:
                 existing_terms_line = new_move.line_ids.filtered(
                     lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
@@ -559,12 +559,10 @@ class PosOrder(models.Model):
                     existing_terms_line_new_val = float_round(
                         -existing_terms_line.credit + rounding_line_difference,
                         precision_rounding=new_move.currency_id.rounding)
-                existing_terms_line.write({
+                existing_terms_line.with_context(skip_invoice_sync=True).write({
                     'debit': existing_terms_line_new_val > 0.0 and existing_terms_line_new_val or 0.0,
                     'credit': existing_terms_line_new_val < 0.0 and -existing_terms_line_new_val or 0.0,
                 })
-
-                new_move._recompute_payment_terms_lines()
         return new_move
 
     def action_pos_order_paid(self):
@@ -1226,6 +1224,7 @@ class PosOrderLine(models.Model):
             'customer_note': orderline.customer_note,
             'refunded_qty': orderline.refunded_qty,
             'price_extra': orderline.price_extra,
+            'refunded_orderline_id': orderline.refunded_orderline_id,
         }
 
     def export_for_ui(self):
@@ -1331,7 +1330,7 @@ class PosOrderLine(models.Model):
     def _compute_margin(self):
         for line in self:
             line.margin = line.price_subtotal - line.total_cost
-            line.margin_percent = not float_is_zero(line.price_subtotal, line.currency_id.rounding) and line.margin / line.price_subtotal or 0
+            line.margin_percent = not float_is_zero(line.price_subtotal, precision_rounding=line.currency_id.rounding) and line.margin / line.price_subtotal or 0
 
 
 class PosOrderLineLot(models.Model):

@@ -51,10 +51,10 @@ class TagsSelector(object):
             _logger.debug("Skipping test '%s' because no test_tag found.", test)
             return False
 
-        test_module = test.test_module
-        test_class = test.test_class
+        test_module = getattr(test, 'test_module', None)
+        test_class = getattr(test, 'test_class', None)
         test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility,
-        test_method = test._testMethodName
+        test_method = getattr(test, '_testMethodName', None)
 
         def _is_matching(test_filter):
             (tag, module, klass, method, module_path) = test_filter

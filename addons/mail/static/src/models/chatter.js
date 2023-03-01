@@ -280,11 +280,16 @@ registerModel({
                     },
                 });
                 this.createNewRecordDeferred.resolve();
-                this.update({
-                    createNewRecordComposerData: clear(),
-                    createNewRecordDeferred: clear(),
-                });
             }
+            if (this.createNewRecordFiles) {
+                const files = this.createNewRecordFiles;
+                this.fileUploader.uploadFiles(files);
+            }
+            this.update({
+                createNewRecordComposerData: clear(),
+                createNewRecordDeferred: clear(),
+                createNewRecordFiles: clear(),
+            });
         },
         /**
          * @private
@@ -526,6 +531,7 @@ registerModel({
         webRecord: attr(),
         createNewRecordComposerData: attr(),
         createNewRecordDeferred: attr(),
+        createNewRecordFiles: attr(),
     },
     onChanges: [
         {
