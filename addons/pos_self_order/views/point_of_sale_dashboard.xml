@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_self_order_menu_item" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view.inherit.self_order</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@role='menuitem'][3]" position="after">
+                <field name="self_order_view_mode" invisible="1"/>
+                <div role="menuitem">
+                    <a name="preview_self_order_app" type="object" attrs="{'invisible': [('self_order_view_mode','=',False)]}">Mobile Menu</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

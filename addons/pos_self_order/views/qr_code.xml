@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="report_self_order_qr_codes_page" model="ir.actions.report">
+            <field name="name">qr.codes</field>
+            <field name="model">pos.config</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">pos_self_order.qr_codes_page</field>
+            <field name="report_file">pos_self_order.qr_codes_page</field>
+            <field name="print_report_name">"QR codes"</field>
+            <field name="binding_model_id" ref="model_pos_config"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="paperformat_qrcodes" model="report.paperformat">
+            <field name="name">QR Codes Page</field>
+            <field name="default" eval="True"/>
+            <field name="header_line" eval="False"/>
+        </record>
+    </data>
+
+    <template id="qr_codes_page">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <h1 class="mb-5 ms-2">
+                    QR Code Menu
+                </h1>
+                <!-- There is a very annoying problem here:
+                wkhtmltopdf does not handle flex-wrap. ( at least not in this version )
+                This makes it so the bootstrap grid system does not work.
+                We have to do a workaround -->
+                <t t-foreach="groups_of_tables" t-as="group_of_tables">
+                    <div class="d-flex">
+                        <t t-foreach="group_of_tables" t-as="table">
+                            <t t-call="pos_self_order.qr_code"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="qr_code">
+        <t t-set="qr_code_size" t-value="180"/>
+        <div class="d-flex flex-column col align-items-center w-25 p-2" >
+            <div class="m-2 position-relative top-0 start-0">
+                <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" 
+                    class="position-relative top-0 start-0"
+                />
+                <t t-call="pos_self_order.first_letter_of_odoo_logo_svg"/>
+            </div>
+        </div>
+    </template>
+    <template id="first_letter_of_odoo_logo_svg">
+        <svg 
+            class="position-absolute top-50 start-50"
+            style="-webkit-transform: translate(-50%, -50%);"
+            t-att-width="qr_code_size/4" 
+            t-att-height="qr_code_size/4" 
+            viewBox="0 0 120 120" fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <g>
+                <rect width="120" height="120" rx="33" fill="white"/>
+                <g>
+                    <path d="M60 110C87.6142 110 110 87.6142 110 60C110 32.3858 87.6142 10 60 10C32.3858 10 10 32.3858 10 60C10 87.6142 32.3858 110 60 110Z" fill="#9C5789"/>
+                    <path d="M59.5166 89.6961C75.8029 89.6961 89.0055 76.4935 89.0055 60.2072C89.0055 43.9209 75.8029 30.7182 59.5166 30.7182C43.2303 30.7182 30.0276 43.9209 30.0276 60.2072C30.0276 76.4935 43.2303 89.6961 59.5166 89.6961Z" fill="white"/>
+                </g>
+            </g>
+        </svg> 
+    </template>
+</odoo>
