@@ -10,6 +10,7 @@ Use the e-commerce to sell your event booths.
     """,
     'depends': ['event_booth_sale', 'website_event_booth', 'website_sale'],
     'data': [
+        'views/event_booth_registration_templates.xml',
         'views/event_booth_templates.xml',
     ],
     'auto_install': True,

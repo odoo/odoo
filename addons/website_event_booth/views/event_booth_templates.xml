@@ -46,17 +46,20 @@
     <template id="event_booth_registration" name="Event Booth Registration">
         <t t-call="website_event_booth.event_booth_layout">
             <t t-if="event_booths and not event.is_finished">
-                <div t-attf-class="#{'col-lg-9' if available_booth_category_ids else 'col-lg-12'} p-4">
+                <t t-call="website_event_booth.event_booth_order_progress">
+                    <t t-set="step" t-value="'STEP_BOOTH_SELECTION'"/>
+                </t>
+                <div t-attf-class="#{'col-lg-9' if available_booth_category_ids else 'col-lg-12'} p-4 pt-3">
                     <form method="post" class="form-horizontal justify-content-center mt32 js_website_submit_form o_wbooth_registration_form"
                           t-attf-action="/event/#{slug(event)}/booth/register" t-att-data-event-id="event.id">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                        <div class="row mb-3 justify-content-center">
+                        <div class="row">
                             <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
-                                <div class="col-md-4">
+                                <div class="col-md-4 mb-3">
                                     <label t-attf-class="d-block #{'o_wbooth_category_unavailable' if booth_category_unavailable else ''}">
-                                        <input type="radio" name="booth_category_id" t-att-value="booth_category.id"
-                                               t-att-disabled="booth_category_unavailable"/>
+                                        <input type="radio" name="booth_category_id" t-att-value="booth_category.id" t-att-disabled="booth_category_unavailable"
+                                               t-att-checked="booth_category.id == selected_booth_category_id"/>
                                         <div>
                                             <h5 name="booth_category_name" class="m-0 text-truncate" t-out="booth_category.name"/>
                                             <span class="img img-responsive">
@@ -73,7 +76,7 @@
                         <t t-if="available_booth_category_ids">
                             <div t-if="event.exhibition_map" class="row">
                                 <div class="d-grid col-sm-6 offset-sm-3 mb-4">
-                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#mapModal">View Floor Plan</button>
+                                    <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fa fa-map-o me-2"/>View Plan</a>
                                     <div role="dialog" id="mapModal" class="modal" tabindex="-1">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
@@ -89,7 +92,7 @@
                                 <div class="col-sm-2 offset-sm-1">
                                     <label for="booth_id" class="control-label">Booths</label>
                                 </div>
-                                <div class="col-sm-6 o_wbooth_booths"/>
+                                <div class="col-sm-6 o_wbooth_booths" t-att-data-selected-booth-ids="selected_booth_ids or ''"/>
                             </div>
                             <div class="row">
                                 <div class="alert alert-danger col-12 o_wbooth_unavailable_booth_alert d-none" role="alert">
@@ -110,7 +113,7 @@
                         </div>
                     </form>
                 </div>
-                <div t-if="available_booth_category_ids" class="o_wevent_booth_category col-lg-3 hidden-sm hidden-xs p-4">
+                <div t-if="available_booth_category_ids" class="o_wevent_booth_category col-lg-3 hidden-sm hidden-xs p-4 pt-3">
                     <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                         <div t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
                              class="o_wbooth_booth_description d-none" t-field="booth_category.description"/>
@@ -118,6 +121,22 @@
                 </div>
             </t>
         </t>
+    </template>
+
+    <template id="event_booth_order_progress">
+        <ul class="o_wevent_booth_order_progress list-unstyled d-none d-lg-block mb-0">
+            <li t-attf-class="position-relative float-start m-0 text-center #{'o_current_stage' if step=='STEP_BOOTH_SELECTION' else ''}">
+                <a class="text-decoration-none text-reset" t-attf-href="/event/#{slug(event)}/booth?#{keep_query('booth_category_id', 'booth_ids')}">
+                    <span class="d-block">Booth Selection</span><span class="chevron position-absolute d-block"/>
+                </a>
+            </li>
+            <li t-attf-class="position-relative float-start m-0 text-center #{'o_current_stage' if step=='STEP_DETAILS_FORM' else 'text-muted'}">
+                Contact Details<span class="chevron position-absolute d-block"/>
+            </li>
+            <li class="position-relative float-start m-0 text-center text-muted">
+                <span>Confirmed</span>
+            </li>
+        </ul>
     </template>
 
 </data></odoo>
