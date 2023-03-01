@@ -260,12 +260,6 @@ class IrActionsActWindow(models.Model):
             if ' ' in modes:
                 raise ValidationError(_('No spaces allowed in view_mode: %r', modes))
 
-    @api.depends('res_model', 'search_view_id')
-    def _compute_search_view(self):
-        for act in self:
-            fvg = self.env[act.res_model].get_view(act.search_view_id.id, 'search')
-            act.search_view = str(fvg)
-
     type = fields.Char(default="ir.actions.act_window")
     view_id = fields.Many2one('ir.ui.view', string='View Ref.', ondelete='set null')
     domain = fields.Char(string='Domain Value',
@@ -290,7 +284,6 @@ class IrActionsActWindow(models.Model):
                                  'act_id', 'gid', string='Groups')
     search_view_id = fields.Many2one('ir.ui.view', string='Search View Ref.')
     filter = fields.Boolean()
-    search_view = fields.Text(compute='_compute_search_view')
 
     def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
@@ -335,7 +328,7 @@ class IrActionsActWindow(models.Model):
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
             "context", "domain", "filter", "groups_id", "limit", "res_id",
-            "res_model", "search_view", "search_view_id", "target", "view_id",
+            "res_model", "search_view_id", "target", "view_id",
             "view_mode", "views",
             # `flags` is not a real field of ir.actions.act_window but is used
             # to give the parameters to generate the action
