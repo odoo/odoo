@@ -3,6 +3,7 @@
     // ----------------------------------------------------------------------------
     // Default KanbanView values
 
+    --Kanban-background: #{$o-kanban-background};
     --KanbanGroup-padding-h: #{$o-kanban-group-padding};
     --KanbanGroup-padding-bottom: #{$o-kanban-group-padding};
 
@@ -25,6 +26,8 @@
 
     --o-view-nocontent-zindex: 1;
     // ----------------------------------------------------------------------------
+
+    background: var(--Kanban-background);
 
     @include media-breakpoint-down(md) {
         --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 2};
