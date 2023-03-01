@@ -225,7 +225,7 @@ QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
         }
     };
     await makeTestEnv({ mockRPC });
-    const error = new ConnectionLostError();
+    const error = new ConnectionLostError("/fake_url");
     const errorEvent = new PromiseRejectionEvent("error", {
         reason: error,
         promise: null,
