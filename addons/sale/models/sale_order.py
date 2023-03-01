@@ -1028,12 +1028,12 @@ class SaleOrder(models.Model):
         return _(
             "There is nothing to invoice!\n\n"
             "Reason(s) of this behavior could be:\n"
-            "- You should deliver your products before invoicing them: Click on the \"truck\" icon "
-            "(top-right of your screen) and follow instructions.\n"
             "- You should modify the invoicing policy of your product: Open the product, go to the "
             "\"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered "
             "quantities\". For Services, you should modify the Service Invoicing Policy to "
-            "'Prepaid'."
+            "'Prepaid'.\n"
+            "- You should manually set the quantities in the \"Delivered\" column to the expected"
+            " value."
         )
 
     def _get_update_prices_lines(self):
