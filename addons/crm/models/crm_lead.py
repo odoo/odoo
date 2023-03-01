@@ -1948,15 +1948,8 @@ class Lead(models.Model):
             won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won', **local_msg_vals)
             lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost', **local_msg_vals)
             salesman_actions = [
-                {'url': won_action, 'title': _('Won')},
-                {'url': lost_action, 'title': _('Lost')}]
-
-        if self.team_id:
-            custom_params = dict(local_msg_vals, res_id=self.team_id.id, model=self.team_id._name)
-            salesman_actions.append({
-                'url': self._notify_get_action_link('view', **custom_params),
-                'title': _('Sales Team Settings')
-            })
+                {'url': won_action, 'title': _('Mark Won')},
+                {'url': lost_action, 'title': _('Mark Lost')}]
 
         salesman_group_id = self.env.ref('sales_team.group_sale_salesman').id
         new_group = (
