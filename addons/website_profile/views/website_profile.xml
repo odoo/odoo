@@ -647,7 +647,7 @@
         </div>
         <div t-elif="validation_email_sent and not validation_email_done" t-att-class="done_alert_classes">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            Verification Email sent to <i t-esc="user.email"></i>!<br/>
+            Verification Email sent to <t t-out="user.email"/>!<br/>
             Did not receive it? <a class="alert-link" t-att-href="my_account_redirect"><u>Correct your email address</u></a> 
             or <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>Send Again</u></a>.
         </div>
