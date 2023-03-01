@@ -138,7 +138,7 @@ class AccountPaymentTerm(models.Model):
     @api.constrains('line_ids')
     def _check_lines(self):
         for terms in self:
-            if len(terms.line_ids.filtered(lambda r: r.value == 'percent')) > 0 and not terms._get_sum_line_ids():
+            if sum(line.value_amount for line in terms.line_ids if line.value == 'percent') != 100:
                 raise ValidationError(_('The Payment Term must have at least one percent line and the sum of the percent must be 100%.'))
             if len(terms.line_ids) > 1 and terms.early_discount:
                 raise ValidationError(
@@ -147,11 +147,6 @@ class AccountPaymentTerm(models.Model):
                 raise ValidationError(_("The Early Payment Discount must be strictly positive."))
             if terms.early_discount and terms.discount_days <= 0:
                 raise ValidationError(_("The Early Payment Discount days must be strictly positive."))
-
-    @api.model
-    def _get_sum_line_ids(self):
-        self.ensure_one()
-        return sum(line.value_amount for line in self.line_ids if line.value == 'percent') == 100
 
     def _compute_terms(self, date_ref, currency, company, tax_amount, tax_amount_currency, sign, untaxed_amount, untaxed_amount_currency):
         """Get the distribution of this payment term.
@@ -180,6 +175,7 @@ class AccountPaymentTerm(models.Model):
         }
 
         if self.early_discount:
+            # Early discount is only available on single line, 100% payment terms.
             discount_percentage = self.discount_percentage / 100.0
             if self.early_pay_discount_computation in ('excluded', 'mixed'):
                 pay_term['discount_balance'] = company_currency.round(total_amount - untaxed_amount * discount_percentage)
@@ -188,21 +184,38 @@ class AccountPaymentTerm(models.Model):
                 pay_term['discount_balance'] = company_currency.round(total_amount * (1 - discount_percentage))
                 pay_term['discount_amount_currency'] = currency.round(total_amount_currency * (1 - discount_percentage))
 
+        # Remove all fixed amounts.
+        rate = abs(total_amount_currency / total_amount) if total_amount else 0.0
+        for line in self.line_ids:
+            if line.value == 'fixed':
+                total_amount_currency -= line.value_amount
+                total_amount -= currency.round(line.value_amount / rate) if rate else 0.0
+
+        residual_amount = total_amount
+        residual_amount_currency = total_amount_currency
+
         #We sort by the last line of a term
+        term_lines = self.line_ids.sorted(lambda l: l == self.line_ids[-1])
+        last_percent_line = term_lines.filtered(lambda l: l.value == 'percent')[-1]
         for line in self.line_ids.sorted(lambda l: l == self.line_ids[-1]):
             term_vals = {
                 'date': line._get_due_date(date_ref),
                 'company_amount': 0,
                 'foreign_amount': 0,
             }
-
             if line.value == 'fixed':
-                term_vals['company_amount'] = sign * company_currency.round(line.value_amount)
+                term_vals['company_amount'] = sign * company_currency.round(line.value_amount / rate) if rate else 0.0
                 term_vals['foreign_amount'] = sign * currency.round(line.value_amount)
+            elif line == last_percent_line:
+                term_vals['company_amount'] = residual_amount
+                term_vals['foreign_amount'] = residual_amount_currency
             else:
-                term_vals['company_amount'] = company_currency.round(total_amount * (line.value_amount / 100.0))
-                term_vals['foreign_amount'] = currency.round(total_amount_currency * (line.value_amount / 100.0))
-
+                line_amount = company_currency.round(total_amount * (line.value_amount / 100.0))
+                line_amount_currency = currency.round(total_amount_currency * (line.value_amount / 100.0))
+                term_vals['company_amount'] = line_amount
+                term_vals['foreign_amount'] = line_amount_currency
+                residual_amount -= line_amount
+                residual_amount_currency -= line_amount_currency
             pay_term["line_ids"].append(term_vals)
 
         return pay_term
