@@ -377,7 +377,7 @@ Model({
          * @param {String} [param2.step] current step of the flow
          * @param {String} [param2.state] current state of the connection
          */
-        _addLogEntry(token, entry, { error, step, state } = {}) {
+        _addLogEntry(token, entry, { error, step, state, ...data } = {}) {
             if (!this.modelManager.isDebug) {
                 return;
             }
@@ -393,6 +393,7 @@ Model({
                     stack: error.stack && error.stack.split("\n"),
                 },
                 trace: trace.split("\n"),
+                ...data,
             });
             if (step) {
                 this.logs[token].step = step;
@@ -717,10 +718,20 @@ Model({
             if (rtcPeerConnection.peerConnection.iceConnectionState === "connected") {
                 return;
             }
-            this._addLogEntry(
-                rtcSession.id,
-                `calling back to recover ${rtcPeerConnection.peerConnection.iceConnectionState} connection, reason: ${reason}`
-            );
+            if (this.modelManager.isDebug) {
+                let stats;
+                try {
+                    const peerConnectionStats = await rtcPeerConnection.peerConnection.getStats();
+                    stats = peerConnectionStats && [...peerConnectionStats.values()];
+                } catch {
+                    // ignore
+                }
+                this._addLogEntry(
+                    rtcSession.id,
+                    `calling back to recover "${rtcPeerConnection.peerConnection.iceConnectionState}" connection`,
+                    { reason, stats }
+                );
+            }
             await this.notifyPeers([rtcSession.id], {
                 event: "disconnect",
             });
