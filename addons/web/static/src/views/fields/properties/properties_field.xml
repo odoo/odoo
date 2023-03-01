@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertiesField" owl="1">
-        <div t-ref="properties" class="row align-items-start">
+        <div t-ref="properties" class="row align-items-start"
+            t-att-class="{'d-none': propertiesList.length === 0 and state.hideAddButton}">
             <t t-foreach="groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">
                 <div class="o_inner_group grid col-lg-6">
                     <div
@@ -46,11 +47,12 @@
                             />
                         </div>
                     </div>
-                    <div 
+                    <div
                         t-if="propertiesList.length % props.columns === propertiesListGroup_index"
-                        t-attf-class="o_field_property_add {{props.columns !== 1 ? 'g-col-2' : ''}}">
+                        class="o_field_property_add"
+                        t-att-class="{'g-col-2': props.columns !== 1, 'd-none': state.hideAddButton}">
                         <button
-                            t-if="!props.readonly &amp;&amp; state.canChangeDefinition"
+                            t-if="!props.readonly &amp;&amp; state.canChangeDefinition &amp;&amp; definitionRecordId"
                             class="btn btn-light text-muted text-break m-0"
                             t-on-click="onPropertyCreate">
                             <i class="fa fa-plus"/>
