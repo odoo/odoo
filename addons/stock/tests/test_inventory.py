@@ -518,4 +518,4 @@ class TestInventory(TransactionCase):
         self.assertEqual(existing_loc2.next_inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_new_loc.inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_existing_loc.inventory_date, date.today() + timedelta(days=2))
-        self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + relativedelta(years=365))
+        self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + relativedelta(years=1))
