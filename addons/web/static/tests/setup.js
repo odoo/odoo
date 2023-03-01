@@ -268,7 +268,7 @@ function patchSessionInfo() {
         },
         db: "test",
         server_version: "1.0",
-        server_version_info: ["1.0"],
+        server_version_info: [1, 0, 0, "final", 0, ''],
     });
 }
 
