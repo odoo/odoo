@@ -12,7 +12,7 @@ function openProjectUpdateAndReturnToTasks(view, viewClass) {
         }, {
             trigger: ".o-kanban-button-new",
             content: "Create a new update from project task view : " + view,
-            extra_trigger: '.o_pupdate_kanban',
+            extra_trigger: '.o_project_update_kanban_view',
         }, {
             trigger: "button.o_form_button_cancel",
             content: "Discard project update from project task view : " + view,

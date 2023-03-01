@@ -1,4 +1,4 @@
-.o_kanban_dashboard {
+.o_kanban_dashboard .o_kanban_renderer {
     // ----------------------------------------------------------------------------
     // Customize kanbanView default values
 
@@ -193,9 +193,11 @@
         );
         padding: $o-kanban-record-margin;
     }
+}
 
+.o_kanban_dashboard.o_emphasize_colors .o_kanban_renderer {
     // Emphasize records' colors when necessary
-    &.o_emphasize_colors .o_kanban_record::after {
+    .o_kanban_record::after {
         width: $o-kanban-color-border-width * 2;
     }
 }

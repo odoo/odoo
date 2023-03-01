@@ -455,10 +455,6 @@
 
         @include media-breakpoint-up(md) {
             --KanbanGroup-width: calc(var(--KanbanRecord-width) + (2 * var(--KanbanGroup-padding-h)));
-
-            &.o_kanban_small_column {
-                --KanbanGroup-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
-            }
         }
 
         .o_kanban_group,
@@ -596,12 +592,6 @@
         }
     }
 
-    &.o_kanban_mobile .o_kanban_record {
-        div.label {
-            @include o-text-overflow;
-        }
-    }
-
     // Records colours
     @include o-kanban-record-color;
 
@@ -611,6 +601,19 @@
         z-index: 1; // show the title over kanban color
     }
 }
+
+.o_kanban_mobile .o_kanban_renderer .o_kanban_record {
+    div.label {
+        @include o-text-overflow;
+    }
+}
+
+.o_kanban_small_column .o_kanban_renderer.o_kanban_grouped {
+    @include media-breakpoint-up(md) {
+        --KanbanGroup-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+    }
+}
+
 
 // ------- Sample mode -------
 .o_kanban_view .o_view_sample_data {

@@ -479,12 +479,8 @@ QUnit.module("Views", (hooks) => {
         patchWithCleanup(ToyController.prototype, {
             setup() {
                 this._super();
-                const {
-                    irFilters,
-                    searchViewArch,
-                    searchViewFields,
-                    searchViewId,
-                } = this.props.info;
+                const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                    this.props.info;
                 assert.strictEqual(searchViewArch, serverData.views["animal,false,search"]);
                 assert.deepEqual(searchViewFields, serverData.models.animal.fields);
                 assert.strictEqual(searchViewId, false);
@@ -527,12 +523,8 @@ QUnit.module("Views", (hooks) => {
             patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
-                    const {
-                        irFilters,
-                        searchViewArch,
-                        searchViewFields,
-                        searchViewId,
-                    } = this.props.info;
+                    const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                        this.props.info;
                     assert.strictEqual(searchViewArch, `<search/>`);
                     assert.deepEqual(searchViewFields, {});
                     assert.strictEqual(searchViewId, false);
@@ -571,12 +563,8 @@ QUnit.module("Views", (hooks) => {
             patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
-                    const {
-                        irFilters,
-                        searchViewArch,
-                        searchViewFields,
-                        searchViewId,
-                    } = this.props.info;
+                    const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                        this.props.info;
                     assert.strictEqual(searchViewArch, `<search/>`);
                     assert.deepEqual(searchViewFields, {});
                     assert.strictEqual(searchViewId, undefined);
@@ -614,12 +602,8 @@ QUnit.module("Views", (hooks) => {
             patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
-                    const {
-                        irFilters,
-                        searchViewArch,
-                        searchViewFields,
-                        searchViewId,
-                    } = this.props.info;
+                    const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                        this.props.info;
                     assert.strictEqual(searchViewArch, `<search/>`);
                     assert.deepEqual(searchViewFields, {});
                     assert.strictEqual(searchViewId, false);
@@ -679,12 +663,8 @@ QUnit.module("Views", (hooks) => {
             patchWithCleanup(ToyController.prototype, {
                 setup() {
                     this._super();
-                    const {
-                        irFilters,
-                        searchViewArch,
-                        searchViewFields,
-                        searchViewId,
-                    } = this.props.info;
+                    const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+                        this.props.info;
                     assert.strictEqual(searchViewArch, `<search/>`);
                     assert.deepEqual(searchViewFields, {});
                     assert.strictEqual(searchViewId, undefined);
@@ -1425,7 +1405,7 @@ QUnit.module("Views", (hooks) => {
                     });
                     assert.deepEqual(domain, [[0, "=", 1]]);
                     assert.deepEqual(groupBy, ["birthday"]);
-                    assert.deepEqual(orderBy, [{name: "bar", asc: true}]);
+                    assert.deepEqual(orderBy, [{ name: "bar", asc: true }]);
                 }
             }
             ToyController.template = xml`<div/>`;
@@ -1439,7 +1419,7 @@ QUnit.module("Views", (hooks) => {
                 domain: [[0, "=", 1]],
                 groupBy: ["birthday"],
                 context: { key: "val" },
-                orderBy: [{name: "bar", asc: true}],
+                orderBy: [{ name: "bar", asc: true }],
             };
             await mount(View, target, { env, props });
         }
@@ -1593,7 +1573,7 @@ QUnit.module("Views", (hooks) => {
                     });
                     assert.deepEqual(domain, ["&", [0, "=", 1], [1, "=", 1]]);
                     assert.deepEqual(groupBy, ["name"]);
-                    assert.deepEqual(orderBy, [{name: "bar", asc: true}]);
+                    assert.deepEqual(orderBy, [{ name: "bar", asc: true }]);
                 }
             }
             ToyController.template = xml`<div/>`;
@@ -1607,11 +1587,34 @@ QUnit.module("Views", (hooks) => {
                 domain: [[0, "=", 1]],
                 groupBy: ["birthday"],
                 context: { search_default_filter: 1, search_default_group_by: 1 },
-                orderBy: [{name: "bar", asc: true}],
+                orderBy: [{ name: "bar", asc: true }],
             };
             await mount(View, target, { env, props });
         }
     );
+
+    QUnit.test("multiple ways to pass classes for styling", async (assert) => {
+        const env = await makeTestEnv({ serverData });
+        const props = {
+            resModel: "animal",
+            type: "toy",
+            className: "o_custom_class_from_props_1 o_custom_class_from_props_2",
+            arch: `
+                <toy
+                    js_class="toy_imp"
+                    class="o_custom_class_from_arch_1 o_custom_class_from_arch_2"
+                />
+            `,
+            fields: {},
+        };
+        await mount(View, target, { env, props });
+        const view = target.querySelector(".o_toy_view");
+        assert.hasClass(view, "o_toy_imp_view", "should have the class from js_class attribute");
+        assert.hasClass(view, "o_custom_class_from_props_1", "should have the class from props");
+        assert.hasClass(view, "o_custom_class_from_props_2", "should have the class from props");
+        assert.hasClass(view, "o_custom_class_from_arch_1", "should have the class from arch");
+        assert.hasClass(view, "o_custom_class_from_arch_2", "should have the class from arch");
+    });
 
     ////////////////////////////////////////////////////////////////////////////
     // update props

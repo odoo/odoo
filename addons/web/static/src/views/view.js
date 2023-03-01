@@ -268,11 +268,18 @@ export class View extends Component {
         let subType = rootNode.getAttribute("js_class");
         const bannerRoute = rootNode.getAttribute("banner_route");
         const sample = rootNode.getAttribute("sample");
+        const classList = [
+            "o_view_controller",
+            `o_${type}_view`,
+            ...(props.className || "").split(" "),
+            ...(rootNode.getAttribute("class") || "").split(" "),
+        ];
 
         // determine ViewClass to instantiate (if not already done)
         if (subType) {
             if (viewRegistry.contains(subType)) {
                 descr = viewRegistry.get(subType);
+                classList.push(`o_${subType}_view`);
             } else {
                 subType = null;
             }
@@ -304,7 +311,7 @@ export class View extends Component {
             relatedModels,
             resModel,
             useSampleModel: false,
-            className: `${props.className} o_view_controller o_${this.env.config.viewType}_view`,
+            className: [...new Set(classList)].filter((c) => c).join(" "),
         };
         if (viewDescription.custom_view_id) {
             // for dashboard
