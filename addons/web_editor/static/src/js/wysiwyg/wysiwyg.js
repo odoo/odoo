@@ -601,7 +601,7 @@ const Wysiwyg = Widget.extend({
             if (!ICE_SERVERS) {
                 ICE_SERVERS = await this._rpc({route: '/web_editor/get_ice_servers'});
             }
-            let iceServers = structuredClone(ICE_SERVERS);
+            let iceServers = ICE_SERVERS;
             if (!iceServers.length) {
                 iceServers = [
                     {
