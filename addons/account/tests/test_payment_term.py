@@ -205,3 +205,66 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                 }],
             },
         )
+
+    def test_payment_term_residual_amount_on_last_line_with_fixed_amount_multi_currency(self):
+        pay_term = self.env['account.payment.term'].create({
+            'name': "test_payment_term_residual_amount_on_last_line",
+            'line_ids': [
+                Command.create({
+                    'value_amount': 50,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 50,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 0.02,
+                    'value': 'fixed',
+                    'nb_days': 0,
+                }),
+            ],
+        })
+
+        computed_term = pay_term._compute_terms(
+            fields.Date.from_string('2016-01-01'), self.currency_data['currency'], self.env.company,
+            0.0, 0.0, 1.0, 0.04, 0.09,
+        )
+        self.assertEqual(
+            [
+                (
+                    self.currency_data['currency'].round(l['foreign_amount']),
+                    self.company_data['currency'].round(l['company_amount']),
+                )
+                for l in computed_term['line_ids']
+            ],
+            [(0.035, 0.02), (0.035, 0.01), (0.02, 0.01)],
+        )
+
+    def test_payment_term_residual_amount_on_last_line(self):
+        pay_term = self.env['account.payment.term'].create({
+            'name': "test_payment_term_residual_amount_on_last_line",
+            'line_ids': [
+                Command.create({
+                    'value_amount': 50,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 50,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+            ],
+        })
+
+        computed_term = pay_term._compute_terms(
+            fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
+            0.0, 0.0, 1.0, 0.03, 0.03,
+        )
+        self.assertEqual(
+            [self.env.company.currency_id.round(l['foreign_amount']) for l in computed_term['line_ids']],
+            [0.02, 0.01],
+        )

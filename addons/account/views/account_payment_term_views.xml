@@ -62,9 +62,9 @@
                         </group>
                         <group>
                             <group string="Due Terms">
-                                <field name="line_ids" nolabel="1" colspan="2">
+                                <field name="line_ids" widget="payment_term_line_ids" nolabel="1" colspan="2">
                                     <tree string="Payment Terms" editable="bottom" no_open="True">
-                                        <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}"/>
+                                        <field name="value_amount"/>
                                         <field name="value" nolabel="1"/>
                                         <field name="nb_days" string="After"/>
                                         <field name="delay_type" nolabel="1"/>
