@@ -82,11 +82,21 @@ class AccountJournal(models.Model):
 
             journal.edi_format_ids = enabled_edi_formats + protected_edi_formats
 
-    def _create_document_from_attachment(self, attachment_ids=None):
-        # tries to match purchasing orders
-        moves = super()._create_document_from_attachment(attachment_ids)
+    @api.model
+    def _update_invoices_with_purchase_order_match(self, moves):
         for move in moves:
             if move.move_type == 'in_invoice':
                 references = [move.invoice_origin] if move.invoice_origin else []
                 move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=4)
+
+    def _create_document_from_attachment(self, attachment_ids=None):
+        # OVERRIDE account
+        moves = super()._create_document_from_attachment(attachment_ids)
+        self._update_invoices_with_purchase_order_match(moves)
+        return moves
+
+    def _update_invoice_from_attachment(self, attachment_ids=None):
+        # OVERRIDE account
+        moves = super()._update_invoice_from_attachment(attachment_ids)
+        self._update_invoices_with_purchase_order_match(moves)
         return moves
