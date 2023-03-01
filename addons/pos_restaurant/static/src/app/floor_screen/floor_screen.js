@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
@@ -198,7 +199,15 @@ export class FloorScreen extends Component {
             if (this.env.pos.orderToTransfer) {
                 await this.env.pos.transferTable(table);
             } else {
-                await this.env.pos.setTable(table);
+                try {
+                    await this.env.pos.setTable(table);
+                } catch (e) {
+                    if (!(e.message instanceof ConnectionLostError)) {
+                        throw e;
+                    }
+                    // Reject error in a separate stack to display the offline popup, but continue the flow
+                    Promise.reject(e);
+                }
             }
             const order = this.env.pos.get_order();
             this.pos.showScreen(order.get_screen_data().name);
