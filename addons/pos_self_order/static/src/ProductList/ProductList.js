@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-const { Component, useState } = owl;
+import { Component, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { formatMonetary } from "@web/views/fields/formatters";
@@ -11,14 +11,15 @@ import { NavBar } from "../NavBar/NavBar";
  * @typedef {import("@pos_self_order/jsDocTypes").CartItem} CartItem
  */
 export class ProductList extends Component {
+    // static props = {
+    //     productList: Array,
+    //     cart: Object,
+    // };
     setup() {
         this.state = useState(this.env.state);
-        /**
-         * @type {Object}
-         * @property {Set<string>} selected_tags
-         */
+       
         this.private_state = useState({
-            selected_tags: new Set(),
+            selected_tags: /** @type {Set<string>} */ new Set(),
             search_is_focused: false,
             search_input: "",
         });

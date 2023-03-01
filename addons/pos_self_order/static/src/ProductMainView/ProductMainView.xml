@@ -29,14 +29,16 @@
                 <t t-if="props.product.attributes">
                     <t t-foreach="props.product.attributes" t-as="attribute" t-key="attribute.id">
                         <div class="attribute_name" t-esc="attribute.name"/>
-                        <!-- <t t-set="values" t-value="attribute.values"/> -->
-                        <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
-                        <!-- <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
-                        <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/> -->
+                        <t t-call="RadioProductAttribute" t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" />
+                        <t t-call="SelectProductAttribute" t-elif="attribute.display_type === 'select'" />
+                        <t t-call="ColorProductAttribute" t-elif="attribute.display_type === 'color'" />
                     </t>
                 </t>
-    <!-- Customer customer_note -->
-                    <input class="form-control" type="text" placeholder="Add a note for the chef" t-model="this.private_state.customer_note"/>
+    <!-- Customer note -->
+                    <div>
+                        <p>Add a note for the chef:</p>
+                        <input class="form-control" type="text" placeholder="no onions please" t-model="this.private_state.customer_note"/>
+                    </div>
     <!-- Increment quantity -->
                     <div class="m-5">
                         <IncrementCounter setValue="setValue" value="this.private_state.qty"/>
@@ -59,11 +61,11 @@
         <div class="configurator_radio" t-ref="root">
             <div class="table">
                 <t t-log="attribute"/>
-                <t t-log="values"/>
-                <!-- <t t-foreach="values" t-as="value" t-key="value.id">
+                <t t-log="attribute.values"/>
+                <t t-foreach="attribute.values" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell">
-                        <input type="radio" t-model="state.selected_value" t-att-name="attribute.id"
-                                   t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
+                        <input type="radio" t-model="private_state.selectedVariants[attribute.name]" t-att-name="attribute.id"
+                                   t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.name"/>
                         <span t-esc="value.name"/>
                         <label t-att-name="value.name" t-attf-for="{{ attribute.id }}_{{ value.id }}"/>
                     </div>
@@ -72,15 +74,15 @@
                             + <t t-esc="formatMonetary(value.price_extra, {currencyId: selfOrder.config.currency_id})" />
                         </span>
                     </div>
-                </t> -->
+                </t>
             </div>
         </div>
     </t>
 
     <t t-name="SelectProductAttribute" owl="1">
         <div>
-            <select class="configurator_select" t-model="state.selected_value">
-                <option t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id">
+            <select class="configurator_select" t-model="private_state.selectedVariants[attribute.name]">
+                <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.name">
                     <t t-esc="value.name"/>
                     <t t-if="value.price_extra">
                         + <t t-esc="formatMonetary(value.price_extra, {currencyId: selfOrder.config.currency_id})" />
@@ -95,7 +97,7 @@
         <div>
 
             <ul class="color_attribute_list">
-                <li t-foreach="values" t-as="value" t-key="value.id" class="color_attribute_list_item">
+                <li t-foreach="attribute.values" t-as="value" t-key="value.id" class="color_attribute_list_item">
                     <label t-attf-class="configurator_color {{ value.id == state.selected_value ? 'active' : '' }}"
                         t-attf-style="background-color: {{ value.html_color }};" t-att-data-color="value.name">
                         <input type="radio" t-model="state.selected_value" t-att-value="value.id" t-att-name="attribute.id"/>
