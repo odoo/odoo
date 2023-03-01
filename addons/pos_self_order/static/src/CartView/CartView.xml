@@ -15,10 +15,11 @@
                     <img class="w-25 img-fluid" t-attf-src="/pos-self-order/get-images/{{ product.product_id }}"  alt="Product image"/>
                     <div class="mt-4 mx-4 w-100 me-5">
                         <div class="d-flex justify-content-between w-100">
+        <!-- product NAME -->
                             <p class="fw-bold"><t t-esc="product.name"/></p>
                         </div>
                         <div class="d-flex justify-content-between w-100">
-                            <t t-esc="cartItem.qty + ' x ' + formatMonetary(product.list_price, {currencyId: selfOrder.config.currency_id})" />
+                            <t t-esc="cartItem.qty + ' x ' + formatMonetary(product.list_price + product.price_extra, {currencyId: selfOrder.config.currency_id})" />
                             <p class="fst-italic fw-bold text-right"><t t-esc="formatMonetary(cartItem.qty *  product.list_price, {currencyId: selfOrder.config.currency_id})" /></p>
                         </div>
                     </div>
