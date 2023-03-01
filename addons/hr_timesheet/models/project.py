@@ -108,12 +108,16 @@ class Project(models.Model):
             raise ValueError(_('Invalid operator: %s') % operator)
 
         query = """
-            SELECT P.id
-              FROM project_project P
-         LEFT JOIN project_task T ON P.id = T.project_id
-             WHERE T.planned_hours IS NOT NULL
-          GROUP BY P.id
-            HAVING SUM(T.remaining_hours) < 0
+            SELECT Project.id
+              FROM project_project AS Project
+              JOIN project_task AS Task
+                ON Project.id = Task.project_id
+             WHERE Task.planned_hours IS NOT NULL
+               AND Project.allow_timesheets = TRUE
+               AND Task.parent_id IS NULL
+               AND Task.is_closed IS FALSE
+          GROUP BY Project.id
+            HAVING SUM(Task.remaining_hours) < 0
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
             operator_new = 'inselect'
