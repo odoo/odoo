@@ -367,7 +367,7 @@ registerModel({
          * @param {String} [param2.step] current step of the flow
          * @param {String} [param2.state] current state of the connection
          */
-        _addLogEntry(token, entry, { error, step, state } = {}) {
+        _addLogEntry(token, entry, { error, step, state, ...data } = {}) {
             if (!this.modelManager.isDebug) {
                 return;
             }
@@ -383,6 +383,7 @@ registerModel({
                     stack: error.stack && error.stack.split('\n'),
                 },
                 trace: trace.split('\n'),
+                ...data,
             });
             if (step) {
                 this.logs[token].step = step;
@@ -723,7 +724,20 @@ registerModel({
                 if (peerConnection.iceConnectionState === 'connected') {
                     return;
                 }
-                this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
+                if (this.modelManager.isDebug) {
+                    let stats;
+                    try {
+                        const peerConnectionStats = await peerConnection.getStats();
+                        stats = peerConnectionStats && [...peerConnectionStats.values()];
+                    } catch (_e) {
+                        // ignore
+                    }
+                    this._addLogEntry(
+                        token,
+                        `calling back to recover "${peerConnection.iceConnectionState}" connection`,
+                        { reason, stats }
+                    );
+                }
                 await this._notifyPeers([token], {
                     event: 'disconnect',
                 });
