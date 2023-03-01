@@ -2,6 +2,7 @@
 
 import PosComponent from "@point_of_sale/js/PosComponent";
 import Registries from "@point_of_sale/js/Registries";
+import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { debounce } from "@web/core/utils/timing";
 
 const { onPatched, onMounted, onWillUnmount, useRef, useState } = owl;
@@ -190,7 +191,15 @@ class FloorScreen extends PosComponent {
             if (this.env.pos.orderToTransfer) {
                 await this.env.pos.transferTable(table);
             } else {
-                await this.env.pos.setTable(table);
+                try {
+                    await this.env.pos.setTable(table);
+                } catch (e) {
+                    if (!(e.message instanceof ConnectionLostError)) {
+                        throw e;
+                    }
+                    // Reject error in a separate stack to display the offline popup, but continue the flow
+                    Promise.reject(e);
+                }
             }
             const order = this.env.pos.get_order();
             this.showScreen(order.get_screen_data().name);

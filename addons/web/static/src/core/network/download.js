@@ -491,7 +491,7 @@ download._download = (options) => {
                 return resolve(filename);
             } else if (xhr.status === 502) {
                 // If Odoo is behind another server (nginx)
-                reject(new ConnectionLostError());
+                reject(new ConnectionLostError(options.url));
             } else {
                 const decoder = new FileReader();
                 decoder.onload = () => {
@@ -524,7 +524,7 @@ download._download = (options) => {
             }
         };
         xhr.onerror = () => {
-            reject(new ConnectionLostError());
+            reject(new ConnectionLostError(options.url));
         };
         xhr.send(data);
     });
