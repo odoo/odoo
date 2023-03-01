@@ -205,7 +205,7 @@ export class GraphRenderer extends Component {
     getBarChartData() {
         // style data
         const { domains, stacked } = this.model.metaData;
-        const data = this.model.data;
+        const { data, lineOverlayDataset } = this.model;
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
             // used when stacked
@@ -214,6 +214,29 @@ export class GraphRenderer extends Component {
             }
             // set dataset color
             dataset.backgroundColor = getColor(index, this.cookies.current.color_scheme);
+        }
+        if (lineOverlayDataset) {
+            // Mutate the lineOverlayDataset to include the config on how it will be displayed.
+            const color = this.cookies.current.color_scheme === "dark" ? "ffffff" : "000000";
+            Object.assign(lineOverlayDataset, {
+                type: "line",
+                order: -1,
+                tension: 0,
+                fill: false,
+                borderWidth: 2,
+                borderDash: [5, 4],
+                borderColor: hexToRGBA(color, LINE_FILL_TRANSPARENCY),
+                pointHitRadius: 5,
+                pointRadius: 5,
+                pointHoverRadius: 10,
+                backgroundColor: hexToRGBA(color, LINE_FILL_TRANSPARENCY),
+            });
+            // We're not mutating the original datasets (`this.model.data.datasets`)
+            // because some part of the code depends on it.
+            return {
+                ...data,
+                datasets: [...data.datasets, lineOverlayDataset],
+            };
         }
 
         return data;
@@ -478,7 +501,8 @@ export class GraphRenderer extends Component {
         const items = [];
         for (const item of sortedDataPoints) {
             const index = item.index;
-            const dataset = data.datasets[item.datasetIndex];
+            // If `datasetIndex` is not found in the `datasets`, then it refers to the `lineOverlayDataset`.
+            const dataset = data.datasets[item.datasetIndex] || this.model.lineOverlayDataset;
             let label = dataset.trueLabels[index];
             let value = this.formatValue(dataset.data[index], allIntegers);
             let boxColor;
