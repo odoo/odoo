@@ -3041,6 +3041,14 @@ class BaseModel(metaclass=MetaModel):
         """
         self.ensure_one()
 
+        installed_lang = set(code for code, _ in self.env['res.lang'].get_installed())
+        missing_languages = set(translations) - installed_lang
+        if missing_languages:
+            raise UserError(
+                _("The following language is not activated: %(missing_names)s",
+                missing_names=', '.join(missing_languages))
+            )
+
         field = self._fields[field_name]
 
         if not field.translate:
