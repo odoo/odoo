@@ -284,8 +284,9 @@ function sendRequest(route, params) {
     let form = document.createElement('form');
     form.setAttribute('action', route);
     form.setAttribute('method', params.method || 'POST');
-    const isInIframe = window.frameElement && window.frameElement.classList.contains('o_iframe');
-    if (isInIframe) {
+    // This is an exception for the 404 page create page button, in backend we
+    // want to open the response in the top window not in the iframe.
+    if (params.forceTopWindow) {
         form.setAttribute('target', '_top');
     }
 
