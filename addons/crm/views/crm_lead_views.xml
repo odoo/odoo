@@ -427,7 +427,7 @@
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                     </div>
                                 </div>
                             </div>
@@ -517,7 +517,7 @@
                     <field name="company_currency"/>
                     <templates>
                         <div t-name="activity-box">
-                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="expected_revenue" widget="monetary" display="full" muted="1"/>
@@ -595,7 +595,7 @@
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                         <div class="oe_kanban_bottom_right">
-                                            <field name="user_id" widget="many2one_avatar_user"/>
+                                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                         </div>
                                     </div>
                                 </div>
