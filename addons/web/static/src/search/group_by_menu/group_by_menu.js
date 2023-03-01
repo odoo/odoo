@@ -48,9 +48,9 @@ export class GroupByMenu extends Component {
      * @returns {boolean}
      */
     validateField(fieldName, field) {
-        const { sortable, store, type } = field;
+        const { store, type, show_on_group_menu } = field;
         return (
-            (type === "many2many" ? store : sortable) &&
+            (type === "many2many" ? store && show_on_group_menu : show_on_group_menu) &&
             fieldName !== "id" &&
             GROUPABLE_TYPES.includes(type)
         );

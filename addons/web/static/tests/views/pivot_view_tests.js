@@ -67,15 +67,17 @@ QUnit.module("Views", (hooks) => {
                             type: "integer",
                             searchable: true,
                             group_operator: "sum",
+                            show_on_filter_menu: true,
                         },
-                        bar: { string: "bar", type: "boolean", store: true, sortable: true },
-                        date: { string: "Date", type: "date", store: true, sortable: true },
+                        bar: { string: "bar", type: "boolean", store: true, sortable: true, show_on_group_menu: true },
+                        date: { string: "Date", type: "date", store: true, sortable: true, show_on_group_menu: true },
                         product_id: {
                             string: "Product",
                             type: "many2one",
                             relation: "product",
                             store: true,
                             sortable: true,
+                            show_on_group_menu: true,
                         },
                         other_product_id: {
                             string: "Other Product",
@@ -83,6 +85,7 @@ QUnit.module("Views", (hooks) => {
                             relation: "product",
                             store: true,
                             sortable: true,
+                            show_on_group_menu: true,
                         },
                         non_stored_m2o: {
                             string: "Non Stored M2O",
@@ -95,6 +98,7 @@ QUnit.module("Views", (hooks) => {
                             relation: "customer",
                             store: true,
                             sortable: true,
+                            show_on_group_menu: true,
                         },
                         computed_field: {
                             string: "Computed and not stored",
@@ -112,6 +116,8 @@ QUnit.module("Views", (hooks) => {
                             searchable: true,
                             sortable: true,
                             store: true,
+                            show_on_filter_menu: true,
+                            show_on_group_menu: true,
                         },
                     },
                     records: [
@@ -1377,6 +1383,7 @@ QUnit.module("Views", (hooks) => {
             // Keep product_id but make it ungroupable
             delete serverData.models.partner.fields.product_id.sortable;
             delete serverData.models.partner.fields.product_id.store;
+            delete serverData.models.partner.fields.product_id.show_on_group_menu;
 
             serverData.models.partner.records = [
                 {
@@ -4514,6 +4521,7 @@ QUnit.module("Views", (hooks) => {
             store: true,
             searchable: true,
             group_operator: "bool_or",
+            show_on_filter_menu: true,
         };
         serverData.models.partner.records = [
             { id: 1, bar: true, date: "2019-12-14" },

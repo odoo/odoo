@@ -44,12 +44,13 @@ QUnit.module("Board", (hooks) => {
             },
             partner: {
                 fields: {
-                    display_name: { string: "Displayed name", type: "char", searchable: true },
+                    display_name: { string: "Displayed name", type: "char", searchable: true, show_on_filter_menu: true },
                     foo: {
                         string: "Foo",
                         type: "char",
                         default: "My little Foo Value",
                         searchable: true,
+                        show_on_filter_menu: true,
                     },
                     bar: { string: "Bar", type: "boolean" },
                     int_field: {
@@ -97,6 +98,7 @@ QUnit.module("Board", (hooks) => {
         assert.expect(6);
 
         serverData.models.partner.fields.foo.sortable = true;
+        serverData.models.partner.fields.foo.show_on_group_menu = true;
 
         serverData.views = {
             "partner,false,list": '<list><field name="foo"/></list>',
@@ -318,6 +320,7 @@ QUnit.module("Board", (hooks) => {
                 string: "Date",
                 type: "date",
                 sortable: true,
+                show_on_group_menu: true,
             };
 
             serverData.views = {

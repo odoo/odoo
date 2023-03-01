@@ -58,7 +58,7 @@ QUnit.module("Fields", (hooks) => {
                         display_name: { string: "Displayed name", type: "char" },
                         foo: { string: "Foo", type: "char", default: "My little Foo Value" },
                         bar: { string: "Bar", type: "boolean", default: true },
-                        int_field: { string: "int_field", type: "integer", sortable: true },
+                        int_field: { string: "int_field", type: "integer", sortable: true, show_on_group_menu: true },
                         p: {
                             string: "one2many field",
                             type: "one2many",
@@ -590,6 +590,7 @@ QUnit.module("Fields", (hooks) => {
             serverData.models.partner.records.push({ id: i, display_name: `Partner ${i}` });
         }
         serverData.models.partner.fields.datetime.searchable = true;
+        serverData.models.partner.fields.datetime.show_on_filter_menu = true;
         serverData.views = {
             "partner,false,search": `
                 <search>

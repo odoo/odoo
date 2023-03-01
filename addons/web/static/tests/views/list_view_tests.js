@@ -106,6 +106,7 @@ QUnit.module("Views", (hooks) => {
                             type: "integer",
                             sortable: true,
                             group_operator: "sum",
+                            show_on_group_menu: true,
                         },
                         text: { string: "text field", type: "text" },
                         qux: { string: "my float", type: "float" },
@@ -2001,6 +2002,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         serverData.models.foo.fields.m2m.store = true;
+        serverData.models.foo.fields.m2m.show_on_group_menu = true;
 
         await makeView({
             type: "list",
@@ -2133,6 +2135,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("ordered target, sort attribute in context", async function (assert) {
         serverData.models.foo.fields.foo.sortable = true;
         serverData.models.foo.fields.date.sortable = true;
+        serverData.models.foo.fields.foo.show_on_group_menu = true;
+        serverData.models.foo.fields.date.show_on_group_menu = true;
 
         await makeView({
             type: "list",
@@ -2168,6 +2172,8 @@ QUnit.module("Views", (hooks) => {
 
         serverData.models.foo.fields.foo.sortable = true;
         serverData.models.foo.fields.date.sortable = true;
+        serverData.models.foo.fields.foo.show_on_group_menu = true;
+        serverData.models.foo.fields.date.show_on_group_menu = true;
 
         let searchReads = 0;
         await makeView({
@@ -2279,6 +2285,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         serverData.models.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.foo.show_on_group_menu = true;
 
         await makeView({
             type: "list",
@@ -2578,6 +2585,7 @@ QUnit.module("Views", (hooks) => {
                         type: "integer",
                         sortable: true,
                         required: true,
+                        show_on_group_menu: true,
                     },
                 },
                 records: [
@@ -2782,6 +2790,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(2);
 
             serverData.models.foo.fields.foo.sortable = true;
+            serverData.models.foo.fields.foo.show_on_group_menu = true;
 
             await makeView({
                 type: "list",
@@ -3780,11 +3789,13 @@ QUnit.module("Views", (hooks) => {
                 type: "sting",
                 sortable: true,
                 default: "value",
+                show_on_group_menu: true,
             };
             serverData.models.foo.records.forEach((elem) => {
                 elem.sort_field = "value" + elem.id;
             });
             serverData.models.foo.fields.foo.sortable = true;
+            serverData.models.foo.fields.foo.show_on_group_menu = true;
             await makeView({
                 type: "list",
                 resModel: "foo",
@@ -3826,6 +3837,7 @@ QUnit.module("Views", (hooks) => {
         "groups can be sorted on non-aggregable fields if a group isn't folded",
         async function (assert) {
             serverData.models.foo.fields.foo.sortable = true;
+            serverData.models.foo.fields.foo.show_on_group_menu = true;
             await makeView({
                 type: "list",
                 resModel: "foo",
@@ -3882,6 +3894,7 @@ QUnit.module("Views", (hooks) => {
         "groups can be sorted on non-aggregable fields if a group isn't folded with expand='1'",
         async function (assert) {
             serverData.models.foo.fields.foo.sortable = true;
+            serverData.models.foo.fields.foo.show_on_group_menu = true;
             await makeView({
                 type: "list",
                 resModel: "foo",
@@ -4343,8 +4356,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("editable list: overflowing table", async function (assert) {
         serverData.models.bar = {
             fields: {
-                titi: { string: "Small char", type: "char", sortable: true },
-                grosminet: { string: "Beeg char", type: "char", sortable: true },
+                titi: { string: "Small char", type: "char", sortable: true, show_on_group_menu: true },
+                grosminet: { string: "Beeg char", type: "char", sortable: true, show_on_group_menu: true },
             },
             records: [
                 {
@@ -4397,10 +4410,10 @@ QUnit.module("Views", (hooks) => {
 
         serverData.models.bar = {
             fields: {
-                titi: { string: "Small char", type: "char", sortable: true },
-                grosminet1: { string: "Beeg char 1", type: "char", sortable: true },
-                grosminet2: { string: "Beeg char 2", type: "char", sortable: true },
-                grosminet3: { string: "Beeg char 3", type: "char", sortable: true },
+                titi: { string: "Small char", type: "char", sortable: true, show_on_group_menu: true },
+                grosminet1: { string: "Beeg char 1", type: "char", sortable: true, show_on_group_menu: true },
+                grosminet2: { string: "Beeg char 2", type: "char", sortable: true, show_on_group_menu: true },
+                grosminet3: { string: "Beeg char 3", type: "char", sortable: true, show_on_group_menu: true },
             },
             records: [
                 {
@@ -4443,8 +4456,8 @@ QUnit.module("Views", (hooks) => {
             serverData.models.foo.records = [{ id: 1, o2m: [1] }];
             serverData.models.bar = {
                 fields: {
-                    titi: { string: "Small char", type: "char", sortable: true },
-                    grosminet: { string: "Beeg char", type: "char", sortable: true },
+                    titi: { string: "Small char", type: "char", sortable: true, show_on_group_menu: true },
+                    grosminet: { string: "Beeg char", type: "char", sortable: true, show_on_group_menu: true },
                 },
                 records: [
                     {
@@ -4496,8 +4509,8 @@ QUnit.module("Views", (hooks) => {
         serverData.models.foo.records = [{ id: 1, bar: true, o2m: [1] }];
         serverData.models.bar = {
             fields: {
-                titi: { string: "Small char", type: "char", sortable: true },
-                grosminet: { string: "Beeg char", type: "char", sortable: true },
+                titi: { string: "Small char", type: "char", sortable: true, show_on_group_menu: true },
+                grosminet: { string: "Beeg char", type: "char", sortable: true, show_on_group_menu: true },
             },
             records: [
                 {
@@ -6151,6 +6164,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("can sort records when clicking on header", async function (assert) {
         serverData.models.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.foo.show_on_group_menu = true;
 
         let nbSearchRead = 0;
         await makeView({
@@ -6202,6 +6216,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("do not sort records when clicking on header with nolabel", async function (assert) {
         serverData.models.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.foo.show_on_group_menu = true;
 
         let nbSearchRead = 0;
         await makeView({
@@ -6338,7 +6353,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("use default_order on editable tree: sort on demand", async function (assert) {
         serverData.models.foo.records[0].o2m = [1, 3];
         serverData.models.bar.fields = {
-            name: { string: "Name", type: "char", sortable: true },
+            name: { string: "Name", type: "char", sortable: true, show_on_group_menu: true },
         };
         serverData.models.bar.records[0].name = "Value 1";
         serverData.models.bar.records[2].name = "Value 3";
@@ -6398,7 +6413,7 @@ QUnit.module("Views", (hooks) => {
         "use default_order on editable tree: sort on demand in page",
         async function (assert) {
             serverData.models.bar.fields = {
-                name: { string: "Name", type: "char", sortable: true },
+                name: { string: "Name", type: "char", sortable: true, show_on_group_menu: true },
             };
 
             const ids = [];
@@ -7246,6 +7261,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(17);
 
         serverData.models.foo.fields.currency_id.sortable = true;
+        serverData.models.foo.fields.currency_id.show_on_group_menu = true;
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -9821,7 +9837,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models = {
             // we want the data to be minimal to have a minimal test
             foo: {
-                fields: { int_field: { string: "int_field", type: "integer", sortable: true } },
+                fields: { int_field: { string: "int_field", type: "integer", sortable: true, show_on_group_menu: true } },
                 records: [
                     { id: 1, int_field: 11 },
                     { id: 2, int_field: 12 },
@@ -10032,6 +10048,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("editable target, handle widget locks and unlocks on sort", async function (assert) {
         // we need another sortable field to lock/unlock the handle
         serverData.models.foo.fields.amount.sortable = true;
+        serverData.models.foo.fields.amount.show_on_group_menu = true;
         // resequence makes sense on a sequence field, not on arbitrary fields
         serverData.models.foo.records[0].int_field = 0;
         serverData.models.foo.records[1].int_field = 1;
@@ -15269,6 +15286,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("list: column: resize, reorder, resize again", async function (assert) {
         serverData.models.foo.fields.foo.sortable = true;
         serverData.models.foo.fields.int_field.sortable = true;
+        serverData.models.foo.fields.foo.show_on_group_menu = true;
+        serverData.models.foo.fields.int_field.show_on_group_menu = true;
         await makeView({
             type: "list",
             resModel: "foo",
@@ -16397,6 +16416,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("keep order after grouping", async (assert) => {
         serverData.models.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.foo.show_on_group_menu = true;
         await makeView({
             type: "list",
             resModel: "foo",
@@ -17193,6 +17213,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("list view with default_group_by", async (assert) => {
         serverData.models.foo.fields.m2m.store = true;
+        serverData.models.foo.fields.m2m.show_on_group_menu = true;
 
         let readGroupCount = 0;
         await makeView({
