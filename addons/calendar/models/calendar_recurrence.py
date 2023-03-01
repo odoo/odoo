@@ -515,7 +515,10 @@ class RecurrenceRule(models.Model):
         elif self.end_type == 'forever':
             rrule_params['count'] = MAX_RECURRENT_EVENT
         elif self.end_type == 'end_date':  # e.g. stop after 12/10/2020
-            rrule_params['until'] = datetime.combine(self.until, time.max).astimezone(self._get_timezone())
+            until = datetime.combine(self.until, time.max)
+            if dtstart.tzinfo is not None and dtstart.tzinfo.utcoffset(dtstart) is not None:
+                until = until.astimezone(self._get_timezone())
+            rrule_params['until'] = until
         return rrule.rrule(
             freq_to_rrule(freq), **rrule_params
         )
