@@ -63,7 +63,7 @@ class TestInventory(TransactionCase):
 
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
             'company_id': self.env.company.id,
@@ -95,7 +95,7 @@ class TestInventory(TransactionCase):
         ])
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
             'company_id': self.env.company.id,
@@ -123,7 +123,7 @@ class TestInventory(TransactionCase):
         ]
         inventory_quants = self.env['stock.quant'].search(quant_domain)
         self.assertEqual(len(inventory_quants), 0)
-        lot1 = self.env['stock.production.lot'].create({
+        lot1 = self.env['stock.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
             'company_id': self.env.company.id,
@@ -301,7 +301,7 @@ class TestInventory(TransactionCase):
         after an adjustment.
         """
         # Set product quantity to 42.
-        inventory_quant = self.env['stock.quant'].create(vals={
+        inventory_quant = self.env['stock.quant'].create({
             'product_id': self.product1.id,
             'location_id': self.stock_location.id,
             'inventory_quantity': 42,
