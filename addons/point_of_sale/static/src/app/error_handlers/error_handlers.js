@@ -6,6 +6,7 @@ import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ErrorTracebackPopup } from "@point_of_sale/js/Popups/ErrorTracebackPopup";
 import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
+import { _t, _lt } from "@web/core/l10n/translation";
 
 export function identifyError(error) {
     return error && error.legacy ? error.message : error;
@@ -29,14 +30,23 @@ function rpcErrorHandler(env, error, originalError) {
 }
 registry.category("error_handlers").add("rpcErrorHandler", rpcErrorHandler);
 
+// TODO: consider only showing a notification instead of an error popup in flows that can work offline
+export const urlToMessage = {
+    "/web/dataset/call_kw/pos.order/create_from_ui": _lt(
+        "The order couldn't be sent to the server because you are offline"
+    ),
+};
 function offlineErrorHandler(env, error, originalError) {
     error = identifyError(originalError);
     if (error instanceof ConnectionLostError) {
-        env.services.popup.add(OfflineErrorPopup, {
-            title: env._t("Couldn't connect to the server"),
-            body: env._t(
+        const body =
+            urlToMessage[error.url] ||
+            _t(
                 "The operation couldn't be completed because you are offline. Check your internet connection and try again."
-            ),
+            );
+        env.services.popup.add(OfflineErrorPopup, {
+            title: _t("Couldn't connect to the server"),
+            body,
         });
         return true;
     }
@@ -52,8 +62,8 @@ function defaultErrorHandler(env, error, originalError) {
         });
     } else {
         env.services.popup.add(ErrorPopup, {
-            title: env._t("Unknown Error"),
-            body: env._t("Unable to show information about this error."),
+            title: _t("Unknown Error"),
+            body: _t("Unable to show information about this error."),
         });
     }
     return true;

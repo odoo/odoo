@@ -18,7 +18,12 @@ export class RPCError extends Error {
     }
 }
 
-export class ConnectionLostError extends Error {}
+export class ConnectionLostError extends Error {
+    constructor(url, ...args) {
+        super(`Connection to "${url}" couldn't be established or was interrupted`, ...args);
+        this.url = url;
+    }
+}
 
 export class ConnectionAbortedError extends Error {}
 
@@ -61,7 +66,7 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
                 if (!settings.silent) {
                     bus.trigger("RPC:RESPONSE", data.id);
                 }
-                reject(new ConnectionLostError());
+                reject(new ConnectionLostError(url));
                 return;
             }
             let params;
@@ -73,7 +78,7 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
                 if (!settings.silent) {
                     bus.trigger("RPC:RESPONSE", data.id);
                 }
-                return reject(new ConnectionLostError());
+                return reject(new ConnectionLostError(url));
             }
             const { error: responseError, result: responseResult } = params;
             if (!settings.silent) {
@@ -90,7 +95,7 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
             if (!settings.silent) {
                 bus.trigger("RPC:RESPONSE", data.id);
             }
-            reject(new ConnectionLostError());
+            reject(new ConnectionLostError(url));
         });
         // configure and send request
         request.open("POST", url);

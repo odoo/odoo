@@ -4,6 +4,12 @@ import { _lt } from "../l10n/translation";
 import { makeErrorFromResponse, ConnectionLostError } from "@web/core/network/rpc_service";
 import { browser } from "@web/core/browser/browser";
 
+/* eslint-disable */
+/**
+ * The following sections are from libraries, they have been slightly modified
+ * to allow patching them during tests, but should not be linted, so that we can
+ * keep a minimal diff that is easy to reapply when upgrading
+ */
 // -----------------------------------------------------------------------------
 // Content Disposition Library
 // -----------------------------------------------------------------------------
@@ -437,6 +443,7 @@ function _download(data, filename, mimetype) {
     }
     return true;
 }
+/* eslint-enable */
 
 // -----------------------------------------------------------------------------
 // Exported download function
@@ -491,7 +498,7 @@ download._download = (options) => {
                 return resolve(filename);
             } else if (xhr.status === 502) {
                 // If Odoo is behind another server (nginx)
-                reject(new ConnectionLostError());
+                reject(new ConnectionLostError(options.url));
             } else {
                 const decoder = new FileReader();
                 decoder.onload = () => {
@@ -524,7 +531,7 @@ download._download = (options) => {
             }
         };
         xhr.onerror = () => {
-            reject(new ConnectionLostError());
+            reject(new ConnectionLostError(options.url));
         };
         xhr.send(data);
     });
