@@ -1,41 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-    <!-- note Stage Form View -->
-    <record id="view_note_stage_form" model="ir.ui.view">
-      <field name="name">note.stage.form</field>
-      <field name="model">project.task.type</field>
-      <field name="arch" type="xml">
-        <form string="Stage of Notes">
-          <group>
-            <field name="name"/>
-            <field name="fold"/>
-          </group>
-        </form>
-      </field>
-    </record>
-
-    <!-- note Stage Tree View -->
-    <record id="view_note_stage_tree" model="ir.ui.view">
-      <field name="name">note.stage.tree</field>
-      <field name="model">project.task.type</field>
-      <field name="arch" type="xml">
-        <tree string="Stages of Notes" editable="bottom">
-            <field name="sequence" widget="handle"/>
-            <field name="name"/>
-            <field name="fold"/>
-        </tree>
-      </field>
-    </record>
-
-    <!-- note Stage Action -->
-    <record id="action_note_stage" model="ir.actions.act_window">
-        <field name="name">Stages</field>
-        <field name="res_model">project.task.type</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('user_id', '=', uid)]</field>
-        <field name="context">{'default_user_id': uid}</field>
-    </record>
-
     <!-- note Tag Form View -->
     <record id="note_tag_view_form" model="ir.ui.view">
       <field name="name">note.tag.form</field>
@@ -54,7 +18,7 @@
       <field name="name">note.tag.tree</field>
       <field name="model">project.tags</field>
       <field name="arch" type="xml">
-        <tree string="Tags" editable="bottom">
+        <tree string="Tags" editable="bottom" sample="1">
             <field name="name"/>
         </tree>
       </field>
@@ -67,11 +31,14 @@
       <field name="view_mode">tree,form</field>
       <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
-          Add a new tag
+          No tags found. Let's create one!
+        </p>
+        <p>
+            Use tags to categorize your notes.
         </p>
       </field>
     </record>
-    
+
     <!-- To-do Quick create form  view -->
     <record id="quick_create_todo_form" model="ir.ui.view">
         <field name="name">project.task.form.quick_create_todo</field>
@@ -94,9 +61,10 @@
         <field name="arch" type="xml">
             <kanban
                 default_group_by="personal_stage_type_ids"
-                class="o_kanban_small_column" 
+                class="o_kanban_small_column"
                 on_create="quick_create"
                 quick_create_view="note.quick_create_todo_form"
+                sample="1"
                 js_class="project_task_to_do_kanban">
                 <field name="color"/>
                 <field name="sequence"/>
@@ -106,6 +74,7 @@
                 <field name="message_partner_ids"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
+                <field name="personal_stage_type_ids" string="Stage" />
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-menu">
@@ -157,15 +126,15 @@
         <field name="name">project.task.todo.tree</field>
         <field name="model">project.task</field>
         <field name="arch" type="xml">
-            
             <tree string="To-dos"
                   default_group_by="personal_stage_type_ids"
                   editable="bottom"
-                  multi_edit="1">
+                  multi_edit="1"
+                  sample="1">
                 <field name="name"/>
-                <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
-                <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                <field name="personal_stage_type_id" string="Stage" optional="hide" domain="[('user_id', '=', uid)]"/>
+                <field name="user_ids" optional="show" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
+                <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                <field name="personal_stage_type_id" string="Stage" optional="hide" domain="[('user_id', '=', uid)]" context="{'default_user_id': uid}"/>
                 <field name="activity_ids" optional="show" widget="list_activity"/>
             </tree>
         </field>
@@ -179,15 +148,16 @@
             <form string="Note"
                   class="o_note_form_view"
                   js_class = "todo_form">
-                <header>
+                  <field name="name" required="1" readonly="0"/>
+                  <header>
                     <field name="tag_ids"
                            widget="many2many_tags"
-                           options="{'color_field': 'color', 'no_create_edit':True}"
+                           options="{'color_field': 'color', 'no_create_edit': True}"
                            class="me-2"
                            placeholder="Tags"/>
                     <field name="user_ids"
                            widget="many2many_avatar_user"
-                           options="{'no_quick_create':True}"
+                           options="{'no_quick_create': True}"
                            placeholder="Assignees"/>
                     <field name="personal_stage_type_id"
                            domain="[('user_id','=',uid)]"
@@ -197,6 +167,7 @@
                 <sheet>
                     <field name="description" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
                 </sheet>
+                <field name="active" invisible="1"/>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
@@ -263,6 +234,9 @@
       <field name="name">To-dos</field>
       <field name="res_model">project.task</field>
       <field name="domain">[('user_ids', 'in', [uid])]</field>
+      <field name="context" eval="{
+        'tree_view_ref': 'note.view_project_task_todo_tree'
+      }"/>
       <field name="view_mode">kanban,tree,form,activity</field>
       <field name="view_ids"
              eval="[(5, 0, 0),
@@ -273,12 +247,12 @@
       <field name="search_view_id" ref="view_note_note_filter"/>
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Add a new personal note
+            No to-do found. Let's create one!
           </p><p>
-            Notes are private, unless you share them by inviting follower on a note.
-            (Useful for meeting minutes).
+            Keep your work organized by using memos and to-do lists.
+            Your to-do items are private by default, but you can choose to share them with others by assigning them as assignees.
           </p>
-        </field>
+      </field>
     </record>
 
     <menuitem
@@ -293,14 +267,9 @@
           sequence="100"
           groups="base.group_no_one">
             <menuitem
-              id="menu_notes_stage"
-              name="Stages"
-              action="note.action_note_stage"
-              sequence="21"/>
-            <menuitem
               id="notes_tag_menu"
               action="note_tag_action"
-              sequence="22"/>
+              sequence="21"/>
         </menuitem>
     </menuitem>
 

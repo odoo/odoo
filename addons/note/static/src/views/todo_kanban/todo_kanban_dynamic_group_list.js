@@ -4,7 +4,7 @@ import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
 import { Domain } from '@web/core/domain';
 import { session } from '@web/session';
 
-export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
+export class TodoKanbanDynamicGroupList extends KanbanDynamicGroupList {
     get context() {
         const context = super.context;
         if (context.createPersonalStageGroup) {

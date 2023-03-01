@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
 import { _lt } from "@web/core/l10n/translation";
-import { TodoFormController } from "@note/views/project_task_form/todo_form_controller";
+import { TodoFormController } from "@note/views/todo_form/todo_form_controller";
 const { onWillStart } = owl;
-import { omit } from "@web/core/utils/objects";
 
 /** TodoFormController is overridden to add the action to convert a to-do to a (non-private) task */
 
@@ -27,13 +26,7 @@ export class TodoFormControllerWithConversion extends TodoFormController {
 
     get actionMenuItems() {
         // Restrict to-do actions to static one and Convert to Task (if user has access to Project)
-        const staticActionItems = Object.entries(this.getStaticActionMenuItems())
-            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
-            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
-            .map(([key, item]) => Object.assign({ key }, omit(item, "isAvailable", "sequence")));
-        const menuItems = {
-            action: staticActionItems,
-        };
+        const menuItems = super.actionMenuItems;
 
         if (this.has_project_access) {
             menuItems.action.push({

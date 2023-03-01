@@ -18,7 +18,7 @@
         'data/mail_activity_type_data.xml',
         'data/mail_template_data.xml',
         'data/todo_template.xml',
-        'views/note_views.xml',
+        'views/todo_views.xml',
         ],
     'demo': [
         'data/note_demo.xml',

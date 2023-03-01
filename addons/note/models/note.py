@@ -128,7 +128,6 @@ class Task(models.Model):
         return self.env.company
 
 
-
     # --------------------------------------- Fields Declaration ----------------------------------
 
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')

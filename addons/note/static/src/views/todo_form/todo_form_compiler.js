@@ -11,4 +11,14 @@ export class TodoFormCompiler extends FormCompiler {
         result.className = result.className + "  o_todo_form_sheet_bg";
         return result;
     }
+
+    compileField(el, params) {
+        // In todo form view, we declare name as required.
+        // We can't declare it as invisible too, because required won't be taken into account properly.
+        // So we override the compileField method in order not to render it.
+        if (el.getAttribute("name") == "name") {
+            return;
+        }
+        return super.compileField(el, params);
+    }
 }

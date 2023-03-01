@@ -51,6 +51,11 @@ Patch({
         onKeydownNoteInput(ev) {
             if (ev.key === 'Enter') {
                 this.saveNote();
+            } else if (ev.key === 'Escape') {
+                this.update({
+                    addingNoteDoFocus: clear(),
+                    isAddingNote: false,
+                });
             }
         },
         async saveNote() {
