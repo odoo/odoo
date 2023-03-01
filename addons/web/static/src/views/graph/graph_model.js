@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-import { sortBy } from "@web/core/utils/arrays";
+import { sortBy, groupBy } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { rankInterval } from "@web/search/utils/dates";
 import { getGroupBy } from "@web/search/utils/group_by";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { Model } from "@web/views/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
+import { sprintf } from "@web/core/utils/strings";
 
 export const SEP = " / ";
 
@@ -98,6 +99,8 @@ export class GraphModel extends Model {
         this.metaData = params;
         this.data = null;
         this.searchParams = null;
+        // This dataset will be added as a line plot on top of stacked bar chart.
+        this.lineOverlayDataset = null;
     }
 
     //--------------------------------------------------------------------------
@@ -283,6 +286,40 @@ export class GraphModel extends Model {
         }
 
         return { datasets, labels };
+    }
+
+    _getLabel(description) {
+        if (!description) {
+            return this.env._t("Sum");
+        } else {
+            return sprintf(this.env._t("Sum (%s)"), description);
+        }
+    }
+
+    _getLineOverlayDataset() {
+        const { domains, stacked } = this.metaData;
+        const data = this.data;
+        let lineOverlayDataset = null;
+        if (stacked) {
+            const stacks = groupBy(data.datasets, (dataset) => dataset.originIndex);
+            if (Object.keys(stacks).length == 1) {
+                const [[originIndex, datasets]] = Object.entries(stacks);
+                if (datasets.length > 1) {
+                    const data = [];
+                    for (const dataset of datasets) {
+                        for (let i = 0; i < dataset.data.length; i++) {
+                            data[i] = (data[i] || 0) + dataset.data[i];
+                        }
+                    }
+                    lineOverlayDataset = {
+                        label: this._getLabel(domains[originIndex].description),
+                        data,
+                        trueLabels: datasets[0].trueLabels,
+                    };
+                }
+            }
+        }
+        return lineOverlayDataset;
     }
 
     /**
@@ -519,5 +556,9 @@ export class GraphModel extends Model {
     async _prepareData() {
         const processedDataPoints = this._getProcessedDataPoints();
         this.data = this._getData(processedDataPoints);
+        this.lineOverlayDataset = null;
+        if (this.metaData.mode === "bar") {
+            this.lineOverlayDataset = this._getLineOverlayDataset();
+        }
     }
 }
