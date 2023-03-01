@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models, api
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
@@ -40,6 +40,14 @@ class Job(models.Model):
     def _compute_published_date(self):
         for job in self:
             job.published_date = job.website_published and fields.Date.today()
+
+    @api.onchange('website_published')
+    def _onchange_website_published(self):
+        if self.website_published:
+            self.is_published = True
+        else:
+            self.is_published = False
+            self.website_id = False
 
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
