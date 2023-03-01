@@ -9,11 +9,11 @@
                 <field name="message_needaction" invisible="1"/>
                 <field name="last_stage_id" invisible="1"/>
                 <field name="date_last_stage_update" invisible="1"/>
-                <field name="partner_name" readonly="1"/>
+                <field name="partner_name" readonly="1" optional="show"/>
                 <field name="type_id" invisible="1"/>
-                <field name="job_id"/>
-                <field name="name" readonly="1"/>
-                <field name="stage_id"/>
+                <field name="job_id" optional="show"/>
+                <field name="name" readonly="1" optional="show"/>
+                <field name="stage_id" optional="show"/>
                 <field name="application_status" optional="show" attrs="{'invisible': [('application_status', '=', 'ongoing')]}"/>
                 <field name="refuse_reason_id" optional='hide'/>
                 <field name="priority" widget="priority" optional="show"/>
@@ -113,7 +113,7 @@
                     <h2 class="o_row">
                         <div>
                             <label for="partner_name" class="oe_edit_only"/>
-                            <field name="partner_name"/>
+                            <field name="partner_name" placeholder="e.g. John Doe"/>
                         </div>
                     </h2>
                 </div>
@@ -125,22 +125,23 @@
                         <field name="email_cc" groups="base.group_no_one"/>
                         <field name="partner_phone" widget="phone" options="{'enable_sms': false}"/>
                         <field name="partner_mobile" widget="phone"/>
-                        <field name="type_id" placeholder="Degree"/>
                         <field name="linkedin_profile" widget="url"/>
+                        <field name="type_id" placeholder="Degree"/>
+
                     </group>
                     <group>
-                        <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" />
                         <field name="user_id" widget="many2one_avatar_user"/>
                         <field name="date_closed" attrs="{'invisible': [('date_closed', '=', False)]}" />
                         <field name="priority" widget="priority"/>
                         <field name="source_id"/>
                         <field name="medium_id"/>
+                        <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
                     <group string="Job">
                         <field name="job_id"/>
                         <field name="department_id"/>
-                        <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}' />
+                        <field name="company_id" groups="base.group_multi_company" invisible="1" options='{"no_open":True}' />
                     </group>
                     <group string="Contract" name="recruitment_contract">
                         <label for="salary_expected"/>
@@ -227,10 +228,10 @@
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Resume's content"/>
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
-                <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>
                 <separator/>
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
+                <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>
                 <separator/>
                 <filter string="Creation Date" name="filter_create" date="create_date"/>
                 <filter string="Last Stage Update" name="filter_date_last_stage_update" date="date_last_stage_update"/>
@@ -252,14 +253,14 @@
                     domain="[('stage_id.hired_stage', '=', False)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
-                    <filter string="Degree" name="degree" domain="[]" context="{'group_by': 'type_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
-                    <filter string="Tags" name="group_by_categ_ids" context="{'group_by':'categ_ids'}"/>
-                    <filter string="Refuse Reason" name="refuse_reason_id" domain="[]" context="{'group_by': 'refuse_reason_id'}"/>
+                    <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
                     <filter string="Last Stage Update" name="last_stage_update" context="{'group_by': 'date_last_stage_update'}"/>
+                    <filter string="Refuse Reason" name="refuse_reason_id" domain="[]" context="{'group_by': 'refuse_reason_id'}"/>
+                    <filter string="Degree" name="degree" domain="[]" context="{'group_by': 'type_id'}"/>
+                    <filter string="Tags" name="group_by_categ_ids" context="{'group_by':'categ_ids'}"/>
                 </group>
            </search>
         </field>
@@ -288,7 +289,7 @@
             <form>
                 <group>
                     <field name="name"/>
-                    <field name="partner_name"/>
+                    <field name="partner_name" placeholder="e.g. John Doe"/>
                     <field name="email_from"/>
                     <field name="job_id" options="{'no_open': True}"/>
                     <field name="company_id" invisible="1"/>
@@ -323,8 +324,10 @@
                 <progressbar field="activity_state" colors='{"planned": "success", "overdue": "danger", "today": "warning"}'/>
                 <templates>
                     <t t-name="kanban-menu">
-                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                         <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
+                        <a role="menuitem" name="archive_applicant" type="object" class="dropdown-item">Refuse</a>
+                        <a role="menuitem" name="archive_applicant" type="object" class="dropdown-item">Archive</a>
+                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                         <div role="separator" class="dropdown-divider"></div>
                         <ul class="oe_kanban_colorpicker text-center" data-field="color"/>
                     </t>
@@ -407,7 +410,7 @@
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,tree,form,graph,calendar,pivot,activity</field>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
-        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'search_default_stage':1,'dialog_size':'medium'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No applications yet
@@ -435,7 +438,7 @@
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
-        <field name="context">{}</field>
+        <field name="context">{'search_default_stage':1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No applications yet

@@ -38,7 +38,7 @@ class Job(models.Model):
     hr_responsible_id = fields.Many2one(
         'res.users', "HR Responsible", tracking=True,
         help="Person responsible of validating the employee's contracts.")
-    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents")
+    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
     alias_id = fields.Many2one(
         'mail.alias', "Alias", ondelete="restrict", required=True,
@@ -260,10 +260,9 @@ class Job(models.Model):
                 'default_res_id': self.ids[0],
                 'show_partner_name': 1,
             },
-            'view_mode': 'tree,form',
+            'view_mode': 'tree',
             'views': [
-                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'tree'),
-                (False, 'form'),
+                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'tree')
             ],
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
             'domain': ['|',

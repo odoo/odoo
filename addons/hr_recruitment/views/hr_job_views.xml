@@ -169,6 +169,7 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="hr_job_simple_form"/>
         <field name="target">new</field>
+        <field name="context">{'dialog_size' : 'medium'}</field>
     </record>
 
     <record id="hr_job_survey" model="ir.ui.view">
@@ -194,6 +195,9 @@
                     </div>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='contract_type_id']" position="after">
+                <field name="company_id" groups="base.group_multi_company"/>
+            </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
                     icon="fa-pencil"
@@ -205,7 +209,8 @@
                 <button class="oe_stat_button"
                     icon="fa-file-text-o"
                     name="action_open_attachments"
-                    type="object">
+                    type="object"
+                    attrs="{'invisible': [('documents_count','=',0)]}">
                     <field name="documents_count" widget="statinfo" string="Documents"/>
                 </button>
                 <button class="oe_stat_button" type="action"
