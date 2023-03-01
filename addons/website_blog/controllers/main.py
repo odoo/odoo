@@ -100,8 +100,9 @@ class WebsiteBlog(http.Controller):
         offset = (page - 1) * self._blog_post_per_page
         first_post = BlogPost
         if not blog:
-            first_post = BlogPost.search(domain + [('website_published', '=', True)], order="post_date desc, id asc", limit=1)
-            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end:
+            # TODO adapt next line in master.
+            first_post = BlogPost.search(domain + [('website_published', '=', True)], order="post_date desc, id asc", limit=1) if not search else first_post
+            if use_cover and not fullwidth_cover and not tags and not date_begin and not date_end and not search:
                 offset += 1
 
         if search:
@@ -116,6 +117,7 @@ class WebsiteBlog(http.Controller):
             total=total,
             page=page,
             step=self._blog_post_per_page,
+            url_args={'search': search, 'date_begin': date_begin, 'date_end': date_end},
         )
 
         if not blogs:
@@ -185,7 +187,8 @@ class WebsiteBlog(http.Controller):
         blogs = Blog.search(request.website.website_domain(), order="create_date asc, id asc")
 
         if not blog and len(blogs) == 1:
-            return werkzeug.utils.redirect('/blog/%s' % slug(blogs[0]), code=302)
+            url = QueryURL('/blog/%s' % slug(blogs[0]), search=search, **opt)()
+            return werkzeug.utils.redirect(url, code=302)
 
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
 
