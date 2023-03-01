@@ -444,7 +444,7 @@ class RecurrenceRule(models.Model):
         dtstart = pytz.utc.localize(dtstart).astimezone(timezone)
         # dtstart is given as a naive datetime, but it actually represents a timezoned datetime
         # (rrule package expects a naive datetime)
-        occurences = self._get_rrule(dtstart=dtstart.replace(tzinfo=None))
+        occurences = self._get_rrule(dtstart=dtstart)
 
         # Special timezoning is needed to handle DST (Daylight Saving Time) changes.
         # Given the following recurrence:
@@ -461,7 +461,7 @@ class RecurrenceRule(models.Model):
         # What should be stored is:
         # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 10:00 - 2019/05/01 10:00 (UTC)
         #                                                  *****              *****
-        return (timezone.localize(occurrence, is_dst=False).astimezone(pytz.utc).replace(tzinfo=None) for occurrence in occurences)
+        return (occurrence.astimezone(pytz.utc).replace(tzinfo=None) for occurrence in occurences)
 
     def _get_events_from(self, dtstart):
         return self.env['calendar.event'].search([
@@ -515,7 +515,7 @@ class RecurrenceRule(models.Model):
         elif self.end_type == 'forever':
             rrule_params['count'] = MAX_RECURRENT_EVENT
         elif self.end_type == 'end_date':  # e.g. stop after 12/10/2020
-            rrule_params['until'] = datetime.combine(self.until, time.max)
+            rrule_params['until'] = datetime.combine(self.until, time.max).astimezone(self._get_timezone())
         return rrule.rrule(
             freq_to_rrule(freq), **rrule_params
         )

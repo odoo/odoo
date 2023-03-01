@@ -818,6 +818,89 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(len(no_duplicate_event), 1)
 
     @patch_api
+    def test_recurrence_no_timezone_triplicate(self):
+        values = [
+            {
+                "attendees": [
+                    {
+                        "email": "myemail@exampl.com",
+                        "responseStatus": "needsAction",
+                        "self": True,
+                    },
+                    {"email": "jane.doe@example.com", "responseStatus": "needsAction"},
+                    {
+                        "email": "john.doe@example.com",
+                        "organizer": True,
+                        "responseStatus": "accepted",
+                    },
+                ],
+                "created": "2022-02-07T13:13:25.000Z",
+                "creator": {"email": "john.doe@example.com"},
+                "end": {"dateTime": "2023-03-28T10:45:00+02:00", "timeZone": "Europe/Zurich"},
+                "etag": '"5534851880843722"',
+                "eventType": "default",
+                "iCalUID": "k0wyg2xl3byu55nbzppsb02pdw@google.com",
+                "id": "k0wyg2xl3byu55nbzppsb02pdw",
+                "kind": "calendar#event",
+                "organizer": {"email": "john.doe@example.com"},
+                "recurrence": ["RRULE:FREQ=MONTHLY;UNTIL=20310101T225959Z;INTERVAL=3;BYDAY=4TU"],
+                "reminders": {"useDefault": True},
+                "sequence": 0,
+                "start": {"dateTime": "2023-03-28T10:00:00+02:00", "timeZone": "Europe/Zurich"},
+                "status": "confirmed",
+                "summary": "Quarter meeting",
+                "updated": "2023-02-28T10:22:35.139Z",
+            },
+            {
+                "attendees": [
+                    {
+                        "email": "myemail@exampl.com",
+                        "responseStatus": "needsAction",
+                        "self": True,
+                    },
+                    {"email": "jane.doe@example.com", "responseStatus": "needsAction"},
+                    {
+                        "email": "john.doe@example.com",
+                        "organizer": True,
+                        "responseStatus": "accepted",
+                    },
+                ],
+                "created": "2022-02-07T13:13:25.000Z",
+                "creator": {"email": "john.doe@example.com"},
+                "end": {"dateTime": "2023-03-28T10:45:00+02:00", "timeZone": "Europe/Zurich"},
+                "etag": '"5534851880843722"',
+                "eventType": "default",
+                "iCalUID": "k0wyg2xl3byu55nbzppsb02pdw@google.com",
+                "id": "k0wyg2xl3byu55nbzppsb02pdw_20230328T080000Z",
+                "kind": "calendar#event",
+                "organizer": {"email": "john.doe@example.com"},
+                "recurringEventId": "r7l5up1iv530flp3hrlqhaubdu",
+                "originalStartTime": {"dateTime": "2023-03-28T10:00:00+02:00", "timeZone": "Europe/Zurich"},
+                "reminders": {"useDefault": True},
+                "sequence": 0,
+                "start": {"dateTime": "2023-03-28T10:00:00+02:00", "timeZone": "Europe/Zurich"},
+                "status": "confirmed",
+                "summary": "Quarter meeting",
+                "updated": "2023-02-28T10:22:35.139Z",
+            }
+        ]
+        google_events = GoogleEvent(values)
+        recurrences = google_events.filter(lambda e: e.is_recurrence())
+        self.env['calendar.recurrence']._sync_google2odoo(recurrences)
+        self.env['calendar.event']._sync_google2odoo(google_events - recurrences)
+        no_triplicate_gevent = google_events.filter(lambda e: e.id == "k0wyg2xl3byu55nbzppsb02pdw")
+        dt_start = datetime.fromisoformat(no_triplicate_gevent.start["dateTime"]).astimezone(pytz.utc).replace(tzinfo=None).replace(hour=0)
+        dt_end = datetime.fromisoformat(no_triplicate_gevent.end["dateTime"]).astimezone(pytz.utc).replace(tzinfo=None).replace(hour=23)
+        no_triplicate_event = self.env["calendar.event"].search(
+            [
+                ("name", "=", no_triplicate_gevent.summary),
+                ("start", ">=", dt_start),
+                ("stop", "<=", dt_end,)
+            ]
+        )
+        self.assertEqual(len(no_triplicate_event), 1)
+
+    @patch_api
     def test_simple_event_into_recurrency(self):
         """ Synched single events should be converted in recurrency without problems"""
         google_id = 'aaaaaaaaaaaa'
