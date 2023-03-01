@@ -74,7 +74,7 @@ BlockUI.props = {
 };
 
 BlockUI.template = xml`
-    <div t-att-class="state.blockUI ? 'o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100 bg-black-50' : ''">
+    <div t-att-class="state.blockUI ? 'o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100' : ''">
       <t t-if="state.blockUI">
         <div class="o_spinner mb-4">
             <img src="/web/static/img/spin.svg" alt="Loading..."/>

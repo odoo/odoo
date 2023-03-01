@@ -29,7 +29,7 @@ $gray-900: $o-gray-900 !default;
 $black:    $o-black !default;
 
 $primary: $o-brand-primary !default;
-$secondary: $white !default;
+$secondary: $gray-300 !default;
 $dark: $o-gray-900 !default;
 
 $success: $o-success !default;
@@ -37,13 +37,6 @@ $info: $o-info !default;
 $warning: $o-warning !default;
 $danger: $o-danger !default;
 
-$theme-colors: () !default;
-$theme-colors: map-merge(
-    (
-        "odoo": $o-brand-odoo,
-    ),
-    $theme-colors
-);
 
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
@@ -195,6 +188,9 @@ $dropdown-item-padding-y: $o-dropdown-vpadding !default;
 $dropdown-item-padding-x: $o-dropdown-hpadding !default;
 
 // List group
+
+$list-group-bg: $o-view-background-color !default;
+$list-group-hover-bg: $dropdown-link-hover-bg !default;
 
 $list-group-active-color: $o-list-group-active-color !default;
 $list-group-active-bg: $o-list-group-active-bg !default;
