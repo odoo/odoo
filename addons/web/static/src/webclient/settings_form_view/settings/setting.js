@@ -61,9 +61,12 @@ export class Setting extends Component {
         if (LINK_REGEX.test(this.props.documentation)) {
             return this.props.documentation;
         } else {
-            const serverVersion = session.server_version.includes("alpha")
-                ? "master"
-                : session.server_version;
+            const serverVersion = session.server_version_info.includes("final")
+                ? `${session.server_version_info[0]}.${session.server_version_info[1]}`.replace(
+                    "~",
+                    "-"
+                )
+                : "master";
             return "https://www.odoo.com/documentation/" + serverVersion + this.props.documentation;
         }
     }
