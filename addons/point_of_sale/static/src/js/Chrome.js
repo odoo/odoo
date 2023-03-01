@@ -336,7 +336,7 @@ export class Chrome extends Component {
                         msg.session == this.env.pos.pos_session.id
                     ) {
                         console.info("POS / Session opened in another window. EXITING POS");
-                        this.closePos();
+                        this.pos.closePos();
                     }
                 }
             },
