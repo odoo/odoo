@@ -1320,7 +1320,7 @@ export class Record extends DataPoint {
      *  reloading after changes are applied, typically used to defer the load.
      * @returns {Promise<boolean>}
      */
-    async _save(options = { stayInEdition: false, noReload: false }) {
+    async _save(options = { stayInEdition: false, noReload: false }, changes = false) {
         if (!this._checkValidity()) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
                 return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
@@ -1334,7 +1334,7 @@ export class Record extends DataPoint {
         if ((await this.onWillSaveRecord(this)) === false) {
             return false;
         }
-        const changes = this.getChanges();
+        changes = !changes ? this.getChanges() : changes;
         const keys = Object.keys(changes);
         const hasChanges = this.isVirtual || keys.length;
         const shouldReload = hasChanges ? !options.noReload : false;
