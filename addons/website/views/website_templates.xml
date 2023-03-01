@@ -2244,7 +2244,7 @@
             <div class="container">
                 <div class="alert alert-info text-center d-lg-flex justify-content-between align-items-center">
                     <p class="m-lg-0 text-info">This page does not exist, but you can create it as you are editor of this site.</p>
-                    <a role="button" class="btn btn-info js_disable_on_click post_link" t-attf-href="/website/add/#{path}?redirect=1#{from_template and '&amp;template=%s' % from_template}">Create Page</a>
+                    <a role="button" class="btn btn-info js_disable_on_click post_link" data-post_force-top-window="true" t-attf-href="/website/add/#{path}?redirect=1#{from_template and '&amp;template=%s' % from_template}">Create Page</a>
                 </div>
                 <div class="text-center text-muted p-3"><i class="fa fa-info-circle"></i> Edit the content below this line to adapt the default <strong>Page not found</strong> page.</div>
             </div>
