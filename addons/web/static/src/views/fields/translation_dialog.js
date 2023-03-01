@@ -80,8 +80,15 @@ export class TranslationDialog extends Component {
     async onSave() {
         const translations = {};
 
+        const resetLangs = [];
+        this.props.languages.forEach(([language, languageName]) => {
+            if (!this.terms.some((t) => t.lang === language && (t.translated || !t.isModified))) {
+                resetLangs.push(language);
+            }
+        });
+
         this.terms.map((term) => {
-            if (term.isModified) {
+            if (term.isModified && !resetLangs.includes(term.lang)) {
                 if (this.props.translateType === "model_terms") {
                     if (!translations[term.lang]) {
                         translations[term.lang] = {};
@@ -91,13 +98,6 @@ export class TranslationDialog extends Component {
                     // this.props.translateType === "model"
                     translations[term.lang] = term.value;
                 }
-            }
-        });
-
-        const resetLangs = [];
-        this.props.languages.forEach(([language, languageName]) => {
-            if (!this.terms.some((t) => t.lang === language && (t.translated || !t.isModified))) {
-                resetLangs.push(language);
             }
         });
 

@@ -871,11 +871,15 @@ QUnit.module('web_editor', {}, function () {
                     if (route === "/web/dataset/call_kw/note.note/get_field_translations") {
                         assert.deepEqual(args.args, [[1],"body"], "should translate the body field of the record");
                         return Promise.resolve([
-                            [{lang: "en_US", source: "first paragraph", value: "first paragraph"},
-                                {lang: "en_US", source: "second paragraph", value: "second paragraph"},
-                                {lang: "fr_BE", source: "first paragraph", value: "premier paragraphe"},
-                                {lang: "fr_BE", source: "second paragraph", value: "deuxième paragraphe"}],
-                            {translation_type: "text", translation_show_source: true},
+                            [{lang: "en_US", source: "first paragraph", value: "first paragraph", translated: true },
+                                {lang: "en_US", source: "second paragraph", value: "second paragraph", translated: true},
+                                {lang: "fr_BE", source: "first paragraph", value: "premier paragraphe", translated: true},
+                                {lang: "fr_BE", source: "second paragraph", value: "deuxième paragraphe", translated: true}],
+                            {
+                                field_type: "html",
+                                translate_type: "model_terms",
+                                en_US_activated: true,
+                            },
                         ]);
                     }
                     if (route === "/web/dataset/call_kw/res.lang/get_installed") {
