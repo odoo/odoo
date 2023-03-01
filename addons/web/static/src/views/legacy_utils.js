@@ -115,20 +115,20 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
             fieldInfo.__no_fetch = true;
         }
 
-        if (!fieldInfo.__no_fetch && fieldDescr.field && fieldDescr.field.fieldsToFetch) {
-            let fieldsToFetch = fieldDescr.field.fieldsToFetch;
-            if (fieldsToFetch instanceof Function) {
-                fieldsToFetch = fieldsToFetch(fieldInfo.__WOWL_FIELD_DESCR__);
+        if (!fieldInfo.__no_fetch && fieldDescr.field && fieldDescr.field.relatedFields) {
+            let relatedFields = fieldDescr.field.relatedFields;
+            if (relatedFields instanceof Function) {
+                relatedFields = relatedFields(fieldInfo.__WOWL_FIELD_DESCR__);
             }
-            fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
-            fieldInfo.relatedFields = { ...fieldsToFetch };
+            relatedFields = Object.fromEntries(relatedFields.map((f) => [f.name, f]));
+            fieldInfo.relatedFields = { ...relatedFields };
             fieldInfo.viewType = "default";
             const defaultView = {};
-            for (const fieldName of Object.keys(fieldsToFetch)) {
+            for (const fieldName of Object.keys(relatedFields)) {
                 defaultView[fieldName] = {};
-                if (fieldDescr.fieldsToFetch[fieldName]) {
+                if (fieldDescr.relatedFields[fieldName]) {
                     defaultView[fieldName].__WOWL_FIELD_DESCR__ =
-                        fieldDescr.fieldsToFetch[fieldName];
+                        fieldDescr.relatedFields[fieldName];
                 }
             }
             fieldInfo.fieldsInfo = { default: defaultView };
