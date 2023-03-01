@@ -49,7 +49,7 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
                 if (args.method === "spreadsheet_move_line_action") {
                     assert.deepEqual(args.args, [
                         {
-                            code: "100",
+                            codes: ["100"],
                             company_id: null,
                             include_unposted: false,
                             date_range: {
