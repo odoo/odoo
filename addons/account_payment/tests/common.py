@@ -22,7 +22,7 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
             return res
 
         with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            cls.env['account.payment.method'].create({
+            cls.env['account.payment.method'].sudo().create({
                 'name': 'Dummy method',
                 'code': 'none',
                 'payment_type': 'inbound'
