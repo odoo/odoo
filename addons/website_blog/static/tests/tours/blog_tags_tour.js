@@ -51,5 +51,16 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
         content: "Verify tag does not appear in blog post anymore",
         trigger: "iframe #o_wblog_post_content div:has(.badge):not(:contains(testtag))",
         run: () => {}, // it's a check
+    }, {
+        content: "Go back to /blog",
+        trigger: "iframe #top_menu a[href='/blog'] span",
+    }, {
+        content: "Click on the adventure tag",
+        trigger: "iframe a[href^='/blog/tag/adventure']",
+    }, {
+        content: "Verify we are still on the backend",
+        trigger: "iframe span:contains(adventure) i.fa-tag",
+        run: () => {}, // it's a check
+
     }]
 );
