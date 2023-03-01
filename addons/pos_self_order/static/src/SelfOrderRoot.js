@@ -138,7 +138,7 @@ class SelfOrderRoot extends Component {
              */
             console.log("this.result_from_get_menu :>> ", this.result_from_get_menu);
             this.productList = this.result_from_get_menu.map(
-                ({ id, price_info, pos_categ_id, ...rest }) => ({
+                ({ id, pos_categ_id, ...rest }) => ({
                     product_id: id,
                     // TODO: we have to TEST if prices are correctly displayed / calculated with tax included or tax excluded
                     list_price: this.selfOrder.config.show_prices_with_tax_included
@@ -151,20 +151,21 @@ class SelfOrderRoot extends Component {
                     // "pairs well with wine", "pairs well with beer", "pairs well with soda", "pairs well with water",
                     // "HAPPY HOUR", "kids menu",  "local", "seasonal"
                     tag_list: pos_categ_id ? new Set(pos_categ_id[1].split(" / ")) : new Set(),
+                    attributes: [],
                     ...rest,
                 })
             );
             this.productList.forEach((product) => {
                 if (
-                    product.attribute_line_ids.some(
+                    !product.attribute_line_ids.some(
                         (id) => id in this.selfOrder.config.attributes_by_ptal_id
                     )
                 ) {
-                    product.attributes = _.map(
-                        product.attribute_line_ids,
-                        (id) => this.selfOrder.config.attributes_by_ptal_id[id]
-                    ).filter((attr) => attr !== undefined);
+                    return;
                 }
+                product.attributes = product.attribute_line_ids
+                    .map((id) => this.selfOrder.config.attributes_by_ptal_id[id])
+                    .filter((attr) => attr !== undefined);
             });
             console.log("this.productList :>> ", this.productList);
         });

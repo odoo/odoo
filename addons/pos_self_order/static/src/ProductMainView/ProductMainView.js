@@ -14,6 +14,7 @@ export class ProductMainView extends Component {
         this.private_state = useState({
             qty: 1,
             customer_note: "",
+            // FIXME: variants still don't work
             selectedVariants: Object.fromEntries(
                 this.props.product.attributes.map((x) => [x.name, x.values[0].name])
             ),
@@ -39,6 +40,17 @@ export class ProductMainView extends Component {
             )
         ].values.filter((value) => value.name === value_name)[0].price_extra;
     }
+    findPriceExtra(selectedVariants) {
+        return Object.keys(selectedVariants).reduce((acc, key) => {
+            return (
+                acc +
+                this.findPriceExtraBasedOnSelectedValueOfCertainAttribute(
+                    key,
+                    selectedVariants[key]
+                )
+            );
+        }, 0);
+    }
     findDescriptionOfProductBasedOnSelectedValuesOfAttributes(selectedVariants) {
         return Object.keys(selectedVariants)
             .map((key) => selectedVariants[key])
@@ -54,6 +66,7 @@ export class ProductMainView extends Component {
             this.props.product.product_id,
             this.private_state.qty,
             this.private_state.customer_note,
+            this.findPriceExtra(this.private_state.selectedVariants),
             this.findDescriptionOfProductBasedOnSelectedValuesOfAttributes(
                 this.private_state.selectedVariants
             )
