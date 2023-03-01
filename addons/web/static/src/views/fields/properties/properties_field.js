@@ -29,6 +29,7 @@ export class PropertiesField extends Component {
         ...standardFieldProps,
         context: { type: Object, optional: true },
         columns: { type: Number, optional: true },
+        hideAddButton: { type: Boolean, optional: true },
         hideKanbanOption: { type: Boolean, optional: true },
     };
 
@@ -48,6 +49,7 @@ export class PropertiesField extends Component {
         this.state = useState({
             canChangeDefinition: true,
             movedPropertyName: null,
+            hideAddButton: this.props.hideAddButton,
         });
 
         this._saveInitialPropertiesValues();
@@ -108,6 +110,24 @@ export class PropertiesField extends Component {
             res[index % columns].push(val);
         });
         return res;
+    }
+
+    /**
+     * Return the id of the definition record.
+     *
+     * @returns {integer}
+     */
+    get definitionRecordId() {
+        return this.props.record.data[this.definitionRecordField][0];
+    }
+
+    /**
+     * Return the model of the definition record.
+     *
+     * @returns {string}
+     */
+    get definitionRecordModel() {
+        return this.props.record.fields[this.definitionRecordField].relation;
     }
 
     /**
@@ -315,21 +335,24 @@ export class PropertiesField extends Component {
             definition_changed: true,
         });
         this.openLastPropertyDefinition = true;
+        this.state.hideAddButton = false;
         this.props.record.update({ [this.props.name]: propertiesDefinitions });
     }
 
     /**
-     * Verify that we can write on properties,
-     * if we don't have access for parent
+     * Verify that we can write on properties, we can not change the definition
+     * if we don't have access for parent or if no parent is set.
      */
     async checkDefinitionWriteAccess() {
-        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
-        const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
+        if (!this.definitionRecordId || !this.definitionRecordModel) {
+            return false;
+        }
+
         try {
             await this.orm.call(
-                definitionRecordModel,
+                this.definitionRecordModel,
                 "check_access_rule",
-                [definitionRecordId],
+                [this.definitionRecordId],
                 {
                     operation: "write",
                 }
@@ -398,18 +421,17 @@ export class PropertiesField extends Component {
      * and therefor update the properties definition.
      */
     async _checkDefinitionAccess() {
-        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
         this.parentName = this.props.record.data[this.definitionRecordField][1];
-        const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
         this.parentString = this.props.record.fields[this.definitionRecordField].string;
 
-        if (!definitionRecordId || !definitionRecordModel) {
+        if (!this.definitionRecordModel) {
+            this.state.canChangeDefinition = false;
             return;
         }
 
         // check if we can write on the definition record
         this.state.canChangeDefinition = await this.user.checkAccessRight(
-            definitionRecordModel,
+            this.definitionRecordModel,
             "write"
         );
     }
@@ -548,9 +570,29 @@ export const propertiesField = {
         return {
             context: dynamicInfo.context,
             columns: parseInt(attrs.columns || "1"),
+            hideAddButton: archParseBoolean(attrs.hideAddButton),
             hideKanbanOption: archParseBoolean(attrs.hideKanbanOption),
         };
     },
 };
 
 registry.category("fields").add("properties", propertiesField);
+
+/**
+ * This action is meant to be called from a form client action
+ * and will let the user create properties, typically used along
+ * with the "hideAddButton" option of the properties field.
+ *
+ * @param {object} env
+ */
+async function actionAddProperty(env) {
+    const addProperty = document.querySelector(".o_field_property_add button");
+    if (addProperty) {
+        addProperty.click();
+    } else {
+        const message = sprintf(env._t("You can not create a new property."));
+        env.services.notification.add(message, { type: "danger" });
+    }
+}
+
+registry.category("actions").add("action_configure_properties_field", actionAddProperty);

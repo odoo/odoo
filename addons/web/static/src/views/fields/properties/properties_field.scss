@@ -1,5 +1,8 @@
 .o_field_properties {
     width: 100%;
+    // be sure that the property field can take zero height
+    // in case no property exists
+    margin-bottom: 0 !important;
 }
 
 // The web client will add a "o_field_invalid" class when the field is considered
