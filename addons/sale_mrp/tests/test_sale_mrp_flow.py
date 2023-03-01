@@ -2159,3 +2159,78 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
                 line.product_uom_qty = 0
 
         self.assertEqual(so.picking_ids, delivery | return_picking)
+
+    def test_fifo_reverse_and_create_new_invoice(self):
+        """
+        FIFO automated
+        Kit with one component
+        Receive the component: 1@10, 1@50
+        Deliver 1 kit
+        Post the invoice, add a credit note with option 'new draft inv'
+        Post the second invoice
+        COGS should be based on the delivered kit
+        """
+        kit = self._create_product('Simple Kit', self.uom_unit)
+        categ_form = Form(self.env['product.category'])
+        categ_form.name = 'Super Fifo'
+        categ_form.property_cost_method = 'fifo'
+        categ_form.property_valuation = 'real_time'
+        categ = categ_form.save()
+        (kit + self.component_a).categ_id = categ
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': self.component_a.id, 'product_qty': 1.0})]
+        })
+
+        in_moves = self.env['stock.move'].create([{
+            'name': 'IN move @%s' % p,
+            'product_id': self.component_a.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.component_a.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in [10, 50]])
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': kit.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_ids.quantity_done = 1.0
+        picking.button_validate()
+
+        invoice01 = so._create_invoices()
+        invoice01.action_post()
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
+            'refund_method': 'modify',
+            'journal_id': invoice01.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        invoice02 = self.env['account.move'].browse(reversal['res_id'])
+        invoice02.action_post()
+
+        amls = invoice02.line_ids
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == categ.property_stock_account_output_categ_id)
+        self.assertEqual(stock_out_aml.debit, 0)
+        self.assertEqual(stock_out_aml.credit, 10)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == categ.property_account_expense_categ_id)
+        self.assertEqual(cogs_aml.debit, 10)
+        self.assertEqual(cogs_aml.credit, 0)
