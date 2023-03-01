@@ -2826,6 +2826,24 @@ class Model(models.AbstractModel):
         process(etree.fromstring(view_info['arch']), view_info, '')
         return result
 
+    @api.model
+    def _ensure_xml_id(self):
+        # Prevent triggering unique constraint when updating a module where master data was added
+        # both in the code and by a user.
+        # i.e. Country state was added by user before being added in code => shouldn't trigger
+        metadata = self.search([]).get_metadata()
+        for data in metadata:
+            data['expected_xml_id'] = self.browse(data['id'])._xml_id_builder().replace(' ', '')
+        self.env['ir.model.data']._update_xmlids([
+            {
+                'xml_id': data['expected_xml_id'],
+                'record': self.browse(data['id']),
+                'noupdate': True,
+            }
+            for data in metadata
+            if data['expected_xml_id'] not in (xmlid['xmlid'] for xmlid in data['xmlids'])
+        ])
+
 
 class NameManager:
     """ An object that manages all the named elements in a view. """

@@ -11,6 +11,7 @@ The kernel of Odoo, needed for all installation.
 ===================================================
 """,
     'data': [
+        'data/pre_load.xml',
         'data/res_bank.xml',
         'data/res.lang.csv',
         'data/res_lang_data.xml',

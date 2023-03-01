@@ -144,6 +144,10 @@ class Country(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+    def _xml_id_builder(self):
+        return f"base.{self.code.lower()}"
+
+
 class CountryGroup(models.Model):
     _description = "Country Group"
     _name = 'res.country.group'
@@ -193,3 +197,6 @@ class CountryState(models.Model):
         for record in self:
             result.append((record.id, "{} ({})".format(record.name, record.country_id.code)))
         return result
+
+    def _xml_id_builder(self):
+        return f"base.state_{self.country_id.code.lower()}_{self.code.lower()}"
