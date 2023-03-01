@@ -37,7 +37,12 @@ export class ProductMainView extends Component {
             Object.keys(attributesLegend).filter((key) => attributesLegend[key].name === "Fabric")
         ].values.filter((value) => value.name === "Plastic")[0].price_extra;
     }
-
+    findDescriptionOfProductBasedOnSelectedValuesOfAttributes(selectedVariants) {
+        const attributesLegend = this.selfOrder.config.attributes_by_ptal_id;
+        return Object.keys(attributesLegend)
+            .map((key) => attributesLegend[key])
+            .join(", ");
+    }
     setValue = (qty) => {
         if (qty >= 0) {
             this.private_state.qty = qty;
@@ -47,21 +52,6 @@ export class ProductMainView extends Component {
             );
         }
     };
-    getPayload() {
-        var selected_attributes = [];
-        var price_extra = 0.0;
-
-        this.private_state.attribute_components.forEach((attribute_component) => {
-            const { value, extra } = attribute_component.getValue();
-            selected_attributes.push(value);
-            price_extra += extra;
-        });
-
-        return {
-            selected_attributes,
-            price_extra,
-        };
-    }
     static components = {
         NavBar,
         IncrementCounter,
