@@ -1,6 +1,27 @@
 <templates>
 
+    <t t-name="event_booth_checkbox_list">
+        <div t-foreach="event_booth_ids" t-as="booth" class="form-check">
+            <input type="checkbox" name="event_booth_ids" t-attf-id="booth_#{booth.id}"
+                t-att-value="booth.id" t-att-checked="selected_booth_ids.includes(booth.id) or None" class="form-check-input me-2"/>
+            <label t-out="booth.name" t-attf-for="booth_#{booth.id}"/>
+        </div>
+    </t>
+
     <t t-name="event_booth_registration_complete">
+        <ul class="o_wevent_booth_order_progress list-unstyled d-none d-lg-block mb-0">
+            <li class="position-relative float-start m-0 text-center">
+                <a class="text-decoration-none text-reset" t-attf-href="/event/#{event_id}/booth?booth_category_id=#{booth_category_id}">
+                    <span class="d-block">Booth Selection</span><span class="chevron position-absolute d-block"/>
+                </a>
+            </li>
+            <li class="position-relative float-start m-0 text-center">
+                Contact Details<span class="chevron position-absolute d-block"/>
+            </li>
+            <li class="position-relative float-start m-0 text-center o_current_stage">
+                Confirmed
+            </li>
+        </ul>
         <div class="col-12 p-5">
             <div class="row mb-3">
                 <div class="col-12">

@@ -46,4 +46,11 @@
         </xpath>
     </template>
 
+    <template id="event_booth_order_progress" inherit_id="website_event_booth.event_booth_order_progress">
+        <xpath expr="//li[last()]//span" position="replace">
+            <t t-if="has_payment_step">Payment</t>
+            <t t-else="">Confirmed</t>
+        </xpath>
+    </template>
+
 </odoo>

@@ -1,7 +1,6 @@
 /** @odoo-module alias=website_event_booth.booth_registration **/
 
 import core from "web.core";
-import dom from "web.dom";
 import publicWidget from "web.public.widget";
 var QWeb = core.qweb;
 var _t = core._t;
@@ -16,11 +15,18 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     },
 
     start() {
-        this.eventId = parseInt(this.$el.data('event-id'));
-        this.activeType = false;
+        this.eventId = parseInt(this.el.dataset.eventId);
+        this.activeBoothCategoryId = false;
         this.boothCache = {};
+        this.boothsFirstRendering = true;
+        this.selectedBoothIds = [];
         return this._super.apply(this, arguments).then(() => {
-            this.$('input[name="booth_category_id"]:enabled:first').click();
+            this.selectedBoothCategory = this.el.querySelector('input[name="booth_category_id"]:checked');
+            if (this.selectedBoothCategory) {
+                this.selectedBoothIds = this.el.querySelector('.o_wbooth_booths').dataset.selectedBoothIds.split(',').map(Number);
+                this.activeBoothCategoryId = this.selectedBoothCategory.value;
+                this._fetchBoothsAndUpdateUI();
+            }
         });
     },
 
@@ -54,18 +60,13 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     },
 
     _fillBooths() {
-        var $boothElem = this.$('.o_wbooth_booths');
-        $boothElem.empty();
-        $.each(this.boothCache[this.activeType], function (key, booth) {
-            let $checkbox = dom.renderCheckbox({
-                text: booth.name,
-                prop: {
-                    name: 'event_booth_ids',
-                    value: booth.id
-                }
-            });
-            $boothElem.append($checkbox);
+        const boothsElem = this.el.querySelector('.o_wbooth_booths');
+        boothsElem.innerHTML = QWeb.render('event_booth_checkbox_list', {
+            'event_booth_ids': this.boothCache[this.activeBoothCategoryId],
+            'selected_booth_ids': this.boothsFirstRendering ? this.selectedBoothIds : [],
         });
+
+        this.boothsFirstRendering = false;
     },
 
     /**
@@ -93,7 +94,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
     _showBoothCategoryDescription() {
         this.$('.o_wbooth_booth_description').addClass('d-none');
-        this.$('#o_wbooth_booth_description_' + this.activeType).removeClass('d-none');
+        this.$('#o_wbooth_booth_description_' + this.activeBoothCategoryId).removeClass('d-none');
     },
 
     /**
@@ -144,29 +145,32 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         this._updateUiAfterBoothChange(this._countSelectedBooths());
     },
 
+    _onChangeBoothType(ev) {
+        ev.preventDefault();
+        this.activeBoothCategoryId = parseInt(ev.currentTarget.value);
+        this._fetchBoothsAndUpdateUI();
+    },
+
     /**
-     * Load all the booths related to the chosen booth category and
+     * Load all the booths related to the activeBoothCategoryId booth category and
      * add them to a local dictionary to avoid making rpc each time the
      * user change the booth category.
      *
      * Then the selection input will be filled with the fetched booth values.
      *
-     * @param ev
      * @private
      */
-    _onChangeBoothType(ev) {
-        ev.preventDefault();
-        this.activeType = parseInt(ev.currentTarget.value);
-        if (this.boothCache[this.activeType] === undefined) {
+    _fetchBoothsAndUpdateUI() {
+        if (this.boothCache[this.activeBoothCategoryId] === undefined) {
             var self = this;
             this._rpc({
                 route: '/event/booth_category/get_available_booths',
                 params: {
                     event_id: this.eventId,
-                    booth_category_id: this.activeType,
+                    booth_category_id: this.activeBoothCategoryId,
                 },
             }).then(function (result) {
-                self.boothCache[self.activeType] = result;
+                self.boothCache[self.activeBoothCategoryId] = result;
                 self._updateUiAfterBoothCategoryChange();
             });
         } else {
@@ -213,10 +217,14 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
             const jsonResponse = response && JSON.parse(response);
             if (jsonResponse.success) {
-                $form.replaceWith($(QWeb.render('event_booth_registration_complete', {
+                this.el.querySelector('.o_wevent_booth_order_progress').remove();
+                const boothCategoryId = this.el.querySelector('input[name=booth_category_id]').value;
+                $form.replaceWith(QWeb.render('event_booth_registration_complete', {
+                    'booth_category_id': boothCategoryId,
+                    'event_id': this.eventId,
                     'event_name': jsonResponse.event_name,
                     'contact': jsonResponse.contact,
-                })));
+                }));
             } else if (jsonResponse.redirect) {
                 window.location.href = jsonResponse.redirect;
             } else if (jsonResponse.error) {

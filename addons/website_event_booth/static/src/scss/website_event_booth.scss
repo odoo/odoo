@@ -71,3 +71,52 @@ label.o_wbooth_category_unavailable {
 .o_wevent_booth_category {
     background-color: $o-wevent-bg-color-light;
 }
+
+.o_wevent_booth_order_progress {
+    $wevent-booth-order-progress-color: mix(map-get($theme-colors, 'primary'), $body-bg, 40%);
+    $wevent-booth-order-progress-color-2: mix(map-get($theme-colors, 'primary'), $body-bg, 33%);
+    $wevent-booth-order-progress-height: 48px;
+    height: $wevent-booth-order-progress-height;
+    li {
+        border: 1px solid $wevent-booth-order-progress-color;
+        border-right-width: 0;
+        padding-left: 24px;
+        height: $wevent-booth-order-progress-height;
+        line-height: $wevent-booth-order-progress-height;
+        width: calc(100%/3);
+        &.o_current_stage {
+            background: $wevent-booth-order-progress-color;
+            .chevron:before {
+                border-left: 24px solid $wevent-booth-order-progress-color;
+            }
+        }
+        &:first-child {
+            padding-left: 0px;
+            &:hover:not(.o_current_stage) {
+                background-color: $wevent-booth-order-progress-color-2 !important;
+                .chevron, .chevron::before {
+                    border-left-color: $wevent-booth-order-progress-color-2 !important;
+                }
+            }
+        }
+        &:last-child {
+            border-right-width: 1px !important;
+        }
+        .chevron {
+            top: -1px;
+            right: -24px;
+            z-index: 1;
+            border: 24px solid transparent;
+            border-right: 0;
+            border-left: 24px solid $wevent-booth-order-progress-color;
+            &:before {
+                @include o-position-absolute($top:-24px, $right:2px);
+                display: block;
+                border: 24px solid transparent;
+                border-right: 0;
+                border-left: 24px solid $o-wevent-bg-color-base;
+                content: "";
+            }
+        }
+    }
+}

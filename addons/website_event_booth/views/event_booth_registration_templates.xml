@@ -3,10 +3,13 @@
 
     <template id="event_booth_registration_details" name="Event Booth Registration Details">
         <t t-call="website_event_booth.event_booth_layout">
+            <t t-call="website_event_booth.event_booth_order_progress">
+                <t t-set="step" t-value="'STEP_DETAILS_FORM'"/>
+            </t>
             <form method="post"
                 id="o_wbooth_contact_details_form"
                 t-att-data-event-id="event.id"
-                class="col-12 px-5 py-2 js_website_submit_form">
+                class="col-12 px-5 py-3 js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="hidden" name="booth_category_id" t-att-value="booth_category.id"/>
                 <input type="hidden" name="event_booth_ids" t-att-value="event_booths.ids"/>
@@ -56,7 +59,7 @@
                 <div class="mb-3">
                     <div class="d-grid col-sm-6 offset-sm-3 mt-5">
                         <button type="submit" class="btn btn-primary fw-bold o_wbooth_registration_confirm">
-                            Book my Booths
+                            <span>Book my Booths</span>
                         </button>
                     </div>
                 </div>
