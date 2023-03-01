@@ -175,7 +175,7 @@ class Base(models.AbstractModel):
         try:
             fname = progress_bar['field']
             return self.read_group(domain, [fname], [group_by, fname], lazy=False)
-        except UserError:
+        except ValueError:
             # possibly failed because of grouping on or aggregating non-stored
             # field; fallback on alternative implementation
             pass
