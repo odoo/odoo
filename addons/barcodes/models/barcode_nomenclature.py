@@ -28,7 +28,7 @@ class BarcodeNomenclature(models.Model):
 
         :type ean: str
         """
-        ean = ean[0:13].zfill(13)
+        ean = ean[0:13].ljust(13, '0')
         return ean[0:-1] + str(get_barcode_check_digit(ean))
 
     @api.model
