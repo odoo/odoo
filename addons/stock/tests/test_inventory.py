@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, TransactionCase
@@ -62,7 +63,7 @@ class TestInventory(TransactionCase):
 
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.lot'].create({
+        lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
             'company_id': self.env.company.id,
@@ -94,7 +95,7 @@ class TestInventory(TransactionCase):
         ])
         self.assertEqual(len(inventory_quant), 0)
 
-        lot1 = self.env['stock.lot'].create({
+        lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
             'company_id': self.env.company.id,
@@ -122,7 +123,7 @@ class TestInventory(TransactionCase):
         ]
         inventory_quants = self.env['stock.quant'].search(quant_domain)
         self.assertEqual(len(inventory_quants), 0)
-        lot1 = self.env['stock.lot'].create({
+        lot1 = self.env['stock.production.lot'].create({
             'name': 'sn2',
             'product_id': self.product2.id,
             'company_id': self.env.company.id,
@@ -300,7 +301,7 @@ class TestInventory(TransactionCase):
         after an adjustment.
         """
         # Set product quantity to 42.
-        inventory_quant = self.env['stock.quant'].create({
+        inventory_quant = self.env['stock.quant'].create(vals={
             'product_id': self.product1.id,
             'location_id': self.stock_location.id,
             'inventory_quantity': 42,
@@ -517,4 +518,4 @@ class TestInventory(TransactionCase):
         self.assertEqual(existing_loc2.next_inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_new_loc.inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_existing_loc.inventory_date, date.today() + timedelta(days=2))
-        self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + timedelta(days=365))
+        self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + relativedelta(years=1))
