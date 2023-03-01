@@ -1229,7 +1229,7 @@ class Task(models.Model):
         new_group = ('group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {})
         if not self.user_ids and not self.is_closed:
             take_action = self._notify_get_action_link('assign', **local_msg_vals)
-            project_actions = [{'url': take_action, 'title': _('I take it')}]
+            project_actions = [{'url': take_action, 'title': _('Assign to me')}]
             new_group[2]['actions'] = project_actions
         groups = [new_group] + groups
 
