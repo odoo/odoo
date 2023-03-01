@@ -46,10 +46,10 @@
 
         <span class="float-end o_timeoff_card_mobile">
             <t t-if="props.requires_allocation" name="duration_type">
-                <strong t-esc="duration" class="o_timeoff_green"/> / <span t-esc="data.max_leaves"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green">Available</span>
+                <strong t-esc="duration" class="o_timeoff_green text-success"/> / <span t-esc="data.max_leaves"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span>
             </t>
             <t t-else="">
-                <strong t-esc="duration"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-odoo">Taken</span>
+                <strong t-esc="duration"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-primary">Taken</span>
             </t>
         </span>
     </t>
