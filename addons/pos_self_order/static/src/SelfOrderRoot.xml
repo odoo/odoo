@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.SelfOrderRoot" owl="1">
+        <Router pos_config_id="selfOrder.pos_config_id">
+            <t t-set-slot="default">
+                <LandingPage/>
+            </t>
+            <t t-set-slot="/menu/{string:pos_name}/products">
+                <ProductList/>
+            </t>
+            <t t-set-slot="/menu/{string:pos_name}/products/{int:productId}" t-slot-scope="url">
+                <ProductMainView 
+                    product="selfOrder.products.find(x => x.product_id === url.productId)"/>
+            </t>
+        </Router>
+    </t>
+</templates>
+

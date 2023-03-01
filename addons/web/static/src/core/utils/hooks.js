@@ -34,13 +34,14 @@ import { status, useComponent, useEffect, useRef, onWillUnmount } from "@odoo/ow
  * @param {Object} [params]
  * @param {string} [params.refName] override the ref name "autofocus"
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
+ * @param {boolean} [params.mobile] if true, will autofocus on mobile devices.
  * @returns {Ref} the element reference
  */
-export function useAutofocus({ refName, selectAll } = {}) {
+export function useAutofocus({ refName, selectAll, mobile } = {}) {
     const comp = useComponent();
     const ref = useRef(refName || "autofocus");
     // Prevent autofocus in mobile
-    if (comp.env.isSmall) {
+    if (!mobile && comp.env.isSmall) {
         return ref;
     }
     // LEGACY

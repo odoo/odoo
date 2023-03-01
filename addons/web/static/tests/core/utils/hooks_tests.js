@@ -153,6 +153,77 @@ QUnit.module("utils", () => {
             await mount(MyComponent, target, { env });
         });
 
+        QUnit.test(
+            "useAutofocus works when isSmall and you provide mobile param",
+            async function (assert) {
+                class MyComponent extends Component {
+                    setup() {
+                        this.inputRef = useAutofocus({ mobile: true });
+                    }
+                }
+                MyComponent.template = xml`
+                <span>
+                    <input type="text" t-ref="autofocus" />
+                </span>
+            `;
+
+                const fakeUIService = {
+                    start(env) {
+                        const ui = {};
+                        Object.defineProperty(env, "isSmall", {
+                            get() {
+                                return true;
+                            },
+                        });
+
+                        return ui;
+                    },
+                };
+
+                registry.category("services").add("ui", fakeUIService);
+
+                const env = await makeTestEnv();
+                const target = getFixture();
+                const comp = await mount(MyComponent, target, { env });
+                assert.strictEqual(document.activeElement, comp.inputRef.el);
+            }
+        );
+        QUnit.test(
+            "useAutofocus does not focus when isSmall and you don't provide mobile param",
+            async function (assert) {
+                class MyComponent extends Component {
+                    setup() {
+                        this.inputRef = useAutofocus();
+                    }
+                }
+                MyComponent.template = xml`
+                <span>
+                    <input type="text" t-ref="autofocus" />
+                </span>
+            `;
+
+                const fakeUIService = {
+                    start(env) {
+                        const ui = {};
+                        Object.defineProperty(env, "isSmall", {
+                            get() {
+                                return true;
+                            },
+                        });
+
+                        return ui;
+                    },
+                };
+
+                registry.category("services").add("ui", fakeUIService);
+
+                const env = await makeTestEnv();
+                const target = getFixture();
+                const comp = await mount(MyComponent, target, { env });
+                assert.notEqual(document.activeElement, comp.inputRef.el);
+            }
+        );
+
         QUnit.test("supports different ref names", async (assert) => {
             class MyComponent extends Component {
                 setup() {
