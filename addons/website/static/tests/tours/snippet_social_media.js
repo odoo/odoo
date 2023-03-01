@@ -2,6 +2,30 @@
 
 import wTourUtils from 'website.tour_utils';
 
+// TODO: Remove following steps once fix of task-3212519 is done.
+// Those steps are preventing a race condition to happen in the meantime: when
+// the tour was clicking on the toggle to hide facebook in the next step, it
+// would actually "ignore" the result of the click on the toggle and would just
+// consider the action of focusing out the input.
+const socialRaceConditionClass = 'social_media_race_condition';
+const preventRaceConditionStep = [{
+    content: "Wait a few ms to avoid race condition",
+    // Ensure the class is remove from previous call of those steps
+    extra_trigger: `body:not(.${socialRaceConditionClass})`,
+    trigger: 'iframe .s_social_media',
+    run() {
+        setTimeout(() => {
+            document.body.classList.add(socialRaceConditionClass);
+        }, 500);
+    }
+}, {
+    content: "Check the race condition class is added after a few ms",
+    trigger: `body.${socialRaceConditionClass}`,
+    run() {
+        document.body.classList.remove(socialRaceConditionClass);
+    }
+}];
+
 const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
     return [{
         content: "Click on Add New Social Network",
@@ -26,7 +50,9 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url) {
         content: "Ensure new link is changed",
         trigger: `iframe .s_social_media:has(a:eq(${linkIndex})[href='${url}'])`,
         run: () => {}, // This is a check.
-    }];
+    },
+    ...preventRaceConditionStep,
+    ];
 };
 
 wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
@@ -58,6 +84,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
         trigger: 'we-list table input:eq(6)[data-media="facebook"]',
         run: () => {}, // This is a check.
     },
+    ...preventRaceConditionStep,
     // Create a Link for which we don't have an icon to propose.
     ...addNewSocialNetwork(7, 6, 'https://whatever.it/1EdSw9X'),
     // Create a custom instagram link.
@@ -87,6 +114,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
                  ":has(a:eq(5)[href='https://www.paypal.com/abc']:has(i.fa-paypal))",
         run: () => {}, // This is a check.
     },
+    ...preventRaceConditionStep,
     {
         content: 'Delete the custom link',
         trigger: 'we-list we-button.o_we_select_remove_option',
