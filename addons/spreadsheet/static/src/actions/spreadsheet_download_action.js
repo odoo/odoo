@@ -4,7 +4,6 @@ import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
 import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
 import { _t } from "@web/core/l10n/translation";
 
@@ -14,7 +13,6 @@ async function downloadSpreadsheet(env, action) {
     const { orm, name, data, stateUpdateMessages } = action.params;
     const dataSources = new DataSources(orm);
     const model = new Model(migrate(data), { dataSources }, stateUpdateMessages);
-    await dataSources.waitForAllLoaded();
     await waitForDataLoaded(model);
     const { files } = model.exportXLSX();
     await download({
@@ -29,29 +27,36 @@ async function downloadSpreadsheet(env, action) {
 /**
  * Ensure that the spreadsheet does not contains cells that are in loading state
  * @param {Model} model
- * @returns {Promise}
+ * @returns {Promise<void>}
  */
 async function waitForDataLoaded(model) {
-    model.dispatch("EVALUATE_CELLS");
+    const dataSources = model.config.dataSources;
     return new Promise((resolve, reject) => {
-        let interval = undefined;
-        interval = browser.setInterval(() => {
-            for (const sheetId of model.getters.getSheetIds()) {
-                for (const cell of Object.values(model.getters.getCells(sheetId))) {
-                    if (
-                        cell.evaluated &&
-                        cell.evaluated.type === "error" &&
-                        cell.evaluated.error.message === _t("Data is loading")
-                    ) {
-                        model.dispatch("EVALUATE_CELLS");
-                        return;
-                    }
-                }
+        function check() {
+            model.dispatch("EVALUATE_CELLS");
+            if (isLoaded(model)) {
+                dataSources.removeEventListener("data-source-updated", check);
+                resolve();
             }
-            browser.clearInterval(interval);
-            resolve();
-        }, 50);
+        }
+        dataSources.addEventListener("data-source-updated", check);
+        check();
     });
+}
+
+function isLoaded(model) {
+    for (const sheetId of model.getters.getSheetIds()) {
+        for (const cell of Object.values(model.getters.getCells(sheetId))) {
+            if (
+                cell.evaluated &&
+                cell.evaluated.type === "error" &&
+                cell.evaluated.error.message === _t("Data is loading")
+            ) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 registry
