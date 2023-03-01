@@ -120,9 +120,14 @@ class AccountMoveLine(models.Model):
             is_line_reversing = self.move_id.move_type == 'out_refund'
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
             account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
+
             posted_cogs = account_moves.line_ids.filtered(lambda l: l.is_anglo_saxon_line and l.product_id == self.product_id and l.balance > 0)
             qty_invoiced = sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in posted_cogs])
             value_invoiced = sum(posted_cogs.mapped('balance'))
+
+            reversal_cogs = posted_cogs.move_id.reversal_move_id.line_ids.filtered(lambda l: l.is_anglo_saxon_line and l.product_id == self.product_id and l.balance > 0)
+            qty_invoiced -= sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in reversal_cogs])
+            value_invoiced -= sum(reversal_cogs.mapped('balance'))
 
             product = self.product_id.with_company(self.company_id).with_context(is_returned=is_line_reversing, value_invoiced=value_invoiced)
             average_price_unit = product._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids)
