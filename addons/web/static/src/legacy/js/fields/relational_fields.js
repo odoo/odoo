@@ -980,7 +980,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'click .o_delete': '_onDeleteTag',
     }),
-    fieldsToFetch: {
+    relatedFields: {
         display_name: {type: 'char'},
     },
     limit: 1000,

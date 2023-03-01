@@ -33,7 +33,7 @@ export class SubtaskKanbanList extends Component {
             child_ids: {
                 type: "one2many",
                 relation: "project.task",
-                fieldsToFetch: {
+                relatedFields: {
                     display_name: { type: "char" },
                     kanban_state: { selection: [['normal', 'In Progress'], ['done', 'Ready'], ['blocked', 'Blocked']],
                                     string: "Status",
@@ -47,7 +47,7 @@ export class SubtaskKanbanList extends Component {
                     user_ids: { type: "many2many",
                                 relation: "res.users",
                                 field: this.props.record.activeFields.user_ids.field,
-                                fieldsToFetch: this.props.record.activeFields.user_ids.fieldsToFetch,
+                                relatedFields: this.props.record.activeFields.user_ids.relatedFields,
                                 attrs: this.props.record.activeFields.user_ids.attrs,
                                 options: this.props.record.activeFields.user_ids.options },
                 }

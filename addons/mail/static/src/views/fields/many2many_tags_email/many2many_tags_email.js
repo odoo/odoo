@@ -93,8 +93,8 @@ FieldMany2ManyTagsEmail.components = {
 export const fieldMany2ManyTagsEmail = {
     ...many2ManyTagsField,
     component: FieldMany2ManyTagsEmail,
-    fieldsToFetch: (fieldInfo) => {
-        return [...many2ManyTagsField.fieldsToFetch(fieldInfo), { name: "email", type: "char" }];
+    relatedFields: (fieldInfo) => {
+        return [...many2ManyTagsField.relatedFields(fieldInfo), { name: "email", type: "char" }];
     },
     additionalClasses: ["o_field_many2many_tags"],
 };
