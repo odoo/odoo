@@ -1205,14 +1205,18 @@ class Field(MetaField('DummyField', (object,), {})):
                     self.compute_value(recs)
                 except (AccessError, MissingError):
                     self.compute_value(record)
-                try:
-                    value = env.cache.get(record, self)
-                except CacheMiss:
+                    recs = record
+
+                missing_recs_ids = tuple(env.cache.get_missing_ids(recs, self))
+                if missing_recs_ids:
+                    missing_recs = record.browse(missing_recs_ids)
                     if self.readonly and not self.store:
-                        raise ValueError(f"Compute method failed to assign {record}.{self.name}") from None
-                    # fallback to null value if compute gives nothing
-                    value = self.convert_to_cache(False, record, validate=False)
-                    env.cache.set(record, self, value)
+                        raise ValueError(f"Compute method failed to assign {missing_recs}.{self.name}")
+                    # fallback to null value if compute gives nothing, do it for every unset record
+                    false_value = self.convert_to_cache(False, record, validate=False)
+                    env.cache.update(missing_recs, self, itertools.repeat(false_value))
+
+                value = env.cache.get(record, self)
 
         elif self.type == 'many2one' and self.delegate and not record.id:
             # parent record of a new record: new record, with the same
