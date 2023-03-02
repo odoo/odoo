@@ -58,6 +58,7 @@ import {
     isZWS,
     getDeepestPosition,
     leftPos,
+    isNotEditableNode,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1431,7 +1432,7 @@ export class OdooEditor extends EventTarget {
         });
         if (!range) return;
         let start = range.startContainer;
-        let end = range.endContainer;
+        let end = !isNotEditableNode(range.endContainer) ? range.endContainer: range.endContainer.previousSibling;
         // Let the DOM split and delete the range.
         const doJoin =
             (closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
@@ -1477,7 +1478,6 @@ export class OdooEditor extends EventTarget {
         // emptied it without removing it. Ensure it's gone.
         const isRemovableInvisible = (node, noBlocks = true) =>
             !isVisible(node, noBlocks) && !isUnremovable(node);
-        const endIsStart = end === start;
         while (end && isRemovableInvisible(end, false) && !end.contains(range.endContainer)) {
             const parent = end.parentNode;
             end.remove();
@@ -1487,7 +1487,7 @@ export class OdooEditor extends EventTarget {
         while (
             start &&
             isRemovableInvisible(start) &&
-            !(endIsStart && start.contains(range.startContainer))
+            !start.contains(range.startContainer)
         ) {
             const parent = start.parentNode;
             start.remove();
@@ -1513,7 +1513,7 @@ export class OdooEditor extends EventTarget {
             doJoin &&
             next &&
             !(next.previousSibling && next.previousSibling === joinWith) &&
-            this.editable.contains(next)
+            this.editable.contains(next) && !isNotEditableNode(next)
         ) {
             const restore = preserveCursor(this.document);
             this.observerFlush();

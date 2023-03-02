@@ -1486,6 +1486,15 @@ X[]
                         contentAfter: `<p>abc</p><p>[]def</p>`,
                     });
                 });
+                it('should not remove contenteditable="false" before the selected text', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>a</p><hr contenteditable="false"><p>[b</p><p>c]d</p>`,
+                        stepFunction: async editor => {
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: `<p>a</p><hr contenteditable="false"><p>[]d</p>`,
+                    });
+                });
             });
             describe('Line breaks', () => {
                 describe('Single', () => {
