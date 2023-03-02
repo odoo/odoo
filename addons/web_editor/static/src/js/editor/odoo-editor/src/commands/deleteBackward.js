@@ -25,6 +25,7 @@ import {
     isSelfClosingElement,
     isNotEditableNode,
     createDOMPathGenerator,
+    closestElement,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -91,8 +92,8 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
             throw UNBREAKABLE_ROLLBACK_CODE;
         }
         const parentEl = this.parentNode;
-
-        if (!isBlock(this) || isSelfClosingElement(this)) {
+        const closestLi = closestElement(this, 'li');
+        if ((closestLi && !closestLi.previousElementSibling) || !isBlock(this) || isSelfClosingElement(this)) {
             /**
              * Backspace at the beginning of an inline node, nothing has to be
              * done: propagate the backspace. If the node was empty, we remove
@@ -141,7 +142,8 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
          */
         if (
             !this.previousElementSibling &&
-            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName)
+            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName) &&
+            !closestLi
         ) {
             const p = document.createElement('p');
             p.replaceChildren(...this.childNodes);
