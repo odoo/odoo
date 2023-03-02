@@ -1219,6 +1219,14 @@ class Users(models.Model):
     def _mfa_url(self):
         """ If an MFA method is enabled, returns the URL for its second step. """
         return
+
+    def _should_alert_new_device(self):
+        """ Determine if an alert should be sent to the user regarding a new device
+
+        To be overriden in 2FA modules implementing known devices
+        """
+        return False
+
 #
 # Implied groups
 #
