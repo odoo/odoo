@@ -60,6 +60,14 @@ class Challenge(models.Model):
     _inherit = 'mail.thread'
     _order = 'end_date, start_date, name, id'
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if 'user_domain' in fields_list and 'user_domain' not in res:
+            user_group_id = self.env.ref('base.group_user')
+            res['user_domain'] = f'["&", ("groups_id", "=", "{user_group_id.name}"), ("active", "=", True)]'
+        return res
+
     # description
     name = fields.Char("Challenge Name", required=True, translate=True)
     description = fields.Text("Description", translate=True)
