@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, fields
 from odoo.addons.account.models.chart_template import template
 
 
@@ -29,5 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'p2117',
                 'account_journal_early_pay_discount_loss_account_id': 'p2132',
                 'account_journal_early_pay_discount_gain_account_id': '2012',
+                'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
+                'fiscalyear_last_month': '3',
             },
         }
