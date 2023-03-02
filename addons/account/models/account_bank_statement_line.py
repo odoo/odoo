@@ -492,9 +492,9 @@ class AccountBankStatementLine(models.Model):
         return (
             transaction_amount,
             transaction_currency,
-            liquidity_line.amount_currency,
+            sum(liquidity_line.mapped('amount_currency')),
             liquidity_line.currency_id,
-            liquidity_line.balance,
+            sum(liquidity_line.mapped('balance')),
             liquidity_line.company_currency_id,
         )
 
