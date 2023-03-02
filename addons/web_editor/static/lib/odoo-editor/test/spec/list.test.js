@@ -4099,6 +4099,15 @@ describe('List', () => {
                                     '<p>abc</p><ul class="o_checklist"><li class="o_checked">[]def</li></ul>',
                             });
                         });
+                        it('should outdent the list item without removing the header tag', async () => {
+                            await testEditor(BasicEditor, {
+                                contentBefore:
+                                    '<ul><li>abc</li><li class="oe-nested"><ul><li><h1>[]def</h1></li></ul></li></ul>',
+                                stepFunction: deleteBackward,
+                                contentAfter:
+                                    '<ul><li>abc</li><li><h1>[]def</h1></li></ul>',
+                            });
+                        });
                         it.skip('should outdent while nested within a list item', async () => {
                             await testEditor(BasicEditor, {
                                 removeCheckIds: true,
