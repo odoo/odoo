@@ -15,7 +15,7 @@ export function getColor(key) {
     if (typeof key === "string" && key.match(CSS_COLOR_REGEX)) {
         colorMap.set(key, key);
     } else if (typeof key === "number") {
-        colorMap.set(key, key);
+        colorMap.set(key, ((key - 1) % 55) + 1);
     } else {
         colorMap.set(key, (((colorMap.size + 1) * 5) % 24) + 1);
     }

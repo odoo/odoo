@@ -2606,6 +2606,58 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event", 5, "should display 5 events on the week");
     });
 
+    QUnit.test("Colors: cycling through available colors", async (assert) => {
+        serverData.models.filter_partner.records = Array.from({ length: 56 }, (_, i) => ({
+            id: i + 1,
+            user_id: uid,
+            partner_id: i + 1,
+            partner_checked: true,
+        }));
+        serverData.models.partner.records = Array.from({ length: 56 }, (_, i) => ({
+            id: i + 1,
+            display_name: `partner ${i + 1}`,
+        }));
+        serverData.models.event.records = Array.from({ length: 56 }, (_, i) => ({
+            id: i + 1,
+            user_id: uid,
+            partner_id: i + 1,
+            name: `event ${i + 1}`,
+            start: `2016-12-12 0${i % 10}:00:00`,
+            stop: `2016-12-12 0${i % 10}:00:00`,
+            partner_ids: [i + 1],
+        }));
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="day" color="partner_ids">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" filter_field="partner_checked"  />
+                </calendar>
+            `,
+        });
+        assert.containsN(target, ".fc-event", 56);
+        assert.hasClass(findEvent(target, 1), "o_calendar_color_1");
+        assert.hasClass(findEvent(target, 55), "o_calendar_color_55");
+        assert.hasClass(findEvent(target, 56), "o_calendar_color_1");
+
+        const partnerSection = findFilterPanelSection(target, "partner_ids");
+        assert.containsOnce(partnerSection, ".o_calendar_filter_item[data-value='all']");
+        assert.containsN(partnerSection, ".o_calendar_filter_item:not([data-value='all'])", 56);
+        assert.hasClass(
+            partnerSection.querySelector(".o_calendar_filter_item[data-value='1']"),
+            "o_cw_filter_color_1"
+        );
+        assert.hasClass(
+            partnerSection.querySelector(".o_calendar_filter_item[data-value='55']"),
+            "o_cw_filter_color_55"
+        );
+        assert.hasClass(
+            partnerSection.querySelector(".o_calendar_filter_item[data-value='56']"),
+            "o_cw_filter_color_1"
+        );
+    });
+
     QUnit.test(`Add filters and specific color`, async (assert) => {
         serverData.models.event_type.records.push({
             id: 4,
