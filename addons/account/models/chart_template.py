@@ -152,8 +152,8 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
 
     def _notify_accountant_managers(taxes_to_check):
         accountant_manager_group = env.ref("account.group_account_manager")
-        partner_managers_ids = accountant_manager_group.users.mapped('partner_id')
-        odoobot = env.ref('base.partner_root')
+        partner_managers_ids = accountant_manager_group.users.partner_id.ids
+        odoobot_id = env.ref('base.partner_root').id
         message_body = _(
             "Please check these taxes. They might be outdated. We did not update them. "
             "Indeed, they do not exactly match the taxes of the original version of the localization module.<br/>"
@@ -162,15 +162,12 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         for account_tax in taxes_to_check:
             message_body += f"<li>{html_escape(account_tax.name)}</li>"
         message_body += "</ul>"
-        for partner_manager in partner_managers_ids:
-            partner_manager.message_post(
-                subject=_('Your taxes have been updated !'),
-                author_id=odoobot.id,
-                body=message_body,
-                message_type='notification',
-                subtype_xmlid='mail.mt_comment',
-                partner_ids=partner_manager.ids,
-            )
+        env['mail.thread'].message_notify(
+            subject=_('Your taxes have been updated !'),
+            author_id=odoobot_id,
+            body=message_body,
+            partner_ids=partner_managers_ids,
+        )
 
     env = api.Environment(cr, SUPERUSER_ID, {})
     chart_template_id = env.ref(chart_template_xmlid).id
