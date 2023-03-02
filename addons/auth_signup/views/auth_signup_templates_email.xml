@@ -84,4 +84,67 @@
         </td></tr>
         </table>
     </template>
+
+    <template id="alert_login_new_device" name="Alert Login with new Device">
+        <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+        <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+        <tbody>
+            <!-- HEADER -->
+            <tr>
+                <td align="center" style="min-width: 590px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                    <tr><td valign="top" style="font-size: 13px;">
+                    <div>
+                        Dear <t t-out="object.name or ''">Marc Demo</t>,<br/><br/>
+                        A new device was used to sign in to your account. <br/><br/>
+                        Here are some details about the connection:<br/>
+                        <ul>
+                            <li><span style="font-weight: bold;">
+                                Date:</span> <t t-out="format_datetime(login_date, dt_format='long')">day, month dd, yyyy - hh:mm:ss (GMT)</t></li>
+                            <t t-if="location_address">
+                                <li><span style="font-weight: bold;">
+                                    Location:</span> <t t-out="location_address">City, Region, Country</t></li>
+                            </t>
+                            <t t-if="useros">
+                                <li><span style="font-weight: bold;">
+                                    Platform:</span> <t t-out="useros">OS</t></li>
+                            </t>
+                            <t t-if="browser">
+                                <li><span style="font-weight: bold;">
+                                    Browser:</span> <t t-out="browser">Browser</t></li>
+                            </t>
+                            <li><span style="font-weight: bold;">
+                                IP Address:</span> <t t-out="ip_address">111.222.333.444</t></li>
+                        </ul>
+                        If you don't recognize it, you should change your password immediately via this link:<br/>
+                        <div style="margin: 16px 0px 16px 0px;">
+                            <a t-attf-href="{{ object.get_base_url() }}/web/reset_password"
+                                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                Reset Password
+                            </a>
+                        </div>
+                        Otherwise, you can safely ignore this email.
+
+                    </div>
+                    </td></tr>
+                    <tr><td style="text-align:center;">
+                      <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </td></tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+        </td></tr>
+        <!-- POWERED BY -->
+        <tr><td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+              <tr><td style="text-align: center; font-size: 13px;">
+                Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" style="color: #875A7B;">Odoo</a>
+              </td></tr>
+            </table>
+        </td></tr>
+        </table>
+    </template>
+
 </odoo>
