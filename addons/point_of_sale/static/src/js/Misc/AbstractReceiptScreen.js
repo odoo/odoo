@@ -24,6 +24,10 @@ class AbstractReceiptScreen extends PosComponent {
             if (printResult.successful) {
                 return true;
             } else {
+                await this.showPopup('ErrorPopup', {
+                    title: printResult.message.title,
+                    body: printResult.message.body,
+                });
                 const { confirmed } = await this.showPopup("ConfirmPopup", {
                     title: printResult.message.title,
                     body: "Do you want to print using the web printer?",
