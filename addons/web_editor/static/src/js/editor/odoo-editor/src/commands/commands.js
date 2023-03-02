@@ -21,7 +21,7 @@ import {
     isColorGradient,
     isSelectionFormat,
     isShrunkBlock,
-    isVisibleEmpty,
+    isSelfClosingElement,
     leftLeafFirstPath,
     preserveCursor,
     rightPos,
@@ -204,7 +204,7 @@ export const editorCommands = {
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
                 const textNode = editor.document.createTextNode('');
-                if (isVisibleEmpty(startNode)) {
+                if (isSelfClosingElement(startNode)) {
                     startNode.parentNode.insertBefore(textNode, startNode);
                 } else {
                     startNode.prepend(textNode);
