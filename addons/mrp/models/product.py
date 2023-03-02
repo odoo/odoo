@@ -35,8 +35,8 @@ class ProductTemplate(models.Model):
     is_kits = fields.Boolean(compute='_compute_is_kits', compute_sudo=False)
     days_to_prepare_mo = fields.Float(
         string="Days to prepare Manufacturing Order", default=0.0,
-        help="Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-             "Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism.")
+        help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+             "Note that security lead times will also be considered when appropriate.")
 
     def _compute_bom_count(self):
         for product in self:
