@@ -562,6 +562,13 @@ class OrderLine(models.Model):
     short_field_name = fields.Integer(index=True)
     very_very_very_very_very_long_field_name_1 = fields.Integer(index=True)
     very_very_very_very_very_long_field_name_2 = fields.Integer(index=True)
+    has_been_rewarded = fields.Char(compute='_compute_has_been_rewarded', store=True)
+
+    @api.depends('reward')
+    def _compute_has_been_rewarded(self):
+        for rec in self:
+            if rec.reward:
+                rec.has_been_rewarded = 'Yes'
 
     def unlink(self):
         # also delete associated reward lines
