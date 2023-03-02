@@ -887,4 +887,4 @@ class MrpWorkorder(models.Model):
             if wo.duration == 0.0:
                 wo.duration = wo.duration_expected
                 wo.duration_percent = 100
-            wo.state = 'done'
+        wo.state = 'done'
