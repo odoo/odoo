@@ -57,18 +57,8 @@ export class Chrome extends Component {
         window.posmodel = this.pos.globalState.debug ? reactivePos : this.pos.globalState;
 
         this.wowlEnv = this.env;
-        for (const service of [
-            "pos",
-            "sound",
-            "debug",
-            "pos_notification",
-            "number_buffer",
-            "popup",
-            "sale_order_fetcher",
-        ]) {
-            env.services[service] = this.wowlEnv.services[service];
-        }
-
+        // FIXME POSREF: make wowl services available in legacy env
+        Object.setPrototypeOf(env.services, this.wowlEnv.services);
         this.env = env;
         this.__owl__.childEnv = env;
         useSubEnv({
