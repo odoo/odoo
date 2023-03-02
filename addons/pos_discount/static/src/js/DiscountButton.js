@@ -5,6 +5,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
     const ProductScreen = require('point_of_sale.ProductScreen');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
+    const round_pr = require('web.utils').round_precision;
 
     class DiscountButton extends PosComponent {
         constructor() {
@@ -52,6 +53,15 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                     base_to_discount = order.get_total_with_tax();
                 }
             }
+            base_to_discount -= round_pr(lines.filter(
+                function (orderline) {
+                    return orderline.is_program_reward;
+                }
+            ).reduce((function(sum, orderLine) {
+                return sum + orderLine.get_price_without_tax();
+            }), 0), this.env.pos.currency.rounding);
+
+
             var discount = - pc / 100.0 * base_to_discount;
 
             if( discount < 0 ){

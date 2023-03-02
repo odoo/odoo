@@ -15,7 +15,12 @@ odoo.define('pos_discount.models', function (require) {
     order:  product_model.order,
     domain: function(self) {return [['id', '=', self.config.discount_product_id[0]]];},
     context: product_model.context,
-    loaded: product_model.loaded,
+    loaded: function(self, products){
+        if (products.length) {
+            products[0].taxes_id = [];
+        }
+        product_model.loaded(self, products);
+    }
   }]);
 
 });
