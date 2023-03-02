@@ -19,18 +19,6 @@ input.o_field_property_input[type=number] {
 }
 
 .o_field_property_many2one_value {
-    img {
-        height: 1.4em;
-        width: 1.4em;
-        object-fit: cover;
-    }
-
-    &.avatar .o_input_dropdown{
-        // counter the avatar size to keep things aligned
-        margin-left: -1.6em;
-        padding-left: 1.6em;
-    }
-
     a.disabled {
         pointer-events: none;
         color: $gray-400;
@@ -45,6 +33,7 @@ input.o_field_property_input[type=number] {
     }
     .o_delete {
         line-height: 1;
+        margin-right: 5px;
     }
     .o_input_dropdown {
         width: 100px !important;
@@ -61,11 +50,6 @@ input.o_field_property_input[type=number] {
 }
 
 .o_field_property_many2many_value.avatar .o_tag{
-    img {
-        margin: -0.3em;
-        margin-right: 0.3em;
-    }
-
     .o_tag_badge_text {
         padding: 0px !important;
     }
