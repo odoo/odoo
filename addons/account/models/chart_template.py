@@ -34,13 +34,22 @@ def preserve_existing_tags_on_taxes(cr, registry, module):
         cr.execute("update ir_model_data set noupdate = 't' where id in %s", [tuple(xml_records.ids)])
 
 def update_taxes_from_templates(cr, chart_template_xmlid):
+    """ This method will try to update taxes based on their template.
+    Schematically there are three possible execution path:
+    [do the template xmlid matches one tax xmlid ?]
+    -NO--> we *create* a new tax based on the template values
+    -YES-> [are the tax template and the matching tax similar enough (details see `_is_tax_and_template_same`) ?]
+            -YES-> We *update* the existing tax's tag (and only tags).
+            -NO--> We *create* a duplicated tax with template value, and related fiscal positions.
+    This method is mainly used as a local upgrade script.
+    Returns a list of tuple (template_id, tax_id) of newly created records.
+    """
     def _create_tax_from_template(company, template, old_tax=None):
-        """
-        Create a new tax from template with template xmlid, if there was already an old tax with that xmlid we
+        """ Create a new tax from template with template xmlid, if there was already an old tax with that xmlid we
         remove the xmlid from it but don't modify anything else.
         """
         def _remove_xml_id(xml_id):
-            module, name = xml_id.split(".", 1)
+            module, name = xml_id.split('.', 1)
             env['ir.model.data'].search([('module', '=', module), ('name', '=', name)]).unlink()
 
         def _avoid_name_conflict():
@@ -50,28 +59,27 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                 conflict_tax.name = "[old] " + conflict_tax.name
 
         template_vals = template._get_tax_vals_complete(company)
-        chart_template = env["account.chart.template"].with_context(default_company_id=company.id)
+        chart_template = env['account.chart.template'].with_context(default_company_id=company.id)
         if old_tax:
             xml_id = old_tax.get_external_id().get(old_tax.id)
             if xml_id:
                 _remove_xml_id(xml_id)
         _avoid_name_conflict()
-        chart_template.create_record_with_xmlid(company, template, "account.tax", template_vals)
+        chart_template.create_record_with_xmlid(company, template, 'account.tax', template_vals)
 
     def _update_tax_from_template(template, tax):
-        # -> update the tax : we only updates tax tags
+        """ Update the tax's tags (and only tags!) based on template values. """
         tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
         template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
         for tax_line, template_line in zip(tax_rep_lines, template_rep_lines):
             tags_to_add = template_line._get_tags_to_add()
             tags_to_unlink = tax_line.tag_ids
             if tags_to_add != tags_to_unlink:
-                tax_line.write({"tag_ids": [(6, 0, tags_to_add.ids)]})
+                tax_line.write({'tag_ids': [(6, 0, tags_to_add.ids)]})
                 _cleanup_tags(tags_to_unlink)
 
     def _get_template_to_real_xmlid_mapping(company, model):
-        """
-        This function uses ir_model_data to return a mapping between the templates and the data, using their xmlid
+        """ This function uses ir_model_data to return a mapping between the templates and the data, using their xmlid
         :returns: {
             account.tax.template.id: account.tax.id
             }
@@ -94,8 +102,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         return dict(tuples)
 
     def _is_tax_and_template_same(template, tax):
-        """
-        This function compares account.tax and account.tax.template repartition lines.
+        """ This function compares account.tax and account.tax.template repartition lines.
         A tax is considered the same as the template if they have the same:
             - amount_type
             - amount
@@ -114,9 +121,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         )
 
     def _cleanup_tags(tags):
-        """
-        Checks if the tags are still used in taxes or move lines. If not we delete it.
-        """
+        """ Checks if the tags are still used in taxes or move lines. If not we delete it. """
         for tag in tags:
             tax_using_tag = env['account.tax.repartition.line'].sudo().search([('tag_ids', 'in', tag.id)], limit=1)
             aml_using_tag = env['account.move.line'].sudo().search([('tax_tag_ids', 'in', tag.id)], limit=1)
@@ -125,14 +130,14 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                 tag.unlink()
 
     def _update_fiscal_positions_from_templates(company, chart_template_id, new_taxes_template):
-        chart_template = env["account.chart.template"].browse(chart_template_id)
+        chart_template = env['account.chart.template'].browse(chart_template_id)
         positions = env['account.fiscal.position.template'].search([('chart_template_id', '=', chart_template_id)])
         tax_template_ref = _get_template_to_real_xmlid_mapping(company, 'account.tax')
         fp_template_ref = _get_template_to_real_xmlid_mapping(company, 'account.fiscal.position')
 
         tax_template_vals = []
         for position_template in positions:
-            fp = env["account.fiscal.position"].browse(fp_template_ref.get(position_template.id))
+            fp = env['account.fiscal.position'].browse(fp_template_ref.get(position_template.id))
             if not fp:
                 continue
             for position_tax in position_template.tax_ids:
@@ -151,7 +156,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         chart_template._create_records_with_xmlid('account.fiscal.position.tax', tax_template_vals, company)
 
     def _notify_accountant_managers(taxes_to_check):
-        accountant_manager_group = env.ref("account.group_account_manager")
+        accountant_manager_group = env.ref('account.group_account_manager')
         partner_managers_ids = accountant_manager_group.users.mapped('partner_id')
         odoobot = env.ref('base.partner_root')
         message_body = _(
@@ -176,9 +181,9 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
     new_taxes_template = []
     for company in companies:
         template_to_tax = _get_template_to_real_xmlid_mapping(company, 'account.tax')
-        templates = env['account.tax.template'].with_context(active_test=False).search([("chart_template_id", "=", chart_template_id)])
+        templates = env['account.tax.template'].with_context(active_test=False).search([('chart_template_id', '=', chart_template_id)])
         for template in templates:
-            tax = env["account.tax"].browse(template_to_tax.get(template.id))
+            tax = env['account.tax'].browse(template_to_tax.get(template.id))
             if not tax or not _is_tax_and_template_same(template, tax):
                 _create_tax_from_template(company, template, old_tax=tax)
                 if tax:
