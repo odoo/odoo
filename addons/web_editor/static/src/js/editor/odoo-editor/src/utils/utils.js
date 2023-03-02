@@ -469,7 +469,7 @@ export function hasValidSelection(editable) {
  *     positions which are not possible, like the cursor inside an image).
  */
 export function getNormalizedCursorPosition(node, offset, full = true) {
-    if (isVisibleEmpty(node) || !closestElement(node).isContentEditable) {
+    if (isSelfClosingElement(node) || !closestElement(node).isContentEditable) {
         // Cannot put cursor inside those elements, put it after instead.
         [node, offset] = rightPos(node);
     }
@@ -500,7 +500,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
             let leftVisibleEmpty = false;
             if (leftInlineNode) {
                 leftVisibleEmpty =
-                    isVisibleEmpty(leftInlineNode) ||
+                    isSelfClosingElement(leftInlineNode) ||
                     !closestElement(leftInlineNode).isContentEditable;
                 [node, offset] = leftVisibleEmpty
                     ? rightPos(leftInlineNode)
@@ -510,7 +510,7 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
                 const rightInlineNode = rightLeafOnlyInScopeNotBlockPath(el, elOffset).next().value;
                 if (rightInlineNode) {
                     const rightVisibleEmpty =
-                        isVisibleEmpty(rightInlineNode) ||
+                        isSelfClosingElement(rightInlineNode) ||
                         !closestElement(rightInlineNode).isContentEditable;
                     if (!(leftVisibleEmpty && rightVisibleEmpty)) {
                         [node, offset] = rightVisibleEmpty
@@ -818,7 +818,7 @@ export function getDeepestPosition(node, offset) {
         let newNode = node.childNodes[offset];
         if (newNode) {
             newNode = getNextVisibleNode(newNode, true);
-            if (!newNode || isVisibleEmpty(newNode)) break;
+            if (!newNode || isSelfClosingElement(newNode)) break;
             found = true;
             node = newNode;
             offset = 0;
@@ -830,7 +830,7 @@ export function getDeepestPosition(node, offset) {
         while (node.hasChildNodes()) {
             let newNode = node.childNodes[offset - 1];
             newNode = getNextVisibleNode(newNode, true);
-            if (!newNode || isVisibleEmpty(newNode)) break;
+            if (!newNode || isSelfClosingElement(newNode)) break;
             node = newNode;
             offset = nodeSize(node);
         }
@@ -1506,7 +1506,7 @@ export function isHtmlContentSupported(node) {
  * @returns {boolean}
  */
 const selfClosingElementTags = ['BR', 'IMG', 'INPUT'];
-export function isVisibleEmpty(node) {
+export function isSelfClosingElement(node) {
     return selfClosingElementTags.includes(node.nodeName);
 }
 /**
@@ -1546,7 +1546,7 @@ export function isVisible(node, areBlocksAlwaysVisible = true) {
     if (node.nodeType === Node.TEXT_NODE) {
         return isVisibleTextNode(node);
     }
-    if ((areBlocksAlwaysVisible && isBlock(node)) || isVisibleEmpty(node)) {
+    if ((areBlocksAlwaysVisible && isBlock(node)) || isSelfClosingElement(node)) {
         return true;
     }
     return [...node.childNodes].some(n => isVisible(n, areBlocksAlwaysVisible));
@@ -1711,7 +1711,7 @@ export function isEmptyBlock(blockEl) {
     for (const node of nodes) {
         // There is no text and no double BR, the only thing that could make
         // this visible is a "visible empty" node like an image.
-        if (node.nodeName != 'BR' && isVisibleEmpty(node)) {
+        if (node.nodeName != 'BR' && isSelfClosingElement(node)) {
             return false;
         }
     }

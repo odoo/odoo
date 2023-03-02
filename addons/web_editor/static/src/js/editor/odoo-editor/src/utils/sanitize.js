@@ -7,7 +7,7 @@ import {
     getListMode,
     isBlock,
     isEmptyBlock,
-    isVisibleEmpty,
+    isSelfClosingElement,
     moveNodes,
     preserveCursor,
     isFontAwesome,
@@ -63,9 +63,9 @@ export function areSimilarElements(node, node2) {
         );
     }
     if (['UL', 'OL'].includes(node.tagName)) {
-        return !isVisibleEmpty(node) && !isVisibleEmpty(node2);
+        return !isSelfClosingElement(node) && !isSelfClosingElement(node2);
     }
-    if (isBlock(node) || isVisibleEmpty(node) || isVisibleEmpty(node2)) {
+    if (isBlock(node) || isSelfClosingElement(node) || isSelfClosingElement(node2)) {
         return false;
     }
     const nodeStyle = getComputedStyle(node);

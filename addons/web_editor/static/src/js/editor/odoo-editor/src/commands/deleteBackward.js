@@ -22,7 +22,7 @@ import {
     prepareUpdate,
     setSelection,
     isMediaElement,
-    isVisibleEmpty,
+    isSelfClosingElement,
     isNotEditableNode,
     createDOMPathGenerator,
 } from '../utils/utils.js';
@@ -59,7 +59,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
             leftNode.remove();
             return;
         }
-        if (!isBlock(leftNode) || isVisibleEmpty(leftNode)) {
+        if (!isBlock(leftNode) || isSelfClosingElement(leftNode)) {
             /**
              * Backspace just after an inline node, convert to backspace at the
              * end of that inline node.
@@ -92,7 +92,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
         }
         const parentEl = this.parentNode;
 
-        if (!isBlock(this) || isVisibleEmpty(this)) {
+        if (!isBlock(this) || isSelfClosingElement(this)) {
             /**
              * Backspace at the beginning of an inline node, nothing has to be
              * done: propagate the backspace. If the node was empty, we remove

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import {
     findNode,
-    isVisibleEmpty,
+    isSelfClosingElement,
     nodeSize,
     rightPos,
     getState,
@@ -83,7 +83,7 @@ Text.prototype.oDeleteForward = function (offset, alreadyMoved = false) {
 
 HTMLElement.prototype.oDeleteForward = function (offset) {
     const filterFunc = node =>
-        isVisibleEmpty(node) || isVisibleTextNode(node) || isNotEditableNode(node);
+        isSelfClosingElement(node) || isVisibleTextNode(node) || isNotEditableNode(node);
 
     const firstLeafNode = findNode(rightLeafOnlyNotBlockNotEditablePath(this, offset), filterFunc);
     if (firstLeafNode &&
