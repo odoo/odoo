@@ -16,10 +16,6 @@ export class NumpadWidget extends Component {
     };
     setup() {
         this.numberBuffer = useService("number_buffer");
-        this.numberBuffer.use({
-            triggerAtInput: (event) => this.props.updateSelectedOrderline(event),
-            useWithBarcode: true,
-        });
     }
     get hasPriceControlRights() {
         return (
