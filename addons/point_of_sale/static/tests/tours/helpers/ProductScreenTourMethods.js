@@ -81,7 +81,7 @@ class Do {
 
     clickPayButton(shouldCheck = true) {
         const steps = [
-            { content: "click pay button", trigger: ".product-screen .actionpad .button.pay" },
+            { content: "click pay button", trigger: ".product-screen .pay-order-button" },
         ];
         if (shouldCheck) {
             steps.push({

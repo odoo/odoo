@@ -12,6 +12,7 @@ import { ErrorPopup } from "./Popups/ErrorPopup";
 import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfiguratorPopup";
 import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 import { markRaw, reactive } from "@odoo/owl";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { escape }  from "@web/core/utils/strings";
 
 var QWeb = core.qweb;
@@ -3114,6 +3115,28 @@ export class Order extends PosModel {
         }
 
         return receipt;
+    }
+    async pay() {
+        if (
+            this.orderlines.some(
+                (line) => line.get_product().tracking !== "none" && !line.has_valid_product_lot()
+            ) &&
+            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+        ) {
+            const { confirmed } = await this.pos.env.services.popup.add(ConfirmPopup, {
+                title: _t("Some Serial/Lot Numbers are missing"),
+                body: _t(
+                    "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
+                ),
+                confirmText: _t("Yes"),
+                cancelText: _t("No"),
+            });
+            if (confirmed) {
+                this.pos.env.services.pos.showScreen("PaymentScreen");
+            }
+        } else {
+            this.pos.env.services.pos.showScreen("PaymentScreen");
+        }
     }
     is_empty() {
         return this.orderlines.length === 0;
