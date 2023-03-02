@@ -43,21 +43,6 @@
     background-size: cover;
     transition: all 300ms ease-in-out;
 
-    .tables {
-        position: relative;
-        --scale: 1;
-        transform: scale(var(--scale));
-
-        @media screen and (min-width: 1024px) {
-            max-width: 1024px;
-            margin: auto;
-            max-height: 540px;
-            border-radius: 0px 0px 6px 6px;
-            border: dashed 2px rgba(0,0,0,0.1);
-            border-top: none;
-            height: 100%;
-        }
-    }
     // Should probably be moved to table.scss but currently the selectors are too generic
     .table {
         position: absolute;

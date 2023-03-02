@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
 
 startSteps();
 
-FloorScreen.do.clickTable("T5");
+FloorScreen.do.clickTable("5");
 
 // Create first order
 ProductScreen.do.confirmOpeningPopup();
@@ -36,8 +36,8 @@ ReceiptScreen.do.clickNextOrder();
 
 // After clicking next order, floor screen is shown.
 // It should have 1 as number of draft synced order.
-FloorScreen.check.orderCountSyncedInTableIs("T5", "1");
-FloorScreen.do.clickTable("T5");
+FloorScreen.check.orderCountSyncedInTableIs("5", "1");
+FloorScreen.do.clickTable("5");
 ProductScreen.check.totalAmountIs("4.40");
 
 // Create another draft order and go back to floor
@@ -50,10 +50,10 @@ ProductScreen.check.selectedOrderlineHas("Minute Maid");
 Chrome.do.backToFloor();
 
 // At floor screen, there should be 2 synced draft orders
-FloorScreen.check.orderCountSyncedInTableIs("T5", "2");
+FloorScreen.check.orderCountSyncedInTableIs("5", "2");
 
 // Delete the first order then go back to floor
-FloorScreen.do.clickTable("T5");
+FloorScreen.do.clickTable("5");
 ProductScreen.check.isShown();
 Chrome.do.clickTicketButton();
 TicketScreen.do.deleteOrder("-0001");
@@ -62,7 +62,7 @@ TicketScreen.do.selectOrder("-0003");
 Chrome.do.backToFloor();
 
 // There should be 1 synced draft order.
-FloorScreen.check.orderCountSyncedInTableIs("T5", "1");
+FloorScreen.check.orderCountSyncedInTableIs("5", "1");
 registry.category("web_tour.tours").add("pos_restaurant_sync", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
@@ -73,13 +73,13 @@ startSteps();
  */
 
 // There is one draft synced order from the previous tour
-FloorScreen.check.orderCountSyncedInTableIs("T5", "1");
-FloorScreen.do.clickTable("T5");
+FloorScreen.check.orderCountSyncedInTableIs("5", "1");
+FloorScreen.do.clickTable("5");
 ProductScreen.check.totalAmountIs("4.40");
 
 // Test transfering an order
 ProductScreen.do.clickTransferButton();
-FloorScreen.do.clickTable("T4");
+FloorScreen.do.clickTable("4");
 
 // Test if products still get merged after transfering the order
 ProductScreen.do.clickDisplayedProduct("Coca-Cola");
@@ -93,14 +93,14 @@ PaymentScreen.do.clickValidate();
 ReceiptScreen.do.clickNextOrder();
 // At this point, there are no draft orders.
 
-FloorScreen.do.clickTable("T2");
+FloorScreen.do.clickTable("2");
 ProductScreen.check.isShown();
 ProductScreen.check.orderIsEmpty();
 ProductScreen.do.clickTransferButton();
-FloorScreen.do.clickTable("T4");
+FloorScreen.do.clickTable("4");
 ProductScreen.do.clickDisplayedProduct("Coca-Cola");
 ProductScreen.check.totalAmountIs("2.20");
 Chrome.do.backToFloor();
-FloorScreen.check.orderCountSyncedInTableIs("T4", "1");
+FloorScreen.check.orderCountSyncedInTableIs("4", "1");
 
 registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", { test: true, url: "/pos/ui", steps: getSteps() });
