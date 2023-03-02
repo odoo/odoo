@@ -228,3 +228,42 @@ class TestChartTemplate(TransactionCase):
         ])
         # we should have 4 records: 2 companies * (1 original tax + 1 recreated tax)
         self.assertEqual(len(taxes_from_template_1), 4)
+
+    def test_message_to_accountants(self):
+        """ When we duplicate a tax because it was too different from the existing one we send
+        a message to accountant advisors. This message should only be sent to advisors
+        and not to regular users.
+        """
+        # create 1 normal user, 2 accountants managers
+        accountant_manager_group = self.env.ref('account.group_account_manager')
+        advisor_users = self.env['res.users'].create([{
+            'name': 'AccountAdvisorTest1',
+            'login': 'aat1',
+            'password': 'aat1aat1',
+            'groups_id': [(4, accountant_manager_group.id)],
+        }, {
+            'name': 'AccountAdvisorTest2',
+            'login': 'aat2',
+            'password': 'aat2aat2',
+            'groups_id': [(4, accountant_manager_group.id)],
+        }])
+        normal_user = self.env['res.users'].create([{
+            'name': 'AccountUserTest1',
+            'login': 'aut1',
+            'password': 'aut1aut1',
+            'groups_id': [(4, self.env.ref('account.group_account_user').id)],
+        }])
+        # create situation where we need to recreate the tax during update to get notification(s) sent
+        self.tax_template_1.amount += 1
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+
+        # accountants received the message
+        self.assertEqual(self.env['mail.message'].search_count([
+            ('partner_ids', 'in', advisor_users.partner_id.ids),
+            ('body', 'like', f"%{self.tax_template_1.name}%"),
+        ]), 1)
+        # normal user didn't
+        self.assertEqual(self.env['mail.message'].search_count([
+            ('partner_ids', 'in', normal_user.partner_id.ids),
+            ('body', 'like', f"%{self.tax_template_1.name}%"),
+        ]), 0)
