@@ -12,14 +12,15 @@ import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
 import { ControlButtonPopup } from "@point_of_sale/js/Popups/ControlButtonPopup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
-import { ActionpadWidget } from "./ActionpadWidget";
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component, onMounted, useState } from "@odoo/owl";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+
 import { MobileOrderWidget } from "../../Misc/MobileOrderWidget";
 import { NumpadWidget } from "./NumpadWidget";
 import { OrderWidget } from "./OrderWidget";
 import { ProductsWidget } from "./ProductsWidget";
-import { usePos } from "@point_of_sale/app/pos_hook";
-import { Component, onMounted, useState } from "@odoo/owl";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { ActionpadWidget } from "./ActionpadWidget";
 
 export class ProductScreen extends ControlButtonsMixin(Component) {
     static template = "ProductScreen";
@@ -39,10 +40,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.notification = useService("pos_notification");
         this.numberBuffer = useService("number_buffer");
         onMounted(this.onMounted);
-        // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
-        // We don't do this in the `mounted` lifecycle method because it is called before
-        // the callbacks in `onMounted` hook.
-        onMounted(() => this.numberBuffer.reset());
+
         useBarcodeReader({
             product: this._barcodeProductAction,
             weight: this._barcodeProductAction,
@@ -51,8 +49,18 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             discount: this._barcodeDiscountAction,
             error: this._barcodeErrorAction,
         });
+
         this.state = useState({
             mobile_pane: this.props.mobile_pane || "right",
+        });
+
+        // Call `resset` when the `onMounted` callback in `numberBuffer.use` is done.
+        // We don't do this in the `mounted` lifecycle method because it is called before
+        // the callbacks in `onMounted` hook.
+        onMounted(() => this.numberBuffer.reset());
+        this.numberBuffer.use({
+            triggerAtInput: (...args) => this.updateSelectedOrderline(...args),
+            useWithBarcode: true,
         });
     }
     onMounted() {
