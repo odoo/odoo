@@ -425,25 +425,15 @@ export class ViewCompiler {
      * @returns {Element}
      */
     compileWidget(el) {
-        const attrs = {};
-        const props = { record: "__comp__.props.record", readonly: this.ctx.readonly };
-        for (const { name, value } of el.attributes) {
-            switch (name) {
-                case "class":
-                case "name": {
-                    props[name] = `'${value}'`;
-                    break;
-                }
-                case "modifiers": {
-                    attrs.modifiers = JSON.parse(value || "{}");
-                    break;
-                }
-                default: {
-                    attrs[name] = value;
-                }
-            }
+        const widgetId = el.getAttribute("widget_id");
+        const props = { record: "__comp__.props.record" };
+        if (el.hasAttribute("name")) {
+            props.name = `'${el.getAttribute("name")}'`;
         }
-        props.node = encodeObjectForTemplate({ attrs });
+        if (el.hasAttribute("class")) {
+            props.name = `'${el.getAttribute("class")}'`;
+        }
+        props.widgetInfo = `__comp__.props.archInfo.widgetNodes['${widgetId}']`;
         const widget = createElement("Widget", props);
         return assignOwlDirectives(widget, el);
     }

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { extractAttributes, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
+import { Widget } from "@web/views/widgets/widget";
 import {
     addFieldDependencies,
     archParseBoolean,
@@ -10,8 +10,6 @@ import {
     processButton,
     stringToOrderBy,
 } from "@web/views/utils";
-
-const viewWidgetRegistry = registry.category("view_widgets");
 
 /**
  * NOTE ON 't-name="kanban-box"':
@@ -54,6 +52,8 @@ export class KanbanArchParser extends XMLParser {
         const tooltipInfo = {};
         let handleField = null;
         const fieldNodes = {};
+        const widgetNodes = {};
+        let widgetNextId = 0;
         const jsClass = xmlDoc.getAttribute("js_class");
         const action = xmlDoc.getAttribute("action");
         const type = xmlDoc.getAttribute("type");
@@ -125,8 +125,15 @@ export class KanbanArchParser extends XMLParser {
                 );
             }
             if (node.tagName === "widget") {
-                const { fieldDependencies } = viewWidgetRegistry.get(node.getAttribute("name"));
-                addFieldDependencies(activeFields, models[modelName], fieldDependencies);
+                const widgetInfo = Widget.parseWidgetNode(node);
+                const widgetId = `widget_${++widgetNextId}`;
+                widgetNodes[widgetId] = widgetInfo;
+                node.setAttribute("widget_id", widgetId);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    widgetInfo.widget.fieldDependencies
+                );
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.
@@ -173,6 +180,7 @@ export class KanbanArchParser extends XMLParser {
             creates,
             defaultGroupBy,
             fieldNodes,
+            widgetNodes,
             handleField,
             headerButtons,
             colorField,

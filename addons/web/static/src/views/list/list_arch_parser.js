@@ -56,6 +56,8 @@ export class ListArchParser extends XMLParser {
     parse(arch, models, modelName) {
         const xmlDoc = this.parseXML(arch);
         const fieldNodes = {};
+        const widgetNodes = {};
+        let widgetNextId = 0;
         const columns = [];
         const fields = models[modelName];
         let buttonId = 0;
@@ -125,6 +127,9 @@ export class ListArchParser extends XMLParser {
                 return false;
             } else if (node.tagName === "widget") {
                 const widgetInfo = this.parseWidgetNode(node);
+                const widgetId = `widget_${++widgetNextId}`;
+                widgetNodes[widgetId] = widgetInfo;
+                node.setAttribute("widget_id", widgetId);
                 addFieldDependencies(
                     activeFields,
                     models[modelName],
@@ -236,6 +241,7 @@ export class ListArchParser extends XMLParser {
             handleField,
             headerButtons,
             fieldNodes,
+            widgetNodes,
             activeFields,
             columns,
             groupBy,

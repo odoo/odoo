@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
+import { Widget } from "@web/views/widgets/widget";
 import { addFieldDependencies, archParseBoolean, getActiveActions } from "@web/views/utils";
-
-const viewWidgetRegistry = registry.category("view_widgets");
 
 export class FormArchParser extends XMLParser {
     parse(arch, models, modelName) {
@@ -14,6 +12,8 @@ export class FormArchParser extends XMLParser {
         const disableAutofocus = archParseBoolean(xmlDoc.getAttribute("disable_autofocus") || "");
         const activeActions = getActiveActions(xmlDoc);
         const fieldNodes = {};
+        const widgetNodes = {};
+        let widgetNextId = 0;
         const fieldNextIds = {};
         let autofocusFieldId = null;
         const activeFields = {};
@@ -41,8 +41,15 @@ export class FormArchParser extends XMLParser {
                 // remove this when chatter fields are declared as attributes on the root node
                 return false;
             } else if (node.tagName === "widget") {
-                const { fieldDependencies } = viewWidgetRegistry.get(node.getAttribute("name"));
-                addFieldDependencies(activeFields, models[modelName], fieldDependencies);
+                const widgetInfo = Widget.parseWidgetNode(node);
+                const widgetId = `widget_${++widgetNextId}`;
+                widgetNodes[widgetId] = widgetInfo;
+                node.setAttribute("widget_id", widgetId);
+                addFieldDependencies(
+                    activeFields,
+                    models[modelName],
+                    widgetInfo.widget.fieldDependencies
+                );
             }
         });
         // TODO: generate activeFields for the model based on fieldNodes (merge duplicated fields)
@@ -77,6 +84,7 @@ export class FormArchParser extends XMLParser {
             autofocusFieldId,
             disableAutofocus,
             fieldNodes,
+            widgetNodes,
             xmlDoc,
             __rawArch: arch,
         };
