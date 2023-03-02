@@ -17,6 +17,13 @@ export class Many2OneAvatarField extends Component {
     get relation() {
         return this.props.relation || this.props.record.fields[this.props.name].relation;
     }
+    get many2OneProps() {
+        return Object.fromEntries(
+            Object.entries(this.props).filter(
+                ([key, _val]) => key in this.constructor.components.Many2OneField.props
+            )
+        );
+    }
 }
 
 export const many2OneAvatarField = {

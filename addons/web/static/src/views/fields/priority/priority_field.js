@@ -11,15 +11,24 @@ export class PriorityField extends Component {
     static template = "web.PriorityField";
     static props = {
         ...standardFieldProps,
+        withCommand: { type: Boolean, optional: true },
     };
 
     setup() {
         this.state = useState({
             index: -1,
         });
-        if (this.props.record.activeFields[this.props.name].viewType === "form") {
-            const commandName = this.env._t("Set priority...");
-            useCommand(
+        if (this.props.withCommand) {
+            for (const command of this.commands) {
+                useCommand(...command);
+            }
+        }
+    }
+
+    get commands() {
+        const commandName = this.env._t("Set priority...");
+        return [
+            [
                 commandName,
                 () => {
                     return {
@@ -37,9 +46,9 @@ export class PriorityField extends Component {
                         ],
                     };
                 },
-                { category: "smart_action", hotkey: "alt+r" }
-            );
-        }
+                { category: "smart_action", hotkey: "alt+r" },
+            ],
+        ];
     }
 
     get tooltipLabel() {
@@ -91,6 +100,9 @@ export const priorityField = {
     component: PriorityField,
     displayName: _lt("Priority"),
     supportedTypes: ["selection"],
+    extractProps: ({ viewType }) => ({
+        withCommand: viewType === "form",
+    }),
 };
 
 registry.category("fields").add("priority", priorityField);

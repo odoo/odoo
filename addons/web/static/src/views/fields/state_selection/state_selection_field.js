@@ -19,6 +19,7 @@ export class StateSelectionField extends Component {
     static props = {
         ...standardFieldProps,
         hideLabel: { type: Boolean, optional: true },
+        withCommand: { type: Boolean, optional: true },
     };
     static defaultProps = {
         hideLabel: false,
@@ -30,20 +31,19 @@ export class StateSelectionField extends Component {
             blocked: "red",
             done: "green",
         };
-        if (this.props.record.activeFields[this.props.name].viewType !== "form") {
-            return;
-        }
-        const hotkeys = ["D", "F", "G"];
-        for (const [index, [value, label]] of this.options.entries()) {
-            useCommand(
-                sprintf(this.env._t("Set kanban state as %s"), label),
-                () => this.updateRecord(value),
-                {
-                    category: "smart_action",
-                    hotkey: "alt+" + hotkeys[index],
-                    isAvailable: () => this.props.value !== value,
-                }
-            );
+        if (this.props.withCommand) {
+            const hotkeys = ["D", "F", "G"];
+            for (const [index, [value, label]] of this.options.entries()) {
+                useCommand(
+                    sprintf(this.env._t("Set kanban state as %s"), label),
+                    () => this.updateRecord(value),
+                    {
+                        category: "smart_action",
+                        hotkey: "alt+" + hotkeys[index],
+                        isAvailable: () => this.props.value !== value,
+                    }
+                );
+            }
         }
     }
     get options() {
@@ -61,10 +61,7 @@ export class StateSelectionField extends Component {
         return formatSelection(this.currentValue, { selection: this.options });
     }
     get showLabel() {
-        return (
-            this.props.record.activeFields[this.props.name].viewType === "list" &&
-            !this.props.hideLabel
-        );
+        return !this.props.hideLabel;
     }
     get isReadonly() {
         return this.props.record.isReadonly(this.props.name);
@@ -91,8 +88,9 @@ export const stateSelectionField = {
     component: StateSelectionField,
     displayName: _lt("Label Selection"),
     supportedTypes: ["selection"],
-    extractProps: ({ options }) => ({
-        hideLabel: !!options.hide_label,
+    extractProps: ({ options, viewType }) => ({
+        hideLabel: !!options.hide_label && viewType === "list",
+        withCommand: viewType === "form",
     }),
 };
 
