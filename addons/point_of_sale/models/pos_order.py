@@ -521,30 +521,12 @@ class PosOrder(models.Model):
                     account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
                 else:
                     account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
-                if rounding_line:
-                    if rounding_line_difference:
-                        rounding_line.with_context(check_move_validity=False).write({
-                            'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
-                            'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
-                            'account_id': account_id,
-                            'price_unit': rounding_applied,
-                        })
-
-                else:
-                    self.env['account.move.line'].with_context(check_move_validity=False).create({
+                if rounding_line_difference:
+                    rounding_line.with_context(check_move_validity=False).write({
                         'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
                         'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
-                        'quantity': 1.0,
-                        'amount_currency': rounding_applied,
-                        'partner_id': new_move.partner_id.id,
-                        'move_id': new_move.id,
-                        'currency_id': new_move.currency_id if new_move.currency_id != new_move.company_id.currency_id else False,
-                        'company_id': new_move.company_id.id,
-                        'company_currency_id': new_move.company_id.currency_id.id,
-                        'display_type': 'rounding',
-                        'sequence': 9999,
-                        'name': new_move.invoice_cash_rounding_id.name,
                         'account_id': account_id,
+                        'price_unit': rounding_applied,
                     })
             else:
                 if rounding_line:
