@@ -55,14 +55,14 @@ class TestFrontend(odoo.tests.HttpCase):
         })
 
         table_05 = self.env['restaurant.table'].create({
-            'name': 'T5',
+            'name': '5',
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 100,
         })
         table_04 = self.env['restaurant.table'].create({
-            'name': 'T4',
+            'name': '4',
             'floor_id': main_floor.id,
             'seats': 4,
             'shape': 'square',
@@ -70,7 +70,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'position_v': 100,
         })
         table_02 = self.env['restaurant.table'].create({
-            'name': 'T2',
+            'name': '2',
             'floor_id': main_floor.id,
             'seats': 4,
             'position_h': 250,
@@ -83,7 +83,7 @@ class TestFrontend(odoo.tests.HttpCase):
         })
 
         table_01 = self.env['restaurant.table'].create({
-            'name': 'T1',
+            'name': '1',
             'floor_id': second_floor.id,
             'seats': 4,
             'shape': 'square',
@@ -91,7 +91,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'position_v': 150,
         })
         table_03 = self.env['restaurant.table'].create({
-            'name': 'T3',
+            'name': '3',
             'floor_id': second_floor.id,
             'seats': 4,
             'position_h': 100,

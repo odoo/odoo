@@ -14,21 +14,21 @@ startSteps();
 
 // check floors if they contain their corresponding tables
 FloorScreen.check.selectedFloorIs("Main Floor");
-FloorScreen.check.hasTable("T2");
-FloorScreen.check.hasTable("T4");
-FloorScreen.check.hasTable("T5");
+FloorScreen.check.hasTable("2");
+FloorScreen.check.hasTable("4");
+FloorScreen.check.hasTable("5");
 FloorScreen.do.clickFloor("Second Floor");
-FloorScreen.check.hasTable("T3");
-FloorScreen.check.hasTable("T1");
+FloorScreen.check.hasTable("3");
+FloorScreen.check.hasTable("1");
 
 // clicking table in active mode does not open product screen
 // instead, table is selected
 FloorScreen.do.clickEdit();
 FloorScreen.check.editModeIsActive(true);
-FloorScreen.do.clickTable("T3");
-FloorScreen.check.selectedTableIs("T3");
-FloorScreen.do.clickTable("T1");
-FloorScreen.check.selectedTableIs("T1");
+FloorScreen.do.clickTable("3");
+FloorScreen.check.selectedTableIs("3");
+FloorScreen.do.clickTable("1");
+FloorScreen.check.selectedTableIs("1");
 
 // switching floor in edit mode deactivates edit mode
 FloorScreen.do.clickFloor("Main Floor");
@@ -38,62 +38,62 @@ FloorScreen.check.editModeIsActive(true);
 
 // test add table
 FloorScreen.do.clickAddTable();
-FloorScreen.check.selectedTableIs("T1");
+FloorScreen.check.selectedTableIs("1");
 FloorScreen.do.clickRename();
 TextInputPopup.check.isShown();
-TextInputPopup.do.inputText("T100");
+TextInputPopup.do.inputText("100");
 TextInputPopup.do.clickConfirm();
-FloorScreen.check.selectedTableIs("T100");
+FloorScreen.check.selectedTableIs("100");
 
 // test duplicate table
 FloorScreen.do.clickDuplicate();
-// new table is already named T101
-FloorScreen.check.selectedTableIs("T101");
+// new table is already named 101
+FloorScreen.check.selectedTableIs("101");
 FloorScreen.do.clickRename();
 TextInputPopup.check.isShown();
-TextInputPopup.do.inputText("T1111");
+TextInputPopup.do.inputText("1111");
 TextInputPopup.do.clickConfirm();
-FloorScreen.check.selectedTableIs("T1111");
+FloorScreen.check.selectedTableIs("1111");
 
 // switch floor, switch back and check if
 // the new tables are still there
 FloorScreen.do.clickFloor("Second Floor");
 FloorScreen.check.editModeIsActive(false);
-FloorScreen.check.hasTable("T3");
-FloorScreen.check.hasTable("T1");
+FloorScreen.check.hasTable("3");
+FloorScreen.check.hasTable("1");
 
 FloorScreen.do.clickFloor("Main Floor");
-FloorScreen.check.hasTable("T2");
-FloorScreen.check.hasTable("T4");
-FloorScreen.check.hasTable("T5");
-FloorScreen.check.hasTable("T100");
-FloorScreen.check.hasTable("T1111");
+FloorScreen.check.hasTable("2");
+FloorScreen.check.hasTable("4");
+FloorScreen.check.hasTable("5");
+FloorScreen.check.hasTable("100");
+FloorScreen.check.hasTable("1111");
 
 // test delete table
 FloorScreen.do.clickEdit();
 FloorScreen.check.editModeIsActive(true);
-FloorScreen.do.clickTable("T2");
-FloorScreen.check.selectedTableIs("T2");
+FloorScreen.do.clickTable("2");
+FloorScreen.check.selectedTableIs("2");
 FloorScreen.do.clickTrash();
 Chrome.do.confirmPopup();
 
 // change number of seats
-FloorScreen.do.clickTable("T4");
-FloorScreen.check.selectedTableIs("T4");
+FloorScreen.do.clickTable("4");
+FloorScreen.check.selectedTableIs("4");
 FloorScreen.do.clickSeats();
 NumberPopup.do.pressNumpad("Backspace 9");
 NumberPopup.check.inputShownIs("9");
 NumberPopup.do.clickConfirm();
-FloorScreen.check.tableSeatIs("T4", "9");
+FloorScreen.check.tableSeatIs("4", "9");
 
 // change number of seat when the input is already selected
-FloorScreen.do.clickTable("T4");
-FloorScreen.check.selectedTableIs("T4");
+FloorScreen.do.clickTable("4");
+FloorScreen.check.selectedTableIs("4");
 FloorScreen.do.clickSeats();
 NumberPopup.do.pressNumpad("1 5");
 NumberPopup.check.inputShownIs("15");
 NumberPopup.do.clickConfirm();
-FloorScreen.check.tableSeatIs("T4", "15");
+FloorScreen.check.tableSeatIs("4", "15");
 
 // change shape
 FloorScreen.do.changeShapeTo("round");
@@ -101,16 +101,16 @@ FloorScreen.do.changeShapeTo("round");
 // Opening product screen in main floor should go back to main floor
 FloorScreen.do.clickEdit();
 FloorScreen.check.editModeIsActive(false);
-FloorScreen.check.tableIsNotSelected("T4");
-FloorScreen.do.clickTable("T4");
+FloorScreen.check.tableIsNotSelected("4");
+FloorScreen.do.clickTable("4");
 ProductScreen.check.isShown();
-Chrome.check.backToFloorTextIs("Main Floor", "T4");
+Chrome.check.backToFloorTextIs("Main Floor", "4");
 Chrome.do.backToFloor();
 
 // Opening product screen in second floor should go back to second floor
 FloorScreen.do.clickFloor("Second Floor");
-FloorScreen.check.hasTable("T3");
-FloorScreen.do.clickTable("T3");
-Chrome.check.backToFloorTextIs("Second Floor", "T3");
+FloorScreen.check.hasTable("3");
+FloorScreen.do.clickTable("3");
+Chrome.check.backToFloorTextIs("Second Floor", "3");
 
 registry.category("web_tour.tours").add("FloorScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

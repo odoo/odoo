@@ -100,7 +100,7 @@ class Check {
         return [
             {
                 content: `selected floor has '${name}' table`,
-                trigger: `.floor-map .tables .table .label:contains("${name}")`,
+                trigger: `.floor-map .table .label:contains("${name}")`,
                 run: () => {},
             },
         ];
@@ -118,7 +118,7 @@ class Check {
         return [
             {
                 content: `number of seats in table '${table}' is '${val}'`,
-                trigger: `.floor-map .tables .table .label:contains("${table}") ~ .table-seats:contains("${val}")`,
+                trigger: `.floor-map .table .label:contains("${table}") ~ .table-seats:contains("${val}")`,
                 run: function () {},
             },
         ];
