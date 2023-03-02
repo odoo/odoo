@@ -9,6 +9,7 @@ from collections import OrderedDict
 from datetime import date, datetime, time
 import io
 from PIL import Image
+from unittest.mock import patch
 import psycopg2
 
 from odoo import models, fields, Command
@@ -3615,6 +3616,25 @@ class TestComputeQueries(common.TransactionCase):
             record = model.create({'foo': 'Foo', 'bar': 'Bar'})
         self.assertEqual(record.foo, 'Bar')
         self.assertEqual(record.bar, 'Bar')
+
+    def test_partial_compute_batching(self):
+        """ Create several 'new' records and check that the partial compute
+        method is called only once.
+        """
+        order = self.env['test_new_api.order'].new({
+            'line_ids': [Command.create({'reward': False})] * 100,
+        })
+
+        OrderLine = self.env.registry['test_new_api.order.line']
+        with patch.object(
+            OrderLine,
+            '_compute_has_been_rewarded',
+            side_effect=OrderLine._compute_has_been_rewarded,
+            autospec=True,
+        ) as patch_compute:
+            order.line_ids.mapped('has_been_rewarded')
+            self.assertEqual(patch_compute.call_count, 1)
+
 
 class test_shared_cache(TransactionCaseWithUserDemo):
     def test_shared_cache_computed_field(self):
