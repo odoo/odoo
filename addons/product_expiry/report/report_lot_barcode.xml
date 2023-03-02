@@ -4,10 +4,10 @@
     <xpath expr="//div[@name='lot_name']" position="after">
         <t t-if="o.use_expiration_date">
             <div class="o_label_4x12" t-if="o.use_date">
-                Best before: <span t-field="o.use_date" t-options='{"widget": "date"}'/>
+                B.b. <t t-out="o.use_date" t-options='{"widget": "date"}'/>
             </div>
             <div class="o_label_4x12" t-if="o.expiration_date">
-                Use by: <span t-field="o.expiration_date" t-options='{"widget": "date"}'/>
+                Exp. <t t-out="o.expiration_date" t-options='{"widget": "date"}'/>
             </div>
         </t>
     </xpath>
