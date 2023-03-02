@@ -103,73 +103,103 @@
         </field>
     </record>
 
-    <!-- TODO VFE factorize core fields between quotation & SO views -->
-    <record id="view_order_tree" model="ir.ui.view">
+    <record id="sale_order_tree" model="ir.ui.view">
         <field name="name">sale.order.tree</field>
         <field name="model">sale.order</field>
-        <field name="priority">2</field>
+        <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <tree string="Sales Orders" sample="1"
-                decoration-info="invoice_status == 'to invoice'"
-                decoration-muted="state == 'cancel'">
+            <tree class="o_sale_order"
+                  string="Sales Orders"
+                  sample="1"
+                  decoration-info="state == 'draft' or invoice_status == 'to invoice'"
+                  decoration-primary="state == 'sent'"
+                  decoration-muted="state == 'cancel'">
                 <field name="message_needaction" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
-                <field name="date_order" string="Order Date" widget="date" optional="show"/>
+                <field name="date_order" widget="date" optional="show"/>
                 <field name="commitment_date" optional="hide"/>
                 <field name="expected_date" optional="hide"/>
                 <field name="partner_id" readonly="1"/>
-                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="team_id" optional="hide"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
-                <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
-                <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
-                <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
+                <field name="company_id"
+                       groups="base.group_multi_company"
+                       optional="show"
+                       readonly="1"/>
+                <field name="amount_untaxed"
+                       sum="Total Tax Excluded"
+                       widget="monetary"
+                       optional="hide"/>
+                <field name="amount_tax"
+                       sum="Tax Total"
+                       widget="monetary"
+                       optional="hide"/>
+                <field name="amount_total"
+                       sum="Total Tax Included"
+                       widget="monetary"
+                       decoration-bf="1"
+                       optional="show"/>
+                <field name="tag_ids"
+                      widget="many2many_tags"
+                      options="{'color_field': 'color'}"
+                      optional="hide"/>
+                <field name="state"
+                    decoration-success="state == 'sale' or state == 'done'"
+                    decoration-info="state == 'draft'"
+                    decoration-primary="state == 'sent'"
+                    widget="badge"
+                    optional="hide"/>
                 <field name="invoice_status"
                     decoration-success="invoice_status == 'invoiced'"
                     decoration-info="invoice_status == 'to invoice'"
                     decoration-warning="invoice_status == 'upselling'"
-                    widget="badge" optional="show"/>
-                <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    widget="badge"
+                    optional="show"/>
                 <field name="amount_to_invoice" optional="hide"/>
-                <field name="state" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree (orders)</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_order_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <!-- Dummy view content since empty views are not supported atm -->
+            <tree position="attributes">
+                <attribute name="string">Sales Orders</attribute>
             </tree>
         </field>
     </record>
 
     <record id="view_quotation_tree" model="ir.ui.view">
-        <field name="name">sale.order.tree</field>
+        <field name="name">sale.order.tree (quotes)</field>
         <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_order_tree"/>
+        <field name="mode">primary</field>
         <field name="priority">4</field>
         <field name="arch" type="xml">
-            <tree string="Quotation" class="o_sale_order" sample="1"
-                decoration-info="state == 'draft'"
-                decoration-primary="state == 'sent'"
-                decoration-muted="state == 'cancel'">
-                <field name="name" string="Number" readonly="1" decoration-bf="1"/>
-                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
-                <field name="commitment_date" widget="date" optional="hide"/>
-                <field name="expected_date" widget="date" optional="hide"/>
-                <field name="partner_id" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
-                <field name="activity_ids" widget="list_activity" optional="show"/>
-                <field name="team_id" optional="hide"/>
-                <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
-                <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
-                <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
-                <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
-                <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
-                <field name="state"
-                    decoration-success="state == 'sale' or state == 'done'"
-                    decoration-info="state == 'draft'"
-                    decoration-primary="state == 'sent'"
-                    widget="badge" optional="show"/>
-                <field name="invoice_status" optional="hide"/>
-                <field name="message_needaction" invisible="1"/>
-                <field name="currency_id" invisible="1"/>
+            <tree position="attributes">
+                <attribute name="string">Quotations</attribute>
             </tree>
+            <field name="date_order" position="replace">
+                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
+            </field>
+            <field name="state" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="invoice_status" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="amount_to_invoice" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
         </field>
     </record>
 
