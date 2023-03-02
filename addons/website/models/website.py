@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import fnmatch
 import hashlib
 import inspect
 import json
@@ -1160,7 +1161,8 @@ class Website(models.Model):
 
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
-                if not query_string or query_string.lower() in url.lower():
+                pattern = query_string and '*%s*' % "*".join(query_string.split('/'))
+                if not query_string or fnmatch.fnmatch(url.lower(), pattern):
                     page = {'loc': url}
                     if url in url_set:
                         continue

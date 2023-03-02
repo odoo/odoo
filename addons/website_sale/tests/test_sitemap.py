@@ -22,4 +22,4 @@ class TestSitemap(HttpCase):
     def test_01_shop_route_sitemap(self):
         resp = self.url_open('/sitemap.xml')
         level2_url = '/shop/category/level-0-level-1-level-2-%s' % self.cats[2].id
-        self.assertTrue(level2_url in resp.text, "Category entry in sitemap should be prefixed by its parent hierarchy.")
+        self.assertIn(level2_url, resp.text, "Category entry in sitemap should be prefixed by its parent hierarchy.")
