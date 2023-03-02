@@ -1538,18 +1538,17 @@ export function isWhitespace(value) {
  * will always return 'true' while it is sometimes invisible.
  *
  * @param {Node} node
- * @param {boolean} areBlocksAlwaysVisible
  * @returns {boolean}
  */
-export function isVisible(node, areBlocksAlwaysVisible = true) {
-    if (!node) return false;
-    if (node.nodeType === Node.TEXT_NODE) {
-        return isVisibleTextNode(node);
-    }
-    if ((areBlocksAlwaysVisible && isBlock(node)) || isSelfClosingElement(node)) {
-        return true;
-    }
-    return [...node.childNodes].some(n => isVisible(n, areBlocksAlwaysVisible));
+export function isVisible(node) {
+    return !!node && (
+        (node.nodeType === Node.TEXT_NODE && isVisibleTextNode(node)) ||
+        isSelfClosingElement(node) ||
+        hasVisibleContent(node)
+    );
+}
+export function hasVisibleContent(node) {
+    return [...(node?.childNodes || [])].some(n => isVisible(n));
 }
 const visibleCharRegex = /[^\s\u200b]|[\u00A0\u0009]$/; // contains at least a char that is always visible (TODO: 0009 shouldn't be included)
 export function isVisibleTextNode(testedNode) {
@@ -1936,7 +1935,7 @@ export function insertAndSelectZws(selection) {
  * @returns {Node} the first visible ancestor of node (or itself)
  */
 export function clearEmpty(node) {
-    while (!isVisible(node)) {
+    while (!isBlock(node) && !isVisible(node)) {
         const toRemove = node;
         node = node.parentNode;
         toRemove.remove();

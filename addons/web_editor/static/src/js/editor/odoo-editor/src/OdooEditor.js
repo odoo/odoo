@@ -1882,10 +1882,10 @@ export class OdooEditor extends EventTarget {
         });
         // If the end container was fully selected, extractContents may have
         // emptied it without removing it. Ensure it's gone.
-        const isRemovableInvisible = (node, noBlocks = true) =>
-            !isVisible(node, noBlocks) && !isZWS(node) && !isUnremovable(node);
+        const isRemovableInvisible = node =>
+            !isVisible(node) && !isZWS(node) && !isUnremovable(node);
         const endIsStart = end === start;
-        while (end && isRemovableInvisible(end, false) && !end.contains(range.endContainer)) {
+        while (end && isRemovableInvisible(end) && !end.contains(range.endContainer)) {
             const parent = end.parentNode;
             end.remove();
             end = parent;
@@ -1893,7 +1893,7 @@ export class OdooEditor extends EventTarget {
         // Same with the start container
         while (
             start &&
-            isRemovableInvisible(start) &&
+            !isBlock(start) && isRemovableInvisible(start) &&
             !(endIsStart && start.contains(range.startContainer))
         ) {
             const parent = start.parentNode;
@@ -2334,7 +2334,7 @@ export class OdooEditor extends EventTarget {
                     this._selectTableCells(range);
                     appliedCustomSelection = true;
                 }
-            } else if (!isVisible(startTd, false) &&
+            } else if (!isVisible(startTd) &&
                 ev.clientX - (this._lastMouseClickPosition ? this._lastMouseClickPosition[0] : ev.clientX) >= 15
             ) {
                 // Handle selecting an empty cell.
