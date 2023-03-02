@@ -7,8 +7,6 @@ import { registry } from "@web/core/registry";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { reactive, markRaw } from "@odoo/owl";
 import { Reactive } from "@point_of_sale/utils";
-import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _t } from "@web/core/l10n/translation";
 
@@ -127,73 +125,6 @@ export class PosStore extends Reactive {
                     this.globalState.loadingSkipButtonIsShown = false;
                     window.location = "/web#action=point_of_sale.action_client_pos_menu";
                 }
-            }
-        }
-    }
-    async closeSession(defaultCashCounted, notes, otherPaymentMethods, payments) {
-        let response;
-
-        if (this.globalState.config.cashControl) {
-            response = await this.orm.call(
-                "pos.session",
-                "post_closing_cash_details"[this.globalState.pos_session.id],
-                {
-                    counted_cash: defaultCashCounted,
-                }
-            );
-
-            if (!response.successful) {
-                return this.handleClosingError(response);
-            }
-        }
-
-        try {
-            await this.orm.call("pos.session", "update_closing_control_state_session", [
-                this.globalState.pos_session.id,
-                notes,
-            ]);
-        } catch (error) {
-            // We have to handle the error manually otherwise the validation check stops the script.
-            // In case of "rescue session", we want to display the next popup with "handleClosingError".
-            // FIXME
-            if (
-                !error.message &&
-                !error.message.data &&
-                error.message.data.message !== "This session is already closed."
-            ) {
-                throw error;
-            }
-        }
-
-        try {
-            const bankPaymentMethodDiffPairs = otherPaymentMethods
-                .filter((pm) => pm.type == "bank")
-                .map((pm) => [pm.id, payments[pm.id].difference]);
-            response = await this.orm.call("pos.session", "close_session_from_ui", [
-                this.globalState.pos_session.id,
-                bankPaymentMethodDiffPairs,
-            ]);
-            if (!response.successful) {
-                return this.handleClosingError(response);
-            }
-            window.location = "/web#action=point_of_sale.action_client_pos_menu";
-        } catch (error) {
-            if (identifyError(error) instanceof ConnectionLostError) {
-                // Cannot redirect to backend when offline, let error handlers show the offline popup
-                // FIXME POSREF: doing this means closing again when online will redo the beginning of the method
-                // although it's impossible to close again because this.closeSessionClicked isn't reset to false
-                // The application state is corrupted.
-                throw error;
-            } else {
-                // FIXME POSREF: why are we catching errors here but not anywhere else in this method?
-                await this.popup.add(ErrorPopup, {
-                    title: _t("Closing session error"),
-                    body: _t(
-                        "An error has occurred when trying to close the session.\n" +
-                            "You will be redirected to the back-end to manually close the session."
-                    ),
-                });
-                window.location = "/web#action=point_of_sale.action_client_pos_menu";
             }
         }
     }
