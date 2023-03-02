@@ -53,7 +53,10 @@ HTMLLIElement.prototype.oShiftTab = function () {
         let p;
         while (li.firstChild) {
             if (isBlock(li.firstChild)) {
-                p = isVisible(p) && ul.after(p) && undefined;
+                if (p && isVisible(p)) {
+                    ul.after(p);
+                }
+                p = undefined;
                 ul.after(li.firstChild);
             } else {
                 p = p || document.createElement('P');
@@ -64,7 +67,9 @@ HTMLLIElement.prototype.oShiftTab = function () {
                 p.append(li.firstChild);
             }
         }
-        if (isVisible(p)) ul.after(p);
+        if (p && isVisible(p)) {
+            ul.after(p)
+        }
 
         restoreCursor(new Map([[li, ul.nextSibling]]));
         li.remove();
