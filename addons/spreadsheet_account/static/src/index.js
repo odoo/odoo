@@ -23,7 +23,13 @@ cellMenuRegistry.add("move_lines_see_records", {
         let [code, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
             .map((arg) => env.model.getters.evaluateFormula(arg));
+<<<<<<< HEAD
         code = toString(code);
+||||||| parent of 7beea853565 (temp)
+        codes = toString(codes);
+=======
+        codes = toString(codes).split(",");
+>>>>>>> 7beea853565 (temp)
         const dateRange = parseAccountingDate(date_range);
         dateRange.year += offset || 0;
         companyId = companyId || null;
@@ -41,10 +47,20 @@ cellMenuRegistry.add("move_lines_see_records", {
         const evaluatedCell = env.model.getters.getEvaluatedCell(position);
         const cell = env.model.getters.getCell(position);
         return (
+<<<<<<< HEAD
             !evaluatedCell.error &&
             evaluatedCell.value !== "" &&
             cell &&
             getNumberOfAccountFormulas(cell.content) === 1
+||||||| parent of 7beea853565 (temp)
+            cell && !cell.evaluated.error &&
+            cell.evaluated.value !== "" && getNumberOfAccountFormulas(cell.content) === 1
+=======
+            cell &&
+            !cell.evaluated.error &&
+            cell.evaluated.value !== "" &&
+            getNumberOfAccountFormulas(cell.content) === 1
+>>>>>>> 7beea853565 (temp)
         );
     },
 });
