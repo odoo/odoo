@@ -4,7 +4,7 @@ import { parse } from "web.field_utils";
 import { barcodeService } from "@barcodes/barcode_service";
 import { _t } from "web.core";
 import { registry } from "@web/core/registry";
-import { EventBus, onMounted, onWillUnmount, useComponent, useExternalListener } from "@odoo/owl";
+import { EventBus, onWillDestroy, useComponent, useExternalListener } from "@odoo/owl";
 
 const INPUT_KEYS = new Set(
     ["Delete", "Backspace", "+1", "+2", "+5", "+10", "+20", "+50"].concat(
@@ -133,16 +133,19 @@ class NumberBuffer extends EventBus {
         this.eventsBuffer = [];
         const currentComponent = useComponent();
         config = Object.assign(getDefaultConfig(), config);
-        onMounted(() => {
-            this.bufferHolderStack.push({
-                component: currentComponent,
-                state: config.state ? config.state : { buffer: "", toStartOver: false },
-                config,
-            });
-            this._setUp();
+
+        this.bufferHolderStack.push({
+            component: currentComponent,
+            state: config.state ? config.state : { buffer: "", toStartOver: false },
+            config,
         });
-        onWillUnmount(() => {
-            this.bufferHolderStack.pop();
+        this._setUp();
+        onWillDestroy(() => {
+            const currentComponentName = currentComponent.constructor.name;
+            const indexComponent = this.bufferHolderStack.findIndex(
+                (stack) => stack.component.constructor.name === currentComponentName
+            );
+            this.bufferHolderStack.splice(indexComponent, 1);
             this._setUp();
         });
     }

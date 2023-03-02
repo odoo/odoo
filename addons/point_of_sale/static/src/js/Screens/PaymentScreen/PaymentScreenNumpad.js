@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-
 import { PSNumpadInputButton } from "./PSNumpadInputButton";
 import { Component } from "@odoo/owl";
 
