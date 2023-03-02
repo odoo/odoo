@@ -317,7 +317,7 @@ class AccountEdiFormat(models.Model):
                 file = proxy_user._decrypt_data(fattura['file'], fattura['key'])
 
                 try:
-                    tree = etree.fromstring(file)
+                    etree.fromstring(file)
                 except Exception:
                     # should not happen as the file has been checked by SdiCoop
                     _logger.info('Received file badly formatted, skipping: \n %s', file)
