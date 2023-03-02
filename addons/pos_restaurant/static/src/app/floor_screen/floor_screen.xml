@@ -26,7 +26,7 @@
                     <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i>
                     <span> button in the editing toolbar to create new tables.</span>
                 </div>
-                <div t-else="" class="tables" t-ref="map">
+                <div t-else="" t-ref="map">
                     <t t-foreach="activeTables" t-as="table" t-key="table.id">
                         <Table t-if="table.id !== state.selectedTableId" onClick.bind="onSelectTable" table="table" />
                         <EditableTable t-else="" table="table" onSaveTable.bind="onSaveTable" limit="floorMapRef" />

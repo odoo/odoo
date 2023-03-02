@@ -13,7 +13,7 @@ import { registry } from "@web/core/registry";
 // when finished, steps can be taken from getSteps
 startSteps();
 
-FloorScreen.do.clickTable("T2");
+FloorScreen.do.clickTable("2");
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.exec.addOrderline("Water", "5", "2", "10.0");
 ProductScreen.exec.addOrderline("Minute Maid", "3", "2", "6.0");
@@ -53,12 +53,12 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", { test: true, url
 
 startSteps();
 
-FloorScreen.do.clickTable("T2");
+FloorScreen.do.clickTable("2");
 ProductScreen.exec.addOrderline("Water", "1", "2.0");
 ProductScreen.exec.addOrderline("Minute Maid", "1", "2.0");
 ProductScreen.exec.addOrderline("Coca-Cola", "1", "2.0");
 Chrome.do.backToFloor();
-FloorScreen.do.clickTable("T2");
+FloorScreen.do.clickTable("2");
 ProductScreen.do.clickSplitBillButton();
 
 SplitBillScreen.do.clickOrderline("Water");
