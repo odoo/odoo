@@ -14,30 +14,6 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
             coupon: this._onCouponScan,
         });
     },
-    async onClickPay() {
-        const order = this.env.pos.get_order();
-        const eWalletLine = order
-            .get_orderlines()
-            .find((line) => line.getEWalletGiftCardProgramType() === "ewallet");
-        if (eWalletLine && !order.get_partner()) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: this.env._t("Customer needed"),
-                body: this.env._t("eWallet requires a customer to be selected"),
-            });
-            if (confirmed) {
-                const { confirmed, payload: newPartner } = await this.pos.showTempScreen(
-                    "PartnerListScreen",
-                    { partner: null }
-                );
-                if (confirmed) {
-                    order.set_partner(newPartner);
-                    order.updatePricelist(newPartner);
-                }
-            }
-        } else {
-            return this._super(...arguments);
-        }
-    },
     _onCouponScan(code) {
         // IMPROVEMENT: Ability to understand if the scanned code is to be paid or to be redeemed.
         this.currentOrder.activateCode(code.base_code);
