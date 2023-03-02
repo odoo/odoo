@@ -22,7 +22,7 @@ cellMenuRegistry.add("move_lines_see_records", {
         let [codes, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
             .map((arg) => env.model.getters.evaluateFormula(arg));
-        codes = toString(codes);
+        codes = toString(codes).split(",");
         const dateRange = parseAccountingDate(date_range);
         dateRange.year += offset || 0;
         companyId = companyId || null;
@@ -38,8 +38,10 @@ cellMenuRegistry.add("move_lines_see_records", {
     isVisible: (env) => {
         const cell = env.model.getters.getActiveCell();
         return (
-            cell && !cell.evaluated.error &&
-            cell.evaluated.value !== "" && getNumberOfAccountFormulas(cell.content) === 1
+            cell &&
+            !cell.evaluated.error &&
+            cell.evaluated.value !== "" &&
+            getNumberOfAccountFormulas(cell.content) === 1
         );
     },
 });
