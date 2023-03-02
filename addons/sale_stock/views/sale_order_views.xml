@@ -54,14 +54,17 @@
            </field>
         </record>
 
-        <record id="view_quotation_tree" model="ir.ui.view">
+        <record id="sale_order_tree" model="ir.ui.view">
             <field name="name">sale.order.tree.inherit.sale.stock</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="inherit_id" ref="sale.sale_order_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='tag_ids']" position="after">
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide" />
-                </xpath>
+                <field name="tag_ids" position="after">
+                    <field name="warehouse_id"
+                           options="{'no_create': True}"
+                           groups="stock.group_stock_multi_warehouses"
+                           optional="hide"/>
+                </field>
             </field>
         </record>
 
@@ -70,9 +73,6 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='team_id']" position="after">
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
-                </xpath>
                 <field name="invoice_status" position="before">
                     <field name="effective_date" invisible="1"/>
                     <field name="delivery_status" optional="hide" widget="badge"
