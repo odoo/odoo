@@ -1,8 +1,20 @@
 /** @odoo-module **/
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { useBus } from "@web/core/utils/hooks";
 
 export class FormStatusIndicator extends Component {
+    setup() {
+        this.state = useState({
+            fieldIsDirty: false,
+        });
+        useBus(
+            this.env.bus,
+            "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+            (ev) => (this.state.fieldIsDirty = ev.detail)
+        );
+    }
+
     get displayButtons() {
         return this.indicatorMode !== "saved";
     }
@@ -12,7 +24,7 @@ export class FormStatusIndicator extends Component {
             return this.props.model.root.isValid ? "dirty" : "invalid";
         } else if (!this.props.model.root.isValid) {
             return "invalid";
-        } else if (this.props.model.root.isDirty || this.props.fieldIsDirty) {
+        } else if (this.props.model.root.isDirty || this.state.fieldIsDirty) {
             return "dirty";
         } else {
             return "saved";
@@ -32,5 +44,4 @@ FormStatusIndicator.props = {
     save: Function,
     discard: Function,
     isDisabled: Boolean,
-    fieldIsDirty: Boolean,
 };

@@ -40,10 +40,13 @@ export class DateTimeField extends Component {
         }
     }
     onDatePickerInput(ev) {
-        this.props.setDirty(ev.target.value !== this.lastSetValue);
+        this.props.record.model.env.bus.trigger(
+            "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+            ev.target.value !== this.lastSetValue
+        );
     }
     onUpdateInput(date) {
-        this.props.setDirty(false);
+        this.props.record.model.env.bus.trigger("RELATIONAL_MODEL:FIELD_IS_DIRTY", false);
         this.lastSetValue = date;
     }
 }

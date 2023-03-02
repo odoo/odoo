@@ -241,4 +241,3 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
 };
 
 Field.props = ["fieldInfo?", "*"];
-Field.defaultProps = { setDirty: () => {} };
