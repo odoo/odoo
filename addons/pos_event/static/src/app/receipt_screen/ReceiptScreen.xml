@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('actions')]" position="inside">
+            <div t-if="currentOrder.hasEventLines()" class="event">
+                <h3>Events</h3>
+                <div class="buttons">
+                    <div class="button print" t-on-click="printFullPageTickets">
+                        <i class="fa fa-print"/> Print Full Page Ticket
+                    </div>
+                    <div class="button print" t-on-click="printFoldableBadge">
+                        <i class="fa fa-print"/> Print Foldable Badge
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

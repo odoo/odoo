@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_product_report_view_form_inherit_pos_event" model="ir.ui.view">
+        <field name="name">event.product.report.view.form.inherit.pos.event</field>
+        <field name="model">event.product.report</field>
+        <field name="inherit_id" ref="event_product.event_product_report_view_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="pos_order_id" attrs="{'invisible': [('pos_order_id', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_product_report_view_tree_inherit_pos_event" model="ir.ui.view">
+        <field name="name">event.product.report.view.tree.inherit.pos.event</field>
+        <field name="model">event.product.report</field>
+        <field name="inherit_id" ref="event_product.event_product_report_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="order_state" position="attributes">
+                <attribute name="decoration-success" add="order_state in ['paid', 'pos_done', 'invoiced']" separator=" or "/>
+                <attribute name="decoration-info" add="order_state == 'pos_draft'" separator=" or "/>
+            </field>
+        </field>
+    </record>
+</odoo>

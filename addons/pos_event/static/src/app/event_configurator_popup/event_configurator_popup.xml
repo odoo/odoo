@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="EventConfiguratorPopup" owl="1">
+        <div class="popup event-configurator-popup">
+            <header class="title">
+                Event tickets
+            </header>
+            <main class="body">
+                <t t-foreach="props.eventData" t-as="event" t-key="event.id">
+                    <div class="event" t-att-class="{'disabled': !event.event_registrations_open}"
+                         t-on-click="() => event.event_registrations_open ? this._onEventClick(event.id) : null">
+                        <div class="event-title" t-esc="event.name"/>
+                        <div class="event-info">
+                            <span>Start: <t t-esc="event.date_begin"/></span>
+                            <span t-if="!event.event_registrations_open" class="badge red">Registration closed</span>
+                            <span t-if="event.event_registrations_open and event.seats_available" class="badge green"><t t-esc="event.seats_available"/> seats remaining</span>
+                            <span>End: <t t-esc="event.date_end"/></span>
+                        </div>
+                    </div>
+                    <div class="tickets" t-if="event.event_registrations_open" t-ref="{{event.id}}-tickets">
+                        <div t-foreach="event.tickets" t-as="ticket" t-key="ticket.id" class="ticket">
+                            <div class="ticket-info">
+                                <div class="ticket-title">
+                                    <span class="ticket-name">
+                                        <t t-esc="ticket.name"/>
+                                        <t t-if="ticket.seats_available"> (<t t-esc="ticket.seats_available"/> seats remaining)</t>
+                                    </span>
+                                    <span class="ticket-price" t-esc="env.pos.format_currency(ticketInfoMap[ticket.id].product.lst_price)"/>
+                                </div>
+                                <span t-if="ticket.description" class="ticket-description" t-esc="ticket.description"/>
+                            </div>
+                            <div class="ticket-quantity" t-if="ticket.sale_available">
+                                <i class="fa fa-minus-circle" role="img" t-on-click="() => this._onMinusClick(event.id, ticket.id)"/>
+                                <input type="number" t-model.number="state.eventTickets[event.id][ticket.id]" t-on-keypress="_onInputKeyPress"/>
+                                <i class="fa fa-plus-circle" role="img" t-on-click="() => this._onPlusClick(event.id, ticket.id)"/>
+                                <span class="delete-cell">
+                                    <i t-if="state.eventTickets[event.id][ticket.id]" class="fa fa-trash" role="img"
+                                       t-on-click="() => this._onDeleteClick(event.id, ticket.id)"
+                                    />
+                                </span>
+                            </div>
+                            <div t-else="">
+                                sold out
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </main>
+            <footer class="footer footer-flex">
+                <div class="button confirm" t-att-class="{'highlight': _canConfirm(), 'disabled': !_canConfirm()}"
+                    t-on-click="() => this._canConfirm() ? this.confirm() : null">
+                    Ok
+                </div>
+                <div class="button cancel" t-on-click="cancel">
+                    Cancel
+                </div>
+            </footer>
+        </div>
+    </t>
+
+</templates>

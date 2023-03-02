@@ -182,12 +182,6 @@ class EventTicket(models.Model):
             res.append((ticket.id, name))
         return res
 
-    def _get_ticket_multiline_description(self):
-        """ Compute a multiline description of this ticket. It is used when ticket
-        description are necessary without having to encode it manually, like sales
-        information. """
-        return '%s\n%s' % (self.display_name, self.event_id.display_name)
-
     def _set_tz_context(self):
         self.ensure_one()
         return self.with_context(tz=self.event_id.date_tz or 'UTC')
