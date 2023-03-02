@@ -46,9 +46,7 @@ export function useInputField(params) {
      */
     function onInput(ev) {
         isDirty = ev.target.value !== lastSetValue;
-        if (component.props.setDirty) {
-            component.props.setDirty(isDirty);
-        }
+        component.props.record.model.env.bus.trigger("RELATIONAL_MODEL:FIELD_IS_DIRTY", isDirty);
     }
 
     /**
@@ -79,9 +77,10 @@ export function useInputField(params) {
                 lastSetValue = ev.target.value;
             }
 
-            if (component.props.setDirty) {
-                component.props.setDirty(isDirty);
-            }
+            component.props.record.model.env.bus.trigger(
+                "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+                isDirty
+            );
         }
     }
     function onKeydown(ev) {
@@ -158,9 +157,10 @@ export function useInputField(params) {
             if ((val || false) !== (component.props.value || false)) {
                 await component.props.record.update({ [component.props.name]: val });
                 lastSetValue = inputRef.el.value;
-                if (component.props.setDirty) {
-                    component.props.setDirty(isDirty);
-                }
+                component.props.record.model.env.bus.trigger(
+                    "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+                    isDirty
+                );
             }
         }
     }

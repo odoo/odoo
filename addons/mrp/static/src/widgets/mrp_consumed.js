@@ -24,7 +24,6 @@ export class MrpConsumed extends FloatField {
     }
 
     onInput(ev) {
-        this.props.setDirty(true);
         return this.props.record.update({ manual_consumption: true });
     }
 }

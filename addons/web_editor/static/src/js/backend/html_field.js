@@ -294,7 +294,7 @@ export class HtmlField extends Component {
             !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
             stripHistoryIds(value) !== stripHistoryIds(lastValue)
         ) {
-            this.props.setDirty(false);
+            this.props.record.model.env.bus.trigger("RELATIONAL_MODEL:FIELD_IS_DIRTY", false);
             this.currentEditingValue = value;
             await this.props.record.update({ [this.props.name]: value });
         }
@@ -315,7 +315,10 @@ export class HtmlField extends Component {
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
         this.wysiwyg.odooEditor.editable.addEventListener("input", () =>
-            this.props.setDirty(this._isDirty())
+            this.props.record.model.env.bus.trigger(
+                "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+                this._isDirty()
+            )
         );
 
         this.isRendered = true;
@@ -614,10 +617,7 @@ HtmlField.components = {
     TranslationButton,
     HtmlFieldWysiwygAdapterComponent,
 };
-HtmlField.defaultProps = {
-    dynamicPlaceholder: false,
-    setDirty: () => {},
-};
+HtmlField.defaultProps = { dynamicPlaceholder: false };
 HtmlField.props = {
     ...standardFieldProps,
     placeholder: { type: String, optional: true },
