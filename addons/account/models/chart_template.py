@@ -82,11 +82,14 @@ class AccountChartTemplate(models.AbstractModel):
                  name, country id, country name, module dependencies and parent template
         :rtype: dict[str, dict]
         """
+        # This function is called many times. Avoid doing a search every time by using the ORM's cache.
+        # We assume that the field is always computed for all the modules at once (by this function)
         field = self.env['ir.module.module']._fields['account_templates']
-        if self.env.cache.contains_field(field):
-            modules = self.env.cache.get_records(self.env['ir.module.module'], field)
-        else:
-            modules = self.env['ir.module.module'].search([])
+        modules = (
+            self.env.cache.get_records(self.env['ir.module.module'], field)
+            or self.env['ir.module.module'].search([])
+        )
+
         return {
             name: template
             for mapping in modules.mapped('account_templates')
