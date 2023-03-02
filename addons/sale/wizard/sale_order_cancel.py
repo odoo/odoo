@@ -84,4 +84,4 @@ class SaleOrderCancel(models.TransientModel):
         return self.action_cancel()
 
     def action_cancel(self):
-        return self.order_id.with_context({'disable_cancel_warning': True}).action_cancel()
+        return self.order_id.with_context(disable_cancel_warning=True).action_cancel()
