@@ -87,8 +87,8 @@ class MrpBom(models.Model):
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added. In case the product is subcontracted, this can be used to determine the date at which components should be sent to the subcontractor.")
     days_to_prepare_mo = fields.Float(
         string="Days to prepare Manufacturing Order", default=0.0,
-        help="Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-             "Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism.")
+        help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+             "Note that security lead times will also be considered when appropriate.")
 
     _sql_constraints = [
         ('qty_positive', 'check (product_qty > 0)', 'The quantity to produce must be positive!'),
