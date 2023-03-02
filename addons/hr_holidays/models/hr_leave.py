@@ -72,7 +72,7 @@ class HolidaysRequest(models.Model):
     _name = "hr.leave"
     _description = "Time Off"
     _order = "date_from desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
     @api.model

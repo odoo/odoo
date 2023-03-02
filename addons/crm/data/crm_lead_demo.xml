@@ -444,10 +444,6 @@ Andrew</p>]]></field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_case15_attach1')])]"/>
         </record>
-        <!--Main attachment is usually registered by message_post, so here we must set it manually-->
-        <record id="crm_case_15" model="crm.lead">
-            <field name="message_main_attachment_id" ref="msg_case15_attach1"/>
-        </record>
         <record id="msg_case15_3" model="mail.message">
             <field name="subject">Re: Plan to buy RedHat servers</field>
             <field name="model">crm.lead</field>

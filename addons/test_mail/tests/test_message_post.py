@@ -919,7 +919,13 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule')
-    def test_message_post_w_attachments(self):
+    def test_message_post_w_attachments_on_main_attachment_model(self):
+        """ Test posting a message with attachments on a model inheriting from
+        the mixin mail.thread.main.attachment.
+
+        As the mixin inherits from mail.thread, we test mainly features from
+        mail.thread but with the ones added of the main attachment mixin.
+        """
         _attachments = [
             ('List1', b'My first attachment'),
             ('List2', b'My second attachment'),
@@ -929,7 +935,12 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         )
         _attachment_records[1].write({'mimetype': 'image/png'})  # to test message_main_attachment heuristic
 
-        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        test_record = self.env['mail.test.simple.main.attachment'].with_context(self._test_context).create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com',
+        })
+        self._reset_mail_context(test_record)
+        self.test_message.model = test_record._name
         self.assertFalse(test_record.message_main_attachment_id)
 
         with self.mock_mail_gateway():
@@ -949,8 +960,8 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
         # message attachments
         self.assertEqual(len(msg.attachment_ids), 5)
-        self.assertEqual(set(msg.attachment_ids.mapped('res_model')), set([self.test_record._name]))
-        self.assertEqual(set(msg.attachment_ids.mapped('res_id')), set([self.test_record.id]))
+        self.assertEqual(set(msg.attachment_ids.mapped('res_model')), {test_record._name})
+        self.assertEqual(set(msg.attachment_ids.mapped('res_id')), {test_record.id})
         self.assertEqual(set(base64.b64decode(x) for x in msg.attachment_ids.mapped('datas')),
                          set([b'AttContent_00', b'AttContent_01', b'AttContent_02', _attachments[0][1], _attachments[1][1]]))
         self.assertTrue(set(_attachment_records.ids).issubset(msg.attachment_ids.ids),

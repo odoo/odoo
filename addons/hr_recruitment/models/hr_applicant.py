@@ -22,7 +22,7 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['mail.thread.cc', 'mail.thread.main.attachment', 'mail.activity.mixin', 'utm.mixin']
     _mailing_enabled = True
     _primary_email = 'email_from'
 

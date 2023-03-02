@@ -398,9 +398,12 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             res["attachments"] = this._mockIrAttachment_attachmentFormat(
                 attachments.map((attachment) => attachment.id)
             );
-            res["mainAttachment"] = thread.message_main_attachment_id
-                ? { id: thread.message_main_attachment_id[0] }
-                : [["clear"]];
+            // Specific implementation of mail.thread.main.attachment
+            if (this.models[thread_model].fields["message_main_attachment_id"]) {
+                res["mainAttachment"] = thread.message_main_attachment_id
+                    ? { id: thread.message_main_attachment_id[0] }
+                    : [["clear"]];
+            }
         }
         if (request_list.includes("followers")) {
             const followers = this.pyEnv["mail.followers"].searchRead([
