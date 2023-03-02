@@ -105,12 +105,15 @@
         <field name="arch" type="xml">
             <form string="Purchase Agreements">
             <field name="company_id" invisible="1"/>
+            <field name="currency_id" invisible="1"/>
             <header>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation"
+                    context="{'default_currency_id': currency_id}"
                     attrs="{'invisible': [('state', '!=', 'open')]}"/>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation" class="btn-primary"
+                    context="{'default_currency_id': currency_id}"
                     attrs="{'invisible': [('state', 'not in', ('in_progress', 'ongoing'))]}"/>
                 <button name="action_in_progress" states="draft" string="Confirm" type="object" class="btn-primary"/>
                 <button name="action_open" states="in_progress" string="Validate" type="object" class="btn-primary"/>
