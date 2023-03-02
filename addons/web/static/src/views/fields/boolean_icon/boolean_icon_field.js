@@ -10,14 +10,11 @@ export class BooleanIconField extends Component {
     static props = {
         ...standardFieldProps,
         icon: { type: String, optional: true },
+        label: { type: String, optional: true },
     };
     static defaultProps = {
         icon: "fa-check-square-o",
     };
-
-    get label() {
-        return this.props.record.activeFields[this.props.name].string;
-    }
 
     update() {
         this.props.record.update({ [this.props.name]: !this.props.value });
@@ -28,8 +25,9 @@ export const booleanIconField = {
     component: BooleanIconField,
     displayName: _lt("Boolean Icon"),
     supportedTypes: ["boolean"],
-    extractProps: ({ options }) => ({
+    extractProps: ({ options, string }) => ({
         icon: options.icon,
+        label: string,
     }),
 };
 

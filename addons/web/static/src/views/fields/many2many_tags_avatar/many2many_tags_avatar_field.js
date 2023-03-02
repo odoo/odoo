@@ -14,6 +14,10 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
         Many2XAutocomplete,
         TagsList,
     };
+    static props = {
+        ...Many2ManyTagsField.props,
+        withCommand: { type: Boolean, optional: true },
+    };
 
     get tags() {
         return super.tags.map((tag) => ({
@@ -27,14 +31,23 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
 export const many2ManyTagsAvatarField = {
     ...many2ManyTagsField,
     component: Many2ManyTagsAvatarField,
+    extractProps: (fieldInfo) => ({
+        ...many2ManyTagsField.extractProps(fieldInfo),
+        withCommand: fieldInfo.viewType === "form",
+    }),
 };
 
 registry.category("fields").add("many2many_tags_avatar", many2ManyTagsAvatarField);
 
 export class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
-    get itemsVisible() {
-        return this.props.record.activeFields[this.props.name].viewType === "list" ? 5 : 3;
-    }
+    static props = {
+        ...Many2ManyTagsAvatarField.props,
+        itemsVisible: { type: Number, optional: true },
+    };
+    static defaultProps = {
+        ...Many2ManyTagsAvatarField.defaultProps,
+        itemsVisible: 3,
+    };
 
     getTagProps(record) {
         return {
@@ -47,6 +60,10 @@ export class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField
 export const listKanbanMany2ManyTagsAvatarField = {
     ...many2ManyTagsAvatarField,
     component: ListKanbanMany2ManyTagsAvatarField,
+    extractProps: (fieldInfo) => ({
+        ...many2ManyTagsAvatarField.extractProps(fieldInfo),
+        itemsVisible: fieldInfo.viewType === "list" ? 5 : 3,
+    }),
 };
 
 registry.category("fields").add("list.many2many_tags_avatar", listKanbanMany2ManyTagsAvatarField);

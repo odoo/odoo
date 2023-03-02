@@ -16,11 +16,13 @@ FieldMany2ManyAltPOsRenderer.recordRowTemplate = "purchase_requisition.AltPOsLis
 
 export class FieldMany2ManyAltPOs extends X2ManyField {
    setup() {
+      super.setup();
       this.orm = useService("orm");
       this.action = useService("action");
-      // TODO: this is a terrible hack, make this a proper extension of many2many if/when possible
-      this.props.record.activeFields[this.props.name].widget = "many2many";
-      super.setup();
+   }
+
+   get isMany2Many() {
+      return true;
    }
 
    /**
