@@ -321,6 +321,7 @@ class AccountMove(models.Model):
              "otherwise a Partner bank account number.",
         check_company=True,
         tracking=True,
+        ondelete='restrict',
     )
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',
