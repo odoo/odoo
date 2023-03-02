@@ -165,9 +165,11 @@ export class GraphModel extends Model {
         metaData.groupBy = groupBy.length ? groupBy : this.initialGroupBy;
         if (metaData.mode !== "pie") {
             metaData.order = "graph_order" in context ? context.graph_order : metaData.order;
-            metaData.stacked = "graph_stacked" in context ? context.graph_stacked : metaData.stacked;
+            metaData.stacked =
+                "graph_stacked" in context ? context.graph_stacked : metaData.stacked;
             if (metaData.mode === "line") {
-                metaData.cumulated = "graph_cumulated" in context ? context.graph_cumulated : metaData.cumulated;
+                metaData.cumulated =
+                    "graph_cumulated" in context ? context.graph_cumulated : metaData.cumulated;
             }
         }
 
@@ -333,6 +335,10 @@ export class GraphModel extends Model {
             processedDataPoints = this.dataPoints.filter(
                 (dataPoint) => dataPoint.labels[0] !== this.env._t("Undefined")
             );
+        } else if (mode === "pie") {
+            processedDataPoints = this.dataPoints.filter(
+                (dataPoint) => dataPoint.value > 0 && dataPoint.count !== 0
+            );
         } else {
             processedDataPoints = this.dataPoints.filter((dataPoint) => dataPoint.count !== 0);
         }
@@ -354,26 +360,6 @@ export class GraphModel extends Model {
         }
 
         return processedDataPoints;
-    }
-
-    /**
-     * Determines whether the set of data points is good. If not, this.data will be (re)set to null
-     * @protected
-     * @param {Object[]}
-     * @returns {boolean}
-     */
-    _isValidData(dataPoints) {
-        const { mode } = this.metaData;
-        let somePositive = false;
-        if (mode === "pie") {
-            for (const dataPt of dataPoints) {
-                if (dataPt.value > 0) {
-                    somePositive = true;
-                }
-            }
-            return somePositive;
-        }
-        return true;
     }
 
     /**
@@ -531,19 +517,7 @@ export class GraphModel extends Model {
      * @protected
      */
     async _prepareData() {
-        let processedDataPoints = this._getProcessedDataPoints();
-        this.data = null;
-        if (this._isValidData(processedDataPoints) && this.metaData.mode === 'pie') {
-            const positiveValues = [];
-            for (const dataPt of processedDataPoints) {
-                if (dataPt.value > 0) {
-                    positiveValues.push(dataPt);
-                }
-            }
-            processedDataPoints = positiveValues;
-        } else if(this.metaData.mode === 'pie') {
-            processedDataPoints = [];
-        }
+        const processedDataPoints = this._getProcessedDataPoints();
         this.data = this._getData(processedDataPoints);
     }
 }
