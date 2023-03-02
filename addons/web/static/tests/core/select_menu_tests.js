@@ -178,6 +178,58 @@ QUnit.module("Web Components", (hooks) => {
         assert.equal(document.activeElement, target.querySelector(".o_select_menu_input input"));
     });
 
+    QUnit.test("value props accept array", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.choices = [
+                    { label: "Z", value: [1, 2] },
+                    { label: "A", value: [1, 3] },
+                ];
+                this.value = [1, 2];
+            }
+        }
+        Parent.components = { SelectMenu };
+        Parent.template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    value="this.value"
+                />
+            `;
+
+        await mount(Parent, target, { env });
+        assert.equal(
+            target.querySelector(".o_select_menu_toggler_slot").innerText,
+            "Z",
+            `The select value shoud be "Z"`
+        );
+    });
+
+    QUnit.test("value props accept object", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.choices = [
+                    { label: "Z", value: { hello: "world" } },
+                    { label: "A", value: { paper: "company" } },
+                ];
+                this.value = { paper: "company" };
+            }
+        }
+        Parent.components = { SelectMenu };
+        Parent.template = xml`
+                <SelectMenu
+                    choices="this.choices"
+                    value="this.value"
+                />
+            `;
+
+        await mount(Parent, target, { env });
+        assert.equal(
+            target.querySelector(".o_select_menu_toggler_slot").innerText,
+            "A",
+            `The select value shoud be "A"`
+        );
+    });
+
     QUnit.test(
         "Clear button calls 'onSelect' with null value and appears only when value is not null",
         async (assert) => {
