@@ -138,11 +138,10 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         return result;
     },
     async onDoRefund() {
-        if (this.env.pos.config.iface_floorplan) {
+        const order = this.getSelectedSyncedOrder();
+        if (this.env.pos.config.iface_floorplan && order) {
             this.env.pos.setTable(
-                this.getSelectedSyncedOrder().table
-                    ? this.getSelectedSyncedOrder().table
-                    : Object.values(this.env.pos.tables_by_id)[0]
+                order.table ? order.table : Object.values(this.env.pos.tables_by_id)[0]
             );
         }
         this._super(...arguments);

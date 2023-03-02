@@ -223,7 +223,7 @@ export class TicketScreen extends IndependentToOrderScreen {
     async onDoRefund() {
         const order = this.getSelectedSyncedOrder();
 
-        if (this._doesOrderHaveSoleItem(order)) {
+        if (order && this._doesOrderHaveSoleItem(order)) {
             if (!this._prepareAutoRefundOnOrder(order)) {
                 // Don't proceed on refund if preparation returned false.
                 return;

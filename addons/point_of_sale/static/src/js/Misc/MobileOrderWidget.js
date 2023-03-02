@@ -1,10 +1,15 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class MobileOrderWidget extends Component {
     static template = "MobileOrderWidget";
 
+    setup() {
+        super.setup(...arguments);
+        this.pos = usePos();
+    }
     get order() {
         return this.env.pos.get_order();
     }
@@ -16,5 +21,12 @@ export class MobileOrderWidget extends Component {
         return this.order
             ? this.order.orderlines.reduce((items_number, line) => items_number + line.quantity, 0)
             : 0;
+    }
+    clickPay() {
+        const order = this.pos.globalState.get_order();
+
+        if (order.orderlines.length) {
+            order.pay();
+        }
     }
 }

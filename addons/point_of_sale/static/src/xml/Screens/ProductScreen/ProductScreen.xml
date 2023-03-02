@@ -20,7 +20,6 @@
                         <div class="subpads">
                             <t t-set="_actionName">Payment</t>
                             <ActionpadWidget
-                                clickPay.bind="onClickPay"
                                 partner="partner"
                                 actionName="_actionName"
                                 onSwitchPane.bind="switchPane" />
@@ -33,7 +32,6 @@
                 <div class="rightpane" t-if="!env.isMobile || state.mobile_pane === 'right'">
                     <ProductsWidget />
                     <MobileOrderWidget
-                        clickPay.bind="onClickPay"
                         t-if="env.isMobile"
                         pane="state.mobile_pane"
                         onSwitchPane.bind="switchPane"/>

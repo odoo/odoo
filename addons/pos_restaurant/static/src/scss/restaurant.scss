@@ -1,5 +1,51 @@
 /* ------ FLOOR BUTTON IN THE ORDER SELECTOR ------- */
-
+.pos .actionpad .pay-order-button {
+    border: none;
+    border-bottom: solid 1px #C9CCD2;
+}
+.pos .actionpad  .pay-order-button.highlight {
+    border-bottom-color: #C9CCD2;
+}
+.pos .actionpad .submit-order {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: calc(var(--btn-height-size) * 3);
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 150ms linear;
+    border-bottom: none;
+}
+@media screen and (max-width: 768px) {
+    .pos .actionpad .submit-order{
+        height: calc(var(--btn-height-size) * 2);
+    }
+}
+.pos .actionpad .submit-order.highlight {
+    background: $primary;
+    color: #fff;
+}
+.pos .actionpad .submit-order.highlight:hover, .pos .actionpad .pay-order-button.highlight:hover{
+    background: darken($primary, 5%);
+}
+.pos .submit-order .submit-circle {
+    display: block;
+    font-size: 20px;
+    line-height: var(--btn-height-size);
+    padding-top: 6px;
+    background: $gray-900;
+    color: white;
+    width: 60px;
+    text-align: center;
+    border-radius: 30px;
+    margin-bottom: 10px;
+}
+.pos .submit-order .submit-circle .fa {
+    position: relative;
+    top: -1px;
+}
 .pos .order-button.floor-button {
     display: flex;
     align-items: center;

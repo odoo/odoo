@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension" owl="1">
+        <!-- Replace the payment button by the order button -->
+        <xpath expr="//button[hasclass('validation')]" position="after">
+            <button
+                t-if="this.swapButton"
+                class="button submit-order"
+                t-att-class="addedClasses"
+                t-on-click="submitOrder">
+                <div class="submit-circle">
+                    <i class="fa fa-cutlery"></i>
+                </div>
+                Order
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('validation')]" position="attributes">
+            <attribute name="t-if">!this.swapButton</attribute>
+        </xpath>
+
+        <!-- Replace the customer button by the payment button, the customer button will be added in the mixins -->
+        <xpath expr="//button[hasclass('set-partner')]" position="after">
+            <button t-on-click="clickPay" class="button pay-order-button" t-att-class="{ 'highlight': this.highlightPay }" t-if="this.swapButton">
+                <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                Payment
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('set-partner')]" position="attributes">
+            <attribute name="t-if">!this.swapButton</attribute>
+        </xpath>
+    </t>
+</templates>

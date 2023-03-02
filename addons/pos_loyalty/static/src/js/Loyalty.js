@@ -327,6 +327,29 @@ patch(Order.prototype, "pos_loyalty.Order", {
         this.codeActivatedProgramRules = json.codeActivatedProgramRules;
         this.codeActivatedCoupons = json.codeActivatedCoupons;
     },
+    async pay() {
+        const eWalletLine = this.get_orderlines().find(
+            (line) => line.getEWalletGiftCardProgramType() === "ewallet"
+        );
+        if (eWalletLine && !this.get_partner()) {
+            const { confirmed } = await this.pos.env.services.popup.add(ConfirmPopup, {
+                title: _t("Customer needed"),
+                body: _t("eWallet requires a customer to be selected"),
+            });
+            if (confirmed) {
+                const { confirmed, payload: newPartner } =
+                    await this.pos.env.services.pos.showTempScreen("PartnerListScreen", {
+                        partner: null,
+                    });
+                if (confirmed) {
+                    this.set_partner(newPartner);
+                    this.updatePricelist(newPartner);
+                }
+            }
+        } else {
+            return this._super(...arguments);
+        }
+    },
     /**
      * We need to update the rewards upon changing the partner as it may impact the points available
      *  for rewards.

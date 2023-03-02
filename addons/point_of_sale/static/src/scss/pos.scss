@@ -604,6 +604,8 @@ td {
 .pos .control-buttons {
     display: flex;
     flex-flow: row wrap;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .pos .popup-control-buttons .control-buttons {
     flex-direction: column;
@@ -627,6 +629,7 @@ td {
     cursor: pointer;
     overflow: hidden;
     transition: all linear 150ms;
+    text-overflow: ellipsis;
 }
 .pos .control-button:hover {
     background: $gray-200;

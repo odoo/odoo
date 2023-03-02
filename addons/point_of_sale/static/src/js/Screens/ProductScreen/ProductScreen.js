@@ -9,7 +9,6 @@ import { parse } from "web.field_utils";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { ControlButtonPopup } from "@point_of_sale/js/Popups/ControlButtonPopup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
@@ -20,6 +19,7 @@ import { OrderWidget } from "./OrderWidget";
 import { ProductsWidget } from "./ProductsWidget";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 
 export class ProductScreen extends ControlButtonsMixin(Component) {
     static template = "ProductScreen";
@@ -240,14 +240,15 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                     this.env.pos.get_order().server_id,
                 ]);
                 if (isPaid) {
-                    const searchDetails = { fieldName: "RECEIPT_NUMBER", searchTerm: this.env.pos.get_order().uid }
+                    const searchDetails = {
+                        fieldName: "RECEIPT_NUMBER",
+                        searchTerm: this.env.pos.get_order().uid,
+                    };
                     this.pos.showScreen("TicketScreen", {
-                        ui: { filter: "SYNCED", searchDetails }
+                        ui: { filter: "SYNCED", searchDetails },
                     });
                     this.notification.add(
-                        _.str.sprintf(
-                            this.env._t('The order has been already paid.')
-                        ),
+                        _.str.sprintf(this.env._t("The order has been already paid.")),
                         3000
                     );
                     this.env.pos.removeOrder(this.env.pos.get_order(), false);
