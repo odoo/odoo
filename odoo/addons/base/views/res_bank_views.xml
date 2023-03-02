@@ -87,12 +87,12 @@
                             <field name="sequence" invisible="1"/>
                             <field name="acc_type" invisible="1"/>
                             <field name="acc_number"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="partner_id"/>
+                            <field name="bank_id"/>
                             <field name="acc_holder_name"/>
+                            <field name="partner_id"/>
                         </group>
                         <group>
-                            <field name="bank_id"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
                             <field name="allow_out_payment" widget="boolean_toggle"/>
                             <field name="active" invisible="1"/>
@@ -107,10 +107,10 @@
             <field name="name">res.partner.bank.tree</field>
             <field name="model">res.partner.bank</field>
             <field name="arch" type="xml">
-                <tree string="Bank Accounts">
+                <tree string="Bank Accounts" multi_edit="1">
                     <field name="sequence" widget="handle"/>
                     <field name="acc_number"/>
-                    <field name="bank_name"/>
+                    <field name="bank_name" string="Bank"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id"/>
                     <field name="acc_holder_name" invisible="1"/>

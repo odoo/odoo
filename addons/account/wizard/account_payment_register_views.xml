@@ -29,9 +29,13 @@
                     <field name="available_partner_bank_ids" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="hide_writeoff_section" invisible="1"/>
+                    <field name="untrusted_bank_ids" invisible="1"/>
 
                     <div role="alert" class="alert alert-info" attrs="{'invisible': [('hide_writeoff_section', '=', False)]}">
                         <p><b>Early Payment Discount applied.</b></p>
+                    </div>
+                    <div role="alert" class="alert alert-warning" attrs="{'invisible': [('untrusted_payments_count', '=', 0)]}">
+                        <span class="fw-bold"><field name="untrusted_payments_count" class="oe_inline"/> out of <field name="total_payments_amount" class="oe_inline"/> payments will be skipped due to <button class="oe_link p-0 align-baseline" type="object" name="action_open_untrusted_bank_accounts">untrusted bank accounts</button>.</span>
                     </div>
                     <group>
                         <group name="group1">
@@ -41,7 +45,7 @@
                             <field name="partner_bank_id"
                                    attrs="{'invisible': ['|', ('show_partner_bank_account', '=', False), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)],
                                            'required': [('require_partner_bank_account', '=', True), ('can_edit_wizard', '=', True), '|', ('can_group_payments', '=', False), ('group_payment', '=', False)], 'readonly': [('payment_type', '=', 'inbound')]}"
-                                    context="{'default_allow_out_payment': True}"/>
+                                    context="{'display_account_trust': True}"/>
                             <field name="group_payment"
                                    attrs="{'invisible': [('can_group_payments', '=', False)]}"/>
                         </group>
@@ -79,8 +83,9 @@
                         </group>
                     </group>
                     <footer>
-                        <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q"/>
-                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
+                        <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" attrs="{'invisible': [('total_payments_amount', '=', 1)]}"/>
+                        <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" attrs="{'invisible': [('total_payments_amount', '!=', 1)]}"/>
+                        <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>

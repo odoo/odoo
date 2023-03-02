@@ -16,6 +16,21 @@ class ResPartnerBank(models.Model):
     journal_id = fields.One2many(
         'account.journal', 'bank_account_id', domain=[('type', '=', 'bank')], string='Account Journal', readonly=True,
         help="The accounting journal corresponding to this bank account.")
+    has_iban_warning = fields.Boolean(
+        compute='_compute_display_account_warning',
+        help='Technical field used to display a warning if the IBAN country is different than the holder country.',
+        store=True,
+    )
+    partner_country_name = fields.Char(related='partner_id.country_id.name')
+    has_money_transfer_warning = fields.Boolean(
+        compute='_compute_display_account_warning',
+        help='Technical field used to display a warning if the account is a transfer service account.',
+        store=True,
+    )
+    money_transfer_service = fields.Char(compute='_compute_money_transfer_service_name')
+    partner_supplier_rank = fields.Integer(related='partner_id.supplier_rank')
+    partner_customer_rank = fields.Integer(related='partner_id.customer_rank')
+    related_moves = fields.One2many('account.move', inverse_name='partner_bank_id')
 
     # Add tracking to the base fields
     bank_id = fields.Many2one(tracking=True)
@@ -23,7 +38,13 @@ class ResPartnerBank(models.Model):
     acc_number = fields.Char(tracking=True)
     acc_holder_name = fields.Char(tracking=True)
     partner_id = fields.Many2one(tracking=True)
-    allow_out_payment = fields.Boolean(tracking=True)
+    user_has_group_validate_bank_account = fields.Boolean(compute='_compute_user_has_group_validate_bank_account')
+    allow_out_payment = fields.Boolean(
+        tracking=True,
+        help='Sending fake invoices with a fraudulent account number is a common phishing practice. '
+             'To protect yourself, always verify new bank account numbers, preferably by calling the vendor, as phishing '
+             'usually happens when their emails are compromised. Once verified, you can activate the ability to send money.'
+    )
     currency_id = fields.Many2one(tracking=True)
 
     @api.constrains('journal_id')
@@ -31,6 +52,49 @@ class ResPartnerBank(models.Model):
         for bank in self:
             if len(bank.journal_id) > 1:
                 raise ValidationError(_('A bank account can belong to only one journal.'))
+
+    @api.constrains('allow_out_payment')
+    def _check_allow_out_payment(self):
+        """ Block enabling the setting, but it can be set to false without the group. (For example, at creation) """
+        for bank in self:
+            if bank.allow_out_payment:
+                if not self.user_has_groups('account.group_validate_bank_account'):
+                    raise ValidationError(_('You do not have the right to trust or un-trust a bank account.'))
+
+    @api.depends('partner_id.country_id', 'sanitized_acc_number', 'allow_out_payment', 'acc_type')
+    def _compute_display_account_warning(self):
+        for bank in self:
+            if bank.allow_out_payment or not bank.sanitized_acc_number or bank.acc_type != 'iban':
+                bank.has_iban_warning = False
+                bank.has_money_transfer_warning = False
+                continue
+            bank_country = bank.sanitized_acc_number[:2]
+            bank.has_iban_warning = bank.partner_id.country_id and bank_country != bank.partner_id.country_id.code
+
+            bank_institution_code = bank.sanitized_acc_number[4:7]
+            bank.has_money_transfer_warning = bank_institution_code in bank._get_money_transfer_services()
+
+    @api.depends('sanitized_acc_number', 'allow_out_payment')
+    def _compute_money_transfer_service_name(self):
+        for bank in self:
+            if bank.sanitized_acc_number:
+                bank_institution_code = bank.sanitized_acc_number[4:7]
+                bank.money_transfer_service = bank._get_money_transfer_services().get(bank_institution_code, False)
+            else:
+                bank.money_transfer_service = False
+
+    def _get_money_transfer_services(self):
+        return {
+            '967': 'Wise',
+            '977': 'Paynovate',
+            '974': 'PPS EU SA',
+        }
+
+    @api.depends('acc_number')
+    def _compute_user_has_group_validate_bank_account(self):
+        user_has_group_validate_bank_account = self.user_has_groups('account.group_validate_bank_account')
+        for bank in self:
+            bank.user_has_group_validate_bank_account = user_has_group_validate_bank_account
 
     def _build_qr_code_vals(self, amount, free_communication, structured_communication, currency, debtor_partner, qr_method=None, silent_errors=True):
         """ Returns the QR-code vals needed to generate the QR-code report link to pay this account with the given parameters,
@@ -215,3 +279,16 @@ class ResPartnerBank(models.Model):
             msg = _("Bank Account %s with number %s deleted", account._get_html_link(title=f"#{account.id}"), account.acc_number)
             account.partner_id._message_log(body=msg)
         return super().unlink()
+
+    def name_get(self):
+        res = super().name_get()
+        if self.env.context.get('display_account_trust'):
+            res = []
+            for acc in self:
+                trusted_label = _('trusted') if acc.allow_out_payment else _('untrusted')
+                if acc.bank_id:
+                    name = '{} - {} ({})'.format(acc.acc_number, acc.bank_id.name, trusted_label)
+                else:
+                    name = '{} ({})'.format(acc.acc_number, trusted_label)
+                res.append((acc.id, name))
+        return res

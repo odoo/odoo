@@ -30,7 +30,9 @@ class AccountPayment(models.Model):
         readonly=False, store=True, tracking=True,
         compute='_compute_partner_bank_id',
         domain="[('id', 'in', available_partner_bank_ids)]",
-        check_company=True)
+        check_company=True,
+        ondelete='restrict',
+    )
     is_internal_transfer = fields.Boolean(string="Internal Transfer",
         readonly=False, store=True,
         tracking=True,
@@ -528,6 +530,7 @@ class AccountPayment(models.Model):
         for pay in self:
             if pay.state in ('draft', 'posted') \
                 and pay.partner_bank_id \
+                and pay.partner_bank_id.allow_out_payment \
                 and pay.payment_method_line_id.code == 'manual' \
                 and pay.payment_type == 'outbound' \
                 and pay.currency_id:
@@ -921,6 +924,11 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         ''' draft -> posted '''
+        # Do not allow to post if the account is required but not trusted
+        for payment in self:
+            if payment.require_partner_bank_account and not payment.partner_bank_id.allow_out_payment:
+                raise UserError(_('To record payments with %s, the recipient bank account must be manually validated. You should go on the partner bank account in order to validate it.', self.payment_method_line_id.name))
+
         self.move_id._post(soft=False)
 
         self.filtered(

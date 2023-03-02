@@ -15,6 +15,67 @@
                         <field name="activity_ids" widget="mail_activity"/>
                     </div>
                 </xpath>
+
+                <xpath expr="//field[@name='acc_number']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('allow_out_payment', '=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('allow_out_payment', '=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='allow_out_payment']" position="replace">
+                    <field name="user_has_group_validate_bank_account" invisible="1"/>
+                    <label for="allow_out_payment"/>
+                    <div class="d-flex gap-2">
+                        <field name="allow_out_payment" widget="boolean_toggle" attrs="{'readonly': [('user_has_group_validate_bank_account', '=', False)]}"/>
+                        <span class="d-flex gap-2 w-100">
+                            <span attrs="{'invisible': [('allow_out_payment', '=', True)]}" class="text-muted">Untrusted</span>
+                            <span attrs="{'invisible': [('allow_out_payment', '=', False)]}" class="text-success">Trusted</span>
+                        </span>
+                    </div>
+                    <div attrs="{'invisible': [('allow_out_payment', '=', True)]}" colspan="2">
+                        <field name="has_money_transfer_warning" invisible="1"/>
+                        <div attrs="{'invisible': [('has_money_transfer_warning', '=', False)]}" class="mb-1">
+                            <span class="text-danger">High risk</span>: <field name="money_transfer_service" nolabel="1" class="oe_inline"/> is a money transfer service and not a bank.
+                            Double check if the account can be trusted by calling the vendor.<br/>
+                            <a href="https://www.odoo.com/documentation/master/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why.</a>
+                        </div>
+                        <field name="has_iban_warning" invisible="1"/>
+                        <div attrs="{'invisible': [('has_iban_warning', '=', False)]}">
+                            <span class="text-warning">Medium risk</span>: Iban <field name="sanitized_acc_number" nolabel="1" class="oe_inline fw-bold"/>
+                            is not from the same country as the partner (<field name="partner_country_name" nolabel="1" class="oe_inline"/>).<br/>
+                            <a href="https://www.odoo.com/documentation/master/applications/finance/accounting/payables/pay/trusted_accounts.html">Check why it's risky.</a>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_search_inherit" model="ir.ui.view">
+            <field name="name">res.partner.bank.search.inherit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="replace">
+                    <search string="Bank Accounts">
+                        <filter string="Trusted" name="trusted" domain="[('allow_out_payment', '=', True)]"/>
+                        <filter string="Untrusted" name="untrusted" domain="[('allow_out_payment', '=', False)]"/>
+                        <filter string="To validate" name="to_validate" domain="[('allow_out_payment', '=', False), ('related_moves', '!=', False)]"/>
+                        <separator/>
+                        <filter string="Customers" name="customer" domain="[('partner_customer_rank','>', 0)]"/>
+                        <filter string="Vendors" name="supplier" domain="[('partner_supplier_rank','>', 0)]"/>
+                        <separator/>
+                        <filter string="Phishing risk: High" name="high_phishing_risk" domain="[('has_money_transfer_warning', '!=', False)]"/>
+                        <filter string="Phishing risk: Medium" name="medium_phishing_risk" domain="[('has_iban_warning', '!=', False)]"/>
+                        <separator/>
+                        <filter string="Created On" name="create_date" date="create_date"/>
+                        <group expand="1" string="Group By">
+                            <filter string="Created On" name="groupby_create_date" context="{'group_by': 'create_date'}"/>
+                            <filter string="Created By" name="groupby_create_by" context="{'group_by': 'create_uid'}"/>
+                        </group>
+                    </search>
+                </xpath>
             </field>
         </record>
 
@@ -28,5 +89,18 @@ action = model.setting_init_bank_account_action()
             <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
         </record>
 
+        <record id="action_account_supplier_accounts" model="ir.actions.act_window">
+            <field name="name">Bank Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="base.view_partner_bank_tree"/>
+            <field name="search_view_id" ref="view_partner_bank_search_inherit"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new bank account
+                </p>
+            </field>
+        </record>
     </data>
 </odoo>

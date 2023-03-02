@@ -126,6 +126,11 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_show_require_partner_bank') # used to know whether the field `partner_bank_id` should be required
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
+    # == trust check ==
+    untrusted_bank_ids = fields.Many2many('res.partner.bank', compute='_compute_trust_values')
+    total_payments_amount = fields.Integer(compute='_compute_trust_values')
+    untrusted_payments_count = fields.Integer(compute='_compute_trust_values')
+
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
@@ -322,6 +327,30 @@ class AccountPaymentRegister(models.TransientModel):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('payment_method_line_id', 'line_ids', 'group_payment')
+    def _compute_trust_values(self):
+        for wizard in self:
+            batches = wizard._get_batches()
+            total_payment_count = 0
+            untrusted_payments_count = 0
+            untrusted_accounts = self.env['res.partner.bank']
+
+            # Validate batches; if require_partner_bank_account and the account isn't trusted, we do not allow the payment
+            for batch in batches:
+                payment_count = 1 if wizard.group_payment else len(batch['lines'])
+                total_payment_count += payment_count
+                batch_account = wizard._get_batch_account(batch)
+                if wizard.require_partner_bank_account and not batch_account.allow_out_payment:
+                    untrusted_payments_count += payment_count
+                    untrusted_accounts |= batch_account
+
+            wizard.update({
+                'total_payments_amount': total_payment_count,
+                'untrusted_payments_count': untrusted_payments_count,
+                'untrusted_bank_ids': untrusted_accounts or False,
+            })
+
 
     @api.depends('line_ids')
     def _compute_from_lines(self):
@@ -834,7 +863,18 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _create_payments(self):
         self.ensure_one()
-        batches = self._get_batches()
+        all_batches = self._get_batches()
+        batches = []
+        # Skip batches that are not valid (bank account not trusted but required)
+        for batch in all_batches:
+            batch_account = self._get_batch_account(batch)
+            if self.require_partner_bank_account and not batch_account.allow_out_payment:
+                continue
+            batches.append(batch)
+
+        if not batches:
+            raise UserError(_('To record payments with %s, the recipient bank account must be manually validated. You should go on the partner bank account in order to validate it.', self.payment_method_line_id.name))
+
         first_batch_result = batches[0]
         edit_mode = self.can_edit_wizard and (len(first_batch_result['lines']) == 1 or self.group_payment)
         to_process = []
@@ -896,4 +936,33 @@ class AccountPaymentRegister(models.TransientModel):
                 'view_mode': 'tree,form',
                 'domain': [('id', 'in', payments.ids)],
             })
+        return action
+
+    def _get_batch_account(self, batch_result):
+        # Get the batch bank account
+        partner_bank_id = batch_result['payment_values']['partner_bank_id']
+        available_partner_banks = self._get_batch_available_partner_banks(batch_result, self.journal_id)
+        if partner_bank_id and partner_bank_id in available_partner_banks.ids:
+            return self.env['res.partner.bank'].browse(partner_bank_id)
+        else:
+            return available_partner_banks[:1]
+
+    def action_open_untrusted_bank_accounts(self):
+        self.ensure_one()
+        if len(self.untrusted_bank_ids) == 1:
+            action = {
+                "view_mode": "form",
+                "res_model": "res.partner.bank",
+                "type": "ir.actions.act_window",
+                "res_id": self.untrusted_bank_ids.id,
+                "views": [[self.env.ref("account.view_partner_bank_form_inherit_account").id, "form"]],
+            }
+        else:
+            action = {
+                "type": "ir.actions.act_window",
+                "res_model": "res.partner.bank",
+                "views": [[False, "tree"], [self.env.ref("account.view_partner_bank_form_inherit_account").id, "form"]],
+                "domain": [["id", "in", self.untrusted_bank_ids.ids]],
+            }
+
         return action

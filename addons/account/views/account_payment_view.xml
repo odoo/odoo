@@ -282,14 +282,14 @@
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
                                 <field name="partner_bank_id" string="Customer Bank Account"
-                                      context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
+                                      context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                         attrs="{
                                             'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
                                         }"/>
 
                                 <field name="partner_bank_id" string="Vendor Bank Account"
-                                        context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
+                                        context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                         attrs="{
                                             'invisible': ['|', '|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True), ('payment_type', '=', 'inbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
@@ -298,7 +298,7 @@
                                 <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
                                 fields readonly condition in the framework, preventing the modification of these fields -->
                                 <field name="partner_bank_id" string="Company Bank Account"
-                                        context="{'default_partner_id': partner_id, 'default_allow_out_payment': True}"
+                                        context="{'default_partner_id': partner_id, 'display_account_trust': True}"
                                         attrs="{
                                             'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('is_internal_transfer', '=', True), ('payment_type', '=', 'outbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
@@ -349,6 +349,7 @@
                 'default_partner_type': 'customer',
                 'search_default_inbound_filter': 1,
                 'default_move_journal_types': ('bank', 'cash'),
+                'display_account_trust': True,
             }</field>
             <field name="view_id" ref="view_account_payment_tree"/>
             <field name="help" type="html">
@@ -369,6 +370,7 @@
                 'default_partner_type': 'supplier',
                 'search_default_outbound_filter': 1,
                 'default_move_journal_types': ('bank', 'cash'),
+                'display_account_trust': True,
             }</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
@@ -384,7 +386,7 @@
             <field name="name">Internal Transfers</field>
             <field name="res_model">account.payment</field>
             <field name="view_mode">tree,kanban,form,graph</field>
-            <field name="context">{'default_payment_type': 'outbound', 'search_default_transfers_filter': 1}</field>
+            <field name="context">{'default_payment_type': 'outbound', 'search_default_transfers_filter': 1, 'display_account_trust': True}</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
