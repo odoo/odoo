@@ -805,45 +805,30 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     return range;
 }
 
-function getNextVisibleNode(node, stopAtZws = false) {
-    while (node && !isVisible(node) && (!stopAtZws || !isZWS(node))) {
-        node = node.nextSibling;
-    }
-    return node;
-}
-
 export function getDeepestPosition(node, offset) {
-    let found = false;
-    while (node.hasChildNodes()) {
-        let newNode = node.childNodes[offset];
-        if (newNode) {
-            newNode = getNextVisibleNode(newNode, true);
-            if (!newNode || isSelfClosingElement(newNode)) break;
-            found = true;
-            node = newNode;
-            offset = 0;
+    let direction = DIRECTIONS.RIGHT;
+    let next = node;
+    while (next) {
+        if (isVisible(next) || isZWS(next)) {
+            // Valid node: update position then try to go deeper.
+            if (next !== node) {
+                [node, offset] = [next, direction ? 0 : nodeSize(next)];
+            }
+            // First switch direction to left if offset is at the end.
+            direction = offset < node.childNodes.length;
+            next = node.childNodes[direction ? offset : offset - 1];
+        } else if (direction && next.nextSibling && !isBlock(next.nextSibling)) {
+            // Invalid node: skip to next sibling (without crossing blocks).
+            next = next.nextSibling;
         } else {
-            break;
+            // Invalid node: skip to previous sibling (without crossing blocks).
+            direction = DIRECTIONS.LEFT;
+            next = !isBlock(next.previousSibling) && next.previousSibling;
         }
+        // Avoid too-deep ranges inside self-closing elements like [BR, 0].
+        next = !isSelfClosingElement(next) && next;
     }
-    if (!found) {
-        while (node.hasChildNodes()) {
-            let newNode = node.childNodes[offset - 1];
-            newNode = getNextVisibleNode(newNode, true);
-            if (!newNode || isSelfClosingElement(newNode)) break;
-            node = newNode;
-            offset = nodeSize(node);
-        }
-    }
-    let didMove = false;
-    let reversed = false;
-    while (!isVisible(node) && !isZWS(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
-        reversed = reversed || !node.nextSibling;
-        node = reversed ? node.previousSibling : node.nextSibling;
-        offset = reversed ? nodeSize(node) : 0;
-        didMove = true;
-    }
-    return didMove && isVisible(node) ? getDeepestPosition(node, offset) : [node, offset];
+    return [node, offset];
 }
 
 export function getCursors(document) {
@@ -1145,7 +1130,7 @@ const computedStyles = new WeakMap();
  * @param node
  */
 export function isBlock(node) {
-    if (node.nodeType !== Node.ELEMENT_NODE) {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) {
         return false;
     }
     const tagName = node.nodeName.toUpperCase();
@@ -1507,7 +1492,7 @@ export function isHtmlContentSupported(node) {
  */
 const selfClosingElementTags = ['BR', 'IMG', 'INPUT'];
 export function isSelfClosingElement(node) {
-    return selfClosingElementTags.includes(node.nodeName);
+    return node && selfClosingElementTags.includes(node.nodeName);
 }
 /**
  * Returns true if the given node is in a PRE context for whitespace handling.
