@@ -12,6 +12,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.misc import ustr
+from odoo.http import request
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError, now
@@ -118,6 +119,18 @@ class ResUsers(models.Model):
             if self._get_signup_invitation_scope() != 'b2c':
                 raise SignupError(_('Signup is not allowed for uninvited users'))
         return self._create_user_from_template(values)
+
+    @classmethod
+    def authenticate(cls, db, login, password, user_agent_env):
+        uid = super().authenticate(db, login, password, user_agent_env)
+        try:
+            with cls.pool.cursor() as cr:
+                env = api.Environment(cr, uid, {})
+                if env.user._should_alert_new_device():
+                    env.user._alert_new_device()
+        except MailDeliveryException:
+            pass
+        return uid
 
     def _notify_inviter(self):
         for user in self:
@@ -247,6 +260,65 @@ class ResUsers(models.Model):
         for user in invited_users:
             template = email_template.with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
             template.send_mail(user, email_layout_xmlid='mail.mail_notification_light', force_send=False)
+
+    def _alert_new_device(self):
+        self.ensure_one()
+        if self.email:
+            email_values = {
+                'email_cc': False,
+                'auto_delete': True,
+                'message_type': 'user_notification',
+                'recipient_ids': [],
+                'partner_ids': [],
+                'scheduled_date': False,
+                'email_to': self.email
+            }
+
+            body = self.env['mail.render.mixin']._render_template(
+                    'auth_signup.alert_login_new_device',
+                    model='res.users', res_ids=self.ids,
+                    engine='qweb_view', options={'post_process': True},
+                    add_context=self._prepare_new_device_notice_values())[self.id]
+            mail = self.env['mail.mail'].sudo().create({
+                'subject': _('New Connection to your Account'),
+                'email_from': self.company_id.email_formatted or self.email_formatted,
+                'body_html': body,
+                **email_values,
+            })
+            mail.send()
+            _logger.info("New device alert email sent for user <%s> to <%s>", self.login, self.email)
+
+    def _prepare_new_device_notice_values(self):
+        values = {
+            'login_date': fields.Datetime.now(),
+            'location_address': False,
+            'ip_address': False,
+            'browser': False,
+            'useros': False,
+        }
+
+        if not request:
+            return values
+
+        city = request.geoip.get('city') or False
+        region = request.geoip.get('region_name') or False
+        country = request.geoip.get('country') or False
+        if country:
+            if region and city:
+                values['location_address'] = _("Near %(city)s, %(region)s, %(country)s", city=city, region=region, country=country)
+            elif region:
+                values['location_address'] = _("Near %(region)s, %(country)s", region=region, country=country)
+            else:
+                values['location_address'] = _("In %(country)s", country=country)
+        else:
+            values['location_address'] = False
+        values['ip_address'] = request.httprequest.environ['REMOTE_ADDR']
+        if request.httprequest.user_agent:
+            if request.httprequest.user_agent.browser:
+                values['browser'] = request.httprequest.user_agent.browser.capitalize()
+            if request.httprequest.user_agent.platform:
+                values['useros'] = request.httprequest.user_agent.platform.capitalize()
+        return values
 
     @api.model
     def web_create_users(self, emails):
