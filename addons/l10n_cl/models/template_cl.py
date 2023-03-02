@@ -31,5 +31,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'account_110421',
                 'income_currency_exchange_account_id': 'account_410195',
                 'expense_currency_exchange_account_id': 'account_410195',
+                'tax_calculation_rounding_method': 'round_globally',
             },
         }

@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -34,5 +34,22 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'cuenta701_01',
                 'account_journal_early_pay_discount_loss_account_id': 'cuenta9993',
                 'account_journal_early_pay_discount_gain_account_id': 'cuenta9994',
+                'tax_cash_basis_journal_id': 'cbmx',
             },
         }
+
+    @template('mx', 'account.journal')
+    def _get_mx_account_journal(self):
+        return {
+            "cbmx": {
+                'type': 'general',
+                'name': _('Effectively Paid'),
+                'code': 'CBMX',
+                'default_account_id': "cuenta118_01",
+                'show_on_dashboard': True,
+            }
+        }
+
+    def _setup_utility_bank_accounts(self, template_code, company, template_data):
+        super()._setup_utility_bank_accounts(template_code, company, template_data)
+        company.account_journal_suspense_account_id.tag_ids = self.env.ref('l10n_mx.tag_credit_balance_account')

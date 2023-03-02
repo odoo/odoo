@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -33,5 +33,38 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'do_niif_52070800',
                 'account_journal_early_pay_discount_loss_account_id': 'do_niif_99900003',
                 'account_journal_early_pay_discount_gain_account_id': 'do_niif_99900004',
+            },
+        }
+
+    @template('do', 'account.journal')
+    def _get_do_account_journal(self):
+        return {
+            "caja_chica": {
+                'name': _('Caja Chica'),
+                'type': 'cash',
+                'sequence': 10,
+            },
+            "cheques_clientes": {
+                'name': _('Cheques Clientes'),
+                'type': 'cash',
+                'sequence': 10,
+            },
+            "gasto": {
+                'type': 'purchase',
+                'name': _('Gastos No Deducibles'),
+                'code': 'GASTO',
+                'show_on_dashboard': True,
+            },
+            "cxp": {
+                'type': 'purchase',
+                'name': _('Migración CxP'),
+                'code': 'CXP',
+                'show_on_dashboard': True,
+            },
+            "cxc": {
+                'type': 'sale',
+                'name': _('Migración CxC'),
+                'code': 'CXC',
+                'show_on_dashboard': True,
             },
         }
