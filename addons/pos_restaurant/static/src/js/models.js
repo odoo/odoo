@@ -5,7 +5,10 @@ import { uuidv4, batched } from "@point_of_sale/js/utils";
 import core from "web.core";
 import { Printer } from "@point_of_sale/js/printers";
 import { patch } from "@web/core/utils/patch";
+import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+
 const QWeb = core.qweb;
+const _t = core._t;
 
 patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     setup() {
@@ -143,7 +146,10 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         return this._super(...arguments) && !this.transferredOrdersSet.has(order);
     },
     _shouldCreateOrder(json) {
-        return (!this._transferredOrder(json) || this._isSameTable(json)) && (!this.selectedOrder || this._super(...arguments));
+        return (
+            (!this._transferredOrder(json) || this._isSameTable(json)) &&
+            (!this.selectedOrder || this._super(...arguments))
+        );
     },
     _shouldRemoveSelectedOrder(removeSelected) {
         return this.selectedOrder && this._super(...arguments);
@@ -156,12 +162,10 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         return transferredOrder && transferredOrder.tableId === json.tableId;
     },
     _transferredOrder(json) {
-        return [...this.transferredOrdersSet].find(
-            (order) => order.uid === json.uid
-        );
+        return [...this.transferredOrdersSet].find((order) => order.uid === json.uid);
     },
     _createOrder(json) {
-        const transferredOrder = this._transferredOrder(json)
+        const transferredOrder = this._transferredOrder(json);
         if (this._isSameTable(json)) {
             // this means we transferred back to the original table, we'll prioritize the server state
             this.removeOrder(transferredOrder, false);
@@ -249,7 +253,12 @@ patch(Order.prototype, "pos_restaurant.Order", {
     setup(options) {
         this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (this.pos.config.iface_floorplan && !this.tableId && !options.json && this.pos.table) {
+            if (
+                this.pos.config.iface_floorplan &&
+                !this.tableId &&
+                !options.json &&
+                this.pos.table
+            ) {
                 this.tableId = this.pos.table.id;
             }
             this.customerCount = this.customerCount || 1;
@@ -295,6 +304,20 @@ patch(Order.prototype, "pos_restaurant.Order", {
             this.printedResume = json.multiprint_resume && JSON.parse(json.multiprint_resume);
             this.printingChanges = json.printing_changes && JSON.parse(json.printing_changes);
         }
+    },
+    async submitOrder() {
+        if (this.pos.unwatched.printers.length) {
+            if (this.hasChangesToPrint()) {
+                const isPrintSuccessful = await this.printChanges();
+                if (!isPrintSuccessful) {
+                    this.pos.env.services.popup.add(ErrorPopup, {
+                        title: _t("Printing failed"),
+                        body: _t("Failed in printing the changes in the order"),
+                    });
+                }
+            }
+        }
+        this.updatePrintedResume();
     },
     //@override
     export_for_printing() {

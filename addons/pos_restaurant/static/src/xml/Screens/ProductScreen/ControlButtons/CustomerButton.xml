@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.CustomerButton" owl="1">
+        <div class="control-button customer-button" t-on-click="() => this.pos.selectPartner()">
+            <i class="fa fa-user" role="img" aria-label="Customer" title="Customer" />
+            <t t-esc="this.partner.name" t-if="this.partner" />
+            <t t-else="">
+                Customer
+            </t>
+        </div>
+    </t>
+</templates>
