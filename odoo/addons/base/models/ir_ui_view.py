@@ -3,6 +3,7 @@
 import ast
 import collections
 import datetime
+import diff_match_patch
 import functools
 import inspect
 import json
@@ -2199,6 +2200,29 @@ actual arch.
                 for key in values:
                     if key != 'inherit_id' and cow_view[key] == self[key]:
                         authorized_vals[key] = values[key]
+                    elif key == 'arch':  # TODO: or arch_db?
+                        # cow view has manual arch diff: try to merge it with
+                        # the odoo updated view
+                        # ----------------------
+                        # From: self[key]
+                        # To  : values[key]
+                        # COW : cow_view[key]
+                        dmp = diff_match_patch.diff_match_patch()
+                        diffs = dmp.diff_main(self[key], values[key])
+                        # dmp.diff_cleanupSemantic(diffs)
+                        # dmp.diff_cleanupEfficiency(diffs)
+                        patches = dmp.patch_make(diffs)
+                        merged_arch, results = dmp.patch_apply(patches, cow_view[key])
+                        if all(results):
+                            # TODO: Validate the XML validity of the generated
+                            #       arch.
+                            authorized_vals[key] = merged_arch
+                        else:
+                            _logger.warning(
+                                "Could not merge COW view manual changes with generic Odoo changes: '%s (%s)'",
+                                cow_view.key, cow_view.id,
+                            )
+
                 # if inherit_id update, replicate change on cow view but
                 # only if that cow view inherit_id wasn't manually changed
                 inherit_id = values.get('inherit_id')

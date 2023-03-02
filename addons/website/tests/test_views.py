@@ -907,6 +907,64 @@ class TestCowViewSaving(TestViewSavingCommon):
             'key': '_website_forum.layout',
         })])
 
+    def test_module_update_arch_replicate_on_cow_changed(self):
+        """ TODO
+        """
+        Website1 = self.env['website'].with_context(load_all_views=True, website_id=1)
+        View = self.env['ir.ui.view']
+        self.inherit_view.active = False
+
+        # Setup: simulate an XML view
+        key = '_cow_testing.demo_view'
+        self.base_view.write({
+            'name': 'Generic XML/Odoo View',
+            'key': key,
+        })
+        self._create_imd(self.base_view)
+
+        for arch_from, arch_to, arch_cow, arch_expected in [[
+            # Case 1: Both added elements, one is added at the same place.
+            #         This is the typical flow of our website builder where one
+            #         is adding an element inside a template (like a gtag).
+            '<body><parent><child1/><child2/></parent></body>',
+            '<body><parent><child0/><child1/><child2/></parent><parent2/></body>',
+            # added:       ^^^^^^^^^                           ^^^^^^^^^^
+            '<body><parent><child1/><child2/><child3/></parent><another_parent/></body>',
+            # added:                         ^^^^^^^^^         ^^^^^^^^^^^^^^^^^
+            '<body><parent><child0/><child1/><child2/><child3/></parent><another_parent/><parent2/></body>',
+            # added:       ^^^^^^^^^                  ^^^^^^^^^         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        ], [
+            # Case 2: - Odoo added/changed some attributes
+            #         - Odoo added a new element
+            #         - The user added an element inside an element that
+            #           received an attribute modification by Odoo
+            #         - The user added a new attributes
+            '<body><parent><child1 class="smth"/><child2>text</child2></parent></body>',
+            '<body><parent><child1 class="smth else"/><child2 class="smth">text</child2><child3/></parent></body>',
+            # added:                          ^^^^^          ^^^^^^^^^^^^^              ^^^^^^^^^
+            '<body><parent><child1 class="smth new"/><child2>text<subchild/></child2></parent></body>',
+            # added:                          ^^^^               ^^^^^^^^^^^
+            '<body><parent><child1 class="smth new else"/><child2 class="smth">text<subchild/></child2><child3/></parent></body>',
+            # added:                           ^^^^^^^^          ^^^^^^^^^^^^^^    ^^^^^^^^^^^         ^^^^^^^^^
+        ]]:
+            # 1. Simulate an XML view
+            self.base_view.arch = arch_from
+
+            # 2. Trigger cow on that XML view for website 1 by writing changes
+            #    in the view arch
+            self.base_view.with_context(website_id=1).write({
+                'name': 'COW of Generic View (W1)',
+                'arch': arch_cow,
+            })
+
+            # 3. Simulate module (of that view) update
+            View._load_records([dict(xml_id=key, values={'arch': arch_to})])
+            View.invalidate_model()
+
+            # 4. Ensure both changes were merged
+            specific_view_arch = Website1.viewref(key).get_combined_arch()
+            self.assertEqual(specific_view_arch, arch_expected, "TODO")
+
     def test_multiple_inherit_level(self):
         """ Test multi-level inheritance:
             Base
