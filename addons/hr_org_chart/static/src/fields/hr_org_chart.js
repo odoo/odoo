@@ -55,9 +55,8 @@ export class HrOrgChart extends Component {
         this.rpc = useService('rpc');
         this.orm = useService('orm');
         this.actionService = useService("action");
+        this.user = useService("user");
         this.popover = useUniquePopover();
-
-        this.jsonStringify = JSON.stringify;
 
         this.state = useState({'employee_id': null});
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
@@ -88,11 +87,11 @@ export class HrOrgChart extends Component {
             this.view_employee_id = null;
         } else if (employeeId !== this.view_employee_id || force) {
             this.view_employee_id = employeeId;
-            var orgData = await this.rpc(
+            let orgData = await this.rpc(
                 '/hr/get_org_chart',
                 {
                     employee_id: employeeId,
-                    context: Component.env.session.user_context,
+                    context: this.user.context,
                 }
             );
             if (Object.keys(orgData).length === 0) {
@@ -112,7 +111,7 @@ export class HrOrgChart extends Component {
     _onOpenPopover(event, employee) {
         this.popover.add(
             event.currentTarget,
-            this.constructor.components.Popover,
+            HrOrgChartPopover,
             {employee},
             {closeOnClickAway: true}
         );
@@ -135,10 +134,6 @@ export class HrOrgChart extends Component {
         this.state.employee_id = managerId;
     }
 }
-
-HrOrgChart.components = {
-    Popover: HrOrgChartPopover,
-};
 
 HrOrgChart.template = 'hr_org_chart.hr_org_chart';
 
