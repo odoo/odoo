@@ -161,7 +161,7 @@ class StockMove(models.Model):
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
-            unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
+            unit_cost = move._get_price_unit()  # If negative, need to use as such, to credit SOH instead of debit - It is NOT negative when decreasing an out move - it is a unit cost
             if move.product_id.cost_method == 'standard':
                 unit_cost = move.product_id.standard_price
             svl_vals = move.product_id._prepare_in_svl_vals(forced_quantity or valued_quantity, unit_cost)
