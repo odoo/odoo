@@ -1056,25 +1056,10 @@ export class Record extends DataPoint {
             const propertyFieldName = `${fieldName}.${definition.name}`;
             if (propertyFieldName in this.fields) {
                 continue;
+            } else if (["many2one", "many2many"].includes(definition.type) && !definition.comodel) {
+                continue;
             }
-
-            let widget = definition.type;
-            if (["many2one", "many2many"].includes(definition.type)) {
-                if (!definition.comodel) {
-                    continue;
-                }
-
-                if (["res.users", "res.partner"].includes(definition.comodel)) {
-                    widget =
-                        definition.type === "many2one"
-                            ? "many2one_avatar"
-                            : "many2many_tags_avatar";
-                } else {
-                    widget = definition.type === "many2one" ? widget : "many2many_tags";
-                }
-            } else if (widget === "tags") {
-                widget = `property_tags`;
-            }
+            const widget = this._getWidgetFromDefinition(definition);
 
             const parent = this.data[propertiesField.definition_record];
             const relatedPropertyField = {
@@ -1122,6 +1107,17 @@ export class Record extends DataPoint {
                 field,
             };
         }
+    }
+
+    _getWidgetFromDefinition(definition) {
+        if (definition.type === "many2many") {
+            return "many2many_tags";
+        } else if (definition.type === "tags") {
+            return "property_tags";
+        } else if (["res.users", "res.partner"].includes(definition.comodel)) {
+            return definition.type === "many2one" ? "many2one_avatar" : "many2many_tags_avatar";
+        }
+        return definition.type;
     }
 
     _createStaticList(fieldName) {

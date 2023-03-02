@@ -7,4 +7,5 @@ addModelNamesToFetch([
     "mail.test.activity",
     "mail.test.multi.company",
     "mail.test.multi.company.read",
+    "mail.test.properties",
 ]);
