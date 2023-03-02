@@ -378,7 +378,7 @@ export class WebsitePreview extends Component {
             } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
                 ev.preventDefault();
                 this.router.redirect(href);
-            } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname) {
+            } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname && !isEditing) {
                 this.websiteService.websiteRootInstance = undefined;
             }
         });
