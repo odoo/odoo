@@ -336,7 +336,7 @@ class AccountEdiFormat(models.Model):
                 attachment.res_id = False
                 attachment.res_model = False
                 invoice.unlink()
-                invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(fattura['filename'], tree)
+                invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_document_from_attachment(attachment)
                 attachment.write({'res_model': 'account.move',
                                   'res_id': invoice.id})
                 proxy_acks.append(id_transaction)
