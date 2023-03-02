@@ -479,7 +479,7 @@ class ReportBomStructure(models.AbstractModel):
         if not found_rules:
             return {}
         rules_delay = sum(rule.delay for rule in found_rules)
-        return self._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
+        return self.with_context(parent_bom=parent_bom)._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
 
     @api.model
     def _need_special_rules(self, product_info, parent_bom=False, parent_product=False):
@@ -497,12 +497,13 @@ class ReportBomStructure(models.AbstractModel):
             wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=warehouse.route_ids)
             wh_manufacture_rules -= rules
             rules_delay += sum(rule.delay for rule in wh_manufacture_rules)
+            manufacturing_lead = bom.company_id.manufacturing_lead if bom and bom.company_id else 0
             return {
                 'route_type': 'manufacture',
                 'route_name': manufacture_rules[0].route_id.display_name,
                 'route_detail': bom.display_name,
-                'lead_time': product.produce_delay + rules_delay,
-                'manufacture_delay': product.produce_delay + rules_delay,
+                'lead_time': product.produce_delay + rules_delay + manufacturing_lead,
+                'manufacture_delay': product.produce_delay + rules_delay + manufacturing_lead,
             }
         return {}
 
