@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { RPCError } from "@web/core/network/rpc_service";
 import { KeepLast } from "@web/core/utils/concurrency";
 
@@ -19,6 +18,7 @@ export class LoadableDataSource {
         this._orm = services.orm;
         this._metadataRepository = services.metadataRepository;
         this._notify = services.notify;
+        this._throwLoadingDataError = services.throwLoadingDataError;
 
         /**
          * Last time that this dataSource has been updated
@@ -82,7 +82,7 @@ export class LoadableDataSource {
     _assertDataIsLoaded() {
         if (!this._isFullyLoaded) {
             this.load();
-            throw new LoadingDataError();
+            this._throwLoadingDataError();
         }
         if (!this._isValid) {
             throw new Error(this._loadErrorMessage);

@@ -14,6 +14,9 @@ QUnit.module("spreadsheet server data", {}, () => {
         };
         const serverData = new ServerData(orm, {
             whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            throwLoadingDataError: (error = new LoadingDataError()) => {
+                throw error;
+            },
         });
         assert.throws(
             () => serverData.get("partner", "get_something", [5]),
@@ -267,6 +270,9 @@ QUnit.module("spreadsheet server data", {}, () => {
         };
         const serverData = new ServerData(orm, {
             whenDataIsFetched: () => assert.step("data-fetched-notification"),
+            throwLoadingDataError: (error = new LoadingDataError()) => {
+                throw error;
+            },
         });
         assert.throws(() => serverData.batch.get("partner", "get_something", 5), LoadingDataError);
         assert.throws(() => serverData.get("partner", "get_something", [5]), LoadingDataError);

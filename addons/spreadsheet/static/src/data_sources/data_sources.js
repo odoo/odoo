@@ -1,9 +1,10 @@
 /** @odoo-module */
 
+import { EventBus } from "@odoo/owl";
+import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { LoadableDataSource } from "./data_source";
 import { MetadataRepository } from "./metadata_repository";
 
-import { EventBus } from "@odoo/owl";
 
 /** *
  * @typedef {object} DataSourceServices
@@ -18,10 +19,24 @@ export class DataSources extends EventBus {
     constructor(orm) {
         super();
         this._orm = orm.silent;
-        this._metadataRepository = new MetadataRepository(orm);
+        this._metadataRepository = new MetadataRepository(orm, () => this.throwLoadingDataError());
         this._metadataRepository.addEventListener("labels-fetched", () => this.notify());
         /** @type {Object.<string, any>} */
         this._dataSources = {};
+        this._numberOfLoadingDataError = 0;
+    }
+
+    resetNumberOfLoadingDataError() {
+        this._numberOfLoadingDataError = 0;
+    }
+
+    isFullyLoaded() {
+        return this._numberOfLoadingDataError === 0;
+    }
+
+    throwLoadingDataError(error = new LoadingDataError()) {
+        this._numberOfLoadingDataError++;
+        throw error;
     }
 
     /**
@@ -38,6 +53,7 @@ export class DataSources extends EventBus {
                 orm: this._orm,
                 metadataRepository: this._metadataRepository,
                 notify: () => this.notify(),
+                throwLoadingDataError: () => this.throwLoadingDataError(),
             },
             params
         );

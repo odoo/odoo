@@ -13,7 +13,11 @@ const { Model } = spreadsheet;
 async function downloadSpreadsheet(env, action) {
     const { orm, name, data, stateUpdateMessages } = action.params;
     const dataSources = new DataSources(orm);
-    const model = new Model(migrate(data), { custom: { dataSources } }, stateUpdateMessages);
+    const model = new Model(
+        migrate(data),
+        { custom: { dataSources }, lazyEvaluation: false },
+        stateUpdateMessages
+    );
     await dataSources.waitForAllLoaded();
     await waitForDataLoaded(model);
     const { files } = model.exportXLSX();
@@ -36,13 +40,10 @@ async function waitForDataLoaded(model) {
     return new Promise((resolve, reject) => {
         let interval = undefined;
         interval = browser.setInterval(() => {
-            for (const sheetId of model.getters.getSheetIds()) {
-                for (const cell of Object.values(model.getters.getEvaluatedCells(sheetId))) {
-                    if (cell.type === "error" && cell.error.message === _t("Data is loading")) {
-                        model.dispatch("EVALUATE_CELLS");
-                        return;
-                    }
-                }
+            model.config.custom.dataSources.resetNumberOfLoadingDataError();
+            model.dispatch("EVALUATE_CELLS");
+            if (!model.config.custom.dataSources.isFullyLoaded()) {
+                return;
             }
             browser.clearInterval(interval);
             resolve();

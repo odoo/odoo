@@ -37,18 +37,20 @@ import { EventBus } from "@odoo/owl";
  * At the end of this process, an event is triggered (labels-fetched)
  */
 export class MetadataRepository extends EventBus {
-    constructor(orm) {
+    constructor(orm, throwLoadingDataError) {
         super();
         this.orm = orm;
 
         this.serverData = new ServerData(this.orm, {
             whenDataIsFetched: () => this.trigger("labels-fetched"),
+            throwLoadingDataError,
         });
 
         this.labelsRepository = new LabelsRepository();
 
         this.displayNameRepository = new DisplayNameRepository(this.orm, {
             whenDataIsFetched: () => this.trigger("labels-fetched"),
+            throwLoadingDataError,
         });
     }
 

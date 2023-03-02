@@ -88,10 +88,12 @@ export class ServerData {
      * @param {any} orm
      * @param {object} params
      * @param {function} params.whenDataIsFetched
+     * @param {function} params.throwLoadingDataError
      */
-    constructor(orm, { whenDataIsFetched }) {
+    constructor(orm, { whenDataIsFetched, throwLoadingDataError }) {
         this.orm = orm;
         this.dataFetchedCallback = whenDataIsFetched;
+        this.throwLoadingDataError = throwLoadingDataError;
         /** @type {Record<string, unknown>}*/
         this.cache = {};
         /** @type {Record<string, Promise<unknown>>}*/
@@ -178,7 +180,7 @@ export class ServerData {
     _getOrThrowCachedResponse(request) {
         const data = this.cache[request.key];
         if (data instanceof Error) {
-            throw data;
+            this.throwLoadingDataError(data);
         }
         return data;
     }

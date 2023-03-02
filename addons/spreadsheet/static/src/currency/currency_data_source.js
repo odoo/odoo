@@ -15,6 +15,7 @@ export class CurrencyDataSource {
     constructor(services) {
         this.serverData = new ServerData(services.orm, {
             whenDataIsFetched: () => services.notify(),
+            throwLoadingDataError: (error) => services.throwLoadingDataError(error),
         });
     }
 

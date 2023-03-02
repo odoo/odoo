@@ -60,7 +60,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
     getFields() {
         if (this._metaData.fields === undefined) {
             this.loadMetadata();
-            throw new LoadingDataError();
+            this._throwLoadingDataError();
         }
         return this._metaData.fields;
     }

@@ -2,6 +2,7 @@
 
 import { nextTick } from "@web/../tests/helpers/utils";
 import { MetadataRepository } from "@spreadsheet/data_sources/metadata_repository";
+import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 
 QUnit.module("spreadsheet > Metadata Repository", {}, () => {
     QUnit.test("Fields_get are only loaded once", async function (assert) {
@@ -73,7 +74,9 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
             },
         };
 
-        const metadataRepository = new MetadataRepository(orm);
+        const metadataRepository = new MetadataRepository(orm, () => {
+            throw new LoadingDataError();
+        });
         metadataRepository.addEventListener("labels-fetched", () => {
             assert.step("labels-fetched");
         });
@@ -157,7 +160,9 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
                 },
             };
 
-            const metadataRepository = new MetadataRepository(orm);
+            const metadataRepository = new MetadataRepository(orm, () => {
+                throw new LoadingDataError();
+            });
 
             assert.throws(() => metadataRepository.getRecordDisplayName("A", 1), /Data is loading/);
             assert.throws(() => metadataRepository.getRecordDisplayName("B", 1), /Data is loading/);

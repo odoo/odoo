@@ -2,7 +2,6 @@
 
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
 import { orderByToString } from "@spreadsheet/helpers/helpers";
-import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
@@ -113,7 +112,7 @@ export default class ListDataSource extends OdooViewsDataSource {
             this.increaseMaxPosition(position + 1);
             // A reload is needed because the asked position is not already loaded.
             this._triggerFetching();
-            throw new LoadingDataError();
+            this._throwLoadingDataError();
         }
         const record = this.data[position];
         if (!record) {
@@ -132,7 +131,7 @@ export default class ListDataSource extends OdooViewsDataSource {
             this._metaData.columns.push(fieldName);
             this._metaData.columns = [...new Set(this._metaData.columns)]; //Remove duplicates
             this._triggerFetching();
-            throw new LoadingDataError();
+            this._throwLoadingDataError();
         }
         switch (field.type) {
             case "many2one":

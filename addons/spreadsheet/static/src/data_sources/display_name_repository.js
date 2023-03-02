@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { Deferred } from "@web/core/utils/concurrency";
-import { LoadingDataError } from "../o_spreadsheet/errors";
 import BatchEndpoint, { Request } from "./server_data";
 
 /**
@@ -37,9 +36,11 @@ export class DisplayNameRepository {
      * @param {Object} params
      * @param {function} params.whenDataIsFetched Callback to call when the
      *  display name of a record is fetched.
+     * @param {function} params.throwLoadingDataError
      */
-    constructor(orm, { whenDataIsFetched }) {
+    constructor(orm, { whenDataIsFetched, throwLoadingDataError }) {
         this.dataFetchedCallback = whenDataIsFetched;
+        this.throwLoadingDataError = throwLoadingDataError;
         /**
          * Contains the display names of records. It's organized in the following way:
          * {
@@ -106,7 +107,7 @@ export class DisplayNameRepository {
             // Catch the error to prevent the error from being thrown in the
             // background.
             this._fetchDisplayName(model, id).catch(() => {});
-            throw new LoadingDataError();
+            this.throwLoadingDataError();
         }
         switch (displayNameResult.state) {
             case "ERROR":
@@ -114,7 +115,7 @@ export class DisplayNameRepository {
             case "COMPLETED":
                 return displayNameResult.value;
             default:
-                throw new LoadingDataError();
+                this.throwLoadingDataError();
         }
     }
 
