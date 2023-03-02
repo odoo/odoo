@@ -16,10 +16,7 @@ export function useAssignUserCommand() {
     const orm = useService("orm");
     const user = useService("user");
     const type = component.props.record.fields[component.props.name].type;
-    if (
-        component.relation !== "res.users" ||
-        component.props.record.activeFields[component.props.name].viewType !== "form"
-    ) {
+    if (component.relation !== "res.users") {
         return;
     }
 

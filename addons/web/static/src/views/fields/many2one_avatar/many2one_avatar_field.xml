@@ -7,7 +7,7 @@
                 <span t-if="props.value === false and !props.readonly" class="o_m2o_avatar_empty"></span>
                 <img t-if="props.value !== false" t-attf-src="/web/image/{{relation}}/{{props.value[0]}}/avatar_128" />
             </span>
-            <Many2OneField t-props="props" canOpen="!props.readonly"/>
+            <Many2OneField t-props="many2OneProps" canOpen="!props.readonly"/>
         </div>
     </t>
 

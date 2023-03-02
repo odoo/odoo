@@ -41,6 +41,7 @@ export class Many2ManyTagsField extends Component {
         createDomain: { type: [Array, Boolean], optional: true },
         placeholder: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
+        string: { type: String, optional: true },
     };
     static defaultProps = {
         canCreate: true,
@@ -112,7 +113,7 @@ export class Many2ManyTagsField extends Component {
         return this.props.record.evalContext;
     }
     get string() {
-        return this.props.record.activeFields[this.props.name].string;
+        return this.props.string || this.props.record.fields[this.props.name].string || "";
     }
 
     getTagProps(record) {
@@ -257,7 +258,7 @@ export const many2ManyTagsField = {
         }
         return relatedFields;
     },
-    extractProps: ({ attrs, options }) => {
+    extractProps: ({ attrs, options, string }) => {
         const noCreate = Boolean(options.no_create);
         const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
         const noQuickCreate = Boolean(options.no_quick_create);
@@ -270,6 +271,7 @@ export const many2ManyTagsField = {
             canCreateEdit: canCreate && !noCreateEdit,
             createDomain: options.create,
             placeholder: attrs.placeholder,
+            string,
         };
     },
 };
