@@ -107,7 +107,6 @@ class MailThread(models.AbstractModel):
         'Number of errors', compute='_compute_message_has_error',
         help="Number of messages with delivery error")
     message_attachment_count = fields.Integer('Attachment Count', compute='_compute_message_attachment_count', groups="base.group_user")
-    message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', copy=False)
 
     @api.depends('message_follower_ids')
     def _compute_message_partner_ids(self):
@@ -1971,27 +1970,12 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
-        # Set main attachment field if necessary
-        self._message_set_main_attachment_id([
-            attachment_command[1]
-            for attachment_command in (msg_values['attachment_ids'] or [])
-        ])
 
     def _message_mail_after_hook(self, mails):
         """ Hook to add custom behavior after having sent an mass mailing.
 
         :param mail.mail mails: mail.mail records about to be sent"""
         return
-
-    def _message_set_main_attachment_id(self, attachment_ids):
-        if self._name == 'mail.thread':
-            return
-        if attachment_ids and not self.message_main_attachment_id:
-            all_attachments = self.env['ir.attachment'].browse(attachment_ids)
-            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
-                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments
-            self.sudo().with_context(tracking_disable=True).message_main_attachment_id = prioritary_attachments[0].id
 
     def _process_attachments_for_post(self, attachments, attachment_ids, message_values):
         """ Preprocess attachments for MailTread.message_post() or MailMail.create().
@@ -3797,7 +3781,6 @@ class MailThread(models.AbstractModel):
             res['activities'] = self.activity_ids.activity_format()
         if 'attachments' in request_list:
             res['attachments'] = self._get_mail_thread_data_attachments()._attachment_format()
-            res['mainAttachment'] = {'id': self.message_main_attachment_id.id} if self.message_main_attachment_id else [('clear',)]
         if 'followers' in request_list:
             res['followers'] = [{
                 'id': follower.id,
