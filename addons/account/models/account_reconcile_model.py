@@ -410,18 +410,23 @@ class AccountReconcileModel(models.Model):
         :return: A list of dictionary to be passed to the account.bank.statement.line's 'reconcile' method.
         '''
         self.ensure_one()
+        journal = st_line.journal_id
+        company_currency = journal.company_id.currency_id
+        foreign_currency = st_line.foreign_currency_id or journal.currency_id or company_currency
+
         liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
 
         if st_line.to_check:
             st_line_residual = -liquidity_lines.balance
+            st_line_residual_currency = st_line._prepare_move_line_default_vals()[1]['amount_currency']
         elif suspense_lines.account_id.reconcile:
             st_line_residual = sum(suspense_lines.mapped('amount_residual'))
+            st_line_residual_currency = sum(suspense_lines.mapped('amount_residual_currency'))
         else:
             st_line_residual = sum(suspense_lines.mapped('balance'))
+            st_line_residual_currency = sum(suspense_lines.mapped('amount_currency'))
 
-        partner = partner or st_line.partner_id
-
-        has_full_write_off= any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
+        has_full_write_off = any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
 
         lines_vals_list = []
         amls = self.env['account.move.line'].browse(aml_ids)
@@ -433,18 +438,30 @@ class AccountReconcileModel(models.Model):
             if aml.balance * st_line_residual > 0:
                 # Meaning they have the same signs, so they can't be reconciled together
                 assigned_balance = -aml.amount_residual
+                assigned_amount_currency = -aml.amount_residual_currency
             elif has_full_write_off:
                 assigned_balance = -aml.amount_residual
-                st_line_residual -= min(-aml.amount_residual, st_line_residual, key=abs)
+                assigned_amount_currency = -aml.amount_residual_currency
+                st_line_residual -= min(assigned_balance, st_line_residual, key=abs)
+                st_line_residual_currency -= min(assigned_amount_currency, st_line_residual_currency, key=abs)
             else:
                 assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
+                assigned_amount_currency = min(-aml.amount_residual_currency, st_line_residual_currency, key=abs)
                 st_line_residual -= assigned_balance
+                st_line_residual_currency -= assigned_amount_currency
 
-            lines_vals_list.append({
-                'id': aml.id,
-                'balance': assigned_balance,
-                'currency_id': st_line.move_id.company_id.currency_id.id,
-            })
+            if aml.currency_id == foreign_currency:
+                lines_vals_list.append({
+                    'id': aml.id,
+                    'balance': assigned_amount_currency,
+                    'currency_id': foreign_currency.id,
+                })
+            else:
+                lines_vals_list.append({
+                    'id': aml.id,
+                    'balance': assigned_balance,
+                    'currency_id': company_currency.id,
+                })
 
         write_off_amount = max(aml_total_residual, -st_line_residual_before, key=abs) + st_line_residual_before + st_line_residual
 

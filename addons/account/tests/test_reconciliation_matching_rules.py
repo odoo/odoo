@@ -1161,3 +1161,67 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             [(6, 0, tax.refund_repartition_line_ids[1].tag_ids.ids)],
             'The tags of the second repartition line are not inverted'
         )
+
+    def test_matching_multi_currency_auto_validate(self):
+        currency = self.setup_multi_currency_data(
+            default_values={
+                'name': 'Black Chocolate Coin',
+                'symbol': '🍫',
+                'currency_unit_label': 'Black Choco',
+                'currency_subunit_label': 'Black Cacao Powder',
+            },
+            rate2016=11.2674,
+            rate2017=11.2674,
+        )['currency']
+
+        bank_journal = self.company_data['default_journal_bank'].copy()
+        bank_journal.currency_id = currency
+
+        invoice_line = self._create_invoice_line(100.0, self.partner_1, 'out_invoice', currency=currency)
+
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_matching_multi_currency_auto_validate',
+            'journal_id': bank_journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'journal_id': bank_journal.id,
+                    'partner_id': self.partner_1.id,
+                    'date': invoice_line.date,
+                    'payment_ref': invoice_line.move_name,
+                    'amount': invoice_line.amount_currency,
+                }),
+            ],
+        })
+        statement_line = statement.line_ids
+        statement.button_post()
+
+        matching_rule = self.env['account.reconcile.model'].create({
+            'name': 'test_matching_multi_currency_auto_validate',
+            'rule_type': 'invoice_matching',
+            'match_partner': True,
+            'match_partner_ids': [(6, 0, self.partner_1.ids)],
+            'match_total_amount': True,
+            'match_total_amount_param': 100.0,
+            'match_same_currency': True,
+            'past_months_limit': False,
+            'auto_reconcile': True,
+        })
+
+        self._check_statement_matching(
+            matching_rule,
+            {
+                statement_line.id: {
+                    'aml_ids': invoice_line.ids,
+                    'model': matching_rule,
+                    'status': 'reconciled',
+                    'partner': self.partner_1,
+                },
+            },
+            statements=statement,
+        )
+
+        self.assertRecordValues(statement_line.line_ids, [
+            # pylint: disable=bad-whitespace
+            {'amount_currency': 100.0,  'debit': 8.88,  'credit': 0.0},
+            {'amount_currency': -100.0, 'debit': 0.0,   'credit': 8.88},
+        ])
