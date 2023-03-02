@@ -32,3 +32,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'kz7410',
             },
         }
+
+    @template('kz', 'account.journal')
+    def _get_kz_account_journal(self):
+        return {
+            'cash': {'default_account_id': 'kz1010'},
+            'bank': {'default_account_id': 'kz1030'},
+        }

@@ -7,20 +7,6 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    @template('ar_base', 'account.journal')
-    def _get_ar_account_journal(self):
-        """ In case of an Argentinean CoA, we modify the default values of the sales journal to be a preprinted journal"""
-        return {
-            'sale': {
-                "name": "Ventas Preimpreso",
-                "code": "0001",
-                "l10n_ar_afip_pos_number": 1,
-                "l10n_ar_afip_pos_partner_id": self.env.company.partner_id.id,
-                "l10n_ar_afip_pos_system": 'II_IM',
-                "refund_sequence": False,
-            },
-        }
-
     @api.model
     def _get_ar_responsibility_match(self, chart_template):
         """ return responsibility type that match with the given chart_template code
