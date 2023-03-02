@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { markRaw, markup, toRaw } from "@odoo/owl";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
@@ -16,6 +17,7 @@ import { registry } from "@web/core/registry";
 import { unique } from "@web/core/utils/arrays";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
+import { pick } from "@web/core/utils/objects";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
@@ -29,9 +31,9 @@ import {
     isX2Many,
     orderByToString,
 } from "@web/views/utils";
+import { getFieldFromRegistry } from "@web/views/fields/field";
 
 const { DateTime } = luxon;
-import { markRaw, markup, toRaw } from "@odoo/owl";
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
@@ -265,11 +267,13 @@ class DataPoint {
 
         this.model = model;
         this.resModel = params.resModel;
-        this.fields = {
-            id: { name: "id", type: "integer", readonly: true },
-            display_name: { name: "display_name", type: "char" },
-            ...params.fields,
-        };
+        this.fields = params.fields;
+        if (!("id" in this.fields)) {
+            this.fields.id = { name: "id", type: "integer", readonly: true };
+        }
+        if (!("display_name" in this.fields)) {
+            this.fields.display_name = { name: "display_name", type: "char" };
+        }
         this.setActiveFields(params.activeFields);
 
         this.onWillSaveRecord = params.onWillSaveRecord || (() => {});
@@ -289,7 +293,9 @@ class DataPoint {
     }
 
     get fieldNames() {
-        return Object.keys(this.activeFields);
+        return Object.keys(this.activeFields).filter(
+            (fieldName) => !this.activeFields[fieldName].relatedPropertyField
+        );
     }
 
     // -------------------------------------------------------------------------
@@ -366,6 +372,14 @@ class DataPoint {
                     return hasKey0 ? 0 : value;
                 }
                 break;
+            }
+            case "properties": {
+                return value
+                    ? value.map((property) => ({
+                          ...property,
+                          value: this._parseServerValue(property, property.value ?? false),
+                      }))
+                    : [];
             }
         }
         return value;
@@ -444,7 +458,7 @@ export class Record extends DataPoint {
     get dataContext() {
         // should not be called befor this.data is ready!
         const evalContext = { ...this.model.user.context };
-        for (const fieldName in this.activeFields) {
+        for (const fieldName of this.fieldNames) {
             const value = this.data[fieldName];
             if ([null].includes(value)) {
                 // simplify that?
@@ -657,7 +671,7 @@ export class Record extends DataPoint {
     discard() {
         clearObject(this._changes);
         clearObject(this._domains);
-        for (const fieldName in this.activeFields) {
+        for (const fieldName of this.fieldNames) {
             // activeFields should be changed
             const field = this.fields[fieldName];
             if (isX2Many(field)) {
@@ -695,6 +709,29 @@ export class Record extends DataPoint {
         };
     }
 
+    _formatServerValue(fieldType, value) {
+        if (fieldType === "many2one") {
+            return value ? value[0] : false;
+        } else if (fieldType === "date") {
+            return value ? serializeDate(value) : false;
+        } else if (fieldType === "datetime") {
+            return value ? serializeDateTime(value) : false;
+        } else if (fieldType === "reference") {
+            return value && value.resModel && value.resId
+                ? `${value.resModel},${value.resId}`
+                : value || false;
+        } else if (fieldType === "properties") {
+            return value.map((property) => ({
+                ...property,
+                value:
+                    property.type === "many2one"
+                        ? property.value
+                        : this._formatServerValue(property.type, property.value),
+            }));
+        }
+        return value;
+    }
+
     getChanges(allFields = false, parentChanges = false) {
         const changes = { ...(allFields ? this.data : this._changes) };
         for (const fieldName in changes) {
@@ -714,19 +751,8 @@ export class Record extends DataPoint {
                 if (!changes[fieldName]) {
                     delete changes[fieldName];
                 }
-            } else if (fieldType === "many2one") {
-                changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
-            } else if (fieldType === "date") {
-                changes[fieldName] = changes[fieldName] ? serializeDate(changes[fieldName]) : false;
-            } else if (fieldType === "datetime") {
-                changes[fieldName] = changes[fieldName]
-                    ? serializeDateTime(changes[fieldName])
-                    : false;
-            } else if (fieldType === "reference") {
-                const value = changes[fieldName];
-                changes[fieldName] = value && value.resModel && value.resId
-                    ? `${value.resModel},${value.resId}`
-                    : (value || false);
+            } else {
+                changes[fieldName] = this._formatServerValue(fieldType, changes[fieldName]);
             }
         }
 
@@ -782,9 +808,8 @@ export class Record extends DataPoint {
      * @returns {boolean}
      */
     isReadonly(fieldName) {
-        const activeField = this.activeFields[fieldName];
-        const { readonly } = activeField.modifiers || {};
-        return readonly ? evalDomain(readonly, this.evalContext) : false;
+        const { readonly } = this.activeFields[fieldName].modifiers || {};
+        return evalDomain(readonly, this.evalContext);
     }
 
     /**
@@ -863,7 +888,7 @@ export class Record extends DataPoint {
 
     async loadRelationalData() {
         const proms = [];
-        for (const fieldName in this.activeFields) {
+        for (const fieldName of this.fieldNames) {
             const field = this.fields[fieldName];
             if (field.type === "many2one") {
                 proms.push(
@@ -990,7 +1015,14 @@ export class Record extends DataPoint {
     async _applyChanges(changes) {
         for (let [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
-            if (field && isX2Many(field)) {
+            if (field && field.relatedPropertyField) {
+                const propertyFieldName = field.relatedPropertyField.fieldName;
+                this.data[propertyFieldName] = this.data[propertyFieldName].map((property) =>
+                    property.name === field.propertyName ? { ...property, value } : property
+                );
+                this._changes[propertyFieldName] = this.data[propertyFieldName];
+                this.data[fieldName] = value;
+            } else if (field && isX2Many(field)) {
                 this._changes[fieldName] = value;
                 await this.data[fieldName].update(value);
             } else {
@@ -1044,6 +1076,81 @@ export class Record extends DataPoint {
         return [id, label];
     }
 
+    _applyPropertyDefinitions(fieldName) {
+        const definitions = this.data[fieldName];
+        const propertiesField = this.fields[fieldName];
+
+        for (const definition of definitions) {
+            const propertyFieldName = `${fieldName}.${definition.name}`;
+            if (propertyFieldName in this.fields) {
+                continue;
+            }
+
+            let widget = definition.type;
+            if (["many2one", "many2many"].includes(definition.type)) {
+                if (!definition.comodel) {
+                    continue;
+                }
+
+                if (["res.users", "res.partner"].includes(definition.comodel)) {
+                    widget =
+                        definition.type === "many2one"
+                            ? "many2one_avatar"
+                            : "many2many_tags_avatar";
+                } else {
+                    widget = definition.type === "many2one" ? widget : "many2many_tags";
+                }
+            } else if (widget === "tags") {
+                widget = `property_tags`;
+            }
+
+            const parent = this.data[propertiesField.definition_record];
+
+            const relatedPropertyField = {
+                id: parent[0], //record.id,
+                fieldName,
+                displayName: parent[1], //record.display_name,
+            };
+
+            this.fields[propertyFieldName] = {
+                ...pick(definition, "selection", "string", "tags", "type"),
+                name: propertyFieldName,
+                sortable: false,
+                required: false,
+                relatedPropertyField,
+                propertyName: definition.name,
+                relation: definition.comodel,
+            };
+            const field = getFieldFromRegistry(definition.type, widget);
+            let { fieldsToFetch } = field;
+            if (fieldsToFetch) {
+                if (fieldsToFetch instanceof Function) {
+                    fieldsToFetch = fieldsToFetch({ options: {}, attrs: {} });
+                }
+                fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
+            }
+            this.activeFields[propertyFieldName] = {
+                ...pick(
+                    this.activeFields[fieldName],
+                    "context",
+                    "modifiers",
+                    "viewType",
+                    "help",
+                    "onChange",
+                    "decorations"
+                ),
+                name: propertyFieldName,
+                string: definition.string,
+                relatedPropertyField,
+                attrs: {},
+                options: {},
+                widget,
+                fieldsToFetch,
+                field,
+            };
+        }
+    }
+
     _createStaticList(fieldName) {
         const field = this.fields[fieldName];
         const activeField = this.activeFields[fieldName];
@@ -1089,7 +1196,18 @@ export class Record extends DataPoint {
             views,
             viewMode,
             onChanges: async () => {
-                this._changes[fieldName] = list;
+                const field = this.fields[fieldName];
+                if (field && field.relatedPropertyField) {
+                    const propertyFieldName = field.relatedPropertyField.fieldName;
+                    this.data[propertyFieldName] = this.data[propertyFieldName].map((property) =>
+                        property.name === field.propertyName
+                            ? { ...property, value: list.currentIds }
+                            : property
+                    );
+                    this._changes[propertyFieldName] = this.data[propertyFieldName];
+                } else {
+                    this._changes[fieldName] = list;
+                }
                 const proms = [];
                 if (activeField && activeField.onChange && this.isX2ManyValid(fieldName)) {
                     const changes = await this._onChange([fieldName]);
@@ -1128,7 +1246,7 @@ export class Record extends DataPoint {
                 defaultValues[fieldName] = 0;
             } else if (["date", "datetime"].includes(field.type)) {
                 defaultValues[fieldName] = false;
-            } else if (isX2Many(field)) {
+            } else if (isX2Many(field) || field.type === "properties") {
                 defaultValues[fieldName] = [];
             } else {
                 defaultValues[fieldName] = null;
@@ -1141,6 +1259,9 @@ export class Record extends DataPoint {
         const specs = {};
         function buildSpec(activeFields, prefix) {
             for (const [fieldName, activeField] of Object.entries(activeFields)) {
+                if (activeField.relatedPropertyField) {
+                    continue;
+                }
                 const key = prefix ? `${prefix}.${fieldName}` : fieldName;
                 specs[key] = activeField.onChange ? "1" : "";
                 const subViewInfo = activeField.views && activeField.views[activeField.viewMode];
@@ -1163,7 +1284,7 @@ export class Record extends DataPoint {
         this._changes = params.changes || {};
         this._rawChanges = { ...this._changes };
         const defaultValues = this._getDefaultValues();
-        for (const fieldName in this.activeFields) {
+        for (const fieldName of this.fieldNames) {
             delete this._rawChanges[fieldName];
             const field = this.fields[fieldName];
             if (isX2Many(field)) {
@@ -1182,6 +1303,34 @@ export class Record extends DataPoint {
                     this.data[fieldName] = this._values[fieldName];
                 } else {
                     this.data[fieldName] = defaultValues[fieldName];
+                }
+
+                if (field.type === "properties") {
+                    this._applyPropertyDefinitions(fieldName);
+                    for (const property of this.data[fieldName]) {
+                        const fieldPropertyName = `${fieldName}.${property.name}`;
+                        if (!this.activeFields[fieldPropertyName]) {
+                            continue;
+                        }
+                        if (isX2Many(property)) {
+                            const staticList = this._createStaticList(fieldPropertyName);
+                            this._cache[fieldPropertyName] = staticList;
+                            await staticList.setDataRecords(
+                                (property.value || []).map((val) => ({
+                                    id: val[0],
+                                    display_name: val[1] || this.model.env._t("No Access"),
+                                }))
+                            );
+                            this.data[fieldPropertyName] = staticList;
+                        } else if (property.type === "many2one") {
+                            this.data[fieldPropertyName] =
+                                property.value.length && property.value[1] === null
+                                    ? [property.value[0], this.model.env._t("No Access")]
+                                    : property.value;
+                        } else {
+                            this.data[fieldPropertyName] = property.value ?? false;
+                        }
+                    }
                 }
             }
         }
@@ -1881,6 +2030,8 @@ export class DynamicRecordList extends DynamicList {
         const newRecord = this.model.createDataPoint("record", {
             ...this.commonRecordParams,
             parentActiveFields: this.activeFields,
+            activeFields: this.activeFields,
+            fields: this.fields,
             ...params,
         });
         if (this.model.useSampleModel) {
@@ -3152,6 +3303,20 @@ export class StaticList extends DataPoint {
         this.currentIds = this._getCurrentIds(this._serverIds, this._commands, true);
     }
 
+    async setDataRecords(data) {
+        const proms = [];
+        this.currentIds = [];
+        this._commandsById = {};
+        this._commands = this._getNormalizedCommands([], []);
+        for (const values of data) {
+            const record = this._createRecord({ resId: values.id, mode: "readonly" });
+            this.currentIds.push(values.id);
+            proms.push(record.load({ values }));
+        }
+        await Promise.all(proms);
+        this.records = this._getRecords();
+    }
+
     async sortBy(fieldName) {
         if (this.orderBy.length && this.orderBy[0].name === fieldName) {
             if (this.isOrder) {
@@ -3508,7 +3673,6 @@ export class RelationalModel extends Model {
         const state = this.root
             ? Object.assign(this.root.exportState(), { offset: 0 })
             : this.initialRootState;
-
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
         await this.keepLast.add(newRoot.load({ values: params.values }));
         this.root = newRoot;

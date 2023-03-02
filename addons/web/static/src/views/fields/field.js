@@ -18,7 +18,7 @@ const fieldRegistry = registry.category("fields");
 class DefaultField extends Component {}
 DefaultField.template = xml``;
 
-function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
+export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
     const prefixes = jsClass ? [jsClass, viewType, ""] : [viewType, ""];
     const findInRegistry = (key) => {
         for (const prefix of prefixes) {

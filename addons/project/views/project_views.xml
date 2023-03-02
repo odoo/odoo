@@ -1530,6 +1530,7 @@
                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                         attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_last_text', '=', 'none')]}"
                         class="fw-bold" widget="badge" optional="hide" groups="project.group_project_rating"/>
+                    <field name="task_properties"/>
                 </field>
                 <tree position="inside">
                     <field name="recurrence_id" invisible="1" />
