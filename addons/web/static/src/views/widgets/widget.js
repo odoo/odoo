@@ -2,7 +2,7 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { decodeObjectForTemplate } from "@web/views/view_compiler";
+import { evalDomain } from "@web/views/utils";
 
 import { Component, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -17,7 +17,11 @@ const viewWidgetRegistry = registry.category("view_widgets");
  */
 export class Widget extends Component {
     setup() {
-        this.widget = viewWidgetRegistry.get(this.props.name);
+        if (this.props.widgetInfo) {
+            this.widget = this.props.widgetInfo.widget;
+        } else {
+            this.widget = viewWidgetRegistry.get(this.props.name);
+        }
     }
 
     get classNames() {
@@ -34,24 +38,23 @@ export class Widget extends Component {
         return classNames;
     }
     get widgetProps() {
-        const { node: rawNode } = this.props;
-        const node = rawNode ? decodeObjectForTemplate(rawNode) : {};
-        let propsFromAttrs = {};
-        if (node.attrs) {
-            const extractProps = this.widget.extractProps || (() => ({}));
-            propsFromAttrs = extractProps({
-                attrs: {
-                    ...node.attrs,
-                    options: evaluateExpr(node.attrs.options || "{}"),
-                },
-            });
-        }
-        const props = { ...this.props };
-        delete props.class;
-        delete props.name;
-        delete props.node;
+        const record = this.props.record;
+        const evalContext = record.evalContext;
 
-        return { ...propsFromAttrs, ...props };
+        let readonlyFromModifiers = false;
+        let propsFromNode = {};
+        if (this.props.widgetInfo) {
+            const widgetInfo = this.props.widgetInfo;
+            const modifiers = widgetInfo.modifiers || {};
+            readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
+            propsFromNode = this.widget.extractProps ? this.widget.extractProps(widgetInfo) : {};
+        }
+
+        return {
+            record,
+            readonly: !record.isInEdition || readonlyFromModifiers || false,
+            ...propsFromNode,
+        };
     }
 }
 Widget.template = xml/*xml*/ `
@@ -62,17 +65,23 @@ Widget.template = xml/*xml*/ `
 Widget.parseWidgetNode = function (node) {
     const name = node.getAttribute("name");
     const widget = viewWidgetRegistry.get(name);
-    const attrs = Object.fromEntries(
-        [...node.attributes].map(({ name, value }) => {
-            return [name, name === "modifiers" ? JSON.parse(value || "{}") : value];
-        })
-    );
-    return {
-        options: evaluateExpr(node.getAttribute("options") || "{}"),
+
+    const widgetInfo = {
         name,
-        attrs,
+        modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         widget,
+        options: evaluateExpr(node.getAttribute("options") || "{}"),
+        attrs: {}, // populated below
     };
+
+    for (const { name, value } of node.attributes) {
+        if (!name.startsWith("t-att")) {
+            // all other (non dynamic) attributes
+            widgetInfo.attrs[name] = value;
+        }
+    }
+
+    return widgetInfo;
 };
 Widget.props = {
     "*": true,

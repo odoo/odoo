@@ -674,13 +674,4 @@ export class FormCompiler extends ViewCompiler {
         }
         return sheetBG;
     }
-
-    /**
-     * @override
-     */
-    compileWidget(el) {
-        const widget = super.compileWidget(el);
-        widget.setAttribute("readonly", `!__comp__.props.record.isInEdition`);
-        return widget;
-    }
 }

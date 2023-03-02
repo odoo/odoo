@@ -92,7 +92,7 @@ QUnit.module("Widgets", ({ beforeEach }) => {
         assert.containsNone(
             fixture,
             ".form-check input:disabled",
-            "all inputs should be enabled in readonly mode"
+            "all inputs should be enabled in edit mode"
         );
 
         await click(fixture.querySelector("td:nth-child(7) input"));
@@ -133,6 +133,42 @@ QUnit.module("Widgets", ({ beforeEach }) => {
         assert.ok(
             fixture.querySelector("td:nth-child(2) input").checked,
             "tuesday checkbox should be checked"
+        );
+    });
+
+    QUnit.test("week recurrence widget readonly modifiers", async (assert) => {
+        registry.category("services", makeFakeLocalizationService({ weekStart: 1 }));
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <widget name="week_days" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            `,
+        });
+
+        const labelsTexts = [...fixture.querySelectorAll(".o_recurrent_weekday_label")].map((el) =>
+            el.innerText.trim()
+        );
+        assert.deepEqual(
+            labelsTexts,
+            ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            "labels should be short week names"
+        );
+
+        assert.containsN(
+            fixture,
+            ".form-check input:disabled",
+            7,
+            "all inputs should be disabled in readonly mode"
         );
     });
 
