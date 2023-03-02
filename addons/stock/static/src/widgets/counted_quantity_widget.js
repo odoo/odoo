@@ -29,7 +29,6 @@ export class CountedQuantityWidgetField extends FloatField {
     }
 
     onInput(ev) {
-        this.props.setDirty(true);
         return this.props.record.update({ inventory_quantity_set: true });
     }
 

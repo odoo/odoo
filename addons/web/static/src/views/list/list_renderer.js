@@ -165,6 +165,12 @@ export class ListRenderer extends Component {
             }
         });
 
+        useBus(
+            this.env.bus,
+            "RELATIONAL_MODEL:FIELD_IS_DIRTY",
+            (ev) => (this.lastIsDirty = ev.detail)
+        );
+
         useBounceButton(this.rootRef, () => {
             return this.showNoContentHelper;
         });
@@ -1553,10 +1559,6 @@ export class ListRenderer extends Component {
             const { context } = this.creates[0];
             this.onCreateAction(context);
         }
-    }
-
-    setDirty(isDirty) {
-        this.lastIsDirty = isDirty;
     }
 
     saveOptionalActiveFields() {
