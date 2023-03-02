@@ -16,7 +16,7 @@ class MailMainAttachmentMixin(models.AbstractModel):
     def _message_post_after_hook(self, message, msg_values):
         """ Set main attachment field if necessary """
         super()._message_post_after_hook(message, msg_values)
-        self._message_set_main_attachment_id([
+        self.sudo()._message_set_main_attachment_id([
             attachment_command[1]
             for attachment_command in (msg_values['attachment_ids'] or [])
         ])
@@ -24,7 +24,7 @@ class MailMainAttachmentMixin(models.AbstractModel):
     def _message_set_main_attachment_id(self, attachment_ids):
         if attachment_ids and not self.message_main_attachment_id:
             # Assign one of the attachments as the main according to the following priority: pdf, image, other types.
-            self.sudo().with_context(tracking_disable=True).message_main_attachment_id = max(
+            self.with_context(tracking_disable=True).message_main_attachment_id = max(
                 self.env['ir.attachment'].browse(attachment_ids),
                 key=lambda r: (r.mimetype.endswith('pdf'), r.mimetype.startswith('image'))
             ).id

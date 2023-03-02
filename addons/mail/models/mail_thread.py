@@ -2063,6 +2063,7 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
+        return
 
     def _message_mail_after_hook(self, mails):
         """ Hook to add custom behavior after having sent an mass mailing.
