@@ -380,6 +380,8 @@ export class MassMailingHtmlField extends HtmlField {
                     selection.removeAllRanges();
                     selection.addRange(range);
                 }
+                // mark selection done for tour testing
+                $editable.addClass('theme_selection_done');
             }, 0);
         });
 

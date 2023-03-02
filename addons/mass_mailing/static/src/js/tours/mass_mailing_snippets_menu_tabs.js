@@ -76,9 +76,14 @@ tour.register('mass_mailing_snippets_menu_toolbar_new_mailing_mobile', {
         mobile: true,
     },
     {
-        content: "Make sure the toolbar isn't floating -> on top of the selection menu",
-        trigger: 'iframe #toolbar:not(.oe-floating)',
-        run: () => null, // it's a check
+        content: "Make sure the toolbar isn't floating",
+        trigger: 'iframe',
+        run: function () {
+            const iframeDocument = this.$anchor[0].contentDocument;
+            if (iframeDocument.querySelector('#toolbar.oe-floating')) {
+                console.error('There should not be a floating toolbar in the iframe');
+            }
+        },
         mobile: true,
     },
     {
@@ -87,14 +92,19 @@ tour.register('mass_mailing_snippets_menu_toolbar_new_mailing_mobile', {
         mobile: true,
     },
     {
-        content: "Make sure the snippets menu is hidden",
-        trigger: 'iframe #oe_snippets.d-none',
-        run: () => null, // it's a check
+        content: "Select an editable element",
+        trigger: 'iframe .s_text_block',
         mobile: true,
     },
     {
-        content: "Select an editable element",
-        trigger: 'iframe .s_text_block',
+        content: "Make sure the snippets menu is hidden",
+        trigger: 'iframe',
+        run: function () {
+            const iframeDocument = this.$anchor[0].contentDocument;
+            if (!iframeDocument.querySelector('#oe_snippets.d-none')) {
+                console.error('The snippet menu should be hidden');
+            }
+        },
         mobile: true,
     },
     {
@@ -123,41 +133,58 @@ tour.register('mass_mailing_snippets_menu_toolbar', {
         trigger: 'iframe .o_mail_theme_selector_new',
     },
     {
-        content: "Make sure the toolbar isn't floating -> on top of the selection menu",
+        content: "Make sure there does not exist a floating toolbar",
         trigger: 'iframe',
         run: function () {
-            if (this.$anchor[0].querySelector('#toolbar:not(.oe-floating)')) {
-                console.error('There should not be any floating toolbar on the theme selection screen.');
+            const iframeDocument = this.$anchor[0].contentDocument;
+            if (iframeDocument.querySelector('#toolbar.oe-floating')) {
+                console.error('There should not be a floating toolbar in the iframe');
             }
         },
     },
     {
         content: "Make sure the empty template is an option on non-mobile devices.",
         trigger: 'iframe #empty',
-        run: () => null, // it's a check
+        run: () => null,
     },
     {
         content: "Click on the default 'welcome' template.",
         trigger: 'iframe #default',
     },
+    { // necessary to wait for the cursor to be placed in the first p
+      // and to avoid leaving the page before the selection is added
+        content: "Wait for template selection event to be over.",
+        trigger: 'iframe .o_editable.theme_selection_done',
+    },
     {
         content: "Make sure the snippets menu is not hidden",
         trigger: 'iframe #oe_snippets:not(.d-none)',
-        run: () => null, // it's a check
+        run: () => null,
     },
     {
-        content: "Select an editable element",
-        trigger: 'iframe .s_text_block',
+        content: "Wait for .s_text_block to be populated",
+        trigger: 'iframe .s_text_block p',
+        run: () => null,
+    },
+    {
+        content: "Click and select p block inside the editor",
+        trigger: 'iframe',
+        run: function () {
+            const iframeWindow = this.$anchor[0].contentWindow;
+            const iframeDocument = iframeWindow.document;
+            const p = iframeDocument.querySelector('.s_text_block p');
+            p.click();
+            const selection = iframeWindow.getSelection();
+            const range = iframeDocument.createRange();
+            range.selectNodeContents(p);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        },
     },
     {
         content: "Make sure the toolbar is there",
-        trigger: 'iframe .o_we_customize_panel',
-        run: function () {
-            const toolbar = this.$anchor[0].querySelector('#toolbar');
-            if (!toolbar) {
-                console.error('The toolbar should be in the customize panel when a text block is selected');
-            }
-        },
+        trigger: 'iframe #oe_snippets .o_we_customize_panel #toolbar',
+        run: () => null,
     },
     ...tour.stepUtils.discardForm(),
 ]);
