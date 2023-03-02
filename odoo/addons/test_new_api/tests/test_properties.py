@@ -1058,7 +1058,7 @@ class PropertiesCase(TransactionCase):
             ]
 
     @mute_logger('odoo.fields')
-    def test_properties_field_onchange(self):
+    def test_properties_field_onchange_change_parent(self):
         """If we change the definition record, the onchange of the properties field must be triggered."""
         message_form = Form(self.env['test_new_api.message'])
 
@@ -1169,8 +1169,9 @@ class PropertiesCase(TransactionCase):
             field_name=['discussion'],
             field_onchange={'attributes': '1'},
         )
-        self.assertTrue(
-            'attributes' in onchange_values['value'],
+        self.assertIn(
+            'attributes',
+            onchange_values['value'],
             msg='Should have detected the definition record change')
         self.assertEqual(
             onchange_values['value']['attributes'], [],
@@ -1187,8 +1188,9 @@ class PropertiesCase(TransactionCase):
             field_name=['discussion'],
             field_onchange={'attributes': '1'},
         )
-        self.assertTrue(
-            'attributes' in onchange_values['value'],
+        self.assertIn(
+            'attributes',
+            onchange_values['value'],
             msg='Should have detected the definition record change')
         self.assertEqual(
             onchange_values['value']['attributes'],
@@ -1233,6 +1235,57 @@ class PropertiesCase(TransactionCase):
         self.assertEqual(
             message.attributes,
             [{'name': 'new_property', 'type': 'char', 'value': 'test value'}])
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_onchange_compute(self):
+        """Test a computed field that depends on the properties."""
+        self.message_1.attributes = [{'definition_deleted': True}]
+        self.assertTrue(self.message_1.is_attributes_empty)
+
+        onchange_values = self.message_1.onchange(
+            values={
+                'attributes': [{
+                    'name': 'test',
+                    'type': 'char',
+                    'default': 'Default',
+                    'value': 'Test',
+                    'definition_changed': True,
+                }],
+                'is_attributes_empty': True,
+            },
+            field_name='attributes',
+            field_onchange={'attributes': '1', 'is_attributes_empty': '', 'discussion': ''},
+        )
+        self.assertFalse(
+            onchange_values['value'].get('is_attributes_empty', True),
+            msg="Should have computed is_attributes_empty")
+        self.assertNotIn(
+            'discussion',
+            onchange_values['value'],
+            msg='The definition record should not have changed')
+
+        onchange_values = self.message_1.onchange(
+            values={
+                'attributes': [{
+                    'name': 'test',
+                    'type': 'char',
+                    'default': 'Default',
+                    'value': 'Test',
+                    'definition_deleted': True,
+                }],
+                'is_attributes_empty': True,
+            },
+            field_name='attributes',
+            field_onchange={'attributes': '1', 'is_attributes_empty': '', 'discussion': ''},
+        )
+        self.assertNotIn(
+            'is_attributes_empty',
+            onchange_values['value'],
+            msg="Should have ignored the change because of definition_deleted")
+        self.assertNotIn(
+            'discussion',
+            onchange_values['value'],
+            msg='The definition record should not have changed')
 
     @mute_logger('odoo.fields')
     def test_properties_field_definition_update(self):

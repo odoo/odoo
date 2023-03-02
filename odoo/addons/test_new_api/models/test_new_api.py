@@ -151,6 +151,7 @@ class Message(models.Model):
         string='Properties',
         definition='discussion.attributes_definition',
     )
+    is_attributes_empty = fields.Boolean(string='Is Attribute Empty', compute='_compute_is_attributes_empty')
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
@@ -181,6 +182,14 @@ class Message(models.Model):
     def _compute_size(self):
         for message in self:
             message.size = len(message.body or '')
+
+    @api.depends('attributes')
+    def _compute_is_attributes_empty(self):
+        for message in self:
+            message.is_attributes_empty = all(
+                property.get('definition_deleted')
+                for property in message.attributes
+            )
 
     def _search_size(self, operator, value):
         if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):

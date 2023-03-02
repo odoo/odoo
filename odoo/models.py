@@ -6460,6 +6460,19 @@ class BaseModel(metaclass=MetaModel):
         # and depends on line.a, but line.b is not in the form view)
         record._update_cache(changed_values, validate=False)
 
+        # update the cache of the definition record to make the onchange
+        # work on properties fields
+        for name in changed_values:
+            field = self._fields.get(name)
+            if field and field.type == "properties":
+                # update the cache of the definition record
+                definitions = copy.deepcopy(changed_values[name])
+                for definition in definitions:
+                    definition.pop('value', None)
+                    definition.pop('definition_changed', None)
+                definitions = [definition for definition in definitions if not definition.get('definition_deleted')]
+                record[field.definition_record]._update_cache({field.definition_record_field: definitions})
+
         # update snapshot0 with changed values
         for name in names:
             snapshot0.fetch(name)
