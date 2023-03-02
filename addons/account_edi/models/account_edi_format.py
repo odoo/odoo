@@ -324,6 +324,10 @@ class AccountEdiFormat(models.Model):
                         edi_format.name,
                         str(e))
                 if res:
+                    for move in res:
+                        if move.move_type in ['in_invoice', 'in_refund']:
+                            references = [move.invoice_origin] if move.invoice_origin else []
+                            move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=4)
                     return res
         return self.env['account.move']
 
@@ -351,6 +355,9 @@ class AccountEdiFormat(models.Model):
                         edi_format.name,
                         str(e))
                 if res:
+                    if move.move_type in ['in_invoice', 'in_refund']:
+                        references = [move.invoice_origin] if move.invoice_origin else []
+                        move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=4)
                     return res
         return self.env['account.move']
 
