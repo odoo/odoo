@@ -15,7 +15,11 @@ export class BooleanField extends Component {
     };
 
     get isReadonly() {
-        return !(this.props.record.isInEdition && !this.props.record.isReadonly(this.props.name));
+        return (
+            !this.props.record.isInEdition ||
+            this.props.record.isReadonly(this.props.name) ||
+            this.props.readonly
+        );
     }
 
     /**
