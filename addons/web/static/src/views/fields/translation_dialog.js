@@ -6,7 +6,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { loadLanguages, _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 export class TranslationDialog extends Component {
     setup() {
@@ -16,7 +16,7 @@ export class TranslationDialog extends Component {
         this.orm = useService("orm");
         this.user = useService("user");
 
-        this.terms = [];
+        this.state = useState({ terms: [] });
 
         onWillStart(async () => {
             const [translations, context] = await this.loadTranslations();
@@ -30,38 +30,32 @@ export class TranslationDialog extends Component {
                 this.props.languages.push(["en_US", _t("Source Value")]);
             }
 
-            this.terms = translations.map((term) => {
-                const relatedLanguage = this.props.languages.find((l) => l[0] === term.lang);
-                const termInfo = {
-                    ...term,
-                    langName: relatedLanguage[1],
-                    oldValue: term.value,
-                    isModified: false,
-                };
-                // we set the translation value coming from the database, except for the language
-                // the user is currently utilizing. Then we set the translation value coming
-                // from the value of the field in the form
-                if (
-                    term.lang === this.user.lang &&
-                    this.props.translateType === "model" &&
-                    !this.props.isComingFromTranslationAlert
-                ) {
-                    termInfo.value = this.props.userLanguageValue;
-                    termInfo.isModified = true;
-                    termInfo.translated = true;
-                }
-                return termInfo;
-            });
-            this.terms.sort((a, b) => a.langName.localeCompare(b.langName));
+            this.state.terms.push(
+                ...translations.map((term) => {
+                    const relatedLanguage = this.props.languages.find((l) => l[0] === term.lang);
+                    const termInfo = {
+                        ...term,
+                        langName: relatedLanguage[1],
+                        oldValue: term.value,
+                        isModified: false,
+                    };
+                    // we set the translation value coming from the database, except for the language
+                    // the user is currently utilizing. Then we set the translation value coming
+                    // from the value of the field in the form
+                    if (
+                        term.lang === this.user.lang &&
+                        this.props.translateType === "model" &&
+                        !this.props.isComingFromTranslationAlert
+                    ) {
+                        termInfo.value = this.props.userLanguageValue;
+                        termInfo.isModified = true;
+                        termInfo.translated = true;
+                    }
+                    return termInfo;
+                })
+            );
+            this.state.terms.sort((a, b) => a.langName.localeCompare(b.langName));
         });
-    }
-
-    get domain() {
-        const domain = this.props.domain;
-        if (this.props.searchName) {
-            domain.push(["name", "=", `${this.props.searchName}`]);
-        }
-        return domain;
     }
 
     /**
@@ -82,12 +76,16 @@ export class TranslationDialog extends Component {
 
         const resetLangs = [];
         this.props.languages.forEach(([language, languageName]) => {
-            if (!this.terms.some((t) => t.lang === language && (t.translated || !t.isModified))) {
+            if (
+                !this.state.terms.some(
+                    (t) => t.lang === language && (t.translated || !t.isModified)
+                )
+            ) {
                 resetLangs.push(language);
             }
         });
 
-        this.terms.map((term) => {
+        this.state.terms.map((term) => {
             if (term.isModified && !resetLangs.includes(term.lang)) {
                 if (this.props.translateType === "model_terms") {
                     if (!translations[term.lang]) {
@@ -113,57 +111,40 @@ export class TranslationDialog extends Component {
     }
 
     onUpdate(term, ev) {
-        if (!this.check_value(term, ev.target.value)) {
+        const newValue = ev.target.value;
+        if (!this.checkValue(term, newValue)) {
             ev.target.value = term.value;
             return;
         }
-        if (!term.translated && !ev.target.value) {
-            ev.target.value = term.value;
-            return;
-        }
-        term.translated = !!ev.target.value;
-        term.isModified = true;
-        if (term.translated) {
+        if (newValue) {
+            term.isModified = true;
+            term.translated = true;
+            term.value = newValue;
             if (term.lang === "en_US") {
-                const oldSource = term.source;
-                const newSource = ev.target.value;
                 // update source and other fallback value
-                const titleToUpdate = new Set();
-                const valueToUpdate = new Set();
-                this.terms.forEach((t) => {
-                    if (t.source === oldSource) {
-                        t.source = newSource;
+                this.state.terms.forEach((t) => {
+                    if (t.source === term.source) {
+                        t.source = newValue;
                         if (!t.translated) {
-                            t.value = newSource;
-                            valueToUpdate.add(t.id.toString());
+                            t.value = newValue;
                         }
-                        titleToUpdate.add(t.id.toString());
                     }
                 });
-                // update UI
-                for (const t of document.getElementsByClassName("o_field_translate")) {
-                    if (titleToUpdate.has(t.dataset.id)) {
-                        t.title = newSource;
-                        if (valueToUpdate.has(t.dataset.id)) {
-                            t.value = newSource;
-                        }
-                        t.title = newSource;
-                    }
-                }
             }
-            ev.target.classList.remove("o_field_translate_fallback");
-            term.value = ev.target.value;
         } else {
-            ev.target.classList.add("o_field_translate_fallback");
+            term.isModified = term.isModified || term.translated;
+            term.translated = false;
             ev.target.value = term.value = term.source;
         }
     }
 
-    check_value(term, value) {
+    checkValue(term, value) {
         if (
             value &&
             term.lang === "en_US" &&
-            this.terms.some((t) => t.value === value && t.id != term.id && t.lang === term.lang)
+            this.state.terms.some(
+                (t) => t.value === value && t.id != term.id && t.lang === term.lang
+            )
         ) {
             this.props.addDialog(AlertDialog, {
                 body: _t("Two sources cannot be the same"),

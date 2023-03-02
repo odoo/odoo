@@ -4,7 +4,7 @@
     <t t-name="web.TranslationDialog" owl="1">
         <Dialog title="title">
             <div class="o_translation_dialog">
-                <t t-foreach="terms" t-as="term" t-key="term.id">
+                <t t-foreach="state.terms" t-as="term" t-key="term.id">
                     <div class="row">
                         <div
                             class="col-12"
