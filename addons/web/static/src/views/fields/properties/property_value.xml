@@ -66,12 +66,13 @@
             </t>
             <div
                 t-elif="props.type === 'many2one'"
-                t-attf-class="d-flex flex-row align-items-center o_field_property_many2one_value {{showAvatar ? 'avatar' : ''}}">
+                class="o_field_property_many2one_value d-flex flex-row align-items-center"
+                t-att-class="{'avatar': showAvatar}">
                 <t t-if="props.comodel">
                     <t t-set="hasAccess" t-value="!propertyValue || propertyValue[1]"/>
                     <img t-if="showAvatar and propertyValue[0] and hasAccess"
                         t-attf-src="/web/image/{{props.comodel}}/{{propertyValue[0]}}/avatar_128"
-                        class="rounded-circle me-1"/>
+                        class="rounded me-1"/>
                     <t t-if="props.readonly || !hasAccess">
                         <a
                             t-if="clickableRelational || !hasAccess"

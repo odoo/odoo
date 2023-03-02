@@ -103,6 +103,7 @@ export class PropertyValue extends Component {
                 const hasAccess = many2manyValue[1] !== null;
                 return {
                     id: many2manyValue[0],
+                    comodel: this.props.comodel,
                     text: hasAccess ? many2manyValue[1] : _lt("No Access"),
                     onClick:
                         hasAccess &&
