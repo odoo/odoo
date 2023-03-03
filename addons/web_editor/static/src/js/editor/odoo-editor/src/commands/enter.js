@@ -3,7 +3,6 @@ import { UNBREAKABLE_ROLLBACK_CODE } from '../utils/constants.js';
 
 import {
     childNodeIndex,
-    clearEmpty,
     fillEmpty,
     isBlock,
     isUnbreakable,
@@ -44,7 +43,7 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     }
 
     // First split the node in two and move half the children in the clone.
-    const splitEl = this.cloneNode(false);
+    let splitEl = this.cloneNode(false);
     while (offset < this.childNodes.length) {
         splitEl.appendChild(this.childNodes[offset]);
     }
@@ -74,14 +73,22 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     if (firstSplit && didSplit) {
         restore();
 
-        fillEmpty(clearEmpty(this));
+        let node = this;
+        while (!isBlock(node) && !isVisible(node)) {
+            const toRemove = node;
+            node = node.parentNode;
+            toRemove.remove();
+        }
+        fillEmpty(node);
         fillEmpty(splitEl);
-
-        const focusToElement =
-            splitEl.nodeType === Node.ELEMENT_NODE && splitEl.tagName === 'A'
-                ? clearEmpty(splitEl)
-                : splitEl;
-        setCursorStart(focusToElement);
+        if (splitEl.tagName === 'A') {
+            while (!isBlock(splitEl) && !isVisible(splitEl)) {
+                const toRemove = splitEl;
+                splitEl = splitEl.parentNode;
+                toRemove.remove();
+            }
+        }
+        setCursorStart(splitEl);
     }
     return splitEl;
 };
