@@ -352,7 +352,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'product.pricelist',
-        fields: ['name', 'display_name', 'discount_policy'],
+        fields: ['name', 'display_name', 'discount_policy', 'currency_id'],
         domain: function(self) {
             if (self.config.use_pricelist) {
                 return [['id', 'in', self.config.available_pricelist_ids]];
@@ -414,6 +414,12 @@ exports.PosModel = Backbone.Model.extend({
             }
 
             self.company_currency = currencies[1];
+        },
+    },{
+        model: 'res.currency',
+        fields: ['name','symbol','position','rounding','rate'],
+        loaded: function(self, currencies){
+            self.currencies = currencies;
         },
     },{
         model:  'pos.category',
@@ -1827,6 +1833,12 @@ exports.Product = Backbone.Model.extend({
 
             if (rule.base === 'pricelist') {
                 price = self.get_price(rule.base_pricelist, quantity);
+                var pricelist_rate = _.find(self.pos.currencies,function(currency){ 
+                    return currency.id == rule.base_pricelist.currency_id[0]
+                  }).rate;
+                  if(pricelist_rate) {
+                    price = price/pricelist_rate;
+                  }
             } else if (rule.base === 'standard_price') {
                 price = self.standard_price;
             }
