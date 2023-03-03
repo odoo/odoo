@@ -1913,20 +1913,6 @@ export function insertAndSelectZws(selection) {
     selection.getRangeAt(0).selectNode(zws);
     return zws;
 }
-/**
- * Removes the given node if invisible and all its invisible ancestors.
- *
- * @param {Node} node
- * @returns {Node} the first visible ancestor of node (or itself)
- */
-export function clearEmpty(node) {
-    while (!isBlock(node) && !isVisible(node)) {
-        const toRemove = node;
-        node = node.parentNode;
-        toRemove.remove();
-    }
-    return node;
-}
 
 export function setTagName(el, newTagName) {
     if (el.tagName === newTagName) {
