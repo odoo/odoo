@@ -260,10 +260,10 @@ class TestChartTemplate(TransactionCase):
         # accountants received the message
         self.assertEqual(self.env['mail.message'].search_count([
             ('partner_ids', 'in', advisor_users.partner_id.ids),
-            ('body', 'like', f"%{self.tax_template_1.name}%"),
+            ('body', 'like', f"%{self.tax_template_1.name}%"),  # we look for taxes' name that have been sent in the message's body
         ]), 1)
         # normal user didn't
         self.assertEqual(self.env['mail.message'].search_count([
             ('partner_ids', 'in', normal_user.partner_id.ids),
-            ('body', 'like', f"%{self.tax_template_1.name}%"),
+            ('body', 'like', f"%{self.tax_template_1.name}%"),  # we look for taxes' name that have been sent in the message's body
         ]), 0)
