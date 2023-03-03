@@ -112,10 +112,10 @@
                             <group>
                                 <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
                                     <div>
-                                        <setting id="task_dependencies_setting" help="Determine the order in which to perform tasks" groups="project.group_project_task_dependencies">
+                                        <setting class="col-lg-12" id="task_dependencies_setting" help="Determine the order in which to perform tasks" groups="project.group_project_task_dependencies">
                                             <field name="allow_task_dependencies"/>
                                         </setting>
-                                        <setting id="project_milestone_setting" help="Track major progress points that must be reached to achieve success" groups="project.group_project_milestone">
+                                        <setting class="col-lg-12" id="project_milestone_setting" help="Track major progress points that must be reached to achieve success" groups="project.group_project_milestone">
                                             <field name="allow_milestones"/>
                                         </setting>
                                     </div>
@@ -124,7 +124,7 @@
                                 <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" attrs="{'invisible': [('allow_rating', '=', False)]}">
                                     <div>
                                         <field name="allow_rating" invisible="1"/>
-                                        <setting name="analytic_div" help="Get customer feedback and evaluate the performance of your employees" groups="project.group_project_rating">
+                                        <setting class="col-lg-12" name="analytic_div" help="Get customer feedback and evaluate the performance of your employees" groups="project.group_project_rating">
                                             <field name="rating_active"/>
                                             <div class="mt16" attrs="{'invisible':[('rating_active','==',False)]}">
                                                 <span class="text-muted o_row ps-1 pb-3">Send a rating request:</span>
