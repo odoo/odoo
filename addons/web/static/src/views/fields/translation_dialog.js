@@ -23,22 +23,23 @@ export class TranslationDialog extends Component {
             let id = 1;
             translations.forEach((t) => (t.id = id++));
             this.props.languages = await loadLanguages(this.orm);
-            this.props.isText = ["text", "html"].includes(context.field_type);
-            this.props.translateType = context.translate_type;
-            this.props.enUSActivated = context.en_US_activated;
-            if (!this.props.enUSActivated) {
+            if (!this.props.languages.find((l) => l[0] === "en_US")) {
                 this.props.languages.push(["en_US", _t("Source Value")]);
             }
+            this.props.isText = ["text", "html"].includes(context.field_type);
+            this.props.translateType = context.translate_type;
 
             this.state.terms.push(
                 ...translations.map((term) => {
                     const relatedLanguage = this.props.languages.find((l) => l[0] === term.lang);
                     const termInfo = {
                         ...term,
+                        isTranslated: term.is_translated,
                         langName: relatedLanguage[1],
                         oldValue: term.value,
                         isModified: false,
                     };
+                    delete termInfo.is_translated;
                     // we set the translation value coming from the database, except for the language
                     // the user is currently utilizing. Then we set the translation value coming
                     // from the value of the field in the form
@@ -49,7 +50,7 @@ export class TranslationDialog extends Component {
                     ) {
                         termInfo.value = this.props.userLanguageValue;
                         termInfo.isModified = true;
-                        termInfo.translated = true;
+                        termInfo.isTranslated = true;
                     }
                     return termInfo;
                 })
@@ -78,7 +79,7 @@ export class TranslationDialog extends Component {
         this.props.languages.forEach(([language, languageName]) => {
             if (
                 !this.state.terms.some(
-                    (t) => t.lang === language && (t.translated || !t.isModified)
+                    (t) => t.lang === language && (t.isTranslated || !t.isModified)
                 )
             ) {
                 resetLangs.push(language);
@@ -118,22 +119,22 @@ export class TranslationDialog extends Component {
         }
         if (newValue) {
             term.isModified = true;
-            term.translated = true;
+            term.isTranslated = true;
             term.value = newValue;
             if (term.lang === "en_US") {
                 // update source and other fallback value
                 this.state.terms.forEach((t) => {
                     if (t.source === term.source) {
                         t.source = newValue;
-                        if (!t.translated) {
+                        if (!t.isTranslated) {
                             t.value = newValue;
                         }
                     }
                 });
             }
         } else {
-            term.isModified = term.isModified || term.translated;
-            term.translated = false;
+            term.isModified = term.isModified || term.isTranslated;
+            term.isTranslated = false;
             ev.target.value = term.value = term.source;
         }
     }

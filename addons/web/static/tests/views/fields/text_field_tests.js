@@ -384,12 +384,12 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/get_field_translations") {
                     return Promise.resolve([
                         [
-                            { lang: "en_US", source: "yop", value: "yop", translated: true },
+                            { lang: "en_US", source: "yop", value: "yop", is_translated: true },
                             {
                                 lang: "fr_BE",
                                 source: "yop",
                                 value: "valeur français",
-                                translated: true,
+                                is_translated: true,
                             },
                         ],
                         {

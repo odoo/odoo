@@ -531,13 +531,13 @@ QUnit.module("SettingsFormView", (hooks) => {
                                 lang: "en_US",
                                 source: "My little Foo Value",
                                 value: "My little Foo Value",
-                                translated: true,
+                                is_translated: true,
                             },
                             {
                                 lang: "fr_BE",
                                 source: "My little Foo Value",
                                 value: "Valeur de mon petit Foo",
-                                translated: true,
+                                is_translated: true,
                             },
                         ],
                         {

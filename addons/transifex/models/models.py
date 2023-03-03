@@ -12,9 +12,9 @@ class BaseModel(models.AbstractModel):
         :param list langs: languages
 
         :return: (translations, context) where
-            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term, "translated": True/False,
-                    "module": module, "transifexURL": transifex_url}]
-            context: {"translate": field.type, "translate_type": "model"/"model_terms", en_US_activated: True/False}
+            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term, "is_translated": True/False,
+                    "module": module, "transifex_url": transifex_url}]
+            context: {"field_type": field.type, "translate_type": "model"/"model_terms"}
         """
         translations, context = super().get_field_translations(field_name)
         external_id = self.get_external_id().get(self.id)

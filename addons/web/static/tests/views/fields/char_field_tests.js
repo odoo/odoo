@@ -309,18 +309,18 @@ QUnit.module("Fields", (hooks) => {
                         call_get_field_translations = 1;
                         return Promise.resolve([
                             [
-                                { lang: "en_US", source: "yop", value: "yop", translated: true },
+                                { lang: "en_US", source: "yop", value: "yop", is_translated: true },
                                 {
                                     lang: "fr_BE",
                                     source: "yop",
                                     value: "yop français",
-                                    translated: true,
+                                    is_translated: true,
                                 },
                                 {
                                     lang: "es_ES",
                                     source: "yop",
                                     value: "yop español",
-                                    translated: true,
+                                    is_translated: true,
                                 },
                             ],
                             { field_type: "char", translate_type: "model", en_US_activated: true },
@@ -329,14 +329,19 @@ QUnit.module("Fields", (hooks) => {
                     if (call_get_field_translations === 1) {
                         return Promise.resolve([
                             [
-                                { lang: "en_US", source: "bar", value: "bar", translated: true },
+                                { lang: "en_US", source: "bar", value: "bar", is_translated: true },
                                 {
                                     lang: "fr_BE",
                                     source: "bar",
                                     value: "yop français",
-                                    translated: true,
+                                    is_translated: true,
                                 },
-                                { lang: "es_ES", source: "bar", value: "bar", translated: false },
+                                {
+                                    lang: "es_ES",
+                                    source: "bar",
+                                    value: "bar",
+                                    is_translated: false,
+                                },
                             ],
                             { field_type: "char", translate_type: "model", en_US_activated: true },
                         ]);
@@ -533,25 +538,25 @@ QUnit.module("Fields", (hooks) => {
                                 lang: "en_US",
                                 source: "first paragraph",
                                 value: "first paragraph",
-                                translated: true,
+                                is_translated: true,
                             },
                             {
                                 lang: "en_US",
                                 source: "second paragraph",
                                 value: "second paragraph",
-                                translated: true,
+                                is_translated: true,
                             },
                             {
                                 lang: "fr_BE",
                                 source: "first paragraph",
                                 value: "premier paragraphe",
-                                translated: true,
+                                is_translated: true,
                             },
                             {
                                 lang: "fr_BE",
                                 source: "second paragraph",
                                 value: "deuxième paragraphe",
-                                translated: true,
+                                is_translated: true,
                             },
                         ],
                         {

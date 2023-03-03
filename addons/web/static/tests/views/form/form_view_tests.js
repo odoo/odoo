@@ -8956,13 +8956,13 @@ QUnit.module("Views", (hooks) => {
                     assert.step(`translate context ${JSON.stringify(args.kwargs.context)}`);
                     return Promise.resolve([
                         [
-                            { lang: "en_US", source: "yop", value: "yop", translated: true },
-                            { lang: "CUST", source: "yop", value: "yop", translated: false },
+                            { lang: "en_US", source: "yop", value: "yop", is_translated: true },
+                            { lang: "CUST", source: "yop", value: "yop", is_translated: false },
                             {
                                 lang: "CUST2",
                                 source: "yop",
                                 value: "valeur français",
-                                translated: true,
+                                is_translated: true,
                             },
                         ],
                         {

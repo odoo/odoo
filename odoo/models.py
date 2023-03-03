@@ -3082,8 +3082,8 @@ class BaseModel(metaclass=MetaModel):
         :param list langs: languages
 
         :return: (translations, context) where
-            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term, translated: True/False}]
-            context: {"translate": field.type, "translate_type": "model"/"model_terms", en_US_activated: True/False}
+            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term, is_translated: True/False}]
+            context: {"field_type": field.type, "translate_type": "model"/"model_terms"}
         """
         self.ensure_one()
         field = self._fields[field_name]
@@ -3103,12 +3103,10 @@ class BaseModel(metaclass=MetaModel):
         values = field._get_stored_translations(self)
         langs = set([l[0] for l in self.env['res.lang'].get_installed()])
         langs.add('en_US')
-        en_US_activated = 'en_US' in langs
 
         context = {
             'field_type': field.type,
             'translate_type': False if not field.translate else 'model_terms' if callable(field.translate) else 'model',
-            'en_US_activated': en_US_activated
         }
 
         if not values:
@@ -3121,7 +3119,7 @@ class BaseModel(metaclass=MetaModel):
                     'lang': lang,
                     'source': val_en,
                     'value': values.get(lang, val_en),  # can be empty str
-                    'translated': lang in values,
+                    'is_translated': lang in values,
                 }
                 for lang in langs
             ]
@@ -3141,7 +3139,7 @@ class BaseModel(metaclass=MetaModel):
                 # while parsing terms, from en_US and fr_FR value, the ORM doesn't know if 'Pomme' is en_US or fr_FR
                 #
                 # here the ORM always assumes the 'Pomme' has been translated in 'en_US'
-                'translated': lang in values,
+                'is_translated': lang in values,
             } for term_en, translations in translation_dictionary.items()
                 for lang, term_lang in translations.items()]
 
