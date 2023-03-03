@@ -2,8 +2,8 @@ odoo.define('web_editor.wysiwyg', function (require) {
 'use strict';
 
 const { ComponentWrapper } = require('web.OwlCompatibility');
-const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/media_dialog');
 const { VideoSelector } = require('@web_editor/components/media_dialog/video_selector');
+const { MediaDialogWrapper, TABS } = require('@web_editor/components/media_dialog/media_dialog');
 const dom = require('web.dom');
 const core = require('web.core');
 const { browser } = require('@web/core/browser/browser');
@@ -74,6 +74,7 @@ const Wysiwyg = Widget.extend({
         document: document,
         allowCommandVideo: true,
         allowCommandImage: true,
+        allowCommandDocument: true,
         allowCommandLink: true,
         insertParagraphAfterColumns: true,
         autostart: true,
@@ -2196,7 +2197,7 @@ const Wysiwyg = Widget.extend({
                 },
             );
         }
-        if (editorOptions.allowCommandImage || editorOptions.allowCommandVideo) {
+        if (editorOptions.allowCommandImage || editorOptions.allowCommandVideo || editorOptions.allowCommandDocument) {
             categories.push({ name: _t('Media'), priority: 50 });
         }
         if (editorOptions.allowCommandImage) {
@@ -2207,7 +2208,7 @@ const Wysiwyg = Widget.extend({
                 description: _t('Insert an image'),
                 fontawesome: 'fa-file-image-o',
                 callback: () => {
-                    this.openMediaDialog();
+                    this.openMediaDialog({activeTab: TABS.IMAGES.id});
                 },
             });
         }
@@ -2219,7 +2220,19 @@ const Wysiwyg = Widget.extend({
                 description: _t('Insert a video'),
                 fontawesome: 'fa-file-video-o',
                 callback: () => {
-                    this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
+                    this.openMediaDialog({activeTab: TABS.VIDEOS.id});
+                },
+            });
+        }
+        if (editorOptions.allowCommandDocument) {
+            commands.push({
+                category: _t('Media'),
+                name: _t('Document'),
+                priority: 20,
+                description: _t('Insert a document'),
+                fontawesome: 'fa-file',
+                callback: () => {
+                    this.openMediaDialog({activeTab: TABS.DOCUMENTS.id});
                 },
             });
         }
