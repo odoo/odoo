@@ -1,8 +1,28 @@
 .o_form_sheet > .o_field_state_selection {
     float: right;
+}
+.o_widget_web_ribbon:not(.o_invisible_modifier) + div div[name="kanban_state"] > div, .o_widget_web_ribbon:not(.o_invisible_modifier) + div[name="kanban_state"] {
+    margin-right: 150px;
+    padding-left: 1rem;
+}
+.o_status {
+    height: $h3-font-size;
+    width: $h3-font-size;
+    @extend .rounded-circle;
+    background-color: map-get($grays, '200');
+    outline-offset: 20px solid red;
+    box-shadow: inset 0 0 0 1px rgba($black, .2);
 
-    .dropdown-toggle .o_status {
-        height: $h3-font-size;
-        width: $h3-font-size;
+    &.o_status_green {
+        @extend .bg-success;
+    }
+
+    &.o_status_red {
+        @extend .bg-danger;
+    }
+
+    .dropdown-item > & {
+        margin-bottom: .2em;
+        transform: translateX(-50%);
     }
 }
