@@ -4,6 +4,7 @@ import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 import { parseFloat } from "@web/views/fields/parsers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 const { Component, onPatched, onWillUpdateProps, useRef, useState } = owl;
 
@@ -17,7 +18,7 @@ class TaxGroupComponent extends Component {
         onPatched(() => {
             if (this.state.value === "edit") {
                 const { taxGroup, currency } = this.props;
-                const newVal = formatFloat(taxGroup.tax_group_amount, { digits: currency.digits });
+                const newVal = formatFloat(taxGroup.tax_group_amount, { digits: (currency && currency.digits) });
                 this.inputTax.el.value = newVal;
                 this.inputTax.el.focus(); // Focus the input
             }
@@ -117,7 +118,12 @@ export class TaxTotalsComponent extends Component {
     }
 
     get currencyId() {
-        return this.props.record.data.currency_id;
+        const recordCurrency = this.props.record.data.currency_id;
+        return recordCurrency && recordCurrency[0];
+    }
+
+    get currency() {
+        return session.currencies[this.currencyId];
     }
 
     invalidate() {
