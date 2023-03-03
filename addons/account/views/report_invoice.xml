@@ -68,6 +68,10 @@
                                 <t t-else=""><strong>Date:</strong></t>
                                 <p class="m-0" t-field="o.invoice_date"/>
                             </div>
+                            <div class="col-auto mw-100 mb-2" t-if="o.invoice_sale_date and o.move_type == 'out_invoice'" name="invoice_sale_date">
+                                <strong>Sale Date:</strong>
+                                <p class="m-0" t-field="o.invoice_sale_date"/>
+                            </div>
                             <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
                                 <strong>Due Date:</strong>
                                 <p class="m-0" t-field="o.invoice_date_due"/>

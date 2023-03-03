@@ -263,6 +263,13 @@ class AccountMove(models.Model):
         index=True,
         copy=False,
     )
+    invoice_sale_date = fields.Date(
+        string='Sale Date',
+        compute='_compute_invoice_sale_date', store=True, readonly=False,
+        states={'draft': [('readonly', False)]},
+        index=True,
+        copy=False,
+    )
     invoice_date_due = fields.Date(
         string='Due Date',
         compute='_compute_invoice_date_due', store=True, readonly=False,
@@ -773,6 +780,12 @@ class AccountMove(models.Model):
                 move.invoice_payment_term_id = move.partner_id.property_supplier_payment_term_id
             else:
                 move.invoice_payment_term_id = False
+
+    @api.depends('invoice_date')
+    def _compute_invoice_sale_date(self):
+        today = fields.Date.context_today(self)
+        for move in self:
+            move.invoice_sale_date = move.invoice_date or today
 
     @api.depends('needed_terms')
     def _compute_invoice_date_due(self):
