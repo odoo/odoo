@@ -3050,15 +3050,6 @@
             }
         };
     }
-    function singleRefSetter(refs, name) {
-        let _el = null;
-        return (el) => {
-            if (el || refs[name] === _el) {
-                refs[name] = el;
-                _el = el;
-            }
-        };
-    }
     /**
      * Validate the component props (or next props) against the (static) props
      * description.  This is potentially an expensive operation: it may needs to
@@ -3107,7 +3098,6 @@
         prepareList,
         setContextValue,
         multiRefSetter,
-        singleRefSetter,
         shallowEqual,
         toNumber,
         validateProps,
@@ -4084,9 +4074,8 @@
                 this.target.hasRef = true;
                 const isDynamic = INTERP_REGEXP.test(ast.ref);
                 if (isDynamic) {
-                    this.helpers.add("singleRefSetter");
                     const str = replaceDynamicParts(ast.ref, (expr) => this.captureExpression(expr, true));
-                    const idx = block.insertData(`singleRefSetter(refs, ${str})`, "ref");
+                    const idx = block.insertData(`(el) => refs[${str}] = el`, "ref");
                     attrs["block-ref"] = String(idx);
                 }
                 else {
@@ -4101,8 +4090,7 @@
                     }
                     else {
                         let id = generateId("ref");
-                        this.helpers.add("singleRefSetter");
-                        this.target.refInfo[name] = [id, `singleRefSetter(refs, \`${name}\`)`];
+                        this.target.refInfo[name] = [id, `(el) => refs[\`${name}\`] = el`];
                         const index = block.data.push(id) - 1;
                         attrs["block-ref"] = String(index);
                     }
@@ -5909,9 +5897,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.7';
-    __info__.date = '2023-02-20T08:44:56.632Z';
-    __info__.hash = '276c8a0';
+    __info__.version = '2.0.6';
+    __info__.date = '2023-02-17T13:32:45.287Z';
+    __info__.hash = '1291f1f';
     __info__.url = 'https://github.com/odoo/owl';
 
 
