@@ -304,7 +304,7 @@ class ImageProcess():
         return self
 
 
-def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format=''):
+def image_process(base64_source, size=(0, 0), verify_resolution=True, quality=0, crop=None, colorize=False, output_format=''):
     """Process the `base64_source` image by executing the given operations and
     return the result as a base64 encoded image.
     """
