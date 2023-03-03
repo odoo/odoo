@@ -439,7 +439,7 @@
         _onShareLinkCopy: function (ev) {
             ev.preventDefault();
             var $clipboardBtn = this.$('.o_clipboard_button');
-            $clipboardBtn.tooltip({title: "Copied !", trigger: "manual", placement: "bottom"});
+            $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
             var self = this;
             var clipboard = new ClipboardJS('.o_clipboard_button', {
                 target: function () {

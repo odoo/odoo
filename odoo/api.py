@@ -610,7 +610,7 @@ class Environment(Mapping):
 
         .. warning::
 
-            No sanity checks applied in sudo mode !
+            No sanity checks applied in sudo mode!
             When in sudo mode, a user can access any company,
             even if not in his allowed companies.
 

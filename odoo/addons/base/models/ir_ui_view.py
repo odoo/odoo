@@ -2613,7 +2613,7 @@ class Model(models.AbstractModel):
             try:
                 arch = getattr(self, '_get_default_%s_view' % view_type)()
             except AttributeError:
-                raise UserError(_("No default view of type '%s' could be found !", view_type))
+                raise UserError(_("No default view of type '%s' could be found!", view_type))
         return arch, view
 
     @api.model

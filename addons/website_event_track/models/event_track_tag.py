@@ -23,5 +23,5 @@ class TrackTag(models.Model):
     category_id = fields.Many2one('event.track.tag.category', string="Category", ondelete="set null")
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists!"),
     ]

@@ -98,7 +98,7 @@ class Company(models.Model):
     layout_background = fields.Selection([('Blank', 'Blank'), ('Geometric', 'Geometric'), ('Custom', 'Custom')], default="Blank", required=True)
     layout_background_image = fields.Binary("Background Image")
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The company name must be unique !')
+        ('name_uniq', 'unique (name)', 'The company name must be unique!')
     ]
 
     def init(self):

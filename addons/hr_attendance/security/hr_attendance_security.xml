@@ -5,7 +5,7 @@
     </record>
 
     <record id="group_hr_attendance_kiosk" model="res.groups">
-        <field name="name">User : Only kiosk mode</field>
+        <field name="name">User: Only kiosk mode</field>
         <field name="category_id" ref="base.module_category_human_resources_employees"/>
         <field name="comment">The user will be able to open the kiosk mode and validate the employee PIN.</field>
         <field name="implied_ids" eval="[(6, 0, [ref('base.group_user')])]"/>
@@ -22,7 +22,7 @@
     </record>
 
     <record id="group_hr_attendance_user" model="res.groups">
-        <field name="name">Officer : Manage all attendances</field>
+        <field name="name">Officer: Manage all attendances</field>
         <field name="category_id" ref="base.module_category_human_resources_attendances"/>
         <field name="implied_ids" eval="[(4, ref('hr.group_hr_user')), (4, ref('hr_attendance.group_hr_attendance'))]"/>
     </record>

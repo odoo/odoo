@@ -17358,7 +17358,7 @@
             isVisible: (env) => {
                 return env.model.getters.getSheetIds().length > 1;
             },
-            action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet ?"), () => {
+            action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet?"), () => {
                 env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
             }),
         })

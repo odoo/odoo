@@ -23,7 +23,7 @@ export class TableGuestsButton extends Component {
         const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: this.nGuests,
             cheap: true,
-            title: this.env._t("Guests ?"),
+            title: this.env._t("Guests?"),
             isInputSelected: true,
         });
 

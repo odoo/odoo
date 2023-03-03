@@ -25,7 +25,7 @@
     </record>
     <record id="event_0_ticket_0" model="event.event.ticket">
         <field name="name">Free</field>
-        <field name="description">Free entrance, no food !</field>
+        <field name="description">Free entrance, no food!</field>
         <field name="event_id" ref="event.event_0"/>
         <field name="start_sale_datetime" eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d 00:00:00')"/>
         <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(days=10)).strftime('%Y-%m-%d 23:00:00')"/>
@@ -68,7 +68,7 @@
         <field name="res_id" ref="event.event_1"/>
         <field name="body" type="html"><p>Hello Marc Demo,<br/>
             Our flight authorizations have been revoked due to insurance issues.<br/>
-            Could you take care of it as soon as possible ?</p>
+            Could you take care of it as soon as possible?</p>
         </field>
         <field name="message_type">comment</field>
         <field name="subtype_id" ref="mail.mt_comment"/>
@@ -78,7 +78,7 @@
         <field name="model">event.event</field>
         <field name="res_id" ref="event.event_1"/>
         <field name="parent_id" ref="message_event_1_0"/>
-        <field name="body" type="html"><p>Hi Mitchell Admin,<br/>I will take care of it today !</p></field>
+        <field name="body" type="html"><p>Hi Mitchell Admin,<br/>I will take care of it today!</p></field>
         <field name="message_type">comment</field>
         <field name="subtype_id" ref="mail.mt_comment"/>
         <field name="author_id" ref="base.partner_demo"/>
@@ -87,7 +87,7 @@
         <field name="model">event.event</field>
         <field name="res_id" ref="event.event_1"/>
         <field name="parent_id" ref="message_event_1_1"/>
-        <field name="body" type="html"><p>Great ! This event will stay "blocked" until it is fixed.<br/>
+        <field name="body" type="html"><p>Great! This event will stay "blocked" until it is fixed.<br/>
         Feel free to green it once everything is in order.</p>
         </field>
         <field name="message_type">comment</field>

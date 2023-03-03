@@ -35,7 +35,7 @@ var SlideEnrollDialog = Dialog.extend({
             if (result.error) {
                 self.$element.replaceWith('<div class="alert alert-danger" role="alert"><strong>' + result.error + '</strong></div>');
             } else if (result.done) {
-                self.$element.replaceWith('<div class="alert alert-success" role="alert"><strong>' + _t('Request sent !') + '</strong></div>');
+                self.$element.replaceWith('<div class="alert alert-success" role="alert"><strong>' + _t('Request sent!') + '</strong></div>');
             } else {
                 self.$element.replaceWith('<div class="alert alert-danger" role="alert"><strong>' + _t('Unknown error, try again.') + '</strong></div>');
             }

@@ -84,7 +84,7 @@ var Quiz = publicWidget.Widget.extend({
     _alertShow: function (alertCode) {
         var message = _t('There was an error validating this quiz.');
         if (alertCode === 'quiz_incomplete') {
-            message = _t('All questions must be answered !');
+            message = _t('All questions must be answered!');
         } else if (alertCode === 'quiz_done') {
             message = _t('This quiz is already done. Retaking it is not possible.');
         }

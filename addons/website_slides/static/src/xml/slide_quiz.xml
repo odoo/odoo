@@ -91,15 +91,15 @@
                     </div>
                 </div>
                 <span t-if="widget.publicUser &amp;&amp; widget.channel.signupAllowed" class="d-block mt-2">
-                    <span>Don't have an account ?</span>
-                    <a class="fw-bold" t-att-href="'/web/signup?redirect=' + widget.redirectURL">Sign Up !</a>
+                    <span>Don't have an account?</span>
+                    <a class="fw-bold" t-att-href="'/web/signup?redirect=' + widget.redirectURL">Sign Up!</a>
                 </span>
             </div>
             <div t-else="" class="d-md-flex align-items-center justify-content-between">
                 <div t-att-class="'d-flex align-items-center' + (widget.slide.completed ? ' alert alert-success my-0 py-1 px-3' : '')">
                     <button t-if="! widget.slide.completed" role="button" title="Check answers" aria-label="Check answers"
                         class="btn btn-primary text-uppercase fw-bold o_wslides_js_lesson_quiz_submit">Check your answers</button>
-                    <b t-else="" class="my-0 h5">Done !</b>
+                    <b t-else="" class="my-0 h5">Done!</b>
                     <span class="my-0 h5" style="line-height: 1">
                         <span role="button" title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge rounded-pill bg-warning text-white fw-bold ms-3 px-2">
                             + <t t-if="!widget.slide.completed" t-esc="widget.quiz.quizKarmaGain"/><t t-else="" t-esc="widget.quiz.quizKarmaWon"/> XP
@@ -134,7 +134,7 @@
                     <div class="pb-3">
                         <h4 class="o_wslides_quiz_modal_xp_gained pb-2 d-flex fade">
                             <t t-if="widget.quiz.quizKarmaWon > 0">
-                                You gained <span class="badge rounded-pill text-bg-success text-white fw-bold ms-2 me-1"><t t-esc="widget.quiz.quizKarmaWon"/> XP</span> !
+                                You gained <span class="badge rounded-pill text-bg-success text-white fw-bold ms-2 me-1"><t t-esc="widget.quiz.quizKarmaWon"/> XP</span>!
                             </t>
                             <t t-else="">You did it!</t>
                         </h4>

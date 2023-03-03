@@ -11,7 +11,7 @@ export class NumberPopup extends AbstractAwaitablePopup {
     static defaultProps = {
         confirmText: _t("Confirm"),
         cancelText: _t("Discard"),
-        title: _t("Confirm ?"),
+        title: _t("Confirm?"),
         body: "",
         cheap: false,
         startingValue: null,

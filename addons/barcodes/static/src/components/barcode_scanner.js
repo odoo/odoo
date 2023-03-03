@@ -29,7 +29,7 @@ export class BarcodeScanner extends Component {
                 window.navigator.vibrate(100);
             }
         } else {
-            this.notification.add(error || this.env._t("Please, Scan again !"), {
+            this.notification.add(error || this.env._t("Please, Scan again!"), {
                 type: "warning",
             });
         }

@@ -16,7 +16,7 @@
 	</record>
 
     <record id="forum_post_O_0" model="forum.post">
-        <field name="name">What is the best fertilizer for tulips ?</field>
+        <field name="name">What is the best fertilizer for tulips?</field>
         <field name="forum_id" ref="forum_forum_demo_channel_0"/>
         <field name="views">2</field>
         <field name="create_uid" ref="base.user_admin"/>
@@ -25,7 +25,7 @@
         <field name="create_date" eval="DateTime.now() - relativedelta(days=31)"/>
     </record>
     <record id="forum_post_O_0_answer_0" model="forum.post">
-        <field name="name">Re: What is the best fertilizer for tulips ?</field>
+        <field name="name">Re: What is the best fertilizer for tulips?</field>
         <field name="forum_id" ref="forum_forum_demo_channel_0"/>
         <field name="content" type="html"><p>You can use loam for tulips.</p></field>
         <field name="parent_id" ref="forum_post_O_0"/>
@@ -38,7 +38,7 @@
         <field name="create_uid" ref="base.user_demo"/>
         <field name="write_uid" ref="base.user_demo"/>
         <field name="content" type="html"><p>I have an oak in my garden since 1997 and I was wondering about the growth of this type of tree ?
-            Is there a way to accelerate the process ?</p></field>
+            Is there a way to accelerate the process?</p></field>
     </record>
 
 </data></odoo>

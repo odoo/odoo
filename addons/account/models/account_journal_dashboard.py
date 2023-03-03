@@ -410,7 +410,7 @@ class account_journal(models.Model):
     def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
         """ Loops on a query result to count the total number of invoices and sum
         their amount_total field (expressed in the given target currency).
-        amount_total must be signed !
+        amount_total must be signed!
         """
         rslt_count = 0
         rslt_sum = 0.0

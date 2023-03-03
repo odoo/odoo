@@ -165,6 +165,6 @@ class MicrosoftService(models.AbstractModel):
                 status = error.response.status_code
                 response = ""
             else:
-                _logger.exception("Bad microsoft request : %s !", error.response.content)
+                _logger.exception("Bad microsoft request: %s!", error.response.content)
                 raise error
         return (status, response, ask_time)

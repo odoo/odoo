@@ -188,7 +188,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         ])
         self.assertEqual(len(work_entries.work_entry_type_id), 1)
         leave = self.env['hr.leave'].create({
-            'name': 'Holiday !!!',
+            'name': 'Holiday!!!',
             'holiday_type': 'company',
             'mode_company_id': self.env.company.id,
             'holiday_status_id': self.leave_type.id,

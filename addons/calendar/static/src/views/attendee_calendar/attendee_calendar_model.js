@@ -141,7 +141,7 @@ export class AttendeeCalendarModel extends CalendarModel {
         } else {
             const confirm = await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
-                    body: this.env._t("Are you sure you want to delete this record ?"),
+                    body: this.env._t("Are you sure you want to delete this record?"),
                     confirm: resolve.bind(null, true),
                 }, {
                     onClose: resolve.bind(null, false),

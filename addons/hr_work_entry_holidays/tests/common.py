@@ -86,7 +86,7 @@ class TestWorkEntryHolidaysBase(TestWorkEntryBase):
         date_from = date_from or Datetime.today()
         date_to = date_to or Datetime.today() + relativedelta(days=1)
         return cls.env['hr.leave'].create({
-            'name': 'Holiday !!!',
+            'name': 'Holiday!!!',
             'employee_id': cls.richard_emp.id,
             'holiday_status_id': cls.leave_type.id,
             'date_to': date_to,

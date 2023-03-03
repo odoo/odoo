@@ -128,7 +128,7 @@ export class TicketScreen extends IndependentToOrderScreen {
                 title: this.env._t("Existing orderlines"),
                 body: _.str.sprintf(
                     this.env._t(
-                        "%s has a total amount of %s, are you sure you want to delete this order ?"
+                        "%s has a total amount of %s, are you sure you want to delete this order?"
                     ),
                     order.name,
                     this.getTotal(order)

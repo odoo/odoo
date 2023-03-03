@@ -8,7 +8,7 @@ const { Component } = owl;
 export class ContractWarningTooltip extends Component {
     get tooltipInfo() {
         return JSON.stringify({
-            "text" : _t("Calendar Mismatch : The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors."),
+            "text" : _t("Calendar Mismatch: The employee's calendar does not match this contract's calendar. This could lead to unexpected behaviors."),
         })
     }
 }

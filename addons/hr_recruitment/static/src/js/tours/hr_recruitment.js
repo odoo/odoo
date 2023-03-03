@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: ".o_employee_form",
-    content: _t("Save it !"),
+    content: _t("Save it!"),
     position: "bottom",
     width: 80
 }]});

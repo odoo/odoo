@@ -93,7 +93,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             container: 'body',
             offset: '0, 3',
             content: function () {
-                return _t("Copied !");
+                return _t("Copied!");
             }
         });
 

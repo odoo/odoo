@@ -67,7 +67,7 @@ registry.category("web_tour.tours").add('crm_tour', {
 }, {
     id: "drag_opportunity_to_won_step",
     trigger: ".o_opportunity_kanban .o_kanban_record:last-of-type",
-    content: Markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats !")),
+    content: Markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats!")),
     position: "bottom",
     run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(3) ",
 },  {

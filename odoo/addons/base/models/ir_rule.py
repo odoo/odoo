@@ -29,7 +29,7 @@ class IrRule(models.Model):
     _sql_constraints = [
         ('no_access_rights',
          'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)',
-         'Rule must have at least one checked access right !'),
+         'Rule must have at least one checked access right!'),
     ]
 
     @api.model

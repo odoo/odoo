@@ -71,7 +71,7 @@ export class TimeOffCalendarController extends CalendarController {
         if (!record.can_cancel) {
             this.displayDialog(ConfirmationDialog, {
                 title: this.env._t("Confirmation"),
-                body: this.env._t("Are you sure you want to delete this record ?"),
+                body: this.env._t("Are you sure you want to delete this record?"),
                 confirm: async () => {
                     await this.model.unlinkRecord(record.id);
                     this.env.timeOffBus.trigger('update_dashboard');

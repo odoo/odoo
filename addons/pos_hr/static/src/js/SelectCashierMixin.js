@@ -38,7 +38,7 @@ export function useCashierSelector({ onCashierChanged } = { onCashierChanged: ()
     async function checkPin(employee) {
         const { confirmed, payload: inputPin } = await popup.add(NumberPopup, {
             isPassword: true,
-            title: _t("Password ?"),
+            title: _t("Password?"),
         });
 
         if (!confirmed) {
