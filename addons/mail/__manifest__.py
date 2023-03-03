@@ -121,9 +121,9 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/core_models/*.js',
         ],
         'mail.assets_messaging': [
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             ('include', 'mail.assets_core_messaging'),
             'mail/static/src/models/*.js',
-            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
         ],
         'mail.assets_model_data': [
             'mail/static/src/models_data/*.js',
