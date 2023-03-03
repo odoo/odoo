@@ -26,17 +26,17 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'is_page': True,
                     'description': """<p>This section is about general information about you. Answering them helps qualifying your answers.</p>""",
                 }), (0, 0, {
-                    'title': 'Where do you live ?',
+                    'title': 'Where do you live?',
                     'sequence': 2,
                     'question_type': 'char_box',
                     'constr_mandatory': False,
                 }), (0, 0, {
-                    'title': 'When is your date of birth ?',
+                    'title': 'When is your date of birth?',
                     'sequence': 3,
                     'question_type': 'date',
                     'description': False,
                 }), (0, 0, {
-                    'title': 'How frequently do you buy products online ?',
+                    'title': 'How frequently do you buy products online?',
                     'sequence': 4,
                     'question_type': 'simple_choice',
                     'comments_allowed': True,
@@ -60,7 +60,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                             'sequence': 5,
                         })],
                 }), (0, 0, {
-                    'title': 'How many times did you order products on our website ?',
+                    'title': 'How many times did you order products on our website?',
                     'sequence': 5,
                     'question_type': 'numerical_box',
                     'constr_mandatory': True,
@@ -71,7 +71,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'question_type': False,
                     'description': """<p>This section is about our eCommerce experience itself.</p>""",
                 }), (0, 0, {
-                    'title': 'Which of the following words would you use to describe our products ?',
+                    'title': 'Which of the following words would you use to describe our products?',
                     'sequence': 7,
                     'question_type': 'multiple_choice',
                     'constr_mandatory': True,
@@ -107,7 +107,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                             'sequence': 9,
                         })],
                 }), (0, 0, {
-                    'title': 'What do your think about our new eCommerce ?',
+                    'title': 'What do your think about our new eCommerce?',
                     'sequence': 8,
                     'question_type': 'matrix',
                     'matrix_subtype': 'multiple',
@@ -142,7 +142,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                         'sequence': 5,
                     })],
                 }), (0, 0, {
-                    'title': 'Do you have any other comments, questions, or concerns ?',
+                    'title': 'Do you have any other comments, questions, or concerns?',
                     'sequence': 9,
                     'question_type': 'text_box',
                     'constr_mandatory': False,

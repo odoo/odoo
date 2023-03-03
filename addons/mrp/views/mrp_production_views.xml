@@ -133,7 +133,7 @@
                             attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', True)]}"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="z"
                             attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', False)]}"
-                            confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
+                            confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process?"/>
                     <button name="button_unbuild" type="object" string="Unbuild" attrs="{'invisible': [('state', '!=', 'done')]}" data-hotkey="shift+v"/>
                 </header>
                 <sheet>

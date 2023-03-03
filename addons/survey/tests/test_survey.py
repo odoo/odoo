@@ -100,7 +100,7 @@ class TestSurveyInternals(common.TestSurveyCommon):
             validation_min_date='2015-03-20', validation_max_date='2015-03-25', validation_error_msg='ValidationError')
 
         self.assertEqual(
-            question.validate_question('Is Alfred an answer ?'),
+            question.validate_question('Is Alfred an answer?'),
             {question.id: _('This is not a date')}
         )
 
@@ -126,7 +126,7 @@ class TestSurveyInternals(common.TestSurveyCommon):
             validation_min_float_value=2.2, validation_max_float_value=3.3, validation_error_msg='ValidationError')
 
         self.assertEqual(
-            question.validate_question('Is Alfred an answer ?'),
+            question.validate_question('Is Alfred an answer?'),
             {question.id: _('This is not a number')}
         )
 
@@ -246,7 +246,7 @@ class TestSurveyInternals(common.TestSurveyCommon):
             return survey.question_ids.filtered(lambda q: q.title == title)[0]
 
         # Create the survey questions (! texts of the questions must be unique as they are used to query them)
-        q_is_vegetarian_text = 'Are you vegetarian ?'
+        q_is_vegetarian_text = 'Are you vegetarian?'
         q_is_vegetarian = self._add_question(
             self.page_0, q_is_vegetarian_text, 'multiple_choice', survey_id=self.survey.id,
             sequence=100, labels=[{'value': 'Yes'}, {'value': 'No'}])
@@ -300,7 +300,7 @@ class TestSurveyInternals(common.TestSurveyCommon):
     @users('survey_manager')
     def test_unlink_triggers(self):
         # Create the survey questions
-        q_is_vegetarian_text = 'Are you vegetarian ?'
+        q_is_vegetarian_text = 'Are you vegetarian?'
         q_is_vegetarian = self._add_question(
             self.page_0, q_is_vegetarian_text, 'multiple_choice', survey_id=self.survey.id,
             sequence=100, labels=[{'value': 'Yes'}, {'value': 'No'}])

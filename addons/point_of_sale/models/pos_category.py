@@ -12,7 +12,7 @@ class PosCategory(models.Model):
     @api.constrains('parent_id')
     def _check_category_recursion(self):
         if not self._check_recursion():
-            raise ValidationError(_('Error ! You cannot create recursive categories.'))
+            raise ValidationError(_('Error! You cannot create recursive categories.'))
 
     name = fields.Char(string='Category Name', required=True, translate=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)

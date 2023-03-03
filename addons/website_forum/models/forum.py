@@ -1083,7 +1083,7 @@ class Vote(models.Model):
     recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True, readonly=False)
 
     _sql_constraints = [
-        ('vote_uniq', 'unique (post_id, user_id)', "Vote already exists !"),
+        ('vote_uniq', 'unique (post_id, user_id)', "Vote already exists!"),
     ]
 
     def _get_karma_value(self, old_vote, new_vote, up_karma, down_karma):
@@ -1191,7 +1191,7 @@ class Tags(models.Model):
     posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name, forum_id)', "Tag name already exists!"),
     ]
 
     @api.depends("post_ids.tag_ids", "post_ids.state")

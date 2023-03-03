@@ -144,9 +144,9 @@ class TestCertificationBadge(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.certification_badge.with_user(self.user_emp).write({'description': "I'm a dude who think that has every right on the Iron Throne"})
         with self.assertRaises(AccessError):
-            self.certification_badge.with_user(self.user_portal).write({'description': "Guy, you just can't do that !"})
+            self.certification_badge.with_user(self.user_portal).write({'description': "Guy, you just can't do that!"})
         with self.assertRaises(AccessError):
-            self.certification_badge.with_user(self.user_public).write({'description': "What did you expect ? Schwepps !"})
+            self.certification_badge.with_user(self.user_public).write({'description': "What did you expect ? Schwepps!"})
 
     def test_badge_configuration_multi(self):
         vals = {

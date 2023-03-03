@@ -29,7 +29,7 @@ class Category(models.Model):
                                    'category', 'discussion')
 
     _sql_constraints = [
-        ('positive_color', 'CHECK(color >= 0)', 'The color code must be positive !')
+        ('positive_color', 'CHECK(color >= 0)', 'The color code must be positive!')
     ]
 
     @api.depends('name', 'parent.display_name')     # this definition is recursive

@@ -34,7 +34,7 @@ publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
 
         Dialog.confirm(
             this,
-            _t("Are you sure you want to close this room ?"),
+            _t("Are you sure you want to close this room?"),
             {
                 confirm_callback: async () => {
                     await this._rpc({
@@ -61,7 +61,7 @@ publicWidget.registry.websiteEventMeetingRoom = publicWidget.Widget.extend({
         event.stopPropagation();
         Dialog.confirm(
             this,
-            _t("Are you sure you want to duplicate this room ?"),
+            _t("Are you sure you want to duplicate this room?"),
             {
                 confirm_callback: async () => {
                     await this._rpc({

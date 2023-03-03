@@ -122,7 +122,7 @@ class TestTimesheet(TestCommonTimesheet):
             rule.active = False
 
     def test_log_timesheet(self):
-        """ Test when log timesheet : check analytic account, user and employee are correctly set. """
+        """ Test when log timesheet: check analytic account, user and employee are correctly set. """
         Timesheet = self.env['account.analytic.line']
         timesheet_uom = self.project_customer.analytic_account_id.company_id.project_time_mode_id
         # employee 1 log some timesheet on task 1
@@ -167,7 +167,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(timesheet4.partner_id, self.project_customer.partner_id, 'Customer of new timesheet should be the same of the one set project (since no task on timesheet)')
 
     def test_log_access_rights(self):
-        """ Test access rights : user can update its own timesheets only, and manager can change all """
+        """ Test access rights: user can update its own timesheets only, and manager can change all """
         # employee 1 log some timesheet on task 1
         Timesheet = self.env['account.analytic.line']
         timesheet1 = Timesheet.with_user(self.user_employee).create({

@@ -253,7 +253,7 @@ export class Many2OneField extends Component {
                 browser.navigator.vibrate(100);
             }
         } else {
-            this.notification.add(this.env._t("Please, scan again !"), {
+            this.notification.add(this.env._t("Please, scan again!"), {
                 type: "warning",
             });
         }

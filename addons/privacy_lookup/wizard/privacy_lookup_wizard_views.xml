@@ -56,7 +56,7 @@
                 <field name="execution_details" invisible="1"/>
                 <field name="is_active" widget="boolean_toggle" attrs="{'invisible': ['|', ('is_unlinked', '=', True), ('has_active', '=', False)]}"/>
                 <field name="is_unlinked" invisible="True"/>
-                <button name="action_unlink" string="Delete" type="object" icon="fa-trash" attrs="{'invisible': [('is_unlinked', '=', True)]}" confirm="This operation is irreversible. Do you wish to proceed to the record deletion ?"/>
+                <button name="action_unlink" string="Delete" type="object" icon="fa-trash" attrs="{'invisible': [('is_unlinked', '=', True)]}" confirm="This operation is irreversible. Do you wish to proceed to the record deletion?"/>
             </tree>
         </field>
     </record>

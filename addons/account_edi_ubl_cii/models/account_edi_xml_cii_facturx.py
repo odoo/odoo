@@ -240,7 +240,7 @@ class AccountEdiXmlCII(models.AbstractModel):
                 invoice.currency_id = currency
             else:
                 logs.append(_("Could not retrieve currency: %s. Did you enable the multicurrency option and "
-                              "activate the currency ?", currency_code_node.text))
+                              "activate the currency?", currency_code_node.text))
 
         # ==== Reference ====
 

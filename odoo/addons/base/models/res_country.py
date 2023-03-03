@@ -77,9 +77,9 @@ class Country(models.Model):
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
-            'The name of the country must be unique !'),
+            'The name of the country must be unique!'),
         ('code_uniq', 'unique (code)',
-            'The code of the country must be unique !')
+            'The code of the country must be unique!')
     ]
 
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
@@ -165,7 +165,7 @@ class CountryState(models.Model):
     code = fields.Char(string='State Code', help='The state code.', required=True)
 
     _sql_constraints = [
-        ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country !')
+        ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country!')
     ]
 
     @api.model

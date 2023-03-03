@@ -173,7 +173,7 @@ class AccountTax(models.Model):
     country_code = fields.Char(related='country_id.code', readonly=True)
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id, type_tax_use, tax_scope)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, company_id, type_tax_use, tax_scope)', 'Tax names must be unique!'),
     ]
 
     @api.constrains('tax_group_id')

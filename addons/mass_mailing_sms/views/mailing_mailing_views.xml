@@ -28,11 +28,11 @@
                 <button name="action_put_in_queue" type="object"
                     string="Send" class="oe_highlight" data-hotkey="v"
                     attrs="{'invisible': ['|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'sending', 'done')), ('sms_force_send', '=', True)]}"
-                    confirm="This will send SMS to all recipients. Do you still want to proceed ?"/>
+                    confirm="This will send SMS to all recipients. Do you still want to proceed?"/>
                 <button name="action_send_mail" type="object"
                     string="Send Now" class="oe_highlight" data-hotkey="g"
                     attrs="{'invisible': ['|', '|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled'), ('sms_force_send', '!=', True)]}"
-                    confirm="This will send SMS to all recipients now. Do you still want to proceed ?"/>
+                    confirm="This will send SMS to all recipients now. Do you still want to proceed?"/>
             </xpath>
             <!-- Headers / Warnings -->
             <xpath expr="//header" position="after">

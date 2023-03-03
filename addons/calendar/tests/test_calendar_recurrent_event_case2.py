@@ -27,7 +27,7 @@ class TestRecurrentEvent(common.TransactionCase):
         meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
             ('start', '>=', '2011-03-13'), ('stop', '<=', '2011-05-13')
         ])
-        self.assertEqual(meetings_count, 5, 'Recurrent daily meetings are not created !')
+        self.assertEqual(meetings_count, 5, 'Recurrent daily meetings are not created!')
 
     def test_recurrent_meeting2(self):
         # I create a weekly meeting till a particular end date.
@@ -52,4 +52,4 @@ class TestRecurrentEvent(common.TransactionCase):
         meetings_count = self.CalendarEvent.search_count([
             ('start', '>=', '2011-03-13'), ('stop', '<=', '2011-05-13')
         ])
-        self.assertEqual(meetings_count, 10, 'Recurrent weekly meetings are not created !')
+        self.assertEqual(meetings_count, 10, 'Recurrent weekly meetings are not created!')

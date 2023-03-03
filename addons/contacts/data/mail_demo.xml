@@ -4,7 +4,7 @@
     <!-- Message with scheduled notification -->
     <record id="message_demo_partner_2_0" model="mail.message">
         <field name="author_id" ref="base.partner_demo"/>
-        <field name="body" type="html"><p>Hello! Could you send us your address ?</p></field>
+        <field name="body" type="html"><p>Hello! Could you send us your address?</p></field>
         <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:00')"/>
         <field name="model">res.partner</field>
         <field name="res_id" ref="base.res_partner_2"/>

@@ -388,7 +388,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      */
     async deleteRibbon(previewMode, widgetValue, params) {
         const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t('Are you sure you want to delete this badge ?'), {
+            Dialog.confirm(this, _t('Are you sure you want to delete this badge?'), {
                 confirm_callback: () => resolve(true),
                 cancel_callback: () => resolve(false),
             });

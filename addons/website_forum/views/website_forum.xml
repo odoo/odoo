@@ -1047,7 +1047,7 @@
     <t t-call="website_forum.header">
         <div class="alert alert-info shadow-sm pb-3" role="status" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
             <p>This post is currently awaiting moderation and it's not published yet.<br/>
-                Do you want <b>Accept</b> or <b>Reject</b> this post ?</p>
+                Do you want <b>Accept</b> or <b>Reject</b> this post?</p>
             <div>
                 <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">
                     <i class="fa fa-check fa-fw me-1"/>Accept</a>

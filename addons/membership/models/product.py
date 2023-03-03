@@ -14,7 +14,7 @@ class Product(models.Model):
         help='Date until which membership remains active.')
 
     _sql_constraints = [
-        ('membership_date_greater', 'check(membership_date_to >= membership_date_from)', 'Error ! Ending Date cannot be set before Beginning Date.')
+        ('membership_date_greater', 'check(membership_date_to >= membership_date_from)', 'Error! Ending Date cannot be set before Beginning Date.')
     ]
 
     @api.model

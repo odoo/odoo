@@ -60,9 +60,9 @@ class Lang(models.Model):
     flag_image_url = fields.Char(compute=_compute_field_flag_image_url)
 
     _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),
-        ('code_uniq', 'unique(code)', 'The code of the language must be unique !'),
-        ('url_code_uniq', 'unique(url_code)', 'The URL code of the language must be unique !'),
+        ('name_uniq', 'unique(name)', 'The name of the language must be unique!'),
+        ('code_uniq', 'unique(code)', 'The code of the language must be unique!'),
+        ('url_code_uniq', 'unique(url_code)', 'The URL code of the language must be unique!'),
     ]
 
     @api.constrains('active')
