@@ -10,14 +10,15 @@ on:
 jobs:
 
   build-docker:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, short]
     permissions:
       contents: read
       packages: write
     env:
-      IMAGE_NAME: ghcr.io/jobrad-gmbh/odoo
+      GHCR_IMAGE_NAME: ghcr.io/jobrad-gmbh/odoo
+      ARTIFACTORY_IMAGE_NAME: artifactory.service.jobrad.org/jra_docker_registry/odoo
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Create variables
       shell: bash
@@ -25,24 +26,38 @@ jobs:
         echo "BRANCH_NAME=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///'  | sed 's/refs\/tags\///' | sed 's/\//_/g')" >> $GITHUB_ENV
         echo "SHORT_REV=$(echo ${{ github.sha }})" >> $GITHUB_ENV
 
-    - name: Login to registry to use the cache for the build
-      uses: docker/login-action@v1
+    - name: Login to ghcr registry
+      uses: docker/login-action@v2
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Login to artifactory registry
+      uses: docker/login-action@v2
+      with:
+        registry: artifactory.service.jobrad.org
+        username: github_runner
+        password: ${{ secrets.ARTIFACTORY_TOKEN }}
+
     - name: Build the Docker image
       shell: bash
       run: |
-        if docker pull "${IMAGE_NAME}:${SHORT_REV}"; then
-          docker image tag "${IMAGE_NAME}:${SHORT_REV}" "${IMAGE_NAME}:${BRANCH_NAME}"
+        if docker pull "${GHCR_IMAGE_NAME}:${SHORT_REV}"; then
+          docker image tag "${GHCR_IMAGE_NAME}:${SHORT_REV}" "${GHCR_IMAGE_NAME}:${BRANCH_NAME}"
         else
           echo "Docker image tag ${SHORT_REV} doesn't exist yet"
-          docker build . -f docker/Dockerfile -t "${IMAGE_NAME}:${BRANCH_NAME}" -t "${IMAGE_NAME}:${SHORT_REV}" --pull
+          docker build . -f docker/Dockerfile -t "${GHCR_IMAGE_NAME}:${BRANCH_NAME}" -t "${GHCR_IMAGE_NAME}:${SHORT_REV}" --pull
         fi
 
-    - name: Push Image
+    - name: Push Image to ghcr
       run: |
-        docker push "${IMAGE_NAME}:${SHORT_REV}"
-        docker push "${IMAGE_NAME}:${BRANCH_NAME}"
+        docker push "${GHCR_IMAGE_NAME}:${SHORT_REV}"
+        docker push "${GHCR_IMAGE_NAME}:${BRANCH_NAME}"
+
+    - name: Push Image to artifactory
+      run: |
+        docker tag "${GHCR_IMAGE_NAME}:${SHORT_REV}" "${ARTIFACTORY_IMAGE_NAME}:${SHORT_REV}"
+        docker tag "${GHCR_IMAGE_NAME}:${BRANCH_NAME}" "${ARTIFACTORY_IMAGE_NAME}:${BRANCH_NAME}"
+        docker push "${ARTIFACTORY_IMAGE_NAME}:${SHORT_REV}"
+        docker push "${ARTIFACTORY_IMAGE_NAME}:${BRANCH_NAME}"
