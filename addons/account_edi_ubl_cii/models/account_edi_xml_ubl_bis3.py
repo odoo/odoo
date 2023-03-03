@@ -369,7 +369,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'peppol_en16931_ubl_buyer_ref_po_ref':
                 "A buyer reference or purchase order reference must be provided." if self._check_required_fields(
                     vals['vals'], 'buyer_reference'
-                ) and self._check_required_fields(invoice, 'invoice_origin') else None,
+                ) and self._check_required_fields(vals['vals'], 'order_reference') else None,
         }
 
         if vals['supplier'].country_id.code == 'NL':
