@@ -1515,7 +1515,7 @@ class Import(models.TransientModel):
                     if fallback_values[field]['field_type'] == "boolean":
                         value = value if value.lower() in ('0', '1', 'true', 'false') else fallback_value
                     # Selection
-                    elif value.lower() not in fallback_values[field]["selection_values"]:
+                    elif fallback_values[field]['field_type'] == "selection" and value.lower() not in fallback_values[field]["selection_values"]:
                         value = fallback_value if fallback_value != 'skip' else None  # don't set any value if we skip
 
                     input_file_data[record_index][column_index] = value
