@@ -636,7 +636,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(new_lead.name, 'Delivery cost inquiry')
 
         message = new_lead.with_user(self.user_sales_manager).message_post(
-            body='Here is my offer !',
+            body='Here is my offer!',
             subtype_xmlid='mail.mt_comment')
         self.assertEqual(message.author_id, self.user_sales_manager.partner_id)
 

@@ -235,7 +235,7 @@ QUOTE_THUNDERBIRD_1 = u"""<div>On 11/08/2012 05:29 PM,
           <li>9.45 AM: summary</li>
           <li>10 AM: meeting with Fabien to present our app</li>
         </ul></div>
-      <div>Is everything ok for you ?</div>
+      <div>Is everything ok for you?</div>
       <div>
         <p>--<br>
           Administrator</p>
@@ -246,7 +246,7 @@ QUOTE_THUNDERBIRD_1 = u"""<div>On 11/08/2012 05:29 PM,
       </div>
     </blockquote>
     Ok for me. I am replying directly below your mail, using Thunderbird, with a signature.<br><br>
-    Did you receive my email about my new laptop, by the way ?<br><br>
+    Did you receive my email about my new laptop, by the way?<br><br>
     Raoul.<br><pre>-- 
 Raoul Grosbedonn&#233;e
 </pre>"""
@@ -300,7 +300,7 @@ TEXT_1 = u"""I contact you about our meeting tomorrow. Here is the schedule I pr
 9 AM: brainstorming about our new amazing business app
 9.45 AM: summary
 10 AM: meeting with Ignasse to present our app
-Is everything ok for you ?
+Is everything ok for you?
 --
 MySignature"""
 
@@ -308,7 +308,7 @@ TEXT_1_IN = [u"""I contact you about our meeting tomorrow. Here is the schedule 
 9 AM: brainstorming about our new amazing business app
 9.45 AM: summary
 10 AM: meeting with Ignasse to present our app
-Is everything ok for you ?"""]
+Is everything ok for you?"""]
 TEXT_1_OUT = [u"""
 --
 MySignature"""]
@@ -358,7 +358,7 @@ TEXT_2_OUT = [u"""
 # MISC
 
 GMAIL_1 = u"""Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
-<li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you ?</div>
+<li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you?</div>
 <div><p>-- <br>Administrator</p></div>
 
 <div><p>Log in our portal at: <a href="http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo">http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo</a></p></div>
@@ -383,7 +383,7 @@ HOTMAIL_1 = u"""<div>
             <br>
             You indicated that you wish to use OpenERP in your own company.
             We would like to know more about your your business needs and requirements, and see how
-            we can help you. When would you be available to discuss your project ?<br>
+            we can help you. When would you be available to discuss your project?<br>
             Best regards,<br>
             <pre>
                 <a href="http://openerp.com" target="_blank">http://openerp.com</a>

@@ -112,7 +112,7 @@ class GoogleService(models.AbstractModel):
         if _log_params.get('client_secret'):
             _log_params['client_secret'] = _log_params['client_secret'][0:4] + 'x' * 12
 
-        _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !", uri, method, headers, _log_params)
+        _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s!", uri, method, headers, _log_params)
 
         ask_time = fields.Datetime.now()
         try:
@@ -139,6 +139,6 @@ class GoogleService(models.AbstractModel):
                 status = error.response.status_code
                 response = ""
             else:
-                _logger.exception("Bad google request : %s !", error.response.content)
+                _logger.exception("Bad google request : %s!", error.response.content)
                 raise error
         return (status, response, ask_time)

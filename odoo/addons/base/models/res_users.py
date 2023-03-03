@@ -338,7 +338,7 @@ class Users(models.Model):
                                   compute='_compute_accesses_count', compute_sudo=True)
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
+        ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login!')
     ]
 
     def init(self):

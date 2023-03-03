@@ -11,13 +11,13 @@
         <field name="scoring_success_min">55</field>
         <field name="questions_layout">page_per_question</field>
         <field name="description" type="html">
-<p>This small quiz will test your knowledge about our Company. Be prepared !</p></field>
+<p>This small quiz will test your knowledge about our Company. Be prepared!</p></field>
         <field name="background_image" type="base64" file="survey/static/src/img/survey_background.jpg"/>
     </record>
 
     <!-- Page 1: general informations -->
     <record id="survey_demo_quiz_p1" model="survey.question">
-        <field name="title">Who are you ?</field>
+        <field name="title">Who are you?</field>
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">1</field>
         <field name="question_type" eval="False"/>
@@ -28,7 +28,7 @@
     <record id="survey_demo_quiz_p1_q1" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">2</field>
-        <field name="title">What is your email ?</field>
+        <field name="title">What is your email?</field>
         <field name="question_type">char_box</field>
         <field name="constr_mandatory" eval="True"/>
         <field name="validation_email" eval="True"/>
@@ -38,7 +38,7 @@
     <record id="survey_demo_quiz_p1_q2" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">3</field>
-        <field name="title">What is your nickname ?</field>
+        <field name="title">What is your nickname?</field>
         <field name="question_type">char_box</field>
         <field name="question_placeholder">Don't be shy, be wild!</field>
         <field name="constr_mandatory" eval="True"/>
@@ -47,7 +47,7 @@
     <record id="survey_demo_quiz_p1_q3" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">4</field>
-        <field name="title">Where are you from ?</field>
+        <field name="title">Where are you from?</field>
         <field name="question_type">char_box</field>
         <field name="question_placeholder">Brussels, Belgium</field>
         <field name="constr_mandatory" eval="True"/>
@@ -55,7 +55,7 @@
     <record id="survey_demo_quiz_p1_q4" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">5</field>
-        <field name="title">How old are you ?</field>
+        <field name="title">How old are you?</field>
         <field name="description" type="html"><p>Just to categorize your answers, don't worry.</p></field>
         <field name="question_type">numerical_box</field>
         <field name="constr_mandatory" eval="True"/>
@@ -74,15 +74,15 @@
     <record id="survey_demo_quiz_p2_q1" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">11</field>
-        <field name="title">When is Mitchell Admin born ?</field>
-        <field name="description" type="html"><span>Our famous Leader !</span></field>
+        <field name="title">When is Mitchell Admin born?</field>
+        <field name="description" type="html"><span>Our famous Leader!</span></field>
         <field name="question_type">date</field>
         <field name="constr_mandatory" eval="True"/>
     </record>
     <record id="survey_demo_quiz_p2_q2" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">12</field>
-        <field name="title">When did precisely Marc Demo crop its first apple tree ?</field>
+        <field name="title">When did precisely Marc Demo crop its first apple tree?</field>
         <field name="question_type">datetime</field>
         <field name="constr_mandatory" eval="True"/>
     </record>
@@ -165,7 +165,7 @@
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">23</field>
         <field name="title">Select trees that made more than 20K sales this year</field>
-        <field name="description" type="html"><span>Our sales people have an advantage, but you can do it !</span></field>
+        <field name="description" type="html"><span>Our sales people have an advantage, but you can do it!</span></field>
         <field name="question_type">multiple_choice</field>
         <field name="constr_mandatory" eval="False"/>
         <field name="comments_allowed" eval="True"/>
@@ -326,7 +326,7 @@
     </record>
 
     <record id="survey_demo_quiz_p4_q1" model="survey.question">
-        <field name="title">Dogwood is from which family of trees ?</field>
+        <field name="title">Dogwood is from which family of trees?</field>
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">31</field>
         <field name="question_type">simple_choice</field>
@@ -360,7 +360,7 @@
     </record>
 
     <record id="survey_demo_quiz_p4_q2" model="survey.question">
-        <field name="title">In which country did the bonsai technique develop ?</field>
+        <field name="title">In which country did the bonsai technique develop?</field>
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">32</field>
         <field name="question_type">simple_choice</field>
@@ -394,7 +394,7 @@
     </record>
 
     <record id="survey_demo_quiz_p4_q3" model="survey.question">
-        <field name="title">Is the wood of a coniferous hard or soft ?</field>
+        <field name="title">Is the wood of a coniferous hard or soft?</field>
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">33</field>
         <field name="question_type">simple_choice</field>
@@ -420,7 +420,7 @@
     </record>
 
     <record id="survey_demo_quiz_p4_q4" model="survey.question">
-        <field name="title">From which continent is native the Scots pine (pinus sylvestris) ?</field>
+        <field name="title">From which continent is native the Scots pine (pinus sylvestris)?</field>
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">34</field>
         <field name="question_type">simple_choice</field>
@@ -500,7 +500,7 @@
     </record>
 
     <record id="survey_demo_quiz_p4_q6" model="survey.question">
-        <field name="title">After watching this video, will you swear that you are not going to procrastinate to trim your hedge this year ?</field>
+        <field name="title">After watching this video, will you swear that you are not going to procrastinate to trim your hedge this year?</field>
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">36</field>
         <field name="question_type">simple_choice</field>
@@ -546,7 +546,7 @@
     <record id="survey_demo_quiz_p5_q1" model="survey.question">
         <field name="survey_id" ref="survey_demo_quiz"/>
         <field name="sequence">41</field>
-        <field name="title">What do you think about this survey ?</field>
+        <field name="title">What do you think about this survey?</field>
         <field name="description" type="html"><span>If you don't like us, please try to be as objective as possible.</span></field>
         <field name="question_type">simple_choice</field>
         <field name="comments_allowed" eval="True"/>

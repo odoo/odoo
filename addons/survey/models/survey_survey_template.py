@@ -24,7 +24,7 @@ class SurveyTemplate(models.Model):
                 _('Please complete this very short survey to let us know how satisfied your are with our products.'),
                 _('Your responses will help us improve our product range to serve you even better.')
             ]),
-            'description_done': _('Thank you very much for your feedback. We highly value your opinion !'),
+            'description_done': _('Thank you very much for your feedback. We highly value your opinion!'),
             'progression_mode': 'number',
             'questions_layout': 'page_per_question',
             'question_and_page_ids': [

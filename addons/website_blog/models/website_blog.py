@@ -130,7 +130,7 @@ class BlogTagCategory(models.Model):
     tag_ids = fields.One2many('blog.tag', 'category_id', string='Tags')
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag category already exists !"),
+        ('name_uniq', 'unique (name)', "Tag category already exists!"),
     ]
 
 
@@ -145,7 +145,7 @@ class BlogTag(models.Model):
     post_ids = fields.Many2many('blog.post', string='Posts')
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists!"),
     ]
 
 

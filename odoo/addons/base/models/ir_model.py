@@ -582,7 +582,7 @@ class IrModelFields(models.Model):
     def _check_name(self):
         for field in self:
             if field.state == 'manual' and not field.name.startswith('x_'):
-                raise ValidationError(_("Custom fields must have a name that starts with 'x_' !"))
+                raise ValidationError(_("Custom fields must have a name that starts with 'x_'!"))
             try:
                 models.check_pg_name(field.name)
             except ValidationError:

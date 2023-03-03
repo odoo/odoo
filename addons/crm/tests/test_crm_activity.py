@@ -22,7 +22,7 @@ class TestCrmMailActivity(TestCrmCommon):
         cls.activity_type_2 = cls.env['mail.activity.type'].create({
             'name': 'Call for Demo',
             'delay_count': 6,
-            'summary': 'ACT 2 : I want to show you my ERP !',
+            'summary': 'ACT 2 : I want to show you my ERP!',
             'res_model': 'crm.lead',
         })
         for activity_type in cls.activity_type_1 + cls.activity_type_2:

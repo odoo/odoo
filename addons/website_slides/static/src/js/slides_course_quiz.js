@@ -114,7 +114,7 @@
         _showErrorMessage: function (errorCode) {
             var message = _t('There was an error validating this quiz.');
             if (errorCode === 'slide_quiz_incomplete') {
-                message = _t('All questions must be answered !');
+                message = _t('All questions must be answered!');
             } else if (errorCode === 'slide_quiz_done') {
                 message = _t('This quiz is already done. Retaking it is not possible.');
             } else if (errorCode === 'public_user') {

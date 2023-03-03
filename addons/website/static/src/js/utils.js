@@ -149,7 +149,7 @@ function prompt(options, _qweb) {
      *
      * Usage Ex:
      *
-     * website.prompt("What... is your quest ?").then(function (answer) {
+     * website.prompt("What... is your quest?").then(function (answer) {
      *     arthur.reply(answer || "To seek the Holy Grail.");
      * });
      *

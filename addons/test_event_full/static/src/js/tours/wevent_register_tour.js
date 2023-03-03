@@ -164,7 +164,7 @@ registry.category("web_tour.tours").add('wevent_register', {
         browseTalksSteps,
         discoverTalkSteps('Live Testimonial', false, false, false),
         browseTalksSteps,
-        discoverTalkSteps('Our Last Day Together !', true, false, true),
+        discoverTalkSteps('Our Last Day Together!', true, false, true),
         browseMeetSteps,
         discoverRoomSteps('Best wood for furniture'),
         registerSteps,

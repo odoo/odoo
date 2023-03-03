@@ -535,7 +535,7 @@ class HolidaysAllocation(models.Model):
 
             res.append(
                 (allocation.id,
-                 _("Allocation of %(allocation_name)s : %(duration).2f %(duration_type)s to %(person)s",
+                 _("Allocation of %(allocation_name)s: %(duration).2f %(duration_type)s to %(person)s",
                    allocation_name=allocation.holiday_status_id.sudo().name,
                    duration=allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
                    duration_type=_('hours') if allocation.type_request_unit == 'hour' else _('days'),

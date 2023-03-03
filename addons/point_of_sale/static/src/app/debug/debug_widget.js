@@ -98,7 +98,7 @@ export class DebugWidget extends Component {
     }
     async deleteOrders() {
         const { confirmed } = await this.popup.add(ConfirmPopup, {
-            title: this.env._t("Delete Paid Orders ?"),
+            title: this.env._t("Delete Paid Orders?"),
             body: this.env._t(
                 "This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone."
             ),
@@ -110,7 +110,7 @@ export class DebugWidget extends Component {
     }
     async deleteUnpaidOrders() {
         const { confirmed } = await this.popup.add(ConfirmPopup, {
-            title: this.env._t("Delete Unpaid Orders ?"),
+            title: this.env._t("Delete Unpaid Orders?"),
             body: this.env._t(
                 "This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone."
             ),

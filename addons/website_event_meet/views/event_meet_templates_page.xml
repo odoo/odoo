@@ -54,13 +54,13 @@
                         t-options="{'format': 'medium'}"/> (<t t-out="meeting_room.event_id.date_tz"/>).
                 </span>
                 <br/>
-                <span>Join us there to chat about <b t-out="meeting_room.name"/> !</span>
+                <span>Join us there to chat about <b t-out="meeting_room.name"/>!</span>
             </div>
         </t>
         <!-- ROOM CONTENT -->
         <div class="d-flex flex-column">
             <div t-if="meeting_room.room_is_full and not is_event_user" class="alert alert-warning text-center">
-                <span>Oops! This room is full !</span><br />Come back later to have a chat with us!
+                <span>Oops! This room is full!</span><br />Come back later to have a chat with us!
             </div>
             <div t-else="" class="d-flex flex-column">
                 <div id="o_wemeet_jitsi_iframe">

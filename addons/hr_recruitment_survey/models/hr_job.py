@@ -17,7 +17,7 @@ class Job(models.Model):
     def action_new_survey(self):
         self.ensure_one()
         survey = self.env['survey.survey'].create({
-            'title': _("Interview Form : %s") % self.name,
+            'title': _("Interview Form: %s") % self.name,
         })
         self.write({'survey_id': survey.id})
 

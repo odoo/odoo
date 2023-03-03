@@ -433,7 +433,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
             'partner_id': self.event_speaker.id,
         })
         self.track_2 = self.env['event.track'].create({
-            'name': 'Our Last Day Together !',
+            'name': 'Our Last Day Together!',
             'event_id': self.event.id,
             'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
             'date': self.reference_now + timedelta(days=1),

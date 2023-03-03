@@ -16,7 +16,7 @@ Message-ID: {msg_id}
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-I would gladly answer to your mass mailing !
+I would gladly answer to your mass mailing!
 
 --
 Your Dear Customer
@@ -31,7 +31,7 @@ Content-Transfer-Encoding: quoted-printable
  </head>=20
  <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
 
-  <p>I would gladly answer to your mass mailing !</p>
+  <p>I would gladly answer to your mass mailing!</p>
 
   <p>--<br/>
      Your Dear Customer

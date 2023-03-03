@@ -75,7 +75,7 @@ class WebsiteVisitor(models.Model):
     create_date = fields.Datetime('First Connection', readonly=True)
     last_connection_datetime = fields.Datetime('Last Connection', default=fields.Datetime.now, help="Last page view date", readonly=True)
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
-    is_connected = fields.Boolean('Is connected ?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
+    is_connected = fields.Boolean('Is connected?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
 
     _sql_constraints = [
         ('access_token_unique', 'unique(access_token)', 'Access token should be unique.'),

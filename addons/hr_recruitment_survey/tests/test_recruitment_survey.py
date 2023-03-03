@@ -31,7 +31,7 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
             'partner_name': 'Jane Doe',
             'email_from': 'customer@example.com',
             'department_id': cls.department_admins.id,
-            'description': 'A nice Sys Admin job offer !',
+            'description': 'A nice Sys Admin job offer!',
             'job_id': cls.job.id,
         })
 

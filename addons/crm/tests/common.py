@@ -37,7 +37,7 @@ Content-Transfer-Encoding: 8bit
 
 This is an example email. All sensitive content has been stripped out.
 
-ALL GLORY TO THE HYPNOTOAD !
+ALL GLORY TO THE HYPNOTOAD!
 
 Cheers,
 

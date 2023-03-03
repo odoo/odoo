@@ -267,7 +267,7 @@ class CrmLead(models.Model):
         self = self.sudo()
         if not (values['contact_name'] and values['description'] and values['title']):
             return {
-                'errors': _('All fields are required !')
+                'errors': _('All fields are required!')
             }
         tag_own = self.env.ref('website_crm_partner_assign.tag_portal_lead_own_opp', False)
         values = {

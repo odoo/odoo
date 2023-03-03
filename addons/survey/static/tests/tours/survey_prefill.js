@@ -8,23 +8,23 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
     url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae',
     steps: [{      // Page-1
         trigger: 'button.btn.btn-primary.btn-lg:contains("Start Survey")',
-    }, { // Question: Where do you live ?
-        trigger: 'div.js_question-wrapper:contains("Where do you live ?") input',
+    }, { // Question: Where do you live?
+        trigger: 'div.js_question-wrapper:contains("Where do you live?") input',
         run: 'text Grand-Rosiere',
-    }, { // Question: When is your date of birth ?
-        trigger: 'div.js_question-wrapper:contains("When is your date of birth ?") input',
+    }, { // Question: When is your date of birth?
+        trigger: 'div.js_question-wrapper:contains("When is your date of birth?") input',
         run: 'text 05/05/1980',
-    }, { // Question: How frequently do you buy products online ?
-        trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online ?") label:contains("Once a week")',
-    }, { // Question: How many times did you order products on our website ?
-        trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website ?") input',
+    }, { // Question: How frequently do you buy products online?
+        trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online?") label:contains("Once a week")',
+    }, { // Question: How many times did you order products on our website?
+        trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website?") input',
         run: 'text 42',
     }, {
         content: 'Click on Next Page',
         trigger: 'button[value="next"]',
     },
     // Page-2
-    { // Question: Which of the following words would you use to describe our products ?
+    { // Question: Which of the following words would you use to describe our products?
         content: 'Answer Which of the following words would you use to describe our products (High Quality)',
         trigger: 'div.js_question-wrapper:contains("Which of the following words would you use to describe our products") label:contains("High quality")',
     }, {
@@ -54,9 +54,9 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
         content: 'Click on the previous page name in the breadcrumb',
         trigger: 'ol.breadcrumb a:first',
     }, {
-        trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website ?") input',
+        trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website?") input',
         run: function () {
-            var $inputQ3 = $('div.js_question-wrapper:contains("How many times did you order products on our website ?") input');
+            var $inputQ3 = $('div.js_question-wrapper:contains("How many times did you order products on our website?") input');
             if ($inputQ3.val() === '42.0') {
                 $('.o_survey_title').addClass('prefilled');
             }
@@ -65,22 +65,22 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
         trigger: '.o_survey_title.prefilled',
         run: function () {
             // check that all the answers are prefilled in Page 1
-            var $inputQ1 = $('div.js_question-wrapper:contains("Where do you live ?") input');
+            var $inputQ1 = $('div.js_question-wrapper:contains("Where do you live?") input');
             if ($inputQ1.val() !== 'Grand-Rosiere') {
                 return;
             }
 
-            var $inputQ2 = $('div.js_question-wrapper:contains("When is your date of birth ?") input');
+            var $inputQ2 = $('div.js_question-wrapper:contains("When is your date of birth?") input');
             if ($inputQ2.val() !== '05/05/1980') {
                 return;
             }
 
-            var $inputQ3 = $('div.js_question-wrapper:contains("How frequently do you buy products online ?") label:contains("Once a week") input');
+            var $inputQ3 = $('div.js_question-wrapper:contains("How frequently do you buy products online?") label:contains("Once a week") input');
             if (!$inputQ3.is(':checked')) {
                 return;
             }
 
-            var $inputQ4 = $('div.js_question-wrapper:contains("How many times did you order products on our website ?") input');
+            var $inputQ4 = $('div.js_question-wrapper:contains("How many times did you order products on our website?") input');
             if ($inputQ4.val() !== '42.0') {
                 return;
             }

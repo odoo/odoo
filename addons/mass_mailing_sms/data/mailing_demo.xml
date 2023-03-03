@@ -10,7 +10,7 @@
         <field name="campaign_id" ref="utm_campaign_0"/>
         <field name="mailing_model_id" ref="base.model_res_partner"/>
         <field name="mailing_domain" eval="[('parent_id', '=', ref('base.res_partner_4'))]"/>
-        <field name="body_plaintext">This week-end, incredible promotion for XMas ! See http://sms.example.com !</field>
+        <field name="body_plaintext">This week-end, incredible promotion for XMas! See http://sms.example.com!</field>
     </record>
     <!-- Generate link tracker information from it -->
     <function model="mailing.mailing" name="convert_links" eval="[ref('mass_mailing_sms.mailing_sms_0')]"/>
@@ -134,7 +134,7 @@
         <field name="source_id" ref="mailing_sms_0_utm_source"/>
         <field name="mailing_model_id" ref="mass_mailing.model_mailing_list"/>
         <field name="contact_list_ids" eval="[(5, 0), (4, ref('mass_mailing_sms.mailing_list_sms_0'))]"/>
-        <field name="body_plaintext">Extra promotion for you !</field>
+        <field name="body_plaintext">Extra promotion for you!</field>
     </record>
     <!-- Simulate traces -->
     <record id="mailing_sms_1_trace_0" model="mailing.trace">

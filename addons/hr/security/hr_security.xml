@@ -6,7 +6,7 @@
     </record>
 
     <record id="group_hr_user" model="res.groups">
-        <field name="name">Officer : Manage all employees</field>
+        <field name="name">Officer: Manage all employees</field>
         <field name="category_id" ref="base.module_category_human_resources_employees"/>
         <field name="implied_ids" eval="[(6, 0, [ref('base.group_private_addresses'), ref('base.group_user')])]"/>
         <field name="comment">The user will be able to approve document created by employees.</field>

@@ -60,7 +60,7 @@ export class Attachment extends Component {
 
     remove() {
         this.dialogs.add(ConfirmationDialog, {
-            body: this.env._t("Are you sure you want to delete this file ?"),
+            body: this.env._t("Are you sure you want to delete this file?"),
             confirm: async () => {
                 const prevented = await this.rpc('/web_editor/attachment/remove', {
                     ids: [this.props.id],

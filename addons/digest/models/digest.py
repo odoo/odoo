@@ -327,7 +327,7 @@ class Digest(models.Model):
             )
         elif self.periodicity == 'daily' and user.has_group('base.group_erp_manager'):
             preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>') % (
-                _('Prefer a broader overview ?'),
+                _('Prefer a broader overview?'),
                 f'/digest/{self.id:d}/set_periodicity?periodicity=weekly',
                 _('Switch to weekly Digests')
             ))

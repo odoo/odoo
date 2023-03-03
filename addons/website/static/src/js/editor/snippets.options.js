@@ -1642,7 +1642,7 @@ options.registry.company_data = options.Class.extend({
         var self = this;
         var proto = options.registry.company_data.prototype;
 
-        Dialog.confirm(this, _t("Do you want to edit the company data ?"), {
+        Dialog.confirm(this, _t("Do you want to edit the company data?"), {
             confirm_callback: function () {
                 self.trigger_up('request_save', {
                     reload: false,

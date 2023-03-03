@@ -363,7 +363,7 @@ class Module(models.Model):
 
     def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:
-            raise UserError(_('Recursion error in modules dependencies !'))
+            raise UserError(_('Recursion error in modules dependencies!'))
 
         # whether some modules are installed with demo data
         demo = False
@@ -839,7 +839,7 @@ class Module(models.Model):
     def _check(self):
         for module in self:
             if not module.description_html:
-                _logger.warning('module %s: description is empty !', module.name)
+                _logger.warning('module %s: description is empty!', module.name)
 
     def _get(self, name):
         """ Return the (sudoed) `ir.module.module` record with the given name.

@@ -55,7 +55,7 @@
                 </span>
                 <br/>
                 <span t-if="is_event_user">Attendees will be able to join to meet <b t-out="sponsor.partner_name"/> .</span>
-                <span t-else="">Join us there to meet <b t-out="sponsor.partner_name"/> !</span>
+                <span t-else="">Join us there to meet <b t-out="sponsor.partner_name"/>!</span>
             </div>
         </t>
         <!-- SPONSOR JITSI + CLOSED/FULL ALERTS -->
@@ -69,7 +69,7 @@
                         -
                         <t t-out="sponsor.hour_to" t-options="{'widget': 'time'}"/>
                     </strong> (<span t-out="sponsor.event_date_tz"/>)
-                    to meet them !
+                    to meet them!
                 </div>
             </t>
             <t t-elif="sponsor.room_is_full">

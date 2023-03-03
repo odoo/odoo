@@ -20,8 +20,8 @@
             <form string="Working Time">
                 <field name="two_weeks_calendar" invisible="1"/>
                 <header>
-                    <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"/>
-                    <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar ? All entries will be lost"/>
+                    <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar? All entries will be lost"/>
+                    <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar? All entries will be lost"/>
                 </header>
                 <sheet string="Working Time">
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

@@ -13316,5 +13316,4 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(['danger:Please click on the "save" button first']);
         }
     );
-
 });

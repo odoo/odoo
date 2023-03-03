@@ -19,5 +19,5 @@ class EmployeeCategory(models.Model):
     employee_ids = fields.Many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', string='Employees')
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists!"),
     ]

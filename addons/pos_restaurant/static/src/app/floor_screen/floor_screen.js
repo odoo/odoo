@@ -329,7 +329,7 @@ export class FloorScreen extends Component {
         }
         const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
             startingValue: selectedTable.name,
-            title: this.env._t("Table Name ?"),
+            title: this.env._t("Table Name?"),
         });
         if (!confirmed) {
             return;
@@ -347,7 +347,7 @@ export class FloorScreen extends Component {
         const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: selectedTable.seats,
             cheap: true,
-            title: this.env._t("Number of Seats ?"),
+            title: this.env._t("Number of Seats?"),
             isInputSelected: true,
         });
         if (!confirmed) {
@@ -384,7 +384,7 @@ export class FloorScreen extends Component {
             return;
         }
         const { confirmed } = await this.popup.add(ConfirmPopup, {
-            title: this.env._t("Are you sure ?"),
+            title: this.env._t("Are you sure?"),
             body: this.env._t("Removing a table cannot be undone"),
         });
         if (!confirmed) {

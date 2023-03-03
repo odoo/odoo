@@ -107,7 +107,7 @@ class AccountAccount(models.Model):
     related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount')
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
+        ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company!')
     ]
 
     non_trade = fields.Boolean(default=False,

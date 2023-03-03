@@ -17,5 +17,5 @@ class Tag(models.Model):
     color = fields.Integer('Color', default=_get_default_color)
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name)', "Tag name already exists!"),
     ]

@@ -244,7 +244,7 @@ class IrMailServer(models.Model):
                 # let UserErrors (messages) bubble up
                 raise e
             except (UnicodeError, idna.core.InvalidCodepoint) as e:
-                raise UserError(_("Invalid server name !\n %s", ustr(e)))
+                raise UserError(_("Invalid server name!\n %s", ustr(e)))
             except (gaierror, timeout) as e:
                 raise UserError(_("No response received. Check server address and port number.\n %s", ustr(e)))
             except smtplib.SMTPServerDisconnected as e:

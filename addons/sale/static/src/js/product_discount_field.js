@@ -31,7 +31,7 @@ export class ProductDiscountField extends FloatField {
         const isFirstOrderLine = this.props.record.data.id === orderLines[0].data.id;
         if (isFirstOrderLine && sameValue(orderLines)) {
             this.dialogService.add(ConfirmationDialog, {
-                body: _lt("Do you want to apply this value to all lines ?"),
+                body: _lt("Do you want to apply this value to all lines?"),
                 confirm: () => {
                     const commands = orderLines.slice(1).map((line) => {
                         return {

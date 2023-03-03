@@ -419,7 +419,7 @@ class CurrencyRate(models.Model):
                         'title': _("Warning for %s", self.currency_id.name),
                         'message': _(
                             "The new rate is quite far from the previous rate.\n"
-                            "Incorrect currency rates may cause critical problems, make sure the rate is correct !"
+                            "Incorrect currency rates may cause critical problems, make sure the rate is correct!"
                         )
                     }
                 }

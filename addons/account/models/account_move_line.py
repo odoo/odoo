@@ -399,7 +399,7 @@ class AccountMoveLine(models.Model):
         (
             "check_credit_debit",
             "CHECK(display_type IN ('line_section', 'line_note') OR credit * debit=0)",
-            "Wrong credit or debit value in accounting entry !"
+            "Wrong credit or debit value in accounting entry!"
         ),
         (
             "check_amount_currency_balance_sign",

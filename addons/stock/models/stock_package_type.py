@@ -28,7 +28,7 @@ class PackageType(models.Model):
     storage_category_capacity_ids = fields.One2many('stock.storage.category.capacity', 'package_type_id', 'Storage Category Capacity', copy=True)
 
     _sql_constraints = [
-        ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one package type !"),
+        ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one package type!"),
         ('positive_height', 'CHECK(height>=0.0)', 'Height must be positive'),
         ('positive_width', 'CHECK(width>=0.0)', 'Width must be positive'),
         ('positive_length', 'CHECK(packaging_length>=0.0)', 'Length must be positive'),

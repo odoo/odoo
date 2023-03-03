@@ -400,7 +400,7 @@ form: module.record_id""" % (xml_id,)
             if f_search:
                 idref2 = _get_idref(self, env, f_model, self.idref)
                 q = safe_eval(f_search, idref2)
-                assert f_model, 'Define an attribute model="..." in your .XML file !'
+                assert f_model, 'Define an attribute model="..." in your .XML file!'
                 # browse the objects searched
                 s = env[f_model].search(q)
                 # column definitions of the "local" object
@@ -660,7 +660,7 @@ def convert_xml_import(env, module, xmlfile, idref=None, mode='init', noupdate=F
     try:
         relaxng.assert_(doc)
     except Exception:
-        _logger.exception("The XML file '%s' does not fit the required schema !", xmlfile.name)
+        _logger.exception("The XML file '%s' does not fit the required schema!", xmlfile.name)
         if jingtrang:
             p = subprocess.run(['pyjing', schema, xmlfile.name], stdout=subprocess.PIPE)
             _logger.warning(p.stdout.decode())
