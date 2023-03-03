@@ -50,7 +50,7 @@
                                 <field name="tracking" invisible="1"/>
                                 <label for="scrap_qty"/>
                                 <div class="o_row">
-                                    <field name="scrap_qty" attrs="{'readonly': [('tracking', '=', 'serial')]}"/>
+                                    <field name="scrap_qty" attrs="{'readonly': ['|',('state', '=', 'done'),('tracking', '=', 'serial')]}"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="product_uom_id" attrs="{'readonly': [('tracking', '=', 'serial')]}" groups="uom.group_uom" force_save="1"/>
                                 </div>
