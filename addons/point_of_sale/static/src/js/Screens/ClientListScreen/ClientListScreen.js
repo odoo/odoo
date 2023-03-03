@@ -50,8 +50,11 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             };
             this.updateClientList = debounce(this.updateClientList, 70);
         }
-
+        
         // Lifecycle hooks
+        async willStart(){
+            await this.env.pos.load_new_partners().catch(r=>console.log("Partners where not updated",r));
+        }
         back() {
             if(this.state.detailIsShown) {
                 this.state.detailIsShown = false;

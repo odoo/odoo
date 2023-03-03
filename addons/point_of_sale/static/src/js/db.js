@@ -241,7 +241,7 @@ var PosDB = core.Class.extend({
     },
     add_partners: function(partners){
         var updated_count = 0;
-        var new_write_date = '';
+        var new_write_date = new Date().toISOString().replace(/(.*T.*)(.*Z.*)$/, '');
         var partner;
         for(var i = 0, len = partners.length; i < len; i++){
             partner = partners[i];
@@ -252,6 +252,7 @@ var PosDB = core.Class.extend({
                     this.partner_by_id[partner.id] &&
                     new Date(local_partner_date).getTime() + 1000 >=
                     new Date(dist_partner_date).getTime() ) {
+                //This is working as intended, above comment should be erased as it leaves doubt to future readers, 
                 // FIXME: The write_date is stored with milisec precision in the database
                 // but the dates we get back are only precise to the second. This means when
                 // you read partners modified strictly after time X, you get back partners that were
