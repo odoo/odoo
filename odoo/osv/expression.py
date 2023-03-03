@@ -120,12 +120,12 @@ import traceback
 import warnings
 from datetime import date, datetime, time
 
-from psycopg2.sql import Composable, SQL
+from psycopg2.sql import SQL, Composable
 
 import odoo.modules
-from ..models import BaseModel
-from odoo.tools import pycompat, Query, _generate_table_alias, sql
+from odoo.tools import Query, _generate_table_alias, pycompat, sql
 
+from ..models import BaseModel
 
 # Domain operators.
 NOT_OPERATOR = '!'
@@ -329,6 +329,40 @@ def distribute_not(domain):
 
     return result
 
+def remove_domain_leaf(domain, fields_to_remove, _normalized_domain=False):
+    """
+    each operator is a logic gate:
+    - '&' and '|' take two entries and can be ignored if one of them (or the two of them) has to be removed
+    -'!' take one entry and can be ignored if this entry has to be removed
+    - _normalized_domain should not be used and is used to know if the function is called by the user or not
+    return domain, rest_domain -> rest_domain should be empty if the operation is finished
+    """
+    operator = ''
+    def _clean_result(result):
+        return result if _normalized_domain else result[0]
+
+    if len(domain) == 0:
+        return _clean_result(([], []))
+    if not _normalized_domain: #First call of the function
+        domain = normalize_domain(domain)
+        operator = domain[0] if len(domain) > 1 else False
+        domain = domain[1:] if len(domain) > 1 else domain
+    if not operator:
+        first_elem = domain[0]
+        if first_elem not in DOMAIN_OPERATORS: #End of a current leaf
+            result = ([], domain[1:]) if first_elem[0] in fields_to_remove else ([first_elem], domain[1:])
+            return _clean_result(result)
+        operator = first_elem
+        domain = domain[1:]
+
+    leaf_1, rest_domain = remove_domain_leaf(domain, fields_to_remove, _normalized_domain=True)
+    if operator == NOT_OPERATOR:
+        result = ([operator, *leaf_1], rest_domain) if leaf_1 else ([], rest_domain)
+        return _clean_result(result)
+    leaf_2, rest_domain = remove_domain_leaf(rest_domain, fields_to_remove, _normalized_domain=True)
+    if leaf_1 == [] or leaf_2 == []:
+        return _clean_result(((leaf_1 or leaf_2), rest_domain))
+    return  _clean_result(([operator, *leaf_1, *leaf_2], rest_domain))
 
 # --------------------------------------------------
 # Generic leaf manipulation
