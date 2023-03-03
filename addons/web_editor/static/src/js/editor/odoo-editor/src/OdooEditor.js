@@ -2738,6 +2738,9 @@ export class OdooEditor extends EventTarget {
                 return;
             }
         }
+        if (!this.isSelectionInEditable(sel)) {
+            return;
+        }
         const paragraphDropdownButton = this.toolbar.querySelector('#paragraphDropdownButton');
         if (paragraphDropdownButton) {
             for (const commandState of [
@@ -3614,15 +3617,11 @@ export class OdooEditor extends EventTarget {
                 this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
             }
         }
+        const isSelectionInEditable = this.isSelectionInEditable(selection);
         if (!appliedCustomSelection) {
-            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
+            this._updateToolbar(!selection.isCollapsed && isSelectionInEditable);
         }
-
-        if (
-            !this.editable.contains(selection.anchorNode) &&
-            !this.editable.contains(selection.focusNode)
-        ) {
-            // Do not affect selection outside of the editable.
+        if (!isSelectionInEditable) {
             return;
         }
         // When CTRL+A in the editor, sometimes the browser use the editable
