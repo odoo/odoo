@@ -38,12 +38,12 @@
                             <field name="picking_id" invisible="1"/>
                             <button class="oe_stat_button" name="action_get_stock_move_lines"
                                     type="object"
-                                    attrs="{'invisible':[('move_id','=',False)]}" icon="fa-exchange">
+                                    attrs="{'invisible':[('move_ids','=',False)]}" icon="fa-exchange">
                                     <div class="o_stat_info">
                                         <span class="o_stat_text">Product Moves</span>
                                     </div>
                             </button>
-                            <field name="move_id" invisible="1"/>
+                            <field name="move_ids" invisible="1"/>
                         </div>
                         <div class="oe_title">
                             <h1><field name="name" nolabel="1"/></h1>
