@@ -70,6 +70,7 @@
                                 <field name="date_done" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="should_replenish"/>
                             </group>
                         </group>
                     </sheet>
@@ -181,6 +182,7 @@
                             <field name="company_id" invisible="1"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"/>
                             <field name="scrap_location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}" />
+                            <field name="should_replenish"/>
                         </group>
                     </group>
                     <footer>

@@ -4,6 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
+from odoo.tools.misc import clean_context
 
 
 class StockScrap(models.Model):
@@ -52,6 +53,7 @@ class StockScrap(models.Model):
         ('done', 'Done')],
         string='Status', default="draft", readonly=True, tracking=True)
     date_done = fields.Datetime('Date', readonly=True)
+    should_replenish = fields.Boolean(string='Replenish Scrapped Quantities', states={'done': [('readonly', True)]})
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):
@@ -143,7 +145,22 @@ class StockScrap(models.Model):
             move.with_context(is_scrap=True)._action_done()
             scrap.write({'state': 'done'})
             scrap.date_done = fields.Datetime.now()
+            if scrap.should_replenish:
+                scrap.do_replenish()
         return True
+
+    def do_replenish(self):
+        self.ensure_one()
+        self.with_context(clean_context(self.env.context)).env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            self.product_id,
+            self.scrap_qty,
+            self.product_uom_id,
+            self.location_id,
+            self.name,
+            self.name,
+            self.company_id,
+            {}
+        )])
 
     def action_get_stock_picking(self):
         action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_all')
