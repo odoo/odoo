@@ -15,6 +15,10 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         return this._super(...arguments).then(function () {
+            // Remove me in master. Make sure position-relative is set on o_wevent_event_track_live
+            // in stable otherwise suggestion screen is relative to the window, not to the youtube
+            // frame, breaking screen display. Loading wheel would not be centered either.
+            self.$el.addClass('position-relative');
             self._setupYoutubePlayer();
         });
     },
