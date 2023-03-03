@@ -1896,12 +1896,7 @@ export function fillEmpty(el) {
         blockEl.appendChild(br);
         fillers.br = br;
     }
-    if (
-        !el.textContent.length &&
-        !isBlock(el) &&
-        el.nodeName !== 'BR' &&
-        !el.hasAttribute("data-oe-zws-empty-inline")
-    ) {
+    if (!isVisible(el) && !el.hasAttribute("data-oe-zws-empty-inline")) {
         // As soon as there is actual content in the node, the zero-width space
         // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
