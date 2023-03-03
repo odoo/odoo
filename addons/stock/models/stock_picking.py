@@ -947,7 +947,7 @@ class Picking(models.Model):
                             move_ids_without_package |= move
                     else:
                         move_ids_without_package |= move
-        return move_ids_without_package.filtered(lambda move: not move.scrap_ids)
+        return move_ids_without_package.filtered(lambda move: not move.scrap_id)
 
     def _check_move_lines_map_quant_package(self, package):
         return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package), 'reserved_qty')

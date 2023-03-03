@@ -4727,7 +4727,7 @@ class StockMove(TransactionCase):
         scrap = scrap_form.save()
         scrap.do_scrap()
         self.assertEqual(scrap.state, 'done')
-        move = scrap.move_id
+        move = scrap.move_ids[0]
         self.assertEqual(move.state, 'done')
         self.assertEqual(move.quantity_done, 1)
         self.assertEqual(move.scrapped, True)
@@ -4746,7 +4746,7 @@ class StockMove(TransactionCase):
         scrap.do_scrap()
         self.assertTrue(scrap.name.startswith('SP/'), 'Sequence should be Changed after do_scrap')
         self.assertEqual(scrap.state, 'done')
-        move = scrap.move_id
+        move = scrap.move_ids[0]
         self.assertEqual(move.state, 'done')
         self.assertEqual(move.quantity_done, 1)
         self.assertEqual(move.scrapped, True)
@@ -4818,7 +4818,7 @@ class StockMove(TransactionCase):
         self.assertEqual(len(picking.move_ids), 2)
         scrapped_move = picking.move_ids.filtered(lambda m: m.state == 'done')
         self.assertTrue(scrapped_move, 'No scrapped move created.')
-        self.assertEqual(scrapped_move.scrap_ids.ids, [scrap.id], 'Wrong scrap linked to the move.')
+        self.assertEqual(scrapped_move.scrap_id.id, scrap.id, 'Wrong scrap linked to the move.')
         self.assertEqual(scrap.scrap_qty, 5, 'Scrap quantity has been modified and is not correct anymore.')
 
         scrapped_move.quantity_done = 8

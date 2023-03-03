@@ -8,6 +8,9 @@
             <field name="owner_id" position="after">
                 <field name="workorder_id" invisible="1"/>
                 <field name="production_id" invisible="1"/>
+                <field name="product_is_kit" invisible="1"/>
+                <field name="product_template" invisible="1"/>
+                <field name="bom_id" attrs="{'invisible': [('product_is_kit', '=', False)], 'required': [('product_is_kit', '=', True)]}"/>
             </field>
         </field>
     </record>
@@ -19,6 +22,9 @@
             <field name="owner_id" position="after">
                 <field name="workorder_id" domain="[('production_id', '=', product_id)]" attrs="{'invisible': [('workorder_id', '=', False)]}"/>
                 <field name="production_id" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('production_id', '=', False)]}"/>
+                <field name="product_is_kit" invisible="1"/>
+                <field name="product_template" invisible="1"/>
+                <field name="bom_id" attrs="{'invisible': [('product_is_kit', '=', False)], 'required': [('product_is_kit', '=', True)]}"/>
             </field>
         </field>
     </record>
