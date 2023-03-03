@@ -15,7 +15,7 @@ assets.loadXML = function (xml, app) {
 
     // don't use require to apply the patch before the first template loading.
     odoo.ready('web.core').then(function () {
-        const core = odoo.__DEBUG__.services['web.core'];
+        const core = odoo.loader.modules.get("web.core");
         core.qweb.add_template(qwebTemplates);
     });
 }
