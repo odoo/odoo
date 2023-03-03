@@ -991,12 +991,12 @@ class AccountRoot(models.Model):
                    LEFT(code,2) AS name,
                    ASCII(code) AS parent_id,
                    company_id
-            FROM account_account WHERE code IS NOT NULL
+            FROM account_account WHERE code != ''
             UNION ALL
             SELECT DISTINCT ASCII(code) AS id,
                    LEFT(code,1) AS name,
                    NULL::int AS parent_id,
                    company_id
-            FROM account_account WHERE code IS NOT NULL
+            FROM account_account WHERE code != ''
             )''' % (self._table,)
         )
