@@ -53,12 +53,12 @@ export class FormRenderer extends Component {
         if (this.shouldAutoFocus) {
             const rootRef = useRef("compiled_view_root");
             useEffect(
-                (isVirtual, rootEl) => {
+                (isNew, rootEl) => {
                     if (!rootEl) {
                         return;
                     }
                     let elementToFocus;
-                    if (isVirtual) {
+                    if (isNew) {
                         const focusableSelectors = [
                             'input[type="text"]',
                             "textarea",
@@ -76,7 +76,7 @@ export class FormRenderer extends Component {
                         elementToFocus.focus();
                     }
                 },
-                () => [this.props.record.isVirtual, rootRef.el]
+                () => [this.props.record.isNew, rootRef.el]
             );
         }
     }

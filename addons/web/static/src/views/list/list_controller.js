@@ -211,7 +211,7 @@ export class ListController extends Component {
 
     onClickDiscard() {
         const editedRecord = this.model.root.editedRecord;
-        if (editedRecord.isVirtual) {
+        if (editedRecord.isNew) {
             this.model.root.removeRecord(editedRecord);
         } else {
             editedRecord.discard();

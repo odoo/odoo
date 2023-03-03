@@ -448,7 +448,7 @@ export class Record extends DataPoint {
 
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
 
-        this.canBeAbandoned = this.isVirtual;
+        this.canBeAbandoned = this.isNew;
     }
 
     // -------------------------------------------------------------------------
@@ -548,10 +548,6 @@ export class Record extends DataPoint {
     }
 
     get isNew() {
-        return this.isVirtual;
-    }
-
-    get isVirtual() {
         return !this.resId;
     }
 
@@ -682,7 +678,7 @@ export class Record extends DataPoint {
         }
         this._invalidFields.clear();
 
-        if (!this.isVirtual) {
+        if (!this.isNew) {
             this.switchMode("readonly");
         }
         this.model.notify();
@@ -847,7 +843,7 @@ export class Record extends DataPoint {
             }
         }
 
-        if (!(params.values || !this.isVirtual)) {
+        if (!(params.values || !this.isNew)) {
             const changes = params.changes || (await this._onChange());
             await this._load({ changes });
         } else {
@@ -1485,11 +1481,11 @@ export class Record extends DataPoint {
         }
         const changes = this.getChanges();
         const keys = Object.keys(changes);
-        const hasChanges = this.isVirtual || keys.length;
+        const hasChanges = this.isNew || keys.length;
         const shouldReload = hasChanges ? !options.noReload : false;
         const context = this.context;
 
-        if (this.isVirtual) {
+        if (this.isNew) {
             if (keys.length === 1 && keys[0] === "display_name") {
                 const [resId] = await this.model.orm.call(
                     this.resModel,
@@ -3074,7 +3070,7 @@ export class StaticList extends DataPoint {
         const ids = [];
         for (const recordId of recordIds) {
             const record = this._cache[recordId];
-            if (record.isVirtual) {
+            if (record.isNew) {
                 delete this._cache[recordId];
             }
             const id = record.resId || record.virtualId;
@@ -3094,7 +3090,7 @@ export class StaticList extends DataPoint {
 
     discard() {
         for (const record of Object.values(this._cache)) {
-            if (record.isVirtual) {
+            if (record.isNew) {
                 delete this._cache[record.id];
             } else {
                 record.discard();
@@ -3274,7 +3270,7 @@ export class StaticList extends DataPoint {
             if (this.currentIds) {
                 for (const resId of this.currentIds) {
                     const record = this._cache[this._mapping[resId]];
-                    if (record && record.isVirtual) {
+                    if (record && record.isNew) {
                         commands.push(x2ManyCommands.create(resId, record.data));
                     } else {
                         commands.push(x2ManyCommands.linkTo(resId));
