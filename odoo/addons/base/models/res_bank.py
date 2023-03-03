@@ -38,14 +38,14 @@ class Bank(models.Model):
         return result
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+    def _name_search_domain(self, name, args=None, operator='ilike'):
         args = args or []
         domain = []
         if name:
             domain = ['|', ('bic', '=ilike', name + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&'] + domain
-        return self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        return domain + args
 
     @api.onchange('country')
     def _onchange_country_id(self):

@@ -39,6 +39,11 @@ class TestVariantsSearch(ProductVariantsCommon):
         self.assertIn(self.product_template_shirt, search_value,
                       'Shirt should be found searching L')
 
+        filtered_search_value = search_value.filtered_domain(
+            [('attribute_line_ids', '=', 'L')]
+        )
+        self.assertEqual(filtered_search_value, search_value, 'filtered_domain should work with Attributes')
+
     def test_name_search(self):
         self.product_slip_template = self.env['product.template'].create({
             'name': 'Slip',
