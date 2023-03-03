@@ -43,7 +43,7 @@ export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
     const readonly = evalDomain(modifiers.readonly, record.evalContext);
     const inEdit = record.isInEdition;
 
-    let empty = !record.isVirtual;
+    let empty = !record.isNew;
     if ("isEmpty" in field) {
         empty = empty && field.isEmpty(record, fieldName);
     } else {

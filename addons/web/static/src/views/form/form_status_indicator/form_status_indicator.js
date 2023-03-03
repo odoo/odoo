@@ -20,7 +20,7 @@ export class FormStatusIndicator extends Component {
     }
 
     get indicatorMode() {
-        if (this.props.model.root.isVirtual) {
+        if (this.props.model.root.isNew) {
             return this.props.model.root.isValid ? "dirty" : "invalid";
         } else if (!this.props.model.root.isValid) {
             return "invalid";

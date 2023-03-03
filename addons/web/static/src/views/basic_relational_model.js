@@ -176,11 +176,6 @@ export class Record extends DataPoint {
     }
 
     get isNew() {
-        return this.model.__bm__.isNew(this.__bm_handle__);
-    }
-
-    get isVirtual() {
-        // FIXME: not sure about this virtual thing
         return !this.resId;
     }
 
@@ -596,13 +591,16 @@ export class Record extends DataPoint {
      * @returns {Promise<boolean>}
      */
     async save(options = {}) {
-        options = Object.assign({
-            stayInEdition: true,
-            noReload: false,
-            savePoint: false,
-            useSaveErrorDialog: false,
-            throwOnError: false,
-        }, options);
+        options = Object.assign(
+            {
+                stayInEdition: true,
+                noReload: false,
+                savePoint: false,
+                useSaveErrorDialog: false,
+                throwOnError: false,
+            },
+            options
+        );
         const shouldSwitchToReadonly = !options.stayInEdition && this.isInEdition;
         let resolveSavePromise;
         this._savePromise = new Promise((r) => {
