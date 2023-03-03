@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from lxml.builder import E
 
-from odoo import api, models, tools, _
+from odoo import api, models, tools, _, Command
 
 
 class BaseModel(models.AbstractModel):
@@ -246,3 +247,108 @@ class BaseModel(models.AbstractModel):
         return {
             'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
         }
+
+    def _get_safe_create_data(self, vals_list, is_remove_missing_ref=False):
+        """ Return cleaned create vals_list to avoid missing reference, creation of new record, deletion and update by:
+
+        - Removing set to any non-existing id for relations many2one and many2many if is_remove_missing_ref
+        - Removing set to non-existing fields
+        - Removing set to one2many relation (which will update the other side of the relation)
+        - Removing set that create sub-record
+        - Removing any command != LINK or SET (i.e. skipping CREATE, UPDATE, DELETE, UNLINK, CLEAR)
+
+        :param list|dict vals_list: value to be cleaned
+        :param bool is_remove_missing_ref: whether to remove missing reference or not (see above). If set to False, no
+        DB query is done and the method is fast.
+        """
+        if isinstance(vals_list, dict):
+            vals_list = [vals_list]
+
+        errors = defaultdict(list)
+
+        def filter_existing_ids(f_name, ids):
+            """ Filter existing ids if is_remove_missing_ref, otherwise return the ids as is.
+
+             :param str f_name: field name of this record
+             :param list ids: id of the target of the field relation
+             :return: If is_remove_missing_ref, returns only existing ids of the relation defined by f_name
+             (being active or not) otherwise returns the ids as is.
+             Note: Null (False, None, ...) are considered as existing ids.
+             """
+            if not is_remove_missing_ref:
+                return ids
+
+            def not_null(c_id):
+                """Check if the id is not null in the DB senses"""
+                return c_id is not False and c_id is not None  # touchy because False is an int and False == 0!
+
+            existing_ids_set = set(self.env[self._fields[f_name].comodel_name]
+                                   .browse(filter(not_null, ids)).exists().mapped('id'))
+            filtered_existing_ids = [c_id for c_id in ids if c_id in existing_ids_set or not not_null(c_id)]
+            if filtered_existing_ids != ids:
+                missing_references = set(ids) - set(filtered_existing_ids)
+                errors[f_name].append(
+                    ('MISSING_REF', _('missing reference (%s)', ','.join(str(r) for r in missing_references))))
+            return filtered_existing_ids
+
+        new_vals_list = []
+        for vals in vals_list:
+            vals_filtered = dict()
+            for field_name, value in vals.items():
+                new_value = None
+                field = self._fields.get(field_name)
+                if not field:
+                    errors[field_name].append(('MISSING_FIELD', _('missing field')))
+                    continue
+                if field.type == 'one2many':
+                    errors[field_name].append(('NOT_ALLOWED_ONE2MANY', _('One2Many field not allowed')))
+                    continue
+
+                # Inspired from fields.convert_to_cache
+                if isinstance(value, (list, tuple)):
+                    # Value is a list/tuple of commands, dicts or record ids
+                    new_list_values = []
+                    if all(map(lambda v: isinstance(v, int), value)):
+                        # special case, all int -> do in one search
+                        existing_ids = filter_existing_ids(field_name, ids=value)
+                        if existing_ids:
+                            new_list_values.extend(existing_ids)
+                    else:
+                        for command in value:
+                            if isinstance(command, (tuple, list)):
+                                # Only modify SET AND LINK command, keep other as-is
+                                if command[0] == Command.SET:
+                                    existing_ids = filter_existing_ids(field_name, ids=command[2])
+                                    if existing_ids:
+                                        new_list_values.append((command[0], command[1], existing_ids))
+                                elif command[0] == Command.LINK:
+                                    existing_ids = filter_existing_ids(field_name, ids=[command[1]])
+                                    if existing_ids:
+                                        new_list_values.append((command[0], existing_ids[0], command[2]))
+                                else:
+                                    # Skip other commands (CREATE, UPDATE, DELETE, UNLINK, CLEAR)
+                                    command_name = Command(command[0]).name
+                                    errors[field_name].append(
+                                        (f'NOT_ALLOWED_{command_name}', _('command not allowed: %s', command_name)))
+                            elif isinstance(command, dict):
+                                errors[field_name].append(
+                                    ('NOT_ALLOWED_CREATE', _('sub record creation not allowed')))
+                            else:  # an id
+                                existing_ids = filter_existing_ids(field_name, ids=[command])
+                                if existing_ids:
+                                    new_list_values.append(existing_ids[0])
+                    if new_list_values:
+                        new_value = new_list_values
+                elif isinstance(value, dict):  # Keep creation
+                    errors[field_name].append(
+                        ('NOT_ALLOWED_CREATE', _('sub record creation not allowed')))
+                elif field.type in ('many2one', 'many2many'):
+                    existing_ids = filter_existing_ids(field_name, [value])
+                    if existing_ids:
+                        new_value = existing_ids[0]
+                else:
+                    new_value = value
+                if new_value is not None:
+                    vals_filtered[field_name] = new_value
+            new_vals_list.append(vals_filtered)
+        return new_vals_list, errors

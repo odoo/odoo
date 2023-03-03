@@ -50,6 +50,9 @@ class Alias(models.Model):
     alias_defaults = fields.Text('Default Values', required=True, default='{}',
                                  help="A Python dictionary that will be evaluated to provide "
                                       "default values when creating new records for this alias.")
+    alias_defaults_error = fields.Text('Default Values Error',
+                                       compute='_compute_alias_defaults_error', compute_sudo=True,
+                                       help="Alias Defaults errors like dangling references, invalid fields, ...")
     alias_force_thread_id = fields.Integer(
         'Record Thread ID',
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
@@ -93,17 +96,51 @@ class Alias(models.Model):
                     alias.alias_name,
                 ))
 
+    def _parse_alias_defaults(self):
+        """Parse alias defaults and returns error if any.
+
+        :return tuple(dict, str): (parsed alias_defaults or None if an error has occurred, error)"""
+        self.ensure_one()
+
+        try:
+            return dict(ast.literal_eval(self.alias_defaults)), None
+        except Exception as exception:  # ast.literal_eval can raise a lot of exception: ValueError, TypeError, ...
+            error = _(
+                'Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}".')
+            if isinstance(exception, SyntaxError):
+                error_details = _('Syntax error at line %s, column %s: %s (in %s).',
+                                  exception.lineno, exception.offset, exception.msg, exception.text)
+                error = f"{error} {error_details}"
+            return None, error
+
     @api.depends('alias_name')
     def _compute_alias_domain(self):
         self.alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
 
+    @api.depends('alias_defaults')
+    def _compute_alias_defaults_error(self):
+        for alias in self:
+            alias_defaults_parsed, parse_error = alias._parse_alias_defaults()
+            if parse_error:
+                alias.alias_defaults_error = parse_error
+                continue
+            try:
+                errors = self.env[alias.alias_model_id.model]._get_safe_create_data(alias_defaults_parsed,
+                                                                                    is_remove_missing_ref=True)[1]
+                if errors:
+                    alias.alias_defaults_error = ', '.join(
+                        f'{field}: {error}' for field in sorted(errors.keys()) for ignore_code, error in errors[field])
+                else:
+                    alias.alias_defaults_error = False
+            except Exception as e:
+                alias.alias_defaults_error = _('Unexpected error: %s', str(e))
+
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
         for alias in self:
-            try:
-                dict(ast.literal_eval(alias.alias_defaults))
-            except Exception:
-                raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
+            _, parse_error = alias._parse_alias_defaults()
+            if parse_error:
+                raise ValidationError(parse_error)
 
     @api.model_create_multi
     def create(self, vals_list):

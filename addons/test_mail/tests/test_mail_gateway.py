@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import socket
 
 from unittest.mock import DEFAULT
 from unittest.mock import patch
 
-from odoo import exceptions
+from odoo import exceptions, Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
@@ -1517,3 +1518,275 @@ class TestMailThreadCC(TestMailCommon):
                                 cc='cc2 <cc2@example.com>, cc3@example.com', target_model='mail.test.cc')
         cc = email_split_and_format(record.email_cc)
         self.assertEqual(sorted(cc), ['"cc2" <cc2@example.com>', 'cc3@example.com'], 'new cc should have been added on record (unique)')
+
+
+class TestMailGatewayDefensiveAliasCommon(TestMailCommon):
+    """Common initialization for testing the validation/autocorrection of alias defaults"""
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailGatewayDefensiveAliasCommon, cls).setUpClass()
+        cls.Tag = cls.env['mail.test.document.tag']
+        cls.Folder = cls.env['mail.test.document.folder']
+        cls.Document = cls.env['mail.test.document']
+        cls.target_model = 'mail.test.document'
+        cls.test_model = cls.env['ir.model']._get(cls.target_model)
+        cls.email_from = '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>'
+        cls.current_test_desc = None
+        # Document non-relational field with some valid value
+        cls.basic_fields = {
+            'type': 'empty',
+            'email_from': 'durant.dupont@example.com',
+            'is_todo': True
+        }
+
+        # inbox@.. will cause the creation of new mail.test.document
+        cls.alias = cls.env['mail.alias'].create({
+            'alias_name': 'inbox',
+            'alias_user_id': False,
+            'alias_model_id': cls.test_model.id,
+            'alias_contact': 'everyone'})
+
+    @staticmethod
+    def _cmd_compat(command_tuple):
+        """Make a command tuple to be serialized in the correct form with repr function."""
+        cmd, arg1, arg2 = command_tuple
+        return int(cmd), arg1, arg2
+
+    def _assert_alias_default_error(self, expected_field_errors, force_recompute=False):
+        """Check alias default errors.
+
+        Note that we cannot check directly the details of the error in the field mail.alias.alias_defaults_error, so we
+        check them indirectly by calling the method _get_safe_create_data on model used for computing that field.
+
+        :param dict expected_field_errors: expected error code set per field
+        :param bool force_recompute: whether to force the recompute of alias_defaults_error. This is useful when
+        alias_default has not changed but the record that it references has been added or deleted.
+        """
+        if force_recompute:
+            self.alias.alias_defaults = self.alias.alias_defaults + ' '
+
+        full_descr = f'{self.current_test_desc} (alias_default: {self.alias.alias_defaults})'
+        if expected_field_errors:
+            self.assertTrue(self.alias.alias_defaults_error, f'{full_descr}: error expected')
+        else:
+            self.assertFalse(self.alias.alias_defaults_error, f'{full_descr}: no error expected')
+
+        _, error_lst_by_field = self.env[self.alias.alias_model_id.model]._get_safe_create_data(
+            ast.literal_eval(self.alias.alias_defaults),
+            is_remove_missing_ref=True)
+        error_codes_set_by_field = {field: {error_code for error_code, _ in errors}
+                                    for field, errors in error_lst_by_field.items()}
+        for field, error_codes in expected_field_errors.items():
+            self.assertTrue(field in error_codes_set_by_field, f'{full_descr}: missing error {field}-{error_codes}')
+            self.assertEqual(error_codes_set_by_field[field], error_codes,
+                             f'{full_descr}: missmatch errors for field {field}')
+
+
+@tagged('mail_gateway')
+class TestMailGatewayDefensiveAliasAutoCorrection(TestMailGatewayDefensiveAliasCommon):
+    """Test the autocorrection and validation of alias defaults that would otherwise prevent the record creation.
+
+    Test that
+    - dangling reference in alias default doesn't prevent the record creation (by ignoring them)
+    - dangling reference in alias default are reported to the user (through alias_defaults_error, the UI is not tested
+    here)
+
+    Note that other validations are tested in a separate test class as those errors are not detected during the creation
+    of the record, they are only reported to the user.
+    """
+
+    def _assert_creation(self, expected):
+        """Process model instance creation based on an incoming message and asserts expected values.
+
+        :param dict expected: the value of the dict represents the expected value for the field name given by the
+        corresponding key. None value can be used to force the test that the field is False.
+        """
+        full_descr = f'{self.current_test_desc} (alias_default: {self.alias.alias_defaults})'
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'inbox@test.com',
+                                         target_model=self.target_model)
+
+        self.assertEqual(len(record), 1)
+        for key, value in expected.items():
+            if value is None:
+                self.assertFalse(record[key], full_descr)
+            else:
+                self.assertEqual(record[key], value, full_descr)
+        record.unlink()
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models', 'odoo.sql_db')
+    def test_skip_set_with_non_existing_references(self):
+        """Test that the autocorrection of alias defaults removes reference to non-existing records."""
+        for alias_defaults_fct in [
+            lambda folder, t_inbox, t_todo: {'folder_id': folder, 'tag_ids': [t_inbox, t_todo]},
+            lambda folder, t_inbox, t_todo: {
+                'folder_id': folder,
+                'tag_ids': [self._cmd_compat(Command.set([t_inbox, t_todo]))]
+            },
+            lambda folder, t_inbox, t_todo: {
+                'folder_id': folder,
+                'tag_ids': [self._cmd_compat(Command.link(t_inbox)), self._cmd_compat(Command.link(t_todo))]
+            },
+            lambda folder, t_inbox, t_todo: {
+                'folder_id': folder,
+                'tag_ids': [self._cmd_compat(Command.set([t_inbox])), self._cmd_compat(Command.link(t_todo))]
+            },
+        ]:
+            tag_inbox = self.Tag.create({'name': 'inbox'})
+            tag_todo = self.Tag.create({'name': 'todo'})
+            folder_inbox = self.Folder.create({'name': 'inbox'})
+            self.alias.alias_defaults = repr({
+                **alias_defaults_fct(folder_inbox.id, tag_inbox.id, tag_todo.id),
+                **self.basic_fields,
+            })
+
+            self.current_test_desc = 'Common use-case: all related data exists and are not archived'
+            self._assert_creation({**self.basic_fields, 'folder_id': folder_inbox, 'tag_ids': tag_inbox + tag_todo})
+            self._assert_alias_default_error({})
+
+            self.current_test_desc = 'Some related data are archived (archived: folder, tag_inbox)'
+            folder_inbox.action_archive()
+            tag_inbox.action_archive()
+            # Unlike command, the id is set even if the record is archived
+            self._assert_creation({**self.basic_fields, 'folder_id': folder_inbox, 'tag_ids': tag_todo})
+            self._assert_alias_default_error({}, force_recompute=True)
+
+            self.current_test_desc = "Some related data doesn't exist, some are archived, some exists " \
+                                     "(archived: tag_inbox, del: folder)"
+            folder_inbox.unlink()
+            self._assert_creation({**self.basic_fields, 'folder_id': None, 'tag_ids': tag_todo})
+            self._assert_alias_default_error({'folder_id': {'MISSING_REF'}}, force_recompute=True)
+
+            self.current_test_desc = "Some related data doesn't exist, Many2Many count more than 1 element " \
+                                     "(deleted: folder)"
+            tag_inbox.action_unarchive()
+            self._assert_creation({**self.basic_fields, 'folder_id': None, 'tag_ids': tag_todo + tag_inbox})
+            self._assert_alias_default_error({'folder_id': {'MISSING_REF'}}, force_recompute=True)
+
+            self.current_test_desc = "All related data doesn't exit, some are archived " \
+                                     "(deleted: folder, tag_todo; archived: tag_inbox)"
+            tag_inbox.action_archive()
+            tag_todo.unlink()
+            self._assert_creation({**self.basic_fields, 'folder_id': None, 'tag_ids': None})
+            self._assert_alias_default_error({'folder_id': {'MISSING_REF'}, 'tag_ids': {'MISSING_REF'}},
+                                             force_recompute=True)
+
+            self.current_test_desc = "All related data doesn't exist"
+            tag_inbox.unlink()
+            self._assert_creation({**self.basic_fields, 'folder_id': None, 'tag_ids': None})
+            self._assert_alias_default_error({'folder_id': {'MISSING_REF'}, 'tag_ids': {'MISSING_REF'}},
+                                             force_recompute=True)
+
+
+@tagged('mail_gateway')
+class TestMailGatewayDefensiveAliasErrorReport(TestMailGatewayDefensiveAliasCommon):
+    """Test of the additional validation reported to the user but not systematically applied.
+
+    The autocorrections are only applied when the creation of the record fails. The reported errors tested here doesn't
+    prevent the creation of the record so no autocorrection will happen except if the creation fails for another reason.
+    But all those errors will be reported to the user, so we test here that they are reported and if the creation fails
+    for another reason, they will be autocorrected (i.e. parts that are not valid will be ignored).
+    """
+    def _assert_alias_default_cleaned(self, expected):
+        """Check cleaned alias default.
+
+        :param dict expected: expected alias default cleaned
+        """
+        safe_date, _ = self.env[self.alias.alias_model_id.model]._get_safe_create_data(
+            ast.literal_eval(self.alias.alias_defaults),
+            is_remove_missing_ref=True)
+        self.assertEqual([expected], safe_date,
+                         f'{self.current_test_desc} (alias_default: {self.alias.alias_defaults}): incorrect cleanup')
+
+    def test_skip_of_sub_record_creation(self):
+        """Test that the autocorrection of alias defaults removes any creation of sub-record."""
+        tag_inbox = self.Tag.create({'name': 'inbox'})
+        tag_name_todo = 'todo'
+        doc_name_new = 'new doc'
+
+        self.current_test_desc = 'Many2many create command skipped'
+        self.alias.alias_defaults = repr(
+            {**self.basic_fields, 'tag_ids': [self._cmd_compat(Command.create({'name': tag_name_todo}))]})
+        self._assert_alias_default_error({'tag_ids': {'NOT_ALLOWED_CREATE'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+        self.current_test_desc = 'Many2many create command skipped among set command'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.set([tag_inbox.id])),
+                        self._cmd_compat(Command.create({'name': 'todo'}))]
+        })
+        self._assert_alias_default_error({'tag_ids': {'NOT_ALLOWED_CREATE'}})
+        self._assert_alias_default_cleaned({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.set([tag_inbox.id]))]
+        })
+
+        self.current_test_desc = 'Many2many create command skipped among link command'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id)),
+                        self._cmd_compat(Command.create({'name': 'todo'}))]
+        })
+        self._assert_alias_default_error({'tag_ids': {'NOT_ALLOWED_CREATE'}})
+        self._assert_alias_default_cleaned({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id))]
+        })
+
+        self.current_test_desc = 'One2many create command skipped'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'sub_document_ids': [self._cmd_compat(Command.create({'name': doc_name_new}))],
+            'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id))],
+        })
+        self._assert_alias_default_error({'sub_document_ids': {'NOT_ALLOWED_ONE2MANY'}})
+        self._assert_alias_default_cleaned({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id))]})
+
+    def test_skip_of_set_to_one2many_field(self):
+        """Test that the autocorrection of alias defaults remove set to one2many field."""
+        sub_doc = self.Document.create({'name': 'Sub document'})
+
+        self.current_test_desc = 'One2many set command skipped'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'sub_document_ids': [self._cmd_compat(Command.set([sub_doc.id]))]
+        })
+        self._assert_alias_default_error({'sub_document_ids': {'NOT_ALLOWED_ONE2MANY'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+        self.current_test_desc = 'One2many set skipped'
+        self.alias.alias_defaults = repr({**self.basic_fields, 'sub_document_ids': [sub_doc.id]})
+        self._assert_alias_default_error({'sub_document_ids': {'NOT_ALLOWED_ONE2MANY'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+        self.current_test_desc = 'One2many link command skipped'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'sub_document_ids': [self._cmd_compat(Command.link(sub_doc.id))]
+        })
+        self._assert_alias_default_error({'sub_document_ids': {'NOT_ALLOWED_ONE2MANY'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+    def test_skip_of_set_to_non_existing_field(self):
+        """Test that the autocorrection of alias defaults removes set to non-existing fields."""
+        self.current_test_desc = 'Non existing field must be skipped'
+        self.alias.alias_defaults = repr({**self.basic_fields, 'not_existing_field': 'test'})
+        self._assert_alias_default_error({'not_existing_field': {'MISSING_FIELD'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+    def test_skip_of_forbidden_command(self):
+        """Test that the autocorrection of alias defaults removes commands != LINK and SET."""
+        tag_name_inbox = 'inbox'
+        tag_inbox = self.Tag.create({'name': tag_name_inbox})
+
+        self.current_test_desc = 'Skip update command'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.update(tag_inbox.id, {'name': 'inbox2'}))]
+        })
+        self._assert_alias_default_error({'tag_ids': {'NOT_ALLOWED_UPDATE'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+        # Other command not tested because seems to have no effect anyway
