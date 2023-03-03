@@ -1516,7 +1516,7 @@ const Wysiwyg = Widget.extend({
                     break;
             }
         };
-        if (!this.options.snippets) {
+        if (!options.snippets) {
             $toolbar.find('#justify, #media-insert').remove();
         }
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
@@ -1874,7 +1874,7 @@ const Wysiwyg = Widget.extend({
         ].join(',')).toggleClass('d-none', !isInMedia);
         // The image replace button is in the image options when the sidebar
         // exists.
-        if (this.snippetsMenu && $target.is('img')) {
+        if (this.snippetsMenu && !this.snippetsMenu.folded && $target.is('img')) {
             this.toolbar.$el.find('#media-replace').toggleClass('d-none', true);
         }
         // Only show the image-transform, image-crop and media-description
@@ -1931,7 +1931,7 @@ const Wysiwyg = Widget.extend({
             // Always hide the unlink button on media.
             this.toolbar.$el.find('#unlink').toggleClass('d-none', true);
             // Show the floatingtoolbar on the topleft of the media.
-            if (this.options.autohideToolbar) {
+            if (this.odooEditor.autohideToolbar && !this.odooEditor.isMobile) {
                 const imagePosition = this.lastMediaClicked.getBoundingClientRect();
                 this.toolbar.$el.css({
                     visibility: 'visible',
@@ -2461,7 +2461,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _onSelectionChange() {
-        if (this.options.autohideToolbar) {
+        if (this.odooEditor.autohideToolbar) {
             const isVisible = this.linkPopover && this.linkPopover.el.offsetParent;
             if (isVisible && !this.odooEditor.document.getSelection().isCollapsed) {
                 this.linkPopover.hide();

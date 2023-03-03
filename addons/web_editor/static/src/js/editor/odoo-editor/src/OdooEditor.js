@@ -627,30 +627,7 @@ export class OdooEditor extends EventTarget {
         // -------
 
         if (this.options.toolbar) {
-            this.toolbar = this.options.toolbar;
-            this.bindExecCommand(this.toolbar);
-            // Ensure anchors in the toolbar don't trigger a hash change.
-            const toolbarAnchors = this.toolbar.querySelectorAll('a');
-            toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
-            for (const colorLabel of this.toolbar.querySelectorAll('label')) {
-                colorLabel.addEventListener('mousedown', ev => {
-                    // Hack to prevent loss of focus (done by preventDefault) while still opening
-                    // color picker dialog (which is also prevented by preventDefault on chrome,
-                    // except when click detail is 2, which happens on a double-click but isn't
-                    // triggered by a dblclick event)
-                    if (ev.detail < 2) {
-                        ev.preventDefault();
-                        ev.currentTarget.dispatchEvent(new MouseEvent('click', { detail: 2 }));
-                    }
-                });
-                colorLabel.addEventListener('input', ev => {
-                    this.document.execCommand(ev.target.name, false, ev.target.value);
-                    this.updateColorpickerLabels();
-                });
-            }
-            if (this.isMobile) {
-                this.editable.before(this.toolbar);
-            }
+            this.setupToolbar(this.options.toolbar);
         }
         // placeholder hint
         if (editable.textContent === '' && this.options.placeholder) {
@@ -675,6 +652,31 @@ export class OdooEditor extends EventTarget {
         // Remove table UI
         this._rowUi.remove();
         this._columnUi.remove();
+    }
+
+    setupToolbar(toolbar) {
+        this.toolbar = toolbar;
+        this.autohideToolbar = this.options.autohideToolbar;
+        this.bindExecCommand(this.toolbar);
+        // Ensure anchors in the toolbar don't trigger a hash change.
+        const toolbarAnchors = this.toolbar.querySelectorAll('a');
+        toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
+        for (const colorLabel of this.toolbar.querySelectorAll('label')) {
+            colorLabel.addEventListener('mousedown', ev => {
+                // Hack to prevent loss of focus (done by preventDefault) while still opening
+                // color picker dialog (which is also prevented by preventDefault on chrome,
+                // except when click detail is 2, which happens on a double-click but isn't
+                // triggered by a dblclick event)
+                if (ev.detail < 2) {
+                    ev.preventDefault();
+                    ev.currentTarget.dispatchEvent(new MouseEvent('click', { detail: 2 }));
+                }
+            });
+            colorLabel.addEventListener('input', ev => {
+                this.document.execCommand(ev.target.name, false, ev.target.value);
+                this.updateColorpickerLabels();
+            });
+        }
     }
 
     resetContent(value) {
@@ -2731,8 +2733,10 @@ export class OdooEditor extends EventTarget {
      * @param {boolean} [show]
      */
     _updateToolbar(show) {
-        if (!this.options.toolbar) return;
-        if (!this.options.autohideToolbar && this.toolbar.style.visibility !== 'visible') {
+        if (!this.toolbar) {
+            return;
+        }
+        if (!this.autohideToolbar && this.toolbar.style.visibility !== 'visible') {
             this.toolbar.style.visibility = 'visible';
         }
 
@@ -2751,7 +2755,7 @@ export class OdooEditor extends EventTarget {
                 }
             }
         }
-        if (this.options.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
+        if (this.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
             if (!this.isMobile) {
                 if (show !== undefined) {
                     this.toolbar.style.visibility = show ? 'visible' : 'hidden';
@@ -2883,13 +2887,13 @@ export class OdooEditor extends EventTarget {
         undoButton && undoButton.classList.toggle('disabled', !this.historyCanUndo());
         const redoButton = this.toolbar.querySelector('#redo');
         redoButton && redoButton.classList.toggle('disabled', !this.historyCanRedo());
-        if (this.options.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
+        if (this.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
             this._positionToolbar();
         }
     }
     updateToolbarPosition() {
         if (
-            this.options.autohideToolbar &&
+            this.autohideToolbar &&
             !this.isMobile &&
             getComputedStyle(this.toolbar).visibility === 'visible'
         ) {
