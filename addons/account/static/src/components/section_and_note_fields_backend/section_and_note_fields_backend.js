@@ -25,7 +25,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     focusToName(editRec) {
-        if (editRec && editRec.isVirtual && this.isSectionOrNote(editRec)) {
+        if (editRec && editRec.isNew && this.isSectionOrNote(editRec)) {
             const col = this.state.columns.find((c) => c.name === this.titleField);
             this.focusCell(col, null);
         }
