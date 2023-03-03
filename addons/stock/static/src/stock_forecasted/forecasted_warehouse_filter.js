@@ -9,15 +9,11 @@ export class ForecastedWarehouseFilter extends Component {
     setup() {
         this.orm = useService("orm");
         this.context = this.props.action.context;
+        this.warehouses = this.props.warehouses;
         onWillStart(this.onWillStart)
     }
 
     async onWillStart() {
-        this.warehouses = await this.orm.call('report.stock.report_product_product_replenishment', 'get_warehouses', []);
-
-        if (!this.context.warehouse)
-            this.props.setWarehouseInContext(this.warehouses[0].id);
-
         this.displayWarehouseFilter = (this.warehouses.length > 1);
     }
 
@@ -35,4 +31,4 @@ export class ForecastedWarehouseFilter extends Component {
 
 ForecastedWarehouseFilter.template = 'stock.ForecastedWarehouseFilter';
 ForecastedWarehouseFilter.components = {Dropdown, DropdownItem};
-ForecastedWarehouseFilter.props = {action: Object, setWarehouseInContext : Function};
+ForecastedWarehouseFilter.props = {action: Object, setWarehouseInContext : Function, warehouses: Array};
