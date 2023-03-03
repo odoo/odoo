@@ -293,7 +293,7 @@ class ir_cron(models.Model):
             lastcall = fields.Datetime.to_datetime(job['lastcall'])
             interval = _intervalTypes[job['interval_type']](job['interval_number'])
             env = api.Environment(job_cr, job['user_id'], {'lastcall': lastcall})
-            ir_cron = env[cls._name]
+            ir_cron = env[cls._name].with_context(prefetch_fields=False)
 
             # Use the user's timezone to compare and compute datetimes,
             # otherwise unexpected results may appear. For instance, adding
