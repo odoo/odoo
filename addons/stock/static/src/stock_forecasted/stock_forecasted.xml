@@ -7,7 +7,7 @@
             </t>
             <t t-set-slot="control-panel-bottom-right">
                 <div class="btn-group o_search_options position-static" role="search">
-                    <ForecastedWarehouseFilter action="props.action" setWarehouseInContext.bind="updateWarehouse"/>
+                    <ForecastedWarehouseFilter action="props.action" warehouses="warehouses" setWarehouseInContext.bind="updateWarehouse"/>
                 </div>
             </t>
         </ControlPanel>
