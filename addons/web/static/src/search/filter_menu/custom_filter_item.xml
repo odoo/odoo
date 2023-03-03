@@ -11,7 +11,7 @@
                     <div class="dropdown-item-text flex-grow-1">
                         <t t-set="fieldType" t-value="fields[condition.field].type"/>
                         <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
-                        <span t-if="!condition_first" class="o_or_filter d-block my-2 text-muted text-center text-uppercase fw-bold">or</span>
+                        <b t-if="!condition_first" class="o_or_filter d-block my-2 text-muted text-center text-uppercase">or</b>
                         <select class="o_generator_menu_field o_input d-flex align-items-center" t-on-change="ev => this.onFieldSelect(condition, ev)">
                             <option t-foreach="fields" t-as="field" t-key="field_index"
                                 t-att-value="field.name"
@@ -82,13 +82,14 @@
                             />
                         </span>
                     </div>
-                    <i t-if="conditions.length gt 1"
-                            class="fa fa-trash-o o_generator_menu_delete d-block position-relative cursor-pointer pe-4"
+                    <button t-if="conditions.length gt 1"
+                            class="o_generator_menu_delete btn d-block position-relative pe-4"
                             role="image"
                             aria-label="Delete"
                             title="Delete"
-                            t-on-click="() => this.onRemoveCondition(condition_index)"
-                    />
+                            t-on-click="() => this.onRemoveCondition(condition_index)">
+                            <i class="fa fa-trash-o"></i>
+                    </button>
                 </div>
             </t>
             <div class="dropdown-item-text mt-2">
