@@ -17,7 +17,7 @@ class Do {
         return [
             {
                 content: "click lock button",
-                trigger: ".header-button .lock-button",
+                trigger: ".lock-button",
             },
         ];
     }

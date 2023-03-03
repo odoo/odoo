@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="CustomerFacingDisplayButton" owl="1">
-        <div class="oe_status" t-on-click="() => customerDisplay.connect()">
+        <li class="menu-item navbar-button" t-on-click="() => customerDisplay.connect()">
             <span class="message"><t t-esc="message" /></span>
             <div t-if="customerDisplay.status === 'warning'" class="js_warning oe_icon oe_orange">
                 <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Warning" title="Customer Screen Warning"></i>
@@ -12,8 +12,9 @@
             </div>
             <div t-if="customerDisplay.status === 'success'" class="js_connected oe_icon oe_green">
                 <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Connected" title="Customer Screen Connected"></i>
-            </div>
-        </div>
+            </div> 
+            <span>Customer Screen</span>
+        </li>
     </t>
 
 </templates>

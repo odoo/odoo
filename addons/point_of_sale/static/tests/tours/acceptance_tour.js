@@ -231,6 +231,10 @@ steps = steps.concat(verify_order_total("5.52"));
 
 steps = steps.concat([
     {
+        content: "open the navbar menu",
+        trigger: ".menu-button",
+    },
+    {
         content: "open closing the Point of Sale frontend popup",
         trigger: ".header-button",
     },
