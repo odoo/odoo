@@ -223,20 +223,23 @@ class HolidaysType(models.Model):
         return [('id', 'in', valid_leave_types.ids)]
 
     def _get_employees_days_per_allocation(self, employee_ids, date=None):
-        leaves = self.env['hr.leave'].search([
+        if not date:
+            date = fields.Date.to_date(self.env.context.get('default_date_from')) or fields.Date.context_today(self)
+
+        leaves_domain = [
             ('employee_id', 'in', employee_ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
             ('holiday_status_id', 'in', self.ids)
-        ])
+        ]
+        if self.env.context.get("ignore_future"):
+            leaves_domain.append(('date_from', '<=', date))
+        leaves = self.env['hr.leave'].search(leaves_domain)
 
         allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
             ('employee_id', 'in', employee_ids),
             ('state', 'in', ['validate']),
             ('holiday_status_id', 'in', self.ids),
         ])
-
-        if not date:
-            date = fields.Date.to_date(self.env.context.get('default_date_from')) or fields.Date.context_today(self)
 
         # The allocation_employees dictionary groups the allocations based on the employee and the holiday type
         # The structure is the following:
