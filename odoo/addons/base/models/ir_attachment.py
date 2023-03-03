@@ -450,14 +450,9 @@ class IrAttachment(models.Model):
             # DLE P173: `test_01_portal_attachment`
             self.env['ir.attachment'].flush_model(['res_model', 'res_id', 'create_uid', 'public', 'res_field'])
             self._cr.execute('SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s', [tuple(self.ids)])
-            for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
-                if public and mode == 'read':
-                    continue
-                if not self.env.is_system() and (res_field or (not res_id and create_uid != self.env.uid)):
-                    raise AccessError(_("Sorry, you are not allowed to access this document."))
-                if not (res_model and res_id):
-                    continue
-                model_ids[res_model].add(res_id)
+            records_to_check = self._cr.fetchall()
+            model_ids = self._collect_records_to_check(records_to_check, mode)
+
         if values and values.get('res_model') and values.get('res_id'):
             model_ids[values['res_model']].add(values['res_id'])
 
@@ -479,6 +474,19 @@ class IrAttachment(models.Model):
             access_mode = 'write' if mode in ('create', 'unlink') else mode
             records.check_access_rights(access_mode)
             records.check_access_rule(access_mode)
+
+    def _collect_records_to_check(self, records_to_check, mode):
+        """Collect the records to check (by model)"""
+        model_ids = defaultdict(set)            # {model_name: set(ids)}
+        for res_model, res_id, create_uid, public, res_field in records_to_check:
+            if public and mode == 'read':
+                continue
+            if not self.env.is_system() and (res_field or (not res_id and create_uid != self.env.uid)):
+                raise AccessError(_("Sorry, you are not allowed to access this document."))
+            if not (res_model and res_id):
+                continue
+            model_ids[res_model].add(res_id)
+        return model_ids
 
     @api.model
     def _filter_attachment_access(self, attachment_ids):
