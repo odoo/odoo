@@ -315,12 +315,8 @@ class MailActivity(models.Model):
                 self.env[model].browse(res_ids).message_subscribe(partner_ids=pids)
 
         # send notifications about activity creation
-        todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
-        if todo_activities:
-            self.env['bus.bus']._sendmany([
-                (activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
-                for activity in todo_activities
-            ])
+        partners = activities.mapped('user_id.partner_id')
+        self._send_notifications(activities, partners, activity_created=True)
         return activities
 
     def read(self, fields=None, load='_classic_read'):
@@ -350,26 +346,37 @@ class MailActivity(models.Model):
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
 
             # send bus notifications
-            todo_activities = user_changes.filtered(lambda act: act.date_deadline <= fields.Date.today())
-            if todo_activities:
-                self.env['bus.bus']._sendmany([
-                    [partner, 'mail.activity/updated', {'activity_created': True}]
-                    for partner in todo_activities.user_id.partner_id
-                ])
-                self.env['bus.bus']._sendmany([
-                    [partner, 'mail.activity/updated', {'activity_deleted': True}]
-                    for partner in pre_responsibles
-                ])
+            partners = user_changes.mapped('user_id.partner_id')
+            self._send_notifications(user_changes, partners, activity_created=True)
+            self._send_notifications(user_changes, pre_responsibles, activity_deleted=True)
+        else:
+            partners = self.mapped('user_id.partner_id')
+            self._send_notifications(self, partners)
         return res
 
     def unlink(self):
-        todo_activities = self.filtered(lambda act: act.date_deadline <= fields.Date.today())
-        if todo_activities:
-            self.env['bus.bus']._sendmany([
-                [partner, 'mail.activity/updated', {'activity_deleted': True}]
-                for partner in todo_activities.user_id.partner_id
-            ])
+        partners = self.mapped('user_id.partner_id')
+        self._send_notifications(self, partners, activity_deleted=True)
         return super(MailActivity, self).unlink()
+
+    def _send_notifications(self, activities, partners, activity_created=False, activity_deleted=False):
+        for activity in activities:
+            data = {
+                'res_id': activity.res_id,
+                'res_model': activity.res_model,
+            }
+            todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
+            if todo_activities:
+                data['is_todo_activity'] = True
+                responsible_partners = todo_activities.mapped('user_id.partner_id')
+                if activity_created:
+                    data['activity_created'] = True
+                elif activity_deleted:
+                    data['activity_deleted'] = True
+            else:
+                responsible_partners = partners + self.env.user.partner_id if self.env.user.partner_id not in partners else partners
+            self.env['bus.bus']._sendmany([(partner, 'mail.activity/updated', data) for partner in responsible_partners])
+        return True
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):

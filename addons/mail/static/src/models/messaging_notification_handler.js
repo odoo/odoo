@@ -109,15 +109,24 @@ Model({
                         case "res.users/connection":
                             return this._handleNotificationPartnerUserConnection(message.payload);
                         case "mail.activity/updated": {
-                            for (const activityMenuView of this.messaging.models[
-                                "ActivityMenuView"
-                            ].all()) {
-                                if (message.payload.activity_created) {
-                                    activityMenuView.update({ extraCount: increment() });
+                            if (message.payload.is_todo_activity) {
+                                for (const activityMenuView of this.messaging.models[
+                                    "ActivityMenuView"
+                                ].all()) {
+                                    if (message.payload.activity_created) {
+                                        activityMenuView.update({ extraCount: increment() });
+                                    }
+                                    if (message.payload.activity_deleted) {
+                                        activityMenuView.update({ extraCount: decrement() });
+                                    }
                                 }
-                                if (message.payload.activity_deleted) {
-                                    activityMenuView.update({ extraCount: decrement() });
-                                }
+                            }
+                            const thread = this.messaging.models["Thread"].findFromIdentifyingData({
+                                id: message.payload.res_id,
+                                model: message.payload.res_model,
+                            });
+                            if (thread) {
+                                thread.chatter.refresh();
                             }
                             return;
                         }
