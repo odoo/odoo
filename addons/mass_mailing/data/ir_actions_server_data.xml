@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_list_merge_action" model="ir.actions.server">
+        <field name="name">Merge</field>
+        <field name="model_id" ref="model_mailing_list"/>
+        <field name="binding_model_id" ref="model_mailing_list"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_mailing_lists_merge()</field>
+    </record>
+</odoo>

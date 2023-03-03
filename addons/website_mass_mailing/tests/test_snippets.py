@@ -17,3 +17,14 @@ class TestSnippets(odoo.tests.HttpCase):
 
     def test_02_newsletter_block_edition(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'newsletter_block_edition', login='admin')
+
+    def test_03_newsletter_block_invalid_list(self):
+        self.assertEqual(self.env['mailing.list'].search_count([['id', 'in', (1, 2)]], limit=2), 2)
+        # add a snippet with list 1 on the page
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'newsletter_block_invalid_list_setup', login='admin')
+        # remove the selected snippet and test behaviour
+        self.env['mailing.list'].sudo().browse(1).unlink()
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'newsletter_block_invalid_list_internal_user_no_change', login='admin')
+        self.logout()
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'newsletter_block_invalid_list_public_user')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'newsletter_block_invalid_list_internal_user_with_change', login='admin')

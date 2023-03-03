@@ -54,6 +54,11 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      */
     destroy() {
         this._updateView({is_subscriber: false});
+        if (this.missingListWarning) {
+            this.missingListWarning.remove();
+            this.missingListWarning = null;
+        }
+        this.$target[0].classList.remove('s_newsletter_subscription_checked');
         this._super.apply(this, arguments);
     },
 
@@ -67,6 +72,11 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * @param {Object} data
      */
     _updateView(data) {
+        if (data.warn_missing_list) {
+            this.missingListWarning = this._displayListDoesNotExist();
+        }
+        this.$target[0].classList.add('s_newsletter_subscription_checked');
+
         const isSubscriber = data.is_subscriber;
         const subscribeBtnEl = this.el.querySelector('.js_subscribe_btn');
         const thanksBtnEl = this.el.querySelector('.js_subscribed_btn');
@@ -84,6 +94,22 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
 
     _getListId: function () {
         return this.$el.closest('[data-snippet=s_newsletter_block').data('list-id') || this.$el.data('list-id');
+    },
+
+    /**
+     * Build an error message dynamically and add it to the snippet
+     * (snippets are static after creation, t-if is not an option)
+     *
+     * @returns {HTMLElement} the warning div
+     */
+    _displayListDoesNotExist() {
+        const insertedDiv = new DOMParser().parseFromString(
+            `<div class="alert alert-warning text-center mb-2">
+                <span class="fa fa-exclamation-triangle mx-1"/><p class="m-0"></p>
+            </div>`, 'text/html');
+        insertedDiv.querySelector('p').innerText = _t('This block is not linked to a Newsletter. Pick one or remove this block.');
+        this.$target[0].insertBefore(insertedDiv, this.$target[0].firstChild);
+        return insertedDiv;
     },
 
     //--------------------------------------------------------------------------
@@ -133,7 +159,6 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             }
             self.displayNotification({
                 type: toastType,
-                title: toastType === 'success' ? _t('Success') : _t('Error'),
                 message: result.toast_content,
                 sticky: true,
             });

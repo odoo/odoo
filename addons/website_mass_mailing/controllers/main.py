@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
+from odoo import _, SUPERUSER_ID
 from odoo.http import route, request
 from odoo.addons.mass_mailing.controllers import main
 
@@ -10,6 +10,8 @@ class MassMailController(main.MassMailController):
 
     @route('/website_mass_mailing/is_subscriber', type='json', website=True, auth='public')
     def is_subscriber(self, list_id, subscription_type, **post):
+        if not request.env.user._is_public() and not request.env['mailing.list'].browse(list_id).exists():
+            return {'is_subscriber': False, 'value': '', 'warn_missing_list': True}
         value = self._get_value(subscription_type)
         fname = self._get_fname(subscription_type)
         is_subscriber = False
@@ -18,7 +20,7 @@ class MassMailController(main.MassMailController):
                 [('list_id', 'in', [int(list_id)]), (f'contact_id.{fname}', '=', value), ('opt_out', '=', False)])
             is_subscriber = contacts_count > 0
 
-        return {'is_subscriber': is_subscriber, 'value': value}
+        return {'is_subscriber': is_subscriber, 'value': value, 'warn_missing_list': False}
 
     def _get_value(self, subscription_type):
         value = None
@@ -40,14 +42,29 @@ class MassMailController(main.MassMailController):
                 'toast_content': _("Suspicious activity detected by Google reCaptcha."),
             }
 
+        success_toast = {
+            'toast_type': 'success',
+            'toast_content': _("Thanks for subscribing!"),
+        }
+
         ContactSubscription = request.env['mailing.contact.subscription'].sudo()
         Contacts = request.env['mailing.contact'].sudo()
+        MailingList = request.env['mailing.list'].sudo()
+
         if subscription_type == 'email':
             name, value = Contacts.get_name_email(value)
         elif subscription_type == 'mobile':
             name = value
 
         fname = self._get_fname(subscription_type)
+
+        if not list_id or not MailingList.browse(list_id).exists():
+            contact_id = Contacts.search([(fname, '=', value)], limit=1)
+            if not contact_id:
+                contact_id = Contacts.create({'name': name, fname: value})
+            contact_id.with_user(SUPERUSER_ID)._message_log(body=_('This contact subscribed to a removed or merged mailing list.'))
+            return success_toast
+
         subscription = ContactSubscription.search(
             [('list_id', '=', int(list_id)), (f'contact_id.{fname}', '=', value)], limit=1)
         if not subscription:
@@ -60,7 +77,4 @@ class MassMailController(main.MassMailController):
             subscription.opt_out = False
         # add email to session
         request.session[f'mass_mailing_{fname}'] = value
-        return {
-            'toast_type': 'success',
-            'toast_content': _("Thanks for subscribing!"),
-        }
+        return success_toast
