@@ -632,7 +632,7 @@ class Websocket:
                 raise SessionExpiredException()
             # Mark the notification request as processed.
             self._notif_sock_r.recv(1)
-            notifications = env['bus.bus']._poll(self._channels, self._last_notif_sent_id)
+            notifications = env['bus.bus'].with_context(prefetch_fields=False)._poll(self._channels, self._last_notif_sent_id)
         if not notifications:
             return
         self._last_notif_sent_id = notifications[-1]['id']
