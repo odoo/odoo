@@ -22,8 +22,12 @@ class Do {
     clickEdit() {
         return [
             {
+                content: 'Click Menu button',
+                trigger: '.menu-button',
+            },
+            {
                 content: `click edit button`,
-                trigger: `.floor-map .edit-button`,
+                trigger: `.edit-button`,
             },
         ];
     }
@@ -31,7 +35,7 @@ class Do {
         return [
             {
                 content: "add table",
-                trigger: `.floor-map .edit-button i[aria-label=Add]`,
+                trigger: `.edit-button i[aria-label=Add]`,
             },
         ];
     }
@@ -39,7 +43,7 @@ class Do {
         return [
             {
                 content: "duplicate table",
-                trigger: `.floor-map .edit-button i[aria-label=Duplicate]`,
+                trigger: `.edit-button i[aria-label=Copy]`,
             },
         ];
     }
@@ -47,7 +51,7 @@ class Do {
         return [
             {
                 content: "rename table",
-                trigger: `.floor-map .edit-button i[aria-label=Rename]`,
+                trigger: `.edit-button i[aria-label=Rename]`,
             },
         ];
     }
@@ -55,7 +59,7 @@ class Do {
         return [
             {
                 content: "change number of seats",
-                trigger: `.floor-map .edit-button i[aria-label=Seats]`,
+                trigger: `.edit-button i[aria-label=Seats]`,
             },
         ];
     }
@@ -63,15 +67,35 @@ class Do {
         return [
             {
                 content: "trash table",
-                trigger: `.floor-map .edit-button.trash`,
+                trigger: `.edit-button.trash`,
             },
+        ];
+    }
+    closeEdit() {
+        return [
+            {
+                content: 'Close edit mode',
+                trigger: '.edit-button .close-edit-button',
+            }
         ];
     }
     changeShapeTo(shape) {
         return [
             {
                 content: `change shape to '${shape}'`,
-                trigger: `.edit-button .button-option${shape === "round" ? ".square" : ".round"}`,
+                trigger: `.edit-button .button-option${shape === "round" ? ".round" : ".square"}`,
+            },
+        ];
+    }
+    ctrlClickTable(name) {
+        return [
+            {
+                content: `ctrl click table '${name}'`,
+                trigger: `.floor-map .table .label:contains("${name}")`,
+                run() {
+                    const el = this.$anchor[0];
+                    el.dispatchEvent(new MouseEvent("click", {bubbles: true, ctrlKey: true}));
+                }
             },
         ];
     }
@@ -101,15 +125,6 @@ class Check {
             {
                 content: `selected floor has '${name}' table`,
                 trigger: `.floor-map .table .label:contains("${name}")`,
-                run: () => {},
-            },
-        ];
-    }
-    editModeIsActive(flag) {
-        return [
-            {
-                content: `check if edit mode is ${flag ? "active" : "inactive"}`,
-                trigger: `.floor-map .edit-button${flag ? ".active" : ":not(:has(.active))"}`,
                 run: () => {},
             },
         ];

@@ -12,6 +12,7 @@ export class EditableTable extends Component {
         onSaveTable: Function,
         limit: { type: Object, shape: { el: [HTMLElement, { value: null }] } },
         table: Table.props.table,
+        selectedTables: Array,
     };
 
     setup() {
@@ -42,7 +43,14 @@ export class EditableTable extends Component {
     }
 
     onMoveStart() {
+        if (this.env.pos.floorPlanStyle == 'kanban') {
+            return;
+        }
         this.startTable = { ...this.props.table };
+        this.selectedTablesCopy = {};
+        for (let i = 0; i < this.props.selectedTables.length; i++) {
+            this.selectedTablesCopy[i] = { ...this.props.selectedTables[i] };
+        }
         // stop the next click event from the touch/click release from unselecting the table
         document.addEventListener("click", (ev) => ev.stopPropagation(), {
             capture: true,
@@ -51,14 +59,25 @@ export class EditableTable extends Component {
     }
 
     onMove({ dx, dy }) {
-        const { position_h, position_v } = this.startTable;
+        if (this.env.pos.floorPlanStyle == 'kanban') {
+            return;
+        }
         const { minX, minY, maxX, maxY } = getLimits(this.root.el, this.props.limit.el);
-        this.props.table.position_h = constrain(position_h + dx, minX, maxX);
-        this.props.table.position_v = constrain(position_v + dy, minY, maxY);
+
+        for (const [index, table] of Object.entries(this.selectedTablesCopy)) {
+            const position_h = table.position_h;
+            const position_v = table.position_v;
+            this.props.selectedTables[index].position_h = constrain(position_h + dx, minX, maxX);
+            this.props.selectedTables[index].position_v = constrain(position_v + dy, minY, maxY);
+        }
+        
         this._setElementStyle();
     }
 
     onResizeHandleMove([moveX, moveY], { dx, dy }) {
+        if (this.env.pos.floorPlanStyle == 'kanban') {
+            return;
+        }
         // Working with min/max x and y makes constraints much easier to apply uniformly
         const { width, height, position_h: minX, position_v: minY } = this.startTable;
         const newTable = { minX, minY, maxX: minX + width, maxY: minY + height };
@@ -108,6 +127,28 @@ export class EditableTable extends Component {
 
     _setElementStyle() {
         const table = this.props.table;
+        if (this.env.pos.floorPlanStyle == 'kanban') {
+            const floor = table.floor;
+            const index = floor.tables.indexOf(table);
+            const minWidth = 100 + 20;
+            const nbrHorizontal = Math.floor(window.innerWidth / minWidth);
+            const widthTable = (window.innerWidth - nbrHorizontal*10) / nbrHorizontal;
+            const position_h = widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
+            const position_v = widthTable * Math.floor(index / nbrHorizontal) + 5 + Math.floor(index / nbrHorizontal) * 10;
+
+            Object.assign(this.root.el.style, {
+                left: `${position_h}px`,
+                top: `${position_v}px`,
+                width: `${widthTable}px`,
+                height: `${widthTable}px`,
+                background: table.color || "rgb(53, 211, 116)",
+                "line-height": `${widthTable}px`,
+                "border-radius": table.shape === "round" ? "1000px" : "3px",
+                "font-size": widthTable >= 150 ? "32px" : "16px",
+                "opacity": "0.7",
+            });
+            return;
+        }
         Object.assign(this.root.el.style, {
             left: `${table.position_h}px`,
             top: `${table.position_v}px`,

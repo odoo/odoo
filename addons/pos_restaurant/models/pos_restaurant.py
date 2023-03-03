@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
 
 
@@ -41,6 +41,34 @@ class RestaurantFloor(models.Model):
                         'Open session: %s' % (' '.join(config.mapped('name')),))
         return super(RestaurantFloor, self).write(vals)
 
+    def rename_floor(self, new_name):
+        for floor in self:
+            floor.name = new_name
+
+    @api.model
+    def create_from_ui(self, name, background_color, config_id):
+        floor_fields = {
+            "name": name,
+            "background_color": background_color,
+        }
+        pos_floor = self.create(floor_fields)
+        pos_floor.pos_config_ids = [Command.link(config_id)]
+        return {
+            'id': pos_floor.id,
+            'name': pos_floor.name,
+            'background_color': pos_floor.background_color,
+            'table_ids': [],
+            'sequence': pos_floor.sequence,
+            'tables': [],
+        }
+
+    def deactivate_floor(self, session_id):
+        draft_orders = self.env['pos.order'].search([('session_id', '=', session_id), ('state', '=', 'draft'), ('table_id.floor_id', '=', self.id)])
+        if draft_orders:
+            raise UserError(_("You cannot delete a floor when orders are still in draft for this floor."))
+        for table in self.table_ids:
+            table.active = False
+        self.active = False
 
 class RestaurantTable(models.Model):
 
@@ -59,6 +87,10 @@ class RestaurantTable(models.Model):
     seats = fields.Integer('Seats', default=1, help="The default number of customer served at this table.")
     color = fields.Char('Color', help="The table's color, expressed as a valid 'background' CSS property value")
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
+
+    def are_orders_still_in_draft(self):
+        draft_orders = self.env['pos.order'].search([('table_id', '=', self.id), ('state', '=', 'draft')])
+        return len(draft_orders) > 0
 
     @api.model
     def create_from_ui(self, table):

@@ -43,6 +43,7 @@ ProductScreen.do.clickOrderline("Water", "3.0");
 ProductScreen.do.clickOrderline("Coca-Cola", "1.0");
 
 // go back to the original order and see if the order is changed
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0001");
 ProductScreen.check.isShown();
@@ -68,11 +69,13 @@ SplitBillScreen.do.clickOrderline("Coca-Cola");
 SplitBillScreen.check.orderlineHas("Coca-Cola", "1", "1");
 SplitBillScreen.do.clickPay();
 PaymentScreen.do.clickBack();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0002");
 ProductScreen.do.clickOrderline("Water", "1.0");
 ProductScreen.do.clickOrderline("Coca-Cola", "1.0");
 ProductScreen.check.totalAmountIs("4.00");
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0001");
 ProductScreen.do.clickOrderline("Minute Maid", "1.0");

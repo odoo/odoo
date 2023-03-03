@@ -9,9 +9,10 @@ import { HeaderButton } from "@point_of_sale/js/ChromeWidgets/HeaderButton";
 import { ProxyStatus } from "@point_of_sale/js/ChromeWidgets/ProxyStatus";
 import { SaleDetailsButton } from "@point_of_sale/js/ChromeWidgets/SaleDetailsButton";
 import { SyncNotification } from "@point_of_sale/js/ChromeWidgets/SyncNotification";
+import { BackendButton } from "@point_of_sale/js/ChromeWidgets/BackendButton";
 import { CashMovePopup } from "./cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
-import { Component } from "@odoo/owl";
+import { Component, useState, useExternalListener } from "@odoo/owl";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -23,6 +24,7 @@ export class Navbar extends Component {
         ProxyStatus,
         SaleDetailsButton,
         SyncNotification,
+        BackendButton,
     };
     static props = {
         showCashMoveButton: Boolean,
@@ -33,7 +35,16 @@ export class Navbar extends Component {
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
         this.hardwareProxy = useService("hardware_proxy");
+        this.state = useState({ isMenuOpened: false });
+        useExternalListener(window, "mouseup", this.onOutsideClick);
     }
+
+    onOutsideClick() {
+        if (this.state.isMenuOpened) {
+            this.state.isMenuOpened = false;
+        }
+    }
+
     get customerFacingDisplayButtonIsShown() {
         return this.env.pos.config.iface_customer_facing_display;
     }
@@ -80,5 +91,17 @@ export class Navbar extends Component {
             return this.env.pos.get_order_list().length;
         }
         return 0;
+    }
+
+    isBurgerMenuClosed() {
+        return !this.state.isMenuOpened;
+    }
+
+    closeMenu() {
+        this.state.isMenuOpened = false;
+    }
+
+    openMenu() {
+        this.state.isMenuOpened = true;
     }
 }

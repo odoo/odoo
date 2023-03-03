@@ -6,16 +6,6 @@
             <div t-if="pos.tempScreen" class="block-top-header" />
             <div class="pos-branding">
                 <img t-if="!env.isMobile" class="pos-logo" t-on-click="() => debug.toggleWidget()" src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
-                <div t-if="props.showCashMoveButton" class="cash-move-button" t-on-click="onCashMoveButtonClick">
-                    <i class="fa fa-money" aria-hidden="true"></i>
-                    <span style="padding-left: 10px;">Cash In/Out</span>
-                </div>
-                <div class="ticket-button" t-att-class="{ highlight: isTicketScreenShown }" t-on-click="onTicketButtonClick">
-                    <div class="with-badge" t-att-badge="orderCount">
-                        <i class="fa fa-ticket" aria-hidden="true"></i>
-                    </div>
-                    <div t-if="!env.isMobile">Orders</div>
-                </div>
             </div>
             <div class="pos-rightheader">
                 <div class="status-buttons">
@@ -24,7 +14,33 @@
                     <ProxyStatus t-if="env.pos.config.use_proxy" />
                     <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
                     <SyncNotification />
-                    <HeaderButton />
+                </div>
+                <div t-if="isBurgerMenuClosed()" class="navbar-button menu-button" t-on-click="openMenu">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+                <div t-else="" class="navbar-button menu menu-button" t-on-click="closeMenu">
+                    <ul>
+                        <li class="menu-item">
+                            <i class="fa fa-bars" aria-hidden="true"></i>
+                            <ul class="sub-menu">
+                                <li class="menu-item navbar-button ticket-button" t-on-click="onTicketButtonClick">
+                                    <div class="with-badge" t-att-badge="orderCount">
+                                        <span>Orders</span>
+                                    </div>
+                                </li>
+                                <li t-if="props.showCashMoveButton" class="menu-item navbar-button" t-on-click="onCashMoveButtonClick">
+                                    <span>Cash In/Out</span>
+                                </li>
+                                <CustomerFacingDisplayButton t-if="CustomerFacingDisplayButtonIsShown"/>
+                                <div class="end-nav-button">
+                                    <BackendButton/>
+                                    <div class="close-button">
+                                        <HeaderButton/>
+                                    </div>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

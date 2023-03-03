@@ -61,3 +61,6 @@ class PosSession(models.Model):
         }
     def _get_pos_ui_restaurant_printer(self, params):
         return self.env['restaurant.printer'].search_read(**params['search_params'])
+
+    def get_pos_ui_restaurant_floor(self):
+        return self._get_pos_ui_restaurant_floor(self._loader_params_restaurant_floor())

@@ -11,6 +11,7 @@ startSteps();
 
 ProductScreen.do.confirmOpeningPopup();
 // New Ticket button should not be in the ticket screen if no table is selected.
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.noNewTicketButton();
 TicketScreen.do.clickDiscard();
@@ -18,6 +19,7 @@ TicketScreen.do.clickDiscard();
 // Deleting the last order in the table brings back to floorscreen
 FloorScreen.do.clickTable("4");
 ProductScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains(2, "-0001");
 TicketScreen.do.deleteOrder("-0001");
@@ -28,12 +30,14 @@ TicketScreen.do.clickDiscard();
 FloorScreen.do.clickTable("2");
 ProductScreen.exec.addOrderline("Minute Maid", "1", "2");
 ProductScreen.check.totalAmountIs("2.0");
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 ProductScreen.exec.addOrderline("Coca-Cola", "2", "2");
 ProductScreen.check.totalAmountIs("4.0");
 Chrome.do.backToFloor();
 FloorScreen.check.orderCountSyncedInTableIs("2", "2");
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.deleteOrder("-0003");
 Chrome.do.confirmPopup();
@@ -49,6 +53,7 @@ ProductScreen.exec.addOrderline("Minute Maid", "1", "3");
 ProductScreen.check.totalAmountIs("3.0");
 Chrome.do.backToFloor();
 FloorScreen.check.orderCountSyncedInTableIs("5", "1");
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.deleteOrder("-0004");
 Chrome.do.confirmPopup();
