@@ -28,7 +28,7 @@ class TestCIIFR(TestUBLCommon):
             'bank_ids': [(0, 0, {'acc_number': 'FR15001559627230'})],
             'phone': '+1 (650) 555-0111',
             'email': "partner1@yourcompany.com",
-            'ref': 'seller_ref',
+            'ref': 'ref_partner_1',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -39,7 +39,7 @@ class TestCIIFR(TestUBLCommon):
             'vat': 'FR35562153452',
             'country_id': cls.env.ref('base.fr').id,
             'bank_ids': [(0, 0, {'acc_number': 'FR90735788866632'})],
-            'ref': 'buyer_ref',
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_21 = cls.env['account.tax'].create({
