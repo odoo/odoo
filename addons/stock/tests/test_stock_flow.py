@@ -2381,7 +2381,7 @@ class TestStockFlow(TestStockCommon):
 
         self.assertEqual(picking.state, 'cancel')
         self.assertEqual(move.state, 'cancel')
-        self.assertEqual(scrap.move_id.state, 'done')
+        self.assertEqual(scrap.move_ids[0].state, 'done')
 
     def test_receive_tracked_product(self):
         self.productA.tracking = 'serial'

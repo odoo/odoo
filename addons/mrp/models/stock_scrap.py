@@ -3,7 +3,6 @@
 
 from odoo import _, api, fields, models
 
-
 class StockScrap(models.Model):
     _inherit = 'stock.scrap'
 
@@ -14,6 +13,12 @@ class StockScrap(models.Model):
         'mrp.workorder', 'Work Order',
         states={'done': [('readonly', True)]},
         check_company=True) # Not to restrict or prefer quants, but informative
+    product_is_kit = fields.Boolean(related='product_id.is_kits')
+    product_template = fields.Many2one(related='product_id.product_tmpl_id')
+    bom_id = fields.Many2one(
+        'mrp.bom', 'Kit',
+        domain="[('type', '=', 'phantom'), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_template)]",
+        states={'done': [('readonly', True)]}, check_company=True)
 
     @api.onchange('workorder_id')
     def _onchange_workorder_id(self):
@@ -50,3 +55,19 @@ class StockScrap(models.Model):
                     return {'warning': {'title': _('Warning'), 'message': message}}
             else:
                 return super()._onchange_serial_number()
+
+    @api.depends('move_ids', 'move_ids.move_line_ids.qty_done', 'product_id')
+    def _compute_scrap_qty(self):
+        self.scrap_qty = 1
+        for scrap in self:
+            if not scrap.bom_id:
+                return super(StockScrap, scrap)._compute_scrap_qty()
+            if scrap.move_ids:
+                filters = {
+                    'incoming_moves': lambda m: True,
+                    'outgoing_moves': lambda m: False
+                }
+                scrap.scrap_qty = scrap.move_ids._compute_kit_quantities(scrap.product_id, scrap.scrap_qty, scrap.bom_id, filters)
+
+    def _should_check_available_qty(self):
+        return super()._should_check_available_qty() or self.product_is_kit

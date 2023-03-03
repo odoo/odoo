@@ -146,7 +146,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         # Scrap Product Wood with lot.
         scrap_id = self.env['stock.scrap'].with_context(active_model='mrp.production', active_id=production_3.id).create({'product_id': self.product_2.id, 'scrap_qty': 1.0, 'product_uom_id': self.product_2.uom_id.id, 'location_id': location_id, 'lot_id': lot_product_2.id, 'production_id': production_3.id})
         scrap_id.do_scrap()
-        scrap_move = scrap_id.move_id
+        scrap_move = scrap_id.move_ids[0]
 
         self.assertTrue(scrap_move.raw_material_production_id)
         self.assertTrue(scrap_move.scrapped)

@@ -127,7 +127,7 @@ class StockMove(models.Model):
              "this second option should be chosen.")
     scrapped = fields.Boolean(
         'Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
-    scrap_ids = fields.One2many('stock.scrap', 'move_id')
+    scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True)
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id, index=True)
     rule_id = fields.Many2one(
         'stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move',
@@ -1881,7 +1881,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master
         if self.env.context.get('is_scrap'):
-            return moves_todo
+            return moves
 
         if picking and not cancel_backorder:
             backorder = picking._create_backorder()
