@@ -1,14 +1,19 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { evalDomain } from "@web/views/utils";
 import { booleanField, BooleanField } from "../boolean/boolean_field";
 
 export class BooleanToggleField extends BooleanField {
     static template = "web.BooleanToggleField";
+    static props = {
+        ...BooleanField.props,
+        readonlyFromModifiers: { type: Array | Boolean, optional: true },
+    };
 
     get isReadonly() {
-        return this.props.record.isReadonly(this.props.name);
+        return evalDomain(this.props.readonlyFromModifiers, this.props.record.evalContext) || false;
     }
 
     async onChange(newValue) {
@@ -28,6 +33,9 @@ export const booleanToggleField = {
     ...booleanField,
     component: BooleanToggleField,
     displayName: _lt("Toggle"),
+    extractProps: (fieldInfo) => ({
+        readonlyFromModifiers: fieldInfo.modifiers.readonly,
+    }),
 };
 
 registry.category("fields").add("boolean_toggle", booleanToggleField);

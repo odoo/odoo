@@ -1,14 +1,15 @@
 /** @odoo-module **/
 
+import { Component } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
-import { _lt } from "@web/core/l10n/translation";
-import { standardFieldProps } from "../standard_field_props";
+import { evalDomain } from "@web/views/utils";
 import { formatSelection } from "../formatters";
-import { Component } from "@odoo/owl";
+import { standardFieldProps } from "../standard_field_props";
 
 export class StateSelectionField extends Component {
     static template = "web.StateSelectionField";
@@ -19,6 +20,7 @@ export class StateSelectionField extends Component {
     static props = {
         ...standardFieldProps,
         hideLabel: { type: Boolean, optional: true },
+        readonlyFromModifiers: { type: Array | Boolean, optional: true },
     };
     static defaultProps = {
         hideLabel: false,
@@ -67,7 +69,7 @@ export class StateSelectionField extends Component {
         );
     }
     get isReadonly() {
-        return this.props.record.isReadonly(this.props.name);
+        return evalDomain(this.props.readonlyFromModifiers, this.props.record.evalContext) || false;
     }
 
     statusColor(value) {
@@ -91,8 +93,9 @@ export const stateSelectionField = {
     component: StateSelectionField,
     displayName: _lt("Label Selection"),
     supportedTypes: ["selection"],
-    extractProps: ({ options }) => ({
+    extractProps: ({ options, modifiers }) => ({
         hideLabel: !!options.hide_label,
+        readonlyFromModifiers: modifiers.readonly,
     }),
 };
 

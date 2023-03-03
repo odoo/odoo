@@ -14,7 +14,7 @@ import { useSortable } from "@web/core/utils/sortable";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
-import { getClassNameFromDecoration } from "@web/views/utils";
+import { evalDomain, getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -25,10 +25,10 @@ import {
     onPatched,
     onWillPatch,
     onWillUpdateProps,
+    useEffect,
     useExternalListener,
     useRef,
     useState,
-    useEffect,
 } from "@odoo/owl";
 
 const formatters = registry.category("formatters");
@@ -781,7 +781,7 @@ export class ListRenderer extends Component {
             if (
                 record.isInEdition &&
                 this.props.list.editedRecord &&
-                this.props.list.editedRecord.isReadonly(column.name)
+                this.getCellReadonly(column, this.props.list.editedRecord)
             ) {
                 classNames.push("text-muted");
             } else {
@@ -793,8 +793,8 @@ export class ListRenderer extends Component {
 
     getCellReadonly(column, record) {
         return (
-            record.isReadonly(column.name) ||
-            (column.relatedPropertyField && record.selected && record.model.multiEdit)
+            (column.relatedPropertyField && record.selected && record.model.multiEdit) ||
+            evalDomain(column.modifiers.readonly, record.evalContext)
         );
     }
 

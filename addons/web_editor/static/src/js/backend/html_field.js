@@ -5,6 +5,7 @@ import { ComponentAdapter } from 'web.OwlCompatibility';
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { evalDomain } from "@web/views/utils";
 import { getWysiwygClass } from 'web_editor.loader';
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
 import { TranslationButton } from "@web/views/fields/translation_button";
@@ -141,7 +142,12 @@ export class HtmlField extends Component {
                         // Ensure all external links are opened in a new tab.
                         retargetLinks(this.readonlyElementRef.el);
 
-                        const hasReadonlyModifiers = Boolean(this.props.record.isReadonly(this.props.name));
+                        const hasReadonlyModifiers =
+                            evalDomain(
+                                this.props.readonlyFromModifiers,
+                                this.props.record.evalContext
+                            ) || false;
+
                         if (!hasReadonlyModifiers) {
                             const $el = $(this.readonlyElementRef.el);
                             $el.off('.checklistBinding');
@@ -630,13 +636,14 @@ HtmlField.props = {
     isInlineStyle: { type: Boolean, optional: true },
     wrapper: { type: String, optional: true },
     wysiwygOptions: { type: Object },
+    readonlyFromModifiers: { type: Array | Boolean, optional: true },
 };
 
 export const htmlField = {
     component: HtmlField,
     displayName: _lt("Html"),
     supportedTypes: ["html"],
-    extractProps: ({ attrs, options }) => {
+    extractProps: ({ attrs, options, modifiers }) => {
         const wysiwygOptions = {
             placeholder: attrs.placeholder,
             noAttachment: options['no-attachment'],
@@ -682,6 +689,7 @@ export const htmlField = {
             wrapper: options.wrapper,
 
             wysiwygOptions,
+            readonlyFromModifiers: modifiers.readonly,
         };
     },
 };

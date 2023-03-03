@@ -1,14 +1,15 @@
 /** @odoo-module **/
 
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { evalDomain } from "@web/views/utils";
 import { standardFieldProps } from "../standard_field_props";
-
-import { Component, useState, onWillUpdateProps } from "@odoo/owl";
 
 export class ColorField extends Component {
     static template = "web.ColorField";
     static props = {
         ...standardFieldProps,
+        readonlyFromModifiers: { type: Array | Boolean, optional: true },
     };
 
     setup() {
@@ -22,13 +23,16 @@ export class ColorField extends Component {
     }
 
     get isReadonly() {
-        return this.props.record.isReadonly(this.props.name);
+        return evalDomain(this.props.readonlyFromModifiers, this.props.record.evalContext) || false;
     }
 }
 
 export const colorField = {
     component: ColorField,
     supportedTypes: ["char"],
+    extractProps: ({ modifiers }) => ({
+        readonlyFromModifiers: modifiers.readonly,
+    }),
 };
 
 registry.category("fields").add("color", colorField);

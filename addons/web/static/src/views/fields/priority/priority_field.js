@@ -4,13 +4,14 @@ import { useCommand } from "@web/core/commands/command_hook";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
-
+import { evalDomain } from "@web/views/utils";
 import { Component, useState } from "@odoo/owl";
 
 export class PriorityField extends Component {
     static template = "web.PriorityField";
     static props = {
         ...standardFieldProps,
+        readonlyFromModifiers: { type: Array | Boolean, optional: true },
     };
 
     setup() {
@@ -54,7 +55,7 @@ export class PriorityField extends Component {
             : this.options.findIndex((o) => o[0] === this.props.value);
     }
     get isReadonly() {
-        return this.props.record.isReadonly(this.props.name);
+        return evalDomain(this.props.readonlyFromModifiers, this.props.record.evalContext) || false;
     }
 
     getTooltip(value) {
@@ -91,6 +92,9 @@ export const priorityField = {
     component: PriorityField,
     displayName: _lt("Priority"),
     supportedTypes: ["selection"],
+    extractProps: ({ modifiers }) => ({
+        readonlyFromModifiers: modifiers.readonly,
+    }),
 };
 
 registry.category("fields").add("priority", priorityField);
