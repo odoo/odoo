@@ -21,6 +21,7 @@ export class StockForecasted extends Component {
         this.productId = this.context.active_id;
         this.resModel = this.context.active_model;
         this.title = this.props.action.name;
+        this.warehouses = useState([]);
 
         onWillStart(this._getReportValues);
     }
@@ -29,6 +30,11 @@ export class StockForecasted extends Component {
         await this._getResModel();
         const isTemplate = !this.resModel || this.resModel === 'product.template';
         this.reportModelName = `stock.forecasted_product_${isTemplate ? "template" : "product"}`;
+        this.warehouses.splice(0, this.warehouses.length);
+        this.warehouses.push(...await this.orm.searchRead('stock.warehouse', [],['id', 'name', 'code']));
+        if (!this.context.warehouse) {
+            this.updateWarehouse(this.warehouses[0].id);
+        }
         const reportValues = await this.orm.call(this.reportModelName, "get_report_values", [], {
             context: this.context,
             docids: [this.productId],
