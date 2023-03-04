@@ -46,7 +46,7 @@ class BaseModuleUninstall(models.TransientModel):
                     return xids and all(xid.split('.')[0] in module_names for xid in xids)
 
                 # find the models that have all their XIDs in the given modules
-                self.model_ids = ir_models.filtered(lost).sorted('name')
+                self.model_ids = ir_models.filtered(lost).sorted('count', reverse=True)
 
     @api.onchange('module_id')
     def _onchange_module_id(self):
