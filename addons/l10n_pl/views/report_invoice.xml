@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <!-- add sale date -->
+        <xpath expr="//div[@name='due_date']" position="before">
+            <div class="col-auto mw-100 mb-2" t-if="o.l10n_pl_invoice_sale_date" name="l10n_pl_invoice_sale_date">
+                <strong>Sale Date:</strong>
+                <p class="m-0" t-field="o.l10n_pl_invoice_sale_date"/>
+            </div>
+        </xpath>
+
+    </template>
+</odoo>

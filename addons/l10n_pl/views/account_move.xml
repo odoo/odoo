@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_move_form_inherit" model="ir.ui.view">
+        <field name="name">view_move_form_inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="invoice_date" position="after">
+                <field name="l10n_pl_invoice_sale_date" string="Sale Date"
+                       attrs="{
+                            'invisible': [('move_type', 'not in', ('out_invoice')), ('quick_edit_mode', '=', False)],
+                            'readonly': [('state', '!=', 'draft')],
+                        }"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

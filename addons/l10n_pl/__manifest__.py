@@ -34,7 +34,11 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
               'data/account_tax_report_data.xml',
               'data/account_tax_data.xml',
               'data/account_fiscal_position_data.xml',
-              'data/account_chart_template_data.xml'
+              'data/account_chart_template_data.xml',
+
+        # Views and others
+        'views/account_move.xml',
+        'views/report_invoice.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
