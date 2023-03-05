@@ -23,32 +23,37 @@
     </t>
 
     <t t-name="web.CalendarController.controlButtons" owl="1">
-        <div class="o_calendar_buttons">
-            <span t-if="!env.isSmall" class="o_calendar_navigation_buttons me-1">
+        <div class="o_calendar_buttons d-flex align-items-center mb-2">
+            <ViewScaleSelector scales="scales" currentScale="model.scale" setScale.bind="setScale" />
+            <span t-if="!env.isSmall" class="o_calendar_navigation_buttons mx-1">
                 <button
-                    class="btn btn-primary o_calendar_button_prev"
-                    title="Previous"
-                    aria-label="Previous"
-                    t-on-click.stop="() => this.setDate('previous')"
-                >
-                    <i class="fa fa-arrow-left" />
-                </button>
-                <button
-                    class="btn btn-primary mx-1 o_calendar_button_today"
+                    class="btn btn-secondary mx-1 o_calendar_button_today"
                     t-on-click.stop="() => this.setDate('today')"
                 >
                     Today
                 </button>
                 <button
-                    class="btn btn-primary o_calendar_button_next"
+                    class="btn btn-text pe-2 o_calendar_button_prev"
+                    title="Previous"
+                    aria-label="Previous"
+                    t-on-click.stop="() => this.setDate('previous')"
+                >
+                    <i class="fa oi-larger fa-angle-left" />
+                </button>
+                <button
+                    class="btn btn-text ps-1 o_calendar_button_next"
                     title="Next"
                     aria-label="Next"
                     t-on-click.stop="() => this.setDate('next')"
                 >
-                    <i class="fa fa-arrow-right" />
+                    <i class="fa oi-larger fa-angle-right" />
                 </button>
+                <t t-log="this"></t>
             </span>
-            <ViewScaleSelector scales="scales" currentScale="model.scale" setScale.bind="setScale" />
+
+            <!-- POC -->
+            <span class="fs-3">April 2023</span>
+
             <button t-if="env.isSmall" class="o_cp_today_button btn btn-sm btn-link" t-on-click="() => this.setDate('today')">
                 <span class="fa-stack o_calendar_button_today">
                     <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today" />
