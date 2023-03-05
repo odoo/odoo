@@ -1,18 +1,17 @@
 /** @odoo-module */
 
-import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
-import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
 import { _t } from "@web/core/l10n/translation";
-
-const { Model } = spreadsheet;
+import { createSpreadsheetModel } from "@spreadsheet/helpers";
 
 async function downloadSpreadsheet(env, action) {
     const { orm, name, data, stateUpdateMessages } = action.params;
-    const dataSources = new DataSources(orm);
-    const model = new Model(migrate(data), { custom: { dataSources } }, stateUpdateMessages);
+    const model = createSpreadsheetModel({
+        orm,
+        data,
+        stateUpdateMessages,
+    });
     await waitForDataLoaded(model);
     const { files } = model.exportXLSX();
     await download({
@@ -33,7 +32,6 @@ async function waitForDataLoaded(model) {
     const dataSources = model.config.custom.dataSources;
     return new Promise((resolve, reject) => {
         function check() {
-            model.dispatch("EVALUATE_CELLS");
             if (isLoaded(model)) {
                 dataSources.removeEventListener("data-source-updated", check);
                 resolve();
