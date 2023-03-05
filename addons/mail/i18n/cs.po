@@ -334,6 +334,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>Chatujte s kolegy</b> v reálném čase pomocí přímých "
+"zpráv.</p><p><i>Nejprve musíte pozvat uživatele v nastavení "
+"aplikace.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -413,6 +416,12 @@ msgid ""
 "                                    If you want to use only selected records please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
+"                                    Pokud chcete odeslat pro všechny záznamy vyhovující výběrovým kritériím, zaškrtněte zde :\n"
+"                                </span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
+"                                    Pokud chcete odeslat pouze pro vybrané záznamy, zrušte zaškrtnutí :\n"
+"                                </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -471,6 +480,12 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+"                                    Všem záznamům vyhovující aktuálním výběrovým kritériím bude zaslaný e-mail,\n"
+"                                    nejen tým ze seznamu.\n"
+"                                </strong><br/>\n"
+"                                E-mail bude zaslaný na všechny vybrané záznamy.<br/>\n"
+"                                Potvrzení tohoto pomocníka pravděpodobně na několik minut zablokuje váš prohlížeč."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -487,6 +502,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Budou použity pouze záznamy vybrané v seznamu.</strong><br/>\n"
+"                                Email bude zaslaný na všechny vybrané záznamy seznamu."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -3690,7 +3707,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "Join Channel"
-msgstr ""
+msgstr "Připojit se ke kanálu"
 
 #. module: mail
 #. openerp-web
@@ -5380,6 +5397,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"Pravidla jak zpracovat chatovací upozornění:\n"
+"- Zpracovat e-mailem: upozornění budou zaslané na vaši e-mailovou adresu\n"
+"- Zpracovat v Odoo: upozornění se zobrazí ve vaší schránce Odoo Příchozí zprávy"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
