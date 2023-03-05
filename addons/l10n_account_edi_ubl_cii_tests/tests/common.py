@@ -178,8 +178,8 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
             'currency_id': self.currency_data['currency'].id,
-            'invoice_origin': 'test invoice origin',
             'narration': 'test narration',
+            'ref': 'ref_move',
             **invoice_kwargs,
             'invoice_line_ids': [
                 (0, 0, {

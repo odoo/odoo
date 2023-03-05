@@ -21,6 +21,7 @@ class TestUBLNL(TestUBLCommon):
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57'})],
             'l10n_nl_kvk': '77777677',
+            'ref': 'ref_partner_1',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -32,6 +33,7 @@ class TestUBLNL(TestUBLCommon):
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL93999574162167'})],
             'l10n_nl_kvk': '1234567',
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
@@ -144,7 +146,6 @@ class TestUBLNL(TestUBLCommon):
             self.partner_1,
             self.partner_2,
             move_type='out_refund',
-            ref='mandatory ref from NL-R-001',
             invoice_line_ids=[
                 {
                     'product_id': self.product_a.id,
