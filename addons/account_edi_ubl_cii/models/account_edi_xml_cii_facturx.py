@@ -154,9 +154,10 @@ class AccountEdiXmlCII(models.AbstractModel):
             'ship_to_trade_party': invoice.partner_shipping_id if 'partner_shipping_id' in invoice._fields and invoice.partner_shipping_id
                 else invoice.commercial_partner_id,
             # Chorus Pro fields
-            'buyer_reference': invoice.buyer_reference if 'buyer_reference' in invoice._fields and invoice.buyer_reference else invoice.ref,
-            'purchase_order_reference': invoice.purchase_order_reference if 'purchase_order_reference' in invoice._fields and invoice.purchase_order_reference
-                else invoice.payment_reference or invoice.name,
+            'buyer_reference': invoice.buyer_reference if 'buyer_reference' in invoice._fields
+                and invoice.buyer_reference else invoice.commercial_partner_id.ref,
+            'purchase_order_reference': invoice.purchase_order_reference if 'purchase_order_reference' in invoice._fields
+                and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields and invoice.contract_reference else '',
         }
 

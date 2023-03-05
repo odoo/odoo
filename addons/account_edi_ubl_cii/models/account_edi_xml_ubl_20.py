@@ -372,6 +372,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         supplier = invoice.company_id.partner_id.commercial_partner_id
         customer = invoice.commercial_partner_id
 
+        # OrderReference/SalesOrderID (sales_order_id) is optional
+        sales_order_id = 'sale_line_ids' in invoice.invoice_line_ids._fields \
+                         and ",".join(invoice.invoice_line_ids.sale_line_ids.order_id.mapped('name'))
+        # OrderReference/ID (order_reference) is mandatory inside the OrderReference node !
+        order_reference = invoice.ref or invoice.name if sales_order_id else invoice.ref
+
         vals = {
             'builder': self,
             'invoice': invoice,
@@ -397,7 +403,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'issue_date': invoice.invoice_date,
                 'due_date': invoice.invoice_date_due,
                 'note_vals': [html2plaintext(invoice.narration)] if invoice.narration else [],
-                'order_reference': invoice.invoice_origin,
+                'order_reference': order_reference,
+                'sales_order_id': sales_order_id,
                 'accounting_supplier_party_vals': {
                     'party_vals': self._get_partner_party_vals(supplier, role='supplier'),
                 },
