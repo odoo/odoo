@@ -33,6 +33,7 @@ class TestUBLAU(TestUBLCommon):
             'vat': '53 930 548 027',
             'country_id': cls.env.ref('base.au').id,
             'bank_ids': [(0, 0, {'acc_number': '93999574162167'})],
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_10 = cls.env['account.tax'].create({
