@@ -44,6 +44,15 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"            <p class=\"o_view_nocontent_smiling_face\">\n"
+"                Ajouter des adresses à la liste des adresses autorisées\n"
+"            </p><p>\n"
+"                Pour vous protéger des spams et des boucles de réponse, Odoo bloque automatiquement des emails\n"
+"                venant de votre passerelle au-delà d'un seuil de <b>%(threshold)i</b> emails toutes les <b>%(minutes)i</b>\n"
+"                minutes. S'il y a toutefois certaines adresses qui vous envoient très fréquemment des\n"
+"                mises à jour, vous pouvez les ajouter ci-dessous et Odoo les laissera passer.\n"
+"            </p>"
 
 #. module: mail
 #. odoo-python
@@ -71,7 +80,7 @@ msgstr "\"%s\" a besoin d'accéder au microphone"
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%(author name)s from %(channel name)s"
-msgstr ""
+msgstr "%(author name)s de %(channel name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -1324,7 +1333,7 @@ msgstr "Nom de l'alias"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Statut de l'alias"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
@@ -1334,7 +1343,7 @@ msgstr "Domaine d'alias"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Statut de l'alias évalué sur le dernier message reçu."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
@@ -1642,7 +1651,7 @@ msgid ""
 " did not match any partner."
 msgstr ""
 "Auteur du message. S'il n'est pas indiqué, email_from peut contenir une "
-"adresse électronique ne correspondant à aucun partenaire."
+"adresse email ne correspondant à aucun partenaire."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
@@ -2525,7 +2534,7 @@ msgstr "Contacts"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Container Model"
-msgstr ""
+msgstr "Modèle de conteneur"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_member__last_interest_dt
@@ -2750,7 +2759,7 @@ msgstr "Message personnalisé"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE server list"
-msgstr ""
+msgstr "Liste de serveur ICE personnalisée"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -2867,7 +2876,7 @@ msgstr "Cher"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Dear Sender"
-msgstr ""
+msgstr "Cher expéditeur"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -3030,7 +3039,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Developer mode is on"
-msgstr ""
+msgstr "Le mode développeur est activé"
 
 #. module: mail
 #. odoo-javascript
@@ -3388,7 +3397,7 @@ msgstr "Ajouter signature email"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__email
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "Email Address"
-msgstr "Adresse électronique"
+msgstr "Adresse email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
@@ -3728,12 +3737,12 @@ msgstr "Echec de rendu du modèle : %s"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr "Raison de l'échec"
+msgstr "Motif de l'échec"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_reason
 msgid "Failure reason"
-msgstr "Raison de l'échec"
+msgstr "Motif de l'échec"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__failure_reason
@@ -4177,12 +4186,12 @@ msgstr "halloween"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr "Gérer par des emails"
+msgstr "Recevoir par email"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
 msgid "Handle in Odoo"
-msgstr "Gérer dans Odoo"
+msgstr "Recevoir dans Odoo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_activity
@@ -6517,7 +6526,7 @@ msgstr "Non confirmé"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
 msgid "Not Tested"
-msgstr ""
+msgstr "Non testé"
 
 #. module: mail
 #. odoo-javascript
@@ -6535,12 +6544,12 @@ msgstr "Note"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Notification"
-msgstr "Notification"
+msgstr "Notifications"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_notification
 msgid "Notification Email"
-msgstr "Notification par email"
+msgstr "Notifications par email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_schedule__notification_parameters
@@ -6885,7 +6894,7 @@ msgstr "Ouvrir le document"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Open Owner"
-msgstr ""
+msgstr "Ouvrir le propriétaire"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -7599,7 +7608,7 @@ msgstr "Motif"
 #. module: mail
 #: model:res.groups,name:mail.group_mail_notification_type_inbox
 msgid "Receive notifications in Odoo"
-msgstr ""
+msgstr "Recevoir des notifications dans Odoo"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__received
@@ -7823,6 +7832,8 @@ msgstr "Modèle de rendu"
 msgid ""
 "Rendering of %(field_name)s is not possible as not defined on template."
 msgstr ""
+"Le rendu de %(field_name)s est impossible, car ce n'est pas défini sur le "
+"modèle."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -9188,7 +9199,7 @@ msgstr "L'utilisateur interne en charge de ce contact."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "The last message received on this alias has caused an error."
-msgstr ""
+msgstr "Le dernier message reçu sur cet alias a provoqué une erreur. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -9204,6 +9215,9 @@ msgid ""
 "                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
 "                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
 msgstr ""
+"Le message ci-dessous n'a pas été accepté par l'adresse %(alias_display_name)s.\n"
+"                 Seuls %(contact_description)s sont autorisés à contacter cette adresse.<br /><br />\n"
+"                 Veuillez vous assurer que vous utilisez la bonne adresse ou contactez-nous sur %(default_email)s."
 
 #. module: mail
 #. odoo-python
@@ -9213,6 +9227,8 @@ msgid ""
 "The message below could not be accepted by the address %(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
+"Le message ci-dessous n'a pas été accepté par l'adresse %(alias_display_name)s.\n"
+"Veuillez réessayer ou contacter %(company_name)s."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
@@ -9775,7 +9791,7 @@ msgstr "Supprimer de la liste noire"
 #: code:addons/mail/wizard/mail_blacklist_remove.py:0
 #, python-format
 msgid "Unblock Reason: %(reason)s"
-msgstr ""
+msgstr "Motif du déblocage : %(reason)s"
 
 #. module: mail
 #. odoo-javascript
@@ -9921,7 +9937,7 @@ msgstr "Utiliser des serveurs ICE Twilio"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use a Gmail Server"
-msgstr ""
+msgstr "Utiliser un serveur Gmail"
 
 #. module: mail
 #. odoo-python
@@ -9940,7 +9956,7 @@ msgstr "Utiliser un domaine actif"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use an Outlook Server"
-msgstr ""
+msgstr "Utiliser un serveur Outlook"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id

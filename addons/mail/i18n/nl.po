@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 06:42+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,15 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"            <p class=\"o_view_nocontent_smiling_face\">\n"
+"                Adressen toevoegen aan de toegestane lijst\n"
+"            </p><p>\n"
+"                Om je te beschermen tegen spam en antwoordlussen, blokkeert Odoo automatisch e-mails\n"
+"                die naar je gateway komen voorbij een drempel van <b>%(threshold)i</b> e-mails elke <b>%(minutes)i</b>\n"
+"                minuten. Als er adressen zijn waarvan je heel vaak updates moet ontvangen,\n"
+"                kan je ze echter hieronder toevoegen en Odoo zal ze doorlaten.\n"
+"            </p>"
 
 #. module: mail
 #. odoo-python
@@ -64,7 +73,7 @@ msgstr "\"%s\" vereist microfoontoegang"
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%(author name)s from %(channel name)s"
-msgstr ""
+msgstr "%(author name)s van %(channel name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -1315,7 +1324,7 @@ msgstr "Aliasnaam"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Status alias"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
@@ -1325,7 +1334,7 @@ msgstr "Aliasdomein"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Status alias beoordeeld op het laatste ontvangen bericht."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
@@ -2512,7 +2521,7 @@ msgstr "Contacten"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Container Model"
-msgstr ""
+msgstr "Model container"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_member__last_interest_dt
@@ -2739,7 +2748,7 @@ msgstr "Aangepast bounced bericht"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE server list"
-msgstr ""
+msgstr "Aangepaste ICE-serverlijst"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -2854,7 +2863,7 @@ msgstr "Beste"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Dear Sender"
-msgstr ""
+msgstr "Beste verzender"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -3016,7 +3025,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Developer mode is on"
-msgstr ""
+msgstr "Ontwikkelaarsmodus is geactiveerd"
 
 #. module: mail
 #. odoo-javascript
@@ -6499,7 +6508,7 @@ msgstr "Niet bevestigd"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
 msgid "Not Tested"
-msgstr ""
+msgstr "Niet getest"
 
 #. module: mail
 #. odoo-javascript
@@ -6860,7 +6869,7 @@ msgstr "Document openen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Open Owner"
-msgstr ""
+msgstr "Eigenaar openen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -7570,7 +7579,7 @@ msgstr "Reden"
 #. module: mail
 #: model:res.groups,name:mail.group_mail_notification_type_inbox
 msgid "Receive notifications in Odoo"
-msgstr ""
+msgstr "Meldingen ontvangen in Odoo"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__received
@@ -7793,6 +7802,8 @@ msgstr "Weergavemodel"
 msgid ""
 "Rendering of %(field_name)s is not possible as not defined on template."
 msgstr ""
+"Rendering van %(field_name)s is niet mogelijk omdat het niet gedefinieerd is"
+" op het sjabloon."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -9154,6 +9165,7 @@ msgstr "De interne gebruiker verantwoordelijk voor dit contract."
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "The last message received on this alias has caused an error."
 msgstr ""
+"Het laatste ontvangen bericht op deze alias heeft een fout veroorzaakt."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -9169,6 +9181,9 @@ msgid ""
 "                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
 "                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
 msgstr ""
+"Het onderstaande bericht kon niet worden aanvaard door het adres %(alias_display_name)s.\n"
+"                 Enkel %(contact_description)s mogen er contact mee opnemen.<br /><br />\n"
+"                 Zorg ervoor dat je het juiste adres gebruikt of neem contact met ons op via %(default_email)s."
 
 #. module: mail
 #. odoo-python
@@ -9178,6 +9193,8 @@ msgid ""
 "The message below could not be accepted by the address %(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
+"Het onderstaande bericht kon niet worden aanvaard door het adres %(alias_display_name)s.\n"
+"Probeer het later opnieuw of neem contact op met %(company_name)s."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
@@ -9742,7 +9759,7 @@ msgstr "Verwijderen uit blacklist"
 #: code:addons/mail/wizard/mail_blacklist_remove.py:0
 #, python-format
 msgid "Unblock Reason: %(reason)s"
-msgstr ""
+msgstr "Reden om te deblokkeren : %(reason)s"
 
 #. module: mail
 #. odoo-javascript
@@ -9885,7 +9902,7 @@ msgstr "Twilio ICE-servers gebruiken"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use a Gmail Server"
-msgstr ""
+msgstr "Een Gmail server gebruiken"
 
 #. module: mail
 #. odoo-python
@@ -9904,7 +9921,7 @@ msgstr "Gebruik actief domein"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use an Outlook Server"
-msgstr ""
+msgstr "Een Outlook server gebruiken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
