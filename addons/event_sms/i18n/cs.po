@@ -30,6 +30,10 @@ msgid ""
 "${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
 " confirm your registration and hope to meet you there."
 msgstr ""
+"$ {object.event_id.organizer_id.name nebo object.event_id.company_id.name "
+"nebo user.env.company.name}: Jsme rádi, že vám připomíname, že událost $ "
+"{object.event_id.name} se začíná $ {object. get_date_range_str ()}. "
+"Potvrzujeme vaši registraci a doufáme, že se tam sejdeme."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -38,6 +42,9 @@ msgid ""
 "user.env.company.name}: We are happy to confirm your registration for the "
 "${object.event_id.name} event."
 msgstr ""
+"$ {object.event_id.organizer_id.name nebo object.event_id.company_id.name "
+"nebo user.env.company.name}: Jsme rádi, že můžeme potvrdit vaši registraci "
+"pro událost $ {object.event_id.name}."
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__display_name
@@ -116,4 +123,4 @@ msgstr "Odeslat"
 #: model:ir.model.fields,help:event_sms.field_event_type_mail__sms_template_id
 msgid ""
 "This field contains the template of the SMS that will be automatically sent"
-msgstr ""
+msgstr "Toto pole obsahuje šablonu SMS, která bude automaticky odeslána"
