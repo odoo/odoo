@@ -24,6 +24,7 @@ class TestUBLNL(TestUBLCommon):
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57'})],
             'l10n_nl_kvk': '77777677',
+            'ref': 'ref_partner_1',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -35,6 +36,7 @@ class TestUBLNL(TestUBLCommon):
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL93999574162167'})],
             'l10n_nl_kvk': '1234567',
+            'ref': 'ref_partner_2',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
