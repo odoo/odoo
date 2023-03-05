@@ -36,6 +36,7 @@
 # Joakim Weckman, 2022
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Richard Mouthier <rmo@odoo.com>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -43,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Richard Mouthier <rmo@odoo.com>, 2022\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15091,6 +15092,10 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Jos tämä näkymä periytyy,\n"
+"* jos True, näkymä laajentaa aina ylätason näkymänsä\n"
+"* jos False, näkymä ei tällä hetkellä laajenna ylätasoaan, mutta se voidaan ottaa käyttöön\n"
+"         "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -19825,6 +19830,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Koskee vain, jos tämä näkymä periytyy toisesta näkymästä (inherit_id ei ole False/Null).\n"
+"\n"
+"* jos laajennus (oletusarvo), jos tätä näkymää pyydetään lähimpänä olevaa ensisijaista näkymää\n"
+"etsitään (inherit_id:n kautta), sitten kaikki siitä periytyvät näkymät, joilla on tämä nimi\n"
+"näkymän mallia sovelletaan\n"
+"* jos ensisijainen, lähin primäärinen näkymä ratkaistaan kokonaan (vaikka se käyttäisi\n"
+"eri mallia kuin tämä näkymä), niin tämän näkymän periytymispesifikaatiot\n"
+"(<xpath/>) sovelletaan, ja tulosta käytetään ikään kuin se olisi tämän näkymän nimi\n"
+"varsinainen arch.\n"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -22600,7 +22614,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__secondary_color
 msgid "Secondary Color"
-msgstr ""
+msgstr "Toissijainen väri"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_security
@@ -23435,7 +23449,7 @@ msgstr "Tila"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
 msgid "Step"
-msgstr ""
+msgstr "Vaihe"
 
 #. module: base
 #: code:addons/base/models/ir_sequence.py:0
@@ -24610,7 +24624,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "Tämä kenttä on sama kuin `arch`-kenttä ilman käännöksiä"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
@@ -24623,11 +24637,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"Tätä kenttää on käytettävä, kun käytetään näkymäkaarta. Se käyttää käännöstä.\n"
+"                               Huomaa, että se lukee `arch_db` tai `arch_fs`, jos se on dev-xml-tilassa."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "Tähän kenttään tallennetaan näkymän arch."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev
@@ -24635,6 +24651,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Tämä kenttä tallentaa nykyisen `arch_db`-tietokannan ennen kuin siihen kirjoitetaan.\n"
+"                                                                         Hyödyllinen rikkinäisen näkymän (pehmeään) nollaamiseen."
 
 #. module: base
 #: code:addons/image.py:0
@@ -25070,7 +25088,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
 msgid "Tours"
-msgstr ""
+msgstr "Esittelykiertueet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
@@ -25650,7 +25668,7 @@ msgstr ""
 #: code:addons/base/static/src/js/res_config_settings.js:0
 #, python-format
 msgid "Unsaved changes"
-msgstr ""
+msgstr "Tallentamattomat muutokset"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -25731,7 +25749,7 @@ msgstr "Verkko-osoite"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__image_url
 msgid "Url of static flag image"
-msgstr ""
+msgstr "Staattisen lippukuvan Url"
 
 #. module: base
 #: model:res.country,name:base.uy
@@ -27108,7 +27126,7 @@ msgstr "tietokannan id"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__date
 msgid "date"
-msgstr ""
+msgstr "päivämäärä"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__datetime
@@ -27328,7 +27346,7 @@ msgstr "many2one_reference"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "minuutti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
