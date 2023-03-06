@@ -16,14 +16,14 @@
                                 <i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.
                                 When a barcode is scanned it is associated to the <i>first</i> rule with a matching
                                 pattern. The pattern syntax is that of regular expression, and a barcode is matched
-                                if the regular expression matches a prefix of the barcode. 
+                                if the regular expression matches a prefix of the barcode.
                             </p><p>
                                 Patterns can also define how numerical values, such as weight or price, can be
                                 encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's
-                                define where the number's digits are encoded. Floats are also supported with the 
-                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, 
-                                the barcode field on the associated records <i>must</i> show these digits as 
-                                zeroes. 
+                                define where the number's digits are encoded. Floats are also supported with the
+                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,
+                                the barcode field on the associated records <i>must</i> show these digits as
+                                zeroes.
                             </p>
                         </div>
                         <field name="rule_ids">
@@ -52,7 +52,6 @@
 
         <record model="ir.actions.act_window" id="action_barcode_nomenclature_form">
             <field name="name">Barcode Nomenclatures</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">barcode.nomenclature</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
@@ -72,10 +71,10 @@
                     <group>
                         <field name="name" />
                         <field name="sequence" />
-                        <field name="type"/>  
-                        <field name="encoding" attrs="{'invisible': [('type','=', 'alias')]}"/> 
+                        <field name="type"/>
+                        <field name="encoding" attrs="{'invisible': [('type','=', 'alias')]}"/>
                         <field name="pattern" />
-                        <field name="alias" attrs="{'invisible': [('type','!=', 'alias')]}"/>   
+                        <field name="alias" attrs="{'invisible': [('type','!=', 'alias')]}"/>
                     </group>
                 </form>
             </field>

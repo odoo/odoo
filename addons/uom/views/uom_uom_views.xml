@@ -33,8 +33,8 @@
                                     e.g: 1*(reference unit)=ratio*(this unit)
                                 </span>
                             </div>
-                            <label for="factor_inv" 
-                                attrs="{'invisible':[('uom_type','!=','bigger')]}"/>                           
+                            <label for="factor_inv"
+                                attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                             <div attrs="{'invisible':[('uom_type','!=','bigger')]}">
                                 <field name="factor_inv"
                                     digits="[42,5]"
@@ -71,7 +71,6 @@
 
     <record id="product_uom_form_action" model="ir.actions.act_window">
         <field name="name">Units of Measure</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">uom.uom</field>
         <field name="view_id" ref="product_uom_tree_view"/>
         <field name="search_view_id" ref="uom_uom_view_search"/>
@@ -139,7 +138,6 @@
 
     <record id="product_uom_categ_form_action" model="ir.actions.act_window">
         <field name="name">Units of Measure Categories</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">uom.category</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'allow_to_change_reference': 1}</field>

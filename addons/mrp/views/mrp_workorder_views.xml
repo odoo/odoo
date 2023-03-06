@@ -26,7 +26,6 @@
 
     <record id="action_mrp_routing_time" model="ir.actions.act_window">
         <field name="name">Work Orders</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">graph,pivot,tree,form,gantt,calendar</field>
         <field name="context">{'search_default_done': True}</field>
@@ -43,7 +42,6 @@
 
     <record model="ir.actions.act_window" id="action_mrp_workorder_production_specific">
         <field name="name">Work Orders</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">tree,form,gantt,calendar,pivot,graph</field>
         <field name="domain">[('production_id', '=', active_id)]</field>
@@ -463,7 +461,6 @@
 
     <record model="ir.actions.act_window" id="action_mrp_workorder_workcenter">
         <field name="name">Work Orders Planning</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
@@ -481,7 +478,6 @@
 
     <record model="ir.actions.act_window" id="action_mrp_workorder_production">
         <field name="name">Work Orders Planning</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="domain">[('production_state','not in',('done','cancel'))]</field>
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
@@ -500,7 +496,6 @@
 
     <record model="ir.actions.act_window" id="mrp_workorder_mrp_production_form">
         <field name="name">Work Orders</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -509,7 +504,6 @@
 
     <record model="ir.actions.act_window" id="mrp_workorder_todo">
         <field name="name">Work Orders</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,gantt</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
@@ -550,7 +544,6 @@
 
     <record id="action_mrp_workcenter_load_report_graph" model="ir.actions.act_window">
         <field name="name">Work Center Loads</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id" ref="view_workcenter_load_pivot"/>

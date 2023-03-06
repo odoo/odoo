@@ -71,7 +71,7 @@
                         </group>
                         <group class="col">
                             <field name="lead_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                        </group>                         
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -80,7 +80,6 @@
 
     <record id="event_lead_rule_action" model="ir.actions.act_window">
         <field name="name">Lead Generation Rule</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">event.lead.rule</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
@@ -90,7 +89,7 @@
     </record>
 
     <menuitem name="Lead Generation"
-        id="event_lead_rule_menu" 
+        id="event_lead_rule_menu"
         action="event_lead_rule_action"
         parent="event.menu_event_configuration"
         sequence="10"

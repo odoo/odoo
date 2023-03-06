@@ -88,7 +88,7 @@
                     <field name="backorder_id" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                    <field name="state" optional="show" widget="badge" 
+                    <field name="state" optional="show" widget="badge"
                            decoration-danger="state=='cancel'"
                            decoration-info="state== 'assigned'"
                            decoration-muted="state == 'draft'"
@@ -215,7 +215,7 @@
                                     decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
                                 <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                             </div>
-                            <field name="date_deadline" 
+                            <field name="date_deadline"
                                 attrs="{'invisible': ['|', ('state', 'in', ('done', 'cancel')), ('date_deadline', '=', False)]}"
                                 decoration-danger="date_deadline and date_deadline &lt; current_date"
                                 decoration-bf="date_deadline and date_deadline &lt; current_date"/>
@@ -387,7 +387,7 @@
                     <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" help="Cancelled Moves"/>
                     <separator/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
-                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/> 
+                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
                     <filter string="Planning Issues" name="planning_issues" help="Transfers that are late on scheduled time or one of pickings will be late"
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('scheduled_date','&lt;', time.strftime('%Y-%m-%d %H:%M:%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]"/>
                     <separator/>
@@ -416,7 +416,6 @@
         <record id="action_picking_tree_all" model="ir.actions.act_window">
             <field name="name">Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0]}</field>
@@ -433,7 +432,6 @@
         <record id="action_picking_tree_incoming" model="ir.actions.act_window">
             <field name="name">Receipts</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
             <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'incoming'}</field>
@@ -450,7 +448,6 @@
         <record id="action_picking_tree_outgoing" model="ir.actions.act_window">
             <field name="name">Deliveries</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain">[('picking_type_code', '=', 'outgoing')]</field>
             <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'outgoing'}</field>
@@ -467,7 +464,6 @@
         <record id="action_picking_tree_internal" model="ir.actions.act_window">
             <field name="name">Internal Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain">[('picking_type_code', '=', 'internal')]</field>
             <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'internal'}</field>
@@ -532,7 +528,6 @@
         <record id="stock_picking_action_picking_type" model="ir.actions.act_window">
             <field name="name">All Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address'}</field>
@@ -549,7 +544,6 @@
         <record id="action_picking_tree_ready" model="ir.actions.act_window">
             <field name="name">To Do</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
@@ -566,7 +560,6 @@
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
             <field name="name">Waiting Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_waiting': 1}</field>
@@ -583,7 +576,6 @@
         <record id="action_picking_tree_late" model="ir.actions.act_window">
             <field name="name">Late Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_planning_issues': 1}</field>
@@ -600,7 +592,6 @@
         <record id="action_picking_tree_backorder" model="ir.actions.act_window">
             <field name="name">Backorders</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_backorder': 1}</field>
@@ -618,7 +609,6 @@
         <record id="action_get_picking_type_operations" model="ir.actions.act_window">
             <field name="name">Operations</field>
             <field name="res_model">stock.move.line</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('stock.view_move_line_tree_detailed')})]"/>
             <field name="domain">[('picking_type_id', '=', active_id), ('picking_id', '!=', False)]</field>
@@ -639,7 +629,6 @@
         <record id="action_picking_form" model="ir.actions.act_window">
             <field name="name">New Transfer</field>
             <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">form</field>
             <field name="domain"></field>
             <field name="context">{

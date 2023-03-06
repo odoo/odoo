@@ -94,11 +94,11 @@
                             <group>
                                 <label for="note" string="Note" />
                                 <br />
-                                <field nolabel="1" colspan="2" name="note" 
+                                <field nolabel="1" colspan="2" name="note"
                                     placeholder="Add some internal notes (to do lists, contact info, ...)" />
                                 <label for="ticket_instructions" string="Ticket Instructions" />
                                 <br />
-                                <field nolabel="1" colspan="2" name="ticket_instructions" 
+                                <field nolabel="1" colspan="2" name="ticket_instructions"
                                     placeholder="e.g. How to get to your event, door closing time, ..." />
                             </group>
                         </page>
@@ -293,7 +293,6 @@
 
     <record model="ir.actions.act_window" id="action_event_view">
        <field name="name">Events</field>
-       <field name="type">ir.actions.act_window</field>
        <field name="res_model">event.event</field>
        <field name="view_mode">kanban,calendar,tree,form,pivot,graph</field>
        <field name="search_view_id" ref="view_event_search"/>

@@ -14,7 +14,6 @@
 	<record id="sale_report_action_slides" model="ir.actions.act_window">
         <field name="name">eLearning Revenues</field>
         <field name="res_model">sale.report</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="view_mode">graph,pivot</field>
         <field name="domain">[("product_id.channel_ids", "!=", False)]</field>
         <field name="context">{'group_by': ['date', 'product_id'], 'pivot_measures': ['price_total']}</field>
