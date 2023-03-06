@@ -8,7 +8,6 @@ import { getBasicData } from "@spreadsheet/../tests/utils/data";
 
 const { Model } = spreadsheet;
 const { functionRegistry } = spreadsheet.registries;
-const { args } = spreadsheet.helpers;
 
 async function createDashboardWithModel(model) {
     const serverData = getDashboardServerData();
@@ -62,7 +61,7 @@ QUnit.test("pivot/list formulas should be clickable", async (assert) => {
     const mock = {
         description: "Mock function to avoid setup all data sources process",
         compute: () => 1,
-        args: args(``),
+        args: [],
         returns: ["NUMBER"],
     };
 
