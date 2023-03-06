@@ -68,7 +68,7 @@ function getColorName(value) {
  * @param {string} fieldName
  * @returns {any}
  */
-function getRawValue(record, fieldName) {
+export function getRawValue(record, fieldName) {
     const field = record.fields[fieldName];
     const value = record.data[fieldName];
     switch (field.type) {
