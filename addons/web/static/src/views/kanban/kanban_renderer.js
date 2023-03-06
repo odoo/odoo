@@ -10,19 +10,46 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable";
 import { sprintf } from "@web/core/utils/strings";
 import { session } from "@web/session";
-import { isAllowedDateField } from "@web/views/relational_model";
-import { isNull, isRelational } from "@web/views/utils";
+import { archParseBoolean, isNull, isRelational } from "@web/views/utils";
+import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useBounceButton } from "@web/views/view_hook";
-import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
-import { Component, useState, useRef, onWillDestroy } from "@odoo/owl";
+import { Component, onWillDestroy, useRef, useState } from "@odoo/owl";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
+const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
+
+/**
+ * @param {Object} groupByField
+ * @returns {boolean}
+ */
+export function isAllowedDateField(groupByField) {
+    return (
+        ["date", "datetime"].includes(groupByField.type) &&
+        archParseBoolean(groupByField.attrs.allow_group_range_value)
+    );
+}
+
+/**
+ * @param {DynamicList} list
+ * @returns {boolean}
+ */
+export function canQuickCreate(list) {
+    if (list.groups && !list.groups.length) {
+        return false;
+    }
+
+    return (
+        list.groupByField &&
+        (isAllowedDateField(list.groupByField) ||
+            QUICK_CREATE_FIELD_TYPES.includes(list.groupByField.type))
+    );
+}
 
 export class KanbanRenderer extends Component {
     static template = "web.KanbanRenderer";
@@ -225,7 +252,7 @@ export class KanbanRenderer extends Component {
     }
 
     get showNoContentHelper() {
-        const { model, isGrouped, groups } = this.props.list;
+        const { model, isGrouped, groupByField, groups } = this.props.list;
         if (model.useSampleModel) {
             return true;
         }
@@ -234,7 +261,7 @@ export class KanbanRenderer extends Component {
                 return false;
             }
             if (groups.length === 0) {
-                return !this.props.list.groupedBy("m2o");
+                return groupByField.type !== "many2one";
             }
         }
         return !model.hasData();
@@ -307,7 +334,7 @@ export class KanbanRenderer extends Component {
 
     getGroupUnloadedCount(group) {
         const progressBar = group.activeProgressBar;
-        const records = group.getAggregableRecords();
+        const records = group.list.records.filter((r) => !r.isInQuickCreation);
         return (progressBar ? progressBar.count : group.count) - records.length;
     }
 
@@ -350,12 +377,16 @@ export class KanbanRenderer extends Component {
     canArchiveGroup(group) {
         const { activeActions } = this.props.archInfo;
         const hasActiveField = "active" in group.fields;
-        return activeActions.archiveGroup && hasActiveField && !this.props.list.groupedBy("m2m");
+        return (
+            activeActions.archiveGroup &&
+            hasActiveField &&
+            this.props.list.groupByField.type !== "many2many"
+        );
     }
 
     canCreateGroup() {
         const { activeActions } = this.props.archInfo;
-        return activeActions.createGroup && this.props.list.groupedBy("m2o");
+        return activeActions.createGroup && this.props.list.groupByField.type === "many2one";
     }
 
     canDeleteGroup(group) {
@@ -366,10 +397,7 @@ export class KanbanRenderer extends Component {
 
     canDeleteRecord() {
         const { activeActions } = this.props.archInfo;
-        return (
-            activeActions.delete &&
-            (!this.props.list.groupedBy || !this.props.list.groupedBy("m2m"))
-        );
+        return activeActions.delete && this.props.list.groupByField.type !== "many2many";
     }
 
     canEditGroup(group) {
@@ -383,7 +411,7 @@ export class KanbanRenderer extends Component {
     }
 
     canQuickCreate() {
-        return this.props.archInfo.activeActions.quickCreate && this.props.list.canQuickCreate();
+        return this.props.archInfo.activeActions.quickCreate && canQuickCreate(this.props.list);
     }
 
     // ------------------------------------------------------------------------

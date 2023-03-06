@@ -213,7 +213,8 @@ export class KanbanRecord extends Component {
 
         this.record = getFormattedRecord(this.props.record);
         // Widget
-        const deletable = activeActions.delete && (!list.groupedBy || !list.groupedBy("m2m"));
+        const deletable =
+            activeActions.delete && (!list.groupByField || list.groupByField.type !== "many2many");
         const editable = activeActions.edit;
         this.widget = {
             deletable,
