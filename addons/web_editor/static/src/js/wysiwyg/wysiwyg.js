@@ -431,6 +431,7 @@ const Wysiwyg = Widget.extend({
             // Wether or not the history has been sent or received at least once.
             let historySyncAtLeastOnce = false;
             let historySyncFinished = false;
+            let historyStepsBuffer = [];
 
             return new PeerToPeer({
                 peerConnectionConfig: { iceServers: this._iceServers },
@@ -515,6 +516,11 @@ const Wysiwyg = Widget.extend({
                                         this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
                                     }
                                 }
+                                // In case there are steps received in the meantime, process them.
+                                if (historyStepsBuffer.length) {
+                                    this.odooEditor.onExternalHistorySteps(historyStepsBuffer);
+                                    historyStepsBuffer = [];
+                                }
                                 historySyncFinished = true;
                             } else {
                                 const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
@@ -529,6 +535,8 @@ const Wysiwyg = Widget.extend({
                             // before the history has synced at least once.
                             if (historySyncFinished) {
                                 this.odooEditor.onExternalHistorySteps([notificationPayload]);
+                            } else {
+                                historyStepsBuffer.push(notificationPayload);
                             }
                             break;
                         case 'oe_history_set_selection': {
