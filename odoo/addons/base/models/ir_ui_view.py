@@ -2810,6 +2810,39 @@ class Model(models.AbstractModel):
         process(etree.fromstring(view_info['arch']), view_info, '')
         return result
 
+    @api.model
+    def _get_fields_spec(self, view_info=None):
+        """ Return the fields specification from a view description; if not
+        given, the result of ``self.get_view()`` is used.
+        """
+        def fill_spec(node, model, fields_spec):
+            if node.tag == 'field':
+                field_name = node.attrib['name']
+                field_spec = fields_spec.setdefault(field_name, {})
+                field = model._fields.get(field_name)
+                if field is not None:
+                    sub_fields_spec = {}
+                    if field.type == 'many2one':
+                        sub_fields_spec.setdefault('display_name', {})
+                    if field.relational:
+                        comodel = model.env[field.comodel_name]
+                        for child in node:
+                            fill_spec(child, comodel, sub_fields_spec)
+                    if field.type == 'one2many':
+                        sub_fields_spec.pop(field.inverse_name, None)
+                    if sub_fields_spec:
+                        field_spec.setdefault('fields', {}).update(sub_fields_spec)
+            else:
+                for child in node:
+                    fill_spec(child, model, fields_spec)
+
+        if view_info is None:
+            view_info = self.get_view()
+
+        result = {}
+        fill_spec(etree.fromstring(view_info['arch']), self, result)
+        return result
+
 
 class NameManager:
     """ An object that manages all the named elements in a view. """
