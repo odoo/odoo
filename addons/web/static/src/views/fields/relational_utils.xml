@@ -57,4 +57,12 @@
     </div>
 </t>
 
+<t t-name="web.AvatarMany2XAutocomplete" owl="1">
+    <span class="o_avatar_many2x_autocomplete">
+        <img t-if="option.value" class="rounded-circle"
+             t-attf-src="/web/image/{{option.resModel}}/{{option.value}}/avatar_128" />
+        <t t-esc="option.label" />
+    </span>
+</t>
+
 </templates>
