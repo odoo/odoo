@@ -1459,6 +1459,15 @@ export function register_payment_method(use_payment_terminal, ImplementedPayment
 }
 
 export class Product extends PosModel {
+    constructor(obj) {
+        super(obj);
+        this.parent_category_ids = [];
+        let category = this.categ.parent;
+        while (category) {
+            this.parent_category_ids.push(category.id);
+            category = category.parent;
+        }
+    }
     isAllowOnlyOneLot() {
         const productUnit = this.get_unit();
         return this.tracking === "lot" || !productUnit || !productUnit.is_pos_groupable;
@@ -1473,6 +1482,13 @@ export class Product extends PosModel {
             return undefined;
         }
         return this.pos.units_by_id[unit_id];
+    }
+    isPricelistItemUsable(item, date) {
+        return (
+            (!item.categ_id || _.contains(this.parent_category_ids.concat(this.categ.id), item.categ_id[0])) &&
+            (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
+            (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
+        );
     }
     // Port of _get_product_price on product.pricelist.
     //
@@ -1499,21 +1515,10 @@ export class Product extends PosModel {
             );
         }
 
-        var category_ids = [];
-        var category = this.categ;
-        while (category) {
-            category_ids.push(category.id);
-            category = category.parent;
-        }
-
         var pricelist_items = _.filter(
             self.applicablePricelistItems[pricelist.id],
             function (item) {
-                return (
-                    (!item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
-                    (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
-                    (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
-                );
+                return self.isPricelistItemUsable(item, date);
             }
         );
 
