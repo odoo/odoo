@@ -177,7 +177,6 @@
     <record id="action_orderpoint_replenish" model="ir.actions.act_window">
         <field name="name">Replenishment</field>
         <field name="res_model">stock.warehouse.orderpoint</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="view_warehouse_orderpoint_tree_editable"/>
         <field name="search_view_id" ref="stock_reorder_report_search"/>
@@ -195,7 +194,6 @@
     <record id="action_orderpoint" model="ir.actions.act_window">
         <field name="name">Reordering Rules</field>
         <field name="res_model">stock.warehouse.orderpoint</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="view_warehouse_orderpoint_tree_editable"/>
         <field name="search_view_id" ref="warehouse_orderpoint_search"/>

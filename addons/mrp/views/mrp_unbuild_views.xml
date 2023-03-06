@@ -4,7 +4,6 @@
 
    <record id="action_mrp_unbuild_moves" model="ir.actions.act_window">
         <field name="name">Stock Moves</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.move.line</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
@@ -192,7 +191,6 @@
 
     <record model="ir.actions.act_window" id="mrp_unbuild">
         <field name="name">Unbuild Orders</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.unbuild</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">

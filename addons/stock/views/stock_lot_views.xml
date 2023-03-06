@@ -20,7 +20,7 @@
                                 </span>
                                 <span class="o_stat_text">Transfers</span>
                             </div>
-                        </button>                           
+                        </button>
                         <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Location" type="object"/>
                         <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action"/>
                 </div>
@@ -88,7 +88,6 @@
 
     <record id="action_production_lot_form" model="ir.actions.act_window">
         <field name="name">Lots/Serial Numbers</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.lot</field>
         <field name="view_ids"
                    eval="[(5, 0, 0),

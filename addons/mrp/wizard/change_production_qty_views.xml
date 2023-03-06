@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        
+
         <!--  Change Product Quantity -->
         <record id="view_change_production_qty_wizard" model="ir.ui.view">
             <field name="name">Change Quantity To Produce</field>
@@ -29,11 +29,10 @@
 
         <record id="action_change_production_qty" model="ir.actions.act_window">
             <field name="name">Change Quantity To Produce</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">change.production.qty</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-       
+
     </data>
-</odoo>    
+</odoo>

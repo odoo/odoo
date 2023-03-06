@@ -147,7 +147,6 @@
 
         <record id="action_delivery_carrier_form" model="ir.actions.act_window">
             <field name="name">Shipping Methods</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">delivery.carrier</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_group_by_provider': True}</field>
@@ -168,7 +167,6 @@
 
         <record id="action_delivery_zip_prefix_list" model="ir.actions.act_window">
             <field name="name">Zip Prefix</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">delivery.zip.prefix</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
@@ -358,7 +356,7 @@
                         <field name="shipping_weight" readonly="True"/>
                     </field>
                 </data>
-                
+
             </field>
         </record>
 
@@ -381,7 +379,6 @@
 
         <record id="act_delivery_trackers_url" model="ir.actions.act_window">
             <field name="name">Display tracking links</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.picking</field>
             <field name="view_id" ref="delivery.delivery_tracking_url_warning_form"/>
             <field name="view_mode">form</field>

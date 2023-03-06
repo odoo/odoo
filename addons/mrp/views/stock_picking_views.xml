@@ -147,7 +147,6 @@
     <record id="action_picking_tree_mrp_operation" model="ir.actions.act_window">
         <field name="name">Manufacturings</field>
         <field name="res_model">stock.picking</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,kanban,form,calendar</field>
         <field name="domain">[('picking_type_code', '=', 'mrp_operation')]</field>
         <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'mrp_operation'}</field>

@@ -272,7 +272,6 @@
 
         <record id="res_partner_action_customer" model="ir.actions.act_window">
             <field name="name">Customers</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
@@ -287,7 +286,6 @@
 
         <record id="res_partner_action_supplier" model="ir.actions.act_window">
             <field name="name">Vendors</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True, 'default_supplier_rank': 1}</field>

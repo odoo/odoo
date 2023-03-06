@@ -114,7 +114,6 @@
 
     <record model="ir.actions.act_window" id="action_storage_category_locations">
         <field name="name">Locations</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.location</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('storage_category_id', '=', active_id)]</field>
@@ -123,7 +122,6 @@
     <record id="action_location_form" model="ir.actions.act_window">
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_location_tree2"/>
         <field name="search_view_id" ref="view_location_search"/>
@@ -150,7 +148,6 @@
     <record id="action_prod_inv_location_form" model="ir.actions.act_window">
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_location_tree2"/>
         <field name="search_view_id" ref="view_location_search"/>
@@ -241,7 +238,6 @@
         <record id="action_routes_form" model="ir.actions.act_window">
             <field name="name">Routes</field>
             <field name="res_model">stock.route</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="stock_location_route_tree" />
             <field name="help" type="html">

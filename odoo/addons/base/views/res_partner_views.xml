@@ -30,7 +30,6 @@
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contact Titles</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="domain">[]</field>
             <field name="context">{}</field>
@@ -524,7 +523,6 @@
 
         <record id="action_partner_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'res_partner_search_mode': 'customer'}</field>
@@ -558,7 +556,6 @@
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[]</field>
@@ -593,7 +590,6 @@
 
         <record id="action_partner_supplier_form" model="ir.actions.act_window">
             <field name="name">Vendors</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -671,7 +667,6 @@
 
         <record id="action_partner_category_form" model="ir.actions.act_window">
             <field name="name">Contact Tags</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
             <field name="search_view_id" ref="res_partner_category_view_search"/>
             <field name="help" type="html">
@@ -728,7 +723,6 @@
 
         <record id="res_partner_industry_action" model="ir.actions.act_window">
             <field name="name">Industries</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.industry</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="res_partner_industry_view_search"/>

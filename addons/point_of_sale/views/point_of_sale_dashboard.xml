@@ -3,7 +3,6 @@
 
     <record id="action_pos_session_filtered" model="ir.actions.act_window">
         <field name="name">Sessions</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.session</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_pos_session_search" />
@@ -23,7 +22,6 @@
 
     <record id="action_pos_order_filtered" model="ir.actions.act_window">
         <field name="name">Orders</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.order</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_pos_order_search"/>
@@ -160,7 +158,7 @@
                                         <div>
                                             <a t-if="record.number_of_rescue_session.value &gt; 0" class="oe_kanban_action oe_kanban_action_a col-12" name="open_opened_rescue_session_form" type="object">
                                                 <t t-esc="record.number_of_rescue_session.value" /> outstanding rescue session
-                                            </a>                                     
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
