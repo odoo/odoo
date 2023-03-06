@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <!--product history-->
     <record id="website_sale_visitor_page_view_tree" model="ir.ui.view">
         <field name="name">website.track.view.tree</field>
@@ -44,15 +45,15 @@
         <field name="model">website.track</field>
         <field name="inherit_id" ref="website.website_visitor_page_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='url']" position="after">
+            <field name="url" position="after">
                 <field name="product_id"/>
-            </xpath>
-            <xpath expr="//filter[@name='type_url']" position="after">
+            </field>
+            <filter name="type_url" position="after">
                 <filter string="Products" name="type_product" domain="[('product_id', '!=', False)]"/>
-            </xpath>
-            <xpath expr="//filter[@name='group_by_url']" position="after">
+            </filter>
+            <filter name="group_by_url" position="after">
                 <filter string="Product" name="group_by_product" domain="[]" context="{'group_by': 'product_id'}"/>
-            </xpath>
+            </filter>
         </field>
     </record>
 
@@ -80,9 +81,9 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='page_ids']" position="after">
+            <field name="page_ids" position="after">
                 <field name="product_ids" widget="many2many_tags" string="Products"/>
-            </xpath>
+            </field>
         </field>
     </record>
 
@@ -91,9 +92,9 @@
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='page_ids']" position="after">
+            <field name="page_ids" position="after">
                 <field name="product_ids"/>
-            </xpath>
+            </field>
             <xpath expr="//div[@id='o_page_count']" position="after">
                  <div id="o_product_count">Visited Products<span class="float-end fw-bold"><field name="product_count"/></span></div>
             </xpath>
@@ -106,9 +107,9 @@
         <field name="model">website.track</field>
         <field name="inherit_id" ref="website.website_visitor_track_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='url']" position="after">
+            <field name="url" position="after">
                 <field name="product_id"/>
-            </xpath>
+            </field>
         </field>
     </record>
 
@@ -117,9 +118,10 @@
         <field name="model">website.track</field>
         <field name="inherit_id" ref="website.website_visitor_track_view_graph"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='url']" position="after">
+            <field name="url" position="after">
                 <field name="product_id"/>
-            </xpath>
+            </field>
         </field>
     </record>
+
 </odoo>
