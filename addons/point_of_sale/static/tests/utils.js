@@ -6,6 +6,7 @@ registry.category("mock_server").add("pos.session/load_pos_data", async function
     return {
         "res.company": { id: 1 },
         "pos.session": { id: 1 },
+        "pos.printer": [],
         "pos.config": { id: 1, uuid: "TEST-UUID", trusted_config_ids: [] },
         "res.partner": [...(this.models["res.partner"]?.records || [])],
         "pos.category": [...(this.models["pos.category"]?.records || [])],

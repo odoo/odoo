@@ -15,10 +15,6 @@ class TestFrontend(odoo.tests.HttpCase):
                                                  'account_type': 'asset_receivable',
                                                  'reconcile': True})
 
-        printer = self.env['restaurant.printer'].create({
-            'name': 'Kitchen Printer',
-            'proxy_ip': 'localhost',
-        })
         drinks_category = self.env['pos.category'].create({'name': 'Drinks'})
 
         main_company = self.env.ref('base.main_company')
@@ -43,7 +39,6 @@ class TestFrontend(odoo.tests.HttpCase):
             'iface_splitbill': True,
             'iface_printbill': True,
             'iface_orderline_notes': True,
-            'printer_ids': [(4, printer.id)],
             'iface_start_categ_id': drinks_category.id,
             'start_category': True,
         })

@@ -3,14 +3,6 @@
 
         <!-- ******  Basic Restaurant Setup ***** -->
 
-        <!-- Kitchen Printer -->
-
-        <record id="kitchen_printer" model="restaurant.printer">
-            <field name="name">Kitchen Printer</field>
-            <field name="proxy_ip">localhost</field>
-            <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]" />
-        </record>
-
         <record id="drinks" model="pos.category">
               <field name="name">Drinks</field>
         </record>

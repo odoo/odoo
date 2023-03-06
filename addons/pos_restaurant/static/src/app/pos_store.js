@@ -17,9 +17,6 @@ const NON_IDLE_EVENTS = [
 ];
 let IDLE_TIMER_SETTER;
 
-/**
- * Go back to the floor screen if the user has been idle for a while.
- */
 patch(PosStore.prototype, "pos_restaurant.PosStore", {
     /**
      * @override

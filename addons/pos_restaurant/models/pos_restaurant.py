@@ -118,15 +118,3 @@ class RestaurantTable(models.Model):
             error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")
             if confs:
                 raise UserError(error_msg)
-
-
-class RestaurantPrinter(models.Model):
-
-    _name = 'restaurant.printer'
-    _description = 'Restaurant Printer'
-
-    name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
-    printer_type = fields.Selection(string='Printer Type', default='iot',
-        selection=[('iot', ' Use a printer connected to the IoT Box')])
-    proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")
-    product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')

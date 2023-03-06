@@ -24,3 +24,4 @@ from . import pos_payment
 from . import pos_payment_method
 from . import pos_bill
 from . import report_sale_details
+from . import pos_printer

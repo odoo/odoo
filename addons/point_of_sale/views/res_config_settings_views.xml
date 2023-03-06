@@ -333,6 +333,18 @@
                                     </div>
                                 </div>
                             </setting>
+                            <setting string="Preparation Printers" help="Print orders at the kitchen, at the bar, etc." id="is_order_printer">
+                                <field name="pos_is_order_printer"/>
+                                <div class="content-group" attrs="{'invisible': [('pos_is_order_printer', '=', False)]}">
+                                    <div class="mt16">
+                                        <label string="Printers" for="pos_printer_ids" class="o_light_label"/>
+                                        <field name="pos_printer_ids" widget="many2many_tags"/>
+                                    </div>
+                                    <div>
+                                        <button name="%(point_of_sale.action_pos_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </setting>
                             <setting string="Preparation Display" help="Display orders on the preparation display" id="preparation_display">
                                 <field name="module_pos_preparation_display"/>
                             </setting>

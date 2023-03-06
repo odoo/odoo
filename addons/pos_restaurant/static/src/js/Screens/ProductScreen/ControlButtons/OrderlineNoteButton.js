@@ -21,12 +21,12 @@ export class OrderlineNoteButton extends Component {
         }
 
         const { confirmed, payload: inputNote } = await this.popup.add(TextAreaPopup, {
-            startingValue: this.selectedOrderline.get_note(),
-            title: this.env._t("Add kitchen Note"),
+            startingValue: this.selectedOrderline.getNote(),
+            title: this.env._t("Add internal Note"),
         });
 
         if (confirmed) {
-            this.selectedOrderline.set_note(inputNote);
+            this.selectedOrderline.setNote(inputNote);
         }
     }
 }

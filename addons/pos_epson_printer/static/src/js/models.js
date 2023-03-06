@@ -13,4 +13,11 @@ patch(PosGlobalState.prototype, "pos_epson_printer.PosGlobalState", {
             }
         });
     },
+    create_printer(config) {
+        if (config.printer_type === "epson_epos") {
+            return new EpsonPrinter({ ip: config.epson_printer_ip });
+        } else {
+            return this._super(...arguments);
+        }
+    },
 });

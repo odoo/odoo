@@ -12,9 +12,7 @@ from odoo import api, fields, models
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
-    note = fields.Char('Kitchen Note added by the waiter.')
-    uuid = fields.Char(string='Uuid', readonly=True, copy=False)
-    mp_skip = fields.Boolean('Skip line when sending ticket to kitchen printers.')
+    note = fields.Char('Internal Note added by the waiter.')
 
 
 class PosOrder(models.Model):
@@ -22,14 +20,11 @@ class PosOrder(models.Model):
 
     table_id = fields.Many2one('restaurant.table', string='Table', help='The table where this order was served', index='btree_not_null', readonly=True)
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
-    multiprint_resume = fields.Char(string='Multiprint Resume', help="Last printed state of the order")
 
     def _get_fields_for_order_line(self):
         fields = super(PosOrder, self)._get_fields_for_order_line()
         fields.extend([
             'note',
-            'uuid',
-            'mp_skip',
             'full_product_name',
             'customer_note',
             'price_extra',
@@ -42,7 +37,6 @@ class PosOrder(models.Model):
         fields.extend([
             'table_id',
             'customer_count',
-            'multiprint_resume',
         ])
         return fields
 
@@ -126,7 +120,6 @@ class PosOrder(models.Model):
         order_fields = super(PosOrder, self)._order_fields(ui_order)
         order_fields['table_id'] = ui_order.get('table_id', False)
         order_fields['customer_count'] = ui_order.get('customer_count', 0)
-        order_fields['multiprint_resume'] = ui_order.get('multiprint_resume', False)
         return order_fields
 
     def _export_for_ui(self, order):

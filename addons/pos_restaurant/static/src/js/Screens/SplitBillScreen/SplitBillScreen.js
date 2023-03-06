@@ -65,9 +65,9 @@ export class SplitBillScreen extends Component {
             // order and for the new one. This is not entirely correct
             // but avoids flooding the kitchen with unnecessary orders.
             // Not sure what to do in this case.
-            if (this.env.pos.isInterfacePrinter()) {
-                this.currentOrder.updatePrintedResume();
-                this.newOrder.updatePrintedResume();
+            if (this.env.pos.orderPreparationCategories.size) {
+                this.currentOrder.updateLastOrderChange();
+                this.newOrder.updateLastOrderChange();
             }
 
             this.newOrder.setCustomerCount(1);

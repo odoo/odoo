@@ -10,10 +10,8 @@ class PosSession(models.Model):
 
     def _pos_ui_models_to_load(self):
         result = super()._pos_ui_models_to_load()
-        if self.config_id.module_pos_restaurant:
-            result.append('restaurant.printer')
-            if self.config_id.is_table_management:
-                result.append('restaurant.floor')
+        if self.config_id.module_pos_restaurant and self.config_id.is_table_management:
+            result.append('restaurant.floor')
         return result
 
     def _loader_params_restaurant_floor(self):
@@ -51,16 +49,6 @@ class PosSession(models.Model):
             floor['tables'] = tables_by_floor_id.get(floor['id'], [])
 
         return floors
-
-    def _loader_params_restaurant_printer(self):
-        return {
-            'search_params': {
-                'domain': [('id', 'in', self.config_id.printer_ids.ids)],
-                'fields': ['name', 'proxy_ip', 'product_categories_ids', 'printer_type'],
-            },
-        }
-    def _get_pos_ui_restaurant_printer(self, params):
-        return self.env['restaurant.printer'].search_read(**params['search_params'])
 
     def get_pos_ui_restaurant_floor(self):
         return self._get_pos_ui_restaurant_floor(self._loader_params_restaurant_floor())

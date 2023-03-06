@@ -9,19 +9,11 @@ class PosConfig(models.Model):
 
     iface_splitbill = fields.Boolean(string='Bill Splitting', help='Enables Bill Splitting in the Point of Sale.')
     iface_printbill = fields.Boolean(string='Bill Printing', help='Allows to print the Bill before payment.')
-    iface_orderline_notes = fields.Boolean(string='Kitchen Notes', help='Allow custom kitchen notes on Orderlines.', default=True)
+    iface_orderline_notes = fields.Boolean(string='Internal Notes', help='Allow custom Internal notes on Orderlines.', default=True)
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
-    printer_ids = fields.Many2many('restaurant.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_table_management = fields.Boolean('Floors & Tables')
-    is_order_printer = fields.Boolean('Order Printer')
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
-
-    def _force_http(self):
-        enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
-        if not enforce_https and self.printer_ids.filtered(lambda pt: pt.printer_type == 'epson_epos'):
-            return True
-        return super(PosConfig, self)._force_http()
 
     def get_tables_order_count(self):
         """         """
@@ -46,8 +38,6 @@ class PosConfig(models.Model):
     def write(self, vals):
         if ('is_table_management' in vals and vals['is_table_management'] == False):
             vals['floor_ids'] = [(5, 0, 0)]
-        if ('is_order_printer' in vals and vals['is_order_printer'] == False):
-            vals['printer_ids'] = [(5, 0, 0)]
         return super(PosConfig, self).write(vals)
 
     @api.model

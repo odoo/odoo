@@ -45,6 +45,8 @@ class ResConfigSettings(models.TransientModel):
     pos_module_pos_discount = fields.Boolean(related='pos_config_id.module_pos_discount', readonly=False)
     pos_module_pos_hr = fields.Boolean(related='pos_config_id.module_pos_hr', readonly=False)
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
+    pos_is_order_printer = fields.Boolean(compute='_compute_pos_printer', store=True, readonly=False)
+    pos_printer_ids = fields.Many2many(related='pos_config_id.printer_ids', readonly=False)
 
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
@@ -181,6 +183,13 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def _is_cashdrawer_displayed(self, res_config):
         return res_config.pos_iface_print_via_proxy
+
+    @api.depends('pos_module_pos_restaurant', 'pos_config_id')
+    def _compute_pos_printer(self):
+        for res_config in self:
+            res_config.update({
+                'pos_is_order_printer': res_config.pos_config_id.is_order_printer,
+            })
 
     @api.depends('pos_limit_categories', 'pos_config_id')
     def _compute_pos_iface_available_categ_ids(self):

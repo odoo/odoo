@@ -55,7 +55,6 @@ export class Table extends Component {
                 font-size: ${table.height >= 150 && table.width >= 150 ? 32 : 16}px;
             `;
         }
-        
     }
     get fill() {
         const customerCount = this.env.pos.getCustomerCount(this.props.table.id);
@@ -71,7 +70,7 @@ export class Table extends Component {
     }
     get orderCountClass() {
         const countClass = { "order-count": true };
-        if (this.env.pos.config.iface_printers) {
+        if (this.env.pos.orderPreparationCategories.size) {
             const notifications = this._getNotifications();
             countClass["notify-printing"] = notifications.printing;
             countClass["notify-skipped"] = notifications.skipped;

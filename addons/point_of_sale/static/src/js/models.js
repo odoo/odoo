@@ -3,9 +3,10 @@
 
 import { PosDB } from "@point_of_sale/js/db";
 import { formatFloat } from "@web/views/fields/formatters";
+import { uuidv4, batched, deduceUrl } from "@point_of_sale/js/utils";
+import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
-import { batched, uuidv4 } from "@point_of_sale/js/utils";
 import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import {
     roundDecimals as round_di,
@@ -21,7 +22,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { Mutex } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
 import { _t } from "@web/core/l10n/translation";
-import { renderToString } from "@web/core/utils/render";
+import { renderToString, renderToElement } from "@web/core/utils/render";
 
 const { DateTime } = luxon;
 
@@ -159,6 +160,7 @@ export class PosGlobalState extends PosModel {
         this.uom_unit_id = null;
         this.default_pricelist = null;
         this.order_sequence = 1;
+        this.printers_category_ids_set = new Set();
 
         // Object mapping the order's name (which contains the uid) to it's server_id after
         // validation (order paid then sent to the backend).
@@ -277,6 +279,7 @@ export class PosGlobalState extends PosModel {
         this.base_url = loadedData["base_url"];
         await this._loadFonts();
         await this._loadPictures();
+        await this._loadPosPrinters(loadedData["pos.printer"]);
     }
     _loadPosSession() {
         // We need to do it here, since only then the local storage has the correct uuid
@@ -285,6 +288,23 @@ export class PosGlobalState extends PosModel {
         const sequences = orders.map((order) => order.data.sequence_number + 1);
         this.pos_session.sequence_number = Math.max(this.pos_session.sequence_number, ...sequences);
         this.pos_session.login_number = odoo.login_number;
+    }
+    _loadPosPrinters(printers) {
+        this.unwatched.printers = [];
+        // list of product categories that belong to one or more order printer
+        for (const printerConfig of printers) {
+            const printer = this.create_printer(printerConfig);
+            printer.config = printerConfig;
+            this.unwatched.printers.push(printer);
+            for (const id of printer.config.product_categories_ids) {
+                this.printers_category_ids_set.add(id);
+            }
+        }
+        this.config.iface_printers = !!this.unwatched.printers.length;
+    }
+    create_printer(config) {
+        const url = deduceUrl(config.proxy_ip || "");
+        return new HWPrinter({ rpc: this.env.services.rpc, url });
     }
     _loadPoSConfig() {
         this.db.set_uuid(this.config.uuid);
@@ -446,6 +466,12 @@ export class PosGlobalState extends PosModel {
     }
     get_cashier_user_id() {
         return this.user.id;
+    }
+    get orderPreparationCategories() {
+        if (this.printers_category_ids_set) {
+            return new Set([...this.printers_category_ids_set]);
+        }
+        return new Set();
     }
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.get_cashier().role == "manager";
@@ -730,10 +756,11 @@ export class PosGlobalState extends PosModel {
         return message;
     }
     async _getPricelistJson(pricelistsToGet) {
-        return await this.orm.call("pos.session", "get_pos_ui_product_pricelists_by_ids", [
-            [odoo.pos_session_id],
-            pricelistsToGet,
-        ]);
+        return await this.env.services.orm.call(
+            "pos.session",
+            "get_pos_ui_product_pricelists_by_ids",
+            [[odoo.pos_session_id], pricelistsToGet]
+        );
     }
     _addPosPricelists(pricelistsJson) {
         if (!this.config.use_pricelist) {
@@ -772,10 +799,11 @@ export class PosGlobalState extends PosModel {
         return message;
     }
     async _getFiscalPositionJson(fiscalPositionToGet) {
-        return await this.orm.call("pos.session", "get_pos_ui_account_fiscal_positions_by_ids", [
-            [odoo.pos_session_id],
-            fiscalPositionToGet,
-        ]);
+        return await this.env.services.orm.call(
+            "pos.session",
+            "get_pos_ui_account_fiscal_positions_by_ids",
+            [[odoo.pos_session_id], fiscalPositionToGet]
+        );
     }
     _addPosFiscalPosition(fiscalPositionJson) {
         this.fiscal_positions.push(...fiscalPositionJson);
@@ -1003,14 +1031,12 @@ export class PosGlobalState extends PosModel {
     // - timeout: timeout for the rpc call in ms
     // returns a promise that resolves with the list of
     // server generated ids for the sent orders
-    _save_to_server(orders, options) {
+    async _save_to_server(orders, options) {
         if (!orders || !orders.length) {
             return Promise.resolve([]);
         }
         this.set_synch("connecting", orders.length);
         options = options || {};
-
-        var self = this;
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
@@ -1023,32 +1049,46 @@ export class PosGlobalState extends PosModel {
         // we try to send the order. silent prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
         const orm = options.to_invoice ? this.orm : this.orm.silent;
-        // FIXME POSREF timeout
-        // const timeout = typeof options.timeout === "number" ? options.timeout : 30000 * orders.length;
-        return orm
-            .call("pos.order", "create_from_ui", [orders, options.draft || false])
-            .then(function (server_ids) {
-                order_ids_to_sync.forEach((order_id) => {
-                    self.db.remove_order(order_id);
-                });
-                self.failed = false;
-                self.set_synch("connected");
-                return server_ids;
-            })
-            .catch(function (error) {
-                console.warn("Failed to send orders:", orders);
-                if (error.code === 200) {
-                    // Business Logic Error, not a connection problem
-                    // Hide error if already shown before ...
-                    if ((!self.failed || options.show_error) && !options.to_invoice) {
-                        self.failed = error;
-                        self.set_synch("error");
-                        throw error;
-                    }
+
+        try {
+            // FIXME POSREF timeout
+            // const timeout = typeof options.timeout === "number" ? options.timeout : 30000 * orders.length;
+            const serverIds = await orm.call("pos.order", "create_from_ui", [
+                orders,
+                options.draft || false,
+            ]);
+
+            for (const serverId of serverIds) {
+                const order = this.env.services.pos.globalState.orders.find(
+                    (order) => order.name === serverId.pos_reference
+                );
+
+                if (order) {
+                    order.server_id = serverId.id;
                 }
-                self.set_synch("disconnected");
-                throw error;
-            });
+            }
+
+            for (const order_id of order_ids_to_sync) {
+                this.db.remove_order(order_id);
+            }
+
+            this.failed = false;
+            this.set_synch("connected");
+            return serverIds;
+        } catch (error) {
+            console.warn("Failed to send orders:", orders);
+            if (error.code === 200) {
+                // Business Logic Error, not a connection problem
+                // Hide error if already shown before ...
+                if ((!this.failed || options.show_error) && !options.to_invoice) {
+                    this.failed = error;
+                    this.set_synch("error");
+                    throw error;
+                }
+            }
+            this.set_synch("disconnected");
+            throw error;
+        }
     }
 
     // Exports the paid orders (the ones waiting for internet connection)
@@ -1797,6 +1837,8 @@ export class Orderline extends PosModel {
         this.pos = options.pos;
         this.order = options.order;
         this.price_manually_set = options.price_manually_set || false;
+        this.uuid = this.uuid || uuidv4();
+
         this.price_automatically_set = options.price_automatically_set || false;
         if (options.json) {
             try {
@@ -1815,6 +1857,9 @@ export class Orderline extends PosModel {
         this.set_product_lot(this.product);
         this.set_quantity(1);
         this.discount = 0;
+        this.note = "";
+        this.hasChange = false;
+        this.skipChange = false;
         this.discountStr = "0";
         this.selected = false;
         this.description = "";
@@ -1854,6 +1899,8 @@ export class Orderline extends PosModel {
         this.refunded_qty = json.refunded_qty;
         this.refunded_orderline_id = json.refunded_orderline_id;
         this.saved_quantity = json.qty;
+        this.uuid = json.uuid;
+        this.skipChange = json.skip_change;
     }
     clone() {
         var orderline = new Orderline(
@@ -1933,6 +1980,20 @@ export class Orderline extends PosModel {
     set_product_lot(product) {
         this.has_product_lot = product.tracking !== "none";
         this.pack_lot_lines = this.has_product_lot && new PosCollection();
+    }
+    getNote() {
+        return this.note;
+    }
+    setNote(note) {
+        this.note = note;
+    }
+    toggleSkipChange() {
+        if (this.hasChange || this.skipChange) {
+            this.skipChange = !this.skipChange;
+        }
+    }
+    setHasChange(isChange) {
+        this.hasChange = isChange;
     }
     // sets a discount [0,100]%
     set_discount(discount) {
@@ -2142,6 +2203,8 @@ export class Orderline extends PosModel {
         );
         // only orderlines of the same product can be merged
         return (
+            !this.skipChange &&
+            orderline.getNote() === this.getNote() &&
             this.get_product().id === orderline.get_product().id &&
             this.get_unit() &&
             this.get_unit().is_pos_groupable &&
@@ -2172,6 +2235,8 @@ export class Orderline extends PosModel {
             });
         }
         return {
+            uuid: this.uuid,
+            skip_change: this.skipChange,
             qty: this.get_quantity(),
             price_unit: this.get_unit_price(),
             price_subtotal: this.get_price_without_tax(),
@@ -2726,6 +2791,8 @@ export class Order extends PosModel {
                 return fp.id === self.pos.config.default_fiscal_position_id[0];
             });
         }
+
+        this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
     }
     save_to_db() {
         if (!this.temporary && !this.locked && !this.finalized) {
@@ -2828,6 +2895,8 @@ export class Order extends PosModel {
         this.tip_amount = json.tip_amount || 0;
         this.access_token = json.access_token || "";
         this.ticketCode = json.ticket_code || "";
+        this.lastOrderPrepaChange =
+            json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
     }
     export_as_JSON() {
         var orderLines, paymentLines;
@@ -2861,6 +2930,7 @@ export class Order extends PosModel {
             is_tipped: this.is_tipped || false,
             tip_amount: this.tip_amount || 0,
             access_token: this.access_token || "",
+            last_order_preparation_change: JSON.stringify(this.lastOrderPrepaChange),
             ticket_code: this.ticketCode || "",
         };
         if (!this.is_paid && this.user_id) {
@@ -2955,6 +3025,195 @@ export class Order extends PosModel {
         }
 
         return receipt;
+    }
+    async printChanges() {
+        const orderChange = this.changesToOrder;
+        let isPrintSuccessful = true;
+        const d = new Date();
+        let hours = "" + d.getHours();
+        hours = hours.length < 2 ? "0" + hours : hours;
+        let minutes = "" + d.getMinutes();
+        minutes = minutes.length < 2 ? "0" + minutes : minutes;
+        for (const printer of this.pos.unwatched.printers) {
+            const changes = this._getPrintingCategoriesChanges(
+                printer.config.product_categories_ids,
+                orderChange
+            );
+            if (changes["new"].length > 0 || changes["cancelled"].length > 0) {
+                const printingChanges = {
+                    new: changes["new"],
+                    cancelled: changes["cancelled"],
+                    table_name: this.pos.config.is_table_management ? this.getTable().name : false,
+                    floor_name: this.pos.config.is_table_management
+                        ? this.getTable().floor.name
+                        : false,
+                    name: this.name || "unknown order",
+                    time: {
+                        hours,
+                        minutes,
+                    },
+                };
+                const receipt = renderToElement("OrderChangeReceipt", { changes: printingChanges });
+                const result = await printer.printReceipt(receipt);
+                if (!result.successful) {
+                    isPrintSuccessful = false;
+                }
+            }
+        }
+
+        return isPrintSuccessful;
+    }
+    _getPrintingCategoriesChanges(categories) {
+        const currentOrderChange = this.changesToOrder;
+        return {
+            new: currentOrderChange["new"].filter((change) =>
+                this.pos.db.is_product_in_category(categories, change["product_id"])
+            ),
+            cancelled: currentOrderChange["cancelled"].filter((change) =>
+                this.pos.db.is_product_in_category(categories, change["product_id"])
+            ),
+        };
+    }
+    /**
+     * This function is called after the order has been successfully sent to the preparation tool(s).
+     * In the future, this status should be separated between the different preparation tools,
+     * so that if one of them returns an error, it is possible to send the information back to it
+     * without impacting the other tools.
+     */
+    updateLastOrderChange() {
+        const orderlineIdx = [];
+        this.orderlines.forEach((line) => {
+            if (!line.skipChange) {
+                const note = line.getNote();
+                const lineKey = `${line.uuid} - ${note}`;
+                orderlineIdx.push(lineKey);
+
+                if (this.lastOrderPrepaChange[lineKey]) {
+                    this.lastOrderPrepaChange[lineKey]["quantity"] = line.get_quantity();
+                } else {
+                    this.lastOrderPrepaChange[lineKey] = {
+                        line_uuid: line.uuid,
+                        product_id: line.get_product().id,
+                        name: line.get_full_product_name(),
+                        note: note,
+                        quantity: line.get_quantity(),
+                    };
+                }
+                line.setHasChange(false);
+            }
+        });
+
+        // Checks whether an orderline has been deleted from the order since it
+        // was last sent to the preparation tools. If so we delete it to the changes.
+        for (const lineKey in this.lastOrderPrepaChange) {
+            if (!this.getOrderedLine(lineKey)) {
+                delete this.lastOrderPrepaChange[lineKey];
+            }
+        }
+    }
+
+    /**
+     * @returns {{ [productKey: string]: { product_id: number, name: string, note: string, quantity: number } }}
+     * This function recalculates the information to be sent to the preparation tools,
+     * it uses the variable lastOrderPrepaChange which contains the last changes sent
+     * to perform this calculation.
+     */
+    getOrderChanges() {
+        const prepaCategoryIds = this.pos.orderPreparationCategories;
+        const oldChanges = this.lastOrderPrepaChange;
+        const changes = {};
+
+        if (!prepaCategoryIds.size) {
+            return {};
+        }
+
+        // Compares the orderlines of the order with the last ones sent.
+        // When one of them has changed, we add the change.
+        for (const orderlineIdx in this.orderlines) {
+            const orderline = this.orderlines[orderlineIdx];
+
+            if (orderline.skipChange) {
+                continue;
+            }
+
+            const product = orderline.get_product();
+            const note = orderline.getNote();
+            const productKey = `${product.id} - ${orderline.get_full_product_name()} - ${note}`;
+            const lineKey = `${orderline.uuid} - ${note}`;
+
+            if (prepaCategoryIds.has(product.pos_categ_id[0])) {
+                const quantity = orderline.get_quantity();
+                const quantityDiff = oldChanges[lineKey]
+                    ? quantity - oldChanges[lineKey].quantity
+                    : quantity;
+
+                if (quantityDiff) {
+                    changes[productKey] = {
+                        name: orderline.get_full_product_name(),
+                        product_id: product.id,
+                        quantity: quantityDiff,
+                        note: note,
+                    };
+                    orderline.setHasChange(true);
+                } else {
+                    orderline.setHasChange(false);
+                }
+            } else {
+                orderline.setHasChange(false);
+            }
+        }
+
+        // Checks whether an orderline has been deleted from the order since it
+        // was last sent to the preparation tools. If so we add this to the changes.
+        for (const [lineKey, lineResume] of Object.entries(this.lastOrderPrepaChange)) {
+            if (!this.getOrderedLine(lineKey)) {
+                const productKey = `${lineResume["product_id"]} - ${lineResume["name"]} - ${lineResume["note"]}`;
+                if (!changes[productKey]) {
+                    changes[productKey] = {
+                        product_id: lineResume["product_id"],
+                        name: lineResume["name"],
+                        note: lineResume["note"],
+                        quantity: -lineResume["quantity"],
+                    };
+                } else {
+                    changes[productKey]["quantity"] -= lineResume["quantity"];
+                }
+            }
+        }
+
+        return changes;
+    }
+    // This function transforms the data generated by getOrderChanges into the old
+    // pattern used by the printer and the display preparation. This old pattern comes from
+    // the time when this logic was in pos_restaurant.
+    get changesToOrder() {
+        const toAdd = [];
+        const toRemove = [];
+        const changes = Object.values(this.getOrderChanges());
+
+        for (const lineChange of changes) {
+            if (lineChange["quantity"] > 0) {
+                toAdd.push(lineChange);
+            } else if (lineChange["quantity"] < 0) {
+                lineChange["quantity"] *= -1; // we change the sign because that's how it is
+                toRemove.push(lineChange);
+            }
+        }
+
+        return { new: toAdd, cancelled: toRemove };
+    }
+    getOrderedLine(lineKey) {
+        return this.orderlines.find(
+            (line) =>
+                line.uuid === this.lastOrderPrepaChange[lineKey]["line_uuid"] &&
+                line.note === this.lastOrderPrepaChange[lineKey]["note"]
+        );
+    }
+    hasSkippedChanges() {
+        return this.orderlines.find((orderline) => orderline.skipChange) ? true : false;
+    }
+    hasChangesToPrint() {
+        return Object.keys(this.getOrderChanges()).length ? true : false;
     }
     async pay() {
         if (

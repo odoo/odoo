@@ -24,7 +24,7 @@ class DoExt extends Do {
         return [
             {
                 content: "click note button",
-                trigger: '.control-buttons .control-button span:contains("Kitchen Note")',
+                trigger: '.control-buttons .control-button span:contains("Internal Note")',
             },
         ];
     }
