@@ -1654,6 +1654,7 @@ class PosSession(models.Model):
             'account.tax',
             'pos.session',
             'pos.config',
+            'pos.printer',
             'pos.bill',
             'res.partner',
             'stock.picking.type',
@@ -1886,6 +1887,17 @@ class PosSession(models.Model):
 
     def _get_pos_ui_res_currency(self, params):
         return self.env['res.currency'].search_read(**params['search_params'])[0]
+
+    def _get_pos_ui_pos_printer(self, params):
+        return self.env['pos.printer'].search_read(**params['search_params'])
+
+    def _loader_params_pos_printer(self):
+        return {
+            'search_params': {
+                'domain': [('id', 'in', self.config_id.printer_ids.ids)],
+                'fields': ['name', 'proxy_ip', 'product_categories_ids', 'printer_type'],
+            },
+        }
 
     def _loader_params_pos_category(self):
         domain = []

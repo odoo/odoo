@@ -43,6 +43,12 @@ export class ReceiptScreen extends AbstractReceiptScreen {
                     await this.handleAutoPrint();
                 }
             }, 0);
+
+            // When the order is paid, if there is still a part of the order
+            // to send in preparation it is automatically sent
+            if (this.pos.globalState.orderPreparationCategories.size) {
+                this.pos.sendOrderInPreparation(this.currentOrder);
+            }
         });
     }
     _addNewOrder() {

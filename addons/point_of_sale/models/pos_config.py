@@ -47,6 +47,8 @@ class PosConfig(models.Model):
         return self.env.ref('point_of_sale.group_pos_user')
 
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
+    printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
+    is_order_printer = fields.Boolean('Order Printer')
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
     picking_type_id = fields.Many2one(
@@ -402,6 +404,9 @@ class PosConfig(models.Model):
 
     def write(self, vals):
         self._reset_default_on_vals(vals)
+        if ('is_order_printer' in vals and not vals['is_order_printer']):
+            vals['printer_ids'] = [fields.Command.clear()]
+
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
@@ -484,7 +489,7 @@ class PosConfig(models.Model):
 
     def _force_http(self):
         enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
-        if not enforce_https and self.other_devices:
+        if not enforce_https and (self.other_devices or self.printer_ids.filtered(lambda pt: pt.printer_type == 'epson_epos')):
             return True
         return False
 

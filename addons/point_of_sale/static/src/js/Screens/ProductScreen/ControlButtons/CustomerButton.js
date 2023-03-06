@@ -23,7 +23,7 @@ ProductScreen.addControlButton({
     condition: function () {
         return (
             this.pos.globalState.config.module_pos_restaurant &&
-            this.pos.globalState.printers_category_ids_set.size
+            this.pos.globalState.orderPreparationCategories.size
         );
     },
 });
