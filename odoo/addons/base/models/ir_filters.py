@@ -17,7 +17,9 @@ class IrFilters(models.Model):
                                    "and available to all users.")
     domain = fields.Text(default='[]', required=True)
     context = fields.Text(default='{}', required=True)
-    sort = fields.Text(default='[]', required=True)
+    order_by = fields.Text(default='[]', string="Order By" required=True)
+    group_by = fields.Text(default='[]', string="Group By", required=True)
+    comparison = fields.Text()
     model_id = fields.Selection(selection='_list_all_models', string='Model', required=True)
     is_default = fields.Boolean(string='Default Filter')
     action_id = fields.Many2one('ir.actions.actions', string='Action', ondelete='cascade',

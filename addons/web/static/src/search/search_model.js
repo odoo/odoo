@@ -121,15 +121,8 @@ function arraytoMap(array) {
  * @param {Object} target
  */
 function execute(op, source, target) {
-    const {
-        query,
-        nextId,
-        nextGroupId,
-        nextGroupNumber,
-        searchItems,
-        searchPanelInfo,
-        sections,
-    } = source;
+    const { query, nextId, nextGroupId, nextGroupNumber, searchItems, searchPanelInfo, sections } =
+        source;
 
     target.nextGroupId = nextGroupId;
     target.nextGroupNumber = nextGroupNumber;
@@ -715,9 +708,11 @@ export class SearchModel extends EventBus {
             return searchItem.comparison;
         }
         const { dateFilterId, comparisonOptionId } = searchItem;
-        const { fieldName, fieldType, description: dateFilterDescription } = this.searchItems[
-            dateFilterId
-        ];
+        const {
+            fieldName,
+            fieldType,
+            description: dateFilterDescription,
+        } = this.searchItems[dateFilterId];
         const selectedGeneratorIds = this._getSelectedGeneratorIds(dateFilterId);
         // compute range and range description
         const { domain: range, description: rangeDescription } = constructDateDomain(
@@ -727,16 +722,14 @@ export class SearchModel extends EventBus {
             selectedGeneratorIds
         );
         // compute comparisonRange and comparisonRange description
-        const {
-            domain: comparisonRange,
-            description: comparisonRangeDescription,
-        } = constructDateDomain(
-            this.referenceMoment,
-            fieldName,
-            fieldType,
-            selectedGeneratorIds,
-            comparisonOptionId
-        );
+        const { domain: comparisonRange, description: comparisonRangeDescription } =
+            constructDateDomain(
+                this.referenceMoment,
+                fieldName,
+                fieldType,
+                selectedGeneratorIds,
+                comparisonOptionId
+            );
         return {
             comparisonId: comparisonOptionId,
             fieldName,
@@ -1754,12 +1747,12 @@ export class SearchModel extends EventBus {
     _getIrFilterDescription(params = {}) {
         const { description, isDefault, isShared } = params;
         const fns = this.env.__getContext__.callbacks;
-        const localContext = Object.assign({}, ...fns.map((fn) => fn()));
         const gs = this.env.__getOrderBy__.callbacks;
         let localOrderBy;
         if (gs.length) {
             localOrderBy = gs.flatMap((g) => g());
         }
+        const localContext = Object.assign({}, ...fns.map((fn) => fn()));
         const context = makeContext([this._getContext(), localContext]);
         const userContext = this.userService.context;
         for (const key in context) {
@@ -1784,19 +1777,20 @@ export class SearchModel extends EventBus {
             userId,
         };
         const irFilter = {
-            name: description,
             action_id: this.env.config.actionId,
             model_id: this.resModel,
-            domain,
-            is_default: isDefault,
-            sort: JSON.stringify(orderBy.map((o) => `${o.name}${o.asc === false ? " desc" : ""}`)),
             user_id: userId,
-            context: { group_by: groupBys, ...context },
+            name: description,
+            is_default: isDefault,
+            domain,
+            context: { ...context },
+            order_by: JSON.stringify(orderBy),
+            group_by: JSON.stringify(groupBys),
         };
 
         if (comparison) {
             preFavorite.comparison = comparison;
-            irFilter.context.comparison = comparison;
+            irFilter.comparison = JSON.stringify(comparison);
         }
 
         return { preFavorite, irFilter };
@@ -1807,7 +1801,7 @@ export class SearchModel extends EventBus {
      */
     _getOrderBy() {
         const groups = this._getGroups();
-        let orderBy = [];
+        const orderBy = [];
         for (const group of groups) {
             for (const activeItem of group.activeItems) {
                 const { searchItemId } = activeItem;
@@ -1956,59 +1950,13 @@ export class SearchModel extends EventBus {
         }
         const groupNumber = userId ? FAVORITE_PRIVATE_GROUP : FAVORITE_SHARED_GROUP;
         const context = evaluateExpr(irFilter.context, this.userService.context);
-        let groupBys = [];
-        if (context.group_by) {
-            groupBys = context.group_by;
-            delete context.group_by;
-        }
-        let comparison;
-        if (context.comparison) {
-            comparison = context.comparison;
-            if (typeof comparison.range === "string") {
-                // legacy case
-                comparison.range = new Domain(comparison.range).toList();
-            }
-            if (typeof comparison.comparisonRange === "string") {
-                // legacy case
-                comparison.comparisonRange = new Domain(comparison.comparisonRange).toList();
-            }
-            delete context.comparison;
-        }
-        let sort;
-        try {
-            sort = JSON.parse(irFilter.sort);
-        } catch (err) {
-            if (err instanceof SyntaxError) {
-                sort = [];
-            } else {
-                throw err;
-            }
-        }
-        const orderBy = sort.map((order) => {
-            let fieldName;
-            let asc;
-            const sqlNotation = order.split(" ");
-            if (sqlNotation.length > 1) {
-                // regex: \fieldName (asc|desc)?\
-                fieldName = sqlNotation[0];
-                asc = sqlNotation[1] === "asc";
-            } else {
-                // legacy notation -- regex: \-?fieldName\
-                fieldName = order[0] === "-" ? order.slice(1) : order;
-                asc = order[0] === "-" ? false : true;
-            }
-            return {
-                asc: asc,
-                name: fieldName,
-            };
-        });
         const favorite = {
             context,
             description: irFilter.name,
             domain: irFilter.domain,
-            groupBys,
+            groupBys: JSON.parse(irFilter.group_by),
             groupNumber,
-            orderBy,
+            orderBy: JSON.parse(irFilter.order_by),
             removable: true,
             serverSideId: irFilter.id,
             type: "favorite",
@@ -2017,8 +1965,8 @@ export class SearchModel extends EventBus {
         if (irFilter.is_default) {
             favorite.isDefault = irFilter.is_default;
         }
-        if (comparison) {
-            favorite.comparison = comparison;
+        if (irFilter.comparison) {
+            favorite.comparison = JSON.parse(irFilter.comparison);
         }
         return favorite;
     }
