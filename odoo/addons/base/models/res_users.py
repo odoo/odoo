@@ -904,6 +904,10 @@ class Users(models.Model):
             'target': 'current',
         }
 
+    def _is_internal(self):
+        self.ensure_one()
+        return not self.share
+
     def _is_public(self):
         self.ensure_one()
         return self.has_group('base.group_public')

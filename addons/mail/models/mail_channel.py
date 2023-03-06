@@ -751,7 +751,7 @@ class Channel(models.Model):
             [('partner_id', '=', self.env.user.partner_id.id)] if self.env.user and self.env.user.partner_id else expression.FALSE_LEAF,
         ])
         all_needed_members = self.env['mail.channel.partner'].search(expression.AND([[('channel_id', 'in', self.ids)], all_needed_members_domain]))
-        partner_format_by_partner = all_needed_members.partner_id.mail_partner_format()
+        partner_format_by_partner = all_needed_members.partner_id.sudo().mail_partner_format()
         members_by_channel = defaultdict(lambda: self.env['mail.channel.partner'])
         invited_members_by_channel = defaultdict(lambda: self.env['mail.channel.partner'])
         member_of_current_user_by_channel = defaultdict(lambda: self.env['mail.channel.partner'])
@@ -807,8 +807,8 @@ class Channel(models.Model):
                     'seen_message_id': cp.seen_message_id.id,
                 } for cp in members_by_channel[channel] if cp.partner_id], key=lambda p: p['partner_id'])
                 info['guestMembers'] = [('insert', sorted([{
-                    'id': member.guest_id.id,
-                    'name': member.guest_id.name,
+                    'id': member.guest_id.sudo().id,
+                    'name': member.guest_id.sudo().name,
                 } for member in members_by_channel[channel] if member.guest_id], key=lambda g: g['id']))]
 
             # add RTC sessions info
