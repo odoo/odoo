@@ -20,7 +20,10 @@
                     <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
 
                     <t t-if="props.delete">
-                        <button class="btn btn-secondary o_btn_remove" t-on-click="remove" data-hotkey="k">Remove</button>
+                        <button class="btn btn-secondary o_btn_remove" t-on-click="remove" data-hotkey="k">
+                            <t t-if="props.deleteButtonLabel" t-out="props.deleteButtonLabel"/>
+                            <t t-else="">Remove</t>
+                        </button>
                     </t>
                 </t>
                 <t t-else="">
