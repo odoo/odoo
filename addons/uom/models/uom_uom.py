@@ -16,13 +16,16 @@ class UoMCategory(models.Model):
     uom_ids = fields.One2many('uom.uom', 'category_id')
     reference_uom_id = fields.Many2one('uom.uom', "Reference UoM", store=False, help="Dummy field to keep track of reference uom change")
 
+    def _get_reference_count(self):
+        return sum(uom.uom_type == 'reference' and uom.active for uom in self.uom_ids)
+
     @api.onchange('uom_ids')
     def _onchange_uom_ids(self):
         if len(self.uom_ids) == 1:
             self.uom_ids[0].uom_type = 'reference'
             self.uom_ids[0].factor = 1
         else:
-            reference_count = sum(uom.uom_type == 'reference' for uom in self.uom_ids)
+            reference_count = self._get_reference_count()
             if reference_count == 0 and self._origin.id:
                 return {
                     'warning': {
@@ -31,9 +34,9 @@ class UoMCategory(models.Model):
                     }
                 }
             if self.reference_uom_id:
-                new_reference = self.uom_ids.filtered(lambda o: o.uom_type == 'reference' and o._origin.id != self.reference_uom_id.id)
+                new_reference = self.uom_ids.filtered(lambda o: o.uom_type == 'reference' and o.active and o._origin.id != self.reference_uom_id.id)
             else:
-                new_reference = self.uom_ids.filtered(lambda o: o.uom_type == 'reference' and o._origin.uom_type != 'reference')
+                new_reference = self.uom_ids.filtered(lambda o: o.uom_type == 'reference' and o.active and o._origin.uom_type != 'reference')
             if new_reference:
                 other_uoms = self.uom_ids.filtered(lambda u: u._origin.id) - new_reference
                 for uom in other_uoms:
@@ -90,8 +93,7 @@ class UoM(models.Model):
         for category in self.category_id:
             if not category.uom_ids:
                 continue
-            reference_count = sum(
-                uom.uom_type == 'reference' for uom in category.uom_ids)
+            reference_count = category._get_reference_count()
             if reference_count > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % category.name)
             elif reference_count == 0:
