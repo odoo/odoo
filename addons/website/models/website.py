@@ -958,10 +958,18 @@ class Website(models.Model):
         self.ensure_one()
         self_prefetch_langs = self.with_context(prefetch_langs=True)
         langs = []
+        shorts = set()
         for lg in self.env['res.lang'].get_available():
+            short = lg[0].split('_')[0]
+            if short in shorts:
+                hreflang = lg[0].replace('_', '-').lower()
+            else:
+                hreflang = short
+                shorts.add(short)
             langs.append({
                 'id': lg[5],
                 'code': lg[0],
+                'hreflang': hreflang,
                 'url_code': lg[1],
                 'name': lg[2].split('/').pop(),
                 'flag_image_url': lg[4],

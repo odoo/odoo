@@ -128,11 +128,9 @@
         <t t-if="request and request.is_frontend_multilang and website and website.is_public_user()">
             <t t-set="alternate_languages" t-value="website._get_alternate_languages(canonical_params=canonical_params)"/>
             <t t-foreach="alternate_languages" t-as="lg" t-if="len(alternate_languages) > 1">
-        <link rel="alternate" t-att-hreflang="lg['url_code']" t-att-href="lg['href']"/>
+        <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
         <link rel="alternate" hreflang="x-default" t-att-href="lg['href']" t-if="lg['id'] == website._get_cached('default_lang_id')"/>
-                <t t-if="lg['code']==lang">
-        <link rel="canonical" t-att-href="lg['href']"/>
-                </t>
+        <link rel="canonical" t-att-href="lg['href']" t-if="lg['code']==lang"/>
             </t><t t-else="">
         <link rel="canonical" t-att-href="alternate_languages[0]['href']"/>
             </t>
