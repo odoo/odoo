@@ -5,7 +5,6 @@
         ==================================================================== -->
         <record id="action_website_add_features" model="ir.actions.act_window">
             <field name="name">Apps</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">['!', ('name', '=like', 'theme_%')]</field>

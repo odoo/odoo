@@ -2,7 +2,6 @@
 <odoo>
     <record id="event_registration_action_from_lead" model="ir.actions.act_window">
         <field name="name">Event registrations</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">event.registration</field>
         <field name="view_mode">tree,kanban,form,calendar,graph</field>
         <field name="domain">[('lead_ids', '=', active_id)]</field>

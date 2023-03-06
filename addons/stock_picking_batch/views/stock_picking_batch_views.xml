@@ -248,7 +248,6 @@
     </record>
     <record id="stock_picking_batch_action" model="ir.actions.act_window">
         <field name="name">Batch Transfers</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.picking.batch</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="domain">[('is_wave', '=', False)]</field>
@@ -314,5 +313,5 @@
                 <filter string="Batch Transfer" name="by_batch_id" context="{'group_by': 'batch_id'}"/>
             </xpath>
         </field>
-    </record>    
+    </record>
 </odoo>

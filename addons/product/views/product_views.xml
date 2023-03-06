@@ -188,7 +188,6 @@
 
     <record id="product_template_action_all" model="ir.actions.act_window">
         <field name="name">Products</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{}</field>
@@ -217,7 +216,6 @@
 
         <record id="product_normal_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">tree,form,kanban,activity</field>
             <field name="search_view_id" ref="product_search_form_view"/>
@@ -308,7 +306,6 @@
 
         <record id="product_variant_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="context">{'search_default_product_tmpl_id': [active_id], 'default_product_tmpl_id': active_id, 'create': False}</field>
             <field name="search_view_id" ref="product_search_form_view"/>
@@ -463,7 +460,6 @@
 
         <record id="product_normal_action_sell" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="context">{"search_default_filter_to_sell":1}</field>

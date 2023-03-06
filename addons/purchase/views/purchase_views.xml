@@ -55,7 +55,6 @@
 
     <record id="product_normal_action_puchased" model="ir.actions.act_window">
         <field name="name">Products</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template": 1}</field>
@@ -662,7 +661,6 @@
 
         <record id="purchase_rfq" model="ir.actions.act_window">
             <field name="name">Requests for Quotation</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
             <field name="view_id" ref="purchase_order_kpis_tree"/>
@@ -684,7 +682,6 @@
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
             <field name="view_ids" eval="[(5, 0, 0),
@@ -837,7 +834,6 @@
 
     <record id="action_accrued_expense_entry" model="ir.actions.act_window">
         <field name="name">Accrued Expense Entry</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">account.accrued.orders.wizard</field>
         <field name="view_mode">form</field>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>

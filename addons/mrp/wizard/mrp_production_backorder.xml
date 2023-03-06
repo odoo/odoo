@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        
+
         <!-- MO Backorder -->
         <record id="view_mrp_production_backorder_form" model="ir.ui.view">
             <field name="name">Create Backorder</field>
@@ -34,11 +34,10 @@
 
         <record id="action_mrp_production_backorder" model="ir.actions.act_window">
             <field name="name">You produced less than initial demand</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production.backorder</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-       
+
     </data>
-</odoo>    
+</odoo>

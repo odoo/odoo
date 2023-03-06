@@ -103,7 +103,6 @@
     <!-- SAMPLE INVOICE EMAIL -->
     <record id="action_open_account_onboarding_create_invoice" model="ir.actions.act_window">
         <field name="name">Create first invoice</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">account.move</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="account.view_move_form" />
@@ -140,7 +139,6 @@
     </record>
     <record id="action_open_account_onboarding_sale_tax" model="ir.actions.act_window">
         <field name="name">Sales tax</field>
-        <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.company</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="account_invoice_onboarding_sale_tax_form" />
