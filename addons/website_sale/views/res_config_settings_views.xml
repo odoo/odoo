@@ -6,14 +6,14 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_update_terms']" position="replace">
+            <button name="action_update_terms" position="replace">
                 <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}" groups="website.group_website_designer">
                     <strong class="align-top">URL: </strong><field name="terms_url"/>
                     <div>
                         <button name='action_update_terms' icon="fa-arrow-right" type="object" string="Edit in Website Builder" class="btn-link"/>
                     </div>
                 </div>
-            </xpath>
+            </button>
         </field>
     </record>
 
@@ -25,7 +25,7 @@
             <!-- Remove customer accounts setting from sales settings tab -->
             <!-- It must not be in the view at all to make sure settings can be saved
                 (because auth_signup_uninvited is specified as required) -->
-            <xpath expr="//setting[@id='auth_signup_documents']" position="replace"></xpath>
+            <setting id="auth_signup_documents" position="replace"/>
         </field>
     </record>
 
@@ -187,11 +187,11 @@
             <setting id="cart_redirect_setting" position="after">
                 <setting id="website_login_documents" position="move"/>
             </setting>
-            <xpath expr="//setting[@id='website_login_documents']" position="replace">
+            <setting id="website_login_documents" position="replace">
                 <setting id="website_login_documents" title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*." string="Sign in/up at checkout" help="&quot;Optional&quot; allows guests to register from the order confirmation email to track their order.">
                     <field name="account_on_checkout" class="w-75" widget="radio"/>
                 </setting>
-            </xpath>
+            </setting>
 
             <setting id="website_marketing_automation" position="after">
                 <setting
@@ -221,11 +221,11 @@
                 </setting>
             </setting>
 
-            <xpath expr="//setting[@id='google_analytics_setting']" position="after">
+            <setting id="google_analytics_setting" position="after">
                 <setting id="autocomplete_googleplaces_setting" help="Use Google Places API to validate addresses entered by your visitors">
                     <field name="module_website_sale_autocomplete"/>
                 </setting>
-            </xpath>
+            </setting>
         </field>
     </record>
 </odoo>
