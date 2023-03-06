@@ -427,26 +427,16 @@ class IrHttp(models.AbstractModel):
             new_url = path.replace('//', '/')
             werkzeug.exceptions.abort(request.redirect(new_url, code=301, local=True))
 
-        # There is no user on the environment yet but the following code
-        # requires one to set the lang on the request. Temporary grant
-        # the public user. Don't try it at home!
-        real_env = request.env
-        # try:
-        # request.registry['ir.http']._auth_method_public()
-
-        nearest_url_lang = request.env['res.lang']._lang_get_code(url_lang_str)                # url_code from URL
-        cookie_lang = request.env['res.lang']._lang_get_code(request.httprequest.cookies.get('frontend_lang')) # url_code from cookie, returning visitor
-        context_lang = cls.get_nearest_lang(request.env.context.get('lang'))                      # code from browser
-        default_lang = cls._get_default_lang()                                                 # string from browser
+        nearest_url_lang = request.env['res.lang']._url_to_code(url_lang_str)
+        cookie_lang = request.env['res.lang']._url_to_code(request.httprequest.cookies.get('frontend_lang'))
+        context_lang = cls.get_nearest_lang(request.env.context.get('lang')) # from browser or from user
+        default_lang = cls._get_default_lang()
 
         # pylint: disable=assigning-non-slot
         request.lang = request.env['res.lang']._lang_get(
-            nearest_url_lang or cookie_lang or context_lang or default_lang._get_cached('code')
-        )
+            nearest_url_lang or cookie_lang or context_lang
+        ) or default_lang
         request_url_code = request.lang._get_cached('url_code')
-
-        # finally:
-        #     request.env = real_env
 
         if not nearest_url_lang:
             url_lang_str = None

@@ -218,7 +218,7 @@ class Lang(models.Model):
     def _lang_get_direction(self, code):
         return self.with_context(active_test=True).search([('code', '=', code)]).direction
 
-    def _lang_get_code(self, url_code):
+    def _url_to_code(self, url_code):
         for lg in self.get_available():
             if lg[3] and (lg[1] == url_code):
                 return lg[0]
