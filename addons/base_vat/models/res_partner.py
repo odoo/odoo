@@ -214,6 +214,16 @@ class ResPartner(models.Model):
             format=vat_no
         )
 
+    __check_vat_al_re = re.compile(r'^[JKLM][0-9]{8}[A-Z]$')
+
+    def check_vat_al(self, vat):
+        """Check Albania VAT number"""
+        number = stdnum.util.get_cc_module('al', 'vat').compact(vat)
+
+        if len(number) == 10 and self.__check_vat_al_re.match(number):
+            return True
+        return False
+
     __check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
 
     def check_vat_ch(self, vat):

@@ -156,7 +156,7 @@ class AccountMove(models.Model):
             else:
                 number_ref = str(move.name) + " " + nik
 
-            shipping_partner = self.env['res.partner'].browse(self._get_invoice_delivery_partner_id())
+            shipping_partner = self.env['res.partner'].browse(move._get_invoice_delivery_partner_id())
             street = ', '.join([x for x in (shipping_partner.street, shipping_partner.street2) if x])
 
             invoice_npwp = '000000000000000'

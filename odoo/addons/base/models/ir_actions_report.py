@@ -331,6 +331,9 @@ class IrActionsReport(models.Model):
             if paperformat_id.header_line:
                 command_args.extend(['--header-line'])
 
+        # Add extra time to allow the page to render
+        command_args.extend(['--javascript-delay', '1000'])
+
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
 
