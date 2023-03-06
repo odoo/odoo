@@ -145,7 +145,7 @@ export class TaxTotalsComponent extends Component {
     }
 
     _format(amount) {
-        return formatMonetary(amount, { currencyId: this.currencyId });
+        return formatMonetary(amount, { currencyId: this.currencyId[0] });
     }
 
     _computeTotalsFormat() {
