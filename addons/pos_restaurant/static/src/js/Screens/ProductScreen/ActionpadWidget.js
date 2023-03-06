@@ -11,7 +11,7 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
         return (
             this.props.actionName === "Payment" &&
             this.pos.globalState.config.module_pos_restaurant &&
-            this.pos.globalState.printers_category_ids_set.size
+            this.pos.globalState.orderPreparationCategories.size
         );
     },
     get currentOrder() {
@@ -32,7 +32,7 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
         if (!this.clicked) {
             this.clicked = true;
             try {
-                this.currentOrder.submitOrder();
+                await this.pos.sendOrderInPreparation(this.currentOrder);
             } finally {
                 this.clicked = false;
             }
@@ -50,15 +50,18 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
     get highlightPay() {
         return (
             this._super(...arguments) &&
-            this.pos.globalState.printers_category_ids_set.size &&
+            this.pos.globalState.orderPreparationCategories.size &&
             !this.currentOrder.hasChangesToPrint() &&
             this.hasQuantity(this.currentOrder)
         );
     },
     get categoryCount() {
         const categories = {};
-        for (const orderline of this.currentOrder.printingChanges.new) {
-            const category = this.pos.globalState.db.get_product_by_id(orderline.product_id).pos_categ_id[1];
+        const orderChange = this.currentOrder.getOrderChanges();
+        for (const idx in orderChange) {
+            const orderline = orderChange[idx];
+            const category = this.pos.globalState.db.get_product_by_id(orderline.product_id)
+                .pos_categ_id[1];
             const numProd = orderline.quantity;
             categories[category] = categories[category] ? categories[category] + numProd : numProd;
         }

@@ -20,7 +20,7 @@
                             </div>
                         </div>
                     </setting>
-                    <setting string="Kitchen Notes" help="Add kitchen notes on order lines for the kitchen" id="iface_orderline_notes" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                    <setting string="Internal Notes" help="Add internal notes on order lines for the kitchen" id="iface_orderline_notes" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
                         <field name="pos_iface_orderline_notes"/>
                     </setting>
                     <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
@@ -28,18 +28,6 @@
                     </setting>
                     <setting help="Split total or order lines" id="iface_splitbill" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
                         <field name="pos_iface_splitbill" string="Allow Bill Splitting"/>
-                    </setting>
-                    <setting string="Kitchen Printers" help="Print orders at the kitchen, at the bar, etc." id="is_order_printer" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
-                        <field name="pos_is_order_printer"/>
-                        <div class="content-group" attrs="{'invisible': [('pos_is_order_printer', '=', False)]}">
-                            <div class="mt16">
-                                <label string="Printers" for="pos_printer_ids" class="o_light_label"/>
-                                <field name="pos_printer_ids" widget="many2many_tags"/>
-                            </div>
-                            <div>
-                                <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
-                            </div>
-                        </div>
                     </setting>
                 </block>
             </block>

@@ -36,6 +36,13 @@
             <field name="start_category">True</field>
         </record>
 
+        <!-- Preparation Printer -->
+        <record id="preparation_printer" model="pos.printer">
+            <field name="name">Preparation Printer</field>
+            <field name="proxy_ip">localhost</field>
+            <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]" />
+        </record>
+
         <!-- Resource: product.product -->
         <record id="stock.product_cable_management_box" model="product.product">
           <field name="pos_categ_id" ref="point_of_sale.pos_category_miscellaneous"/>

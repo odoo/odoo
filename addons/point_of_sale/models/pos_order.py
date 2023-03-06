@@ -59,6 +59,7 @@ class PosOrder(models.Model):
             'tip_amount': ui_order.get('tip_amount', 0),
             'access_token': ui_order.get('access_token', ''),
             'ticket_code': ui_order.get('ticket_code', ''),
+            'last_order_preparation_change': ui_order.get('last_order_preparation_change', False),
         }
 
     @api.model
@@ -237,6 +238,7 @@ class PosOrder(models.Model):
         return price_unit
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
+    last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='Responsible',
@@ -280,7 +282,7 @@ class PosOrder(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
-    note = fields.Text(string='Kitchen Notes')
+    note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True, ondelete='restrict')
@@ -1103,6 +1105,7 @@ class PosOrder(models.Model):
             'create_uid',
             'create_date',
             'fiscal_position_id',
+            'last_order_preparation_change',
             'to_invoice',
             'access_token',
             'ticket_code',
@@ -1232,7 +1235,9 @@ class PosOrder(models.Model):
         """This function is here to be overriden"""
         fields = [
             'id',
+            'uuid',
             'discount',
+            'skip_change',
             'product_id',
             'price_unit',
             'order_id',
@@ -1278,6 +1283,7 @@ class PosOrderLine(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
     name = fields.Char(string='Line No', required=True, copy=False)
+    skip_change = fields.Boolean('Skip line when sending ticket to kitchen printers.')
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
     price_unit = fields.Float(string='Unit Price', digits=0)
@@ -1303,6 +1309,7 @@ class PosOrderLine(models.Model):
     refund_orderline_ids = fields.One2many('pos.order.line', 'refunded_orderline_id', 'Refund Order Lines', help='Orderlines in this field are the lines that refunded this orderline.')
     refunded_orderline_id = fields.Many2one('pos.order.line', 'Refunded Order Line', help='If this orderline is a refund, then the refunded orderline is specified in this field.')
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
+    uuid = fields.Char(string='Uuid', readonly=True, copy=False)
 
     @api.depends('refund_orderline_ids')
     def _compute_refund_qty(self):
@@ -1402,6 +1409,8 @@ class PosOrderLine(models.Model):
         return {
             'qty': orderline.qty,
             'price_unit': orderline.price_unit,
+            'skip_change': orderline.skip_change,
+            'uuid': orderline.uuid,
             'price_subtotal': orderline.price_subtotal,
             'price_subtotal_incl': orderline.price_subtotal_incl,
             'product_id': orderline.product_id.id,
