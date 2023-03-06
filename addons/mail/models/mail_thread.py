@@ -1873,7 +1873,9 @@ class MailThread(models.AbstractModel):
         if 'email_add_signature' not in msg_values:
             msg_values['email_add_signature'] = True
         if not msg_values.get('record_name'):
-            msg_values['record_name'] = self.display_name
+            # use sudo as record access is not always granted (notably when replying
+            # a notification) -> final check is done at message creation level
+            msg_values['record_name'] = self.sudo().display_name
         msg_values.update({
             # author
             'author_id': author_id,
