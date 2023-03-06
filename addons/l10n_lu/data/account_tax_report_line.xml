@@ -301,6 +301,7 @@
                             </record>
                         </field>
                     </record>
+<<<<<<< HEAD
                     <record id="account_tax_report_line_2a_breakdown_taxable_turnover_tax" model="account.report.line">
                         <field name="name">046 - Breakdown of taxable turnover – tax</field>
                         <field name="code">LUTAX_046</field>
@@ -384,6 +385,19 @@
                                 </field>
                             </record>
                         </field>
+||||||| parent of f4c662eb45d (temp)
+                    <record id="account_tax_report_line_4a_total_tax_due" model="account.tax.report.line">
+                        <field name="name">103 - Total tax due</field>
+                        <field name="sequence">1</field>
+                        <field name="code">LUTAX_103</field>
+                        <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
+=======
+                    <record id="account_tax_report_line_4a_total_tax_due" model="account.tax.report.line">
+                        <field name="name">103 - Total tax due</field>
+                        <field name="sequence">1</field>
+                        <field name="code">LUTAX_103</field>
+                        <field name="formula">LUTAX_046 + LUTAX_056 + LUTAX_407 + LUTAX_410 + LUTAX_768 + LUTAX_227</field>
+>>>>>>> f4c662eb45d (temp)
                     </record>
                     <record id="account_tax_report_line_2b_intra_community_acqui_of_goods_base" model="account.report.line">
                         <field name="name">051 - Intra-Community acquisitions of goods – base</field>
