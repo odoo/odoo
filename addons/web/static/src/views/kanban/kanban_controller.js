@@ -8,7 +8,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
-import { KanbanRenderer } from "./kanban_renderer";
+import { canQuickCreate, KanbanRenderer } from "./kanban_renderer";
 
 import { Component, useRef } from "@odoo/owl";
 
@@ -94,7 +94,7 @@ export class KanbanController extends Component {
     async createRecord(group) {
         const { activeActions, onCreate } = this.props.archInfo;
         const { root } = this.model;
-        if (activeActions.quickCreate && onCreate === "quick_create" && root.canQuickCreate()) {
+        if (activeActions.quickCreate && onCreate === "quick_create" && canQuickCreate(root)) {
             await root.quickCreate(group);
         } else if (onCreate && onCreate !== "quick_create") {
             const options = {

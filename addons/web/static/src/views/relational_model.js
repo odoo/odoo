@@ -20,25 +20,17 @@ import { memoize } from "@web/core/utils/functions";
 import { pick } from "@web/core/utils/objects";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
+import { getFieldFromRegistry } from "@web/views/fields/field";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { ListConfirmationDialog } from "@web/views/list/list_confirmation_dialog";
 import { Model } from "@web/views/model";
-import {
-    archParseBoolean,
-    evalDomain,
-    isNumeric,
-    isRelational,
-    isX2Many,
-    orderByToString,
-} from "@web/views/utils";
-import { getFieldFromRegistry } from "@web/views/fields/field";
+import { evalDomain, isNumeric, isRelational, isX2Many, orderByToString } from "@web/views/utils";
 
 const { DateTime } = luxon;
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
 const { CREATE, UPDATE, DELETE, FORGET, LINK_TO, DELETE_ALL, REPLACE_WITH } = x2ManyCommands;
-const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 const DEFAULT_HANDLE_FIELD = "sequence";
 const DEFAULT_QUICK_CREATE_FIELDS = {
@@ -63,17 +55,6 @@ const DEFAULT_QUICK_CREATE_VIEW = {
  *  make: () => Context;
  * }} RawContext
  */
-
-/**
- * @param {Object} groupByField
- * @returns {boolean}
- */
-export function isAllowedDateField(groupByField) {
-    return (
-        ["date", "datetime"].includes(groupByField.type) &&
-        archParseBoolean(groupByField.attrs.allow_group_range_value)
-    );
-}
 
 /**
  * @param {RawContext} rawContext
@@ -1679,14 +1660,6 @@ class DynamicList extends DataPoint {
         return resIds;
     }
 
-    canQuickCreate() {
-        return (
-            this.groupByField &&
-            (isAllowedDateField(this.groupByField) ||
-                QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type))
-        );
-    }
-
     canResequence() {
         return this.model.handleField || DEFAULT_HANDLE_FIELD in this.fields;
     }
@@ -2331,10 +2304,6 @@ export class DynamicGroupList extends DynamicList {
         return group;
     }
 
-    canQuickCreate() {
-        return super.canQuickCreate() && this.groups.length;
-    }
-
     /**
      * @see {_createGroup}
      */
@@ -2384,37 +2353,6 @@ export class DynamicGroupList extends DynamicList {
         };
         delete state.limit;
         return state;
-    }
-
-    /**
-     * @param {string} shortType
-     * @returns {boolean}
-     */
-    groupedBy(shortType) {
-        const { type } = this.groupByField;
-        switch (shortType) {
-            case "m2o":
-            case "many2one": {
-                return type === "many2one";
-            }
-            case "o2m":
-            case "one2many": {
-                return type === "one2many";
-            }
-            case "m2m":
-            case "many2many": {
-                return type === "many2many";
-            }
-            case "m2x":
-            case "many2x": {
-                return ["many2one", "many2many"].includes(type);
-            }
-            case "x2m":
-            case "x2many": {
-                return ["one2many", "many2many"].includes(type);
-            }
-        }
-        return false;
     }
 
     hasAggregate(fieldName) {
@@ -2606,7 +2544,7 @@ export class DynamicGroupList extends DynamicList {
                         } else {
                             groupParams.displayName = Array.isArray(value) ? value[1] : value;
                         }
-                        if (this.groupedBy("m2x")) {
+                        if (["many2one", "many2many"].includes(this.groupByField.type)) {
                             groupParams.recordParams = this.groupByInfo[this.firstGroupBy];
                         }
                         break;
@@ -2816,10 +2754,6 @@ export class Group extends DataPoint {
             isFolded: this.isFolded,
             listState: this.list.exportState(),
         };
-    }
-
-    getAggregableRecords() {
-        return this.list.records.filter((r) => !r.isInQuickCreation);
     }
 
     getAggregates(fieldName) {
