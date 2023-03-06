@@ -25,6 +25,15 @@ class TestOnChange(SavepointCaseWithUserDemo):
         values = self.Discussion.default_get(fields)
         self.assertEqual(values, {})
 
+        user = self.env.user
+        field_onchange = self.env['test_new_api.message']._onchange_spec()
+        values = self.env['test_new_api.message'].onchange({}, [], field_onchange)['value']
+        self.assertEqual(values['discussion'], False)
+        self.assertEqual(values['body'], False)
+        self.assertEqual(values['author'], (user.id, user.display_name))
+        self.assertEqual(values['name'], f'[] {user.name}')
+        self.assertEqual(values['size'], 0)
+
     def test_get_field(self):
         """ checking that accessing an unknown attribute does nothing special """
         with self.assertRaises(AttributeError):
