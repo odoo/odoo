@@ -3992,6 +3992,11 @@ var BasicModel = AbstractModel.extend({
                     }
                     return ids;
                 }
+                if (field.type === "properties" && _.isArray(fieldValue)) {
+                    // remove deleted properties to be able
+                    // to filter based on empty properties field
+                    return fieldValue.filter(definition => !definition.definition_deleted);
+                }
                 return fieldValue;
             }
         });

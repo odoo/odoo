@@ -123,6 +123,26 @@ QUnit.module("Fields", (hooks) => {
                             ],
                             company_id: 37,
                         },
+                        {
+                            id: 3,
+                            display_name: "third partner",
+                            properties: [
+                                {name: "property_1", type: "char"},
+                                {name: "property_2", type: "char", definition_deleted: true},
+                                {name: "property_3", type: "char", definition_changed: true},
+                                {name: "property_4", type: "char"},
+                            ],
+                            company_id: 37,
+                        },
+                        {
+                            id: 4,
+                            display_name: "fourth partner",
+                            properties: [
+                                {name: "property_2", type: "char", definition_deleted: true},
+                                {name: "property_3", type: "char", definition_deleted: true},
+                            ],
+                            company_id: 37,
+                        },
                     ],
                 },
                 company: {
@@ -1169,7 +1189,6 @@ QUnit.module("Fields", (hooks) => {
         assert.equal(items.length, 2);
     });
 
-
     /**
      * Test the behavior of the default value. It should be propagated on the property
      * value only when we create a new property. If the property already exists, and we
@@ -1223,5 +1242,93 @@ QUnit.module("Fields", (hooks) => {
             await closePopover(target);
             assert.strictEqual(property.querySelector(".o_property_field_value input").value, "");
         }
+    });
+
+    /**
+     * Check the behavior of the domain (properies with "definition_deleted" should be ignored).
+     * In that case, some properties start without the flag "definition_deleted".
+     */
+    QUnit.test("properties: form view and falsy domain, properties are not empty", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (method === "check_access_rights") {
+                return true;
+            }
+        }
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 3,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="display_name"/>
+                            <field name="properties" widget="properties"/>
+                            <div class="o_test_properties_not_empty" attrs="{'invisible': [('properties', '=', [])]}">
+                                Properties not empty
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+
+        // delete a property, 2 properties left
+        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+        await click(target, ".o_field_property_definition_delete");
+        await click(target, ".modal-content .btn-primary");
+        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+
+        // delete a property, 1 property left
+        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+        await click(target, ".o_field_property_definition_delete");
+        await click(target, ".modal-content .btn-primary");
+        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+
+        // delete a property, no property left
+        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+        await click(target, ".o_field_property_definition_delete");
+        await click(target, ".modal-content .btn-primary");
+        assert.notOk(target.querySelector(".o_test_properties_not_empty"));
+    });
+
+    /**
+     * Check the behavior of the domain (properties with "definition_deleted" should be ignored).
+     * In that case, all properties start with the flag "definition_deleted".
+     */
+    QUnit.test("properties: form view and falsy domain, properties are empty", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (method === "check_access_rights") {
+                return true;
+            }
+        }
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 4,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="display_name"/>
+                            <field name="properties" widget="properties"/>
+                            <div class="o_test_properties_not_empty" attrs="{'invisible': [('properties', '=', [])]}">
+                                Properties not empty
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+        assert.notOk(target.querySelector(".o_test_properties_not_empty"));
+
+        // create the first property
+        await click(target, ".o_field_property_add button");
+        assert.ok(target.querySelector(".o_test_properties_not_empty"));
     });
 });
