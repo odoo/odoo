@@ -2,13 +2,17 @@
 from typing import Dict, List
 
 import babel.dates
-import pytz
 import base64
+import copy
+import itertools
 import json
+import pytz
 
 from odoo import _, _lt, api, fields, models
+from odoo.fields import Command
+from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import date_utils
+from odoo.tools import date_utils, unique
 from odoo.tools.misc import OrderedSet, get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
@@ -831,6 +835,208 @@ class Base(models.AbstractModel):
 
             return { 'values': field_range, }
 
+    def onchange2(self, values: Dict, field_names: List[str], fields_spec: Dict):
+        """
+        Perform an onchange on the given fields, and return the result.
+
+        :param values: dictionary mapping field names to values on the form view,
+            giving the current state of modification
+        :param field_names: names of the modified fields
+        :param fields_spec: dictionary specifying the fields in the view,
+            just like the one used by :meth:`web_read`; it is used to format
+            the resulting values
+
+        When creating a record from scratch, the client should call this with an
+        empty list as ``field_names``. In that case, the method first adds
+        default values to ``values``, computes the remaining fields, applies
+        onchange methods to them, and return all the fields in ``fields_spec``.
+
+        The result is a dictionary with two optional keys. The key ``"value"``
+        is used to return field values that should be modified on the caller.
+        The corresponding value is a dict mapping field names to their value,
+        in the format of :meth:`web_read`, except for x2many fields, where the
+        value is a list of commands to be applied on the caller's field value.
+
+        The key ``"warning"`` provides a warning message to the caller. The
+        corresponding value is a dictionary like::
+
+            {
+                "title": "Be careful!",         # subject of message
+                "message": "Blah blah blah.",   # full warning message
+                "type": "dialog",               # how to display the warning
+            }
+
+        """
+        # this is for tests using `Form`
+        self.env.flush_all()
+
+        env = self.env
+        first_call = not field_names
+
+        if any(fname not in self._fields for fname in field_names):
+            return {}
+
+        if first_call:
+            field_names = [fname for fname in values if fname != 'id']
+            missing_names = [fname for fname in fields_spec if fname not in values]
+            defaults = self.default_get(missing_names)
+            for field_name in missing_names:
+                values[field_name] = defaults.get(field_name, False)
+                if field_name in defaults:
+                    field_names.append(field_name)
+
+        # prefetch x2many lines: this speeds up the initial snapshot by avoiding
+        # computing fields on new records as much as possible, as that can be
+        # costly and is not necessary at all
+        self.fetch(fields_spec.keys())
+        for field_name, field_spec in fields_spec.items():
+            field = self._fields[field_name]
+            if field.type not in ('one2many', 'many2many'):
+                continue
+            sub_fields_spec = field_spec.get('fields') or {}
+            if sub_fields_spec and values.get(field_name):
+                # retrieve all line ids in commands
+                line_ids = set(self[field_name].ids)
+                for cmd in values[field_name]:
+                    if cmd[0] in (Command.UPDATE, Command.LINK):
+                        line_ids.add(cmd[1])
+                    elif cmd[0] == Command.SET:
+                        line_ids.update(cmd[2])
+                # prefetch stored fields on lines
+                lines = self[field_name].browse(line_ids)
+                lines.fetch(sub_fields_spec.keys())
+                # copy the cache of lines to their corresponding new records;
+                # this avoids computing computed stored fields on new_lines
+                new_lines = lines.browse(map(NewId, line_ids))
+                cache = self.env.cache
+                for field_name in sub_fields_spec:
+                    field = lines._fields[field_name]
+                    cache.update_raw(
+                        new_lines, field, map(copy.copy, cache.get_values(lines, field)),
+                    )
+
+        # Isolate changed values, to handle inconsistent data sent from the
+        # client side: when a form view contains two one2many fields that
+        # overlap, the lines that appear in both fields may be sent with
+        # different data. Consider, for instance:
+        #
+        #   foo_ids: [line with value=1, ...]
+        #   bar_ids: [line with value=1, ...]
+        #
+        # If value=2 is set on 'line' in 'bar_ids', the client sends
+        #
+        #   foo_ids: [line with value=1, ...]
+        #   bar_ids: [line with value=2, ...]
+        #
+        # The idea is to put 'foo_ids' in cache first, so that the snapshot
+        # contains value=1 for line in 'foo_ids'. The snapshot is then updated
+        # with the value of `bar_ids`, which will contain value=2 on line.
+        #
+        # The issue also occurs with other fields. For instance, an onchange on
+        # a move line has a value for the field 'move_id' that contains the
+        # values of the move, among which the one2many that contains the line
+        # itself, with old values!
+        #
+        changed_values = {fname: values[fname] for fname in field_names}
+        # set changed values to null in initial_values; not setting them
+        # triggers default_get() on the new record when creating snapshot0
+        initial_values = dict(values, **dict.fromkeys(field_names, False))
+
+        # do not force delegate fields to False
+        for parent_name in self._inherits.values():
+            if not initial_values.get(parent_name, True):
+                initial_values.pop(parent_name)
+
+        # create a new record, and update it with initial values
+        record = self.new(origin=self)
+        if self:
+            # fill in the cache of record with the values of self
+            cache_values = {fname: self[fname] for fname in fields_spec}
+            record._update_cache(cache_values, validate=False)
+        record._update_cache(initial_values)
+
+        # make parent records match with the form values; this ensures that
+        # computed fields on parent records have all their dependencies at
+        # their expected value
+        for field_name in initial_values:
+            field = self._fields.get(field_name)
+            if field and field.inherited:
+                parent_name, field_name = field.related.split('.', 1)
+                record[parent_name]._update_cache({field_name: record[field_name]})
+
+        # make a snapshot based on the initial values of record
+        snapshot0 = RecordSnapshot(record, fields_spec, fetch=(not first_call))
+
+        # store changed values in cache; also trigger recomputations based on
+        # subfields (e.g., line.a has been modified, line.b is computed stored
+        # and depends on line.a, but line.b is not in the form view)
+        record._update_cache(changed_values, validate=False)
+
+        # update snapshot0 with changed values
+        for field_name in field_names:
+            snapshot0.fetch(field_name)
+
+        # Determine which field(s) should be triggered an onchange. On the first
+        # call, 'names' only contains fields with a default. If 'self' is a new
+        # line in a one2many field, 'names' also contains the one2many's inverse
+        # field, and that field may not be in nametree.
+        todo = list(unique(itertools.chain(field_names, fields_spec))) if first_call else list(field_names)
+        done = set()
+
+        # mark fields to do as modified to trigger recomputations
+        protected = [self._fields[fname] for fname in field_names]
+        with self.env.protecting(protected, record):
+            record.modified(todo)
+            for field_name in todo:
+                field = self._fields[field_name]
+                if field.inherited:
+                    # modifying an inherited field should modify the parent
+                    # record accordingly; because we don't actually assign the
+                    # modified field on the record, the modification on the
+                    # parent record has to be done explicitly
+                    parent = record[field.related.split('.')[0]]
+                    parent[field_name] = record[field_name]
+
+        result = {'warnings': OrderedSet()}
+
+        # process names in order
+        while todo:
+            # apply field-specific onchange methods
+            for field_name in todo:
+                record._onchange_eval(field_name, "1", result)
+                done.add(field_name)
+
+            if not env.context.get('recursive_onchanges', True):
+                break
+
+            # determine which fields to process for the next pass
+            todo = [
+                field_name
+                for field_name in fields_spec
+                if field_name not in done and snapshot0.has_changed(field_name)
+            ]
+
+        # make the snapshot with the final values of record
+        snapshot1 = RecordSnapshot(record, fields_spec)
+
+        # determine values that have changed by comparing snapshots
+        result['value'] = snapshot1.diff(snapshot0, force=first_call)
+
+        # format warnings
+        warnings = result.pop('warnings')
+        if len(warnings) == 1:
+            title, message, type_ = warnings.pop()
+            if not type_:
+                type_ = 'dialog'
+            result['warning'] = dict(title=title, message=message, type=type_)
+        elif len(warnings) > 1:
+            # concatenate warning titles and messages
+            title = _("Warnings")
+            message = '\n\n'.join([warn_title + '\n\n' + warn_message for warn_title, warn_message, warn_type in warnings])
+            result['warning'] = dict(title=title, message=message, type='dialog')
+
+        return result
+
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
@@ -867,3 +1073,98 @@ class ResCompany(models.Model):
         b64_val = self._get_asset_style_b64()
         if b64_val != asset_attachment.datas:
             asset_attachment.write({'datas': b64_val})
+
+
+class RecordSnapshot(dict):
+    """ A dict with the values of a record, following a prefix tree. """
+    __slots__ = ['record', 'fields_spec']
+
+    def __init__(self, record: BaseModel, fields_spec: Dict, fetch=True):
+        # put record in dict to include it when comparing snapshots
+        super().__init__()
+        self.record = record
+        self.fields_spec = fields_spec
+        if fetch:
+            for name in fields_spec:
+                self.fetch(name)
+
+    def __eq__(self, other: 'RecordSnapshot'):
+        return self.record == other.record and super().__eq__(other)
+
+    def fetch(self, field_name):
+        """ Set the value of field ``name`` from the record's value. """
+        if self.record._fields[field_name].type in ('one2many', 'many2many'):
+            # x2many fields are serialized as a dict of line snapshots
+            lines = self.record[field_name]
+            if 'context' in self.fields_spec[field_name]:
+                lines = lines.with_context(**self.fields_spec[field_name]['context'])
+            sub_fields_spec = self.fields_spec[field_name].get('fields') or {}
+            self[field_name] = {line.id: RecordSnapshot(line, sub_fields_spec) for line in lines}
+        else:
+            self[field_name] = self.record[field_name]
+
+    def has_changed(self, field_name) -> bool:
+        """ Return whether a field on the record has changed. """
+        if field_name not in self:
+            return True
+        if self.record._fields[field_name].type not in ('one2many', 'many2many'):
+            return self[field_name] != self.record[field_name]
+        return self[field_name].keys() != set(self.record[field_name]._ids) or any(
+            line_snapshot.has_changed(subname)
+            for line_snapshot in self[field_name].values()
+            for subname in self.fields_spec[field_name].get('fields') or {}
+        )
+
+    def diff(self, other: 'RecordSnapshot', force=False):
+        """ Return the values in ``self`` that differ from ``other``. """
+
+        # determine fields to return
+        simple_fields_spec = {}
+        x2many_fields_spec = {}
+        for field_name, field_spec in self.fields_spec.items():
+            if field_name == 'id':
+                continue
+            if not force and other.get(field_name) == self[field_name]:
+                continue
+            field = self.record._fields[field_name]
+            if field.type in ('one2many', 'many2many'):
+                x2many_fields_spec[field_name] = field_spec
+            else:
+                simple_fields_spec[field_name] = field_spec
+
+        # use web_read() for simple fields
+        [result] = self.record.web_read(simple_fields_spec)
+
+        # discard the NewId from the dict
+        result.pop('id')
+
+        # for x2many fields: serialize value as commands
+        for field_name, field_spec in x2many_fields_spec.items():
+            result[field_name] = commands = []
+            # commands for removed lines
+            remove = Command.delete if field.type == 'one2many' else Command.unlink
+            for id_, line_snapshot in (other.get(field_name) or {}).items():
+                if id_ not in self[field_name]:
+                    commands.append(remove(id_.origin or id_.ref or 0))
+            # commands for modified or extra lines
+            for id_, line_snapshot in self[field_name].items():
+                if id_ in other.get(field_name, ()):
+                    # existing line: check diff
+                    line_diff = line_snapshot.diff(other[field_name][id_])
+                    if line_diff:
+                        commands.append(Command.update(id_.origin or id_.ref or 0, line_diff))
+                elif not id_.origin:
+                    # new line: send diff from scratch
+                    line_diff = line_snapshot.diff({})
+                    commands.append((Command.CREATE, id_.origin or id_.ref or 0, line_diff))
+                else:
+                    # link line: send data to client and possible update
+                    line = line_snapshot.record._origin
+                    base_snapshot = RecordSnapshot(line, field_spec.get('fields') or {})
+                    line_data = base_snapshot.diff({})
+                    commands.append((Command.LINK, line.id, line_data))
+                    line_diff = line_snapshot.diff(base_snapshot)
+                    if line_diff:
+                        commands.append(Command.update(id_.origin, line_diff))
+
+        return result

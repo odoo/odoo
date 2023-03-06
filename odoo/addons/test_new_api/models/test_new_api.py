@@ -267,6 +267,11 @@ class Multi(models.Model):
         for line in self.lines:
             line.partner = self.partner
 
+    @api.onchange('tags')
+    def _onchange_tags(self):
+        for line in self.lines:
+            line.tags |= self.tags
+
 
 class MultiLine(models.Model):
     _name = 'test_new_api.multi.line'
@@ -289,6 +294,16 @@ class MultiTag(models.Model):
     _description = 'Test New API Multi Tag'
 
     name = fields.Char()
+    display_name = fields.Char(compute='_compute_display_name')
+
+    @api.depends('name')
+    @api.depends_context('special_tag')
+    def _compute_display_name(self):
+        for record in self:
+            name = record.name
+            if name and self.env.context.get('special_tag'):
+                name += "!"
+            record.display_name = name or ""
 
 
 class Edition(models.Model):
