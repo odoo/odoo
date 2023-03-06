@@ -11,11 +11,7 @@ const _t = core._t;
 export const PaymentStripe = PaymentInterface.extend({
     init: function (pos, payment_method) {
         this._super(...arguments);
-        this.terminal = new StripeTerminal({
-            onFetchConnectionToken: this.stripeFetchConnectionToken.bind(this),
-            onUnexpectedReaderDisconnect: this.stripeUnexpectedDisconnect.bind(this),
-        });
-        this.discoverReaders();
+        this.createStripeTerminal();
     },
 
     stripeUnexpectedDisconnect: function () {
@@ -40,9 +36,9 @@ export const PaymentStripe = PaymentInterface.extend({
             }
             return data.secret;
         } catch (error) {
-            this._showError(error.message);
-            return false;
-        }
+            this._showError(error.message.message, 'Fetch Token');
+            this.terminal = false;
+        };
     },
 
     discoverReaders: async function () {
@@ -59,7 +55,18 @@ export const PaymentStripe = PaymentInterface.extend({
     },
 
     checkReader: async function () {
-        const line = this.pos.get_order().selected_paymentline;
+        try {
+            if ( !this.terminal ) {
+                let createStripeTerminal = this.createStripeTerminal();
+                if ( !createStripeTerminal ) {
+                    throw _t('Failed to load resource: net::ERR_INTERNET_DISCONNECTED.');
+                }
+            }
+        } catch (error) {
+            this._showError(error);
+            return false;
+        }
+        let line = this.pos.get_order().selected_paymentline;
         // Because the reader can only connect to one instance of the SDK at a time.
         // We need the disconnect this reader if we want to use another one
         if (
@@ -86,22 +93,27 @@ export const PaymentStripe = PaymentInterface.extend({
         const discoveredReaders = JSON.parse(this.pos.discoveredReaders);
         for (const selectedReader of discoveredReaders) {
             if (selectedReader.serial_number == this.payment_method.stripe_serial_number) {
-                const connectResult = await this.terminal.connectReader(selectedReader, {
-                    fail_if_in_use: true,
-                });
-                if (connectResult.error) {
-                    this._showError(connectResult.error.message, connectResult.error.code);
-                    line.set_payment_status("retry");
-                    return false;
-                } else {
+                try {
+                    let connectResult = await this.terminal.connectReader(selectedReader, {fail_if_in_use: true});
+                    if (connectResult.error) {
+                        throw connectResult;
+                    }
                     this.pos.connectedReader = this.payment_method.stripe_serial_number;
                     return true;
+                } catch (error) {
+                    if (error.error) {
+                        this._showError(error.error.message, error.code);
+                    } else {
+                        this._showError(error);
+                    }
+                    line.set_payment_status('retry');
+                    return false;
                 }
             }
         }
         this._showError(
             _.str.sprintf(
-                this.env._t("Stripe readers %s not listed in your account"),
+                _t('Stripe readers %s not listed in your account'), 
                 this.payment_method.stripe_serial_number
             )
         );
@@ -139,6 +151,21 @@ export const PaymentStripe = PaymentInterface.extend({
         }
     },
 
+    createStripeTerminal: function () {
+        try {
+            this.terminal = StripeTerminal.create({
+                onFetchConnectionToken: this.stripeFetchConnectionToken.bind(this),
+                onUnexpectedReaderDisconnect: this.stripeUnexpectedDisconnect.bind(this),
+            });
+            this.discoverReaders();
+            return true;
+        } catch (error) {
+            this._showError(_t('Failed to load resource: net::ERR_INTERNET_DISCONNECTED.'), error);
+            this.terminal = false;
+            return false;
+        }
+    },
+
     captureAfterPayment: async function (processPayment, line) {
         const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
         if (capturePayment.charges) {
@@ -165,7 +192,7 @@ export const PaymentStripe = PaymentInterface.extend({
             }
             return data;
         } catch (error) {
-            this._showError(error.message);
+            this._showError(error.message.message, 'Capture Payment');
             return false;
         }
     },
@@ -187,7 +214,7 @@ export const PaymentStripe = PaymentInterface.extend({
             }
             return data.client_secret;
         } catch (error) {
-            this._showError(error.message);
+            this._showError(error.message.message, 'Fetch Secret');
             return false;
         }
     },
@@ -197,11 +224,14 @@ export const PaymentStripe = PaymentInterface.extend({
          * Override
          */
         await this._super.apply(this, arguments);
-        const line = this.pos.get_order().selected_paymentline;
-        line.set_payment_status("waiting");
-        if (await this.checkReader()) {
-            return await this.collectPayment(line.amount);
-        } else {
+        let line = this.pos.get_order().selected_paymentline;
+        line.set_payment_status('waiting');
+        try {
+            if (await this.checkReader()) {
+                return await this.collectPayment(line.amount);
+            }
+        } catch (error) {
+            this._showError(error);
             return false;
         }
     },
@@ -220,8 +250,10 @@ export const PaymentStripe = PaymentInterface.extend({
     },
 
     stripeCancel: async function () {
-        if (this.terminal.getConnectionStatus() != "connected") {
-            this._showError(_t("Payment canceled because not reader connected"));
+        if (!this.terminal) {
+            return true;
+        } else if (this.terminal.getConnectionStatus() != 'connected') {
+            this._showError(_t('Payment canceled because not reader connected'));
             return true;
         } else {
             const cancelCollectPaymentMethod = await this.terminal.cancelCollectPaymentMethod();
