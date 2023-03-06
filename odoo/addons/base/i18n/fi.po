@@ -37,6 +37,7 @@
 # Richard Mouthier <rmo@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Konsta Aavaranta, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -44,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 11:00+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Konsta Aavaranta, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10241,7 +10242,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__append
 msgid "Append"
-msgstr ""
+msgstr "Lisää"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_category
@@ -10896,7 +10897,7 @@ msgstr "B9 23 33 x 62 mm"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background_image
 msgid "Background Image"
-msgstr ""
+msgstr "Taustakuva"
 
 #. module: base
 #. odoo-python
@@ -11288,7 +11289,7 @@ msgstr "Belize"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr ""
+msgstr "Alla oleva teksti on ehdotus, eikä se ole Odoo S.A.:n vastuulla."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -12459,7 +12460,7 @@ msgstr "Yrityksen tiedot"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_details
 msgid "Company Details"
-msgstr ""
+msgstr "Yrityksen tiedot"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
@@ -13018,7 +13019,7 @@ msgstr "Valtio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Kupongit ja kanta-asiakasohjelmat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty_delivery
@@ -14183,7 +14184,7 @@ msgstr "Suunta"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__directive
 msgid "Directive"
-msgstr ""
+msgstr "Direktiivi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
@@ -15019,7 +15020,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.enable_profiling_wizard
 msgid "Enable profiling"
-msgstr ""
+msgstr "Ota profilointi käyttöön"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__duration
@@ -16049,7 +16050,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "Tiedoston suoratoistomalli ohjaimille"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -17049,7 +17050,7 @@ msgstr "Ylätunnisteen välistys"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr ""
+msgstr "Kaikkien raporttien yläosassa näkyvä otsikkoteksti."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
@@ -17724,6 +17725,10 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Jos tämä näkymä periytyy,\n"
+"* jos True, näkymä laajentaa aina ylätason näkymänsä\n"
+"* jos False, näkymä ei tällä hetkellä laajenna ylätasoaan, mutta se voidaan ottaa käyttöön\n"
+"         "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -17997,7 +18002,7 @@ msgstr "Passiiviset käyttäjät"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__include
 msgid "Include"
-msgstr ""
+msgstr "Sisällytä"
 
 #. module: base
 #. odoo-python
@@ -19342,7 +19347,7 @@ msgstr "Lounaskonfiguraation velho"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background
 msgid "Layout Background"
-msgstr ""
+msgstr "Asettelun tausta"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_format
@@ -22779,6 +22784,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Koskee vain, jos tämä näkymä periytyy toisesta näkymästä (inherit_id ei ole False/Null).\n"
+"\n"
+"* jos laajennus (oletusarvo), jos tätä näkymää pyydetään lähimpänä olevaa ensisijaista näkymää\n"
+"etsitään (inherit_id:n kautta), sitten kaikki siitä periytyvät näkymät, joilla on tämä nimi\n"
+"näkymän mallia sovelletaan\n"
+"* jos ensisijainen, lähin primäärinen näkymä ratkaistaan kokonaan (vaikka se käyttäisi\n"
+"eri mallia kuin tämä näkymä), niin tämän näkymän periytymispesifikaatiot\n"
+"(<xpath/>) sovelletaan, ja tulosta käytetään ikään kuin se olisi tämän näkymän nimi\n"
+"varsinainen arch.\n"
 
 #. module: base
 #. odoo-python
@@ -23701,7 +23715,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "Maksupalvelujen tarjoajat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -24042,7 +24056,7 @@ msgstr "Järjestysluvun etuliite"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
 msgid "Prepend"
-msgstr ""
+msgstr "Prepend"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter_wall
@@ -25256,7 +25270,7 @@ msgstr "Toista joka x."
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__replace
 msgid "Replace"
-msgstr ""
+msgstr "Korvaa"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__binding_type__report
@@ -25673,7 +25687,7 @@ msgstr "SSL/TLS"
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "VAKIOMUOTOISET MYYNTIEHDOT"
 
 #. module: base
 #: model:res.country,name:base.bl
@@ -26093,7 +26107,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__secondary_color
 msgid "Secondary Color"
-msgstr ""
+msgstr "Toissijainen väri"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_security
@@ -27248,7 +27262,7 @@ msgstr "Aloita asetusten määrittäminen"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Tila"
+msgstr "Alue"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -27293,7 +27307,7 @@ msgstr "Tila"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
 msgid "Step"
-msgstr ""
+msgstr "Vaihe"
 
 #. module: base
 #. odoo-python
@@ -28046,6 +28060,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Verotunniste. Tässä olevat arvot validoidaan maamuodon perusteella. Voit "
+"käyttää '/'-merkkiä osoittaaksesi, että kumppani ei ole verovelvollinen."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -28082,6 +28098,9 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Asiakas luopuu nimenomaisesti omista vakioehdoistaan, vaikka ne olisi "
+"laadittu näiden vakiomyyntiehtojen jälkeen. Jotta poikkeukset olisivat "
+"päteviä, niistä on sovittava etukäteen kirjallisesti ja nimenomaisesti."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -28726,7 +28745,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "Tämä kenttä on sama kuin `arch`-kenttä ilman käännöksiä"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
@@ -28739,11 +28758,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"Tätä kenttää on käytettävä, kun käytetään näkymäkaarta. Se käyttää käännöstä.\n"
+"                               Huomaa, että se lukee `arch_db` tai `arch_fs`, jos se on dev-xml-tilassa."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "Tähän kenttään tallennetaan näkymän arch."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev
@@ -28751,6 +28772,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Tämä kenttä tallentaa nykyisen `arch_db`-tietokannan ennen kuin siihen kirjoitetaan.\n"
+"                                                                         Hyödyllinen rikkinäisen näkymän (pehmeään) nollaamiseen."
 
 #. module: base
 #. odoo-python
@@ -29269,7 +29292,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
 msgid "Tours"
-msgstr ""
+msgstr "Esittelykiertueet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_async
@@ -29918,7 +29941,7 @@ msgstr "Verkko-osoite"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__image_url
 msgid "Url of static flag image"
-msgstr ""
+msgstr "Staattisen lippukuvan Url"
 
 #. module: base
 #: model:res.country,name:base.uy
@@ -31348,7 +31371,7 @@ msgstr "Koita jotain muuta hakuehtoa."
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "Sinun on päivitettävä tämä asiakirja vastaamaan T&amp;C:täsi."
 
 #. module: base
 #. odoo-python
@@ -31529,7 +31552,7 @@ msgstr "tietokannan id"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__date
 msgid "date"
-msgstr ""
+msgstr "päivämäärä"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__datetime
@@ -31855,7 +31878,7 @@ msgstr "many2one_reference"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "minuutti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
