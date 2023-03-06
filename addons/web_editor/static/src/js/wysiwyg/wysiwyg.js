@@ -673,8 +673,10 @@ const Wysiwyg = Widget.extend({
                     },
                     { transport: 'rtc' }
                 );
+                // If missing steps === -1, it means that either the
+                // step.clientId has a stale document or the step.clientId has a
+                // snapshot and does not includes the step in its history.
                 if (missingSteps === -1 || !missingSteps.length) {
-                    // This case should never happen.
                     console.warn('Editor get_missing_steps result is erroneous.');
                     return;
                 }
