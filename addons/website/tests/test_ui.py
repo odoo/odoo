@@ -401,3 +401,9 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_25_website_edit_discard(self):
         self.start_tour('/web', 'homepage_edit_discard', login='admin')
+
+    def test_26_website_media_dialog_icons(self):
+        self.start_tour("/", 'website_media_dialog_icons', login='admin')
+
+    def test_27_website_clicks(self):
+        self.start_tour('/web', 'website_click_tour', login='admin')

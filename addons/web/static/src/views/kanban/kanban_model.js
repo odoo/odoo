@@ -498,10 +498,11 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             };
 
             try {
-                await record.update({ [this.groupByField.name]: value });
+                await record.update({ [this.groupByField.name]: value }, { silent: true });
                 const saved = await record.save({ noReload: true });
                 if (!saved) {
                     abort();
+                    this.model.notify();
                     return;
                 }
             } catch (err) {
@@ -523,9 +524,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             await Promise.all(promises);
         }
 
-        if (fullyLoadGroup) {
-            this.model.notify();
-        } else {
+        if (!fullyLoadGroup) {
             // Only trigger resequence if the group hasn't been fully loaded
             await targetGroup.list.resequence(dataRecordId, refId);
         }

@@ -163,3 +163,8 @@ class SaleOrder(models.Model):
         if 'state' in values and values['state'] == 'cancel':
             self.project_id.sudo().sale_line_id = False
         return super(SaleOrder, self).write(values)
+
+    def _prepare_analytic_account_data(self, prefix=None):
+        result = super(SaleOrder, self)._prepare_analytic_account_data(prefix=prefix)
+        result['plan_id'] = self.company_id.analytic_plan_id.id or result['plan_id']
+        return result

@@ -535,9 +535,9 @@ export const editorCommands = {
         // Get the <font> nodes to color
         const selectedNodes = getSelectedNodes(editor.editable).filter(node => !closestElement(node, 'table.o_selected_table'));
         const fonts = selectedNodes.flatMap(node => {
-            let font = closestElement(node, 'font');
+            let font = closestElement(node, 'font') || closestElement(node, 'span');
             const children = font && descendants(font);
-            if (font && font.nodeName === 'FONT') {
+            if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
                 // Partially selected <font>: split it.
                 const selectedChildren = children.filter(child => selectedNodes.includes(child));
                 if (selectedChildren.length) {
