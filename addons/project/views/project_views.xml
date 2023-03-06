@@ -15,7 +15,7 @@
         <record id="view_task_search_form_base" model="ir.ui.view">
             <field name="name">project.task.search.form</field>
             <field name="model">project.task</field>
-            <field name="priority">100</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                <search string="Tasks">
                     <field name="name" string="Tasks" filter_domain="['|', ('name', 'ilike', self), ('id', 'ilike', self)]"/>
@@ -58,7 +58,7 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="view_task_search_form_base"/>
             <field name="mode">primary</field>
-            <field name="priority">50</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <field name="stage_id" position="after">
                     <field name="display_project_id" string="Project"/>
@@ -81,7 +81,7 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="view_task_search_form_project_fsm_base"/>
             <field name="mode">primary</field>
-            <field name="priority">25</field>
+            <field name="priority">999</field>
             <field name="arch" type="xml">
                 <filter name="date_last_stage_update" position="after">
                     <filter string="Deadline" name="date_deadline" date="date_deadline"/>
@@ -97,6 +97,7 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="view_task_search_form_project_base"></field>
             <field name="mode">primary</field>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <filter name="inactive" position="before">
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
