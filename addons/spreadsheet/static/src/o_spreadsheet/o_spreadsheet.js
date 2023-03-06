@@ -1,26 +1,6 @@
 (function (exports, owl) {
     'use strict';
 
-    function _interopNamespace(e) {
-        if (e && e.__esModule) return e;
-        var n = Object.create(null);
-        if (e) {
-            Object.keys(e).forEach(function (k) {
-                if (k !== 'default') {
-                    var d = Object.getOwnPropertyDescriptor(e, k);
-                    Object.defineProperty(n, k, d.get ? d : {
-                        enumerable: true,
-                        get: function () { return e[k]; }
-                    });
-                }
-            });
-        }
-        n["default"] = e;
-        return Object.freeze(n);
-    }
-
-    var owl__namespace = /*#__PURE__*/_interopNamespace(owl);
-
     /*
      * usage: every string should be translated either with _lt if they are registered with a registry at
      *  the load of the app or with Spreadsheet._t in the templates. Spreadsheet._t is exposed in the
@@ -264,6 +244,7 @@
     const DEFAULT_FIGURE_WIDTH = 536;
     // Chart
     const MAX_CHAR_LABEL = 20;
+    const FIGURE_ID_SPLITTER = "??";
     const DEFAULT_GAUGE_LOWER_COLOR = "#cc0000";
     const DEFAULT_GAUGE_MIDDLE_COLOR = "#f1c232";
     const DEFAULT_GAUGE_UPPER_COLOR = "#6aa84f";
@@ -3544,6 +3525,8 @@
         CommandResult[CommandResult["NonContinuousTargets"] = 81] = "NonContinuousTargets";
         CommandResult[CommandResult["DuplicatedFigureId"] = 82] = "DuplicatedFigureId";
         CommandResult[CommandResult["InvalidSelectionStep"] = 83] = "InvalidSelectionStep";
+        CommandResult[CommandResult["DuplicatedChartId"] = 84] = "DuplicatedChartId";
+        CommandResult[CommandResult["ChartDoesNotExist"] = 85] = "ChartDoesNotExist";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -5360,7 +5343,7 @@
         validateChartDefinition: (validator, definition) => BarChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => BarChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => BarChart.getDefinitionFromContextCreation(context),
-        name: "Bar",
+        name: _lt("Bar"),
     });
     chartRegistry.add("line", {
         match: (type) => type === "line",
@@ -5369,7 +5352,7 @@
         validateChartDefinition: (validator, definition) => LineChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => LineChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => LineChart.getDefinitionFromContextCreation(context),
-        name: "Line",
+        name: _lt("Line"),
     });
     chartRegistry.add("pie", {
         match: (type) => type === "pie",
@@ -5378,7 +5361,7 @@
         validateChartDefinition: (validator, definition) => PieChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => PieChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => PieChart.getDefinitionFromContextCreation(context),
-        name: "Pie",
+        name: _lt("Pie"),
     });
     chartRegistry.add("scorecard", {
         match: (type) => type === "scorecard",
@@ -5387,7 +5370,7 @@
         validateChartDefinition: (validator, definition) => ScorecardChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => ScorecardChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => ScorecardChart.getDefinitionFromContextCreation(context),
-        name: "Scorecard",
+        name: _lt("Scorecard"),
     });
     chartRegistry.add("gauge", {
         match: (type) => type === "gauge",
@@ -5396,7 +5379,7 @@
         validateChartDefinition: (validator, definition) => GaugeChart.validateChartDefinition(validator, definition),
         transformDefinition: (definition, executed) => GaugeChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => GaugeChart.getDefinitionFromContextCreation(context),
-        name: "Gauge",
+        name: _lt("Gauge"),
     });
     const chartComponentRegistry = new Registry();
     chartComponentRegistry.add("line", ChartJsComponent);
@@ -5493,28 +5476,28 @@
         return position;
     }
     /**
-     * Return the component (or ref's component) top left position (in pixels) relative
+     * Return the component (or ref's component) BoundingRect, relative
      * to the upper left corner of the screen (<body> element).
      *
      * Note: when used with a <Portal/> component, it will
      * return the portal position, not the teleported position.
      */
-    function useAbsolutePosition(ref) {
-        const position = owl.useState({ x: 0, y: 0 });
-        function updateElPosition() {
+    function useAbsoluteBoundingRect(ref) {
+        const rect = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
+        function updateElRect() {
             const el = ref.el;
             if (el === null) {
                 return;
             }
-            const { top, left } = el.getBoundingClientRect();
-            if (left !== position.x || top !== position.y) {
-                position.x = left;
-                position.y = top;
-            }
+            const { top, left, width, height } = el.getBoundingClientRect();
+            rect.x = left;
+            rect.y = top;
+            rect.width = width;
+            rect.height = height;
         }
-        owl.onMounted(updateElPosition);
-        owl.onPatched(updateElPosition);
-        return position;
+        owl.onMounted(updateElRect);
+        owl.onPatched(updateElRect);
+        return rect;
     }
     /**
      * Get the rectangle inside which a popover should stay when being displayed.
@@ -5873,7 +5856,7 @@
                 menuItems: [],
             });
             this.menuRef = owl.useRef("menu");
-            this.position = useAbsolutePosition(this.menuRef);
+            this.position = useAbsoluteBoundingRect(this.menuRef);
         }
         setup() {
             owl.useExternalListener(window, "click", this.onExternalClick, { capture: true });
@@ -6039,8 +6022,8 @@
             this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
             this.chartContainerRef = owl.useRef("chartContainer");
             this.menuButtonRef = owl.useRef("menuButton");
-            this.menuButtonPosition = useAbsolutePosition(this.menuButtonRef);
-            this.position = useAbsolutePosition(this.chartContainerRef);
+            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
+            this.position = useAbsoluteBoundingRect(this.chartContainerRef);
         }
         getMenuItemRegistry() {
             const registry = new MenuItemRegistry();
@@ -6094,11 +6077,12 @@
             this.openContextMenu(position);
         }
         showMenu() {
-            const position = {
-                x: this.menuButtonPosition.x - MENU_WIDTH,
-                y: this.menuButtonPosition.y,
+            const { x, y, width } = this.menuButtonRect;
+            const menuPosition = {
+                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
+                y: y,
             };
-            this.openContextMenu(position);
+            this.openContextMenu(menuPosition);
         }
         openContextMenu(position) {
             const registry = this.getMenuItemRegistry();
@@ -7253,7 +7237,7 @@
         separator: true,
     })
         .add("unhide_columns", {
-        name: "Unhide columns",
+        name: _lt("Unhide columns"),
         sequence: 86,
         action: UNHIDE_COLUMNS_ACTION,
         isVisible: (env) => {
@@ -7341,7 +7325,7 @@
         separator: true,
     })
         .add("unhide_rows", {
-        name: "Unhide rows",
+        name: _lt("Unhide rows"),
         sequence: 86,
         action: UNHIDE_ROWS_ACTION,
         isVisible: (env) => {
@@ -17626,7 +17610,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onComposerContentFocused: Function,
     };
 
-    const { Component: Component$1 } = owl__namespace;
     const CSS$2 = css /* scss */ `
   .o-filter-icon {
     color: ${FILTERS_COLOR};
@@ -17652,7 +17635,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
   }
 `;
-    class FilterIcon extends Component$1 {
+    class FilterIcon extends owl.Component {
         get style() {
             const { x, y } = this.props.position;
             return `top:${y}px;left:${x}px`;
@@ -17666,9 +17649,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onClick: Function,
     };
 
-    const { Component } = owl__namespace;
     const CSS$1 = css /* scss */ ``;
-    class FilterIconsOverlay extends Component {
+    class FilterIconsOverlay extends owl.Component {
         getVisibleFilterHeaders() {
             const sheetId = this.env.model.getters.getActiveSheetId();
             const headerPositions = this.env.model.getters.getFilterHeaders(sheetId);
@@ -18675,7 +18657,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 isOpen: false,
             });
             this.linkEditorRef = owl.useRef("linkEditor");
-            this.position = useAbsolutePosition(this.linkEditorRef);
+            this.position = useAbsoluteBoundingRect(this.linkEditorRef);
             this.urlInput = owl.useRef("urlInput");
         }
         setup() {
@@ -18791,8 +18773,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
             this.imageContainerRef = owl.useRef("o-image");
             this.menuButtonRef = owl.useRef("menuButton");
-            this.menuButtonPosition = useAbsolutePosition(this.menuButtonRef);
-            this.position = useAbsolutePosition(this.imageContainerRef);
+            this.menuButtonRect = useAbsoluteBoundingRect(this.menuButtonRef);
+            this.position = useAbsoluteBoundingRect(this.imageContainerRef);
         }
         getMenuItemRegistry() {
             const registry = new MenuItemRegistry();
@@ -18851,11 +18833,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.openContextMenu(position);
         }
         showMenu() {
-            const position = {
-                x: this.menuButtonPosition.x - MENU_WIDTH,
-                y: this.menuButtonPosition.y,
+            const { x, y, width } = this.menuButtonRect;
+            const menuPosition = {
+                x: x >= MENU_WIDTH ? x - MENU_WIDTH : x + width,
+                y: y,
             };
-            this.openContextMenu(position);
+            this.openContextMenu(menuPosition);
         }
         openContextMenu(position) {
             const registry = this.getMenuItemRegistry();
@@ -19495,17 +19478,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         separator: true,
     })
         .addChild("format_wrapping_overflow", ["format", "format_wrapping"], {
-        name: "Overflow",
+        name: _lt("Overflow"),
         sequence: 10,
         action: (env) => setStyle(env, { wrapping: "overflow" }),
     })
         .addChild("format_wrapping_wrap", ["format", "format_wrapping"], {
-        name: "Wrap",
+        name: _lt("Wrap"),
         sequence: 20,
         action: (env) => setStyle(env, { wrapping: "wrap" }),
     })
         .addChild("format_wrapping_clip", ["format", "format_wrapping"], {
-        name: "Clip",
+        name: _lt("Clip"),
         sequence: 30,
         action: (env) => setStyle(env, { wrapping: "clip" }),
     })
@@ -20492,6 +20475,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         get figureId() {
             return this.state.figureId;
         }
+        get sheetId() {
+            return this.state.sheetId;
+        }
         setup() {
             const selectedFigureId = this.env.model.getters.getSelectedFigureId();
             if (!selectedFigureId) {
@@ -20500,11 +20486,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.state = owl.useState({
                 panel: "configuration",
                 figureId: selectedFigureId,
+                sheetId: this.env.model.getters.getActiveSheetId(),
             });
             owl.onWillUpdateProps(() => {
                 const selectedFigureId = this.env.model.getters.getSelectedFigureId();
                 if (selectedFigureId && selectedFigureId !== this.state.figureId) {
                     this.state.figureId = selectedFigureId;
+                    this.state.sheetId = this.env.model.getters.getActiveSheetId();
                     this.shouldUpdateChart = false;
                 }
                 else {
@@ -20527,7 +20515,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.env.model.dispatch("UPDATE_CHART", {
                 definition,
                 id: this.figureId,
-                sheetId: this.env.model.getters.getActiveSheetId(),
+                sheetId: this.sheetId,
             });
         }
         onTypeChange(type) {
@@ -20539,7 +20527,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.env.model.dispatch("UPDATE_CHART", {
                 definition,
                 id: this.figureId,
-                sheetId: this.env.model.getters.getActiveSheetId(),
+                sheetId: this.sheetId,
             });
         }
         get chartPanel() {
@@ -23530,7 +23518,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
             this.gridRef = owl.useRef("grid");
             this.hiddenInput = owl.useRef("hiddenInput");
-            this.canvasPosition = useAbsolutePosition(this.gridRef);
+            this.canvasPosition = useAbsoluteBoundingRect(this.gridRef);
             this.hoveredCell = owl.useState({ col: undefined, row: undefined });
             owl.useChildSubEnv({ getPopoverContainerRect: () => this.getGridRect() });
             owl.useExternalListener(document.body, "cut", this.copy.bind(this, true));
@@ -27113,13 +27101,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 data = migrate(data);
             }
         }
-        // sanity check: try to fix missing fields/corrupted state by providing
-        // sensible default values
-        data = Object.assign(createEmptyWorkbookData(), data, { version: CURRENT_VERSION });
-        data.sheets = data.sheets.map((s, i) => Object.assign(createEmptySheet(`Sheet${i + 1}`, `Sheet${i + 1}`), s));
-        if (data.sheets.length === 0) {
-            data.sheets.push(createEmptySheet(INITIAL_SHEET_ID, "Sheet1"));
-        }
+        data = repairData(data);
         return data;
     }
     function migrate(data) {
@@ -27358,6 +27340,48 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         },
     ];
     /**
+     * This function is used to repair faulty data independently of the migration.
+     */
+    function repairData(data) {
+        data = forceUnicityOfFigure(data);
+        data = setDefaults(data);
+        return data;
+    }
+    /**
+     * Force the unicity of figure ids accross sheets
+     */
+    function forceUnicityOfFigure(data) {
+        if (data.uniqueFigureIds) {
+            return data;
+        }
+        const figureIds = new Set();
+        const uuidGenerator = new UuidGenerator();
+        for (const sheet of data.sheets || []) {
+            for (const figure of sheet.figures || []) {
+                if (figureIds.has(figure.id)) {
+                    figure.id += uuidGenerator.uuidv4();
+                }
+                figureIds.add(figure.id);
+            }
+        }
+        data.uniqueFigureIds = true;
+        return data;
+    }
+    /**
+     * sanity check: try to fix missing fields/corrupted state by providing
+     * sensible default values
+     */
+    function setDefaults(data) {
+        data = Object.assign(createEmptyWorkbookData(), data, { version: CURRENT_VERSION });
+        data.sheets = data.sheets
+            ? data.sheets.map((s, i) => Object.assign(createEmptySheet(`Sheet${i + 1}`, `Sheet${i + 1}`), s))
+            : [];
+        if (data.sheets.length === 0) {
+            data.sheets.push(createEmptySheet(INITIAL_SHEET_ID, "Sheet1"));
+        }
+        return data;
+    }
+    /**
      * The goal of this function is to repair corrupted/wrong initial messages caused by
      * a bug.
      * The bug should obviously be fixed, but it's too late for existing spreadsheet.
@@ -27495,6 +27519,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             formats: {},
             borders: {},
             revisionId: DEFAULT_REVISION_ID,
+            uniqueFigureIds: true,
         };
         return data;
     }
@@ -28488,9 +28513,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor() {
             super(...arguments);
             this.charts = {};
-            this.nextId = 1;
             this.createChart = chartFactory(this.getters);
-            this.validateChartDefinition = (definition) => validateChartDefinition(this, definition);
+            this.validateChartDefinition = (cmd) => validateChartDefinition(this, cmd.definition);
         }
         adaptRanges(applyChange) {
             for (const [chartId, chart] of Object.entries(this.charts)) {
@@ -28503,8 +28527,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CREATE_CHART":
+                    return this.checkValidations(cmd, this.chainValidations(this.validateChartDefinition, this.checkChartDuplicate));
                 case "UPDATE_CHART":
-                    return this.validateChartDefinition(cmd.definition);
+                    return this.checkValidations(cmd, this.chainValidations(this.validateChartDefinition, this.checkChartExists));
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -28514,22 +28539,22 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "CREATE_CHART":
                     this.addFigure(cmd.id, cmd.sheetId, cmd.position, cmd.size);
-                    this.addChart(cmd.id, cmd.sheetId, cmd.definition);
+                    this.addChart(cmd.id, cmd.definition);
                     break;
                 case "UPDATE_CHART": {
-                    this.addChart(cmd.id, cmd.sheetId, cmd.definition);
+                    this.addChart(cmd.id, cmd.definition);
                     break;
                 }
                 case "DUPLICATE_SHEET": {
                     const sheetFiguresFrom = this.getters.getFigures(cmd.sheetId);
                     for (const fig of sheetFiguresFrom) {
                         if (fig.tag === "chart") {
-                            const id = this.nextId.toString();
-                            this.history.update("nextId", this.nextId + 1);
+                            const figureIdBase = fig.id.split(FIGURE_ID_SPLITTER).pop();
+                            const duplicatedFigureId = `${cmd.sheetIdTo}${FIGURE_ID_SPLITTER}${figureIdBase}`;
                             const chart = (_a = this.charts[fig.id]) === null || _a === void 0 ? void 0 : _a.copyForSheetId(cmd.sheetIdTo);
                             if (chart) {
                                 this.dispatch("CREATE_CHART", {
-                                    id,
+                                    id: duplicatedFigureId,
                                     position: { x: fig.x, y: fig.y },
                                     size: { width: fig.width, height: fig.height },
                                     definition: chart.getDefinition(),
@@ -28595,7 +28620,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         // figure data should be external IMO => chart should be in sheet.chart
                         // instead of in figure.data
                         if (figure.tag === "chart") {
-                            this.history.update("nextId", this.nextId + 1);
                             this.charts[figure.id] = this.createChart(figure.id, figure.data, sheet.id);
                         }
                     }
@@ -28603,14 +28627,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         export(data) {
+            var _a;
             if (data.sheets) {
                 for (let sheet of data.sheets) {
                     // TODO This code is false, if two plugins want ot insert figures on the sheet, it will crash !
                     const sheetFigures = this.getters.getFigures(sheet.id);
-                    const figures = sheetFigures;
-                    for (let figure of figures) {
+                    const figures = [];
+                    for (let sheetFigure of sheetFigures) {
+                        const figure = sheetFigure;
                         if (figure && figure.tag === "chart") {
-                            figure.data = this.getChartDefinition(figure.id);
+                            const data = (_a = this.charts[figure.id]) === null || _a === void 0 ? void 0 : _a.getDefinition();
+                            if (data) {
+                                figure.data = data;
+                                figures.push(figure);
+                            }
+                        }
+                        else {
+                            figures.push(figure);
                         }
                     }
                     sheet.figures = figures;
@@ -28663,8 +28696,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Add a chart in the local state. If a chart already exists, this chart is
          * replaced
          */
-        addChart(id, sheetId, definition) {
-            this.history.update("charts", id, this.createChart(id, definition, sheetId));
+        addChart(id, definition) {
+            const sheetId = this.getters.getFigureSheetId(id);
+            if (sheetId) {
+                this.history.update("charts", id, this.createChart(id, definition, sheetId));
+            }
+        }
+        checkChartDuplicate(cmd) {
+            return this.getters.getFigureSheetId(cmd.id)
+                ? 84 /* CommandResult.DuplicatedChartId */
+                : 0 /* CommandResult.Success */;
+        }
+        checkChartExists(cmd) {
+            return this.getters.getFigureSheetId(cmd.id)
+                ? 0 /* CommandResult.Success */
+                : 85 /* CommandResult.ChartDoesNotExist */;
         }
     }
     ChartPlugin.getters = [
@@ -29127,6 +29173,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             var _a;
             return (_a = this.figures[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId];
         }
+        getFigureSheetId(figureId) {
+            return Object.keys(this.figures).find((sheetId) => { var _a; return ((_a = this.figures[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) !== undefined; });
+        }
         // ---------------------------------------------------------------------------
         // Import/Export
         // ---------------------------------------------------------------------------
@@ -29151,7 +29200,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.export(data);
         }
     }
-    FigurePlugin.getters = ["getFigures", "getFigure"];
+    FigurePlugin.getters = ["getFigures", "getFigure", "getFigureSheetId"];
 
     class FilterTable {
         constructor(zone) {
@@ -29869,7 +29918,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              * paths of images synced with the file store server.
              */
             this.syncedImages = new Set();
-            this.nextId = 1;
             this.fileStore = config.external.fileStore;
         }
         // ---------------------------------------------------------------------------
@@ -29897,14 +29945,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const sheetFiguresFrom = this.getters.getFigures(cmd.sheetId);
                     for (const fig of sheetFiguresFrom) {
                         if (fig.tag === "image") {
-                            const id = `image-${this.nextId}`;
-                            this.history.update("nextId", this.nextId + 1);
+                            const figureIdBase = fig.id.split(FIGURE_ID_SPLITTER).pop();
+                            const duplicatedFigureId = `${cmd.sheetIdTo}${FIGURE_ID_SPLITTER}${figureIdBase}`;
                             const image = this.getImage(fig.id);
                             if (image) {
                                 const size = { width: fig.width, height: fig.height };
                                 this.dispatch("CREATE_IMAGE", {
                                     sheetId: cmd.sheetIdTo,
-                                    figureId: id,
+                                    figureId: duplicatedFigureId,
                                     position: { x: fig.x, y: fig.y },
                                     size,
                                     definition: deepCopy(image),
@@ -29969,7 +30017,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const sheet of data.sheets) {
                 const images = (sheet.figures || []).filter((figure) => figure.tag === "image");
                 for (const image of images) {
-                    this.history.update("nextId", this.nextId + 1);
                     this.history.update("images", sheet.id, image.id, image.data);
                     this.syncedImages.add(image.data.path);
                 }
@@ -39096,7 +39143,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     class SpreadsheetDashboard extends owl.Component {
         setup() {
             const gridRef = owl.useRef("grid");
-            this.canvasPosition = useAbsolutePosition(gridRef);
+            this.canvasPosition = useAbsoluteBoundingRect(gridRef);
             this.hoveredCell = owl.useState({ col: undefined, row: undefined });
             owl.useChildSubEnv({ getPopoverContainerRect: () => this.getGridRect() });
             useGridDrawing("canvas", this.env.model, () => this.env.model.getters.getSheetViewDimension());
@@ -43850,9 +43897,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-    exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-02-17T09:46:59.402Z';
-    exports.__info__.hash = '7f419b0';
+
+    __info__.version = '16.1.3';
+    __info__.date = '2023-03-06T07:34:25.041Z';
+    __info__.hash = '7e26a7c';
+
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
