@@ -138,7 +138,6 @@
             'web/static/src/views/form/button_box/*.scss',
 
             'web/static/src/legacy/action_adapters.js',
-            'web/static/src/legacy/debug_manager.js',
             'web/static/src/legacy/legacy_service_provider.js',
             'web/static/src/legacy/legacy_client_actions.js',
             'web/static/src/legacy/legacy_dialog.js',
