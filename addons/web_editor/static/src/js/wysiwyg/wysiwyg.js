@@ -458,7 +458,7 @@ const Wysiwyg = Widget.extend({
         // Check wether clientA is before clientB.
         const isClientFirst = (clientA, clientB) => {
             if (clientA.startTime === clientB.startTime) {
-                return clientA.id.localCompare(clientB.id) === -1;
+                return clientA.id.localeCompare(clientB.id) < 1;
             } else {
                 return clientA.startTime < clientB.startTime;
             }
