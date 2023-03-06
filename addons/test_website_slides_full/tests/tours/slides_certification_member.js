@@ -144,7 +144,7 @@ var certificationCompletionSteps = [{
 
 var profileSteps = [{
     content: 'eLearning: access user profile',
-    trigger: '.o_wslides_home_aside_loggedin a:contains("View"):first'
+    trigger: '.o_wslides_home_aside_loggedin a:contains("View")'
 }, {
     content: 'eLearning: check that the user profile certifications include the new certification',
     trigger: '.o_wprofile_slides_course_card_body:contains("Furniture Creation Certification")',
