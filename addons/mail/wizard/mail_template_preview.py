@@ -71,6 +71,7 @@ class MailTemplatePreview(models.TransientModel):
         """ Preview the mail template (body, subject, ...) depending of the language and
         the record reference, more precisely the record id for the defined model of the mail template.
         If no record id is selectable/set, the inline_template placeholders won't be replace in the display information. """
+        error_msg = False
         mail_template = self.mail_template_id.with_context(lang=self.lang)
         if not self.resource_ref or not self.resource_ref.id:
             self._set_mail_attributes()
@@ -82,10 +83,10 @@ class MailTemplatePreview(models.TransientModel):
                     self._MAIL_TEMPLATE_FIELDS
                 )[self.resource_ref.id]
                 self._set_mail_attributes(values=mail_values)
-                self.error_msg = False
             except (ValueError, UserError) as user_error:
                 self._set_mail_attributes()
-                self.error_msg = user_error.args[0]
+                error_msg = user_error.args[0]
+        self.error_msg = error_msg
 
     def _set_mail_attributes(self, values=None):
         for field in self._MAIL_TEMPLATE_FIELDS:

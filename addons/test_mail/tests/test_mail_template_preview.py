@@ -20,6 +20,20 @@ class TestMailTemplateTools(TestMailTemplateCommon):
         self.assertEqual(len(self.test_template.partner_to.split(',')), 2)
         self.assertTrue(self.test_record.email_from)
 
+    def test_mail_template_preview_empty_database(self):
+        """Check behaviour of the wizard when there is no record for the target model."""
+        self.env['mail.test.lang'].search([]).unlink()
+        test_template = self.env['mail.template'].browse(self.test_template.ids)
+        preview = self.env['mail.template.preview'].create({
+            'mail_template_id': test_template.id,
+        })
+
+        self.assertFalse(preview.error_msg)
+        for field in preview._MAIL_TEMPLATE_FIELDS:
+            if field in ['partner_to', 'report_template_ids']:
+                continue
+            self.assertEqual(test_template[field], preview[field])
+
     def test_mail_template_preview_force_lang(self):
         test_record = self.env['mail.test.lang'].browse(self.test_record.ids)
         test_record.write({
