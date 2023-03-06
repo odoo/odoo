@@ -332,6 +332,102 @@
                         </div>
                     </t>
                 </t>
+<<<<<<< HEAD
+||||||| parent of ceb2f04b231 (temp)
+                <!-- === Tokens === -->
+                <t t-foreach="tokens" t-as="token">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <!-- Only shown if 'assign_token_route' is set -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="token.id == default_payment_option_id"
+                                   t-att-class="'' if bool(assign_token_route) else 'd-none'"
+                                   t-att-data-payment-option-id="token.id"
+                                   t-att-data-provider="token.provider_code"
+                                   data-payment-option-type="token"/>
+                            <!-- === Token name === -->
+                            <span class="payment_option_name" t-esc="token.display_name"/>
+                            <!-- === "V" check mark === -->
+                            <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Test token" badge === -->
+                            <t t-call="payment.test_token_badge"/>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not token.provider_id.is_published and token.env.user._is_internal()"
+                                  class="badge rounded-pill text-bg-danger ms-1">
+                                Unpublished
+                            </span>
+                        </label>
+                        <!-- === "Delete" token button === -->
+                        <button name="o_payment_delete_token"
+                                class="btn btn-primary btn-sm float-end">
+                            <i class="fa fa-trash"/> Delete
+                        </button>
+                    </div>
+                    <!-- === Token inline form === -->
+                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer d-none">
+                        <t t-set="token_inline_form_xml_id"
+                           t-value="token.sudo().provider_id.token_inline_form_view_id.xml_id"/>
+                        <!-- === Inline form content (filled by provider) === -->
+                        <div t-if="token_inline_form_xml_id" class="clearfix">
+                            <t t-call="{{token_inline_form_xml_id}}">
+                                <t t-set="token" t-value="token"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+=======
+                <!-- === Tokens === -->
+                <t t-foreach="tokens" t-as="token">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <!-- Only shown if 'assign_token_route' is set -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="token.id == default_payment_option_id"
+                                   t-att-class="'' if bool(assign_token_route) else 'd-none'"
+                                   t-att-data-payment-option-id="token.id"
+                                   t-att-data-provider="token.provider_code"
+                                   data-payment-option-type="token"/>
+                            <!-- === Token name === -->
+                            <span class="payment_option_name" t-esc="token.display_name"/>
+                            <!-- === "V" check mark === -->
+                            <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Test token" badge === -->
+                            <t t-call="payment.test_token_badge">
+                                <t t-set='provider' t-value='token.provider_id' />
+                            </t>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not token.provider_id.is_published and token.env.user._is_internal()"
+                                  class="badge rounded-pill text-bg-danger ms-1">
+                                Unpublished
+                            </span>
+                        </label>
+                        <!-- === "Delete" token button === -->
+                        <button name="o_payment_delete_token"
+                                class="btn btn-primary btn-sm float-end">
+                            <i class="fa fa-trash"/> Delete
+                        </button>
+                    </div>
+                    <!-- === Token inline form === -->
+                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer d-none">
+                        <t t-set="token_inline_form_xml_id"
+                           t-value="token.sudo().provider_id.token_inline_form_view_id.xml_id"/>
+                        <!-- === Inline form content (filled by provider) === -->
+                        <div t-if="token_inline_form_xml_id" class="clearfix">
+                            <t t-call="{{token_inline_form_xml_id}}">
+                                <t t-set="token" t-value="token"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+>>>>>>> ceb2f04b231 (temp)
             </div>
             <!-- === "Save Payment Method" button === -->
             <t t-call="{{footer_template_id}}">
@@ -442,7 +538,13 @@
 
     <!-- Test token badge -->
     <template id="test_token_badge" name="Test Token Badge">
+<<<<<<< HEAD
         <span t-if="token.provider_id.state == 'test'" class="badge rounded-pill text-bg-warning">
+||||||| parent of ceb2f04b231 (temp)
+        <span t-if="provider.state == 'test'" class="badge rounded-pill test-bg-warning">
+=======
+        <span t-if="provider.state == 'test'" class="badge rounded-pill text-bg-warning px-2">
+>>>>>>> ceb2f04b231 (temp)
             Test Token
         </span>
     </template>
