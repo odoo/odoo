@@ -5,7 +5,7 @@ import { sprintf } from "@web/core/utils/strings";
 
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 const { functionRegistry } = spreadsheet.registries;
-const { args, toBoolean, toString, toNumber, toJsDate } = spreadsheet.helpers;
+const { arg, toBoolean, toString, toNumber, toJsDate } = spreadsheet.helpers;
 
 const QuarterRegexp = /^q([1-4])\/(\d{4})$/i;
 const MonthRegexp = /^0?([1-9]|1[0-2])\/(\d{4})$/i;
@@ -128,19 +128,20 @@ export function parseAccountingDate(dateRange) {
     }
 }
 
-const ODOO_FIN_ARGS = `
-    account_codes (string) ${_t("The prefix of the accounts.")}
-    date_range (string, date) ${_t(
-        `The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`
-    )}
-    offset (number, default=0) ${_t("Year offset applied to date_range.")}
-    company_id (number, optional) ${_t("The company to target (Advanced).")}
-    include_unposted (boolean, default=TRUE) ${_t("Set to TRUE to include unposted entries.")}
-`;
+const ODOO_FIN_ARGS = () => [
+    arg("account_codes (string)", _t("The prefix of the accounts.")),
+    arg(
+        "date_range (string, date)",
+        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+    ),
+    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
+    arg("company_id (number, optional)", _t("The company to target (Advanced).")),
+    arg("include_unposted (boolean, default=TRUE)", _t("Set to TRUE to include unposted entries.")),
+];
 
 functionRegistry.add("ODOO.CREDIT", {
     description: _t("Get the total credit for the specified account(s) and period."),
-    args: args(ODOO_FIN_ARGS),
+    args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
@@ -174,7 +175,7 @@ functionRegistry.add("ODOO.CREDIT", {
 
 functionRegistry.add("ODOO.DEBIT", {
     description: _t("Get the total debit for the specified account(s) and period."),
-    args: args(ODOO_FIN_ARGS),
+    args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
@@ -208,7 +209,7 @@ functionRegistry.add("ODOO.DEBIT", {
 
 functionRegistry.add("ODOO.BALANCE", {
     description: _t("Get the total balance for the specified account(s) and period."),
-    args: args(ODOO_FIN_ARGS),
+    args: ODOO_FIN_ARGS(),
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
@@ -251,10 +252,10 @@ functionRegistry.add("ODOO.BALANCE", {
 
 functionRegistry.add("ODOO.FISCALYEAR.START", {
     description: _t("Returns the starting date of the fiscal year encompassing the provided date."),
-    args: args(`
-        date (date) ${_t("Reference date.")}
-        company_id (number, optional) ${_t("The company.")}
-    `),
+    args: [
+        arg("date (date)", _t("Reference date.")),
+        arg("company_id (number, optional)", _t("The company.")),
+    ],
     returns: ["NUMBER"],
     computeFormat: () => "m/d/yyyy",
     compute: function (date, companyId = null) {
@@ -268,10 +269,10 @@ functionRegistry.add("ODOO.FISCALYEAR.START", {
 
 functionRegistry.add("ODOO.FISCALYEAR.END", {
     description: _t("Returns the ending date of the fiscal year encompassing the provided date."),
-    args: args(`
-        date (date) ${_t("Reference date.")}
-        company_id (number, optional) ${_t("The company.")}
-    `),
+    args: [
+        arg("date (date)", _t("Reference date.")),
+        arg("company_id (number, optional)", _t("The company.")),
+    ],
     returns: ["NUMBER"],
     computeFormat: () => "m/d/yyyy",
     compute: function (date, companyId = null) {
@@ -285,9 +286,7 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
 
 functionRegistry.add("ODOO.ACCOUNT.GROUP", {
     description: _t("Returns the account ids of a given group."),
-    args: args(`
-        type (string) ${_t("Account type.")}
-    `),
+    args: [arg("type (string)", _t("Account type."))],
     returns: ["NUMBER"],
     computeFormat: () => "m/d/yyyy",
     compute: function (accountType) {

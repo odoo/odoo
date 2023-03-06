@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import spreadsheet from "../o_spreadsheet/o_spreadsheet_extended";
-const { args, toString, toJSDate } = spreadsheet.helpers;
+const { arg, toString, toJSDate } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
 
 
@@ -15,10 +15,10 @@ functionRegistry
             const _date = date ? toJSDate(date) : undefined;
             return this.getters.getCurrencyRate(from, to, _date);
         },
-        args: args(`
-            currency_from (string) ${_t("First currency code.")}
-            currency_to (string) ${_t("Second currency code.")}
-            date (date, optional) ${_t("Date of the rate.")}
-        `),
+        args: [
+            arg("currency_from (string)", _t("First currency code.")),
+            arg("currency_to (string)", _t("Second currency code.")),
+            arg("date (date, optional)", _t("Date of the rate.")),
+        ],
     returns: ["NUMBER"],
 });
