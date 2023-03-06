@@ -2,6 +2,7 @@
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
+import { getModifier } from "@web/views/view_compiler";
 import {
     archParseBoolean,
     evalDomain,
@@ -255,6 +256,9 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         const views = {};
         for (const child of node.children) {
             const viewType = child.tagName === "tree" ? "list" : child.tagName;
+            if (getModifier(child, "invisible")) {
+                continue;
+            }
             const { ArchParser } = viewRegistry.get(viewType);
             const xmlSerializer = new XMLSerializer();
             const subArch = xmlSerializer.serializeToString(child);
