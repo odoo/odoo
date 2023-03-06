@@ -709,11 +709,11 @@ Content-Transfer-Encoding: quoted-printable
 <?xml version=3D"1.0" encoding=3D"utf-16"?><html><head><style type=3D"text/=
 css"><!--blockquote.cite
 {margin-left: 5px; margin-right: 0px; padding-left: 10px; padding-right:=
- 0px; border-left-width: 1px; border-left-style: solid; border-left-color:=
+ 0px; border-left-width: 1px; border-left-style: solid; border-start-color:=
  rgb(204, 204, 204);}
 blockquote.cite2
 {margin-left: 5px; margin-right: 0px; padding-left: 10px; padding-right:=
- 0px; border-left-width: 1px; border-left-style: solid; border-left-color:=
+ 0px; border-left-width: 1px; border-left-style: solid; border-start-color:=
  rgb(204, 204, 204); margin-top: 3px; padding-top: 0px;}
 a img
 {border: 0px;}
