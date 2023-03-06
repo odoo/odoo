@@ -33,9 +33,15 @@
                         <field name="code">PLTAXC_02_11</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_poza_kraj_tag" model="account.report.expression">
-                                <field name="label">balance</field>
+                                <field name="label">tag</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">Podstawa - Dostawa towarów/usług, poza kraj</field>
+                                <field name="label">tag</field>
+                            </record>
+                            <record id="account_tax_report_line_poza_kraj_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PLTAXC_02_11.tag + PLTAXC_02a_12.balance</field>
                             </record>
                         </field>
                         <field name="children_ids">
@@ -82,36 +88,36 @@
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_kraj_3_lub_5" model="account.report.line">
-                        <field name="name">Podstawa - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+                    <record id="account_tax_report_line_kraj_5" model="account.report.line">
+                        <field name="name">Podstawa - Dostawa towarów/usług, kraj 5%</field>
                         <field name="code">PLTAXC_04_15</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_line_kraj_3_lub_5_tag" model="account.report.expression">
+                            <record id="account_tax_report_line_kraj_5_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Podstawa - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+                                <field name="formula">Podstawa - Dostawa towarów/usług, kraj 5%</field>
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_kraj_7_lub_8" model="account.report.line">
-                        <field name="name">Podstawa - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+                    <record id="account_tax_report_line_kraj_8" model="account.report.line">
+                        <field name="name">Podstawa - Dostawa towarów/usług, kraj 8%</field>
                         <field name="code">PLTAXC_05_17</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_line_kraj_7_lub_8_tag" model="account.report.expression">
+                            <record id="account_tax_report_line_kraj_8_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Podstawa - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+                                <field name="formula">Podstawa - Dostawa towarów/usług, kraj 8%</field>
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_kraj_22_lub_23" model="account.report.line">
-                        <field name="name">Podstawa - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+                    <record id="account_tax_report_line_kraj_23" model="account.report.line">
+                        <field name="name">Podstawa - Dostawa towarów/usług, kraj 23%</field>
                         <field name="code">PLTAXC_06_19</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_line_kraj_22_lub_23_tag" model="account.report.expression">
+                            <record id="account_tax_report_line_kraj_23_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Podstawa - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+                                <field name="formula">Podstawa - Dostawa towarów/usług, kraj 23%</field>
                             </record>
                         </field>
                     </record>
@@ -164,9 +170,15 @@
                         <field name="code">PLTAXC_11_27</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_import_uslug_tag" model="account.report.expression">
-                                <field name="label">balance</field>
+                                <field name="label">tag</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">Podstawa - Import usług</field>
+                                <field name="label">tag</field>
+                            </record>
+                            <record id="account_tax_report_line_import_uslug_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PLTAXC_11_27.tag + PLTAXC_11a_29.balance</field>
                             </record>
                         </field>
                         <field name="children_ids">
@@ -247,36 +259,36 @@
                         <field name="code">PLTAXC</field>
                         <field name="aggregation_formula">PLTAXC_04_16.balance + PLTAXC_05_18.balance + PLTAXC_06_20.balance + PLTAXC_09_24.formula + PLTAXC_10_26.balance + PLTAXC_11_28.balance + PLTAXC_12_32.balance + PLTAXC_12_33.balance + PLTAXC_01_34.balance</field>
                         <field name="children_ids">
-                            <record id="account_tax_report_line_podatek_kraj_3_lub_5" model="account.report.line">
-                                <field name="name">Podatek - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+                            <record id="account_tax_report_line_podatek_kraj_5" model="account.report.line">
+                                <field name="name">Podatek - Dostawa towarów/usług 5%</field>
                                 <field name="code">PLTAXC_04_16</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_line_podatek_kraj_3_lub_5_tag" model="account.report.expression">
+                                    <record id="account_tax_report_line_podatek_kraj_5_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">Podatek - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+                                        <field name="formula">Podatek - Dostawa towarów/usług, kraj 5%</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="account_tax_report_line_podatek_kraj_7_lub_8" model="account.report.line">
-                                <field name="name">Podatek - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+                            <record id="account_tax_report_line_podatek_kraj_8" model="account.report.line">
+                                <field name="name">Podatek - Dostawa towarów/usług 8%</field>
                                 <field name="code">PLTAXC_05_18</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_line_podatek_kraj_7_lub_8_tag" model="account.report.expression">
+                                    <record id="account_tax_report_line_podatek_kraj_8_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">Podatek - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+                                        <field name="formula">Podatek - Dostawa towarów/usług, kraj 8%</field>
                                     </record>
                                 </field>
                             </record>
-                            <record id="account_tax_report_line_podatek_kraj_22_lub_23" model="account.report.line">
-                                <field name="name">Podatek - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+                            <record id="account_tax_report_line_podatek_kraj_23" model="account.report.line">
+                                <field name="name">Podatek - Dostawa towarów/usług 23%</field>
                                 <field name="code">PLTAXC_06_20</field>
                                 <field name="expression_ids">
-                                    <record id="account_tax_report_line_podatek_kraj_22_lub_23_tag" model="account.report.expression">
+                                    <record id="account_tax_report_line_podatek_kraj_23_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">Podatek - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+                                        <field name="formula">Podatek - Dostawa towarów/usług, kraj 23%</field>
                                     </record>
                                 </field>
                             </record>
@@ -325,9 +337,15 @@
                                 <field name="code">PLTAXC_11_28</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_podatek_import_uslug_tag" model="account.report.expression">
-                                        <field name="label">balance</field>
+                                        <field name="label">tag</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">Podatek - Import usług</field>
+                                        <field name="label">tag</field>
+                                    </record>
+                                    <record id="account_tax_report_line_podatek_import_uslug_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PLTAXC_11_28.tag + PLTAXC_11a_30.balance</field>
                                     </record>
                                 </field>
                                 <field name="children_ids">
