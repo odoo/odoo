@@ -598,7 +598,7 @@ class AccountJournal(models.Model):
     @api.model
     def get_next_bank_cash_default_code(self, journal_type, company, cache=None):
         journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
-        existing_codes = set(self.env['account.journal'].search([
+        existing_codes = set(self.env['account.journal'].with_context(active_test=False).search([
             ('code', 'like', journal_code_base + '%'),
             ('company_id', '=', company.id),
         ]).mapped('code') + (cache or []))
