@@ -3,18 +3,18 @@
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import {
     many2ManyTagsField,
     Many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "../many2many_tags/tags_list";
-import { onMounted, useRef, useState } from "@odoo/owl";
+import { onMounted, useState } from "@odoo/owl";
+import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     static template = "web.Many2ManyTagsAvatarField";
     static components = {
-        Many2XAutocomplete,
+        Many2XAutocomplete: AvatarMany2XAutocomplete,
         TagsList,
     };
     static props = {
@@ -100,7 +100,6 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
     setup() {
         super.setup();
         this.popover = usePopover();
-        this.emptyAvatar = useRef("emptyAvatar");
     }
     get visibleTagsCount() {
         return this.props.itemsVisible;
@@ -116,8 +115,6 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
         if (this.closePopoverFn) {
             this.closePopover();
         }
-        this.emptyAvatar.el?.dispatchEvent(new MouseEvent("mouseleave"));
-        this.emptyAvatar.el?.removeAttribute("data-tooltip-template");
         this.closePopoverFn = this.popover.add(
             ev.currentTarget.parentElement,
             Many2ManyTagsAvatarFieldPopover,
@@ -130,12 +127,6 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
             },
             {
                 position: "bottom",
-                onClose: () => {
-                    this.emptyAvatar.el?.setAttribute(
-                        "data-tooltip-template",
-                        "web.TagsList.Tooltip"
-                    );
-                },
             }
         );
     }
