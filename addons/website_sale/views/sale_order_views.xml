@@ -210,7 +210,7 @@
         <field name="inherit_id" ref="sale.sale_order_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="before">
-                <field name="website_id" optional="show"/>
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>
