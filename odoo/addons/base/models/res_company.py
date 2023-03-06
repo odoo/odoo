@@ -336,3 +336,12 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        company = self.env.company
+        if company.country_id.vat_label:
+            for node in arch.xpath("//field[@name='vat']"):
+                node.attrib["string"] = company.country_id.vat_label
+        return arch, view

@@ -687,3 +687,13 @@ class ResCompany(models.Model):
                 company.early_pay_discount_computation = 'excluded'
             else:
                 company.early_pay_discount_computation = 'included'
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        """ This is already done in base, but with accounting installed we want to use the account_fiscal_country_id instead """
+        arch, view = super()._get_view(view_id, view_type, **options)
+        company = self.env.company
+        if company.account_fiscal_country_id.vat_label:
+            for node in arch.xpath("//field[@name='vat']"):
+                node.attrib["string"] = company.account_fiscal_country_id.vat_label
+        return arch, view
