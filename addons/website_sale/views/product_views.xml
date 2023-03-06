@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="product_template_search_view_website" model="ir.ui.view">
         <field name="name">product.template.search.published</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_search_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='consumable']" position="after">
+            <filter name="consumable" position="after">
                 <separator/>
                 <filter string="Published" name="published" domain="[('is_published', '=', True)]"/>
-            </xpath>
+            </filter>
         </field>
     </record>
 
@@ -43,9 +44,9 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="website_sale.product_template_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="/tree" position="attributes">
+            <tree position="attributes">
               <attribute name="default_order">website_sequence</attribute>
-            </xpath>
+            </tree>
             <field name="priority" position="before">
                 <field name="website_sequence" widget="handle"/>
             </field>
@@ -62,9 +63,9 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_kanban_view"/>
         <field name="arch" type="xml">
-            <xpath expr="/kanban" position="attributes">
+            <kanban position="attributes">
               <attribute name="default_order">website_sequence</attribute>
-            </xpath>
+            </kanban>
             <field name="id" position="after">
                 <field name="website_sequence"/>
             </field>
@@ -101,7 +102,7 @@
                     <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" class="oe_edit_only"/>
                 </div>
             </div>
-            <xpath expr="//field[@name='uom_id']" position="after">
+            <field name="uom_id" position="after">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
                 <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
                     <field name="base_unit_count" attrs="{'invisible': [('product_variant_count', '>', 1)]}" style="width: 4rem;"/>
@@ -111,7 +112,7 @@
                     </div>
                     <span class='text-muted' attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}">Based on variants</span>
                 </div>
-            </xpath>
+            </field>
         </field>
     </record>
 
@@ -120,7 +121,7 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='uom_id']" position="after">
+            <field name="uom_id" position="after">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
                 <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
                     <field name="base_unit_count" style="width: 4rem;"/>
@@ -129,7 +130,7 @@
                         (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
                     </div>
                 </div>
-            </xpath>
+            </field>
         </field>
     </record>
 
@@ -145,14 +146,14 @@
             <group name="upsell" position="attributes">
                 <attribute name="invisible">0</attribute>
             </group>
-            <xpath expr="//group[@name='upsell']" position="inside">
+            <group name="upsell" position="inside">
                 <field name="accessory_product_ids" widget="many2many_tags" attrs="{'invisible': [('sale_ok','=',False)]}"
                        placeholder="Suggested accessories in the eCommerce cart"/>
                 <field name="alternative_product_ids" widget="many2many_tags"
                        domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                        attrs="{'invisible': [('sale_ok','=',False)]}"
                        placeholder="Displayed in bottom of product pages"/>
-            </xpath>
+            </group>
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group string="eCommerce Shop" name="shop" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="website_url" invisible="1"/>
@@ -173,7 +174,7 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='pricing']" position="inside">
+            <group name="pricing" position="inside">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
                 <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
                     <field name="base_unit_count" style="width: 4rem;"/>
@@ -182,12 +183,12 @@
                         (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
                     </div>
                 </div>
-            </xpath>
-            <xpath expr="//group[@name='packaging']" position="after">
+            </group>
+            <group name="packaging" position="after">
                 <group name="product_variant_images" string="Extra Variant Media">
                     <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
                 </group>
-            </xpath>
+            </group>
         </field>
     </record>
 
@@ -238,6 +239,7 @@
             </form>
         </field>
     </record>
+
     <record id="product_public_category_tree_view" model="ir.ui.view">
         <field name="name">product.public.category.tree</field>
         <field name="model">product.public.category</field>
@@ -249,6 +251,7 @@
             </tree>
         </field>
     </record>
+
     <record id="product_public_category_action" model="ir.actions.act_window">
         <field name="name">eCommerce Categories</field>
         <field name="type">ir.actions.act_window</field>
@@ -280,15 +283,15 @@
         <field name="inherit_id" ref="product.product_pricelist_view" />
         <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='pricelist_availability']" position="after">
+            <group name="pricelist_availability" position="after">
                 <group name="pricelist_website" string="Website">
                     <field name="company_id" invisible="1"/>
                     <field name="website_id" options="{'no_create': True}"/>
                     <field name="selectable"/>
                     <field name="code"/>
                 </group>
-            </xpath>
-          </field>
+            </group>
+        </field>
     </record>
 
     <record id="website_sale_pricelist_tree_view" model="ir.ui.view">
