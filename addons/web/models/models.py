@@ -46,6 +46,7 @@ class Base(models.AbstractModel):
         :param limit: maximum number of records to read
         :param offset: number of records to skip
         :param order: columns to sort results
+        :param count_limit: the upper limit for counting the records. Can be ignored using the context key 'force_search_count'
         :return: {
             'records': array of read records (result of a call to 'search_read')
             'length': number of records matching the domain (result of a call to 'search_count')
