@@ -5400,7 +5400,7 @@ class AccountMoveLine(models.Model):
 
         # Fix cash basis entries.
         is_cash_basis_needed = self[0].account_internal_type in ('receivable', 'payable')
-        if is_cash_basis_needed:
+        if is_cash_basis_needed and exchange_diff_move_vals['line_ids']:
             _add_cash_basis_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
 
         # ==========================================================================
