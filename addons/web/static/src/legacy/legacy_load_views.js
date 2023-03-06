@@ -65,7 +65,7 @@ export function processArch(arch, viewType, resModel, models) {
             if (viewFields[fieldName] === undefined) {
                 const viewFieldsInfo = models[resModel][fieldName];
                 const nodeString = node.getAttribute("string");
-                if (nodeString === undefined && viewFieldsInfo === undefined) {
+                if (nodeString === null && viewFieldsInfo === undefined) {
                     throw new Error(`Missing field string information for the field '${fieldName}' from the '${resModel}' model`);
                 }
                 viewFields[fieldName] = {

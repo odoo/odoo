@@ -8,6 +8,14 @@
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="mail_test_multi_company_read_rule" model="ir.rule">
+        <field name="name">MC Readonly Rule</field>
+        <field name="model_id" ref="test_mail.model_mail_test_multi_company_read"/>
+        <field name="perm_read" eval="False"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+
     <!-- TICKET-LIKE -->
     <record id="mail_test_ticket_rule_portal" model="ir.rule">
         <field name="name">Portal Mail Test Ticket</field>

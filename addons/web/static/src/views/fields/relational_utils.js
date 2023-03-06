@@ -668,7 +668,7 @@ export function useOpenX2ManyRecord({
                         return model.addNewRecord(
                             list,
                             {
-                                context: list.context,
+                                context: makeContext([list.context, context]),
                                 resModel: resModel,
                                 activeFields: form.activeFields,
                                 fields: { ...form.fields },

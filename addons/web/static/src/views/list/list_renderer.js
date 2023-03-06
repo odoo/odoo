@@ -61,6 +61,7 @@ function getElementToFocus(cell) {
 export class ListRenderer extends Component {
     setup() {
         this.uiService = useService("ui");
+        this.notificationService = useService("notification");
         this.allColumns = this.props.archInfo.columns;
         this.keyOptionalFields = this.createKeyOptionalFields();
         this.getOptionalActiveFields();
@@ -185,6 +186,12 @@ export class ListRenderer extends Component {
         useExternalListener(window, "resize", () => {
             this.columnWidths = null;
             this.freezeColumnWidths();
+        });
+    }
+
+    displaySaveNotification() {
+        this.notificationService.add(this.env._t('Please click on the "save" button first'), {
+            type: "danger",
         });
     }
 
