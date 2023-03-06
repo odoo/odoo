@@ -303,9 +303,6 @@ export class ViewAdapter extends ActionAdapter {
         };
         useDebugCategory("action", debugContext);
         useDebugCategory("view", debugContext);
-        if (this.props.viewInfo.type === "form") {
-            useDebugCategory("form_legacy", debugContext);
-        }
         this.env = Component.env;
     }
 
