@@ -15,6 +15,7 @@ class HRAttendanceReport(models.Model):
     check_in = fields.Date("Check In", readonly=True)
     worked_hours = fields.Float("Hours Worked", readonly=True)
     overtime_hours = fields.Float("Extra Hours", readonly=True)
+    overtime_hours_real = fields.Float("Extra Hours (Real)", readonly=True)
 
     @api.model
     def _select(self):
@@ -26,7 +27,8 @@ class HRAttendanceReport(models.Model):
                 hr_employee.company_id,
                 hra.check_in,
                 hra.worked_hours,
-                coalesce(ot.duration, 0) as overtime_hours
+                coalesce(ot.duration, 0) as overtime_hours,
+                coalesce(ot.duration_real, 0) as overtime_hours_real
         """
 
     @api.model
