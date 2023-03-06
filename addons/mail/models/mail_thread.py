@@ -257,7 +257,7 @@ class MailThread(models.AbstractModel):
 
         threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
-        if not self._context.get('mail_create_nosubscribe') and threads:
+        if not self._context.get('mail_create_nosubscribe') and threads and self.env.user.active:
             self.env['mail.followers']._insert_followers(
                 threads._name, threads.ids,
                 self.env.user.partner_id.ids, subtypes=None,
@@ -1873,7 +1873,9 @@ class MailThread(models.AbstractModel):
         if 'email_add_signature' not in msg_values:
             msg_values['email_add_signature'] = True
         if not msg_values.get('record_name'):
-            msg_values['record_name'] = self.display_name
+            # use sudo as record access is not always granted (notably when replying
+            # a notification) -> final check is done at message creation level
+            msg_values['record_name'] = self.sudo().display_name
         msg_values.update({
             # author
             'author_id': author_id,
@@ -1899,8 +1901,10 @@ class MailThread(models.AbstractModel):
 
         new_message = self._message_create(msg_values)
 
-        # Set main attachment field if necessary
-        self._message_set_main_attachment_id(msg_values['attachment_ids'])
+        # Set main attachment field if necessary. Call as sudo as people may post
+        # without read access on the document, notably when replying on a
+        # notification, which makes attachments check crash.
+        self.sudo()._message_set_main_attachment_id(msg_values['attachment_ids'])
 
         if msg_values['author_id'] and msg_values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
             if self.env['res.partner'].browse(msg_values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
@@ -1910,13 +1914,21 @@ class MailThread(models.AbstractModel):
         self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
-    def _message_set_main_attachment_id(self, attachment_ids):  # todo move this out of mail.thread
+    def _message_set_main_attachment_id(self, attachment_ids):
+        """ Update record's main attachment. If not set, take first interesting
+        attachment and link it on record.
+
+        TODO: move this out of mail.thread. """
         if not self._abstract and attachment_ids and not self.message_main_attachment_id:
-            all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
+            all_attachments = self.env['ir.attachment'].browse([
+                attachment_tuple[1]
+                for attachment_tuple in attachment_ids
+                if attachment_tuple[0] == 4
+            ])
             prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
                                      or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
                                      or all_attachments
-            self.sudo().with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
+            self.with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
 
     def _message_post_after_hook(self, message, msg_vals):
         """ Hook to add custom behavior after having posted the message. Both
@@ -1941,6 +1953,13 @@ class MailThread(models.AbstractModel):
           * create attachments from ``attachments``. If those are linked to the
             content (body) through CIDs body is updated. CIDs are found and
             replaced by links to web/image as CIDs are not supported as it.
+
+        Note that attachments are created/written in sudo as we consider at this
+        point access is granted on related record and/or to post the linked
+        message. The caller must verify the access rights accordingly. Indeed
+        attachments rights are stricter than message rights which may lead to
+        ACLs issues e.g. when posting on a readonly document or replying to
+        a notification on a private document.
 
         :param list(tuple(str,str)) or list(tuple(str,str, dict)) attachments:
           list of attachment tuples in the form ``(name,content)`` or
@@ -2026,7 +2045,7 @@ class MailThread(models.AbstractModel):
                 # keep cid, name list and token synced with attachement_values_list length to match ids latter
                 attachement_extra_list.append((cid, name, token))
 
-            new_attachments = self.env['ir.attachment'].create(attachement_values_list)
+            new_attachments = self.env['ir.attachment'].sudo().create(attachement_values_list)
             attach_cid_mapping, attach_name_mapping = {}, {}
             for attachment, (cid, name, token) in zip(new_attachments, attachement_extra_list):
                 if cid:
@@ -3375,6 +3394,7 @@ class MailThread(models.AbstractModel):
         if not self:
             res['hasReadAccess'] = False
             return res
+        res['canPostOnReadonly'] = self._mail_post_access == 'read'
 
         self.ensure_one()
         try:
