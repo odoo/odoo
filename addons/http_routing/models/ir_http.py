@@ -432,10 +432,11 @@ class IrHttp(models.AbstractModel):
         # the public user. Don't try it at home!
         real_env = request.env
         # try:
-        request.registry['ir.http']._auth_method_public()  # it calls update_env
+        # request.registry['ir.http']._auth_method_public()
+
         nearest_url_lang = request.env['res.lang']._lang_get_code(url_lang_str)                # url_code from URL
         cookie_lang = request.env['res.lang']._lang_get_code(request.httprequest.cookies.get('frontend_lang')) # url_code from cookie, returning visitor
-        context_lang = cls.get_nearest_lang(real_env.context.get('lang'))                                            # code from browser
+        context_lang = cls.get_nearest_lang(request.env.context.get('lang'))                      # code from browser
         default_lang = cls._get_default_lang()                                                 # string from browser
 
         # pylint: disable=assigning-non-slot
@@ -443,6 +444,7 @@ class IrHttp(models.AbstractModel):
             nearest_url_lang or cookie_lang or context_lang or default_lang._get_cached('code')
         )
         request_url_code = request.lang._get_cached('url_code')
+
         # finally:
         #     request.env = real_env
 
