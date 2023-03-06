@@ -279,7 +279,9 @@
                             <!-- === "V" check mark === -->
                             <t t-call="payment.verified_token_checkmark"/>
                             <!-- === "Test token" badge === -->
-                            <t t-call="payment.test_token_badge"/>
+                            <t t-call="payment.test_token_badge">
+                                <t t-set='provider' t-value='token.provider_id' />
+                            </t>
                             <!-- === "Unpublished" badge === -->
                             <span t-if="not token.provider_id.is_published and token.env.user._is_internal()"
                                   class="badge rounded-pill text-bg-danger ms-1">
@@ -413,7 +415,7 @@
 
     <!-- Test token badge -->
     <template id="test_token_badge" name="Test Token Badge">
-        <span t-if="provider.state == 'test'" class="badge rounded-pill test-bg-warning">
+        <span t-if="provider.state == 'test'" class="badge rounded-pill text-bg-warning px-2">
             Test Token
         </span>
     </template>
