@@ -559,7 +559,7 @@ class Web_Editor(http.Controller):
         }
         bundle_css = None
         regex_hex = r'#[0-9A-F]{6,8}'
-        regex_rgba = r'rgba?\(\d{1,3},\d{1,3},\d{1,3}(?:,[0-9.]{1,4})?\)'
+        regex_rgba = r'rgba?\(\d{1,3}, ?\d{1,3}, ?\d{1,3}(?:, ?[0-9.]{1,4})?\)'
         for key, value in options.items():
             colorMatch = re.match('^c([1-5])$', key)
             if colorMatch:
