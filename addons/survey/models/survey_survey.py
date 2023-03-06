@@ -431,7 +431,9 @@ class Survey(models.Model):
     def _prepare_user_input_predefined_questions(self):
         """ Will generate the questions for a randomized survey.
         It uses the random_questions_count of every sections of the survey to
-        pick a random number of questions and returns the merged recordset """
+        pick a random number of questions and returns the merged recordset.
+        If the random_questions_count of a section is null or negative,
+        its questions won't be added to the recordset and thus won't be displayed."""
         self.ensure_one()
 
         questions = self.env['survey.question']
@@ -447,10 +449,11 @@ class Survey(models.Model):
             if self.questions_selection == 'all':
                 questions |= page.question_ids
             else:
-                if page.random_questions_count > 0 and len(page.question_ids) > page.random_questions_count:
-                    questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
-                else:
-                    questions |= page.question_ids
+                if page.random_questions_count > 0:
+                    if len(page.question_ids) > page.random_questions_count:
+                        questions = questions.concat(*random.sample(page.question_ids, page.random_questions_count))
+                    else:
+                        questions |= page.question_ids
 
         return questions
 
@@ -514,27 +517,47 @@ class Survey(models.Model):
     def _get_pages_or_questions(self, user_input):
         """ Returns the pages or questions (depending on the layout) that will be shown
         to the user taking the survey.
-        In 'page_per_question' layout, we also want to show pages that have a description. """
-
-        result = self.env['survey.question']
-        if self.questions_layout == 'page_per_section':
-            result = self.page_ids
-        elif self.questions_layout == 'page_per_question':
-            if self.questions_selection == 'random' and not self.session_state:
-                result = user_input.predefined_question_ids
-            else:
-                result = self._get_pages_and_questions_to_show()
+        In 'page_per_question' layout, we also want to show pages that have a description.
+        """
+        # Random
+        if self.questions_selection == 'random':
+            result = self._get_visible_pages_and_questions()
+            if self.questions_layout == 'page_per_section':
+                return result.filtered(lambda page_or_question: page_or_question.is_page)
+            elif self.questions_layout == 'page_per_question':
+                if not self.session_state:
+                    return user_input.predefined_question_ids
+                return self._get_pages_and_questions_to_show(result)
+        # All
+        else:
+            result = self.env['survey.question']
+            if self.questions_layout == 'page_per_section':
+                return self.page_ids
+            elif self.questions_layout == 'page_per_question':
+                return self._get_pages_and_questions_to_show(self.question_and_page_ids)
 
         return result
 
-    def _get_pages_and_questions_to_show(self):
+    def _get_visible_pages_and_questions(self):
+        """ The pages which have less than 1 as random_questions_count shouldn't be displayed as there won't be
+        any question to show in the page.
+        :return: survey.question recordset excluding pages with random_questions_count inferior to 1 and their questions
+        """
+        visible_pages = self.page_ids.filtered(lambda page: not(page.questions_selection == 'random' and page.random_questions_count <= 0))
+        return self.question_and_page_ids.filtered(lambda question_or_page:
+            question_or_page in visible_pages or # page is visible
+            question_or_page.page_id in visible_pages or # question is in a visible page
+            (not question_or_page.is_page and not question_or_page.page_id) # question doesn't belong to any page
+        )
+
+    def _get_pages_and_questions_to_show(self, pages_and_questions):
         """
         :return: survey.question recordset excluding invalid conditional questions and pages without description
         """
 
         self.ensure_one()
         invalid_questions = self.env['survey.question']
-        questions_and_valid_pages = self.question_and_page_ids.filtered(
+        questions_and_valid_pages = pages_and_questions.filtered(
             lambda question: not question.is_page or not is_html_empty(question.description))
         for question in questions_and_valid_pages.filtered(lambda q: q.is_conditional).sorted():
             trigger = question.triggering_question_id
