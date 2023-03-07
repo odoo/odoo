@@ -14,7 +14,6 @@ import {
     mapViews,
     mapActiveFieldsToFieldsInfo,
 } from "@web/views/legacy_utils";
-import { localization } from "@web/core/l10n/localization";
 import BasicModel from "web.BasicModel";
 import Context from "web.Context";
 
@@ -150,27 +149,6 @@ export class Record extends DataPoint {
         return this.model.__bm__.isDirty(this.__bm_handle__);
     }
 
-    get dirtyFields() {
-        const changes = this.model.__bm__.localData[this.__bm_handle__]._changes;
-        if (!changes) {
-            return [];
-        }
-        return Object.keys(changes).map((change) => this.activeFields[change]);
-    }
-
-    get translatableFields() {
-        if (!localization.multiLang) {
-            return [];
-        }
-        return Object.values(this.fields)
-            .filter((f) => f.translate)
-            .map((f) => this.activeFields[f.name]);
-    }
-
-    get dirtyTranslatableFields() {
-        return this.translatableFields.filter((f) => this.dirtyFields.includes(f));
-    }
-
     get isInEdition() {
         return this.mode === "edit";
     }
@@ -288,6 +266,11 @@ export class Record extends DataPoint {
         this.mode = mode;
         this.model.notify();
         return true;
+    }
+
+    isFieldDirty(fieldName) {
+        const changes = this.model.__bm__.localData[this.__bm_handle__]._changes;
+        return changes && changes[fieldName];
     }
 
     /**

@@ -523,13 +523,6 @@ export class Record extends DataPoint {
         return false;
     }
 
-    get dirtyFields() {
-        if (!this.isDirty) {
-            return [];
-        }
-        return this._changes.map((change) => this.activeFields[change]);
-    }
-
     get isInEdition() {
         return this.mode === "edit";
     }
@@ -768,6 +761,10 @@ export class Record extends DataPoint {
         return Domain.and(
             rawDomains.map((d) => (typeof d === "string" ? evaluateExpr(d, evalContext) : d))
         );
+    }
+
+    isFieldDirty(fieldName) {
+        return this.isDirty && !!this._changes[fieldName];
     }
 
     isInvalid(fieldName) {

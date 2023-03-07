@@ -12,8 +12,7 @@ export class EmployeeProfileController extends formView.Controller {
     }
 
     onWillSaveRecord(record) {
-        const dirtyFields = record.dirtyFields.map((f) => f.name);
-        this.mustReload = dirtyFields.includes("lang");
+        this.mustReload = record.isFieldDirty("lang");
     }
 
     onRecordSaved(record) {
