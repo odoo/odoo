@@ -35,6 +35,7 @@ QUnit.test("defaults", (assert) => {
         formViewId: false,
         hasEditDialog: false,
         hasQuickCreate: true,
+        quickCreateFormViewId: false,
         isDateHidden: false,
         isTimeHidden: false,
         popoverFields: {},

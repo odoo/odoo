@@ -166,7 +166,6 @@ class Meeting(models.Model):
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
     invalid_email_partner_ids = fields.Many2many('res.partner', compute='_compute_invalid_email_partner_ids')
-    attendees_count = fields.Integer('Attendees Count', compute='_compute_attendees_count')
     # alarms
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
@@ -217,6 +216,30 @@ class Meeting(models.Model):
     until = fields.Date(compute='_compute_recurrence', readonly=False)
     # UI Fields.
     display_description = fields.Boolean(compute='_compute_display_description')
+    attendees_count = fields.Integer(compute='_compute_attendees_count')
+    accepted_count = fields.Integer(compute='_compute_attendees_count')
+    declined_count = fields.Integer(compute='_compute_attendees_count')
+    tentative_count = fields.Integer(compute='_compute_attendees_count')
+    awaiting_count = fields.Integer(compute="_compute_attendees_count")
+
+    @api.depends('attendee_ids', 'attendee_ids.state', 'partner_ids')
+    def _compute_attendees_count(self):
+        for event in self:
+            count_event = {}
+            for attendee in event.attendee_ids:
+                count_event[attendee.state] = count_event.get(attendee.state, 0) + 1
+
+            accepted_count = count_event.get('accepted', 0)
+            declined_count = count_event.get('declined', 0)
+            tentative_count = count_event.get('tentative', 0)
+            attendees_count = len(event.partner_ids)
+            event.update({
+                'accepted_count': accepted_count,
+                'declined_count': declined_count,
+                'tentative_count': tentative_count,
+                'attendees_count': attendees_count,
+                'awaiting_count': attendees_count - accepted_count - declined_count - tentative_count
+            })
 
     @api.depends('attendee_ids')
     def _compute_invalid_email_partner_ids(self):
@@ -224,11 +247,6 @@ class Meeting(models.Model):
             event.invalid_email_partner_ids = event.partner_ids.filtered(
                 lambda a: not (a.email and single_email_re.match(a.email))
             )
-
-    @api.depends('attendee_ids')
-    def _compute_attendees_count(self):
-        for event in self:
-            event.attendees_count = len(event.attendee_ids)
 
     def _compute_is_highlighted(self):
         if self.env.context.get('active_model') == 'res.partner':
@@ -801,7 +819,7 @@ class Meeting(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'url': self.videocall_location,
-            'target': 'self' if self.videocall_source == 'discuss' else 'new'
+            'target': 'new'
         }
 
     def action_join_meeting(self, partner_id):

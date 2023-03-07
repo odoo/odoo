@@ -145,7 +145,9 @@ export class CalendarController extends Component {
                 this.displayDialog(
                     this.constructor.components.QuickCreate,
                     this.getQuickCreateProps(record),
-                    { onClose: () => resolve() }
+                    {
+                        onClose: () => resolve(),
+                    }
                 );
             });
         } else {

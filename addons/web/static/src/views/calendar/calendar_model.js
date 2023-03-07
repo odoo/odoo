@@ -135,6 +135,10 @@ export class CalendarModel extends Model {
         return this.data.unusualDays;
     }
 
+    get quickCreateFormViewId() {
+        return this.meta.quickCreateFormViewId;
+    }
+
     //--------------------------------------------------------------------------
 
     async createFilter(fieldName, filterValue) {
@@ -218,7 +222,7 @@ export class CalendarModel extends Model {
                 end = start;
             } else {
                 // in week mode or day mode, convert allday event to event
-                end = start.plus({ hours: 2 });
+                end = start.plus({ hours: 1 });
             }
         }
 
