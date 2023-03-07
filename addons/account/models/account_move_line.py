@@ -208,10 +208,6 @@ class AccountMoveLine(models.Model):
         tracking=True,
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.",
     )
-    tax_audit = fields.Char(
-        string="Tax Audit String",
-        compute="_compute_tax_audit", store=True,
-        help="Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them.")
     # Technical field. True if the balance of this move line needs to be
     # inverted when computing its total for each tag (for sales invoices, for # example)
     tax_tag_invert = fields.Boolean(
@@ -772,28 +768,6 @@ class AccountMoveLine(models.Model):
                 record.tax_tag_invert = record.move_id.is_inbound()
             if record.move_id.tax_cash_basis_origin_move_id and (record.move_id.reversed_entry_id or record.tax_base_amount < 0):
                 record.tax_tag_invert = not record.tax_tag_invert
-
-    @api.depends('tax_tag_ids', 'debit', 'credit', 'journal_id', 'tax_tag_invert')
-    def _compute_tax_audit(self):
-        separator = '        '
-
-        for record in self:
-            currency = record.company_id.currency_id
-            audit_str = ''
-            for tag in record.tax_tag_ids:
-                tag_amount = (record.tax_tag_invert and -1 or 1) * (tag.tax_negate and -1 or 1) * record.balance
-
-                if tag.applicability == 'taxes' and tag.name[0] in {'+', '-'}:
-                    # Then, the tag comes from a report expression, and hence has a + or - sign (also in its name)
-                    tag_name = tag.name[1:]
-                else:
-                    # Then, it's a financial tag (sign is always +, and never shown in tag name)
-                    tag_name = tag.name
-
-                audit_str += separator if audit_str else ''
-                audit_str += tag_name + ': ' + formatLang(self.env, tag_amount, currency_obj=currency)
-
-            record.tax_audit = audit_str
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):

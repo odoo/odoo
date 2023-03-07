@@ -39,7 +39,6 @@
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
                                         <field name="tax_tag_invert" readonly="1" groups="base.group_no_one"/>
-                                        <field name="tax_audit"/>
                                     </group>
                                     <group string="Matching" attrs="{'invisible':[('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
                                         <label for="full_reconcile_id"/>
@@ -275,7 +274,6 @@
                 <field name="matching_number" position="replace">
                     <field name="tax_line_id" string="Tax"/>
                     <field name="tax_base_amount" sum="Total Base Amount"/>
-                    <field name="tax_audit"/>
                 </field>
                 <field name="analytic_distribution" position="attributes">
                     <attribute name="optional">hide</attribute>
